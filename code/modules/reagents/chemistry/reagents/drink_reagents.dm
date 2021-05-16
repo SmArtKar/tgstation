@@ -1026,3 +1026,21 @@
 		M.drowsyness += 1 * REM * delta_time
 	return ..()
 
+/datum/reagent/consumable/ruckusjuice
+	name = "Ruckus Juice"
+	description = "Juice of a strange space plant. You can hear static noise coming from it."
+	color = "#92996D" // rgb: 146, 153, 109
+	taste_description = "pineapples and milk"
+	glass_name = "glass of ruckus juice"
+	glass_desc = "...Are you sure that drinking this is a good idea?"
+	ph = 3.3
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+
+/datum/reagent/consumable/ruckusjuice/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
+	if(M.druggy < 3)
+		M.adjust_drugginess(1 * REM * delta_time)
+	if(M.derpspeech < 3)
+		M.derpspeech += 1 * REM * delta_time
+	if(DT_PROB(1, delta_time))
+		M.say(pick_list_replacements(BRAIN_DAMAGE_FILE, "brain_damage"), forced = "ruckus juice") //Ruckus, get it?
+	..()

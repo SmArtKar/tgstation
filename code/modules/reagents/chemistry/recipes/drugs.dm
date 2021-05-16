@@ -126,3 +126,8 @@
 	required_reagents = list(/datum/reagent/drug/maint/sludge = 6 , /datum/reagent/toxin/acid/nitracid = 1 , /datum/reagent/consumable/enzyme = 1)
 	required_catalysts = list(/datum/reagent/acetone_oxide = 5)
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING
+
+/datum/chemical_reaction/ruckus_concentrate
+	results = list(/datum/reagent/drug/maint/ruckus_concentrate = 6)
+	required_reagents = list(/datum/reagent/fuel = 3 , /datum/reagent/ammonia = 2 , /datum/reagent/consumable/ruckusjuice = 3) //You need either to grow ruckus plant yourself, or find some ampules with it's juice as maint loot.
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_DRUG | REACTION_TAG_ORGAN | REACTION_TAG_DAMAGING

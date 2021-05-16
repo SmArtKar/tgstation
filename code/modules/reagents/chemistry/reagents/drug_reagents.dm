@@ -439,3 +439,35 @@
 
 	M.adjustToxLoss(5 * REM * delta_time)
 	M.adjustOrganLoss(ORGAN_SLOT_LIVER, 3 * REM * delta_time)
+
+/datum/reagent/drug/maint/ruckus_concentrate //Meme drug useful for hacking. Makes you talk like you're retarded.
+	name = "Concentraited Ruckus Juice"
+	description = "Concentraited juice of an alien plant named 'Ruckus' for it's property to generate static-like noises when releasing spores, it can greatly enchance your sensoric abilities, allowing you to see and feel more than others can."
+	reagent_state = SOLID
+	color = "#996D7C" // rgb: 153, 109, 124
+	overdose_threshold = 20
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	addiction_types = list(/datum/addiction/maintenance_drugs = 20)
+
+/datum/reagent/drug/maint/ruckus_concentrate/on_mob_add(mob/living/L, amount)
+	. = ..()
+	ADD_TRAIT(L, TRAIT_KNOW_ENGI_WIRES, type)
+	ADD_TRAIT(L, TRAIT_KNOW_CYBORG_WIRES, type)
+
+/datum/reagent/drug/maint/ruckus_concentrate/on_mob_delete(mob/living/L)
+	. = ..()
+	REMOVE_TRAIT(L, TRAIT_KNOW_ENGI_WIRES, type)
+	REMOVE_TRAIT(L, TRAIT_KNOW_CYBORG_WIRES, type)
+
+/datum/reagent/drug/maint/ruckus_concentrate/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
+	. = ..()
+	M.adjustToxLoss(2 * REM * delta_time)
+	M.adjustOrganLoss(ORGAN_SLOT_LIVER, 1 * REM * delta_time)
+
+	if(M.druggy < 3)
+		M.adjust_drugginess(1 * REM * delta_time)
+	if(M.derpspeech < 3)
+		M.derpspeech += 1 * REM * delta_time
+	if(DT_PROB(2.5, delta_time))
+		M.say(pick_list_replacements(BRAIN_DAMAGE_FILE, "brain_damage"), forced = "concentraited ruckus juice")
+	..()

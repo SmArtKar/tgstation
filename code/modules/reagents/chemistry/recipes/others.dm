@@ -857,3 +857,37 @@
 			return
 	clear_products(holder, step_volume_added)
 	holder.my_atom.audible_message("<span class='notice'>[icon2html(holder.my_atom, viewers(DEFAULT_MESSAGE_RANGE, src))] The reaction gives out a fizz, teleporting items everywhere!</span>")
+
+////////////////////////////////////
+
+/datum/chemical_reaction/duolibine
+	results = list(/datum/reagent/duolibine = 1)
+	required_reagents = list(/datum/reagent/acetaldehyde = 1, /datum/reagent/ash = 1, /datum/reagent/gunpowder = 1) //White, grey and black, get it?
+	mix_sound = 'sound/magic/disable_tech.ogg'
+	mix_message = "Solution thickens and starts changing colors rapidly."
+
+	required_temp = 435
+	optimal_temp = 435
+	overheat_temp = 480
+	optimal_ph_min = 2
+	optimal_ph_max = 5
+	determin_ph_range = 6
+	temp_exponent_factor = 2
+	ph_exponent_factor = 1
+	thermic_constant = 10
+	H_ion_release = -0.02
+	rate_up_lim = 5
+	purity_min = 0.35
+
+	reaction_tags = REACTION_TAG_MODERATE | REACTION_TAG_DANGEROUS | REACTION_TAG_OTHER
+
+/datum/chemical_reaction/duolibine/overheated(datum/reagents/holder, datum/equilibrium/equilibrium, step_volume_added)
+	. = ..()
+	var/turf/this_turf = get_turf(holder.my_atom)
+	holder.my_atom.audible_message("The [holder.my_atom] suddenly explodes, world's colors fading around it!")
+	playsound(this_turf, 'sound/chemistry/shockwave_explosion.ogg', 80, TRUE)
+	for(var/mob/living/loser in orange(3, this_turf))
+		to_chat(loser, "<span class='userdanger'>Your eyes burn horrifically as you become colorblind!</span>")
+		loser.emote("scream")
+		loser.add_client_colour(/datum/client_colour/monochrome)
+		addtimer(CALLBACK(loser, /mob/living/.proc/remove_client_colour, /datum/client_colour/monochrome), 2 MINUTES) //Congratulations, you're now colorblind for 2 minutes.

@@ -363,3 +363,45 @@
 	name = "saline canister"
 	volume = 5000
 	list_reagents = list(/datum/reagent/medicine/salglu_solution = 5000)
+
+/obj/item/reagent_containers/glass/beaker/maint_vial
+	name = "old vial"
+	desc = "An old, dusty vial. Can hold up to 15 units."
+	icon_state = "maint_vial"
+	fill_icon_state = "maint_vial"
+	custom_materials = list(/datum/material/glass=250)
+	volume = 15
+	amount_per_transfer_from_this = 5
+	possible_transfer_amounts = list(5, 10, 15)
+	fill_icon_thresholds = list(0, 1, 5, 10, 15)
+	var/sealed = FALSE
+
+/obj/item/reagent_containers/glass/beaker/maint_vial/welder_act(mob/living/user, obj/item/I)
+	. = ..()
+
+	if(sealed)
+		return
+
+	if(!I.tool_start_check(user, amount=0))
+		return
+
+	icon_state = "maint_vial_sealed"
+	sealed = TRUE
+	spillable = FALSE
+	reagent_flags = null
+	to_chat(user, "<span class='notice'>You seal [src] with [I].</span>")
+
+/obj/item/reagent_containers/glass/beaker/maint_vial/attack_self(mob/living/user)
+	if(!sealed)
+		return ..()
+
+	icon_state = "maint_vial_broken"
+	sealed = FALSE
+	spillable = TRUE
+	reagent_flags = OPENCONTAINER
+	to_chat(user, "<span class='notice'>You break off [src]'s top.</span>")
+
+/obj/item/reagent_containers/glass/beaker/maint_vial/ruckus_juice
+	sealed = TRUE
+	icon_state = "maint_vial_sealed"
+	list_reagents = list(/datum/reagent/consumable/ruckusjuice = 15)

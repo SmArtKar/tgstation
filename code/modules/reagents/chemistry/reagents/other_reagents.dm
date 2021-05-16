@@ -2611,3 +2611,28 @@
 		var/color
 		CONVERT_PH_TO_COLOR(exposed_atom.reagents.ph, color)
 		exposed_atom.add_atom_colour(color, WASHABLE_COLOUR_PRIORITY)
+
+//An unstable component for tricky reactions. You need to time the moment perfectly for needed purity/reagent.
+/datum/reagent/duolibine
+	name = "Duolibine"
+	color = "#000000" //Cycles between 255, 255, 255 and 0, 0, 0
+	description = "An unstable reagent that cycles between two states, it's known for reacting differently depending on the state it's currently in."
+	taste_description = "bitter coffee and sweet sugar"
+	ph = 3.2
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	var/cycler = 0 //Used for the color effect
+
+/datum/reagent/duolibine/New()
+	. = ..()
+	START_PROCESSING(SSfastprocess, src)
+
+/datum/reagent/duolibine/Destroy()
+	STOP_PROCESSING(SSfastprocess, src)
+	. = ..()
+
+/datum/reagent/duolibine/process(delta_time)
+	cycler += delta_time * 10 / max(purity, 0.01) //Low purity speeds up the cycling to make things harder for a stupid chemist
+	color = rgb(sin(cycler) ** 2 * 255, sin(cycler) ** 2 * 255, sin(cycler) ** 2 * 255)
+	if(holder && holder.my_atom)
+		holder.my_atom.update_icon()
+		holder.my_atom.update_overlays()

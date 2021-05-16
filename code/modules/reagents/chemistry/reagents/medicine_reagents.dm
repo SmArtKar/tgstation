@@ -1561,3 +1561,61 @@
 	clot_rate = 0.2
 	passive_bleed_modifier = 0.8
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+
+/datum/reagent/medicine/statix //Because stasis prevents even self consuming reagents from metabolizing, we are going to use process()
+	name = "Statix 76"
+	description = "Result of NanoTrasen's attempts to make portable stasis devices, this experimental mixture can temporarely freeze vital function for short periods of time. However, after stasis wears off, user's cells will be damaged by backfire effect, which depends on damage taken by user."
+	color = "#D067DB" //RGB: 208, 103, 219
+	taste_description = "dirty socks"
+	ph = 11
+	overdose_threshold = 15
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	metabolization_rate = REAGENTS_METABOLISM * 0.1 //It actually metabolizes much faster because it uses SSfastprocess
+	var/list/damage_list = list()
+	var/list/type_list = list()
+	var/list/zone_list = list()
+
+/datum/reagent/medicine/statix/on_mob_add(mob/living/L, amount)
+	. = ..()
+	ADD_TRAIT(L, TRAIT_SOFT_STASIS, type)
+	to_chat(L, "<span class='warning'>Your body suddenly goes numb.</span>")
+	START_PROCESSING(SSfastprocess, src)
+	RegisterSignal(L, COMSIG_MOB_APPLY_DAMGE,  .proc/store_damage)
+
+/datum/reagent/medicine/statix/on_mob_delete(mob/living/L)
+	. = ..()
+
+	UnregisterSignal(L, COMSIG_MOB_APPLY_DAMGE)
+	REMOVE_TRAIT(L, TRAIT_SOFT_STASIS, type)
+	to_chat(L, "<span class='warning'>Your feelings return.</span>")
+	STOP_PROCESSING(SSfastprocess, src)
+	backfire_effect(L)
+
+/datum/reagent/medicine/statix/process(delta_time)
+	holder.metabolize_reagent(holder.my_atom, src, SSMOBS_DT, 0, can_overdose = TRUE)
+
+/datum/reagent/medicine/statix/proc/backfire_effect(mob/living/victim)
+	if(!LAZYLEN(damage_list))
+		return
+	log_game("[victim] was damaged by backfire effect of [src]" )
+	to_chat(victim, "<span class='userdanger'>You scream in pain as you feel your cells rupture!</span>")
+	victim.emote("scream")
+	for(var/damage_num = 1 to LAZYLEN(damage_list))
+		victim.apply_damage(damage_list[damage_num], type_list[damage_num], zone_list[damage_num]) //After the effect wears off, you take extra damage. So if someone shot you with .357 you would suffer damage equal to another shot after stasis wears off because that's totally how logic works and I want to prevent powergaming with it.
+
+	if(purity < 1)
+		victim.apply_damage(LAZYLEN(damage_list) * (1 - purity), CLONE)
+
+/datum/reagent/medicine/statix/proc/store_damage(datum/source, damage, damagetype, def_zone)
+	damage_list.Add(damage)
+	type_list.Add(damagetype)
+	zone_list.Add(def_zone)
+
+/datum/reagent/medicine/statix/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume, show_message = TRUE)
+	. = ..()
+	if(methods & INGEST)
+		exposed_mob.reagents.add_reagent(/datum/reagent/inverse, volume)
+		exposed_mob.reagents.remove_reagent(type, volume)
+
+/datum/reagent/medicine/statix/overdose_process(mob/living/M, delta_time, times_fired)
+	store_damage(damage = 1.5 * REM * delta_time / purity, damagetype = CLONE) //Evil

@@ -370,3 +370,26 @@
 	var/location = get_turf(holder.my_atom)
 	for(var/i in 1 to created_volume)
 		new /obj/item/stack/medical/poultice(location)
+
+/datum/chemical_reaction/statix //Not sure if it can be used as a weapon, but it's definetly gonna be useful for paramedics.
+	results = list(/datum/reagent/medicine/statix = 2)
+	required_reagents = list(/datum/reagent/duolibine = 1, /datum/reagent/carbon = 1, /datum/reagent/acetone_oxide = 1)
+	required_temp = 270
+	optimal_temp = 330
+	optimal_ph_min = 4
+	optimal_ph_max = 8
+	determin_ph_range = 3
+	temp_exponent_factor = 2
+	ph_exponent_factor = 2
+	thermic_constant = -4
+	H_ion_release = -1
+	rate_up_lim = 1 //slooow
+	purity_min = 0.3
+	reaction_flags = REACTION_PH_VOL_CONSTANT
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_OTHER
+
+/datum/chemical_reaction/statix/reaction_step(datum/reagents/holder, datum/equilibrium/reaction, delta_t, delta_ph, step_reaction_vol)
+	. = ..()
+	var/datum/reagent/duolibine/duolibine = holder.get_reagent(/datum/reagent/duolibine)
+	if(duolibine)
+		reaction.delta_ph *= min(sin(duolibine.cycler) ** 2, 0.01) //You want it as white as possible. It will keep cycling while the reaction is going so for the perfect purity you will have to add it extremely slowly

@@ -292,3 +292,27 @@
 		new /obj/structure/fluff/hedge/opaque(user.drop_location())
 		to_chat(user, "<span class='notice'>You plant \the [src].</span>")
 		qdel(src)
+
+/obj/item/seeds/ruckus
+	name = "pack of ruckus seeds"
+	desc = "These seeds grow into ruckus plants."
+	icon_state = "seed-ruckus"
+	species = "ruckus"
+	plantname = "Ruckus"
+	product = /obj/item/food/grown/ruckus
+	lifespan = 125
+	endurance = 15
+	maturation = 4
+	production = 3
+	yield = 2
+	growthstages = 3
+	growing_icon = 'icons/obj/hydroponics/growing_fruits.dmi'
+	reagents_add = list(/datum/reagent/consumable/nutriment/vitamin = 0.05, /datum/reagent/consumable/nutriment = 0.05)
+	genes = list(/datum/plant_gene/trait/repeated_harvest, /datum/plant_gene/trait/plant_type/weed_hardy)
+
+/obj/item/food/grown/ruckus
+	seed = /obj/item/seeds/ruckus
+	name = "ruckus leaf"
+	desc = "A large leaf of strange plant. You can see small spore sacks on the other side of it."
+	icon_state = "ruckus"
+	distill_reagent = /datum/reagent/consumable/ruckusjuice

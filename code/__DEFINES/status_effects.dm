@@ -152,4 +152,6 @@
 
 // Stasis helpers
 
-#define IS_IN_STASIS(mob) (mob.has_status_effect(STATUS_EFFECT_STASIS))
+#define IS_IN_HARD_STASIS(mob) (mob.has_status_effect(STATUS_EFFECT_STASIS))
+
+#define IS_IN_STASIS(mob) (mob.has_status_effect(STATUS_EFFECT_STASIS) || HAS_TRAIT(mob, TRAIT_SOFT_STASIS))
