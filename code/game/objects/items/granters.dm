@@ -401,6 +401,64 @@
 /obj/item/book/granter/martial/plasma_fist/nobomb
 	martial = /datum/martial_art/plasma_fist/nobomb
 
+/obj/item/book/granter/martial/duet
+	martial = /datum/martial_art/duet
+	name = "white scroll"
+	martialname = "dual kick"
+	desc = "A scroll filled with cilcular symbols. It seems to be drawings of some sort of martial art."
+	greet = "<span class='sciradio boldannounce'>You have learned the ancient martial art of Dual Kick! Most of your combos and abilities are only useful when you and your partner are together, so don't stray away from them!</span>"
+	icon = 'icons/obj/wizard.dmi'
+	icon_state = "scroll2"
+	worn_icon_state = "scroll"
+	remarks = list("Is power of friendship really all we need to become powerful?", "Focus, kick, spin...", "Stand together...", "I must pierce armor for maximum damage...", "Just try to punch em until cool circles appear in the air...", "Speeeeeeeeeeeen...")
+
+	var/obj/item/book/granter/martial/duet/partner_scroll
+	var/mob/living/learnee
+
+/obj/item/book/granter/martial/duet/on_reading_finished(mob/user)
+	if(istype(user.mind.martial_art, martial)) //We already know this art
+		to_chat(user, "<span class='warning'>You finish reading [src], but can't really figure out how to use [martialname]... probably because you already know something similar to it.</span>")
+		return
+
+	if(!partner_scroll) //Second scroll was burned/eaten/somehow deleted, the art becomes useless.
+		to_chat(user, "<span class='warning'>You finish reading [src], but you find that the second part of the scroll is missing! You can't learn this martial art by yourself only...</span>")
+		onlearned(user)
+		return
+
+	if(!partner_scroll.learnee)
+		to_chat(user, "<span class='warning'>You finish reading [src], but now you need to find yourself a partner. Wait until someone reads the second part of the scroll to use the martial art!</span>")
+		onlearned(user)
+		return
+
+	learn_art(user)
+	partner_scroll.learn_art(partner_scroll.learnee)
+
+	var/datum/martial_art/duet/art = user.mind.martial_art
+	art.link_art(partner_scroll.learnee)
+	art = partner_scroll.learnee.mind.martial_art
+	art.link_art(user)
+
+/obj/item/book/granter/martial/duet/proc/learn_art(mob/living/user)
+	to_chat(user, "[greet]")
+	var/datum/martial_art/duet/art = new martial()
+	art.teach(user)
+	user.log_message("learned the martial art [martialname] ([art])", LOG_ATTACK, color="orange")
+	onlearned(user)
+
+/obj/item/book/granter/martial/duet/onlearned(mob/living/carbon/user)
+	..()
+	learnee = user
+	if(oneuse == TRUE)
+		desc = "It's completely blank."
+		name = "empty scroll"
+		icon_state = "blankscroll"
+
+/obj/item/book/granter/martial/duet/black
+	name = "dark scroll"
+	martial = /datum/martial_art/duet/black
+	martialname = "dual strike"
+	greet = "<span class='sciradio boldannounce'>You have learned the ancient martial art of Dual Strike! Most of your combos and abilities are only useful when you and your partner are together, so don't stray away from them!</span>"
+
 // I did not include mushpunch's grant, it is not a book and the item does it just fine.
 
 //Crafting Recipe books

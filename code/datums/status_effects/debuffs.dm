@@ -967,3 +967,18 @@
 /datum/status_effect/cloudstruck/Destroy()
 	. = ..()
 	QDEL_NULL(mob_overlay)
+
+/datum/status_effect/incapacitating/beatdown
+	id = "beatdown"
+	status_type = STATUS_EFFECT_REPLACE
+	duration = 3 SECONDS
+
+/datum/status_effect/incapacitating/beatdown/on_apply()
+	. = ..()
+	if(!.)
+		return
+	ADD_TRAIT(owner, TRAIT_FLOORED, TRAIT_STATUS_EFFECT(id))
+
+/datum/status_effect/incapacitating/beatdown/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_FLOORED, TRAIT_STATUS_EFFECT(id))
+	return ..()

@@ -455,6 +455,16 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	player_minimum = 25
 	restricted = TRUE
 
+/datum/uplink_item/dangerous/duet_martial //Two traitors need to cooperate to buy and use this. Really powerful martial art that's hard to pull off because it requires really good cooperation in combat
+	name = "\"Duality\" Martial Art"
+	desc = "A box containing two scrolls that can teach you and your partner an ancient martial art, that will require cooperation to use. White scroll has more defencive potential while black has more offensive."
+	item = /obj/item/storage/box/syndicate/duet_martial
+	cost = 40
+	surplus = 0
+	player_minimum = 25
+	purchasable_from = ~(UPLINK_NUKE_OPS | UPLINK_CLOWN_OPS)
+	restricted = TRUE
+
 /datum/uplink_item/dangerous/machinegun
 	name = "L6 Squad Automatic Weapon"
 	desc = "A fully-loaded Aussec Armoury belt-fed machine gun. \

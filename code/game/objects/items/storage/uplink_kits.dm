@@ -633,6 +633,20 @@
 		group.register(i)
 	desc += " The implants are registered to the \"[group.name]\" group."
 
+/obj/item/storage/box/syndicate/duet_martial
+	name = "\"Duality\" Martial Art Kit"
+	desc = "A box, containing 2 scrolls that can teach you legendary dual martial art. Two users required."
+	icon_state = "syndiebox"
+	illustration = "writing_syndie"
+
+/obj/item/storage/box/syndicate/duet_martial/PopulateContents()
+	new /obj/item/clothing/suit/chaplainsuit/whiterobe(src)
+	new /obj/item/clothing/suit/hooded/chaplain_hoodie(src)
+	var/obj/item/book/granter/martial/duet/first_scroll = new(src)
+	var/obj/item/book/granter/martial/duet/black/second_scroll = new(src)
+	first_scroll.partner_scroll = second_scroll
+	second_scroll.partner_scroll = first_scroll
+
 #undef KIT_RECON
 #undef KIT_BLOODY_SPAI
 #undef KIT_STEALTHY

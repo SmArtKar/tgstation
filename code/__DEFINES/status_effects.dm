@@ -114,6 +114,9 @@
 /// Read the documentation for /datum/status_effect/confusion for more information.
 #define STATUS_EFFECT_CONFUSION /datum/status_effect/confusion
 
+/// Used for Dual martial arts, allows to attack the target at very high speeds and regenerate stamina from it
+#define STATUS_EFFECT_BEATDOWN /datum/status_effect/incapacitating/beatdown
+
 /////////////
 // NEUTRAL //
 /////////////

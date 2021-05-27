@@ -565,6 +565,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define LOCKED_HELMET_TRAIT "locked-helmet"
 #define NINJA_SUIT_TRAIT "ninja-suit"
 #define SLEEPING_CARP_TRAIT "sleeping_carp"
+#define DUALITY_TRAIT "duality"
 #define MADE_UNCLONEABLE "made-uncloneable"
 #define TIMESTOP_TRAIT "timestop"
 #define LIFECANDLE_TRAIT "lifecandle"
