@@ -13,6 +13,9 @@
 #define MARTIAL_DUET_BEATDOWN "DQGWH" //Applies s short-lasting status effect that allows us to attack them with North Star speed and regenerate stamina
 #define MARTIAL_DUET_FURY "HHWGQHZH" //Generates a series of ying yang symbols and launches target into them. Whenever target crosses a symbol, it detonates, damaging them and healing the user. Powerful enough to softcrit someone(including damage from hits requires)
 
+#define MARTIAL_DUET_STANCE_BACK "Back To Back"
+#define MARTIAL_DUET_STANCE_SPIN "Spinning Devil"
+#define MARTIAL_DUET_STANCE_CHARGE "Charged Punch"
 
 /datum/martial_art/duet //Defense
 	name = "Dual Kick"
@@ -132,17 +135,17 @@
 
 /datum/action/duet_stance/back
 	name = "Back To Back - Only works as long as you and your partner are standing next to each other. In this stance you rapidly regenerate stamina and have much higher block chance and overall damage."
-	stance_name = "Back To Back"
+	stance_name = MARTIAL_DUET_STANCE_BACK
 	button_icon_state = "duet_stance_back"
 
 /datum/action/duet_stance/spin
 	name = "Spinning Devil - All of your attacks get AoE damage, in cost of you recieving heavy stamina damage. If your partner is standing next to you in the same stance, they will also hit the target with you."
-	stance_name = "Spinning Devil"
+	stance_name = MARTIAL_DUET_STANCE_SPIN
 	button_icon_state = "duet_stance_spin"
 
 /datum/action/duet_stance/charge
 	name = "Charged Punch - As long as you're not moving, your hits deal up to double the amount of damage and stamina damage. Longer you don't move, higher your damage gets. Time required to reach peak damage is tripled if your partner is not nearby."
-	stance_name = "Charged Punch"
+	stance_name = MARTIAL_DUET_STANCE_CHARGE
 	button_icon_state = "duet_stance_charge"
 
 /datum/martial_art/duet/proc/check_distance(self_call = FALSE)
@@ -165,17 +168,17 @@
 		are_we_together = FALSE
 		are_we_tight = FALSE
 
-	if(stance == "Back To Back")
+	if(stance == MARTIAL_DUET_STANCE_BACK)
 		if(!are_we_tight)
 			to_chat(owner, "<span class='warning'>You exit Back To Back stance as you move away from your partner.</span>")
 			to_chat(partner, "<span class='warning'>You exit Back To Back stance as your partner moves away from you.</span>")
-			update_stance("Default", "Back To Back")
-			partner_art.update_stance("Default", "Back To Back")
+			update_stance("Default", MARTIAL_DUET_STANCE_BACK)
+			partner_art.update_stance("Default", MARTIAL_DUET_STANCE_BACK)
 		owner.setDir(get_dir(partner, owner))
 		partner.setDir(get_dir(owner, partner))
-	else if(stance == "Charged Punch")
+	else if(stance == MARTIAL_DUET_STANCE_CHARGE)
 		to_chat(owner, "<span class='warning'>You exit Charged Punch stance as you move.</span>")
-		update_stance("Default", "Charged Punch")
+		update_stance("Default", MARTIAL_DUET_STANCE_CHARGE)
 		if(ying_yang)
 			ying_yang.detonate()
 
@@ -183,23 +186,23 @@
 	stance = new_stance
 
 	switch(old_stance)
-		if("Back To Back")
-			if(partner_art.stance == "Back To Back")
-				partner_art.update_stance("Default", "Back To Back")
+		if(MARTIAL_DUET_STANCE_BACK)
+			if(partner_art.stance == MARTIAL_DUET_STANCE_BACK)
+				partner_art.update_stance("Default", MARTIAL_DUET_STANCE_BACK)
 
 			block_chance -= 25
 			damage_mod -= 0.5
 			stamina_damage_mod -= 0.5
 
-		if("Charged Punch")
+		if(MARTIAL_DUET_STANCE_CHARGE)
 			stance_charge = 0
 			if(ying_yang)
 				ying_yang.detonate()
 
 	switch(stance)
-		if("Back To Back")
-			if(partner_art.stance != "Back To Back")
-				partner_art.update_stance("Back To Back", partner_art.stance)
+		if(MARTIAL_DUET_STANCE_BACK)
+			if(partner_art.stance != MARTIAL_DUET_STANCE_BACK)
+				partner_art.update_stance(MARTIAL_DUET_STANCE_BACK, partner_art.stance)
 
 			block_chance += 25
 			damage_mod += 0.5
@@ -208,11 +211,11 @@
 			partner.setDir(get_dir(owner, partner))
 
 			if(!are_we_tight)
-				update_stance("Default", "Back To Back")
-				partner_art.update_stance("Default", "Back To Back")
+				update_stance("Default", MARTIAL_DUET_STANCE_BACK)
+				partner_art.update_stance("Default", MARTIAL_DUET_STANCE_BACK)
 				return
 
-		if("Charged Punch")
+		if(MARTIAL_DUET_STANCE_CHARGE)
 			stance_charge = world.time
 			ying_yang = new /obj/effect/temp_visual/ying_yang/big(get_turf(owner), (are_we_together ? MARTIAL_DUET_CHARGE_DURATION : MARTIAL_DUET_CHARGE_DURATION * 3))
 			ying_yang.icon_state = "duet_[are_we_together ? "full" : color]"
@@ -220,17 +223,17 @@
 
 
 /datum/martial_art/duet/process(delta_time)
-	if(stance == "Back To Back")
+	if(stance == MARTIAL_DUET_STANCE_BACK)
 		if((owner.body_position == LYING_DOWN) || owner.incapacitated())
-			update_stance("Default", "Back To Back")
-			partner_art.update_stance("Default", "Back To Back")
+			update_stance("Default", MARTIAL_DUET_STANCE_BACK)
+			partner_art.update_stance("Default", MARTIAL_DUET_STANCE_BACK)
 			STOP_PROCESSING(SSfastprocess, src)
 			return
 
 		owner.adjustStaminaLoss(-3 * stamina_boost_mod * delta_time)
 		owner.AdjustAllImmobility(-30 * stamina_boost_mod * delta_time)
 	else
-		if(stance == "Charged Punch" && ying_yang && ying_yang.icon_state != "duet_[are_we_together ? "full" : color]")
+		if(stance == MARTIAL_DUET_STANCE_CHARGE && ying_yang && ying_yang.icon_state != "duet_[are_we_together ? "full" : color]")
 			ying_yang.icon_state = "duet_[are_we_together ? "full" : color]"
 
 	if(are_we_together)
@@ -238,7 +241,7 @@
 			new /obj/effect/temp_visual/duet(get_turf(owner))
 
 /datum/martial_art/duet/proc/check_focus_damage()
-	if(stance == "Charged Punch")
+	if(stance == MARTIAL_DUET_STANCE_CHARGE)
 		focus_modifier = min(2, 1 + (world.time - stance_charge) / (are_we_together ? MARTIAL_DUET_CHARGE_DURATION : MARTIAL_DUET_CHARGE_DURATION * 3))
 		return
 	focus_modifier = 1
@@ -293,7 +296,7 @@
 					"<span class='userdanger'>You're [picked_hit_type]ed by [A]!</span>", "<span class='hear'>You hear a sickening sound of flesh hitting flesh!</span>", COMBAT_MESSAGE_RANGE, A)
 	to_chat(A, "<span class='danger'>You [picked_hit_type] [D]!</span>")
 
-	if(stance == "Spinning Devil" && !D.has_status_effect(STATUS_EFFECT_BEATDOWN)) //No shockwaves during beatdown
+	if(stance == MARTIAL_DUET_STANCE_SPIN && !D.has_status_effect(STATUS_EFFECT_BEATDOWN)) //No shockwaves during beatdown
 		shockwave(A, D, FALSE)
 
 	log_combat(A, D, "[picked_hit_type]s (Duality)")
@@ -328,7 +331,7 @@
 			break
 		sleep(3)
 
-	if(are_we_tight && partner_art.stance == "Spinning Devil" && get_dist(partner, target) <= 1)
+	if(are_we_tight && partner_art.stance == MARTIAL_DUET_STANCE_SPIN && get_dist(partner, target) <= 1)
 		target.attack_hand(partner)
 
 /datum/martial_art/duet/disarm_act(mob/living/A, mob/living/D)
@@ -618,3 +621,7 @@
 #undef MARTIAL_DUET_BEATDOWN
 #undef MARTIAL_DUET_FURY
 #undef MARTIAL_DUET_DOUBLE_KICK
+
+#undef MARTIAL_DUET_STANCE_BACK
+#undef MARTIAL_DUET_STANCE_SPIN
+#undef MARTIAL_DUET_STANCE_CHARGE
