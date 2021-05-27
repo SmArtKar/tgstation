@@ -972,6 +972,7 @@
 	id = "beatdown"
 	status_type = STATUS_EFFECT_REPLACE
 	duration = 3 SECONDS
+	tick_interval = 4
 
 /datum/status_effect/incapacitating/beatdown/on_apply()
 	. = ..()
@@ -981,4 +982,8 @@
 
 /datum/status_effect/incapacitating/beatdown/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_FLOORED, TRAIT_STATUS_EFFECT(id))
-	return ..()
+	. = ..()
+
+/datum/status_effect/incapacitating/beatdown/tick()
+	. = ..()
+	new /obj/effect/temp_visual/duet(get_turf(owner)) //So the owner would know about the debuff
