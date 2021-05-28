@@ -23,6 +23,7 @@
 	display_combos = TRUE
 	block_chance = 40
 	max_streak_length = 8
+	combo_timer = 20 SECONDS
 	help_verb = /mob/living/proc/duet_help
 
 	var/mob/living/owner //Because for some fucking reason martial arts don't store their owner.
