@@ -1,18 +1,22 @@
 //the random offset applied to square coordinates, causes intermingling at biome borders
 #define BIOME_RANDOM_SQUARE_DRIFT 2
+//Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
+#define PERLIN_NOISE_ZOOM 65
+//Defines the level at which mountains spawn
+#define MOUNTAIN_LEVEL 0.85
 
 /datum/map_generator/jungle_generator
 	///2D list of all biomes based on heat and humidity combos.
 	var/list/possible_biomes = list(
 	BIOME_LOW_HEAT = list(
 		BIOME_LOW_HUMIDITY = /datum/biome/plains,
-		BIOME_LOWMEDIUM_HUMIDITY = /datum/biome/mudlands,
+		BIOME_LOWMEDIUM_HUMIDITY = /datum/biome/plains/cold,
 		BIOME_HIGHMEDIUM_HUMIDITY = /datum/biome/mudlands,
 		BIOME_HIGH_HUMIDITY = /datum/biome/water
 		),
 	BIOME_LOWMEDIUM_HEAT = list(
 		BIOME_LOW_HUMIDITY = /datum/biome/plains,
-		BIOME_LOWMEDIUM_HUMIDITY = /datum/biome/jungle,
+		BIOME_LOWMEDIUM_HUMIDITY = /datum/biome/plains/cold,
 		BIOME_HIGHMEDIUM_HUMIDITY = /datum/biome/jungle,
 		BIOME_HIGH_HUMIDITY = /datum/biome/mudlands
 		),
@@ -29,8 +33,6 @@
 		BIOME_HIGH_HUMIDITY = /datum/biome/jungle/deep
 		)
 	)
-	///Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
-	var/perlin_zoom = 65
 
 ///Seeds the rust-g perlin noise with a random number.
 /datum/map_generator/jungle_generator/generate_terrain(list/turfs)
@@ -39,16 +41,18 @@
 	var/humidity_seed = rand(0, 50000)
 	var/heat_seed = rand(0, 50000)
 
+	var/area/mine/planetgeneration/caves/cave_area = new()
+
 	for(var/t in turfs) //Go through all the turfs and generate them
 		var/turf/gen_turf = t
-		var/drift_x = (gen_turf.x + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
-		var/drift_y = (gen_turf.y + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
+		var/drift_x = (gen_turf.x + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / PERLIN_NOISE_ZOOM
+		var/drift_y = (gen_turf.y + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / PERLIN_NOISE_ZOOM
 
 		var/height = text2num(rustg_noise_get_at_coordinates("[height_seed]", "[drift_x]", "[drift_y]"))
 
 
 		var/datum/biome/selected_biome
-		if(height <= 0.85) //If height is less than 0.85, we generate biomes based on the heat and humidity of the area.
+		if(height <= MOUNTAIN_LEVEL) //If height is less than MOUNTAIN_LEVEL, we generate biomes based on the heat and humidity of the area.
 			var/humidity = text2num(rustg_noise_get_at_coordinates("[humidity_seed]", "[drift_x]", "[drift_y]"))
 			var/heat = text2num(rustg_noise_get_at_coordinates("[heat_seed]", "[drift_x]", "[drift_y]"))
 			var/heat_level //Type of heat zone we're in LOW-MEDIUM-HIGH
@@ -73,11 +77,25 @@
 				if(0.75 to 1)
 					humidity_level = BIOME_HIGH_HUMIDITY
 			selected_biome = possible_biomes[heat_level][humidity_level]
-		else //Over 0.85; It's a mountain
+		else //Over MOUNTAIN_LEVEL; It's a mountain
 			selected_biome = /datum/biome/mountain
 		selected_biome = SSmapping.biomes[selected_biome] //Get the instance of this biome from SSmapping
 		selected_biome.generate_turf(gen_turf)
+		if(selected_biome.natural_light)
+			gen_turf.set_light_power(8)
+			gen_turf.set_light_range(2)
+			gen_turf.set_light_on(TRUE)
+
+		if(selected_biome.generate_caves)
+			var/area/old_area = gen_turf.loc
+			cave_area.contents += gen_turf
+			gen_turf.change_area(old_area, cave_area)
+
 		CHECK_TICK
+
+	cave_area.RunGeneration()
+
+	//spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle, /area/mine/planetgeneration) ///Uncomment if you want to spawn rivers as well. Do not uncomment unless lighting shit is reworked.
 
 /turf/open/genturf
 	name = "ungenerated turf"
@@ -87,5 +105,18 @@
 
 /area/mine/planetgeneration
 	name = "planet generation area"
-	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
+
+	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/jungle_generator
+
+/area/mine/planetgeneration/caves
+	name = "planet caves generation area"
+	map_generator = /datum/map_generator/cave_generator/jungle/surface
+
+/area/mine/planetgeneration/caves/deep
+	name = "deep jungle caves generation area"
+	map_generator = /datum/map_generator/cave_generator/jungle/deep
+
+#undef PERLIN_NOISE_ZOOM
+#undef BIOME_RANDOM_SQUARE_DRIFT
+#undef MOUNTAIN_LEVEL

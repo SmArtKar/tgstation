@@ -12,13 +12,16 @@
 	/// Optional travel time for ladder in deciseconds
 	var/travel_time = 0
 
+	var/allow_up = TRUE
+	var/allow_down = TRUE
+
 /obj/structure/ladder/Initialize(mapload, obj/structure/ladder/up, obj/structure/ladder/down)
 	..()
-	if (up)
+	if (up && allow_up && up.allow_down)
 		src.up = up
 		up.down = src
 		up.update_appearance()
-	if (down)
+	if (down && allow_down && down.allow_up)
 		src.down = down
 		down.up = src
 		down.update_appearance()
@@ -38,14 +41,14 @@
 	if (!down)
 		L = locate() in SSmapping.get_turf_below(T)
 		if (L)
-			if(crafted == L.crafted)
+			if(crafted == L.crafted && allow_down && L.allow_up)
 				down = L
 				L.up = src  // Don't waste effort looping the other way
 				L.update_appearance()
 	if (!up)
 		L = locate() in SSmapping.get_turf_above(T)
 		if (L)
-			if(crafted == L.crafted)
+			if(crafted == L.crafted && allow_up && L.allow_down)
 				up = L
 				L.down = src  // Don't waste effort looping the other way
 				L.update_appearance()
@@ -209,3 +212,9 @@
 
 /obj/structure/ladder/crafted
 	crafted = TRUE
+
+/obj/structure/ladder/dirt_hole
+	name = "hole"
+	desc = "A hole in the ground. It's big enough for you to fit through."
+	icon_state = "cave_dirt"
+	allow_up = FALSE
