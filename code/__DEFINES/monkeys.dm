@@ -37,3 +37,6 @@
 
 ///Monkey recruit cooldown
 #define MONKEY_RECRUIT_COOLDOWN 1 MINUTES
+
+/// Enemy vision for jungle monkeys
+#define JUNGLE_MONKEY_ENEMY_VISION 5

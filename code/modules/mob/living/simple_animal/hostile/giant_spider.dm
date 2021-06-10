@@ -299,7 +299,7 @@
 	if(cocoon_target == src)
 		to_chat(src, "<span class='warning'>You can't wrap yourself!</span>")
 		return
-	if(istype(cocoon_target, /mob/living/simple_animal/hostile/giant_spider))
+	if(isspider(cocoon_target))
 		to_chat(src, "<span class='warning'>You can't wrap other spiders!</span>")
 		return
 	if(!Adjacent(cocoon_target))

@@ -1,9 +1,9 @@
 /obj/structure/flora/aquatic
+	icon = 'icons/obj/flora/waterflora.dmi'
 
 /obj/structure/flora/aquatic/rock
 	name = "rock"
 	desc = "A volcanic rock. Pioneers used to ride these babies for miles."
-	icon = 'icons/obj/flora/waterflora.dmi'
 	icon_state = "bigwaterrock"
 	resistance_flags = FIRE_PROOF
 	density = TRUE
@@ -35,3 +35,13 @@
 /obj/structure/flora/aquatic/rock/pile/Initialize()
 	. = ..()
 	icon_state = "[initial(icon_state)][rand(1,2)]"
+
+/obj/structure/flora/aquatic/seaweed
+	name = "seaweed"
+	desc = "Some seaweed. It's not growing in sea and it's not weed, but it's still called seaweed."
+	icon_state = "seaweed"
+
+/obj/structure/flora/aquatic/seaweed/Initialize()
+	. = ..()
+	icon_state = "[initial(icon_state)][rand(1,3)]"
+

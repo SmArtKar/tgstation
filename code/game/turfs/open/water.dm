@@ -22,8 +22,8 @@
 	slowdown = 4 //We're swimming, not walking
 	layer = 1.98 //We need other turfs to be above it
 
-	var/flora_list = list(/obj/structure/flora/aquatic/rock = 1, /obj/structure/flora/aquatic/rock/pile = 1)
-	var/flora_prob = 4
+	var/flora_list = list(/obj/structure/flora/aquatic/rock = 1, /obj/structure/flora/aquatic/rock/pile = 1, /obj/structure/flora/aquatic/seaweed = 8)
+	var/flora_prob = 8
 
 /turf/open/water/jungle/ex_act(severity, target)
 	contents_explosion(severity, target)
@@ -125,15 +125,16 @@
 
 	for(var/thing in thing_to_check)
 		if(isobj(thing))
-			var/obj/O = thing
-			if(!(O.resistance_flags & (ON_FIRE)))
-				continue
-			O.extinguish()
 			. = 1
+			var/obj/O = thing
+			if(O.resistance_flags & (ON_FIRE))
+				O.extinguish()
+
 			if(istype(O, /obj/structure/closet))
 				var/obj/structure/closet/C = O
 				for(var/I in C.contents)
 					wet_stuff(I)
+
 		else if (isliving(thing))
 			. = 1
 			var/mob/living/L = thing
@@ -146,7 +147,13 @@
 
 			if(L.movement_type & FLYING)
 				continue
+
 			L.adjust_fire_stacks(-10 * delta_time)
+
+			if(L.mob_size <= MOB_SIZE_SMALL || L.body_position == LYING_DOWN) //Lying/small mobs choke in water
+				if(L.losebreath < 5)
+					L.losebreath = min(5, L.losebreath + 1)
+
 			for(var/obj/item/I in L)
 				wet_stuff(I)
 

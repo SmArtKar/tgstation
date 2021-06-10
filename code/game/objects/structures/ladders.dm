@@ -15,6 +15,8 @@
 	var/allow_up = TRUE
 	var/allow_down = TRUE
 
+	base_icon_state = "ladder"
+
 /obj/structure/ladder/Initialize(mapload, obj/structure/ladder/up, obj/structure/ladder/down)
 	..()
 	if (up && allow_up && up.allow_down)
@@ -65,7 +67,7 @@
 	up = down = null
 
 /obj/structure/ladder/update_icon_state()
-	icon_state = "ladder[up ? 1 : 0][down ? 1 : 0]"
+	icon_state = "[base_icon_state][up ? 1 : 0][down ? 1 : 0]"
 	return ..()
 
 /obj/structure/ladder/singularity_pull()
@@ -216,5 +218,61 @@
 /obj/structure/ladder/dirt_hole
 	name = "hole"
 	desc = "A hole in the ground. It's big enough for you to fit through."
-	icon_state = "cave_dirt"
+	icon_state = "cave_dirt11"
+	base_icon_state = "cave_dirt"
+	resistance_flags = INDESTRUCTIBLE
 	allow_up = FALSE
+	crafted = TRUE //So you can make ladders to climb back up
+
+/obj/structure/ladder/dirt_hole/use(mob/user, is_ghost=FALSE)
+	if (!is_ghost && !in_range(src, user))
+		return
+
+	to_chat(user, "<span class='notice'>You enter [src].</span>")
+
+	if(down)
+		travel(FALSE, user, is_ghost, down)
+	else
+		travel(FALSE, user, is_ghost, locate(x, y, z - 1))
+
+	if(!is_ghost)
+		add_fingerprint(user)
+
+/obj/structure/ladder/dirt_hole/travel(going_up, mob/user, is_ghost, atom/target)
+	if(!istype(target, /obj/structure/ladder))
+		if(!do_after(user, travel_time, target = src))
+			return
+		show_fluff_message(going_up, user)
+		var/turf/T = get_turf(target)
+		var/atom/movable/AM
+		if(user.pulling)
+			AM = user.pulling
+			AM.forceMove(T)
+		user.forceMove(T)
+		if(AM)
+			user.start_pulling(AM)
+		return
+
+	var/obj/structure/ladder/ladder = target
+
+	if(!is_ghost)
+		ladder.add_fingerprint(user)
+		if(!do_after(user, travel_time, target = src))
+			return
+		show_fluff_message(going_up, user)
+
+
+	var/turf/T = get_turf(ladder)
+	var/atom/movable/AM
+	if(user.pulling)
+		AM = user.pulling
+		AM.forceMove(T)
+	user.forceMove(T)
+	if(AM)
+		user.start_pulling(AM)
+
+	//reopening ladder radial menu ahead
+	T = get_turf(user)
+	var/obj/structure/ladder/ladder_structure = locate() in T
+	if (ladder_structure)
+		ladder_structure.use(user)

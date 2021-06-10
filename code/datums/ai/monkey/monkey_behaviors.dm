@@ -131,7 +131,7 @@
 			break
 
 	if(target)
-		walk_away(living_pawn, target, MONKEY_ENEMY_VISION, 5)
+		walk_away(living_pawn, target, controller.blackboard[BB_MONKEY_ENEMY_VISION], 5)
 	else
 		finish_action(controller, TRUE)
 
@@ -275,7 +275,7 @@
 	controller.blackboard[BB_MONKEY_RECRUIT_COOLDOWN] = world.time + MONKEY_RECRUIT_COOLDOWN
 	var/mob/living/living_pawn = controller.pawn
 
-	for(var/mob/living/L in view(living_pawn, MONKEY_ENEMY_VISION))
+	for(var/mob/living/L in view(living_pawn, controller.blackboard[BB_MONKEY_ENEMY_VISION]))
 		if(!HAS_AI_CONTROLLER_TYPE(L, /datum/ai_controller/monkey))
 			continue
 

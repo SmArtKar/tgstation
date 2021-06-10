@@ -36,6 +36,7 @@
 #define BB_MONKEY_DISPOSING "BB_monkey_disposing"
 #define BB_MONKEY_RECRUIT_COOLDOWN "BB_monkey_recruit_cooldown"
 #define BB_MONKEY_NEXT_HUNGRY "BB_monkey_next_hungry"
+#define BB_MONKEY_ENEMY_VISION "BB_monkey_enemy_vision"
 
 
 ///Haunted item controller defines

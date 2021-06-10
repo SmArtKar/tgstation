@@ -18,7 +18,8 @@ have ways of interacting with a specific mob and control it.
 		BB_MONKEY_CURRENT_ATTACK_TARGET = null,
 		BB_MONKEY_GUN_NEURONS_ACTIVATED = FALSE,
 		BB_MONKEY_GUN_WORKED = TRUE,
-		BB_MONKEY_NEXT_HUNGRY = 0
+		BB_MONKEY_NEXT_HUNGRY = 0,
+		BB_MONKEY_ENEMY_VISION = MONKEY_ENEMY_VISION
 	)
 
 /datum/ai_controller/monkey/angry
@@ -28,6 +29,16 @@ have ways of interacting with a specific mob and control it.
 	if(. & AI_CONTROLLER_INCOMPATIBLE)
 		return
 	blackboard[BB_MONKEY_AGRESSIVE] = TRUE //Angry cunt
+
+/datum/ai_controller/monkey/jungle
+
+/datum/ai_controller/monkey/jungle/TryPossessPawn(atom/new_pawn)
+	. = ..()
+	if(. & AI_CONTROLLER_INCOMPATIBLE)
+		return
+	if(prob(35))
+		blackboard[BB_MONKEY_AGRESSIVE] = TRUE
+	blackboard[BB_MONKEY_ENEMY_VISION] = JUNGLE_MONKEY_ENEMY_VISION
 
 /datum/ai_controller/monkey/TryPossessPawn(atom/new_pawn)
 	if(!isliving(new_pawn))
@@ -84,7 +95,7 @@ have ways of interacting with a specific mob and control it.
 	var/mob/living/selected_enemy
 	if(length(enemies) || blackboard[BB_MONKEY_AGRESSIVE]) //We have enemies or are pissed
 		var/list/valids = list()
-		for(var/mob/living/possible_enemy in view(MONKEY_ENEMY_VISION, living_pawn))
+		for(var/mob/living/possible_enemy in view(blackboard[BB_MONKEY_ENEMY_VISION], living_pawn))
 			if(possible_enemy == living_pawn || (!enemies[possible_enemy] && (!blackboard[BB_MONKEY_AGRESSIVE] || HAS_AI_CONTROLLER_TYPE(possible_enemy, /datum/ai_controller/monkey)))) //Are they an enemy? (And do we even care?)
 				continue
 			// Weighted list, so the closer they are the more likely they are to be chosen as the enemy
@@ -111,7 +122,7 @@ have ways of interacting with a specific mob and control it.
 				return //Focus on this
 
 			else //He's down, can we disposal him?
-				var/obj/machinery/disposal/bodyDisposal = locate(/obj/machinery/disposal/) in view(MONKEY_ENEMY_VISION, living_pawn)
+				var/obj/machinery/disposal/bodyDisposal = locate(/obj/machinery/disposal/) in view(blackboard[BB_MONKEY_ENEMY_VISION], living_pawn)
 				if(bodyDisposal)
 					blackboard[BB_MONKEY_CURRENT_ATTACK_TARGET] = selected_enemy
 					blackboard[BB_MONKEY_TARGET_DISPOSAL] = bodyDisposal

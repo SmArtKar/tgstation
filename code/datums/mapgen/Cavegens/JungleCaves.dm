@@ -4,8 +4,8 @@
 	open_turf_types =  list(/turf/open/floor/plating/dirt/jungle = 1)
 	closed_turf_types =  list(/turf/closed/mineral/random/jungle = 1)
 
-	/*mob_spawn_list = list()
-	megafauna_spawn_list = list()*/
+	mob_spawn_list = list(/obj/effect/spawner/jungle/cave_mob_spawner) //We use a single spawner so it can separate water and land mobs
+	//megafauna_spawn_list = list()
 	flora_spawn_list = list(/obj/structure/flora/rock = 2, /obj/structure/flora/rock/pile = 4, /obj/structure/flora/grass/jungle/b = 2, /obj/structure/flora/rock/jungle = 1)
 	//feature_spawn_list = list()
 
@@ -90,15 +90,18 @@
 						picked_mob = pickweight(mob_spawn_list - SPAWN_MEGAFAUNA)
 
 				for(var/thing in urange(12, new_open_turf))
-					if(!ishostile(thing) && !istype(thing, /obj/structure/spawner))
+					if(!ishostile(thing) && !istype(thing, /obj/effect/spawner))
 						continue
 					if((ispath(picked_mob, /mob/living/simple_animal/hostile/megafauna) || ismegafauna(thing)) && get_dist(new_open_turf, thing) <= 7)
 						can_spawn = FALSE
 						break
-					if(ispath(picked_mob, /mob/living/simple_animal/hostile/asteroid) || istype(thing, /mob/living/simple_animal/hostile/asteroid))
+					if(ispath(picked_mob, /mob/living/simple_animal/hostile/jungle) || istype(thing, /mob/living/simple_animal/hostile/jungle))
 						can_spawn = FALSE
 						break
-					if((ispath(picked_mob, /obj/structure/spawner/lavaland) || istype(thing, /obj/structure/spawner/lavaland)) && get_dist(new_open_turf, thing) <= 2)
+					if((ispath(picked_mob, /obj/effect/spawner/jungle) || istype(thing, /obj/effect/spawner/jungle)) && get_dist(new_open_turf, thing) <= 5)
+						can_spawn = FALSE
+						break
+					if((ispath(picked_mob, /obj/structure/spawner) || istype(thing, /obj/structure/spawner)) && get_dist(new_open_turf, thing) <= 2)
 						can_spawn = FALSE
 						break
 

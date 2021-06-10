@@ -19,14 +19,20 @@
 
 /mob/living/carbon/human/species/monkey/angry
 	ai_controller = /datum/ai_controller/monkey/angry
+	var/hatless = FALSE
 
 /mob/living/carbon/human/species/monkey/angry/Initialize()
 	. = ..()
-	if(prob(10))
+	if(prob(10) && !hatless)
 		var/obj/item/clothing/head/helmet/justice/escape/helmet = new(src)
 		equip_to_slot_or_del(helmet,ITEM_SLOT_HEAD)
 		helmet.attack_self(src) // todo encapsulate toggle
 
+/mob/living/carbon/human/species/monkey/angry/jungle
+	hatless = TRUE
+	faction = list("jungle")
+	weather_immunities = list(ACID) //Evolved or something, I dunno
+	ai_controller = /datum/ai_controller/monkey/jungle
 
 /mob/living/carbon/human/species/monkey/punpun //except for a few special persistence features, pun pun is just a normal monkey
 	name = "Pun Pun" //C A N O N

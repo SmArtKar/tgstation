@@ -14,3 +14,21 @@
 	see_in_dark = 4
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	mob_size = MOB_SIZE_LARGE
+
+/obj/effect/spawner/jungle/cave_mob_spawner
+	name = "cave mob spawner"
+	var/land_mobs = list(/obj/effect/spawner/jungle/cave_spider_nest = 3, /obj/effect/spawner/jungle/cave_bat_nest = 5)
+	var/water_most = list()
+
+/obj/effect/spawner/jungle/cave_mob_spawner/Initialize()
+	. = ..()
+	if(istype(get_turf(src), /turf/open/water/jungle))
+		if(LAZYLEN(water_most))
+			var/spawn_type = pickweight(water_most)
+			new spawn_type(get_turf(src))
+		return INITIALIZE_HINT_QDEL
+
+	if(LAZYLEN(land_mobs))
+		var/spawn_type = pickweight(land_mobs)
+		new spawn_type(get_turf(src))
+	return INITIALIZE_HINT_QDEL

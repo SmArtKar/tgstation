@@ -56,10 +56,10 @@
 	. = ..()
 	if(genetic)
 		return
-	if(istype(mover, /mob/living/simple_animal/hostile/giant_spider))
+	if(isspider(mover))
 		return TRUE
 	else if(isliving(mover))
-		if(istype(mover.pulledby, /mob/living/simple_animal/hostile/giant_spider))
+		if(isspider(mover))
 			return TRUE
 		if(prob(50))
 			to_chat(mover, "<span class='danger'>You get stuck in \the [src] for a moment.</span>")
