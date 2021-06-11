@@ -10,11 +10,11 @@
 	. = ..()
 	if(!proximity)
 		return
-	var/obj/item/organ/regenerative_core/C = M
-	if(!istype(C, /obj/item/organ/regenerative_core))
+	if(!istype(M, /obj/item/organ/regenerative_core))
 		to_chat(user, "<span class='warning'>The stabilizer only works on certain types of monster organs, generally regenerative in nature.</span>")
 		return
 
+	var/obj/item/organ/regenerative_core/C = M
 	C.preserved()
 	to_chat(user, "<span class='notice'>You inject the [M] with the stabilizer. It will no longer go inert.</span>")
 	qdel(src)
@@ -121,13 +121,13 @@
 	update_appearance()
 
 /obj/item/organ/regenerative_core/update_icon_state()
-	icon_state = inert ? "legion_soul_inert" : "legion_soul"
+	icon_state = inert ? "[initial(icon_state)]_inert" : initial(icon_state)
 	return ..()
 
 /obj/item/organ/regenerative_core/update_overlays()
 	. = ..()
 	if(!inert && !preserved)
-		. += "legion_soul_crackle"
+		. += "[initial(icon_state)]_crackle"
 
 /obj/item/organ/regenerative_core/legion/go_inert()
 	..()

@@ -33,6 +33,9 @@
 	stat_attack = HARD_CRIT
 	robust_searching = TRUE
 	speak_emote = list("squeaks")
+	crusher_drop_mod = 2.5 //They spawn in large amounts, up to 11 in a pack.
+	crusher_loot = /obj/item/crusher_trophy/bat_wing
+	butcher_results = list(/obj/item/food/meat/slab = 1, /obj/item/stack/sheet/sinew/bat = 1, /obj/item/stack/sheet/bone = 1)
 
 /mob/living/simple_animal/hostile/jungle/bat/Initialize()
 	. = ..()
@@ -80,3 +83,22 @@
 			new /mob/living/simple_animal/hostile/jungle/bat(T)
 
 	return INITIALIZE_HINT_QDEL
+
+/obj/item/crusher_trophy/bat_wing //Basically an alternative version of demon claws that requires you to detonate your mark first and doesn't give x5 effect on mark detonation, but you get more healing and also regenerate your blood.
+	name = "cave bat wing"
+	desc = "A wing of some bat. Suitable as a trophy for a kinetic crusher."
+	icon_state = "bat_wing"
+	denied_type = /obj/item/crusher_trophy/bat_wing
+
+/obj/item/crusher_trophy/bat_wing/effect_desc()
+	return "mark detonation to apply a bloody mark to the target. For each hit you land at the marked creature will regenerate some of your health and blood."
+
+/obj/item/crusher_trophy/bat_wing/on_mark_detonation(mob/living/target, mob/living/user)
+	target.apply_status_effect(STATUS_EFFECT_BLOODYMARK)
+
+/obj/item/crusher_trophy/demon_claws/on_melee_hit(mob/living/target, mob/living/user)
+	if(target.has_status_effect(STATUS_EFFECT_BLOODYMARK))
+		user.heal_ordered_damage(3, list(BRUTE, BURN, OXY))
+		if(iscarbon(user))
+			var/mob/living/carbon/carbie = user
+			carbie.blood_volume += carbie.blood_volume >= BLOOD_VOLUME_NORMAL ? 0 : 10

@@ -64,3 +64,6 @@
 		adjustBruteLoss(-2)
 	else
 		return ..()
+
+/mob/living/simple_animal/hostile/retaliate/snake/jungle
+	faction = list("jungle")

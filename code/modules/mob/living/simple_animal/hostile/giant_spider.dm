@@ -605,7 +605,9 @@
 	minbodytemp = 0
 	maxbodytemp = 1500
 	poison_type = /datum/reagent/consumable/frostoil
-	color = rgb(114,228,250)
+	icon_state = "guard_ice"
+	icon_living = "guard_ice"
+	icon_dead = "guard_ice_dead"
 	gold_core_spawnable = NO_SPAWN
 	menu_description = "Versatile ice spider variant for frontline combat. Jack of all trades, master of none. Immune to temperature damage. Does not inject frost oil."
 
@@ -622,7 +624,9 @@
 	minbodytemp = 0
 	maxbodytemp = 1500
 	poison_type = /datum/reagent/consumable/frostoil
-	color = rgb(114,228,250)
+	icon_state = "nurse_ice"
+	icon_living = "nurse_ice"
+	icon_dead = "nurse_ice_dead"
 	menu_description = "Support ice spider variant specializing in healing their brethren and placing webbings swiftly, but has very low amount of health and deals low damage. Immune to temperature damage. Frost oil injection of 3u per bite."
 
 /**
@@ -638,7 +642,9 @@
 	minbodytemp = 0
 	maxbodytemp = 1500
 	poison_type = /datum/reagent/consumable/frostoil
-	color = rgb(114,228,250)
+	icon_state = "hunter_ice"
+	icon_living = "hunter_ice"
+	icon_dead = "hunter_ice_dead"
 	gold_core_spawnable = NO_SPAWN
 	menu_description = "Fast ice spider variant specializing in catching running prey, but has less health. Immune to temperature damage. Frost oil injection of 10u per bite."
 
@@ -659,6 +665,9 @@
 	desc = "Furry and black, it makes you shudder to look at it. This one has sparkling purple eyes, and looks abnormally thin and frail."
 	menu_description = "Fast spider variant specializing in catching running prey, but has less damage than a normal hunter spider at the cost of more health. Toxin injection of 10u per bite."
 
+/mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle
+	faction = list("jungle")
+
 /**
  * # Scrawny Tarantula
  *
@@ -675,6 +684,9 @@
 	melee_damage_upper = 25
 	desc = "Furry and black, it makes you shudder to look at it. This one has abyssal red eyes, and looks abnormally thin and frail."
 	menu_description = "A weaker variant of the tarantula with reduced amount of health and damage, very slow when not on webbing. It also has a charge ability to close distance with a target after a small windup. Does not inject toxin."
+
+/mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle
+	faction = list("jungle")
 
 /**
  * # Scrawny Nurse Spider

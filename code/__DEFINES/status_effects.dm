@@ -25,6 +25,8 @@
 
 #define STATUS_EFFECT_BLOODDRUNK /datum/status_effect/blooddrunk //Stun immunity and greatly reduced damage taken
 
+#define STATUS_EFFECT_ACID_SACK /datum/status_effect/acid_sack //Alternative to blood drunk.
+
 #define STATUS_EFFECT_FLESHMEND /datum/status_effect/fleshmend //Very fast healing; suppressed by fire, and heals less fire damage
 
 #define STATUS_EFFECT_EXERCISED /datum/status_effect/exercised //Prevents heart disease
@@ -34,6 +36,8 @@
 #define STATUS_EFFECT_GOOD_MUSIC /datum/status_effect/good_music
 
 #define STATUS_EFFECT_REGENERATIVE_CORE /datum/status_effect/regenerative_core
+
+#define STATUS_EFFECT_SUN_CORE /datum/status_effect/regenerative_core/shining_core //Seedlings are much harder to kill and they can't be farmed, so core effect is stronger as well.
 
 #define STATUS_EFFECT_ANTIMAGIC /datum/status_effect/antimagic //grants antimagic (and reapplies if lost) for the duration
 
@@ -113,6 +117,8 @@
 /// Makes the mob move randomly.
 /// Read the documentation for /datum/status_effect/confusion for more information.
 #define STATUS_EFFECT_CONFUSION /datum/status_effect/confusion
+
+#define STATUS_EFFECT_BLOODYMARK /datum/status_effect/bloody_mark
 
 /////////////
 // NEUTRAL //

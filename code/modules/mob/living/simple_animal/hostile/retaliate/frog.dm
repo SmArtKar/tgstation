@@ -54,3 +54,6 @@
 		var/mob/living/L = AM
 		if(L.mob_size > MOB_SIZE_TINY)
 			playsound(src, stepped_sound, 50, TRUE)
+
+/mob/living/simple_animal/hostile/retaliate/frog/jungle
+	faction = list("jungle")

@@ -28,7 +28,7 @@
 	resistance_flags = LAVA_PROOF | FIRE_PROOF
 
 /datum/crafting_recipe/oar
-	name = "Goliath Bone Oar"
+	name = "Bone Oar"
 	result = /obj/item/oar
 	reqs = list(/obj/item/stack/sheet/bone = 2)
 	time = 15
@@ -49,10 +49,21 @@
 	resistance_flags = FREEZE_PROOF
 	can_buckle = TRUE
 
+/obj/vehicle/ridden/lavaboat/jungle
+	name = "boat"
+	desc = "A boat made out of snakeman hide. It's quite durable and will hold against any acid rains."
+	resistance_flags = ACID_PROOF
+	allowed_turf = /turf/open/water
+
 /datum/crafting_recipe/boat/plasma
 	name = "Polar Bear Hide Boat"
 	result = /obj/vehicle/ridden/lavaboat/plasma
 	reqs = list(/obj/item/stack/sheet/animalhide/goliath_hide/polar_bear_hide = 3)
+
+/datum/crafting_recipe/boat/jungle
+	name = "Snakeman Hide Boat"
+	result = /obj/vehicle/ridden/lavaboat/jungle
+	reqs = list(/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide = 3)
 
 //Dragon Boat
 

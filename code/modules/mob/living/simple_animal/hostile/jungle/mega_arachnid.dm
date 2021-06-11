@@ -10,8 +10,9 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BUG
 	melee_damage_lower = 30
 	melee_damage_upper = 30
-	maxHealth = 300
-	health = 300
+	butcher_results = list(/obj/item/food/meat/slab/xeno = 4, /obj/item/stack/sheet/bone = 4)
+	maxHealth = 350
+	health = 350
 	speed = 1
 	ranged = 1
 	pixel_x = -16
@@ -27,6 +28,8 @@
 	alpha = 50
 
 	footstep_type = FOOTSTEP_MOB_CLAW
+
+	crusher_loot = /obj/item/crusher_trophy/acid_sack
 
 /mob/living/simple_animal/hostile/jungle/mega_arachnid/Life(delta_time = SSMOBS_DT, times_fired)
 	..()
@@ -69,3 +72,32 @@
 	flags_1 = NONE
 	icon_state = "tentacle_end"
 	icon = 'icons/obj/guns/projectiles.dmi'
+
+/obj/item/crusher_trophy/acid_sack //Blood-drunk eye analogue. Works slightly different
+	name = "acid sack"
+	desc = "A still pulsing sack full of acidic blood. Suitable as a trophy for a kinetic crusher."
+	icon_state = "acid_sack"
+	denied_type = /obj/item/crusher_trophy/acid_sack
+
+/obj/item/crusher_trophy/acid_sack/effect_desc()
+	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer."
+
+/obj/item/crusher_trophy/acid_sack/on_mark_detonation(mob/living/target, mob/living/user)
+	user.apply_status_effect(STATUS_EFFECT_ACID_SACK)
+
+/obj/item/crusher_trophy/acid_sack/on_melee_hit(mob/living/target, mob/living/user)
+	var/datum/status_effect/acid_sack/C = user.has_status_effect(STATUS_EFFECT_ACID_SACK)
+	if(C)
+		C.duration += 0.5 SECONDS //Not enough time to infinitely stack it.
+
+/obj/item/crusher_trophy/acid_sack/add_to(obj/item/kinetic_crusher/H, mob/living/user)
+	for(var/t in H.trophies)
+		var/obj/item/crusher_trophy/T = t
+		if(istype(T, denied_type) || istype(T, /obj/item/crusher_trophy/axe_head) || istype(src, T.denied_type))	//Conflicts with Axe Head. I don't want them to stack sack effect infinitely
+			to_chat(user, "<span class='warning'>You can't seem to attach [src] to [H]. Maybe remove a few trophies?</span>")
+			return FALSE
+	if(!user.transferItemToLoc(src, H))
+		return
+	H.trophies += src
+	to_chat(user, "<span class='notice'>You attach [src] to [H].</span>")
+	return TRUE

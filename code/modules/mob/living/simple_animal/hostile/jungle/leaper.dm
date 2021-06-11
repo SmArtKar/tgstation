@@ -11,8 +11,8 @@
 	icon_living = "leaper"
 	icon_dead = "leaper_dead"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
-	maxHealth = 300
-	health = 300
+	maxHealth = 460
+	health = 460
 	ranged = TRUE
 	projectiletype = /obj/projectile/leaper
 	projectilesound = 'sound/weapons/pierce.ogg'
@@ -28,6 +28,8 @@
 	var/projectile_ready = FALSE //Stopping AI leapers from firing whenever they want, and only doing it after a hop has finished instead
 
 	footstep_type = FOOTSTEP_MOB_HEAVY
+
+	crusher_loot = /obj/item/crusher_trophy/leaper_eye
 
 /obj/projectile/leaper
 	name = "leaper bubble"
@@ -136,6 +138,13 @@
 	pixel_y = -32
 	base_pixel_y = -32
 	duration = 30
+
+/obj/effect/temp_visual/leaper_crush_small
+	name = "grim tidings"
+	desc = "Incoming miner!"
+	layer = BELOW_MOB_LAYER
+	icon_state = "lily_pad"
+	duration = 1 SECONDS //A bit faster
 
 /mob/living/simple_animal/hostile/jungle/leaper/Initialize()
 	. = ..()
@@ -272,5 +281,50 @@
 			icon_state = "leaper_alert"
 			return
 	icon_state = "leaper"
+
+/obj/item/crusher_trophy/leaper_eye //My favorite out of normal jungle mobs
+	name = "leaper eye"
+	desc = "A blood-red eye of a leaper. Suitable as a trophy for a kinetic crusher."
+	icon_state = "leaper_eye"
+	denied_type = /obj/item/crusher_trophy/leaper_eye
+	var/jump_cooldown = 0
+
+/obj/item/crusher_trophy/leaper_eye/effect_desc()
+	return "ranged right click attacks to make you jump onto your target instead. This ability has a cooldown of 10 seconds."
+
+/obj/item/crusher_trophy/leaper_eye/on_right_click(atom/target, mob/living/user)
+	if(jump_cooldown > world.time)
+		to_chat(user, "<span class='warning'>[src] hasn't fully recovered from the previous jump! Wait [round((jump_cooldown - world.time) / 10)] more seconds!</span>")
+		return
+
+	if(isclosedturf(target) || isclosedturf(get_turf(target)))
+		return
+
+	jump_cooldown = world.time + 10 SECONDS
+	new /obj/effect/temp_visual/leaper_crush_small(get_turf(target))
+	addtimer(CALLBACK(src, .proc/jump, target, user), 1 SECONDS)
+
+/obj/item/crusher_trophy/leaper_eye/proc/jump(atom/target, mob/living/user)
+	var/old_density = user.density
+	user.density = FALSE
+	throw_at(user, get_dist(user, target), 1, user, FALSE, callback = CALLBACK(src, .proc/crush, target, user, old_density))
+
+/obj/item/crusher_trophy/leaper_eye/proc/crush(atom/target, mob/living/user, old_density)
+	playsound(user, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+	user.density = old_density
+	var/new_turf = get_turf(user)
+	for(var/mob/living/victim in new_turf)
+		if(victim == user)
+			continue
+		victim.adjustBruteLoss(35)
+		if(!QDELETED(victim)) // Some mobs are deleted on death
+			var/throw_dir = get_dir(user, victim)
+			if(victim.loc == loc)
+				throw_dir = pick(GLOB.alldirs)
+			var/throwtarget = get_edge_target_turf(user, throw_dir)
+			victim.throw_at(throwtarget, 3, 1)
+			visible_message("<span class='warning'>[victim] is thrown clear of [user]!</span>")
+
+	jump_cooldown = world.time + 10 SECONDS
 
 #undef PLAYER_HOP_DELAY

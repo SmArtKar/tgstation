@@ -83,6 +83,7 @@
 
 	//Headset for Poly to yell at engineers :)
 	var/obj/item/radio/headset/ears = null
+	var/no_headset = FALSE
 
 	//The thing the parrot is currently interested in. This gets used for items the parrot wants to pick up, mobs it wants to steal from,
 	//mobs it wants to attack or mobs that have attacked it
@@ -110,7 +111,7 @@
 
 /mob/living/simple_animal/parrot/Initialize()
 	. = ..()
-	if(!ears)
+	if(!ears && !no_headset)
 		var/headset = pick(/obj/item/radio/headset/headset_sec, \
 						/obj/item/radio/headset/headset_eng, \
 						/obj/item/radio/headset/headset_med, \
@@ -1003,3 +1004,8 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 	H.ForceContractDisease(P, FALSE)
 	parrot_interest = null
 	H.visible_message("<span class='danger'>[src] dive bombs into [H]'s chest and vanishes!</span>", "<span class='userdanger'>[src] dive bombs into your chest, vanishing! This can't be good!</span>")
+
+/mob/living/simple_animal/parrot/jungle //They start without a headset
+	no_headset = TRUE
+	speak_chance = 0 //No spam
+	faction = list("jungle")

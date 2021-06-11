@@ -15,16 +15,52 @@
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	mob_size = MOB_SIZE_LARGE
 
+	var/crusher_loot
+	var/crusher_drop_mod = 25
+	var/throw_message = "bounces off of"
+
+/mob/living/simple_animal/hostile/jungle/bullet_act(obj/projectile/P)//Reduces damage from laser projectiles to curb off-screen kills. If some rogue miner brings them to the station they still can be killed with shotguns and WTs
+	if(!stat)
+		Aggro()
+
+	if(P.damage < 30 && P.damage_type != BRUTE)
+		P.damage = (P.damage / 3)
+		visible_message("<span class='danger'>[P] has a reduced effect on [src]!</span>")
+	. = ..()
+
+/mob/living/simple_animal/hostile/jungle/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum) //No floor tiling them to death, wiseguy
+	if(istype(AM, /obj/item))
+		var/obj/item/T = AM
+		if(!stat)
+			Aggro()
+		if(T.throwforce <= 20)
+			visible_message("<span class='notice'>The [T.name] [throw_message] [src.name]!</span>")
+			return
+	. = ..()
+
+/mob/living/simple_animal/hostile/jungle/death(gibbed)
+	SSblackbox.record_feedback("tally", "mobs_killed_mining", 1, type)
+	var/datum/status_effect/crusher_damage/C = has_status_effect(STATUS_EFFECT_CRUSHERDAMAGETRACKING)
+	if(C && crusher_loot && prob((C.total_damage/maxHealth) * crusher_drop_mod)) //on average, you'll need to kill 4 creatures before getting the item
+		spawn_crusher_loot()
+	..(gibbed)
+
+/mob/living/simple_animal/hostile/jungle/proc/spawn_crusher_loot()
+	if(butcher_results && LAZYLEN(butcher_results))
+		butcher_results[crusher_loot] = 1
+	else
+		loot[crusher_loot] = 1
+
 /obj/effect/spawner/jungle/cave_mob_spawner
 	name = "cave mob spawner"
-	var/land_mobs = list(/obj/effect/spawner/jungle/cave_spider_nest = 3, /obj/effect/spawner/jungle/cave_bat_nest = 5)
-	var/water_most = list()
+	var/land_mobs = list(/obj/effect/spawner/jungle/cave_spider_nest = 3, /obj/effect/spawner/jungle/cave_bat_nest = 5, /mob/living/simple_animal/hostile/jungle/snakeman = 4, /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle = 2, /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle = 1, /mob/living/simple_animal/hostile/jungle/mega_arachnid = 1)
+	var/water_mobs = list(/mob/living/simple_animal/hostile/retaliate/snake/jungle = 3, /mob/living/simple_animal/hostile/retaliate/frog/jungle = 2)
 
 /obj/effect/spawner/jungle/cave_mob_spawner/Initialize()
 	. = ..()
 	if(istype(get_turf(src), /turf/open/water/jungle))
-		if(LAZYLEN(water_most))
-			var/spawn_type = pickweight(water_most)
+		if(LAZYLEN(water_mobs))
+			var/spawn_type = pickweight(water_mobs)
 			new spawn_type(get_turf(src))
 		return INITIALIZE_HINT_QDEL
 

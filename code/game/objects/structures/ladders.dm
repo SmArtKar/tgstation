@@ -224,6 +224,13 @@
 	allow_up = FALSE
 	crafted = TRUE //So you can make ladders to climb back up
 
+/obj/structure/ladder/dirt_hole/LateInitialize()
+	. = ..()
+	var/turf/bottom_turf = locate(x, y, z - 1)
+	if(bottom_turf && istype(bottom_turf, /turf/closed/mineral))
+		var/turf/closed/mineral/rock = bottom_turf
+		rock.gets_drilled()
+
 /obj/structure/ladder/dirt_hole/use(mob/user, is_ghost=FALSE)
 	if (!is_ghost && !in_range(src, user))
 		return

@@ -110,3 +110,8 @@
 	if(oogas >= rand(2,6))
 		playsound(src, 'sound/creatures/gorilla.ogg', 50)
 		oogas = 0
+
+/mob/living/simple_animal/hostile/gorilla/jungle //Evolved or something, dunno
+	aggro_vision_range = 5
+	faction = list("jungle")
+	weather_immunities = list(ACID)

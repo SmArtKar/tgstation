@@ -25,7 +25,6 @@
 	unsuitable_heat_damage = 10
 	melee_damage_lower = 20
 	melee_damage_upper = 20
-	combat_mode = TRUE
 	faction = list("jungle", "spiders")
 	pass_flags = PASSTABLE
 	move_to_delay = 2
@@ -39,9 +38,16 @@
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	ranged = TRUE
 	projectiletype = /obj/projectile/cave_spider_web
+	crusher_drop_mod = 10 //They spawn in packs
+	crusher_loot = /obj/item/crusher_trophy/spider_webweaver
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/OpenFire(atom/targeting)
 	if(get_dist(src, targeting) > WEB_DISTANCE)
+		return
+
+	if(prob(100 - health / maxHealth))
+		throw_at(targeting, WEB_DISTANCE, 2, src, FALSE, TRUE)
+		visible_message("<span class='danger'>[src] jumps at [targeting]!</span>")
 		return
 
 	. = ..()
@@ -64,7 +70,7 @@
 		if(isliving(targeted))
 			var/mob/living/L = targeted
 			L.Paralyze(2 SECONDS)
-			targeted.throw_at(firer, WEB_DISTANCE, 2, firer, FALSE, TRUE)
+			L.throw_at(firer, WEB_DISTANCE, 2, firer, FALSE, TRUE)
 		QDEL_IN(web, 3 SECONDS)
 
 /obj/effect/ebeam/web
@@ -133,5 +139,38 @@
 			new /obj/structure/spider/stickyweb(T)
 
 	return INITIALIZE_HINT_QDEL
+
+/obj/item/crusher_trophy/spider_webweaver //A bit weaker than normal cave spider attack
+	name = "cave spider's web weaver"
+	desc = "A ripped off web weaver. Suitable as a trophy for a kinetic crusher."
+	icon_state = "spider_webweaver"
+	denied_type = /obj/item/crusher_trophy/spider_webweaver
+	var/web_shot = FALSE
+
+/obj/item/crusher_trophy/spider_webweaver/effect_desc()
+	return "mark detonation to turn next shot into a ball of web that will stun enemies and pull them at you upon hit."
+
+/obj/item/crusher_trophy/spider_webweaver/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
+	if(web_shot)
+		marker.name = "webbed [marker.name]"
+		marker.icon_state = "webball"
+		RegisterSignal(marker, COMSIG_PROJECTILE_ON_HIT, .proc/projectile_hit)
+		web_shot = FALSE
+
+/obj/item/crusher_trophy/spider_webweaver/on_mark_detonation(mob/living/target, mob/living/user)
+	web_shot = TRUE
+	addtimer(CALLBACK(src, .proc/reset_web_shot), 300, TIMER_UNIQUE|TIMER_OVERRIDE)
+
+/obj/item/crusher_trophy/spider_webweaver/proc/reset_web_shot()
+	web_shot = FALSE
+
+/obj/item/crusher_trophy/spider_webweaver/proc/projectile_hit(atom/fired_from, atom/movable/firer, atom/target, Angle)
+	SIGNAL_HANDLER
+	if(isliving(target))
+		var/mob/living/L = target
+		L.Paralyze(2 SECONDS)
+		L.throw_at(firer, WEB_DISTANCE, 1, firer, FALSE, TRUE)
+		var/datum/beam/web = firer.Beam(target, icon_state = "web")
+		QDEL_IN(web, 3 SECONDS)
 
 #undef WEB_DISTANCE

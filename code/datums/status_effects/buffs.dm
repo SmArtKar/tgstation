@@ -141,6 +141,47 @@
 	if(islist(owner.stun_absorption) && owner.stun_absorption["blooddrunk"])
 		owner.stun_absorption -= "blooddrunk"
 
+/datum/status_effect/acid_sack //Lower damage protection but normal hits reset the timer so if you want you can trade mark detonation damage to protection.
+	id = "acid_sack"
+	duration = 15
+	tick_interval = 0
+	alert_type = /atom/movable/screen/alert/status_effect/acid_sack
+
+/atom/movable/screen/alert/status_effect/acid_sack
+	name = "Acidic Blood"
+	desc = "A bunch of acidic blood was injected into your veins, making you stronger!"
+	icon_state = "acid_sack"
+
+/datum/status_effect/acid_sack/on_apply()
+	. = ..()
+	if(.)
+		ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, BLOODDRUNK_TRAIT) //Let's just use blood drunk trait not to create too many of those
+		if(ishuman(owner))
+			var/mob/living/carbon/human/H = owner
+			H.physiology.brute_mod *= 0.5
+			H.physiology.burn_mod *= 0.5
+			H.physiology.tox_mod *= 0.5
+			H.physiology.oxy_mod *= 0.5
+			H.physiology.clone_mod *= 0.5
+			H.physiology.stamina_mod *= 0.5
+		owner.log_message("gained acid sack stun immunity", LOG_ATTACK)
+		owner.add_stun_absorption("acid_sack", INFINITY, 4)
+		owner.playsound_local(get_turf(owner), 'sound/effects/singlebeat.ogg', 40, 1, use_reverb = FALSE)
+
+/datum/status_effect/acid_sack/on_remove()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.physiology.brute_mod *= 2
+		H.physiology.burn_mod *= 2
+		H.physiology.tox_mod *= 2
+		H.physiology.oxy_mod *= 2
+		H.physiology.clone_mod *= 2
+		H.physiology.stamina_mod *= 2
+	owner.log_message("lost acid sack stun immunity", LOG_ATTACK)
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, BLOODDRUNK_TRAIT);
+	if(islist(owner.stun_absorption) && owner.stun_absorption["acid_sack"])
+		owner.stun_absorption -= "acid_sack"
+
 /datum/status_effect/sword_spin
 	id = "Bastard Sword Spin"
 	duration = 50
@@ -323,6 +364,11 @@
 	desc = "You can move faster than your broken body could normally handle!"
 	icon_state = "regenerative_core"
 
+/atom/movable/screen/alert/status_effect/shining_core
+	name = "Shining Power"
+	desc = "Shining core allows you to move as fast as you possibly could!"
+	icon_state = "shining_core"
+
 /datum/status_effect/regenerative_core
 	id = "Regenerative Core"
 	duration = 1 MINUTES
@@ -342,6 +388,22 @@
 
 /datum/status_effect/regenerative_core/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+
+/datum/status_effect/regenerative_core/shining_core //Longer effect, more healing, prevents softcrit. But hey, killing seedlings is much harder than killing legions.
+	id = "Shining Core"
+	duration = 2 MINUTES
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = /atom/movable/screen/alert/status_effect/shining_core
+
+/datum/status_effect/regenerative_core/shining_core/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_NOSOFTCRIT, STATUS_EFFECT_TRAIT)
+	owner.adjustBruteLoss(-25)
+	owner.adjustFireLoss(-25)
+
+/datum/status_effect/regenerative_core/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_NOSOFTCRIT, STATUS_EFFECT_TRAIT)
 
 /datum/status_effect/antimagic
 	id = "antimagic"

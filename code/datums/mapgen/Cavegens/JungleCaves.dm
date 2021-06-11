@@ -1,5 +1,3 @@
-#define GRASS_GEN_LIGHT 0.7
-
 /datum/map_generator/cave_generator/jungle
 	open_turf_types =  list(/turf/open/floor/plating/dirt/jungle = 1)
 	closed_turf_types =  list(/turf/closed/mineral/random/jungle = 1)
@@ -10,9 +8,10 @@
 	//feature_spawn_list = list()
 
 	flora_spawn_chance = 4
+	mob_spawn_chance = 6
 
 	var/special_turfs = list(/turf/open/floor/plating/grass/jungle = 2, /turf/open/floor/plating/grass/jungle/green = 1, /turf/open/floor/plating/dirt/jungle/wasteland = 1)
-	var/special_turf_chance = 5
+	var/special_turf_chance = 0 //Currently set to 0, maybe if somebody makes it look good we can use it.
 
 /datum/map_generator/cave_generator/jungle/generate_terrain(list/turfs)
 	var/start_time = REALTIMEOFDAY
@@ -92,15 +91,19 @@
 				for(var/thing in urange(12, new_open_turf))
 					if(!ishostile(thing) && !istype(thing, /obj/effect/spawner))
 						continue
+
 					if((ispath(picked_mob, /mob/living/simple_animal/hostile/megafauna) || ismegafauna(thing)) && get_dist(new_open_turf, thing) <= 7)
 						can_spawn = FALSE
 						break
-					if(ispath(picked_mob, /mob/living/simple_animal/hostile/jungle) || istype(thing, /mob/living/simple_animal/hostile/jungle))
+
+					if((ispath(picked_mob, /mob/living/simple_animal/hostile) && !ispath(picked_mob, /mob/living/simple_animal/hostile/megafauna)) || (istype(thing, /mob/living/simple_animal/hostile) && !ismegafauna(thing)))
 						can_spawn = FALSE
 						break
+
 					if((ispath(picked_mob, /obj/effect/spawner/jungle) || istype(thing, /obj/effect/spawner/jungle)) && get_dist(new_open_turf, thing) <= 5)
 						can_spawn = FALSE
 						break
+
 					if((ispath(picked_mob, /obj/structure/spawner) || istype(thing, /obj/structure/spawner)) && get_dist(new_open_turf, thing) <= 2)
 						can_spawn = FALSE
 						break
@@ -109,13 +112,13 @@
 					new picked_mob(new_open_turf)
 		CHECK_TICK
 
-	/*for(var/turf/special_turf in special_gen_turfs)
+	for(var/turf/special_turf in special_gen_turfs)
 		var/turf_range = rand(2, 5)
 		for(var/turf/genturf in range(turf_range, special_turf))
 			if(!isopenturf(genturf) || sqrt((genturf.x - special_turf.x) ** 2 + (genturf.z - special_turf.z) ** 2) > turf_range) //I want a circle, not a square
 				continue
 
-			genturf.ChangeTurf(special_gen_turfs[special_turf], initial(special_gen_turfs[special_turf].baseturfs), CHANGETURF_IGNORE_AIR)*/ //We generate some patches of grass and wasteland in caves so they don't look plain
+			genturf.ChangeTurf(special_gen_turfs[special_turf], initial(special_gen_turfs[special_turf].baseturfs), CHANGETURF_IGNORE_AIR) //We generate some patches of grass and wasteland in caves so they don't look plain
 
 	spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle/underground, /area/mine/planetgeneration/caves)
 
@@ -124,5 +127,14 @@
 	log_world(message)
 
 /datum/map_generator/cave_generator/jungle/surface
+	feature_spawn_chance = 2
+	feature_spawn_list = list(/obj/structure/ladder/dirt_hole)
 
 /datum/map_generator/cave_generator/jungle/deep
+	mob_spawn_chance = 8
+	feature_spawn_chance = 0.25
+	feature_spawn_list = list(/obj/structure/ladder/dirt_hole)
+
+/datum/map_generator/cave_generator/jungle/deep/bottom
+	feature_spawn_chance = 0
+	feature_spawn_list = list()

@@ -967,3 +967,8 @@
 /datum/status_effect/cloudstruck/Destroy()
 	. = ..()
 	QDEL_NULL(mob_overlay)
+
+/datum/status_effect/bloody_mark
+	id = "bloody_mark"
+	duration = 1 MINUTES
+	status_type = STATUS_EFFECT_REPLACE

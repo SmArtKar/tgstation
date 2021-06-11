@@ -19,17 +19,15 @@
 
 /mob/living/carbon/human/species/monkey/angry
 	ai_controller = /datum/ai_controller/monkey/angry
-	var/hatless = FALSE
 
 /mob/living/carbon/human/species/monkey/angry/Initialize()
 	. = ..()
-	if(prob(10) && !hatless)
+	if(prob(10))
 		var/obj/item/clothing/head/helmet/justice/escape/helmet = new(src)
 		equip_to_slot_or_del(helmet,ITEM_SLOT_HEAD)
 		helmet.attack_self(src) // todo encapsulate toggle
 
-/mob/living/carbon/human/species/monkey/angry/jungle
-	hatless = TRUE
+/mob/living/carbon/human/species/monkey/jungle
 	faction = list("jungle")
 	weather_immunities = list(ACID) //Evolved or something, I dunno
 	ai_controller = /datum/ai_controller/monkey/jungle

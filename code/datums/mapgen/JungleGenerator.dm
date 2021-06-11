@@ -117,6 +117,10 @@
 	name = "deep jungle caves generation area"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep
 
+/area/mine/planetgeneration/caves/deep/bottom
+	name = "deep jungle caves generation area"
+	map_generator = /datum/map_generator/cave_generator/jungle/deep/bottom
+
 #undef PERLIN_NOISE_ZOOM
 #undef BIOME_RANDOM_SQUARE_DRIFT
 #undef MOUNTAIN_LEVEL

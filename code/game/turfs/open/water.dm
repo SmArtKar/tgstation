@@ -59,6 +59,9 @@
 			continue
 		qdel(plant)
 
+	for(var/obj/structure/ladder/dirt_hole/hole in src) //Neither do we want holes
+		qdel(hole)
+
 	if(prob(flora_prob))
 		var/area/A = loc
 

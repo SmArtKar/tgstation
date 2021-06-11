@@ -14,8 +14,8 @@
 	icon_living = "seedling"
 	icon_dead = "seedling_dead"
 	mob_biotypes = MOB_ORGANIC | MOB_PLANT
-	maxHealth = 100
-	health = 100
+	maxHealth = 420
+	health = 420
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	pixel_x = -16
@@ -34,6 +34,8 @@
 	stat_attack = HARD_CRIT
 	move_resist = MOVE_FORCE_EXTREMELY_STRONG
 	var/combatant_state = SEEDLING_STATE_NEUTRAL
+	loot = list(/obj/item/organ/regenerative_core/legion/shining_core)
+	crusher_loot = /obj/item/crusher_trophy/tail_spike/seedling_petal
 	var/obj/seedling_weakpoint/weak_point
 	var/mob/living/beam_debuff_target
 	var/solar_beam_identifier = 0
@@ -235,6 +237,48 @@
 	if(combatant_state == SEEDLING_STATE_WARMUP || combatant_state == SEEDLING_STATE_ACTIVE)
 		return
 	return ..()
+
+/obj/item/organ/regenerative_core/legion/shining_core
+	name = "shining core"
+	desc = "A shining core of some dead seedling. Rumors say that these core can heal and stim you, providing a combat boost. It will quickly decay if not preserved."
+	icon_state = "sun_core"
+
+/obj/item/organ/regenerative_core/legion/shining_core/go_inert()
+	..()
+	name = "decayed shining core"
+	desc = "A shining core of some dead seedling. This one is decayed for too long and became useless."
+
+/obj/item/organ/regenerative_core/legion/shining_core/preserved(implanted = 0)
+	..()
+	desc = "A shining core of some dead seedling. Rumors say that these core can heal and stim you, providing a combat boost. It's been preserved and won't decay."
+
+/obj/item/organ/regenerative_core/legion/shining_core/applyto(atom/target, mob/user)
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(inert)
+			to_chat(user, "<span class='notice'>[src] has decayed and can no longer be used to heal.</span>")
+			return
+		else
+			if(H.stat == DEAD)
+				to_chat(user, "<span class='notice'>[src] is useless on the dead.</span>")
+				return
+
+			if(H != user)
+				H.visible_message("<span class='notice'>[user] applies [src] to [H]'s skin, smearing the oozing liquid into their skin.</span>")
+				SSblackbox.record_feedback("nested tally", "shining_core", 1, list("[type]", "used", "other"))
+			else
+				to_chat(user, "<span class='notice'>You start to smear liquid from [src]'s insides on yourself. Sudden feeling of power floods your mind, but gosh, it burns like hell!</span>")
+				SSblackbox.record_feedback("nested tally", "shining_core", 1, list("[type]", "used", "self"))
+
+			H.apply_status_effect(STATUS_EFFECT_SUN_CORE)
+			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "core", /datum/mood_event/healsbadman)
+			qdel(src)
+
+/obj/item/crusher_trophy/tail_spike/seedling_petal
+	name = "seedling petal"
+	desc = "A petal from a seedling. Suitable as a trophy for a kinetic crusher."
+	icon_state = "seedling_petal"
+	denied_type = /obj/item/crusher_trophy/tail_spike/seedling_petal
 
 #undef SEEDLING_STATE_NEUTRAL
 #undef SEEDLING_STATE_WARMUP

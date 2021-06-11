@@ -203,6 +203,12 @@ GLOBAL_LIST_INIT(leather_recipes, list ( \
 	singular_name = "wolf sinew"
 	merge_type = /obj/item/stack/sheet/sinew/wolf
 
+/obj/item/stack/sheet/sinew/bat
+	name = "bat sinew"
+	desc = "Long stringy filaments which came from wings of some unfortunate cave bat."
+	singular_name = "bat sinew"
+	merge_type = /obj/item/stack/sheet/sinew/bat
+
 GLOBAL_LIST_INIT(sinew_recipes, list ( \
 	new/datum/stack_recipe("sinew restraints", /obj/item/restraints/handcuffs/cable/sinew, 1), \
 ))
@@ -232,6 +238,13 @@ GLOBAL_LIST_INIT(sinew_recipes, list ( \
 	icon_state = "polar_bear_hide"
 	singular_name = "polar bear hide"
 	merge_type = /obj/item/stack/sheet/animalhide/goliath_hide/polar_bear_hide
+
+/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide
+	name = "snakeman hides"
+	desc = "Pieces of a snakeman's thick hide, these might be able to make your suit a bit more durable to attack from the local fauna."
+	icon_state = "snakeman_hide"
+	singular_name = "snakeman hide"
+	merge_type = /obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide
 
 /obj/item/stack/sheet/animalhide/ashdrake
 	name = "ash drake hide"

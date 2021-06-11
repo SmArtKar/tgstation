@@ -4,7 +4,7 @@
 #define MOOK_ATTACK_RECOVERY 3
 #define ATTACK_INTERMISSION_TIME 5
 
-//Fragile but highly aggressive wanderers that pose a large threat in numbers.
+//Fragile but highly aggressive wanderers that pose a large threat in numbers. //No longer fragile :)
 //They'll attempt to leap at their target from afar using their hatchets.
 /mob/living/simple_animal/hostile/jungle/mook
 	name = "wanderer"
@@ -14,12 +14,13 @@
 	icon_living = "mook"
 	icon_dead = "mook_dead"
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
+	maxHealth = 270
+	health = 270
+	butcher_results = list(/obj/item/food/meat/slab/synthmeat = 2, /obj/item/stack/sheet/mechanical_alloy = 1)
 	pixel_x = -16
 	base_pixel_x = -16
 	pixel_y = -8
 	base_pixel_y = -8
-	maxHealth = 45
-	health = 45
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	ranged = TRUE
@@ -35,6 +36,8 @@
 	var/struck_target_leap = FALSE
 
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
+	crusher_drop_mod = 10
+	crusher_loot = /obj/item/crusher_trophy/axe_head
 
 /mob/living/simple_animal/hostile/jungle/mook/CanAllowThrough(atom/movable/O)
 	. = ..()
@@ -224,6 +227,46 @@
 	pixel_y = -16
 	base_pixel_y = -16
 	duration = 10
+
+/obj/item/crusher_trophy/axe_head //Allows you to hit super fast if you manage to constantly detonate marks, but heavily impacts damage.
+	name = "axe head"
+	desc = "A shiny metal axe head. Suitable as a trophy for a kinetic crusher."
+	icon_state = "axe_head"
+	denied_type = /obj/item/crusher_trophy/axe_head
+
+/obj/item/crusher_trophy/axe_head/effect_desc()
+	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time."
+
+/obj/item/crusher_trophy/axe_head/on_mark_detonation(mob/living/target, mob/living/user)
+	user.changeNext_move(CLICK_CD_RAPID)
+
+/obj/item/crusher_trophy/axe_head/add_to(obj/item/kinetic_crusher/crusher, mob/living/user)
+	. = ..()
+	if(.)
+		crusher.AddComponent(/datum/component/two_handed, force_wielded=10) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
+		crusher.charge_time -= 5
+		crusher.detonation_damage -= 25
+		crusher.backstab_bonus -= 15
+
+/obj/item/crusher_trophy/axe_head/remove_from(obj/item/kinetic_crusher/crusher, mob/living/user)
+	. = ..()
+	if(.)
+		crusher.AddComponent(/datum/component/two_handed, force_wielded=20)
+		crusher.charge_time += 5
+		crusher.detonation_damage += 25
+		crusher.backstab_bonus += 15
+
+/obj/item/stack/sheet/mechanical_alloy
+	name = "mechanical alloy"
+	icon = 'icons/obj/mining.dmi'
+	desc = "Odd, non-newtonian dark-yellow metal that has been harvested from wanderer corpses."
+	singular_name = "mechanical alloy"
+	icon_state = "sheet-mechanicalloy"
+	max_amount = 12
+	novariants = FALSE
+	item_flags = NOBLUDGEON
+	w_class = WEIGHT_CLASS_NORMAL
+	merge_type = /obj/item/stack/sheet/mechanical_alloy
 
 #undef MOOK_ATTACK_NEUTRAL
 #undef MOOK_ATTACK_WARMUP

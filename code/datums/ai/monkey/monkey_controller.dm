@@ -36,8 +36,6 @@ have ways of interacting with a specific mob and control it.
 	. = ..()
 	if(. & AI_CONTROLLER_INCOMPATIBLE)
 		return
-	if(prob(35))
-		blackboard[BB_MONKEY_AGRESSIVE] = TRUE
 	blackboard[BB_MONKEY_ENEMY_VISION] = JUNGLE_MONKEY_ENEMY_VISION
 
 /datum/ai_controller/monkey/TryPossessPawn(atom/new_pawn)
