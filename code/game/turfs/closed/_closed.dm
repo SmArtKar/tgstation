@@ -218,7 +218,6 @@
 	pixel_x = -4
 	pixel_y = -4
 
-
 /turf/closed/indestructible/paper
 	name = "thick paper wall"
 	desc = "A wall layered with impenetrable sheets of paper."

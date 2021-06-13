@@ -138,3 +138,4 @@
 /datum/map_generator/cave_generator/jungle/deep/bottom
 	feature_spawn_chance = 0
 	feature_spawn_list = list()
+	closed_turf_types =  list(/turf/closed/mineral/random/jungle/strong = 1) //These walls make plasmacutters almost useless, you'll need to make use of your KA.

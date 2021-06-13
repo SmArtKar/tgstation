@@ -636,7 +636,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	set waitfor = FALSE
 	. = ..()
 	var/image/A = null
-	var/kind = force_kind ? force_kind : pick("nothing","monkey","corgi","carp","skeleton","demon","zombie")
+	var/kind = force_kind ? force_kind : pick("nothing","monkey","corgi","carp","skeleton","demon","zombie","spider")
 	feedback_details += "Type: [kind]"
 	var/list/nearby
 	if(skip_nearby)
@@ -668,6 +668,9 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 			if("demon")//Demon
 				A = image('icons/mob/mob.dmi',H,"daemon")
 				A.name = "Demon"
+			if("spider")//Spider
+				A = image('icons/mob/animal.dmi',target,pick("guard","hunter","nurse","tarantula","viper","midwife"))
+				A.name = "Spider"
 			if("custom")
 				A = image(custom_icon_file, H, custom_icon)
 				A.name = custom_name
@@ -691,7 +694,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	set waitfor = FALSE
 	..()
 	var/image/A = null
-	var/kind = force_kind ? force_kind : pick("monkey","corgi","carp","skeleton","demon","zombie","robot")
+	var/kind = force_kind ? force_kind : pick("monkey","corgi","carp","skeleton","demon","zombie","robot","spider")
 	feedback_details += "Type: [kind]"
 	switch(kind)
 		if("monkey")//Monkey
@@ -709,6 +712,8 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 		if("robot")//Cyborg
 			A = image('icons/mob/robots.dmi',target,"robot")
 			target.playsound_local(target,'sound/voice/liveagain.ogg', 75, 1)
+		if("spider")//Spider
+			A = image('icons/mob/animal.dmi',target,pick("guard","hunter","nurse","tarantula","viper","midwife"))
 		if("custom")
 			A = image(custom_icon_file, target, custom_icon)
 	A.override = 1

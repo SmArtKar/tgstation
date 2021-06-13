@@ -1,0 +1,3036 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ay" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"aG" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"bf" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"bH" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"bK" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"dz" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit"
+	},
+/area/template_noop)
+"dM" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"dS" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"dZ" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"ez" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"gm" = (
+/obj/effect/turf_decal/stripes/line,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"gN" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit"
+	},
+/area/template_noop)
+"hp" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"hM" = (
+/turf/open/space/basic,
+/area/template_noop)
+"kX" = (
+/turf/closed/indestructible/syndicate,
+/area/template_noop)
+"lM" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"mA" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"mX" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit"
+	},
+/area/template_noop)
+"ns" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"nX" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"pi" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 5
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit"
+	},
+/area/template_noop)
+"tj" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"tW" = (
+/obj/effect/turf_decal/siding/red,
+/turf/open/indestructible{
+	icon_state = "rcircuit"
+	},
+/area/template_noop)
+"uF" = (
+/obj/effect/turf_decal/siding/green/corner,
+/turf/open/indestructible{
+	icon_state = "gcircuit"
+	},
+/area/template_noop)
+"vv" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"wt" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"wW" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"xq" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"xF" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"zJ" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 5
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"zW" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 10
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit"
+	},
+/area/template_noop)
+"Ab" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"AO" = (
+/obj/effect/turf_decal/stripes/line,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"AS" = (
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"Cy" = (
+/obj/effect/turf_decal/siding/yellow/corner{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit"
+	},
+/area/template_noop)
+"CL" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"Da" = (
+/turf/template_noop,
+/area/template_noop)
+"Dj" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit"
+	},
+/area/template_noop)
+"EC" = (
+/turf/closed/indestructible/reinforced,
+/area/template_noop)
+"Fm" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"FG" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "gcircuit"
+	},
+/area/template_noop)
+"Gd" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 5
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"JD" = (
+/obj/effect/turf_decal/siding/green,
+/turf/open/indestructible{
+	icon_state = "gcircuit"
+	},
+/area/template_noop)
+"JG" = (
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"KA" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"KF" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Li" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"LM" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "gcircuit"
+	},
+/area/template_noop)
+"OA" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 5
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Ph" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Pt" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit"
+	},
+/area/template_noop)
+"Rw" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit"
+	},
+/area/template_noop)
+"SL" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Td" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit"
+	},
+/area/template_noop)
+"UF" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"VJ" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"XF" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838"
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"XV" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit"
+	},
+/area/template_noop)
+
+(1,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+hM
+hM
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(2,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(3,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(4,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(5,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(6,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(7,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(8,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(9,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(10,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(11,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(12,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(13,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+kX
+kX
+kX
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(14,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+kX
+kX
+ns
+JG
+JG
+JG
+JG
+vv
+kX
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(15,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+kX
+uF
+LM
+FG
+Li
+JG
+JG
+JG
+JG
+AO
+pi
+Rw
+gN
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(16,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+uF
+LM
+FG
+wW
+wt
+bH
+JG
+JG
+JG
+JG
+UF
+wt
+nX
+pi
+Rw
+gN
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(17,1,1) = {"
+Da
+Da
+Da
+Da
+kX
+kX
+uF
+FG
+wW
+wt
+bH
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+UF
+wt
+nX
+pi
+gN
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(18,1,1) = {"
+Da
+Da
+Da
+Da
+kX
+uF
+FG
+wW
+bH
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+UF
+nX
+pi
+gN
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(19,1,1) = {"
+Da
+Da
+Da
+kX
+kX
+JD
+wW
+bH
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+UF
+nX
+dz
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(20,1,1) = {"
+Da
+Da
+Da
+kX
+uF
+FG
+Li
+JG
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+JG
+AO
+pi
+gN
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(21,1,1) = {"
+Da
+Da
+Da
+kX
+JD
+wW
+bH
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+UF
+nX
+dz
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(22,1,1) = {"
+Da
+Da
+kX
+kX
+FG
+Li
+JG
+JG
+JG
+kX
+kX
+JG
+bK
+SL
+SL
+SL
+SL
+xF
+JG
+kX
+kX
+JG
+JG
+JG
+AO
+pi
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(23,1,1) = {"
+Da
+Da
+kX
+UF
+wt
+bH
+JG
+JG
+JG
+kX
+JG
+bK
+aG
+mA
+VJ
+VJ
+CL
+OA
+xF
+JG
+kX
+JG
+JG
+JG
+UF
+wt
+bH
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(24,1,1) = {"
+Da
+Da
+kX
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+XF
+mA
+dZ
+AS
+AS
+ay
+CL
+xq
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+kX
+EC
+EC
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(25,1,1) = {"
+hM
+Da
+kX
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+XF
+dM
+AS
+AS
+AS
+AS
+gm
+xq
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+hM
+"}
+(26,1,1) = {"
+hM
+Da
+kX
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+XF
+dM
+AS
+AS
+AS
+AS
+gm
+xq
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+hM
+"}
+(27,1,1) = {"
+Da
+Da
+kX
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+XF
+Gd
+bf
+AS
+AS
+lM
+Fm
+xq
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+kX
+EC
+EC
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(28,1,1) = {"
+Da
+Da
+kX
+vv
+dS
+ns
+JG
+JG
+JG
+kX
+JG
+KF
+Ph
+Gd
+hp
+hp
+Fm
+tj
+KA
+JG
+kX
+JG
+JG
+JG
+vv
+dS
+ns
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(29,1,1) = {"
+Da
+Da
+kX
+kX
+zW
+Li
+JG
+JG
+JG
+kX
+kX
+JG
+KF
+Ab
+Ab
+Ab
+Ab
+KA
+JG
+kX
+kX
+JG
+JG
+JG
+AO
+Pt
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(30,1,1) = {"
+Da
+Da
+Da
+kX
+tW
+zJ
+ns
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+vv
+ez
+Td
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(31,1,1) = {"
+Da
+Da
+Da
+kX
+mX
+zW
+Li
+JG
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+JG
+kX
+kX
+JG
+JG
+JG
+JG
+AO
+Pt
+Cy
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(32,1,1) = {"
+Da
+Da
+Da
+kX
+kX
+tW
+zJ
+ns
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+vv
+ez
+Td
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(33,1,1) = {"
+Da
+Da
+Da
+Da
+kX
+mX
+zW
+zJ
+ns
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+vv
+ez
+Pt
+Cy
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(34,1,1) = {"
+Da
+Da
+Da
+Da
+kX
+kX
+mX
+zW
+zJ
+dS
+ns
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+JG
+vv
+dS
+ez
+Pt
+Cy
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(35,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+mX
+Dj
+zW
+zJ
+dS
+ns
+JG
+JG
+JG
+JG
+vv
+dS
+ez
+Pt
+XV
+Cy
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(36,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+kX
+mX
+Dj
+zW
+Li
+JG
+JG
+JG
+JG
+AO
+Pt
+XV
+Cy
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(37,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+kX
+kX
+bH
+JG
+JG
+JG
+JG
+UF
+kX
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(38,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+kX
+kX
+kX
+kX
+kX
+kX
+kX
+kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(39,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(40,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(41,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(42,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(43,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(44,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(45,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(46,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(47,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(48,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(49,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}
+(50,1,1) = {"
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+hM
+hM
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+"}

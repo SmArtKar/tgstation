@@ -36,7 +36,6 @@
 	add_atom_colour("#FF0000", FIXED_COLOUR_PRIORITY)
 	visible_message("<span class='danger'>[src] roars, their skin turning red!</span>")
 	speed = -1
-	move_to_delay = 2
 	anger_state = TRUE
 	damage_coeff = list(BRUTE = 2, BURN = 2, TOX = 2, CLONE = 2, STAMINA = 0, OXY = 2)
 	addtimer(CALLBACK(src, .proc/exit_anger), 2 SECONDS)

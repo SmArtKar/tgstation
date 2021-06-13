@@ -667,6 +667,7 @@
 
 /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle
 	faction = list("jungle")
+	speak_chance = 0
 
 /**
  * # Scrawny Tarantula
@@ -687,6 +688,7 @@
 
 /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle
 	faction = list("jungle")
+	speak_chance = 0
 
 /**
  * # Scrawny Nurse Spider
@@ -702,6 +704,10 @@
 	maxHealth = 30
 	desc = "Furry and black, it makes you shudder to look at it. This one has brilliant green eyes, and looks abnormally thin and frail."
 	menu_description = "Weaker version of the nurse spider, specializing in healing their brethren and placing webbings swiftly, but has very low amount of health and deals low damage. Toxin injection of 3u per bite."
+
+/mob/living/simple_animal/hostile/giant_spider/nurse/scrawny/jungle
+	faction = list("jungle")
+	speak_chance = 0
 
 /**
  * # Flesh Spider

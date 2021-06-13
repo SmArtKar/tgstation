@@ -682,4 +682,31 @@
 /turf/closed/mineral/strong/ex_act(severity, target)
 	return FALSE
 
+/turf/closed/mineral/random/jungle //Lower plasma chance, higher diamond chance.
+	icon = 'icons/turf/mining.dmi'
+	smooth_icon = 'icons/turf/walls/smoothdirt.dmi'
+	icon_state = "dirt"
+	base_icon_state = "smoothrocks"
+	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
+	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS)
+
+	mineralSpawnChanceList = list(/obj/item/stack/ore/uranium = 5, /obj/item/stack/ore/diamond = 2, /obj/item/stack/ore/gold = 10,
+		/obj/item/stack/ore/silver = 12, /obj/item/stack/ore/plasma = 10, /obj/item/stack/ore/iron = 40, /obj/item/stack/ore/titanium = 11,
+		/obj/item/stack/ore/bluespace_crystal = 1)
+
+	baseturfs = /turf/open/floor/plating/dirt/jungle/dark
+	turf_type = /turf/open/floor/plating/dirt/jungle/dark
+
+/turf/closed/mineral/random/jungle/Initialize()
+	. = ..()
+	baseturfs = /turf/open/floor/plating/dirt/jungle/dark
+
+/turf/closed/mineral/random/jungle/strong //I don't want cave exploration to be as easy on the bottom level because there's a lot of ruins so I did this.
+
+/turf/closed/mineral/random/jungle/strong/bullet_act(obj/projectile/proj) //Strong jungle walls really heavily(1/3 of normal) impact plasmacutter range. Better use your KA!
+	if(istype(proj, /obj/projectile/plasma))
+		proj.Range()
+		proj.Range()
+	. = ..()
+
 #undef MINING_MESSAGE_COOLDOWN

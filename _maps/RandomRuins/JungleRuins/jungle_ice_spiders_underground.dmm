@@ -1,0 +1,761 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/template_noop,
+/area/template_noop)
+"b" = (
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"c" = (
+/obj/structure/spider/cocoon,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"d" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/flora/rock/icy,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"e" = (
+/obj/structure/frame/machine,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"f" = (
+/obj/structure/frame/machine,
+/turf/open/floor/plating/ice/smooth,
+/area/ruin/unpowered/ice_spiders)
+"g" = (
+/obj/effect/mob_spawn/human/geneticist,
+/obj/structure/bed/maint,
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"h" = (
+/obj/structure/spider/cocoon,
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/giant_spider/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"i" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/spider/cocoon,
+/mob/living/simple_animal/hostile/giant_spider/hunter/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"j" = (
+/mob/living/simple_animal/hostile/giant_spider/hunter/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"k" = (
+/turf/open/floor/plating/ice/smooth,
+/area/ruin/unpowered/ice_spiders)
+"l" = (
+/obj/structure/girder,
+/obj/structure/grille,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"m" = (
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/giant_spider/nurse/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"n" = (
+/turf/closed/mineral/snowmountain,
+/area/ruin/unpowered/ice_spiders)
+"o" = (
+/obj/structure/table/wood,
+/obj/effect/decal/cleanable/cobweb,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"p" = (
+/obj/structure/statue/snow/snowman,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"q" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/ice_stasis,
+/turf/open/floor/plating/ice/smooth,
+/area/ruin/unpowered/ice_spiders)
+"r" = (
+/mob/living/simple_animal/hostile/giant_spider/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"s" = (
+/obj/structure/windoor_assembly{
+	dir = 4
+	},
+/turf/open/floor/plating/ice/smooth,
+/area/ruin/unpowered/ice_spiders)
+"u" = (
+/obj/structure/door_assembly/door_assembly_vault{
+	anchored = 1
+	},
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"w" = (
+/obj/item/shard,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"x" = (
+/obj/structure/fluff{
+	desc = "They seem to pulse slightly with an inner life.";
+	icon = 'icons/effects/effects.dmi';
+	icon_state = "eggs";
+	name = "egg cluster"
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"y" = (
+/obj/structure/table/wood,
+/obj/item/paper/crumpled/bloody{
+	info = "If you're reading this, I am probaby dead and you have aready found my body. Run. Just run. Our experiments failed and spiders breached contaiment. We are all doomed. ";
+	text = ""
+	},
+/obj/machinery/light/small/broken{
+	dir = 4
+	},
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"z" = (
+/obj/structure/fluff{
+	desc = "They seem to pulse slightly with an inner life.";
+	icon = 'icons/effects/effects.dmi';
+	icon_state = "eggs";
+	name = "egg cluster"
+	},
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/giant_spider/nurse/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"A" = (
+/obj/structure/barricade/wooden/snowed,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"B" = (
+/obj/structure/frame/computer{
+	dir = 1
+	},
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"C" = (
+/obj/structure/fluff{
+	desc = "They seem to pulse slightly with an inner life.";
+	icon = 'icons/effects/effects.dmi';
+	icon_state = "eggs";
+	name = "egg cluster"
+	},
+/obj/structure/spider/stickyweb,
+/obj/structure/table_frame,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"D" = (
+/obj/structure/door_assembly/door_assembly_science,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"F" = (
+/obj/structure/ice_stasis,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"G" = (
+/obj/structure/fluff{
+	desc = "They seem to pulse slightly with an inner life.";
+	icon = 'icons/effects/effects.dmi';
+	icon_state = "eggs";
+	name = "egg cluster"
+	},
+/mob/living/simple_animal/hostile/giant_spider/nurse/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"H" = (
+/obj/structure/frame/computer{
+	dir = 1
+	},
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"I" = (
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/giant_spider/hunter/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/ice/smooth,
+/area/ruin/unpowered/ice_spiders)
+"J" = (
+/obj/structure/spider/stickyweb,
+/obj/item/organ/heart/spider_mother,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"L" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/fluff{
+	desc = "They seem to pulse slightly with an inner life.";
+	icon = 'icons/effects/effects.dmi';
+	icon_state = "eggs";
+	name = "egg cluster"
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"M" = (
+/obj/structure/flora/rock/pile/icy,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"N" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/spider/cocoon,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"O" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/ice/smooth,
+/area/ruin/unpowered/ice_spiders)
+"P" = (
+/obj/structure/barricade/wooden/snowed,
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"Q" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"R" = (
+/obj/structure/spider/stickyweb,
+/mob/living/simple_animal/hostile/giant_spider/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"S" = (
+/obj/structure/fluff/iced_abductor,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"T" = (
+/obj/structure/spider/cocoon,
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"U" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/fluff{
+	desc = "They seem to pulse slightly with an inner life.";
+	icon = 'icons/effects/effects.dmi';
+	icon_state = "eggs";
+	name = "egg cluster"
+	},
+/mob/living/simple_animal/hostile/giant_spider/ice{
+	speak_chance = 0
+	},
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"V" = (
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"W" = (
+/turf/closed/indestructible/rock/snow/ice/ore,
+/area/ruin/unpowered/ice_spiders)
+"X" = (
+/obj/structure/spider/stickyweb,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+"Y" = (
+/obj/structure/bookcase,
+/turf/open/floor/plating/snowed/smoothed,
+/area/ruin/unpowered/ice_spiders)
+"Z" = (
+/obj/structure/spider/stickyweb,
+/obj/structure/flora/rock/pile/icy,
+/turf/open/floor/plating/asteroid/snow/atmosphere,
+/area/ruin/unpowered/ice_spiders)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+W
+W
+W
+W
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+W
+W
+j
+F
+W
+a
+W
+V
+V
+a
+"}
+(3,1,1) = {"
+a
+a
+W
+W
+W
+W
+W
+a
+W
+S
+N
+X
+W
+W
+W
+n
+V
+V
+"}
+(4,1,1) = {"
+a
+W
+W
+C
+h
+m
+W
+W
+W
+V
+R
+k
+I
+W
+n
+n
+n
+V
+"}
+(5,1,1) = {"
+a
+W
+c
+x
+J
+L
+B
+W
+i
+X
+X
+R
+n
+W
+n
+n
+n
+W
+"}
+(6,1,1) = {"
+a
+W
+z
+T
+V
+c
+U
+W
+O
+q
+W
+n
+n
+n
+V
+n
+W
+W
+"}
+(7,1,1) = {"
+a
+W
+f
+k
+m
+p
+W
+W
+W
+W
+W
+n
+n
+X
+V
+W
+W
+a
+"}
+(8,1,1) = {"
+a
+W
+W
+s
+X
+W
+W
+n
+n
+n
+W
+W
+W
+Q
+X
+W
+a
+a
+"}
+(9,1,1) = {"
+a
+a
+W
+X
+w
+W
+n
+n
+n
+n
+n
+n
+W
+D
+Q
+W
+a
+a
+"}
+(10,1,1) = {"
+a
+a
+W
+V
+V
+W
+W
+n
+n
+n
+n
+W
+W
+Q
+D
+W
+a
+a
+"}
+(11,1,1) = {"
+a
+W
+W
+V
+X
+d
+W
+n
+n
+W
+W
+W
+X
+V
+V
+W
+a
+a
+"}
+(12,1,1) = {"
+a
+W
+M
+X
+X
+r
+W
+n
+W
+W
+V
+d
+X
+X
+R
+W
+W
+a
+"}
+(13,1,1) = {"
+a
+W
+X
+V
+V
+W
+W
+n
+W
+X
+R
+X
+X
+M
+V
+X
+W
+W
+"}
+(14,1,1) = {"
+a
+W
+V
+X
+W
+W
+n
+W
+W
+V
+X
+X
+X
+X
+V
+X
+X
+W
+"}
+(15,1,1) = {"
+a
+W
+X
+X
+W
+n
+n
+W
+X
+Z
+X
+V
+X
+X
+X
+X
+V
+W
+"}
+(16,1,1) = {"
+W
+W
+V
+X
+W
+n
+n
+W
+V
+X
+X
+W
+W
+W
+X
+j
+W
+W
+"}
+(17,1,1) = {"
+W
+X
+X
+V
+W
+W
+n
+W
+V
+X
+W
+W
+n
+W
+W
+W
+W
+a
+"}
+(18,1,1) = {"
+W
+W
+j
+X
+k
+W
+n
+W
+R
+V
+W
+n
+n
+n
+n
+a
+a
+a
+"}
+(19,1,1) = {"
+a
+W
+Z
+X
+O
+W
+W
+W
+W
+u
+W
+W
+W
+W
+W
+W
+a
+a
+"}
+(20,1,1) = {"
+W
+W
+d
+X
+X
+M
+W
+W
+W
+V
+V
+X
+P
+A
+o
+W
+W
+W
+"}
+(21,1,1) = {"
+W
+G
+c
+X
+X
+X
+W
+W
+k
+X
+X
+X
+A
+Y
+b
+b
+H
+W
+"}
+(22,1,1) = {"
+W
+N
+X
+V
+X
+V
+V
+X
+X
+V
+W
+W
+W
+l
+y
+b
+e
+W
+"}
+(23,1,1) = {"
+W
+W
+L
+W
+W
+R
+X
+V
+X
+W
+W
+a
+W
+W
+W
+g
+W
+W
+"}
+(24,1,1) = {"
+a
+W
+W
+W
+W
+W
+W
+W
+W
+W
+a
+a
+a
+a
+W
+W
+W
+a
+"}

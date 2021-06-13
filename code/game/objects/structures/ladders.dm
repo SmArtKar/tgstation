@@ -224,12 +224,26 @@
 	allow_up = FALSE
 	crafted = TRUE //So you can make ladders to climb back up
 
-/obj/structure/ladder/dirt_hole/LateInitialize()
+/obj/structure/ladder/dirt_hole/Initialize()
 	. = ..()
+	check_for_deletion()
+
+/obj/structure/ladder/dirt_hole/proc/check_for_deletion()
 	var/turf/bottom_turf = locate(x, y, z - 1)
-	if(bottom_turf && istype(bottom_turf, /turf/closed/mineral))
-		var/turf/closed/mineral/rock = bottom_turf
-		rock.gets_drilled()
+	if(!bottom_turf || !istype(bottom_turf))
+		return
+
+	if(isclosedturf(bottom_turf))
+		qdel(src, force = TRUE)
+		return
+
+	if(!isarea(bottom_turf.loc))
+		qdel(src, force = TRUE)
+		return
+
+	if(!istype(bottom_turf.loc, /area/mine/planetgeneration/caves))
+		qdel(src, force = TRUE)
+		return
 
 /obj/structure/ladder/dirt_hole/use(mob/user, is_ghost=FALSE)
 	if (!is_ghost && !in_range(src, user))

@@ -5,7 +5,7 @@
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "dirt_basic"
 	base_icon_state = "dirt"
-	baseturfs = /turf/open/chasm/jungle
+	baseturfs = /turf/open/floor/plating/dirt //No longer becomes a chasm. Needed to prevent players from getting into ruins easily.
 	initial_gas_mix = OPENTURF_LOW_PRESSURE
 	planetary_atmos = TRUE
 	attachment_holes = FALSE
@@ -83,25 +83,6 @@
 	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_FLOOR_GRASS_JUNGLE)
 
 	layer = 2.031
-
-/turf/closed/mineral/random/jungle //Lower plasma chance, higher diamond chance.
-	icon = 'icons/turf/mining.dmi'
-	smooth_icon = 'icons/turf/walls/smoothdirt.dmi'
-	icon_state = "dirt"
-	base_icon_state = "smoothrocks"
-	smoothing_flags = SMOOTH_BITMASK | SMOOTH_BORDER
-	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS)
-
-	mineralSpawnChanceList = list(/obj/item/stack/ore/uranium = 5, /obj/item/stack/ore/diamond = 2, /obj/item/stack/ore/gold = 10,
-		/obj/item/stack/ore/silver = 12, /obj/item/stack/ore/plasma = 10, /obj/item/stack/ore/iron = 40, /obj/item/stack/ore/titanium = 11,
-		/obj/item/stack/ore/bluespace_crystal = 1)
-
-	baseturfs = /turf/open/floor/plating/dirt/jungle/dark
-	turf_type = /turf/open/floor/plating/dirt/jungle/dark
-
-/turf/closed/mineral/random/jungle/Initialize()
-	. = ..()
-	baseturfs = /turf/open/floor/plating/dirt/jungle/dark
 
 /turf/open/floor/plating/grass/jungle/green
 	smooth_icon = 'icons/turf/floors/junglegrass_green.dmi'
