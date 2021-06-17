@@ -59,12 +59,14 @@
 	H.dna.add_mutation(RACEMUT, MUT_NORMAL)
 	H.dna.activate_mutation(RACEMUT)
 
+	RegisterSignal(H, COMSIG_MOB_CLIENT_LOGIN, .proc/remove_ai)
 
 /datum/species/monkey/on_species_loss(mob/living/carbon/C)
 	. = ..()
 	C.pass_flags = initial(C.pass_flags)
 	C.butcher_results = null
 	C.dna.remove_mutation(RACEMUT)
+	UnregisterSignal(C, COMSIG_MOB_CLIENT_LOGIN)
 
 /datum/species/monkey/spec_unarmedattack(mob/living/carbon/human/user, atom/target, modifiers)
 	. = ..()
@@ -96,6 +98,11 @@
 		return TRUE
 	target.attack_paw(user, modifiers)
 	return TRUE
+
+/datum/species/monkey/proc/remove_ai(mob/user, client/CL)
+	if(user.ai_controller)
+		QDEL_NULL(user.ai_controller)
+	UnregisterSignal(user, COMSIG_MOB_CLIENT_LOGIN)
 
 /datum/species/monkey/handle_mutations_and_radiation(mob/living/carbon/human/source, delta_time, times_fired)
 	. = ..()
