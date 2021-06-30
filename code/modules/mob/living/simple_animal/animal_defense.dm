@@ -3,6 +3,9 @@
 	if (..())
 		return TRUE
 
+	if(!user)
+		return TRUE
+
 	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		user.do_attack_animation(src, ATTACK_EFFECT_DISARM)
 		playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)

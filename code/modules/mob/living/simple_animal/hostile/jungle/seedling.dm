@@ -14,8 +14,8 @@
 	icon_living = "seedling"
 	icon_dead = "seedling_dead"
 	mob_biotypes = MOB_ORGANIC | MOB_PLANT
-	maxHealth = 420
-	health = 420
+	maxHealth = 380
+	health = 380
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	pixel_x = -16
@@ -279,6 +279,22 @@
 	desc = "A petal from a seedling. Suitable as a trophy for a kinetic crusher."
 	icon_state = "seedling_petal"
 	denied_type = /obj/item/crusher_trophy/tail_spike/seedling_petal
+
+/obj/item/crusher_trophy/tail_spike/seedling_petal/on_mark_detonation(mob/living/target, mob/living/user)
+	for(var/mob/living/L in oview(2, user))
+		if(L.stat == DEAD)
+			continue
+		playsound(L, 'sound/weapons/sear.ogg', 20, TRUE)
+		new /obj/effect/temp_visual/seedling_sparks(L.loc)
+		addtimer(CALLBACK(src, .proc/pushback, L, user), 1)
+		L.adjustFireLoss(bonus_value, forced = TRUE)
+
+/obj/effect/temp_visual/seedling_sparks
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "seedling_sparks"
+	light_range = LIGHT_RANGE_FIRE
+	light_color = LIGHT_COLOR_FIRE
+	duration = 12
 
 #undef SEEDLING_STATE_NEUTRAL
 #undef SEEDLING_STATE_WARMUP

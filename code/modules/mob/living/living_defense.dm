@@ -238,6 +238,9 @@
 
 /mob/living/attack_hand(mob/living/carbon/human/user, list/modifiers)
 	. = ..()
+	if(!user)
+		return .
+
 	var/martial_result = user.apply_martial_art(src, modifiers)
 	if (martial_result != MARTIAL_ATTACK_INVALID)
 		return martial_result

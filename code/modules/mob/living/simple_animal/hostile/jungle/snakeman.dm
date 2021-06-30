@@ -10,8 +10,8 @@
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 2, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide = 1)
 	speak_emote = list("roars")
-	maxHealth = 240
-	health = 240
+	maxHealth = 190
+	health = 190
 	melee_damage_lower = 20
 	melee_damage_upper = 20
 	attack_sound = 'sound/weapons/pierce_slow.ogg'

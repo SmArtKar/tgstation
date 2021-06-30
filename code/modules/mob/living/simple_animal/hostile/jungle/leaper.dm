@@ -36,6 +36,8 @@
 	icon_state = "leaper"
 	paralyze = 50
 	damage = 0
+	nodamage = TRUE
+	speed = 2
 	range = 7
 	hitsound = 'sound/effects/snap.ogg'
 	nondirectional_sprite = TRUE
@@ -290,7 +292,7 @@
 	var/jump_cooldown = 0
 
 /obj/item/crusher_trophy/leaper_eye/effect_desc()
-	return "ranged right click attacks to make you jump onto your target instead. This ability has a cooldown of 10 seconds."
+	return "ranged right click attacks to make you jump onto your target instead. This ability has a 10 seconds cooldown."
 
 /obj/item/crusher_trophy/leaper_eye/on_right_click(atom/target, mob/living/user)
 	if(jump_cooldown > world.time)
@@ -309,20 +311,20 @@
 	user.density = FALSE
 	throw_at(user, get_dist(user, target), 1, user, FALSE, callback = CALLBACK(src, .proc/crush, target, user, old_density))
 
-/obj/item/crusher_trophy/leaper_eye/proc/crush(atom/target, mob/living/user, old_density)
+/obj/item/crusher_trophy/leaper_eye/proc/crush(atom/target, mob/living/user, old_density) //More suitable for quick escapes/sudden attacks
 	playsound(user, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	user.density = old_density
 	var/new_turf = get_turf(user)
 	for(var/mob/living/victim in new_turf)
 		if(victim == user)
 			continue
-		victim.adjustBruteLoss(35)
+		victim.adjustBruteLoss(15)
 		if(!QDELETED(victim)) // Some mobs are deleted on death
 			var/throw_dir = get_dir(user, victim)
 			if(victim.loc == loc)
 				throw_dir = pick(GLOB.alldirs)
 			var/throwtarget = get_edge_target_turf(user, throw_dir)
-			victim.throw_at(throwtarget, 3, 1)
+			victim.throw_at(throwtarget, 5, 1)
 			visible_message("<span class='warning'>[victim] is thrown clear of [user]!</span>")
 
 	jump_cooldown = world.time + 10 SECONDS
