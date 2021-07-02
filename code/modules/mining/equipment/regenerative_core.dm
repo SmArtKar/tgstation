@@ -16,7 +16,6 @@
 		to_chat(user, span_warning("The stabilizer only works on certain types of monster organs, generally regenerative in nature."))
 		return
 
-	var/obj/item/organ/regenerative_core/C = M
 	C.preserved()
 	to_chat(user, span_notice("You inject the [M] with the stabilizer. It will no longer go inert."))
 	qdel(src)
