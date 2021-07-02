@@ -39,11 +39,11 @@
 	crusher_drop_mod = 10
 	crusher_loot = /obj/item/crusher_trophy/axe_head
 
-/mob/living/simple_animal/hostile/jungle/mook/CanAllowThrough(atom/movable/O)
+/mob/living/simple_animal/hostile/jungle/mook/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()
-	if(istype(O, /mob/living/simple_animal/hostile/jungle/mook))
-		var/mob/living/simple_animal/hostile/jungle/mook/M = O
-		if(M.attack_state == MOOK_ATTACK_ACTIVE && M.throwing)
+	if(istype(mover, /mob/living/simple_animal/hostile/jungle/mook))
+		var/mob/living/simple_animal/hostile/jungle/mook/mook_moover = mover
+		if(mook_moover.attack_state == MOOK_ATTACK_ACTIVE && mook_moover.throwing)
 			return TRUE
 
 /mob/living/simple_animal/hostile/jungle/mook/death()
@@ -98,9 +98,10 @@
 		melee_damage_lower = 15
 		melee_damage_upper = 15
 		var/mob_direction = get_dir(src,target)
+		var/atom/target_from = GET_TARGETS_FROM(src)
 		if(get_dist(src,target) > 1)
 			step(src,mob_direction)
-		if(targets_from && isturf(targets_from.loc) && target.Adjacent(targets_from) && isliving(target))
+		if(isturf(target_from.loc) && target.Adjacent(target_from) && isliving(target))
 			var/mob/living/L = target
 			L.attack_animal(src)
 			return
@@ -111,7 +112,7 @@
 /mob/living/simple_animal/hostile/jungle/mook/proc/LeapAttack()
 	if(target && !stat && attack_state == MOOK_ATTACK_WARMUP)
 		attack_state = MOOK_ATTACK_ACTIVE
-		density = FALSE
+		set_density(FALSE)
 		melee_damage_lower = 30
 		melee_damage_upper = 30
 		update_icons()
@@ -127,7 +128,7 @@
 /mob/living/simple_animal/hostile/jungle/mook/proc/AttackRecovery()
 	if(attack_state == MOOK_ATTACK_ACTIVE && !stat)
 		attack_state = MOOK_ATTACK_RECOVERY
-		density = TRUE
+		set_density(TRUE)
 		face_atom(target)
 		if(!struck_target_leap)
 			update_icons()
@@ -160,7 +161,7 @@
 		if(CanAttack(L))
 			L.attack_animal(src)
 			struck_target_leap = TRUE
-			density = TRUE
+			set_density(TRUE)
 			update_icons()
 	var/mook_under_us = FALSE
 	for(var/A in get_turf(src))
@@ -173,7 +174,7 @@
 			if(!struck_target_leap && CanAttack(ML))//Check if some joker is attempting to use rest to evade us
 				struck_target_leap = TRUE
 				ML.attack_animal(src)
-				density = TRUE
+				set_density(TRUE)
 				struck_target_leap = TRUE
 				update_icons()
 				continue
