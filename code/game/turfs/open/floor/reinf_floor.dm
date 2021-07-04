@@ -228,3 +228,34 @@
 
 /turf/open/floor/engine/telecomms
 	initial_gas_mix = TCOMMS_ATMOS
+
+/turf/open/floor/engine/ecute
+	name = "modified reinforced floor"
+	desc = "Reinforced floor with a bunch of high-power igniters built in. What can go wrong?"
+	icon_state = "engine_ecute"
+
+	var/active = FALSE
+
+/turf/open/floor/engine/ecute/proc/turn_on(new_state = TRUE)
+	active = new_state
+	if(active)
+		icon_state = "[initial(icon_state)]_active"
+		update_icon()
+	else
+		icon_state = initial(icon_state)
+		update_icon()
+
+/turf/open/floor/engine/ecute/Entered(atom/movable/arrived, direction)
+	. = ..()
+	if(!active)
+		return
+
+	if(!isliving(arrived))
+		return
+
+	var/mob/living/victim = arrived
+	if(victim.electrocute_act(25, src, 1, SHOCK_NOGLOVES))
+		victim.dropItemToGround(victim.get_active_held_item())
+		victim.dropItemToGround(victim.get_inactive_held_item())
+		victim.add_confusion(15)
+		victim.visible_message(span_danger("[src] electrocutes [victim]!"), span_userdanger("[src] electrocutes you!"))

@@ -33,6 +33,7 @@
 	var/attackby_result
 
 	if (is_right_clicking)
+		SEND_SIGNAL(src, COMSIG_RIGHT_CLICK_USE, target)
 		switch (target.attackby_secondary(src, user, params))
 			if (SECONDARY_ATTACK_CALL_NORMAL)
 				attackby_result = target.attackby(src, user, params)

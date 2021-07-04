@@ -1,0 +1,382 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/wood,
+/area/mine/lobby)
+"g" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/obj/item/gun/energy/plasmacutter/adv,
+/obj/item/gun/energy/kinetic_accelerator,
+/obj/item/borg/upgrade/modkit/range,
+/obj/item/borg/upgrade/modkit/range,
+/obj/item/borg/upgrade/modkit/range,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"h" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/machinery/power/apc/highcap/fifteen_k{
+	pixel_y = 25
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"k" = (
+/obj/machinery/door/airlock/external/glass,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"o" = (
+/obj/machinery/sleeper/syndie/fullupgrade{
+	dir = 4
+	},
+/obj/effect/turf_decal/box,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"p" = (
+/obj/effect/turf_decal/box,
+/obj/machinery/mineral/equipment_vendor,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"q" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"r" = (
+/obj/effect/mob_spawn/human/hermit{
+	outfit = /datum/outfit/job/miner
+	},
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/patriot,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"s" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 8
+	},
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/storage/pill_bottle/mining,
+/obj/item/storage/pill_bottle/stimulant,
+/obj/item/storage/pill_bottle/psicodine,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"t" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/item/gun/energy/plasmacutter/adv,
+/obj/item/gun/energy/kinetic_accelerator,
+/obj/item/borg/upgrade/modkit/range,
+/obj/item/borg/upgrade/modkit/range,
+/obj/item/borg/upgrade/modkit/range,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"z" = (
+/obj/effect/mob_spawn/human/hermit{
+	outfit = /datum/outfit/job/miner
+	},
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/syndie,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"A" = (
+/obj/machinery/door/window/survival_pod{
+	dir = 8
+	},
+/obj/item/borg/upgrade/modkit/cooldown,
+/obj/item/borg/upgrade/modkit/cooldown,
+/obj/item/borg/upgrade/modkit/cooldown,
+/obj/item/clothing/suit/hooded/explorer,
+/obj/item/clothing/mask/gas/explorer,
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"B" = (
+/obj/structure/table/reinforced,
+/obj/item/kinetic_crusher,
+/obj/item/borg/upgrade/modkit/tracer/adjustable,
+/obj/item/borg/upgrade/modkit/aoe/turfs,
+/obj/item/borg/upgrade/modkit/trigger_guard,
+/obj/item/gps,
+/obj/item/clothing/glasses/meson/night,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"C" = (
+/obj/effect/mob_spawn/human/hermit{
+	outfit = /datum/outfit/job/miner
+	},
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/cosmos,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"D" = (
+/obj/effect/turf_decal/box,
+/obj/machinery/mineral/ore_redemption,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"F" = (
+/obj/effect/mob_spawn/human/hermit{
+	outfit = /datum/outfit/job/miner
+	},
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/wiz,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"G" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"H" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 4
+	},
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/storage/pill_bottle/mining,
+/obj/item/storage/pill_bottle/stimulant,
+/obj/item/storage/pill_bottle/psicodine,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"L" = (
+/obj/structure/table/reinforced,
+/obj/item/autosurgeon/organ/cmo,
+/obj/item/mining_voucher,
+/obj/item/mining_voucher,
+/obj/item/mining_voucher,
+/obj/item/storage/belt/mining,
+/obj/item/storage/bag/ore/holding,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"N" = (
+/obj/machinery/door/window/survival_pod{
+	dir = 4
+	},
+/obj/item/borg/upgrade/modkit/cooldown,
+/obj/item/borg/upgrade/modkit/cooldown,
+/obj/item/borg/upgrade/modkit/cooldown,
+/obj/item/clothing/suit/hooded/explorer,
+/obj/item/clothing/mask/gas/explorer,
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/obj/item/organ/regenerative_core/legion/shining_core{
+	preserved = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"P" = (
+/obj/machinery/door/airlock/titanium,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"R" = (
+/obj/machinery/vending/wallmed{
+	custom_premium_price = 0;
+	custom_price = 0;
+	default_price = 0;
+	extra_price = 0;
+	fair_market_price = 0
+	},
+/turf/closed/indestructible/wood,
+/area/mine/lobby)
+"V" = (
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"Z" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 4
+	},
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/borg/upgrade/modkit/damage,
+/obj/item/storage/pill_bottle/mining,
+/obj/item/storage/pill_bottle/stimulant,
+/obj/item/storage/pill_bottle/psicodine,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/obj/item/reagent_containers/hypospray/medipen/survival/luxury,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+o
+o
+a
+C
+L
+B
+a
+z
+L
+B
+a
+"}
+(3,1,1) = {"
+a
+h
+q
+R
+H
+N
+g
+R
+Z
+N
+g
+a
+"}
+(4,1,1) = {"
+k
+V
+V
+P
+V
+V
+V
+V
+V
+V
+V
+a
+"}
+(5,1,1) = {"
+a
+G
+G
+R
+s
+A
+t
+R
+s
+A
+t
+a
+"}
+(6,1,1) = {"
+a
+p
+D
+a
+r
+L
+B
+a
+F
+L
+B
+a
+"}
+(7,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}

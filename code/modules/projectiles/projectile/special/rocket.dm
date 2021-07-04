@@ -1,3 +1,5 @@
+#define SEEKING_ROTATION_PER_TICK 10
+
 /obj/projectile/bullet/gyro
 	name ="explosive bolt"
 	icon_state= "bolter"
@@ -103,3 +105,65 @@
 			return BULLET_ACT_HIT
 	//if(istype(target, /turf/closed) || ismecha(target))
 	new /obj/item/broken_missile(get_turf(src), 1)
+
+/// Special missiles for ancient AI mining boss. These do not have any flash range and are slightly weaker than the original ones.
+
+/obj/projectile/bullet/a84mm/ancient
+	damage = 60
+	dismemberment = 20
+
+/obj/projectile/bullet/a84mm/ancient/do_boom(atom/target)
+	explosion(target, devastation_range = -1, heavy_impact_range = 0, light_impact_range = 1, flame_range = 2, flash_range = -1, adminlog = FALSE)
+
+/obj/projectile/bullet/a84mm/he/ancient
+	damage = 45
+	dismemberment = 20
+
+/obj/projectile/bullet/a84mm/he/ancient/do_boom(atom/target, blocked=0)
+	explosion(target, light_impact_range = 1, flame_range = 2, flash_range = 0)
+
+/obj/projectile/bullet/a84mm/ancient/heavy //Nasty ones
+	name ="\improper RDX rocket"
+	desc = "BIIIIG BOOM"
+	icon_state= "missile_heavy"
+	damage = 80
+	dismemberment = 40
+
+/obj/projectile/bullet/a84mm/ancient/heavy/do_boom(atom/target)
+	explosion(target, devastation_range = -1, heavy_impact_range = 1, light_impact_range = 2, flame_range = 3, flash_range = 2, adminlog = FALSE) //These ones are an exception and do flash
+
+/obj/projectile/bullet/a84mm/ancient/at
+	name ="\improper AT rocket"
+	desc = "Small boom."
+	icon_state= "atrocket"
+	damage = 30
+	dismemberment = 0
+
+/obj/projectile/bullet/a84mm/ancient/at/do_boom(atom/target)
+	explosion(target, devastation_range = -1, heavy_impact_range = -1, light_impact_range = 0, flame_range = 1, flash_range = -1, adminlog = FALSE)
+
+/obj/projectile/bullet/a84mm/ancient/at/seeking
+	damage = 15
+	var/mob/living/victim
+
+/obj/projectile/bullet/a84mm/ancient/at/seeking/on_hit(atom/target, blocked = FALSE)
+	if(ishuman(target) || !isliving(target))
+		return BULLET_ACT_BLOCK
+	. = ..()
+
+/obj/projectile/bullet/a84mm/ancient/at/seeking/do_boom(atom/target)
+	if(ishuman(target) || !isliving(target))
+		return
+
+	explosion(target, devastation_range = -1, heavy_impact_range = -1, light_impact_range = 0, flame_range = 1, flash_range = -1, adminlog = FALSE)
+
+/obj/projectile/bullet/a84mm/ancient/at/seeking/process()
+	if(victim)
+		var/new_angle = Get_Angle(src, victim)
+		var/angle_change = min(new_angle - Angle, SEEKING_ROTATION_PER_TICK)
+		if(new_angle - Angle < 0)
+			angle_change = max(new_angle - Angle, SEEKING_ROTATION_PER_TICK * -1)
+		set_angle(Angle + angle_change) //WOOOOSH
+	. = ..()
+
+#undef SEEKING_ROTATION_PER_TICK

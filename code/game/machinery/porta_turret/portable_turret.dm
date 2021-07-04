@@ -1147,3 +1147,53 @@ DEFINE_BITFIELD(turret_flags, list(
 			if(istype(P, /obj/projectile/beam/lasertag/bluetag))
 				toggle_on(FALSE)
 				addtimer(CALLBACK(src, .proc/toggle_on, TRUE), 10 SECONDS)
+
+/obj/machinery/porta_turret/ancient_ai
+	installation = null
+	always_up = TRUE
+	use_power = NO_POWER_USE
+	has_cover = FALSE
+	scan_range = 9
+	req_access = list(ACCESS_AWAY_GENERAL)
+	uses_stored = FALSE
+	mode = TURRET_LETHAL
+	stun_projectile = /obj/projectile/bullet/a84mm/ancient/at
+	lethal_projectile = /obj/projectile/bullet/a84mm/ancient/at
+	lethal_projectile_sound = 'sound/weapons/gun/general/rocket_launch.ogg'
+	stun_projectile_sound = 'sound/weapons/gun/general/rocket_launch.ogg'
+	icon_state = "rocket_off"
+	base_icon_state = "rocket"
+	faction = list("jungle", "boss")
+	desc = "A heavy rocket turret, covered by a layer of dust."
+
+	armor = list(MELEE = 50, BULLET = 50, LASER = 100, ENERGY = 50, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+
+	var/mob/living/simple_animal/hostile/megafauna/ancient_ai/master_ai
+
+/obj/machinery/porta_turret/ancient_ai/Initialize()
+	. = ..()
+	toggle_on(FALSE)
+
+/obj/machinery/porta_turret/ancient_ai/ComponentInitialize()
+	. = ..()
+	AddElement(/datum/element/empprotection, EMP_PROTECT_SELF | EMP_PROTECT_WIRES)
+
+/obj/machinery/porta_turret/ancient_ai/setup()
+	return
+
+/obj/machinery/porta_turret/ancient_ai/assess_perp(mob/living/carbon/human/perp)
+	return 10
+
+/obj/machinery/porta_turret/ancient_ai/shootAt(atom/movable/target)
+	if(master_ai && master_ai.rocket_type)
+		stun_projectile = master_ai.rocket_type
+		lethal_projectile = master_ai.rocket_type
+	. =  ..()
+
+/obj/machinery/porta_turret/ancient_ai/target(atom/movable/target)
+	if(target)
+		setDir(get_dir(base, target))
+		shootAt(target)
+
+/obj/machinery/porta_turret/ancient_ai/ui_interact(mob/user, datum/tgui/ui)
+	return

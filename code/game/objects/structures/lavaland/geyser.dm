@@ -193,3 +193,29 @@
 	layer_mode_sprite = "reinforced_plunger_layer"
 
 	custom_premium_price = PAYCHECK_MEDIUM * 8
+
+/obj/structure/geyser/jungle
+	icon_state = "geyser_dirt"
+
+/obj/structure/geyser/jungle/wittel
+	reagent_id = /datum/reagent/wittel
+	point_value = 250
+	true_name = "wittel geyser"
+	discovery_message = "It's a rare wittel geyser! This could be very powerful in the right hands... "
+
+/obj/structure/geyser/jungle/plasma_oxide
+	reagent_id = /datum/reagent/plasma_oxide
+	true_name = "plasma-oxide geyser"
+
+/obj/structure/geyser/jungle/protozine
+	reagent_id = /datum/reagent/medicine/omnizine/protozine
+	true_name = "protozine geyser"
+
+/obj/structure/geyser/jungle/hollowwater
+	reagent_id = /datum/reagent/water/hollowwater
+	true_name = "hollow water geyser"
+
+/obj/structure/geyser/jungle/random
+	point_value = 500
+	true_name = "strange geyser"
+	discovery_message = "It's a strange geyser! How does any of this even work?"

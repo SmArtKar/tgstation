@@ -677,6 +677,10 @@
 /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle
 	faction = list("jungle")
 	speak_chance = 0
+	health = 100
+	maxHealth = 100
+	melee_damage_lower = 15
+	melee_damage_upper = 15
 
 /**
  * # Scrawny Nurse Spider

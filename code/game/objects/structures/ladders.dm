@@ -230,18 +230,19 @@
 
 /obj/structure/ladder/dirt_hole/proc/check_for_deletion()
 	var/turf/bottom_turf = locate(x, y, z - 1)
-	if(!bottom_turf || !istype(bottom_turf))
+	var/turf/my_turf = get_turf()
+	if(!bottom_turf || !istype(bottom_turf) || !my_turf || !istype(my_turf))
 		return
 
-	if(isclosedturf(bottom_turf))
+	if(isclosedturf(bottom_turf) || isclosedturf(my_turf))
 		qdel(src, force = TRUE)
 		return
 
-	if(!isarea(bottom_turf.loc))
+	if(!isarea(bottom_turf.loc) || !isarea(my_turf.loc))
 		qdel(src, force = TRUE)
 		return
 
-	if(!istype(bottom_turf.loc, /area/mine/planetgeneration/caves))
+	if(!istype(bottom_turf.loc, /area/mine/planetgeneration/caves) || !istype(my_turf.loc, /area/mine/planetgeneration/caves))
 		qdel(src, force = TRUE)
 		return
 

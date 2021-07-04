@@ -35,7 +35,7 @@
 /mob/living/simple_animal/hostile/jungle/snakeman/proc/enter_anger()
 	add_atom_colour("#FF0000", FIXED_COLOUR_PRIORITY)
 	visible_message("<span class='danger'>[src] roars, their skin turning red!</span>")
-	speed = -1
+	add_movespeed_modifier(/datum/movespeed_modifier/slaughter)
 	anger_state = TRUE
 	damage_coeff = list(BRUTE = 2, BURN = 2, TOX = 2, CLONE = 2, STAMINA = 0, OXY = 2)
 	addtimer(CALLBACK(src, .proc/exit_anger), 2 SECONDS)
@@ -43,10 +43,32 @@
 /mob/living/simple_animal/hostile/jungle/snakeman/proc/exit_anger()
 	visible_message("<span class='notice'>[src]'s skin slowly turns back to normal color.</span>")
 	damage_coeff = initial(damage_coeff)
-	speed = initial(speed)
-	move_to_delay = initial(move_to_delay)
+	remove_movespeed_modifier(/datum/movespeed_modifier/slaughter)
 	anger_state = FALSE
 	remove_atom_colour(FIXED_COLOUR_PRIORITY)
+
+/mob/living/simple_animal/hostile/jungle/snakeman/Move()
+	if(anger_state)
+		var/obj/effect/temp_visual/snakeman_dash/dash = new(get_turf(src))
+		dash.dir = dir
+	. = ..()
+
+/obj/effect/temp_visual/snakeman_dash
+	name = "snakeman dash"
+	icon = 'icons/mob/animal.dmi'
+	icon_state = "snakeman"
+	duration = 5
+
+/obj/effect/temp_visual/snakeman_dash/Initialize()
+	. = ..()
+	START_PROCESSING(SSfastprocess, src)
+
+/obj/effect/temp_visual/snakeman_dash/Destroy()
+	STOP_PROCESSING(SSfastprocess, src)
+	. = ..()
+
+/obj/effect/temp_visual/snakeman_dash/process()
+	alpha -= 50
 
 /obj/item/crusher_trophy/goliath_tentacle/adrenaline_sacs
 	name = "adrenaline sacs"

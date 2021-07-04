@@ -1,28 +1,33 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
-"ay" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
+"aM" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
 	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
-	},
-/area/template_noop)
-"aG" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 6
-	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"bf" = (
-/obj/effect/turf_decal/stripes/corner{
+"aR" = (
+/obj/machinery/giant_arm_holder/dir_1{
+	base_pixel_x = -32;
+	base_pixel_y = null;
+	dir = 1;
+	pixel_x = -32;
+	pixel_y = 0
+	},
+/turf/closed/indestructible/syndicate,
+/area/template_noop)
+"bk" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
 	dir = 4
 	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
 	},
+/turf/open/floor/engine/ecute,
 /area/template_noop)
 "bH" = (
 /obj/effect/turf_decal/stripes/corner{
@@ -32,29 +37,28 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"bK" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838"
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull"
-	},
-/area/template_noop)
-"dz" = (
+"bM" = (
 /obj/effect/turf_decal/siding/blue{
-	dir = 1
+	color = "#383838";
+	dir = 10
 	},
-/turf/open/indestructible{
-	icon_state = "bcircuit"
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
 	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
 /area/template_noop)
-"dM" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 1
+"dB" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
 	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
 	},
+/turf/open/floor/engine/ecute,
 /area/template_noop)
 "dS" = (
 /obj/effect/turf_decal/stripes/line{
@@ -62,14 +66,6 @@
 	},
 /turf/open/indestructible{
 	icon_state = "darkfull"
-	},
-/area/template_noop)
-"dZ" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
 	},
 /area/template_noop)
 "ez" = (
@@ -80,10 +76,26 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"gm" = (
-/obj/effect/turf_decal/stripes/line,
+"fl" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "podfloor"
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"gw" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull"
 	},
 /area/template_noop)
 "gN" = (
@@ -94,33 +106,50 @@
 	icon_state = "bcircuit"
 	},
 /area/template_noop)
-"hp" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
+"hd" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 6
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "podfloor"
+	icon_state = "gcircuit"
 	},
 /area/template_noop)
-"hM" = (
-/turf/open/space/basic,
+"he" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/ancient_server,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"hG" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"hN" = (
+/obj/machinery/giant_arm_holder,
+/turf/closed/indestructible/syndicate,
+/area/template_noop)
+"jL" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
 /area/template_noop)
 "kX" = (
 /turf/closed/indestructible/syndicate,
-/area/template_noop)
-"lM" = (
-/obj/effect/turf_decal/stripes/corner,
-/turf/open/indestructible{
-	icon_state = "podfloor"
-	},
-/area/template_noop)
-"mA" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 9
-	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
-	},
 /area/template_noop)
 "mX" = (
 /obj/effect/turf_decal/siding/red/corner{
@@ -138,6 +167,24 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
+"nv" = (
+/obj/machinery/rogue_drone_spawner,
+/obj/effect/turf_decal/delivery,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"nP" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 6
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 1
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
 "nX" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
@@ -154,19 +201,72 @@
 	icon_state = "bcircuit"
 	},
 /area/template_noop)
-"tj" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 9
+"qd" = (
+/obj/machinery/laser_flower,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"tW" = (
-/obj/effect/turf_decal/siding/red,
+"sD" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"sR" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
 /turf/open/indestructible{
-	icon_state = "rcircuit"
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"tr" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"tt" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 5
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"ut" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"uB" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
 	},
 /area/template_noop)
 "uF" = (
@@ -181,6 +281,16 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
+"vL" = (
+/obj/machinery/laser_flower,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
 "wt" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -188,6 +298,33 @@
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
+/area/template_noop)
+"wu" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"wE" = (
+/obj/machinery/rogue_drone_spawner,
+/obj/effect/turf_decal/delivery,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"wG" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
 /area/template_noop)
 "wW" = (
 /obj/effect/turf_decal/stripes/line{
@@ -197,20 +334,34 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"xq" = (
-/obj/effect/turf_decal/siding/blue{
+"xb" = (
+/obj/effect/turf_decal/siding/blue/corner{
 	color = "#383838";
 	dir = 1
 	},
-/turf/open/indestructible{
-	icon_state = "darkfull"
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 6
 	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
 /area/template_noop)
-"xF" = (
-/obj/effect/turf_decal/siding/blue/corner{
+"xh" = (
+/obj/effect/turf_decal/siding/blue{
 	color = "#383838";
 	dir = 4
 	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"yx" = (
+/obj/machinery/ancient_server,
+/obj/effect/turf_decal/delivery,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
@@ -223,6 +374,24 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
+"zK" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"zS" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
 "zW" = (
 /obj/effect/turf_decal/siding/red{
 	dir = 10
@@ -231,14 +400,13 @@
 	icon_state = "rcircuit"
 	},
 /area/template_noop)
-"Ab" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 8
+"Af" = (
+/obj/machinery/giant_arm_holder/dir_4{
+	base_pixel_y = 0;
+	dir = 4;
+	pixel_y = 0
 	},
-/turf/open/indestructible{
-	icon_state = "darkfull"
-	},
+/turf/closed/indestructible/syndicate,
 /area/template_noop)
 "AO" = (
 /obj/effect/turf_decal/stripes/line,
@@ -246,9 +414,47 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"AS" = (
+"Bk" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/rogue_drone_spawner,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "podfloor"
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Bq" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 6
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"By" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Bz" = (
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
 	},
 /area/template_noop)
 "Cy" = (
@@ -259,34 +465,42 @@
 	icon_state = "ycircuit"
 	},
 /area/template_noop)
-"CL" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 10
-	},
+"CP" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/rogue_drone_spawner,
 /turf/open/indestructible{
-	icon_state = "podfloor"
+	icon_state = "darkfull"
 	},
 /area/template_noop)
 "Da" = (
 /turf/template_noop,
 /area/template_noop)
-"Dj" = (
-/obj/effect/turf_decal/siding/red{
-	dir = 8
+"Eb" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "rcircuit"
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Ex" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
 	},
 /area/template_noop)
 "EC" = (
-/turf/closed/indestructible/reinforced,
-/area/template_noop)
-"Fm" = (
 /obj/effect/turf_decal/stripes/line{
-	dir = 6
+	dir = 1
 	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "podfloor"
+	icon_state = "darkfull"
 	},
 /area/template_noop)
 "FG" = (
@@ -297,41 +511,85 @@
 	icon_state = "gcircuit"
 	},
 /area/template_noop)
-"Gd" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 5
-	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
-	},
-/area/template_noop)
-"JD" = (
-/obj/effect/turf_decal/siding/green,
-/turf/open/indestructible{
-	icon_state = "gcircuit"
-	},
-/area/template_noop)
-"JG" = (
+"Hu" = (
+/obj/machinery/ancient_server,
+/obj/effect/turf_decal/delivery,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"KA" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
+"HM" = (
+/obj/machinery/porta_turret/ancient_ai,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/effect/turf_decal/stripes/corner{
 	dir = 1
 	},
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"KF" = (
+"HZ" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"Ih" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"Ju" = (
+/obj/machinery/giant_arm_holder/dir_8{
+	base_pixel_x = -32;
+	dir = 8;
+	pixel_x = -32
+	},
+/turf/closed/indestructible/syndicate,
+/area/template_noop)
+"JG" = (
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"JM" = (
 /obj/effect/turf_decal/siding/blue/corner{
 	color = "#383838";
 	dir = 8
 	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 5
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"KN" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/mob/living/simple_animal/hostile/megafauna/ancient_ai,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "darkfull"
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"KO" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
 	},
 /area/template_noop)
 "Li" = (
@@ -342,31 +600,34 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"LM" = (
-/obj/effect/turf_decal/siding/green{
-	dir = 4
-	},
-/turf/open/indestructible{
-	icon_state = "gcircuit"
-	},
-/area/template_noop)
-"OA" = (
+"LA" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
-	dir = 5
+	dir = 9
 	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"NH" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"Ph" = (
+"Pn" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
-	dir = 10
+	dir = 1
 	},
-/turf/open/indestructible{
-	icon_state = "darkfull"
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838"
 	},
+/turf/open/floor/engine/ecute,
 /area/template_noop)
 "Pt" = (
 /obj/effect/turf_decal/siding/yellow{
@@ -376,29 +637,60 @@
 	icon_state = "ycircuit"
 	},
 /area/template_noop)
-"Rw" = (
+"PW" = (
 /obj/effect/turf_decal/siding/blue{
-	dir = 4
+	color = "#383838"
 	},
-/turf/open/indestructible{
-	icon_state = "bcircuit"
-	},
-/area/template_noop)
-"SL" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
+	dir = 1
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"Qj" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/template_noop)
+"RU" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 5
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 8
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"SF" = (
+/obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"Td" = (
-/obj/effect/turf_decal/siding/yellow{
-	dir = 1
+"Tn" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
 	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"TJ" = (
+/obj/effect/turf_decal/siding/green/corner,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "ycircuit"
+	icon_state = "gcircuit"
 	},
 /area/template_noop)
 "UF" = (
@@ -409,29 +701,72 @@
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"VJ" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/turf/open/indestructible{
-	icon_state = "podfloor"
-	},
-/area/template_noop)
-"XF" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838"
-	},
+"WB" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull"
 	},
 /area/template_noop)
-"XV" = (
-/obj/effect/turf_decal/siding/yellow{
+"WE" = (
+/obj/effect/turf_decal/stripes/corner{
 	dir = 8
 	},
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "ycircuit"
+	icon_state = "darkfull"
 	},
+/area/template_noop)
+"Xl" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/ancient_server,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"Yi" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"YJ" = (
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull"
+	},
+/area/template_noop)
+"YV" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
+/area/template_noop)
+"ZG" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute,
 /area/template_noop)
 
 (1,1,1) = {"
@@ -459,8 +794,8 @@ Da
 Da
 Da
 Da
-hM
-hM
+Da
+Da
 Da
 Da
 Da
@@ -1026,18 +1361,18 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+kX
+kX
+kX
+JG
+JG
+kX
+kX
+kX
+kX
+kX
 Da
 Da
 Da
@@ -1070,28 +1405,28 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
 kX
+By
+vv
+dS
+dS
+dS
+dS
+dS
+dS
+ns
+sR
 kX
 kX
 kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1119,32 +1454,32 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
+TJ
+hd
+Li
+AO
+HZ
+bk
+xh
+xh
+bk
+sD
+Li
+AO
+pi
+gN
 kX
 kX
-ns
-JG
-JG
-JG
-JG
-vv
-kX
-kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1169,35 +1504,35 @@ Da
 Da
 Da
 Da
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
 uF
-LM
-FG
+hd
+wW
+bH
+wu
+ZG
+wW
+NH
+NH
+nX
+ZG
 Li
-JG
-JG
-JG
-JG
-AO
+UF
+nX
 pi
-Rw
 gN
 kX
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1220,37 +1555,37 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-kX
+hN
 uF
-LM
 FG
-wW
-wt
+Yi
 bH
-JG
-JG
-JG
+uB
+wu
+Pn
+Li
+Bk
+Hu
+AO
+Pn
+Li
 JG
 UF
-wt
 nX
 pi
-Rw
 gN
+Af
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1271,39 +1606,39 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
 uF
 FG
-wW
-wt
+Yi
 bH
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+uB
+uB
+wu
+ZG
+zJ
+dS
+dS
+ez
+Pn
+Li
+uB
+uB
 UF
-wt
 nX
 pi
 gN
 kX
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1323,40 +1658,40 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+kX
 kX
 uF
 FG
-wW
+Yi
 bH
+uB
 JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+uB
+wu
+RU
+bk
+bk
+bk
+bk
+nP
+Li
+uB
+uB
+uB
 UF
 nX
 pi
 gN
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
 Da
 Da
 Da
@@ -1374,41 +1709,41 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-kX
-JD
+uF
+FG
 wW
 bH
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+uB
+uB
+uB
 JG
 UF
+wt
+NH
+wt
+wt
+wt
+wt
+bH
+JG
+uB
+uB
+uB
+WE
 nX
-dz
+pi
+gN
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1426,42 +1761,42 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-uF
+kX
 FG
-Li
+wW
+bH
 JG
 JG
-JG
-JG
+uB
+yx
 kX
 kX
-JG
-JG
-JG
-JG
+kX
+qd
+uB
+uB
+Bz
 kX
 kX
+kX
+Hu
 JG
-JG
-JG
-JG
-AO
+uB
+uB
+UF
+nX
 pi
-gN
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
 Da
 Da
 Da
@@ -1478,42 +1813,42 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-JD
-wW
+hG
+wt
 bH
 JG
 JG
 JG
+uB
+kX
+kX
+nv
+uB
+uB
+uB
+JG
+JG
+JG
+he
 kX
 kX
 JG
+uB
 JG
 JG
-JG
-JG
-JG
+WE
+wt
+gw
 kX
-kX
-JG
-JG
-JG
-UF
-nX
-dz
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1529,43 +1864,43 @@ Da
 (22,1,1) = {"
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
+vv
+SF
+SF
+SF
+dS
+dS
+ns
 kX
-FG
-Li
+he
 JG
+vv
+dS
+dS
+dS
+dS
+ns
 JG
-JG
+nv
 kX
+WB
+dS
+dS
+SF
+SF
+dS
+ns
 kX
-JG
-bK
-SL
-SL
-SL
-SL
-xF
-JG
-kX
-kX
-JG
-JG
-JG
-AO
-pi
-kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1581,43 +1916,43 @@ Da
 (23,1,1) = {"
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-UF
-wt
-bH
-JG
-JG
-JG
+AO
+HZ
+xh
+bk
+bk
+sD
+Li
 kX
 JG
-bK
-aG
-mA
-VJ
-VJ
-CL
-OA
-xF
+vv
+ez
+tr
+xh
+bk
+dB
+zJ
+ns
 JG
 kX
-JG
-JG
-JG
-UF
-wt
-bH
+AO
+HZ
+xh
+bk
+xh
+bM
+Li
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1633,43 +1968,43 @@ Da
 (24,1,1) = {"
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
+wu
+ZG
+Yi
+wt
+nX
+Pn
+aM
+YJ
 JG
+wu
+Tn
+nP
+KO
+Ex
+RU
+YV
+EC
 JG
-JG
-JG
-JG
-JG
-JG
-JG
-XF
-mA
-dZ
-AS
-AS
-ay
-CL
-xq
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+vL
+AO
+ZG
+Yi
+NH
+zK
+ZG
+Li
 kX
-EC
-EC
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1683,35 +2018,44 @@ Da
 Da
 "}
 (25,1,1) = {"
-hM
 Da
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+JG
+AO
+Pn
+Li
+Hu
+AO
+Pn
+Li
+uB
+uB
+wu
+PW
+KO
+Qj
+KN
+Ex
+ZG
+aM
 JG
 JG
-JG
-JG
-JG
-JG
-JG
-JG
-XF
-dM
-AS
-AS
-AS
-AS
-gm
-xq
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+AO
+Pn
+Li
+Bk
+wu
+Pn
+Li
 JG
 Da
 Da
@@ -1724,46 +2068,46 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-hM
 "}
 (26,1,1) = {"
-hM
 Da
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+JG
+wu
+ZG
+Li
+CP
+wu
+Pn
+Li
 JG
 JG
+AO
+PW
+tt
+ut
+Ih
+zS
+Pn
+aM
+uB
 JG
-JG
-JG
-JG
-JG
-JG
-XF
-dM
-AS
-AS
-AS
-AS
-gm
-xq
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+AO
+Pn
+aM
+yx
+AO
+Pn
+Li
 JG
 Da
 Da
@@ -1776,56 +2120,47 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-hM
 "}
 (27,1,1) = {"
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
+AO
+Pn
+zJ
+dS
+fl
+Pn
+Li
+vL
 JG
+AO
+JM
+sD
+tt
+zS
+LA
+xb
+Li
 JG
-JG
-JG
-JG
-JG
-JG
-JG
-XF
-Gd
-bf
-AS
-AS
-lM
-Fm
-xq
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
+YJ
+AO
+ZG
+zJ
+dS
+ez
+Pn
+Li
 kX
-EC
-EC
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1841,43 +2176,43 @@ Da
 (28,1,1) = {"
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-vv
-dS
-ns
-JG
-JG
+AO
+RU
+bk
+bk
+bk
+nP
+Li
+kX
+uB
+WE
+nX
+JM
+wG
+wG
+Bq
+wW
+jL
 JG
 kX
-JG
-KF
-Ph
-Gd
-hp
-hp
-Fm
-tj
-KA
-JG
+wu
+RU
+bk
+bk
+bk
+nP
+Li
 kX
-JG
-JG
-JG
-vv
-dS
-ns
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1893,43 +2228,43 @@ Da
 (29,1,1) = {"
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
+UF
+wt
+NH
+NH
+wt
+NH
+jL
 kX
-zW
-Li
-JG
-JG
-JG
+wE
+uB
+WE
+wt
+wt
+wt
+NH
+jL
+uB
+Xl
 kX
+UF
+wt
+NH
+wt
+wt
+wt
+bH
 kX
-JG
-KF
-Ab
-Ab
-Ab
-Ab
-KA
-JG
-kX
-kX
-JG
-JG
-JG
-AO
-Pt
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1946,42 +2281,42 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-tW
-zJ
-ns
+sR
+dS
+Eb
+uB
+uB
+JG
+uB
+kX
+kX
+Xl
 JG
 JG
 JG
+JG
+JG
+uB
+wE
 kX
 kX
 JG
-JG
-JG
-JG
-JG
-JG
-kX
-kX
-JG
-JG
-JG
+uB
+uB
+uB
 vv
-ez
-Td
+dS
+By
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1998,42 +2333,42 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-mX
+kX
 zW
-Li
+zJ
+ns
 JG
 JG
 JG
-JG
+Hu
 kX
 kX
+kX
+YJ
 JG
 JG
-JG
-JG
+vL
 kX
 kX
+kX
+Hu
 JG
-JG
-JG
-JG
-AO
+uB
+uB
+WB
+fl
 Pt
-Cy
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
 Da
 Da
 Da
@@ -2050,41 +2385,41 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-kX
-tW
+mX
+zW
 zJ
 ns
 JG
 JG
 JG
 JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
-JG
 vv
-ez
-Td
+dS
+dS
+dS
+dS
+SF
+SF
+ns
+JG
+uB
+uB
+uB
+WB
+fl
+Pt
+Cy
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2103,6 +2438,15 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+kX
 kX
 mX
 zW
@@ -2111,32 +2455,23 @@ ns
 JG
 JG
 JG
+AO
+LA
+bk
+xh
+xh
+xh
+sD
+Li
 JG
 JG
 JG
-JG
-JG
-JG
-JG
-JG
-JG
-vv
+WB
 ez
 Pt
 Cy
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
 Da
 Da
 Da
@@ -2155,39 +2490,39 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
 mX
 zW
 zJ
-dS
 ns
 JG
 JG
-JG
-JG
-JG
-JG
+AO
+Pn
+Yi
+NH
+wt
+nX
+Pn
+Li
 JG
 JG
 vv
-dS
 ez
 Pt
 Cy
 kX
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2208,37 +2543,37 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
-kX
+Ju
 mX
-Dj
 zW
 zJ
-dS
 ns
 JG
-JG
-JG
+AO
+Pn
+aM
+yx
+CP
+wu
+ZG
+Li
 JG
 vv
-dS
 ez
 Pt
-XV
 Cy
+aR
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2261,35 +2596,35 @@ Da
 Da
 Da
 Da
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
 mX
-Dj
 zW
-Li
-JG
-JG
-JG
-JG
+zJ
+ns
 AO
+Pn
+zJ
+dS
+SF
+fl
+ZG
+Li
+vv
+ez
 Pt
-XV
 Cy
 kX
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2315,32 +2650,32 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
+mX
+zW
+Li
+AO
+RU
+bk
+bk
+bk
+xh
+nP
+aM
+AO
+Pt
+Cy
 kX
 kX
-bH
-JG
-JG
-JG
-JG
-UF
-kX
-kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2370,28 +2705,28 @@ Da
 Da
 Da
 Da
+Da
+Da
+Da
+Da
+Da
+Da
 kX
 kX
 kX
+HM
+UF
+wt
+wt
+wt
+wt
+wt
+wt
+bH
+hG
 kX
 kX
 kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2430,18 +2765,18 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+kX
+kX
+kX
+JG
+JG
+kX
+kX
+kX
+kX
+kX
 Da
 Da
 Da
@@ -3007,8 +3342,8 @@ Da
 Da
 Da
 Da
-hM
-hM
+Da
+Da
 Da
 Da
 Da
