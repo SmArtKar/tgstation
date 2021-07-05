@@ -1,0 +1,483 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/closed/indestructible/wood,
+/area/mine/lobby)
+"d" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/wiz,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"e" = (
+/obj/effect/turf_decal/box,
+/obj/machinery/mineral/ore_redemption,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"f" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/hos,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"h" = (
+/obj/machinery/autolathe/hacked,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"k" = (
+/obj/effect/turf_decal/box,
+/obj/machinery/mineral/equipment_vendor,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"l" = (
+/obj/machinery/light,
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"m" = (
+/obj/machinery/door/window/survival_pod{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"o" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"p" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"q" = (
+/obj/structure/table/reinforced,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"r" = (
+/obj/machinery/sleeper/syndie/fullupgrade{
+	dir = 4
+	},
+/obj/effect/turf_decal/box,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"s" = (
+/obj/machinery/telecomms/allinone/indestructable,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"t" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/machinery/light,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"u" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/machinery/light,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"v" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"w" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"x" = (
+/obj/machinery/light,
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"z" = (
+/obj/structure/table/reinforced,
+/obj/structure/window/reinforced/survival_pod{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"A" = (
+/obj/structure/table/reinforced,
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/structure/mirror/magic/lesser{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"B" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/syndie,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"C" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"D" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/cosmos,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"E" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/centcom,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"F" = (
+/obj/machinery/vending/wallmed{
+	custom_premium_price = 0;
+	custom_price = 0;
+	default_price = 0;
+	extra_price = 0;
+	fair_market_price = 0
+	},
+/turf/closed/indestructible/wood,
+/area/mine/lobby)
+"G" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/machinery/power/apc/highcap/fifteen_k{
+	pixel_y = 25
+	},
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"I" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/patriot,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"K" = (
+/obj/machinery/door/airlock/external/glass,
+/obj/structure/fans/tiny/invisible,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"M" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/cult,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"N" = (
+/obj/machinery/door/airlock/titanium,
+/obj/structure/fans/tiny/invisible,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"P" = (
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"S" = (
+/obj/machinery/ore_silo,
+/obj/item/multitool,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"T" = (
+/obj/machinery/door/window/survival_pod{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"V" = (
+/obj/structure/table/reinforced,
+/obj/machinery/light{
+	dir = 8
+	},
+/obj/structure/mirror/magic/lesser{
+	pixel_x = -32;
+	pixel_y = 0
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"W" = (
+/obj/structure/window/reinforced/survival_pod{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+"X" = (
+/obj/effect/turf_decal/stripes/line,
+/turf/open/indestructible/hotelwood,
+/area/mine/lobby)
+"Z" = (
+/obj/effect/turf_decal/delivery,
+/obj/item/bedsheet/captain,
+/obj/effect/mob_spawn/human/debug_miner,
+/turf/open/indestructible{
+	icon_state = "podfloor"
+	},
+/area/mine/lobby)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+r
+r
+a
+D
+V
+q
+a
+B
+V
+q
+a
+"}
+(3,1,1) = {"
+a
+G
+u
+F
+W
+T
+o
+F
+W
+T
+o
+a
+"}
+(4,1,1) = {"
+K
+P
+P
+N
+P
+P
+P
+N
+P
+P
+P
+a
+"}
+(5,1,1) = {"
+K
+P
+P
+N
+P
+P
+P
+N
+P
+P
+P
+a
+"}
+(6,1,1) = {"
+a
+C
+x
+F
+p
+m
+z
+F
+p
+m
+z
+a
+"}
+(7,1,1) = {"
+a
+X
+s
+a
+I
+A
+q
+a
+d
+A
+q
+a
+"}
+(8,1,1) = {"
+a
+X
+S
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(9,1,1) = {"
+a
+X
+h
+a
+M
+V
+q
+a
+E
+V
+q
+a
+"}
+(10,1,1) = {"
+a
+w
+l
+F
+W
+T
+o
+F
+W
+T
+o
+a
+"}
+(11,1,1) = {"
+K
+P
+P
+N
+P
+P
+P
+N
+P
+P
+P
+a
+"}
+(12,1,1) = {"
+K
+P
+P
+N
+P
+P
+P
+N
+P
+P
+P
+a
+"}
+(13,1,1) = {"
+a
+v
+t
+F
+p
+m
+z
+F
+p
+m
+z
+a
+"}
+(14,1,1) = {"
+a
+k
+e
+a
+f
+A
+q
+a
+Z
+A
+q
+a
+"}
+(15,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}

@@ -776,3 +776,90 @@
 	target.layer = old_layer
 	target.plane = old_plane
 	current_button.appearance_cache = target.appearance
+
+/// Parkour!
+
+/datum/action/item_action/exosuit_jump
+	name = "Activate Exosuit Jump Booster"
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "exosuit_jump"
+	background_icon_state = "bg_exosuit"
+
+/datum/action/item_action/exosuit_jump/Trigger()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	exosuit.activate_jump(owner)
+
+/datum/action/item_action/exosuit_hook
+	name = "Extend Magnetic Grappling Hook"
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "exosuit_hook"
+	background_icon_state = "bg_exosuit"
+
+/*/datum/action/item_action/exosuit_hook/Trigger()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	exosuit.extend_hook(owner)
+	UpdateButtonIcon()
+
+/datum/action/item_action/exosuit_hook/UpdateButtonIcon(status_only = FALSE, force)
+	. = ..()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return .
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	button.icon_state = "bg_exosuit[exosuit.hook.loc != exosuit ? "_on" : ""]"
+
+*/
+
+/datum/action/item_action/exosuit_dash
+	name = "Activate Reactive Exosuit Boosters"
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "exosuit_dash"
+	background_icon_state = "bg_exosuit"
+
+/datum/action/item_action/exosuit_dash/Trigger()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	exosuit.activate_dash(owner)
+	UpdateButtonIcon()
+
+/datum/action/item_action/exosuit_dash/UpdateButtonIcon(status_only = FALSE, force)
+	. = ..()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return .
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	button.icon_state = "bg_exosuit[exosuit.dash_active ? "_on" : ""]"
+
+/datum/action/item_action/toggle_spacesuit/exosuit
+	background_icon_state = "bg_exosuit"
+
+/datum/action/item_action/toggle_spacesuit/exosuit/UpdateButtonIcon(status_only = FALSE, force)
+	. = ..()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return .
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	button.icon_state = "bg_exosuit[exosuit.thermal_on ? "_on" : ""]"
+
+/datum/action/item_action/toggle_helmet/exosuit
+	background_icon_state = "bg_exosuit"
+
+/datum/action/item_action/toggle_helmet/exosuit/UpdateButtonIcon(status_only = FALSE, force)
+	. = ..()
+	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
+		return .
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
+	button.icon_state = "bg_exosuit[exosuit.helmet.loc != exosuit ? "_on" : ""]"
+
+/datum/action/item_action/toggle_helmet_light/exosuit
+	background_icon_state = "bg_exosuit"
+
+/datum/action/item_action/toggle_helmet_light/exosuit/UpdateButtonIcon(status_only = FALSE, force)
+	. = ..()
+	if(!istype(target, /obj/item/clothing/head/helmet/space/hardsuit/exosuit))
+		return .
+	var/obj/item/clothing/head/helmet/space/hardsuit/exosuit/helmet = target
+	button.icon_state = "bg_exosuit[helmet.on ? "_on" : ""]"
+

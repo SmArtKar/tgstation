@@ -272,6 +272,8 @@
 
 			H.apply_status_effect(STATUS_EFFECT_SUN_CORE)
 			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "core", /datum/mood_event/healsbadman)
+			playsound(H, 'sound/magic/staff_healing.ogg', 20, TRUE)
+			new /obj/effect/temp_visual/seedling_sparks(get_turf(H))
 			qdel(src)
 
 /obj/item/crusher_trophy/tail_spike/seedling_petal

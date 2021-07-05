@@ -28,7 +28,7 @@
 #define LASER_FLOWER_LENGTH 4 SECONDS
 #define LASER_FLOWER_BULLETHELL_LENGTH 10 SECONDS
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai
 	name = "ancient AI"
 	desc = "Ancient Nanotrasen AI that was hacked and reprogrammed to kill everything in sight."
 	health = 1000
@@ -58,6 +58,9 @@
 	stat_attack = HARD_CRIT
 	ranged = TRUE
 
+	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit)
+	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/crusher_trophy/ai_core)
+
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
 	var/shield_toggled = TRUE
 	var/floors_shocked = FALSE
@@ -67,25 +70,25 @@
 	var/bullethell = FALSE
 	var/floorshock = FALSE
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE)
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE)
 	return
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/Initialize()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Initialize()
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, ROUNDSTART_TRAIT)
 	update_appearance()
 	status_flags |= GODMODE
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/Goto(target, delay, minimum_distance) //It's a bunch of damn servers, they can't walk
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Goto(target, delay, minimum_distance) //It's a bunch of damn servers, they can't walk
 	return
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/MoveToTarget(list/possible_targets)
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/MoveToTarget(list/possible_targets)
 	return
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/Move()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Move()
 	return
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/GiveTarget(new_target)
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/GiveTarget(new_target)
 	if(icon_state == "ai_complex_offline")
 		icon_state = "ai_complex_online"
 		update_icon()
@@ -94,12 +97,12 @@
 	flick("ai_complex_syndicate", src)
 	. = ..()
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/update_overlays()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/update_overlays()
 	. = ..()
 	if(shield_toggled)
 		. += "ai_shield"
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/activate_turrets()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_turrets()
 	var/list/working_turrets = list()
 
 	for(var/obj/machinery/porta_turret/ancient_ai/turret in range(12, src))
@@ -124,7 +127,7 @@
 		turret.update_icon()
 		sleep(5)
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/activate_floor_shock()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_floor_shock()
 	if(floors_shocked)
 		return
 
@@ -134,7 +137,7 @@
 	floorshock = TRUE
 	addtimer(CALLBACK(src, .proc/deactivate_floor_shock), FLOOR_SHOCK_LENGTH)
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/deactivate_floor_shock()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/deactivate_floor_shock()
 	if(!floors_shocked)
 		return
 
@@ -142,17 +145,17 @@
 		floor.turn_on(FALSE)
 	floorshock = FALSE
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/spawn_drones()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/spawn_drones()
 
 	for(var/obj/machinery/rogue_drone_spawner/spawner in range(12, src))
 		spawner.spawn_drone()
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/violent_smash()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/violent_smash()
 
 	for(var/obj/machinery/giant_arm_holder/arm in range(12, src))
 		arm.violent_smash()
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/activate_servers()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_servers()
 	for(var/obj/machinery/ancient_server/server in range(12, src))
 		if(!(server in server_list))
 			server_list.Add(server)
@@ -164,26 +167,26 @@
 			server.update_icon()
 		server.master_ai = src
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/laser_flower()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/laser_flower()
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
 		turret.toggle(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_LENGTH)
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/deactivate_flowers()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/deactivate_flowers()
 	bullethell = FALSE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
 		turret.toggle(FALSE)
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/laser_flower_bullethell()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/laser_flower_bullethell()
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
 		turret.toggle(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_BULLETHELL_LENGTH)
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/server_broken()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/server_broken()
 	servers -= 1
 	playsound(src, 'sound/voice/ed209_20sec.ogg', 100, FALSE)
 
@@ -194,12 +197,12 @@
 	if(servers > 0)
 		addtimer(CALLBACK(src, .proc/activate_shield), 5 SECONDS)
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/proc/activate_shield()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_shield()
 	shield_toggled = TRUE
 	status_flags |= GODMODE
 	update_appearance()
 
-/mob/living/simple_animal/hostile/megafauna/ancient_ai/OpenFire()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/OpenFire()
 	ranged_cooldown = world.time + (shield_toggled ? 5 SECONDS : 3 SECONDS)
 
 	if(get_dist(src, target) <= 2 && !floorshock)
@@ -282,7 +285,7 @@
 	anchored = TRUE
 
 	var/active = FALSE
-	var/mob/living/simple_animal/hostile/megafauna/ancient_ai/master_ai
+	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
 /obj/machinery/laser_flower/update_icon()
 	if(machine_stat & BROKEN)
@@ -481,7 +484,7 @@
 	max_integrity = 400
 	armor = list(MELEE = 75, BULLET = 0, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
-	var/mob/living/simple_animal/hostile/megafauna/ancient_ai/master_ai
+	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
 /obj/machinery/ancient_server/attackby(obj/item/C, mob/user, params)
 	. = ..()
@@ -532,7 +535,257 @@
 		P.fire(target)
 		sleep(5)
 
+/**
+ *
+ * P.R.O.T.O.N. Exosuit
+ *
+ * A cool cybernetic suit that gives you HUDs and allows to perorm some sick tricks for more movement
+ * It's as good as H.E.C.K. in terms of armor
+ * However, all those sick features and armor only work in low-pressure enviroment to prevent it's use onboard.
+ *
+ **/
+
+#define PROTON_ACTIVE_ARMOR list(MELEE = 70, BULLET = 40, LASER = 10, ENERGY = 20, BOMB = 50, BIO = 100, RAD = 100, FIRE = 100, ACID = 100)
+#define PROTON_INACTIVE_ARMOR list(MELEE = 20, BULLET = 10, LASER = 0, ENERGY = 10, BOMB = 0, BIO = 100, RAD = 50, FIRE = 100, ACID = 100)
+
+#define PROTON_JUMP_COOLDOWN 5 SECONDS //A bit better than jump boots
+#define PROTON_JUMP_RANGE 5
+#define PROTON_JUMP_SPEED 3
+#define PROTON_DASH_RANGE 2
+#define PROTON_DASH_TICK_PRESS 3
+
+#define PROTON_JUMP_COST 1500
+#define PROTON_DASH_COST 500
+#define PROTON_HOOK_COST 2000
+
+/obj/item/clothing/suit/space/hardsuit/exosuit
+	name = "P.R.O.T.O.N. exosuit"
+	desc = "A prototype exosuit with external actuators for additional agility. It's dusty, but still in pretty good condition."
+	icon_state = "hardsuit-exosuit"
+	inhand_icon_state = "syndicate-black"
+	slowdown = 0
+	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/exosuit
+	armor = PROTON_ACTIVE_ARMOR
+	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	resistance_flags = FIRE_PROOF | LAVA_PROOF | ACID_PROOF | FREEZE_PROOF
+	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/pickaxe, /obj/item/spear, /obj/item/organ/regenerative_core, /obj/item/kitchen/knife, /obj/item/kinetic_crusher, /obj/item/resonator, /obj/item/gun/energy/kinetic_accelerator)
+	actions_types = list(/datum/action/item_action/toggle_spacesuit/exosuit, /datum/action/item_action/toggle_helmet/exosuit, /datum/action/item_action/exosuit_jump, /datum/action/item_action/exosuit_dash, /datum/action/item_action/exosuit_hook)
+
+	var/active = TRUE
+	var/dash_active = FALSE
+	var/dash_timer = 0
+	var/dash_dir = 0
+	var/jump_cooldown = 0
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_OCLOTHING)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, .proc/check_pressure)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/dropped(mob/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/check_pressure()
+	if(lavaland_equipment_pressure_check(get_turf(src)))
+		activate()
+	else
+		deactivate()
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/activate()
+	if(active)
+		return
+	active = TRUE
+
+	armor = PROTON_ACTIVE_ARMOR
+	helmet.armor = PROTON_ACTIVE_ARMOR
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/deactivate()
+	if(!active)
+		return
+	active = FALSE
+
+	armor = PROTON_INACTIVE_ARMOR
+	helmet.armor = PROTON_INACTIVE_ARMOR
+	activate_dash() //Deactivates dash
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/check_cell(mob/user, charge_required)
+	if(!cell || !cell.use(charge_required))
+		to_chat(user, span_warning("[src]'s actuators are limp and lifeless, probably it's cell is missing or discharged!"))
+		return
+	helmet.check_charge(user) //So HUDs deactivate when cell is fully depleted.
+	return TRUE
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/activate_jump(mob/user)
+	if(!check_cell(user, PROTON_JUMP_COST))
+		return
+
+	if(jump_cooldown > world.time)
+		cell.give(PROTON_JUMP_COST) //Refunds cost if fails to activate. I want the power check first so it will prioritise powerless error message
+		to_chat(user, span_warning("[src]'s internal jump boosters haven't yet fully cooled down! Wait [round((jump_cooldown - world.time) / 10)] more seconds!"))
+		return
+
+	if(!active)
+		cell.give(PROTON_JUMP_COST)
+		to_chat(user, span_warning("[src]'s actuators hiss, but fail to propperly activate in high-pressure enviroment!"))
+		return
+
+	var/atom/target = get_edge_target_turf(user, user.dir)
+
+	if (user.throw_at(target, PROTON_JUMP_RANGE, PROTON_JUMP_SPEED, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(src, .proc/jump_end, user)))
+		ADD_TRAIT(user, TRAIT_NO_FLOATING_ANIM, SUIT_TRAIT)
+		ADD_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+		ADD_TRAIT(user, TRAIT_MOVE_FLYING, SUIT_TRAIT) //Unlike jump boots, P.R.O.T.O.N. actually makes you fly for a bit so you are not affected by lava and such shit
+		playsound(user, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+		user.visible_message(span_warning("[user] dashes forward into the air!"))
+		jump_cooldown = world.time + PROTON_JUMP_COOLDOWN
+	else
+		cell.give(PROTON_JUMP_COST)
+		to_chat(user, span_warning("Something prevents you from jumping!"))
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/jump_end(mob/user)
+	REMOVE_TRAIT(user, TRAIT_NO_FLOATING_ANIM, SUIT_TRAIT)
+	REMOVE_TRAIT(user, TRAIT_MOVE_FLYING, SUIT_TRAIT)
+	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/activate_dash(mob/user)
+	dash_active = !dash_active
+
+	if(!active)
+		dash_active = FALSE
+
+	if(dash_active)
+		RegisterSignal(user, COMSIG_KB_MOVEMENT_NORTH_DOWN, .proc/dash_north)
+		RegisterSignal(user, COMSIG_KB_MOVEMENT_SOUTH_DOWN, .proc/dash_south)
+		RegisterSignal(user, COMSIG_KB_MOVEMENT_EAST_DOWN, .proc/dash_east)
+		RegisterSignal(user, COMSIG_KB_MOVEMENT_WEST_DOWN, .proc/dash_west)
+	else
+		UnregisterSignal(user, list(COMSIG_KB_MOVEMENT_NORTH_DOWN, COMSIG_KB_MOVEMENT_SOUTH_DOWN, COMSIG_KB_MOVEMENT_WEST_DOWN, COMSIG_KB_MOVEMENT_EAST_DOWN))
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_north(turf/new_loc)
+	attempt_dash(NORTH)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_south(turf/new_loc)
+	attempt_dash(SOUTH)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_east(turf/new_loc)
+	attempt_dash(EAST)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_west(turf/new_loc)
+	attempt_dash(WEST)
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/attempt_dash(direction = NORTH)
+	if(!isliving(loc))
+		return
+
+	var/mob/living/user = loc
+
+	if(user.incapacitated() || user.body_position == LYING_DOWN)
+		return
+
+	if(dash_dir != direction)
+		dash_dir = direction
+		dash_timer = world.time
+		return
+
+	if(world.time - dash_timer <= PROTON_DASH_TICK_PRESS)
+		if(!check_cell(user, PROTON_DASH_COST))
+			return
+		dash_timer = 0
+		var/atom/target = get_edge_target_turf(user, direction)
+		if (user.throw_at(target, PROTON_DASH_RANGE, 1, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(src, .proc/dash_end, user)))
+			ADD_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+			playsound(user, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+		else
+			cell.give(PROTON_DASH_COST)
+			to_chat(user, span_warning("Something prevents you from dashing!"))
+	else
+		dash_timer = world.time
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_end(mob/living/user)
+	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+	user.Stun(PROTON_DASH_TICK_PRESS) //Stun em a bit so it's not that effective as a method of transportation
+
+/obj/item/clothing/head/helmet/space/hardsuit/exosuit
+	name = "P.R.O.T.O.N. exosuit helmet"
+	desc = "An advanced helmet with a complex HUD. It's dusty and one of the stripes is faded but other than that, it is in a good condition."
+	icon_state = "hardsuit0-exosuit"
+	hardsuit_type = "exosuit"
+	armor = PROTON_ACTIVE_ARMOR
+	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	resistance_flags = FIRE_PROOF | LAVA_PROOF | ACID_PROOF | FREEZE_PROOF
+	actions_types = list(/datum/action/item_action/toggle_helmet_light/exosuit)
+
+/obj/item/clothing/head/helmet/space/hardsuit/exosuit/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_HEAD && suit.cell && suit.cell.charge > 0)
+		var/datum/atom_hud/hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+		hud.add_hud_to(user)
+		ADD_TRAIT(user, TRAIT_MEDICAL_HUD, HELMET_TRAIT)
+
+		hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+		hud.add_hud_to(user)
+		ADD_TRAIT(user, TRAIT_SECURITY_HUD, HELMET_TRAIT)
+
+		hud = GLOB.huds[DATA_HUD_DIAGNOSTIC_ADVANCED]
+		hud.add_hud_to(user)
+		ADD_TRAIT(user, TRAIT_DIAGNOSTIC_HUD, HELMET_TRAIT)
+
+/obj/item/clothing/head/helmet/space/hardsuit/exosuit/dropped(mob/user)
+	. = ..()
+	var/datum/atom_hud/hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+	hud.remove_hud_from(user)
+	REMOVE_TRAIT(user, TRAIT_MEDICAL_HUD, HELMET_TRAIT)
+
+	hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+	hud.remove_hud_from(user)
+	REMOVE_TRAIT(user, TRAIT_SECURITY_HUD, HELMET_TRAIT)
+
+	hud = GLOB.huds[DATA_HUD_DIAGNOSTIC_ADVANCED]
+	hud.remove_hud_from(user)
+	REMOVE_TRAIT(user, TRAIT_DIAGNOSTIC_HUD, HELMET_TRAIT)
+
+/obj/item/clothing/head/helmet/space/hardsuit/exosuit/proc/check_charge(mob/user)
+	if(!suit.cell || suit.cell.charge <= 0)
+		var/datum/atom_hud/hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+		hud.remove_hud_from(user)
+		REMOVE_TRAIT(user, TRAIT_MEDICAL_HUD, HELMET_TRAIT)
+
+		hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+		hud.remove_hud_from(user)
+		REMOVE_TRAIT(user, TRAIT_SECURITY_HUD, HELMET_TRAIT)
+
+		hud = GLOB.huds[DATA_HUD_DIAGNOSTIC_ADVANCED]
+		hud.remove_hud_from(user)
+		REMOVE_TRAIT(user, TRAIT_DIAGNOSTIC_HUD, HELMET_TRAIT)
+		return
+
+	var/datum/atom_hud/hud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
+	hud.add_hud_to(user)
+	ADD_TRAIT(user, TRAIT_MEDICAL_HUD, HELMET_TRAIT)
+
+	hud = GLOB.huds[DATA_HUD_SECURITY_ADVANCED]
+	hud.add_hud_to(user)
+	ADD_TRAIT(user, TRAIT_SECURITY_HUD, HELMET_TRAIT)
+
+	hud = GLOB.huds[DATA_HUD_DIAGNOSTIC_ADVANCED]
+	hud.add_hud_to(user)
+	ADD_TRAIT(user, TRAIT_DIAGNOSTIC_HUD, HELMET_TRAIT)
+
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN
 #undef LASER_FLOWER_LENGTH
 #undef LASER_FLOWER_BULLETHELL_LENGTH
+
+#undef PROTON_ACTIVE_ARMOR
+#undef PROTON_INACTIVE_ARMOR
+
+#undef PROTON_JUMP_COOLDOWN
+#undef PROTON_JUMP_RANGE
+#undef PROTON_JUMP_SPEED
+#undef PROTON_DASH_RANGE
+#undef PROTON_DASH_TICK_PRESS
+
+#undef PROTON_JUMP_COST
+#undef PROTON_DASH_COST
+#undef PROTON_HOOK_COST

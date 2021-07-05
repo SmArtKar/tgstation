@@ -197,8 +197,8 @@
 	icon_state = "boomerang_jungle"
 	inhand_icon_state = "boomerang_jungle"
 	force = 5
-	throwforce = 30
-	throw_range = 30
+	throwforce = 10
+	throw_range = 10
 	custom_materials = list(/datum/material/wood = 10000)
 
 /obj/item/boomerang/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force, gentle = FALSE, quickstart = TRUE)
@@ -209,11 +209,12 @@
 
 /obj/item/boomerang/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	if(isanimal(hit_atom))
-		var/mob/thrown_by = thrownby?.resolve()
-		if(thrown_by)
-			addtimer(CALLBACK(src, /atom/movable.proc/throw_at, thrown_by, throw_range+2, throw_speed, null, TRUE), 1)
-	else
-		return ..()
+		throwforce = 30
+	var/mob/thrown_by = thrownby?.resolve()
+	if(thrown_by)
+		addtimer(CALLBACK(src, /atom/movable.proc/throw_at, thrown_by, throw_range+2, throw_speed, null, TRUE), 1)
+	. = ..()
+	throwforce = initial(throwforce)
 
 /obj/item/dash_knife
 	name = "posessed knife"
@@ -247,6 +248,8 @@
 	UnregisterSignal(user, COMSIG_MOB_EQUIPPED_ITEM)
 
 /obj/item/dash_knife/proc/check_other_equip()
+	SIGNAL_HANDLER
+
 	if(!ismob(loc))
 		return
 	var/mob/user = loc
@@ -260,15 +263,19 @@
 		return
 
 	second_item = target
-	RegisterSignal(target, COMSIG_RIGHT_CLICK_USE, .proc/dash)
+	RegisterSignal(target, COMSIG_RIGHT_CLICK_USE, .proc/dash, override = TRUE)
 	RegisterSignal(target, COMSIG_ITEM_PRE_UNEQUIP, .proc/unequipped_other_item)
 
 /obj/item/dash_knife/proc/unequipped_other_item()
+	SIGNAL_HANDLER
+
 	UnregisterSignal(second_item, COMSIG_RIGHT_CLICK_USE)
 	UnregisterSignal(second_item, COMSIG_ITEM_PRE_UNEQUIP)
 	second_item = null
 
 /obj/item/dash_knife/proc/dash(atom/target)
+	SIGNAL_HANDLER
+
 	if(dash_cooldown > world.time || !ismob(loc))
 		return
 

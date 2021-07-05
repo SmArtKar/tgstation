@@ -97,7 +97,11 @@
 		if(!elimination) //used so the achievment only occurs for the last legion to die.
 			grant_achievement(achievement_type, score_achievement_type, crusher_kill, force_grant)
 			SSblackbox.record_feedback("tally", tab, 1, "[initial(name)]")
+	loot_manipulation()
 	return ..()
+
+/// For jungle megafauna
+/mob/living/simple_animal/hostile/megafauna/proc/loot_manipulation()
 
 /// Spawns crusher loot instead of normal loot
 /mob/living/simple_animal/hostile/megafauna/proc/spawn_crusher_loot()

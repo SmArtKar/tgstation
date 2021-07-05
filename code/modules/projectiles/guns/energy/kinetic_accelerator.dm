@@ -193,6 +193,8 @@
 	if(kinetic_gun)
 		var/list/mods = kinetic_gun.modkits
 		for(var/obj/item/borg/upgrade/modkit/modkit in mods)
+			if(istype(modkit, /obj/item/borg/upgrade/modkit/human_passthrough))
+				return PROJECTILE_PIERCE_PHASE
 			modkit.projectile_prehit(src, target, kinetic_gun)
 	if(!pressure_decrease_active && !lavaland_equipment_pressure_check(get_turf(target)))
 		name = "weakened [name]"
@@ -400,6 +402,8 @@
 				M.gets_drilled(K.firer, TRUE)
 	if(modifier)
 		for(var/mob/living/L in range(1, target_turf) - K.firer - target)
+			if(ishuman(L) && locate(/obj/item/borg/upgrade/modkit/human_passthrough) in K.kinetic_gun.modkits)
+				continue
 			var/armor = L.run_armor_check(K.def_zone, K.flag, "", "", K.armour_penetration)
 			L.apply_damage(K.damage*modifier, K.damage_type, K.def_zone, armor)
 			to_chat(L, span_userdanger("You're struck by a [K.name]!"))
@@ -426,6 +430,11 @@
 	name = "minebot passthrough"
 	desc = "Causes kinetic accelerator shots to pass through minebots."
 	cost = 0
+
+/obj/item/borg/upgrade/modkit/human_passthrough
+	name = "humanoid passthrough"
+	desc = "Causes kinetic accelerator shots to pass through your fellow miners."
+	cost = 10
 
 //Tendril-unique modules
 /obj/item/borg/upgrade/modkit/cooldown/repeater

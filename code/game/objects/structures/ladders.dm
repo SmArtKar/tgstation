@@ -230,7 +230,7 @@
 
 /obj/structure/ladder/dirt_hole/proc/check_for_deletion()
 	var/turf/bottom_turf = locate(x, y, z - 1)
-	var/turf/my_turf = get_turf()
+	var/turf/my_turf = get_turf(src)
 	if(!bottom_turf || !istype(bottom_turf) || !my_turf || !istype(my_turf))
 		return
 

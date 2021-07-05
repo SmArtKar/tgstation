@@ -6,6 +6,7 @@
 	"shuttles": {
 		"cargo": "cargo_delta"
 	},
+    "mining": null,
     "traits": [
 		{
 			"Up": 1,

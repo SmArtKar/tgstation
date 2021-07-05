@@ -42,6 +42,17 @@
 
 	payday_modifier = 1.5
 
+/datum/species/monkey/jungle
+	name = "Adapted Monkey"
+	id = SPECIES_MONKEY_JUNGLE
+	inherent_traits = list(
+		TRAIT_CAN_STRIP,
+		TRAIT_VENTCRAWLER_NUDE,
+		TRAIT_PRIMITIVE,
+		TRAIT_WEAK_SOUL,
+		TRAIT_GUN_NATURAL,
+		TRAIT_NOBREATH,
+	)
 
 /datum/species/monkey/random_name(gender,unique,lastname)
 	var/randname = "monkey ([rand(1,999)])"

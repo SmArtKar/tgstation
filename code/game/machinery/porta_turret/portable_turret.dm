@@ -1168,7 +1168,7 @@ DEFINE_BITFIELD(turret_flags, list(
 
 	armor = list(MELEE = 50, BULLET = 50, LASER = 100, ENERGY = 50, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
-	var/mob/living/simple_animal/hostile/megafauna/ancient_ai/master_ai
+	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
 /obj/machinery/porta_turret/ancient_ai/Initialize()
 	. = ..()

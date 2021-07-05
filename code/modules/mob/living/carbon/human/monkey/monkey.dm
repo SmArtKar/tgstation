@@ -29,6 +29,7 @@
 
 /mob/living/carbon/human/species/monkey/jungle
 	faction = list("jungle")
+	race = /datum/species/monkey/jungle //Resistant to pressure and don't need as much oxygen
 	weather_immunities = list(ACID) //Evolved or something, I dunno
 	ai_controller = /datum/ai_controller/monkey/jungle
 
