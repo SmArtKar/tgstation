@@ -25,8 +25,8 @@
 
 #define FLOOR_SHOCK_LENGTH 15 SECONDS
 #define DRONE_RESPAWN_COOLDOWN 10 SECONDS
-#define LASER_FLOWER_LENGTH 4 SECONDS
-#define LASER_FLOWER_BULLETHELL_LENGTH 10 SECONDS
+#define LASER_FLOWER_LENGTH 2 SECONDS
+#define LASER_FLOWER_BULLETHELL_LENGTH 6 SECONDS
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai
 	name = "ancient AI"
@@ -128,7 +128,8 @@
 		return
 
 	for(var/turf/open/floor/engine/ecute/floor in range(12, src))
-		floor.turn_on()
+		if(prob(75))
+			floor.turn_on()
 
 	floorshock = TRUE
 	addtimer(CALLBACK(src, .proc/deactivate_floor_shock), FLOOR_SHOCK_LENGTH)
@@ -144,7 +145,8 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/spawn_drones()
 
 	for(var/obj/machinery/rogue_drone_spawner/spawner in range(12, src))
-		spawner.spawn_drone()
+		if(prob(50))
+			spawner.spawn_drone()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/violent_smash()
 
@@ -166,7 +168,8 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/laser_flower()
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
-		turret.toggle(TRUE)
+		if(prob(50))
+			turret.toggle(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_LENGTH)
 
@@ -178,7 +181,8 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/laser_flower_bullethell()
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
-		turret.toggle(TRUE)
+		if(prob(75))
+			turret.toggle(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_BULLETHELL_LENGTH)
 
@@ -330,7 +334,7 @@
 	name = "weak laser"
 	wound_bonus = -100
 	damage = 20
-	speed = 2
+	speed = 4
 	eyeblur = 0
 
 /obj/machinery/giant_arm_holder
@@ -876,12 +880,12 @@
 	if(!firer)
 		return
 
-	firer.throw_at(target, get_dist(firer, target), 1, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(suit, /obj/item/clothing/suit/space/hardsuit/exosuit.proc/jump_end, firer))
-	ADD_TRAIT(firer, TRAIT_NO_FLOATING_ANIM, SUIT_TRAIT)
-	ADD_TRAIT(firer, TRAIT_STUNIMMUNE, SUIT_TRAIT)
-	ADD_TRAIT(firer, TRAIT_MOVE_FLYING, SUIT_TRAIT)
-	playsound(firer, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
-	firer.visible_message(span_warning("[firer] is pulled towards [target] by [src]!"))
+	if(firer.throw_at(target, get_dist(firer, target), 1, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(suit, /obj/item/clothing/suit/space/hardsuit/exosuit.proc/jump_end, firer)))
+		ADD_TRAIT(firer, TRAIT_NO_FLOATING_ANIM, SUIT_TRAIT)
+		ADD_TRAIT(firer, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+		ADD_TRAIT(firer, TRAIT_MOVE_FLYING, SUIT_TRAIT)
+		playsound(firer, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+		firer.visible_message(span_warning("[firer] is pulled towards [target] by [src]!"))
 
 /obj/projectile/exosuit_hook/Destroy()
 	qdel(chain)

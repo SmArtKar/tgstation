@@ -38,6 +38,10 @@
 	var/obj/item/clothing/suit/hooded/explorer/suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 	suit.ToggleHood()
 
+	var/obj/item/card/id/id = H.get_item_by_slot(ITEM_SLOT_ID)
+	id.registered_name = H.ckey
+	id.update_label()
+
 /obj/item/storage/box/full_ka_upgrades/PopulateContents()
 	..()
 	for(var/i = 1 to 3)
@@ -52,7 +56,7 @@
 	new /obj/item/t_scanner/adv_mining_scanner(src)
 
 /obj/item/storage/box/healeys/PopulateContents()
-	for(var/i = 1 to 3)
+	for (var/i = 1 to 3)
 		new /obj/item/organ/regenerative_core/legion/shining_core/preserved(src)
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
 
@@ -63,12 +67,9 @@
 	new /obj/item/storage/pill_bottle/stimulant(src)
 
 /obj/item/storage/belt/mining/healeys/PopulateContents()
-	for(var/i = 1 to 3)
+	for (var/i = 1 to 3)
 		new /obj/item/organ/regenerative_core/legion/shining_core/preserved(src)
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
-
-/obj/item/organ/regenerative_core/legion/shining_core/preserved
-	preserved = TRUE
 
 /obj/item/organ/regenerative_core/legion/shining_core/preserved/Initialize()
 	. = ..()

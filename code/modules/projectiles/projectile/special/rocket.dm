@@ -111,6 +111,7 @@
 /obj/projectile/bullet/a84mm/ancient
 	damage = 60
 	dismemberment = 20
+	speed = 2
 
 /obj/projectile/bullet/a84mm/ancient/do_boom(atom/target)
 	explosion(target, devastation_range = -1, heavy_impact_range = 0, light_impact_range = 1, flame_range = 2, flash_range = -1, adminlog = FALSE)
@@ -118,6 +119,7 @@
 /obj/projectile/bullet/a84mm/he/ancient
 	damage = 45
 	dismemberment = 20
+	speed = 2
 
 /obj/projectile/bullet/a84mm/he/ancient/do_boom(atom/target, blocked=0)
 	explosion(target, light_impact_range = 1, flame_range = 2, flash_range = 0)
@@ -144,6 +146,7 @@
 
 /obj/projectile/bullet/a84mm/ancient/at/seeking
 	damage = 15
+	speed = 0
 	var/mob/living/victim
 
 /obj/projectile/bullet/a84mm/ancient/at/seeking/on_hit(atom/target, blocked = FALSE)

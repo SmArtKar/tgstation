@@ -53,6 +53,8 @@
 	var/list/attack_action_types = list()
 	/// If there is a small sprite icon for players controlling the megafauna to use
 	var/small_sprite_type
+	/// How much damage should be dealt by crusher for it to count as a crusher kill
+	var/crusher_damage_required = 0.6
 
 /mob/living/simple_animal/hostile/megafauna/Initialize(mapload)
 	. = ..()
@@ -87,7 +89,7 @@
 		return
 	var/datum/status_effect/crusher_damage/crusher_dmg = has_status_effect(STATUS_EFFECT_CRUSHERDAMAGETRACKING)
 	var/crusher_kill = FALSE
-	if(crusher_dmg && crusher_loot && crusher_dmg.total_damage >= maxHealth * 0.6)
+	if(crusher_dmg && crusher_loot && crusher_dmg.total_damage >= maxHealth * crusher_damage_required)
 		spawn_crusher_loot()
 		crusher_kill = TRUE
 	if(true_spawn && !(flags_1 & ADMIN_SPAWNED_1))

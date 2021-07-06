@@ -4,7 +4,8 @@
 	dir = 1
 	},
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "ycircuit";
@@ -136,7 +137,8 @@
 	dir = 8
 	},
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "rcircuit";
@@ -275,7 +277,8 @@
 	dir = 4
 	},
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "bcircuit";
@@ -347,7 +350,8 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
@@ -705,7 +709,8 @@
 /obj/effect/turf_decal/stripes/corner,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
@@ -746,7 +751,8 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
@@ -787,7 +793,8 @@
 "NG" = (
 /obj/effect/turf_decal/siding/green/corner,
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "gcircuit";
@@ -843,7 +850,8 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/path_blocker{
-	invisibility = 101
+	invisibility = 101;
+	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
@@ -2041,7 +2049,7 @@ JG
 Ie
 kX
 kX
-he
+nv
 dC
 uB
 uB
@@ -2092,7 +2100,7 @@ dS
 dS
 ns
 kX
-he
+nv
 JG
 vv
 dS
