@@ -1,28 +1,373 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
-"ay" = (
+"aR" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"bj" = (
+/obj/machinery/giant_arm_holder/dir_4{
+	base_pixel_y = 0;
+	dir = 4;
+	pixel_y = 0
+	},
+/turf/closed/indestructible/syndicate,
+/area/ruin/powered/ancient_ai)
+"bM" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"ci" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 5
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"cQ" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"dB" = (
+/obj/effect/turf_decal/siding/green/corner,
+/turf/open/indestructible{
+	icon_state = "gcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"ev" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/rogue_drone_spawner,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"eG" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 5
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"gt" = (
 /obj/effect/turf_decal/siding/yellow/corner{
 	dir = 1
-	},
-/obj/effect/path_blocker{
-	invisibility = 101;
-	reverse = 1
 	},
 /turf/open/indestructible{
 	icon_state = "ycircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"aM" = (
-/obj/effect/turf_decal/stripes/line{
+/area/ruin/powered/ancient_ai)
+"gw" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"hG" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
 	dir = 1
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838"
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"hN" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 5
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 8
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"iO" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/ancient_server,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"kX" = (
+/turf/closed/indestructible/syndicate,
+/area/ruin/powered/ancient_ai)
+"mX" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"nh" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"aR" = (
+/area/ruin/powered/ancient_ai)
+"ns" = (
+/obj/effect/turf_decal/delivery,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/ancient_server,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"nX" = (
+/obj/machinery/giant_arm_holder/dir_8{
+	base_pixel_x = -32;
+	dir = 8;
+	pixel_x = -32
+	},
+/turf/closed/indestructible/syndicate,
+/area/ruin/powered/ancient_ai)
+"op" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101;
+	reverse = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"oW" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101;
+	reverse = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"qd" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"rE" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"sR" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"tr" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"uk" = (
+/obj/effect/turf_decal/siding/yellow{
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"uD" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"uF" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"uL" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838"
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 1
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"vu" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"vv" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"vH" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"vL" = (
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"wt" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/rogue_drone_spawner,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"wG" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 10
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"wW" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"xb" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"xh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/laser_flower,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"xz" = (
 /obj/machinery/giant_arm_holder/dir_1{
 	base_pixel_x = -32;
 	base_pixel_y = null;
@@ -31,130 +376,154 @@
 	pixel_y = 0
 	},
 /turf/closed/indestructible/syndicate,
-/area/template_noop)
-"bk" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 8
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"bH" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"bM" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 10
-	},
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"dB" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 10
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"dC" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/turf_decal/delivery,
-/obj/machinery/rogue_drone_spawner,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"dS" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"ez" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 6
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"fl" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 6
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"gw" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
+/area/ruin/powered/ancient_ai)
+"xS" = (
+/obj/machinery/laser_flower,
 /obj/effect/turf_decal{
 	icon = 'icons/obj/turrets.dmi';
 	icon_state = "rocket_base"
 	},
-/obj/machinery/porta_turret/ancient_ai,
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"gE" = (
-/obj/effect/turf_decal/siding/red/corner{
+/area/ruin/powered/ancient_ai)
+"yu" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"yx" = (
+/obj/effect/turf_decal/stripes/line,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"zJ" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"zK" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"zW" = (
+/obj/machinery/giant_arm_holder,
+/turf/closed/indestructible/syndicate,
+/area/ruin/powered/ancient_ai)
+"AO" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Bk" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"By" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "gcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"BO" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
 	dir = 8
 	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 5
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Cy" = (
+/obj/effect/turf_decal/siding/green/corner,
 /obj/effect/path_blocker{
 	invisibility = 101;
 	reverse = 1
 	},
 /turf/open/indestructible{
-	icon_state = "rcircuit";
+	icon_state = "gcircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"gN" = (
+/area/ruin/powered/ancient_ai)
+"Cz" = (
 /obj/effect/turf_decal/siding/blue/corner{
-	dir = 4
+	color = "#383838";
+	dir = 1
 	},
-/turf/open/indestructible{
-	icon_state = "bcircuit";
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 6
+	},
+/turf/open/floor/engine/ecute{
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
+/area/ruin/powered/ancient_ai)
+"CP" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 6
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 1
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Da" = (
+/turf/template_noop,
 /area/template_noop)
-"hd" = (
+"Eb" = (
+/obj/effect/turf_decal/siding/green/corner,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "gcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Ex" = (
 /obj/effect/turf_decal/siding/green{
 	dir = 6
 	},
@@ -163,490 +532,18 @@
 	icon_state = "gcircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"he" = (
-/obj/effect/turf_decal/delivery,
-/obj/machinery/ancient_server,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"hG" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
-	},
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/machinery/porta_turret/ancient_ai,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"hN" = (
-/obj/machinery/giant_arm_holder,
-/turf/closed/indestructible/syndicate,
-/area/template_noop)
-"jL" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"kX" = (
-/turf/closed/indestructible/syndicate,
-/area/template_noop)
-"mX" = (
-/obj/effect/turf_decal/siding/red/corner{
-	dir = 8
-	},
-/turf/open/indestructible{
-	icon_state = "rcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"ns" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 4
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"nv" = (
-/obj/effect/turf_decal/delivery,
-/obj/structure/fluff/broken_ancient_server,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"nP" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 6
-	},
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 1
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"nX" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 10
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"pi" = (
-/obj/effect/turf_decal/siding/blue{
-	dir = 5
-	},
-/turf/open/indestructible{
-	icon_state = "bcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"qd" = (
-/obj/machinery/laser_flower,
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"rr" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	dir = 4
-	},
-/obj/effect/path_blocker{
-	invisibility = 101;
-	reverse = 1
-	},
-/turf/open/indestructible{
-	icon_state = "bcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"sD" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 10
-	},
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 4
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"sR" = (
-/obj/effect/turf_decal/stripes/corner,
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/machinery/porta_turret/ancient_ai,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"tr" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838"
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 9
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"tt" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 5
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "podfloor";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"ty" = (
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/machinery/laser_flower,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"ut" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/path_blocker{
-	invisibility = 101;
-	reverse = 1
-	},
-/turf/open/indestructible{
-	icon_state = "podfloor";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"uB" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"uF" = (
-/obj/effect/turf_decal/siding/green/corner,
-/turf/open/indestructible{
-	icon_state = "gcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"vv" = (
-/obj/effect/turf_decal/stripes/corner,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"vL" = (
-/obj/machinery/laser_flower,
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"wt" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"wu" = (
-/obj/effect/turf_decal/stripes/line,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"wE" = (
-/obj/effect/turf_decal/delivery,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/ancient_server,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"wG" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 8
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"wW" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 9
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"xb" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 6
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"xh" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 8
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"yx" = (
-/obj/machinery/ancient_server,
-/obj/effect/turf_decal/delivery,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"zJ" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 5
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"zK" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 10
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"zS" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 6
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "podfloor";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"zW" = (
-/obj/effect/turf_decal/siding/red{
-	dir = 10
-	},
-/turf/open/indestructible{
-	icon_state = "rcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Af" = (
-/obj/machinery/giant_arm_holder/dir_4{
-	base_pixel_y = 0;
-	dir = 4;
-	pixel_y = 0
-	},
-/turf/closed/indestructible/syndicate,
-/area/template_noop)
-"AO" = (
-/obj/effect/turf_decal/stripes/line,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Bk" = (
-/obj/effect/turf_decal/delivery,
-/obj/machinery/rogue_drone_spawner,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Bq" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 6
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"By" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 4
-	},
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/machinery/porta_turret/ancient_ai,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Bz" = (
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/machinery/porta_turret/ancient_ai,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Cy" = (
-/obj/effect/turf_decal/siding/yellow/corner{
-	dir = 1
-	},
-/turf/open/indestructible{
-	icon_state = "ycircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"CP" = (
-/obj/effect/turf_decal/delivery,
-/obj/machinery/rogue_drone_spawner,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Da" = (
-/turf/template_noop,
-/area/template_noop)
-"Dx" = (
-/obj/effect/turf_decal/delivery,
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/fluff/broken_ancient_server,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Eb" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Ex" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 10
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "podfloor";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "EC" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "FG" = (
-/obj/effect/turf_decal/siding/green{
-	dir = 6
-	},
-/turf/open/indestructible{
-	icon_state = "gcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Hb" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal{
 	icon = 'icons/obj/turrets.dmi';
@@ -657,16 +554,141 @@
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"Hu" = (
-/obj/machinery/ancient_server,
+/area/ruin/powered/ancient_ai)
+"GS" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 10
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"HM" = (
 /obj/effect/turf_decal/delivery,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/fluff/broken_ancient_server,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"HM" = (
+/area/ruin/powered/ancient_ai)
+"HZ" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Ih" = (
+/obj/effect/turf_decal/delivery,
+/obj/structure/fluff/broken_ancient_server,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"ID" = (
+/obj/effect/turf_decal/siding/yellow/corner{
+	dir = 1
+	},
+/obj/effect/path_blocker{
+	invisibility = 101;
+	reverse = 1
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"IR" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Ju" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/delivery,
+/obj/machinery/rogue_drone_spawner,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"JG" = (
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"JM" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/obj/effect/path_blocker{
+	invisibility = 101;
+	reverse = 1
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"KE" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"KN" = (
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/laser_flower,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Ld" = (
+/obj/effect/turf_decal/stripes/corner,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101;
+	reverse = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"LA" = (
 /obj/machinery/porta_turret/ancient_ai,
 /obj/effect/turf_decal{
 	icon = 'icons/obj/turrets.dmi';
@@ -679,72 +701,223 @@
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"HZ" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 9
-	},
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838"
-	},
+/area/ruin/powered/ancient_ai)
+"NH" = (
+/obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Ie" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/turf_decal{
-	icon = 'icons/obj/turrets.dmi';
-	icon_state = "rocket_base"
-	},
-/obj/machinery/laser_flower,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"Ih" = (
-/obj/effect/turf_decal/stripes/corner,
+/area/ruin/powered/ancient_ai)
+"Pn" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Pt" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"PJ" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"PW" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 5
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Qc" = (
+/obj/machinery/ancient_server,
+/obj/effect/turf_decal/delivery,
 /obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Qj" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"RU" = (
+/obj/machinery/ancient_server,
+/obj/effect/turf_decal/delivery,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Sn" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 4
+	},
 /obj/effect/path_blocker{
 	invisibility = 101;
 	reverse = 1
 	},
 /turf/open/indestructible{
-	icon_state = "podfloor";
+	icon_state = "bcircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"Ju" = (
-/obj/machinery/giant_arm_holder/dir_8{
-	base_pixel_x = -32;
-	dir = 8;
-	pixel_x = -32
+/area/ruin/powered/ancient_ai)
+"SF" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
 	},
-/turf/closed/indestructible/syndicate,
-/area/template_noop)
-"JG" = (
+/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"JM" = (
+/area/ruin/powered/ancient_ai)
+"Tn" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"TJ" = (
+/obj/effect/turf_decal/delivery,
+/obj/machinery/ancient_server,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Ua" = (
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"UF" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"UK" = (
 /obj/effect/turf_decal/siding/blue/corner{
+	color = "#383838"
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 9
+	},
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"UX" = (
+/obj/effect/turf_decal/siding/blue{
 	color = "#383838";
 	dir = 8
 	},
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
-	dir = 5
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"VF" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"WB" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"WE" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Xl" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838"
 	},
 /turf/open/floor/engine/ecute{
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"KN" = (
+/area/ruin/powered/ancient_ai)
+"Yd" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
 	},
@@ -758,250 +931,63 @@
 	icon_state = "podfloor";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"KO" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 9
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "podfloor";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Li" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 1
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"LA" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 9
-	},
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838"
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"NG" = (
-/obj/effect/turf_decal/siding/green/corner,
-/obj/effect/path_blocker{
-	invisibility = 101;
-	reverse = 1
-	},
-/turf/open/indestructible{
-	icon_state = "gcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"NH" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Pn" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838"
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Pt" = (
-/obj/effect/turf_decal/siding/yellow{
-	dir = 9
-	},
-/turf/open/indestructible{
-	icon_state = "ycircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"PW" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838"
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 1
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Qj" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/path_blocker{
-	invisibility = 101;
-	reverse = 1
-	},
-/turf/open/indestructible{
-	icon_state = "podfloor";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"RU" = (
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 5
-	},
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 8
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"SF" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Tn" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838"
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 9
-	},
-/turf/open/floor/engine/ecute{
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"TJ" = (
-/obj/effect/turf_decal/siding/green/corner,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "gcircuit";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"UF" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
-	},
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"WB" = (
-/obj/effect/turf_decal/stripes/corner,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"WE" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 8
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"Xl" = (
-/obj/effect/turf_decal/delivery,
-/obj/machinery/ancient_server,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "Yi" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 9
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/indestructible{
-	icon_state = "darkfull";
-	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
-	},
-/area/template_noop)
-"YJ" = (
+/obj/machinery/laser_flower,
 /obj/effect/turf_decal{
 	icon = 'icons/obj/turrets.dmi';
 	icon_state = "rocket_base"
 	},
-/obj/machinery/porta_turret/ancient_ai,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
-"YV" = (
-/obj/effect/turf_decal/siding/blue/corner{
-	color = "#383838";
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/blue{
-	color = "#383838";
-	dir = 10
+/area/ruin/powered/ancient_ai)
+"YJ" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/engine/ecute{
+/turf/open/indestructible{
+	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
+"YV" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
 "ZG" = (
-/obj/effect/turf_decal/siding/blue{
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"ZU" = (
+/obj/effect/turf_decal/siding/blue/corner{
 	color = "#383838";
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/blue{
-	color = "#383838"
+	color = "#383838";
+	dir = 6
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/engine/ecute{
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 
 (1,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1076,36 +1062,8 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 "}
 (3,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1180,20 +1138,6 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 "}
 (5,1,1) = {"
 Da
@@ -1208,32 +1152,18 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+kX
+kX
+kX
+JG
+JG
+kX
+kX
+kX
+kX
+kX
 Da
 Da
 Da
@@ -1258,36 +1188,22 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+kX
+HZ
+wW
+mX
+mX
+mX
+mX
+mX
+mX
+Tn
+bM
+kX
+kX
+kX
 Da
 Da
 Da
@@ -1309,38 +1225,24 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+Eb
+Ex
+UF
+yx
+gw
+Pn
+uF
+uF
+Pn
+Bk
+UF
+yx
+eG
+rE
+kX
+kX
 Da
 Da
 Da
@@ -1360,40 +1262,26 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+dB
+Ex
+vv
+AO
+NH
+hG
+vv
+xb
+xb
+zJ
+hG
+UF
+aR
+zJ
+eG
+rE
+kX
+kX
 Da
 Da
 Da
@@ -1411,42 +1299,28 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+zW
+Cy
+By
+YJ
+AO
+tr
+NH
+Xl
+UF
+ev
+RU
+yx
+Xl
+UF
+JG
+aR
+zJ
+eG
+Sn
+bj
+kX
 Da
 Da
 Da
@@ -1462,44 +1336,30 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+Cy
+By
+YJ
+AO
+tr
+tr
+NH
+hG
+PW
+mX
+mX
+YV
+Xl
+UF
+tr
+tr
+aR
+zJ
+eG
+Sn
+kX
+kX
 Da
 Da
 Da
@@ -1513,46 +1373,32 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+dB
+By
+YJ
+AO
+tr
+JG
+tr
+NH
+hN
+Pn
+Pn
+Pn
+Pn
+CP
+UF
+tr
+tr
+tr
+aR
+zJ
+eG
+rE
+kX
+kX
 Da
 Da
 Da
@@ -1565,46 +1411,32 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
+dB
+By
+vv
+AO
+tr
+tr
+tr
+vL
+aR
+WB
+xb
+WB
+WB
+WB
+WB
+AO
+KN
+tr
+tr
+tr
+Qj
+zJ
+eG
+rE
 kX
-kX
-kX
-kX
-JG
-JG
-kX
-kX
-kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1616,48 +1448,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
 kX
 kX
 By
 vv
-dS
-dS
-dS
-dS
-dS
-dS
-ns
-sR
+AO
+JG
+JG
+tr
+HM
 kX
 kX
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+xS
+tr
+tr
+Ua
+kX
+kX
+kX
+RU
+JG
+tr
+tr
+aR
+zJ
+eG
+kX
+kX
 Da
 Da
 Da
@@ -1668,48 +1486,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-kX
-TJ
-hd
-Li
+Pt
+WB
 AO
-HZ
-bk
+JG
+JG
+JG
 xh
-xh
-bk
-sD
-Li
-AO
-pi
-gN
 kX
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+Ih
+Ju
+tr
+tr
+JG
+JG
+wt
+iO
+kX
+kX
+vL
+tr
+JG
+JG
+Qj
+WB
+PJ
+kX
 Da
 Da
 Da
@@ -1720,48 +1524,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-kX
-uF
-hd
 wW
-bH
-wu
 ZG
+ZG
+ZG
+mX
+mX
+Tn
+kX
+Ih
+JG
 wW
-NH
-NH
-nX
+mX
+mX
+mX
+mX
+Tn
+JG
+Ih
+kX
+vu
+mX
+mX
 ZG
-Li
-UF
-nX
-pi
-gN
+ZG
+mX
+Tn
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1772,48 +1562,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-hN
-NG
-FG
-Yi
-bH
-uB
-wu
+yx
+gw
+uF
 Pn
-Li
+Pn
 Bk
-Hu
-AO
-Pn
-Li
-JG
 UF
-nX
-pi
-rr
-Af
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+wt
+wW
+YV
+IR
+uF
+Pn
+uD
+PW
+Tn
+wt
+kX
+yx
+gw
+uF
+Pn
+uF
+vH
+UF
+kX
 Da
 Da
 Da
@@ -1824,48 +1600,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-kX
-NG
-FG
-Yi
-bH
-uB
-uB
-wu
-ZG
+NH
+hG
+YJ
+WB
 zJ
-dS
-dS
-ez
-Pn
-Li
-uB
-uB
+Xl
+EC
+vL
+JG
+NH
+UK
+CP
+KE
+cQ
+hN
+GS
+VF
+JG
+Yi
+yx
+hG
+YJ
+xb
+nh
+hG
 UF
-nX
-pi
-rr
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -1876,48 +1638,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
-kX
-uF
-FG
-Yi
-bH
-uB
 JG
-uB
-wu
-RU
-bk
-bk
-bk
-bk
-nP
-Li
-uB
-uB
-uB
+yx
+Xl
 UF
-nX
-pi
-gN
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+RU
+yx
+Xl
+UF
+tr
+tr
+NH
+uL
+KE
+oW
+Yd
+cQ
+hG
+EC
+JG
+JG
+yx
+Xl
+UF
+ev
+NH
+Xl
+UF
+JG
 Da
 Da
 Da
@@ -1928,48 +1676,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
-uF
-FG
-wW
-bH
-uB
-uB
-uB
-YJ
+JG
+NH
+hG
 UF
 wt
 NH
-wt
-wt
-wt
-wt
-bH
-ty
-uB
-uB
-uB
+Xl
+UF
+JG
+JG
+yx
+uL
+ci
+op
+Ld
 WE
-nX
-pi
-gN
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+Xl
+EC
+tr
+JG
+yx
+Xl
+EC
+HM
+yx
+Xl
+UF
+JG
 Da
 Da
 Da
@@ -1980,48 +1714,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-kX
-FG
-wW
-bH
-JG
-JG
-uB
-Dx
-kX
-kX
-kX
+yx
+Xl
+PW
+mX
 qd
-uB
-uB
-Bz
-kX
-kX
-kX
-Hu
-JG
-uB
-uB
+Xl
 UF
-nX
-pi
+Yi
+JG
+yx
+BO
+Bk
+ci
+WE
+yu
+ZU
+UF
+JG
+vL
+yx
+hG
+PW
+mX
+YV
+Xl
+UF
 kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2032,48 +1752,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-hG
-wt
-bH
-JG
-JG
-JG
-Ie
-kX
-kX
-nv
-dC
-uB
-uB
-JG
-JG
+yx
+hN
+Pn
+Pn
+Pn
 CP
-he
+UF
 kX
-kX
-YJ
-uB
-JG
-JG
-WE
+Ju
+Qj
+zJ
+BO
+UX
+UX
+Cz
+vv
+SF
 wt
-gw
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+NH
+hN
+Pn
+Pn
+Pn
+CP
+UF
+kX
 Da
 Da
 Da
@@ -2084,48 +1790,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-vv
-SF
-SF
-SF
-dS
-dS
-ns
-kX
-nv
-JG
-vv
-dS
-dS
-dS
-dS
-ns
-JG
-nv
-kX
+aR
 WB
-dS
-dS
+xb
+xb
+WB
+xb
 SF
-SF
-dS
-ns
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+ns
+tr
+Qj
+WB
+WB
+WB
+xb
+SF
+tr
+TJ
+kX
+aR
+WB
+xb
+WB
+WB
+WB
+AO
+kX
 Da
 Da
 Da
@@ -2136,48 +1828,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-AO
-HZ
-xh
-bk
-bk
-sD
-Li
-kX
-CP
-vv
-ez
-tr
-xh
-bk
-dB
-zJ
-ns
-CP
-kX
-AO
-HZ
-xh
-bk
-xh
 bM
-Li
+mX
+zK
+tr
+tr
+JG
+FG
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+TJ
+wt
+JG
+JG
+JG
+JG
+Ju
+HM
+kX
+kX
+KN
+tr
+tr
+tr
+wW
+mX
+HZ
+kX
 Da
 Da
 Da
@@ -2188,48 +1866,34 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 kX
-wu
-ZG
-Yi
-wt
-nX
-Pn
-aM
-YJ
-JG
-wu
+kX
+wG
+PW
 Tn
-nP
-KO
-Ex
-RU
-YV
-EC
 JG
-vL
-AO
-ZG
-Yi
-NH
-zK
-ZG
-Li
+JG
+JG
+RU
 kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+kX
+kX
+vL
+JG
+JG
+Yi
+kX
+kX
+kX
+RU
+JG
+tr
+tr
+vu
+qd
+uk
+kX
+kX
 Da
 Da
 Da
@@ -2241,46 +1905,32 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-JG
-AO
-Pn
-Li
-Hu
-AO
-Pn
-Li
-uB
-uB
-wu
+kX
+sR
+wG
 PW
-KO
-Qj
+Tn
+JG
+JG
+JG
 KN
-Ex
+wW
+mX
+mX
+mX
+mX
 ZG
-aM
-JG
-JG
-AO
-Pn
-Li
-Bk
-wu
-Pn
-Li
-JG
-Da
-Da
-Da
-Da
-Da
-Da
+ZG
+Tn
+vL
+tr
+tr
+tr
+vu
+qd
+uk
+gt
+kX
 Da
 Da
 Da
@@ -2293,46 +1943,32 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-JG
-wu
-ZG
-Li
-CP
-wu
-Pn
-Li
-JG
-JG
-AO
+kX
+kX
+sR
+wG
 PW
-tt
-ut
-Ih
-zS
-Pn
-aM
-uB
+Tn
 JG
-AO
-Pn
-aM
-Dx
-AO
-Pn
-Li
 JG
-Da
-Da
-Da
-Da
-Da
-Da
+JG
+yx
+yu
+Pn
+uF
+uF
+uF
+Bk
+UF
+JG
+JG
+JG
+vu
+YV
+uk
+gt
+kX
+kX
 Da
 Da
 Da
@@ -2346,44 +1982,30 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
 kX
-AO
-Pn
-zJ
-dS
-fl
-Pn
-Li
-vL
-JG
-AO
+kX
 JM
-sD
-tt
-zS
-LA
-xb
-Li
+wG
+PW
+Tn
 JG
+JG
+yx
+Xl
 YJ
-AO
-ZG
+xb
+WB
 zJ
-dS
-ez
-Pn
-Li
+Xl
+UF
+JG
+JG
+wW
+YV
+uk
+ID
 kX
-Da
-Da
-Da
-Da
-Da
+kX
 Da
 Da
 Da
@@ -2399,42 +2021,28 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
 kX
-AO
-RU
-bk
-bk
-bk
-nP
-Li
-kX
-dC
-WE
 nX
 JM
 wG
-wG
-Bq
+PW
+Tn
+JG
+yx
+Xl
+EC
+Qc
+wt
+NH
+hG
+UF
+JG
 wW
-jL
-CP
+YV
+uk
+ID
+xz
 kX
-wu
-RU
-bk
-bk
-bk
-nP
-Li
-kX
-Da
-Da
-Da
-Da
 Da
 Da
 Da
@@ -2452,40 +2060,26 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
 kX
-UF
-wt
-NH
-NH
-wt
-NH
-jL
 kX
-wE
-uB
-WE
-wt
-wt
-wt
-NH
-jL
-uB
+sR
+wG
+PW
+Tn
+yx
 Xl
-kX
+PW
+mX
+ZG
+qd
+hG
 UF
-wt
-NH
-wt
-wt
-wt
-bH
+wW
+YV
+uk
+gt
 kX
-Da
-Da
-Da
+kX
 Da
 Da
 Da
@@ -2505,38 +2099,24 @@ Da
 Da
 Da
 Da
-Da
-Da
+kX
 kX
 sR
-dS
-Eb
-uB
-uB
-JG
-Hb
-kX
-kX
-Xl
+wG
+UF
+yx
+hN
+Pn
+Pn
+Pn
+uF
 CP
-JG
-JG
-JG
-JG
-dC
-Dx
+EC
+yx
+uk
+gt
 kX
 kX
-ty
-uB
-uB
-uB
-vv
-dS
-By
-kX
-Da
-Da
 Da
 Da
 Da
@@ -2558,36 +2138,22 @@ Da
 Da
 Da
 Da
-Da
-kX
-kX
-zW
-zJ
-ns
-JG
-JG
-JG
-Hu
 kX
 kX
 kX
-YJ
-JG
-JG
-vL
-kX
-kX
-kX
-Hu
-JG
-uB
-uB
+LA
+aR
 WB
-fl
+WB
+WB
+WB
+WB
+WB
+AO
 Pt
 kX
 kX
-Da
+kX
 Da
 Da
 Da
@@ -2613,30 +2179,16 @@ Da
 Da
 Da
 kX
-mX
-zW
-zJ
-ns
+kX
+kX
+kX
+kX
 JG
 JG
-JG
-ty
-vv
-dS
-dS
-dS
-dS
-SF
-SF
-ns
-YJ
-uB
-uB
-uB
-WB
-fl
-Pt
-Cy
+kX
+kX
+kX
+kX
 kX
 Da
 Da
@@ -2664,32 +2216,18 @@ Da
 Da
 Da
 Da
-kX
-kX
-mX
-zW
-zJ
-ns
-JG
-JG
-JG
-AO
-LA
-bk
-xh
-xh
-xh
-sD
-Li
-JG
-JG
-JG
-WB
-ez
-Pt
-Cy
-kX
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 Da
 Da
 Da
@@ -2717,30 +2255,16 @@ Da
 Da
 Da
 Da
-kX
-kX
-gE
-zW
-zJ
-ns
-JG
-JG
-AO
-Pn
-Yi
-NH
-wt
-nX
-Pn
-Li
-JG
-JG
-vv
-ez
-Pt
-ay
-kX
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 Da
 Da
 Da
@@ -2770,28 +2294,14 @@ Da
 Da
 Da
 Da
-kX
-Ju
-gE
-zW
-zJ
-ns
-JG
-AO
-Pn
-aM
-yx
-CP
-wu
-ZG
-Li
-JG
-vv
-ez
-Pt
-ay
-aR
-kX
+Da
+Da
+Da
+Da
+Da
+Da
+Da
+Da
 Da
 Da
 Da
@@ -2808,748 +2318,6 @@ Da
 Da
 "}
 (36,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
-kX
-mX
-zW
-zJ
-ns
-AO
-Pn
-zJ
-dS
-SF
-fl
-ZG
-Li
-vv
-ez
-Pt
-Cy
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(37,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
-kX
-mX
-zW
-Li
-AO
-RU
-bk
-bk
-bk
-xh
-nP
-aM
-AO
-Pt
-Cy
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(38,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
-kX
-kX
-HM
-UF
-wt
-wt
-wt
-wt
-wt
-wt
-bH
-hG
-kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(39,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-kX
-kX
-kX
-kX
-kX
-JG
-JG
-kX
-kX
-kX
-kX
-kX
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(40,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(41,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(42,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(43,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(44,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(45,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(46,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(47,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(48,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(49,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-"}
-(50,1,1) = {"
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
 Da
 Da
 Da
