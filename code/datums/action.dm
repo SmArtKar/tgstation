@@ -797,7 +797,7 @@
 	button_icon_state = "exosuit_hook"
 	background_icon_state = "bg_exosuit"
 
-/*/datum/action/item_action/exosuit_hook/Trigger()
+/datum/action/item_action/exosuit_hook/Trigger()
 	if(!istype(target, /obj/item/clothing/suit/space/hardsuit/exosuit))
 		return
 	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
@@ -810,8 +810,6 @@
 		return .
 	var/obj/item/clothing/suit/space/hardsuit/exosuit/exosuit = target
 	button.icon_state = "bg_exosuit[exosuit.hook.loc != exosuit ? "_on" : ""]"
-
-*/
 
 /datum/action/item_action/exosuit_dash
 	name = "Activate Reactive Exosuit Boosters"

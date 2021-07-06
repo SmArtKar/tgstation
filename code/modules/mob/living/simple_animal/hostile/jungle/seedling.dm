@@ -176,7 +176,7 @@
 		combatant_state = SEEDLING_STATE_ACTIVE
 		update_icons()
 		var/datum/callback/cb = CALLBACK(src, .proc/InaccurateShot)
-		for(var/i in 1 to 13)
+		for(var/i in 1 to 7)
 			addtimer(cb, i)
 		addtimer(CALLBACK(src, .proc/AttackRecovery), 14)
 

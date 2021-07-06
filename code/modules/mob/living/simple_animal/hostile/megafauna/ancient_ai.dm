@@ -57,6 +57,8 @@
 	aggro_vision_range = 13
 	stat_attack = HARD_CRIT
 	ranged = TRUE
+	ranged_message = null
+	ranged_ignores_vision = TRUE
 
 	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit)
 	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/crusher_trophy/ai_core)
@@ -70,7 +72,7 @@
 	var/bullethell = FALSE
 	var/floorshock = FALSE
 
-/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE)
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Initialize()
@@ -79,23 +81,17 @@
 	update_appearance()
 	status_flags |= GODMODE
 
-/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Goto(target, delay, minimum_distance) //It's a bunch of damn servers, they can't walk
-	return
-
-/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/MoveToTarget(list/possible_targets)
-	return
-
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Move()
 	return
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/GiveTarget(new_target)
+	. = ..()
 	if(icon_state == "ai_complex_offline")
 		icon_state = "ai_complex_online"
 		update_icon()
 		playsound(src, 'sound/ai/default/aimalf.ogg', 50, TRUE)
 		activate_servers()
 	flick("ai_complex_syndicate", src)
-	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/update_overlays()
 	. = ..()
@@ -368,14 +364,14 @@
 
 	var/mutable_appearance/arm_1 = mutable_appearance(icon, "arm_1")
 	var/matrix/arm_1_matrix = matrix()
-	arm_1_matrix.Turn(angle_1 - default_angle)
+	arm_1_matrix.Turn(angle_1 - 45)
 	arm_1.transform = arm_1_matrix
 	add_overlay(arm_1)
 
 
 	var/mutable_appearance/arm_2 = mutable_appearance(icon, "arm_2")
 	var/matrix/arm_2_matrix = matrix()
-	arm_2_matrix.Turn(angle_2 - default_angle)
+	arm_2_matrix.Turn(angle_2 - 45)
 	arm_2_matrix.Translate(cos(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1, -sin(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1)
 	arm_2.transform = arm_2_matrix
 	add_overlay(arm_2)
@@ -383,7 +379,7 @@
 
 	var/mutable_appearance/arm_3 = mutable_appearance(icon, "arm_3")
 	var/matrix/arm_3_matrix = matrix()
-	arm_3_matrix.Turn(angle_3 - default_angle)
+	arm_3_matrix.Turn(angle_3 - 45)
 	arm_3_matrix.Translate(cos(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1, -sin(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1)
 	arm_3_matrix.Translate(cos(angle_2) * round(sqrt(25 ** 2 / 2)) * 2 + 1, -sin(angle_2) * round(sqrt(25 ** 2 / 2)) * 2 + 1)
 	arm_3.transform = arm_3_matrix
@@ -541,7 +537,7 @@
  *
  * A cool cybernetic suit that gives you HUDs and allows to perorm some sick tricks for more movement
  * It's as good as H.E.C.K. in terms of armor
- * However, all those sick features and armor only work in low-pressure enviroment to prevent it's use onboard.
+ * However, all those sick features and armor only work in low-pressure enviroment to prevent it's use onboard and require power from internal cell, so don't forget to bring some!
  *
  **/
 
@@ -553,6 +549,8 @@
 #define PROTON_JUMP_SPEED 3
 #define PROTON_DASH_RANGE 2
 #define PROTON_DASH_TICK_PRESS 3
+#define PROTON_DASH_COOLDOWN 0.3 SECONDS
+#define PROTON_HOOK_COOLDOWN 3 SECONDS
 
 #define PROTON_JUMP_COST 1500
 #define PROTON_DASH_COST 500
@@ -576,6 +574,14 @@
 	var/dash_timer = 0
 	var/dash_dir = 0
 	var/jump_cooldown = 0
+	var/dash_cooldown = 0
+	var/hook_cooldown = 0
+	var/obj/item/gun/magic/exosuit_hook/hook
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/Initialize()
+	. = ..()
+	hook = new(src)
+	hook.suit = src
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/equipped(mob/user, slot)
 	. = ..()
@@ -609,11 +615,18 @@
 	helmet.armor = PROTON_INACTIVE_ARMOR
 	activate_dash() //Deactivates dash
 
-/obj/item/clothing/suit/space/hardsuit/exosuit/proc/check_cell(mob/user, charge_required)
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/check_cell(mob/user, charge_required, no_discharge = FALSE)
+	if(no_discharge)
+		if(!cell || cell.charge < charge_required)
+			to_chat(user, span_warning("[src]'s actuators are limp and lifeless, probably it's cell is missing or discharged!"))
+			return
+		return TRUE
+
 	if(!cell || !cell.use(charge_required))
 		to_chat(user, span_warning("[src]'s actuators are limp and lifeless, probably it's cell is missing or discharged!"))
 		return
-	helmet.check_charge(user) //So HUDs deactivate when cell is fully depleted.
+	var/obj/item/clothing/head/helmet/space/hardsuit/exosuit/my_helmet = helmet
+	my_helmet.check_charge(user) //So HUDs deactivate when cell is fully depleted.
 	return TRUE
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/proc/activate_jump(mob/user)
@@ -683,6 +696,10 @@
 	if(user.incapacitated() || user.body_position == LYING_DOWN)
 		return
 
+	if(dash_cooldown > world.time)
+		to_chat(user, span_warning("[src]'s actuators haven't yet fully cooled down! Wait [round((dash_cooldown - world.time) / 10)] more seconds!"))
+		return
+
 	if(dash_dir != direction)
 		dash_dir = direction
 		dash_timer = world.time
@@ -696,6 +713,7 @@
 		if (user.throw_at(target, PROTON_DASH_RANGE, 1, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(src, .proc/dash_end, user)))
 			ADD_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
 			playsound(user, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+			dash_cooldown = world.time + PROTON_DASH_COOLDOWN
 		else
 			cell.give(PROTON_DASH_COST)
 			to_chat(user, span_warning("Something prevents you from dashing!"))
@@ -704,7 +722,31 @@
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_end(mob/living/user)
 	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
-	user.Stun(PROTON_DASH_TICK_PRESS) //Stun em a bit so it's not that effective as a method of transportation
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/extend_hook(mob/user)
+	if(hook.loc != src)
+		if(ismob(hook.loc))
+			var/mob/hook_loc = hook.loc
+			hook_loc.dropItemToGround(hook)
+		hook.forceMove(src)
+		return
+
+	if(!check_cell(user, PROTON_HOOK_COST, TRUE))
+		return
+
+	if(hook_cooldown > world.time)
+		cell.give(PROTON_DASH_COST)
+		to_chat(user, span_warning("[src]'s hook launching system haven't yet fully cooled down! Wait [round((hook_cooldown - world.time) / 10)] more seconds!"))
+		return
+
+	hook.forceMove(get_turf(src))
+	if(!user.put_in_hands(hook))
+		hook.forceMove(src)
+		return
+
+/obj/item/clothing/suit/space/hardsuit/exosuit/proc/hook_used()
+	hook_cooldown = PROTON_HOOK_COOLDOWN
+	cell.use(PROTON_HOOK_COST)
 
 /obj/item/clothing/head/helmet/space/hardsuit/exosuit
 	name = "P.R.O.T.O.N. exosuit helmet"
@@ -772,6 +814,79 @@
 	hud.add_hud_to(user)
 	ADD_TRAIT(user, TRAIT_DIAGNOSTIC_HUD, HELMET_TRAIT)
 
+/obj/item/gun/magic/exosuit_hook
+	name = "magnetic grappling hook"
+	desc = "A powerful magnet on a chain that is designed to pull you towards your target."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "hook_exo"
+	inhand_icon_state = null
+	fire_sound = 'sound/weapons/batonextend.ogg'
+	max_charges = 1
+	recharge_rate = 1 //Cooldown is handled in suit itself
+	slot_flags = null
+	item_flags = NOBLUDGEON
+	force = 0
+	ammo_type = /obj/item/ammo_casing/magic/exosuit_hook
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/suit
+
+/obj/item/gun/magic/exosuit_hook/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
+	. = ..()
+	user.dropItemToGround(src)
+	forceMove(suit)
+	suit.hook_used()
+
+/obj/item/gun/magic/exosuit_hook/dropped(mob/user)
+	. = ..()
+	forceMove(suit)
+
+/obj/item/ammo_casing/magic/exosuit_hook
+	name = "magnetic hook"
+	desc = "A magnet on a chain."
+	projectile_type = /obj/projectile/exosuit_hook
+	caliber = CALIBER_HOOK
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "hook_exo"
+	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect
+
+/obj/item/ammo_casing/magic/exosuit_hook/ready_proj(atom/target, mob/living/user, quiet, zone_override = "")
+	..()
+	if(loc && istype(loc, /obj/item/gun/magic/exosuit_hook) && loaded_projectile && istype(loaded_projectile, /obj/projectile/exosuit_hook))
+		var/obj/item/gun/magic/exosuit_hook/hook = loc
+		var/obj/projectile/exosuit_hook/proj = loaded_projectile
+		proj.suit = hook.suit
+
+/obj/projectile/exosuit_hook
+	name = "magnetic hook"
+	icon_state = "hook_exo"
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	pass_flags = PASSTABLE
+	damage = 5 //A bit of damage from the impact
+	damage_type = BRUTE
+	hitsound = 'sound/weapons/chainhit.ogg'
+	var/chain
+	var/obj/item/clothing/suit/space/hardsuit/exosuit/suit
+
+/obj/projectile/exosuit_hook/fire(setAngle)
+	if(firer)
+		chain = firer.Beam(src, icon_state = "chain_thin")
+	..()
+
+/obj/projectile/exosuit_hook/on_hit(atom/target)
+	. = ..()
+	if(!firer)
+		return
+
+	firer.throw_at(target, get_dist(firer, target), 1, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(suit, /obj/item/clothing/suit/space/hardsuit/exosuit.proc/jump_end, firer))
+	ADD_TRAIT(firer, TRAIT_NO_FLOATING_ANIM, SUIT_TRAIT)
+	ADD_TRAIT(firer, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+	ADD_TRAIT(firer, TRAIT_MOVE_FLYING, SUIT_TRAIT)
+	playsound(firer, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+	firer.visible_message(span_warning("[firer] is pulled towards [target] by [src]!"))
+
+/obj/projectile/exosuit_hook/Destroy()
+	qdel(chain)
+	return ..()
+
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN
 #undef LASER_FLOWER_LENGTH
@@ -785,6 +900,8 @@
 #undef PROTON_JUMP_SPEED
 #undef PROTON_DASH_RANGE
 #undef PROTON_DASH_TICK_PRESS
+#undef PROTON_DASH_COOLDOWN
+#undef PROTON_HOOK_COOLDOWN
 
 #undef PROTON_JUMP_COST
 #undef PROTON_DASH_COST

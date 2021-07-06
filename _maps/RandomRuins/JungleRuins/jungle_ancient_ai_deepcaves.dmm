@@ -1,4 +1,16 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ay" = (
+/obj/effect/turf_decal/siding/yellow/corner{
+	dir = 1
+	},
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
+/turf/open/indestructible{
+	icon_state = "ycircuit";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
 "aM" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -68,6 +80,15 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
+"dC" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/delivery,
+/obj/machinery/rogue_drone_spawner,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
 "dS" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -107,6 +128,18 @@
 /obj/machinery/porta_turret/ancient_ai,
 /turf/open/indestructible{
 	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
+"gE" = (
+/obj/effect/turf_decal/siding/red/corner{
+	dir = 8
+	},
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
+/turf/open/indestructible{
+	icon_state = "rcircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
@@ -187,8 +220,8 @@
 	},
 /area/template_noop)
 "nv" = (
-/obj/machinery/rogue_drone_spawner,
 /obj/effect/turf_decal/delivery,
+/obj/structure/fluff/broken_ancient_server,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
@@ -234,6 +267,18 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
+"rr" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 4
+	},
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
+/turf/open/indestructible{
+	icon_state = "bcircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
@@ -285,11 +330,25 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
+"ty" = (
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/laser_flower,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
 "ut" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
@@ -345,9 +404,9 @@
 	},
 /area/template_noop)
 "wE" = (
-/obj/machinery/rogue_drone_spawner,
 /obj/effect/turf_decal/delivery,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/ancient_server,
 /turf/open/indestructible{
 	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
@@ -534,6 +593,15 @@
 "Da" = (
 /turf/template_noop,
 /area/template_noop)
+"Dx" = (
+/obj/effect/turf_decal/delivery,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/fluff/broken_ancient_server,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
 "Eb" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
@@ -574,6 +642,18 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
+"Hb" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/porta_turret/ancient_ai,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
 "Hu" = (
 /obj/machinery/ancient_server,
 /obj/effect/turf_decal/delivery,
@@ -609,9 +689,24 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
+"Ie" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal{
+	icon = 'icons/obj/turrets.dmi';
+	icon_state = "rocket_base"
+	},
+/obj/machinery/laser_flower,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
 "Ih" = (
 /obj/effect/turf_decal/stripes/corner,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
@@ -650,6 +745,9 @@
 	},
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
@@ -683,6 +781,16 @@
 	color = "#383838"
 	},
 /turf/open/floor/engine/ecute{
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/template_noop)
+"NG" = (
+/obj/effect/turf_decal/siding/green/corner,
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
+/turf/open/indestructible{
+	icon_state = "gcircuit";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/template_noop)
@@ -734,6 +842,9 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/path_blocker{
+	invisibility = 101
+	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
@@ -1665,7 +1776,7 @@ Da
 Da
 kX
 hN
-uF
+NG
 FG
 Yi
 bH
@@ -1682,7 +1793,7 @@ JG
 UF
 nX
 pi
-gN
+rr
 Af
 kX
 Da
@@ -1716,7 +1827,7 @@ Da
 Da
 kX
 kX
-uF
+NG
 FG
 Yi
 bH
@@ -1735,7 +1846,7 @@ uB
 UF
 nX
 pi
-gN
+rr
 kX
 kX
 Da
@@ -1825,7 +1936,7 @@ bH
 uB
 uB
 uB
-JG
+YJ
 UF
 wt
 NH
@@ -1834,7 +1945,7 @@ wt
 wt
 wt
 bH
-JG
+ty
 uB
 uB
 uB
@@ -1876,7 +1987,7 @@ bH
 JG
 JG
 uB
-yx
+Dx
 kX
 kX
 kX
@@ -1927,20 +2038,20 @@ bH
 JG
 JG
 JG
-uB
+Ie
 kX
 kX
-nv
-uB
+he
+dC
 uB
 uB
 JG
 JG
-JG
+CP
 he
 kX
 kX
-JG
+YJ
 uB
 JG
 JG
@@ -2033,7 +2144,7 @@ bk
 sD
 Li
 kX
-JG
+CP
 vv
 ez
 tr
@@ -2042,7 +2153,7 @@ bk
 dB
 zJ
 ns
-JG
+CP
 kX
 AO
 HZ
@@ -2203,7 +2314,7 @@ JG
 AO
 Pn
 aM
-yx
+Dx
 AO
 Pn
 Li
@@ -2293,7 +2404,7 @@ bk
 nP
 Li
 kX
-uB
+dC
 WE
 nX
 JM
@@ -2302,7 +2413,7 @@ wG
 Bq
 wW
 jL
-JG
+CP
 kX
 wu
 RU
@@ -2395,20 +2506,20 @@ Eb
 uB
 uB
 JG
-uB
+Hb
 kX
 kX
 Xl
+CP
 JG
 JG
 JG
 JG
-JG
-uB
-wE
+dC
+Dx
 kX
 kX
-JG
+ty
 uB
 uB
 uB
@@ -2501,7 +2612,7 @@ ns
 JG
 JG
 JG
-JG
+ty
 vv
 dS
 dS
@@ -2510,7 +2621,7 @@ dS
 SF
 SF
 ns
-JG
+YJ
 uB
 uB
 uB
@@ -2600,7 +2711,7 @@ Da
 Da
 kX
 kX
-mX
+gE
 zW
 zJ
 ns
@@ -2619,7 +2730,7 @@ JG
 vv
 ez
 Pt
-Cy
+ay
 kX
 kX
 Da
@@ -2653,7 +2764,7 @@ Da
 Da
 kX
 Ju
-mX
+gE
 zW
 zJ
 ns
@@ -2670,7 +2781,7 @@ JG
 vv
 ez
 Pt
-Cy
+ay
 aR
 kX
 Da

@@ -67,6 +67,9 @@
 		new /obj/item/organ/regenerative_core/legion/shining_core/preserved(src)
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
 
+/obj/item/organ/regenerative_core/legion/shining_core/preserved
+	preserved = TRUE
+
 /obj/item/organ/regenerative_core/legion/shining_core/preserved/Initialize()
 	. = ..()
 	preserved()
