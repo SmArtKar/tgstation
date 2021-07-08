@@ -6,17 +6,17 @@
  */
 
 /mob/living/simple_animal/hostile/megafauna/jungle
-	var/rare_loot = list()
-	var/rare_crusher_loot = list()
+	var/list/rare_loot = list()
+	var/list/rare_crusher_loot = list()
 	var/rarity = 1
 
-	var/common_loot = list()
-	var/common_crusher_loot = list()
+	var/list/common_loot = list()
+	var/list/common_crusher_loot = list()
 
-	var/former_targets = list()
+	var/list/former_targets = list()
 	crusher_damage_required = 0.3 //Because if you gangbang the boss it won't really be super high if there's a PKA user
 
-/mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target)
+/mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target) //Even if you hit once, you'll count
 	. = ..()
 	if(!(new_target in former_targets))
 		former_targets.Add(new_target)
@@ -48,7 +48,7 @@
 		for(var/rare_looty in rare_loot_list)
 			loot.Add(rare_looty)
 
-	common_loot_list = (crusher_kill ? common_crusher_loot : common_loot)
+	var/common_loot_list = (crusher_kill ? common_crusher_loot : common_loot)
 	for(var/i = 1 to killers)
 		for(var/common_looty in common_loot_list)
 			loot.Add(common_looty)

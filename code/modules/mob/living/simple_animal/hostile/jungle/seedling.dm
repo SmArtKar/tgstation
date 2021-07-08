@@ -249,7 +249,7 @@
 	desc = "A shining core of some dead seedling. This one is decayed for too long and became useless."
 
 /obj/item/organ/regenerative_core/legion/shining_core/preserved(implanted = 0)
-	..()
+	. = ..()
 	desc = "A shining core of some dead seedling. Rumors say that these core can heal and stim you, providing a combat boost. It's been preserved and won't decay."
 
 /obj/item/organ/regenerative_core/legion/shining_core/applyto(atom/target, mob/user)

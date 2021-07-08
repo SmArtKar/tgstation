@@ -63,3 +63,7 @@
 
 /mob/living/simple_animal/hostile/lizard/jungle
 	faction = list("jungle")
+
+/mob/living/simple_animal/hostile/lizard/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)

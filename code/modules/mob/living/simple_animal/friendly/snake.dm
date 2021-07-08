@@ -77,3 +77,7 @@
 
 /mob/living/simple_animal/hostile/retaliate/snake/jungle
 	faction = list("jungle")
+
+/mob/living/simple_animal/hostile/retaliate/snake/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)

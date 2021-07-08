@@ -123,7 +123,7 @@
 
 			genturf.ChangeTurf(special_gen_turfs[special_turf], initial(special_gen_turfs[special_turf].baseturfs), CHANGETURF_IGNORE_AIR) //We generate some patches of grass and wasteland in caves so they don't look plain
 
-	spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle/underground, /area/mine/planetgeneration/caves)
+	spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle/underground, /area/mine/planetgeneration_caves)
 
 	var/message = "[name] finished in [(REALTIMEOFDAY - start_time)/10]s!"
 	to_chat(world, "<span class='boldannounce'>[message]</span>")

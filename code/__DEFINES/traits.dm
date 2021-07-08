@@ -328,6 +328,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// This atom can ignore the "is on a turf" check for simple AI datum attacks, allowing them to attack from bags or lockers as long as any other conditions are met
 #define TRAIT_AI_BAGATTACK "bagattack"
 
+/// This trait means that said mob can be attacked with crusher regardless of it's size
+#define TRAIT_CRUSHER_VUNERABLE "crusher_vunerable"
+
+/// Mobs will always attack this regardless of their parameters
+#define TRAIT_MOB_HATED "mob_hated"
+
 // You can stare into the abyss, but it does not stare back.
 // You're immune to the hallucination effect of the supermatter, either
 // through force of will, or equipment. Present on /mob or /datum/mind

@@ -147,26 +147,7 @@
 /obj/projectile/bullet/a84mm/ancient/at/seeking
 	damage = 15
 	speed = 0
-	var/mob/living/victim
 
-/obj/projectile/bullet/a84mm/ancient/at/seeking/on_hit(atom/target, blocked = FALSE)
-	if(ishuman(target) || !isliving(target))
-		return BULLET_ACT_BLOCK
-	. = ..()
-
-/obj/projectile/bullet/a84mm/ancient/at/seeking/do_boom(atom/target)
-	if(ishuman(target) || !isliving(target))
-		return
-
-	explosion(target, devastation_range = -1, heavy_impact_range = -1, light_impact_range = 0, flame_range = 1, flash_range = -1, adminlog = FALSE)
-
-/obj/projectile/bullet/a84mm/ancient/at/seeking/process()
-	if(victim)
-		var/new_angle = Get_Angle(src, victim)
-		var/angle_change = min(new_angle - Angle, SEEKING_ROTATION_PER_TICK)
-		if(new_angle - Angle < 0)
-			angle_change = max(new_angle - Angle, SEEKING_ROTATION_PER_TICK * -1)
-		set_angle(Angle + angle_change) //WOOOOSH
-	. = ..()
+	homing = TRUE
 
 #undef SEEKING_ROTATION_PER_TICK

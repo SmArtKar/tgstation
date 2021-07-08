@@ -1166,11 +1166,11 @@ DEFINE_BITFIELD(turret_flags, list(
 	faction = list("jungle", "boss")
 	desc = "A heavy rocket turret, covered by a layer of dust."
 
-	armor = list(MELEE = 50, BULLET = 50, LASER = 100, ENERGY = 50, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 80, BULLET = 80, LASER = 100, ENERGY = 80, BOMB = 80, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
-/obj/machinery/porta_turret/ancient_ai/Initialize()
+/obj/machinery/porta_turret/ancient_ai/New()
 	. = ..()
 	toggle_on(FALSE)
 
@@ -1197,3 +1197,20 @@ DEFINE_BITFIELD(turret_flags, list(
 
 /obj/machinery/porta_turret/ancient_ai/ui_interact(mob/user, datum/tgui/ui)
 	return
+
+/obj/machinery/porta_turret/ancient_ai/proc/showShoot(atom/movable/target)
+	new /obj/effect/temp_visual/turret_telegraph(get_turf(src))
+	addtimer(CALLBACK(src, .proc/pew_pew, target), 10)
+
+/obj/machinery/porta_turret/ancient_ai/proc/pew_pew(atom/movable/target)
+	toggle_on(TRUE)
+	update_icon()
+	shootAt(target)
+	sleep(3)
+	toggle_on(FALSE)
+	update_icon()
+
+/obj/effect/temp_visual/turret_telegraph
+	icon = 'icons/mob/telegraphing/telegraph_holographic.dmi'
+	icon_state = "target_circle"
+	duration = 13

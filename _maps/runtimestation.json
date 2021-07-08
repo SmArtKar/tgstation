@@ -10,18 +10,31 @@
     "traits": [
 		{
 			"Up": 1,
-			"Linkage": "Cross"
+			"Linkage": null,
+            "Mining":true,
+            "Station":false,
+            "Jungle Deep Cave Ruins":true,
+            "Gravity":true
 		},
 		{
 			"Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/openspace",
-			"Linkage": "Cross"
+            "Mining":true,
+            "Station":false,
+			"Linkage": null,
+            "Jungle Cave Ruins":true,
+            "Gravity":true
 		},
 		{
 			"Down": -1,
 			"Baseturf": "/turf/open/openspace",
-			"Linkage": "Cross"
+			"Linkage": null,
+            "Mining":true,
+            "Station":true,
+            "Gravity":true,
+            "Jungle Ruins":true,
+            "Weather_Acidrain":true
 		}
 	]
 }

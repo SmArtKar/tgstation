@@ -131,9 +131,9 @@
 		. += "[initial(icon_state)]_crackle"
 
 /obj/item/organ/regenerative_core/legion/go_inert()
-	..()
+	. = ..()
 	desc = "[src] has become inert. It has decayed, and is completely useless."
 
 /obj/item/organ/regenerative_core/legion/preserved(implanted = 0)
-	..()
+	. = ..()
 	desc = "[src] has been stabilized. It is preserved, allowing you to use it to heal completely without danger of decay."

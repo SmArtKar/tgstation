@@ -239,7 +239,7 @@
 	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time."
 
 /obj/item/crusher_trophy/axe_head/on_mark_detonation(mob/living/target, mob/living/user)
-	user.changeNext_move(CLICK_CD_RAPID)
+	user.changeNext_move(CLICK_CD_RANGE)
 
 /obj/item/crusher_trophy/axe_head/add_to(obj/item/kinetic_crusher/crusher, mob/living/user)
 	. = ..()

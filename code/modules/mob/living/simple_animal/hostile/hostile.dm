@@ -250,7 +250,7 @@
 			return TRUE
 
 	if(isobj(the_target))
-		if(attack_all_objects || is_type_in_typecache(the_target, wanted_objects))
+		if(attack_all_objects || is_type_in_typecache(the_target, wanted_objects) || HAS_TRAIT(the_target, TRAIT_MOB_HATED))
 			return TRUE
 
 	return FALSE

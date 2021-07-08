@@ -1009,3 +1009,7 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 	no_headset = TRUE
 	speak_chance = 0 //No spam
 	faction = list("jungle")
+
+/mob/living/simple_animal/parrot/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)

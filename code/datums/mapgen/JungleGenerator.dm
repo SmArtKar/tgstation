@@ -41,7 +41,7 @@
 	var/humidity_seed = rand(0, 50000)
 	var/heat_seed = rand(0, 50000)
 
-	var/area/mine/planetgeneration/caves/cave_area = new()
+	var/area/mine/planetgeneration_caves/cave_area = new()
 
 	for(var/t in turfs) //Go through all the turfs and generate them
 		var/turf/gen_turf = t
@@ -106,18 +106,20 @@
 /area/mine/planetgeneration
 	name = "planet generation area"
 
-	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
+	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/jungle_generator
 
-/area/mine/planetgeneration/caves
+/area/mine/planetgeneration_caves
 	name = "planet caves generation area"
+
+	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/cave_generator/jungle/surface
 
-/area/mine/planetgeneration/caves/deep
-	name = "deep jungle caves generation area"
+/area/mine/planetgeneration_caves/deep
+	name = "jungle caves generation area"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep
 
-/area/mine/planetgeneration/caves/deep/bottom
+/area/mine/planetgeneration_caves/deep/bottom
 	name = "deep jungle caves generation area"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep/bottom
 

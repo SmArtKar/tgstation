@@ -11,6 +11,7 @@
 	glasses = /obj/item/clothing/glasses/meson/night
 	suit = /obj/item/clothing/suit/hooded/explorer
 	mask = /obj/item/clothing/mask/gas/explorer
+	neck = /obj/item/clothing/neck/cloak/skill_reward/mining
 	backpack_contents = list(
 		/obj/item/storage/box/healeys = 1,\
 		/obj/item/flashlight/seclite=1,\
@@ -53,11 +54,14 @@
 	new /obj/item/borg/upgrade/modkit/chassis_mod/orange(src)
 	new /obj/item/borg/upgrade/modkit/tracer/adjustable(src)
 	new /obj/item/borg/upgrade/modkit/aoe/turfs(src)
-	new /obj/item/t_scanner/adv_mining_scanner(src)
+	new /obj/item/borg/upgrade/modkit/human_passthrough(src)
+	var/obj/item/t_scanner/adv_mining_scanner/scanner = new(src)
+	scanner.toggle_on()
 
 /obj/item/storage/box/healeys/PopulateContents()
 	for (var/i = 1 to 3)
-		new /obj/item/organ/regenerative_core/legion/shining_core/preserved(src)
+		var/obj/item/organ/regenerative_core/legion/shining_core/core = new(src)
+		core.preserved()
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
 
 	for(var/i = 1 to 6)
@@ -68,12 +72,9 @@
 
 /obj/item/storage/belt/mining/healeys/PopulateContents()
 	for (var/i = 1 to 3)
-		new /obj/item/organ/regenerative_core/legion/shining_core/preserved(src)
+		var/obj/item/organ/regenerative_core/legion/shining_core/core = new(src)
+		core.preserved()
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
-
-/obj/item/organ/regenerative_core/legion/shining_core/preserved/Initialize()
-	. = ..()
-	preserved()
 
 /obj/effect/mob_spawn/human/debug_miner
 	name = "debug mining cryostasis sleeper"

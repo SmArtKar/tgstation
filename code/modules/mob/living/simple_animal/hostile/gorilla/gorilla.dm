@@ -115,3 +115,7 @@
 	aggro_vision_range = 5
 	faction = list("jungle")
 	weather_immunities = list(ACID)
+
+/mob/living/simple_animal/hostile/gorilla/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)

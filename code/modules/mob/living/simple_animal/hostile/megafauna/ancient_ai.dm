@@ -23,7 +23,7 @@
 *
 **/
 
-#define FLOOR_SHOCK_LENGTH 15 SECONDS
+#define FLOOR_SHOCK_LENGTH 10 SECONDS
 #define DRONE_RESPAWN_COOLDOWN 10 SECONDS
 #define LASER_FLOWER_LENGTH 2 SECONDS
 #define LASER_FLOWER_BULLETHELL_LENGTH 6 SECONDS
@@ -38,6 +38,8 @@
 	icon_state = "ai_complex_offline"
 	icon_living = "ai_complex_offline"
 	icon_dead = "ai_complex_broken"
+
+	mob_biotypes = MOB_ROBOTIC | MOB_EPIC
 
 	friendly_verb_continuous = "crackles at"
 	friendly_verb_simple = "crackles at"
@@ -60,12 +62,12 @@
 	ranged_message = null
 	ranged_ignores_vision = TRUE
 
-	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit)
-	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/crusher_trophy/ai_core)
+	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade)
+	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade, /obj/item/crusher_trophy/ai_core)
+	common_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon)
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
 	var/shield_toggled = TRUE
-	var/floors_shocked = FALSE
 	var/list/server_list = list()
 	var/servers = 0
 	var/initial_servers = 0
@@ -115,31 +117,22 @@
 
 	for(var/i = 1 to 4)
 		var/obj/machinery/porta_turret/ancient_ai/turret = pick_n_take(working_turrets)
-		turret.toggle_on(TRUE)
-		turret.update_icon()
-		turret.shootAt(target)
-		sleep(3)
-		turret.toggle_on(FALSE)
-		turret.update_icon()
+		turret.showShoot(target)
 		sleep(5)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_floor_shock()
-	if(floors_shocked)
+	if(floorshock)
 		return
 
 	for(var/turf/open/floor/engine/ecute/floor in range(12, src))
-		if(prob(75))
-			floor.turn_on()
+		if(prob(50))
+			floor.turn_on(TRUE)
+			addtimer(CALLBACK(floor, /turf/open/floor/engine/ecute.proc/turn_on, FALSE), FLOOR_SHOCK_LENGTH)
 
 	floorshock = TRUE
 	addtimer(CALLBACK(src, .proc/deactivate_floor_shock), FLOOR_SHOCK_LENGTH)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/deactivate_floor_shock()
-	if(!floors_shocked)
-		return
-
-	for(var/turf/open/floor/engine/ecute/floor in range(12, src))
-		floor.turn_on(FALSE)
 	floorshock = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/spawn_drones()
@@ -152,6 +145,7 @@
 
 	for(var/obj/machinery/giant_arm_holder/arm in range(12, src))
 		arm.violent_smash()
+		sleep(3)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_servers()
 	for(var/obj/machinery/ancient_server/server in range(12, src))
@@ -203,13 +197,12 @@
 	update_appearance()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/OpenFire()
-	ranged_cooldown = world.time + (shield_toggled ? 5 SECONDS : 3 SECONDS)
+	anger_modifier = clamp((initial_servers / servers) + (shield_toggled ? 0 : 1), 0, 6)
+	ranged_cooldown = world.time + ((5 + anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
 
 	if(get_dist(src, target) <= 2 && !floorshock)
 		activate_floor_shock()
 		return
-
-	anger_modifier = clamp((initial_servers / servers) + (shield_toggled ? 0 : 1), 0, 6)
 
 	if(anger_modifier == 6)
 		rocket_type = /obj/projectile/bullet/a84mm/ancient/heavy
@@ -323,18 +316,21 @@
 
 /obj/machinery/laser_flower/proc/shoot_projectile(target)
 	var/turf/startloc = get_turf(src)
-	var/obj/projectile/P = new /obj/projectile/beam/laser/weak(startloc)
+	var/obj/projectile/P = new /obj/projectile/beam/laser/kinetic(startloc)
 	P.preparePixelProjectile(target, startloc)
 	P.firer = src
 	if(master_ai && master_ai.target)
 		P.original = master_ai.target
 	P.fire(target)
 
-/obj/projectile/beam/laser/weak
-	name = "weak laser"
+/obj/projectile/beam/laser/kinetic
+	name = "kinetic laser"
+	icon_state = "emitter"
 	wound_bonus = -100
+	damage_type = BRUTE
+	flag = BULLET	//I want armor to work against it at least a tiny bit
 	damage = 20
-	speed = 4
+	speed = 2
 	eyeblur = 0
 
 /obj/machinery/giant_arm_holder
@@ -482,7 +478,7 @@
 	anchored = TRUE
 
 	max_integrity = 400
-	armor = list(MELEE = 75, BULLET = 0, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 0, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
@@ -533,6 +529,7 @@
 		P.firer = user
 		P.original = target
 		P.fire(target)
+		P.homing_target = target
 		sleep(5)
 
 /**
@@ -890,6 +887,76 @@
 /obj/projectile/exosuit_hook/Destroy()
 	qdel(chain)
 	return ..()
+
+/**
+ *
+ * Personal drone
+ * When you throw experimental drone shell on the floor it activates and spawns a personal combat drone. It's pretty tanky, has neat damage, and in case it dies it can be repaired using a welder and some iron.
+ *
+ */
+
+/obj/item/personal_drone_shell
+	name = "experimental drone shell"
+	desc = "An advanced drone shell with visible reinforcements and unusual toolset. A small sticker note on it says \"Throw on floor to activate\"."
+	icon = 'icons/mob/drone.dmi'
+	icon_state = "drone_repair_green_hat"
+
+/obj/item/personal_drone_shell/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	if(!..()) //not caught
+		var/mob/living/simple_animal/hostile/rogue_drone/pet_drone/pet = new(get_turf(src))
+		var/mob/thrown_by = thrownby?.resolve()
+		if(thrown_by)
+			pet.activate(thrown_by)
+		qdel(src)
+
+/// Bait Beacon
+
+/obj/item/bait_beacon
+	name = "bait beacon"
+	desc = "A strange device with twin antennas that's designed to lure monsters to it."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "battererburnt"
+	throwforce = 5
+	w_class = WEIGHT_CLASS_TINY
+	throw_speed = 3
+	throw_range = 7
+	flags_1 = CONDUCT_1
+	obj_flags = CAN_BE_HIT
+	inhand_icon_state = "electronic"
+	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	var/active = FALSE
+
+/obj/item/bait_beacon/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_MOB_HATED, ROUNDSTART_TRAIT)
+
+/obj/item/bait_beacon/attack_self(mob/living/carbon/user, flag = 0, emp = 0)
+	if(!user)
+		return
+
+	active = !active
+	if(!active)
+		deactivate()
+
+	log_combat(user, null, "lured mobs in the area", src)
+
+	icon_state = "batterer"
+	playsound(user, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+
+	for(var/mob/living/simple_animal/hostile/M in urange(10, src))
+		M.GiveTarget(src)
+
+/obj/item/bait_beacon/proc/deactivate()
+	icon_state = "battererburnt"
+	for(var/mob/living/simple_animal/hostile/M in urange(10, src))
+		if(M.target == src)
+			M.GiveTarget(null) // And as soon as it's disabled they lose interest in it
+
+/obj/item/bait_beacon/attack_animal(mob/living/simple_animal/user, list/modifiers)
+	if(active) //Disables it
+		deactivate()
+	. = ..()
 
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN

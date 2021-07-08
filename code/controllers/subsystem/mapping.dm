@@ -18,6 +18,9 @@ SUBSYSTEM_DEF(mapping)
 	var/list/lava_ruins_templates = list()
 	var/list/ice_ruins_templates = list()
 	var/list/ice_ruins_underground_templates = list()
+	var/list/jungle_ruins_templates = list()
+	var/list/jungle_cave_ruins_templates = list()
+	var/list/jungle_deep_cave_ruins_templates = list()
 
 	var/datum/space_level/isolated_ruins_z //Created on demand during ruin loading.
 
@@ -112,6 +115,20 @@ SUBSYSTEM_DEF(mapping)
 		for (var/ice_z in ice_ruins_underground)
 			spawn_rivers(ice_z, 4, level_trait(ice_z, ZTRAIT_BASETURF), /area/icemoon/underground/unexplored/rivers)
 
+	// Generate jungle ruins
+
+	var/list/jungle_ruins = levels_by_trait(ZTRAIT_JUNGLE_RUINS)
+	if (jungle_ruins.len)
+		seedRuins(jungle_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/planetgeneration), jungle_ruins_templates)
+
+	var/list/jungle_cave_ruins = levels_by_trait(ZTRAIT_JUNGLE_CAVE_RUINS)
+	if (jungle_cave_ruins.len)
+		seedRuins(jungle_cave_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/planetgeneration_caves), jungle_cave_ruins_templates)
+
+	var/list/jungle_deep_cave_ruins = levels_by_trait(ZTRAIT_JUNGLE_DEEP_CAVE_RUINS)
+	if (jungle_deep_cave_ruins.len)
+		seedRuins(jungle_deep_cave_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/planetgeneration_caves), jungle_deep_cave_ruins_templates)
+
 	// Generate deep space ruins
 	var/list/space_ruins = levels_by_trait(ZTRAIT_SPACE_RUINS)
 	if (space_ruins.len)
@@ -188,6 +205,9 @@ Used by the AI doomsday and the self-destruct nuke.
 	lava_ruins_templates = SSmapping.lava_ruins_templates
 	ice_ruins_templates = SSmapping.ice_ruins_templates
 	ice_ruins_underground_templates = SSmapping.ice_ruins_underground_templates
+	jungle_ruins_templates = SSmapping.jungle_ruins_templates
+	jungle_cave_ruins_templates = SSmapping.jungle_cave_ruins_templates
+	jungle_deep_cave_ruins_templates = SSmapping.jungle_deep_cave_ruins_templates
 	shuttle_templates = SSmapping.shuttle_templates
 	shelter_templates = SSmapping.shelter_templates
 	unused_turfs = SSmapping.unused_turfs
@@ -404,6 +424,7 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 	var/list/banned = generateMapList("[global.config.directory]/lavaruinblacklist.txt")
 	banned += generateMapList("[global.config.directory]/spaceruinblacklist.txt")
 	banned += generateMapList("[global.config.directory]/iceruinblacklist.txt")
+	banned += generateMapList("[global.config.directory]/jungleruinblacklist.txt")
 
 	for(var/item in sortList(subtypesof(/datum/map_template/ruin), /proc/cmp_ruincost_priority))
 		var/datum/map_template/ruin/ruin_type = item
@@ -426,6 +447,12 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 			ice_ruins_templates[R.name] = R
 		else if(istype(R, /datum/map_template/ruin/space))
 			space_ruins_templates[R.name] = R
+		else if(istype(R, /datum/map_template/ruin/jungle/cave/deep))
+			jungle_deep_cave_ruins_templates[R.name] = R
+		else if(istype(R, /datum/map_template/ruin/jungle/cave))
+			jungle_cave_ruins_templates[R.name] = R
+		else if(istype(R, /datum/map_template/ruin/jungle))
+			jungle_ruins_templates[R.name] = R
 
 /datum/controller/subsystem/mapping/proc/preloadShuttleTemplates()
 	var/list/unbuyable = generateMapList("[global.config.directory]/unbuyableshuttles.txt")

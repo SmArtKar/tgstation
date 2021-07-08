@@ -1,7 +1,7 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "iu" = (
 /turf/open/genturf,
-/area/mine/planetgeneration/caves/deep/bottom)
+/area/mine/planetgeneration_caves/deep/bottom)
 "Cp" = (
 /obj/effect/landmark/observer_start,
 /turf/open/genturf,
@@ -19,7 +19,7 @@
 /area/mine/planetgeneration)
 "ZP" = (
 /turf/open/genturf,
-/area/mine/planetgeneration/caves/deep)
+/area/mine/planetgeneration_caves/deep)
 
 (1,1,1) = {"
 iu
