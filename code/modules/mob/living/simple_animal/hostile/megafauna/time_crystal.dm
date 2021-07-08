@@ -138,7 +138,7 @@
 		return
 
 	if(prob(clamp((140 - anger_modifier), 40, 60)))
-		chronoshperes()
+		chronospheres()
 	else
 		spawn_turrets()
 		return
