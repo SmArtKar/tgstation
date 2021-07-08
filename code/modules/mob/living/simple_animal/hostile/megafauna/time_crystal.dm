@@ -126,7 +126,7 @@
 		shoot_projectile(start_turf, i * 72, proj_type = /obj/projectile/chronosphere)
 		SLEEP_CHECK_DEATH(3)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/OpenFire()
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/OpenFire()
 	anger_modifier =  (1 -(health / maxHealth)) * 100
 	ranged_cooldown = world.time + 4 SECONDS
 
@@ -137,7 +137,7 @@
 		collect_particles()
 		return
 
-	if(prob(clamp((140 - anger_modifier), 40, 60))
+	if(prob(clamp((140 - anger_modifier), 40, 60)))
 		chronoshperes()
 	else
 		spawn_turrets()
