@@ -17,6 +17,7 @@
 	alpha = 125
 	var/check_anti_magic = FALSE
 	var/check_holy = FALSE
+	var/sound_on_del = TRUE
 
 /obj/effect/timestop/Initialize(mapload, radius, time, list/immune_atoms, start = TRUE) //Immune atoms assoc list atom = TRUE
 	. = ..()
@@ -37,7 +38,8 @@
 
 /obj/effect/timestop/Destroy()
 	QDEL_NULL(chronofield)
-	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, frequency = -1) //reverse!
+	if(sound_on_del)
+		playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, frequency = -1) //reverse!
 	return ..()
 
 /obj/effect/timestop/proc/timestop()

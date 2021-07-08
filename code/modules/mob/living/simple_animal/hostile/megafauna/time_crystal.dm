@@ -9,7 +9,7 @@
  * 1. 3 small orbiting crystals are released. These crystals will float to random positions around the main crystal and shoot player with amber shards until destroyed.
  * 2. Time Crystal start shooting wave-like patterns of amber shards in all directions
  * 3. Crystal shoots a few slow chronospheres that stop time around them after a few seconds.
- * 4. A lot of smaller crystals are spawned. They try to reach time crystal while player is supposed to be shooting them down. In case enough crystals reach the main one, it gains orbitals back or spawns them as turrets if it already has them.
+ * 4. If distance between crystal and player is too big crystal dashes towards the player, leaving timestop fields behind itself
  * 5. Crystal falls into the ground and starts preparing a powerful laser attack. After it's ready, it shoots into the sky and several player-following lasers are created, damaging everything in their path.
  *
  * Melee attack just shoots amber shards point-blank
@@ -20,8 +20,6 @@
 
 #define AMBER_TIMESTOP_RANGE 1
 #define AMBER_TIMESTOP_DURATION 5 SECONDS
-#define AMBER_PARTICLES_SPAWNED 30
-#define AMBER_PARTICLES_REQUIRED 20
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal
 	name = "time crystal"
@@ -41,7 +39,7 @@
 	move_to_delay = 14
 	ranged = TRUE
 	ranged_cooldown_time = 40
-	aggro_vision_range = 12
+	aggro_vision_range = 18
 
 	loot = list()
 	crusher_loot = list(/obj/item/crusher_trophy/crystal_shard)
@@ -53,8 +51,6 @@
 	var/has_orbiting = TRUE
 	var/dropped = FALSE
 	var/beaming = FALSE
-	var/collecting = FALSE
-	var/particles_collected = 0
 
 	var/obj/effect/temp_visual/crystal_killbeam/beam
 
@@ -62,7 +58,7 @@
 	return
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Move()
-	if(dropped || collecting)
+	if(dropped)
 		return
 	. = ..()
 
@@ -133,8 +129,8 @@
 	if(beaming || dropped)
 		return
 
-	if(!has_orbiting && prob(anger_modifier + 30))
-		collect_particles()
+	if(get_dist(src, target) > 10)
+		do_dash()
 		return
 
 	if(prob(clamp((140 - anger_modifier), 40, 60)))
@@ -205,31 +201,22 @@
 	update_icon()
 	flick("crystal_fly_up", src)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/collect_particles()
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/do_dash()
 	if(dropped)
 		return
-	collecting = TRUE
-	particles_collected = 0
 
-	ranged_cooldown = world.time + AMBER_PARTICLES_SPAWNED * 3 + 4 SECONDS
+	ranged_cooldown = world.time + 60 SECONDS //Just in case
+	add_atom_colour("#DE9E41", TEMPORARY_COLOUR_PRIORITY)
 
-	var/list/possible_turfs = list()
-	for(var/turf/open/possible_turf in range(6, src))
-		if(!possible_turf.is_blocked_turf_ignore_climbable())
-			possible_turfs.Add(possible_turf)
+	while(get_dist(src, target) > 6)
+		var/turf/next_turf = get_step(get_turf(src), get_dir(src, target))
+		Move(next_turf)
+		var/chronofield = make_field(/datum/proximity_monitor/advanced/timestop/amber, list("current_range" = 1, "host" = src, "immune" = list(src), "check_anti_magic" = FALSE, "check_holy" = FALSE))
+		QDEL_IN(chronofield, AMBER_TIMESTOP_DURATION)
+		SLEEP_CHECK_DEATH(1)
 
-	for(var/i = 1 to AMBER_PARTICLES_SPAWNED)
-		if(!LAZYLEN(possible_turfs))
-			break
-		shoot_projectile(get_turf(src), i * 72, proj_type = /obj/projectile/crystal, startloc = pick_n_take(possible_turfs))
-		SLEEP_CHECK_DEATH(3)
-
-	collecting = FALSE
-	if(particles_collected > AMBER_PARTICLES_REQUIRED)
-		if(has_orbiting)
-			spawn_turrets()
-		has_orbiting = TRUE
-		update_icon()
+	ranged_cooldown = world.time + 2 SECONDS
+	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
 
 /obj/projectile/crystal_shards
 	name = "crystal shards"
@@ -302,28 +289,12 @@
 	update_icon()
 	. = ..()
 
-/obj/projectile/crystal/on_hit(atom/target)
-	if(istype(target, /mob/living/simple_animal/hostile/jungle/crystal_turret))
-		return PROJECTILE_PIERCE_PHASE
-
-	if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal))
-		var/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/crystal
-		crystal.particles_collected += 1
-		return PROJECTILE_DELETE_WITHOUT_HITTING
-	. = ..()
-
-/obj/projectile/crystal/CanAllowThrough(atom/movable/mover, border_dir)
-	. = ..()
-	if(istype(mover, /obj/projectile/kinetic) || istype(mover, /obj/projectile/destabilizer)) //That may look funny but I want particles to be destructible so you can shoot them
-		qdel(src)
-		return FALSE
-
 /obj/effect/timestop/amber
 	invisibility = 101
+	sound_on_del = FALSE
 
 /obj/effect/timestop/amber/timestop()
 	target = get_turf(src)
-	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, -1)
 	chronofield = make_field(/datum/proximity_monitor/advanced/timestop/amber, list("current_range" = freezerange, "host" = src, "immune" = immune, "check_anti_magic" = check_anti_magic, "check_holy" = check_holy))
 	QDEL_IN(src, duration)
 
