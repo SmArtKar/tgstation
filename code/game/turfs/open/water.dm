@@ -17,7 +17,8 @@
 	heavyfootstep = FOOTSTEP_WATER
 
 /turf/open/water/jungle //Actually working water that wets stuff
-	baseturfs = /turf/open/chasm/jungle
+	baseturfs = /turf/open/floor/plating/dirt/jungle
+	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
 	slowdown = 4 //We're swimming, not walking
 	layer = 1.98 //We need other turfs to be above it
 

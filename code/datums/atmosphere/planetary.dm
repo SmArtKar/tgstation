@@ -50,3 +50,28 @@
 	minimum_temp = 180
 	maximum_temp = 180
 
+/datum/atmosphere/jungle
+	id = JUNGLE_DEFAULT_ATMOS
+
+	base_gases = list(
+		/datum/gas/oxygen=7,
+		/datum/gas/nitrogen=14,
+	)
+	normal_gases = list(
+		/datum/gas/oxygen=4,
+		/datum/gas/nitrogen=4,
+		/datum/gas/carbon_dioxide=4,
+	)
+	restricted_gases = list(
+		/datum/gas/plasma=0.05,
+		/datum/gas/water_vapor=0.1,
+		/datum/gas/miasma=0.3,
+		/datum/gas/bz=1.2,
+	)
+	restricted_chance = 20
+
+	minimum_pressure = HAZARD_LOW_PRESSURE + 10
+	maximum_pressure = LAVALAND_EQUIPMENT_EFFECT_PRESSURE - 1
+
+	minimum_temp = BODYTEMP_COLD_DAMAGE_LIMIT + 1
+	maximum_temp = 350

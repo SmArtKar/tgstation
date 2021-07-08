@@ -696,6 +696,7 @@
 
 	baseturfs = /turf/open/floor/plating/dirt/jungle/dark
 	turf_type = /turf/open/floor/plating/dirt/jungle/dark
+	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
 
 /turf/closed/mineral/random/jungle/Initialize()
 	. = ..()
