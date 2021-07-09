@@ -47,6 +47,8 @@
 
 #define STATUS_EFFECT_MAYHEM /datum/status_effect/mayhem //Total bloodbath. Activated by orb of mayhem pickup/bottle of mayhem item.
 
+#define STATUS_EFFECT_CRYSTAL_HEART /datum/status_effect/crystal_heart
+
 /////////////
 // DEBUFFS //
 /////////////

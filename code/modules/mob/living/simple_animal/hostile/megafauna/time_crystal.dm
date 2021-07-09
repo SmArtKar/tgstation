@@ -41,8 +41,8 @@
 	ranged_cooldown_time = 40
 	aggro_vision_range = 18
 
-	loot = list()
-	crusher_loot = list(/obj/item/crusher_trophy/crystal_shard)
+	loot = list(/obj/effect/spawner/lootdrop/time_crystal)
+	crusher_loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/crusher_trophy/crystal_shard)
 
 	wander = FALSE
 	gps_name = "Vibrating Signal"
@@ -265,6 +265,7 @@
 	homing = TRUE
 
 /obj/projectile/chronosphere/on_range()
+	new /obj/effect/temp_visual/chronoexplosion(get_turf(src))
 	new /obj/effect/timestop/amber(get_turf(src), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, list(firer))
 	. = ..()
 
@@ -282,12 +283,27 @@
 	icon_state = "tiny"
 	damage = 10
 	damage_type = BRUTE
-	speed = 4
+	var/pressure_decreased = FALSE
 
 /obj/projectile/crystal/Initialize()
 	icon_state = "[initial(icon_state)][rand(1,8)]"
 	update_icon()
 	. = ..()
+
+/obj/projectile/crystal/on_hit(atom/target)
+	if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal) || istype(target, /mob/living/simple_animal/hostile/jungle/crystal_turret))
+		return PROJECTILE_PIERCE_PHASE
+	. = ..()
+
+/obj/projectile/crystal/prehit_pierce(atom/target)
+	. = ..()
+	if(. == PROJECTILE_PIERCE_PHASE)
+		return
+
+	if(!lavaland_equipment_pressure_check(get_turf(target)) && !pressure_decreased)
+		name = "weakened [name]"
+		damage = damage * 0.25
+		pressure_decreased = TRUE
 
 /obj/effect/timestop/amber
 	invisibility = 101
@@ -409,6 +425,76 @@
 		H.damage_coeff = list(BRUTE = 1.2, BURN = 1.2, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
 		sleep(bonus_value)
 		H.damage_coeff = initial_coeff
+
+/obj/item/clothing/gloves/crystal
+	name = "crystal gauntlets"
+	desc = "Odd-shaped crystals that look like they would fit your hands"
+	icon_state = "crystal_gauntlets"
+	inhand_icon_state = "crystal_gauntlets"
+	strip_delay = 40
+	equip_delay_other = 20
+	cold_protection = HANDS
+	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	heat_protection = HANDS
+	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	resistance_flags = LAVA_PROOF | FIRE_PROOF | ACID_PROOF
+	armor = list(MELEE = 15, BULLET = 25, LASER = 15, ENERGY = 15, BOMB = 100, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+
+/obj/item/clothing/gloves/crystal/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_GLOVES)
+		RegisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK, .proc/shootie)
+	else
+		UnregisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK)
+
+/obj/item/clothing/gloves/crystal/dropped(mob/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK)
+
+/obj/item/clothing/gloves/crystal/proc/shootie(mob/living/carbon/human/H, atom/A, proximity)
+	SIGNAL_HANDLER
+
+	if(H.Adjacent(A))
+		return
+
+	var/obj/projectile/proj = new /obj/projectile/crystal(get_turf(H))
+	proj.preparePixelProjectile(get_turf(A), get_turf(H))
+	proj.firer = H
+	proj.original = A
+	H.changeNext_move(CLICK_CD_RAPID)
+
+	proj.fire()
+
+/obj/effect/spawner/lootdrop/time_crystal
+	name = "time crystal loot spawner"
+	loot = list(/obj/item/clothing/gloves/crystal = 2, /obj/item/crystal_fruit = 1)
+
+/obj/item/crystal_fruit //One-use full heal and buff for 30 seconds. When you're truely fucked.
+	name = "crystal fruit"
+	desc = "Legends say that eating this fruit will give you \"awesome power\". It's not specified what these are."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "crystal_fruit"
+
+/obj/item/crystal_fruit/attack_self(mob/user)
+	if(!iscarbon(user))
+		return
+
+	var/mob/living/carbon/eater = user
+	if(eater.is_mouth_covered())
+		to_chat(eater, span_warning("You can't eat [src] with your mouth covered!")) //Minor inconvinience just because I am a dickhead
+
+	eater.revive(full_heal = TRUE, admin_revive = TRUE)
+	eater.apply_status_effect(STATUS_EFFECT_CRYSTAL_HEART)
+	playsound(eater, 'sound/magic/staff_healing.ogg', 20, TRUE)
+	to_chat(eater, span_notice("You feel great!"))
+	qdel(src)
+
+/obj/effect/temp_visual/chronoexplosion
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "sphere_explosion"
+	pixel_x = -32
+	pixel_y = -32
+	duration = 3
 
 #undef AMBER_TIMESTOP_RANGE
 #undef AMBER_TIMESTOP_DURATION

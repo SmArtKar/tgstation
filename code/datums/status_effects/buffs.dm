@@ -584,3 +584,45 @@
 /datum/movespeed_modifier/status_speed_boost
 	multiplicative_slowdown = -1
 
+/atom/movable/screen/alert/status_effect/crystal_heart
+	name = "Crystal Heart"
+	desc = "Your heart has been crystallised by consuming a crystal fruit, giving you awesome power for a brief moment!"
+	icon_state = "crystallization"
+
+/datum/status_effect/crystal_heart
+	id = "crystal_heart"
+	duration = 30 SECONDS
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = /atom/movable/screen/alert/status_effect/crystal_heart
+
+/datum/status_effect/crystal_heart/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+
+/datum/status_effect/crystal_heart/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+
+/datum/status_effect/crystal_heart/on_apply()
+	. = ..()
+	if(.)
+		ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+		if(ishuman(owner))
+			var/mob/living/carbon/human/H = owner
+			H.physiology.brute_mod *= 0.5
+			H.physiology.burn_mod *= 0.5
+			H.physiology.tox_mod *= 0.5
+			H.physiology.oxy_mod *= 0.5
+			H.physiology.clone_mod *= 0.5
+			H.physiology.stamina_mod *= 0.5
+
+/datum/status_effect/crystal_heart/on_remove()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.physiology.brute_mod *= 2
+		H.physiology.burn_mod *= 2
+		H.physiology.tox_mod *= 2
+		H.physiology.oxy_mod *= 2
+		H.physiology.clone_mod *= 2
+		H.physiology.stamina_mod *= 2
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
