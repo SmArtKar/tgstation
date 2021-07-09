@@ -134,7 +134,8 @@
 		return
 
 	if(prob(clamp((140 - anger_modifier), 40, 60)))
-		chronospheres()
+		if(get_dist(src, target) > 3) //No point-blank chronospheres
+			chronospheres()
 	else
 		spawn_turrets()
 		return

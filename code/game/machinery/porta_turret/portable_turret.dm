@@ -1165,8 +1165,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	base_icon_state = "rocket"
 	faction = list("jungle", "boss")
 	desc = "A heavy rocket turret, covered by a layer of dust."
-
-	armor = list(MELEE = 80, BULLET = 80, LASER = 100, ENERGY = 80, BOMB = 80, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	resistance_flags = INDESTRUCTIBLE
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 

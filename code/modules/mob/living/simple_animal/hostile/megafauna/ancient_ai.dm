@@ -163,7 +163,7 @@
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
 		if(prob(50))
-			turret.toggle(TRUE)
+			turret.toggle_with_warning(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_LENGTH)
 
@@ -176,7 +176,7 @@
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
 		if(prob(75))
-			turret.toggle(TRUE)
+			turret.toggle_with_warning(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_BULLETHELL_LENGTH)
 
@@ -241,7 +241,7 @@
 	icon_state = "drone_spawner"
 
 	max_integrity = 200
-	armor = list(MELEE = 50, BULLET = 50, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -273,7 +273,7 @@
 	icon_state = "laser_flower"
 
 	max_integrity = 200
-	armor = list(MELEE = 50, BULLET = 50, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -286,6 +286,10 @@
 	else
 		icon_state = "[initial(icon_state)][active ? "_active" : ""]"
 	. = ..()
+
+/obj/machinery/laser_flower/proc/toggle_with_warning(activate = TRUE)
+	new /obj/effect/temp_visual/turret_telegraph(get_turf(src))
+	addtimer(CALLBACK(src, .proc/toggle, activate), 10)
 
 /obj/machinery/laser_flower/proc/toggle(activate = TRUE)
 	if(active == activate)
@@ -338,9 +342,7 @@
 	desc = "A huge giant arm mounted on a wall."
 	icon = 'icons/obj/jungle/64x64.dmi'
 	icon_state = "arm_holder"
-
-	max_integrity = 2000
-	armor = list(MELEE = 100, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 100, RAD = 100, FIRE = 100, ACID = 100)
+	resistance_flags = INDESTRUCTIBLE
 	density = TRUE
 	anchored = TRUE
 
@@ -478,7 +480,7 @@
 	anchored = TRUE
 
 	max_integrity = 400
-	armor = list(MELEE = 50, BULLET = 0, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
@@ -501,6 +503,7 @@
 	density = TRUE
 	anchored = TRUE
 	deconstructible = FALSE
+	resistance_flags = INDESTRUCTIBLE
 
 
 /obj/item/crusher_trophy/ai_core
@@ -940,6 +943,7 @@
 	active = !active
 	if(!active)
 		deactivate()
+		return
 
 	log_combat(user, null, "lured mobs in the area", src)
 
