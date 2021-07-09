@@ -272,6 +272,8 @@
 #define RESONANCE_COOLDOWN 15 SECONDS
 #define RESONANCE_RANGE 5
 
+/// Alloy armor needs better sprites but I am lazy
+
 /obj/item/clothing/suit/hooded/alloy_armor
 	name = "mechanical alloy armor"
 	desc = "A suit made out of mechanicall alloy plates sewed together with bat sinew."
