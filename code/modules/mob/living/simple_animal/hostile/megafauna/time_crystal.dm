@@ -351,8 +351,8 @@
 	projectiletype = /obj/projectile/amber_crystal
 	projectilesound = 'sound/effects/ethereal_revive_fail.ogg'
 	speak_emote = list("vibrates")
-	maxHealth = 300
-	health = 300
+	maxHealth = 600
+	health = 600
 	vision_range = 9
 	aggro_vision_range = 9
 	move_force = MOVE_FORCE_VERY_STRONG
