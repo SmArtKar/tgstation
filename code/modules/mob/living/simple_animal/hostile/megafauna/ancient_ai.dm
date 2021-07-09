@@ -963,7 +963,7 @@
 /obj/item/experimental_components
 	name = "experimental components"
 	desc = "A bunch of dark-blue circuitry glued together for some reason. And they call that high tech?"
-	icon = 'icons/obj/lavaland/artifacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "experimental_components"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0

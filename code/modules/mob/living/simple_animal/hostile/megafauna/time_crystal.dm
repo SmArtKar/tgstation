@@ -499,7 +499,7 @@
 /obj/item/amber_core
 	name = "amber core"
 	desc = "Strange crystal made of very dense amber found in one of Time Crystals."
-	icon = 'icons/obj/lavaland/artifacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "amber_core"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0
