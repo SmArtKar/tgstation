@@ -11,6 +11,7 @@
 	icon_living = "leaper"
 	icon_dead = "leaper_dead"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
+	butcher_results = list(/obj/item/food/meat/slab/xeno = 4, /obj/item/stack/sheet/bone = 2)
 	maxHealth = 460
 	health = 460
 	ranged = TRUE
