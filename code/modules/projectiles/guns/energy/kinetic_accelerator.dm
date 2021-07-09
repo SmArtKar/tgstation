@@ -193,7 +193,7 @@
 	if(kinetic_gun)
 		var/list/mods = kinetic_gun.modkits
 		for(var/obj/item/borg/upgrade/modkit/modkit in mods)
-			if(istype(modkit, /obj/item/borg/upgrade/modkit/human_passthrough))
+			if(istype(modkit, /obj/item/borg/upgrade/modkit/human_passthrough) && ishuman(target) && !ismonkey(target))
 				return PROJECTILE_PIERCE_PHASE
 			modkit.projectile_prehit(src, target, kinetic_gun)
 	if(!pressure_decrease_active && !lavaland_equipment_pressure_check(get_turf(target)))
