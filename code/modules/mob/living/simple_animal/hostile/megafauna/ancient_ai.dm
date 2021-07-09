@@ -559,7 +559,7 @@
 
 /obj/item/clothing/suit/space/hardsuit/exosuit
 	name = "P.R.O.T.O.N. exosuit"
-	desc = "A prototype exosuit with external actuators for additional agility. It's dusty, but still in pretty good condition."
+	desc = "A prototype exosuit with external actuators for additional agility. It's dusty, but still in pretty good condition. \n Dash can be used by double-tapping movement button(when active) and hook can be activated by pressing resist hotkey."
 	icon_state = "hardsuit-exosuit"
 	inhand_icon_state = "syndicate-black"
 	slowdown = 0
@@ -588,10 +588,12 @@
 	. = ..()
 	if(slot == ITEM_SLOT_OCLOTHING)
 		RegisterSignal(user, COMSIG_MOVABLE_MOVED, .proc/check_pressure)
+		RegisterSignal(user, COMSIG_KB_LIVING_RESIST_DOWN, .proc/extend_hook)
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/dropped(mob/user)
 	. = ..()
 	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+	UnregisterSignal(user, COMSIG_KB_LIVING_RESIST_DOWN)
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/proc/check_pressure()
 	if(lavaland_equipment_pressure_check(get_turf(src)))
@@ -732,7 +734,7 @@
 		hook.forceMove(src)
 		return
 
-	if(!check_cell(user, PROTON_HOOK_COST, TRUE))
+	if(!check_cell(user, PROTON_HOOK_COST, TRUE) || !active)
 		return
 
 	if(hook_cooldown > world.time)
