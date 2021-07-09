@@ -41,8 +41,8 @@
 	ranged_cooldown_time = 40
 	aggro_vision_range = 18
 
-	loot = list(/obj/effect/spawner/lootdrop/time_crystal)
-	crusher_loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/crusher_trophy/crystal_shard)
+	loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/amber_core)
+	crusher_loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/amber_core, /obj/item/crusher_trophy/crystal_shard)
 
 	wander = FALSE
 	gps_name = "Vibrating Signal"
@@ -495,6 +495,15 @@
 	pixel_x = -32
 	pixel_y = -32
 	duration = 3
+
+/obj/item/amber_core
+	name = "amber core"
+	desc = "Strange crystal made of very dense amber found in one of Time Crystals."
+	icon = 'icons/obj/lavaland/artifacts.dmi'
+	icon_state = "amber_core"
+	w_class = WEIGHT_CLASS_TINY
+	force = 0
+	throwforce = 0
 
 #undef AMBER_TIMESTOP_RANGE
 #undef AMBER_TIMESTOP_DURATION

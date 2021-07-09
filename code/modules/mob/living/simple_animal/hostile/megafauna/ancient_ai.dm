@@ -62,8 +62,8 @@
 	ranged_message = null
 	ranged_ignores_vision = TRUE
 
-	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade)
-	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade, /obj/item/crusher_trophy/ai_core)
+	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade, /obj/item/experimental_components)
+	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade, /obj/item/experimental_components, /obj/item/crusher_trophy/ai_core)
 	common_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon)
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
@@ -959,6 +959,15 @@
 	if(active) //Disables it
 		deactivate()
 	. = ..()
+
+/obj/item/experimental_components
+	name = "experimental components"
+	desc = "A bunch of dark-blue circuitry glued together for some reason. And they call that high tech?"
+	icon = 'icons/obj/lavaland/artifacts.dmi'
+	icon_state = "experimental_components"
+	w_class = WEIGHT_CLASS_TINY
+	force = 0
+	throwforce = 0
 
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN

@@ -269,7 +269,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	merge_type = /obj/item/stack/sheet/mechanical_alloy
 
-#define RESONANCE_COOLDOWN 15 SECONDS
+#define RESONANCE_COOLDOWN 12 SECONDS
 #define RESONANCE_RANGE 5
 
 /obj/item/clothing/suit/hooded/alloy_armor
