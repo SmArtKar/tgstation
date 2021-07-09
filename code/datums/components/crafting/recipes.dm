@@ -839,6 +839,14 @@
 				/obj/item/stack/sheet/animalhide/ashdrake = 5)
 	category = CAT_PRIMAL
 
+/datum/crafting_recipe/alloy_armor
+	name = "Mechanical Alloy Armor"
+	result = /obj/item/clothing/suit/hooded/alloy_armor
+	time = 60
+	reqs = list(/obj/item/stack/sheet/sinew/bat = 3,
+				/obj/item/stack/sheet/mechanical_alloy = 3)
+	category = CAT_PRIMAL
+
 /datum/crafting_recipe/godslayer
 	name = "Godslayer Armour"
 	result = /obj/item/clothing/suit/hooded/cloak/godslayer

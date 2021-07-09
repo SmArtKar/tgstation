@@ -269,6 +269,47 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	merge_type = /obj/item/stack/sheet/mechanical_alloy
 
+#define RESONANCE_COOLDOWN 15 SECONDS
+#define RESONANCE_RANGE 5
+
+/obj/item/clothing/suit/hooded/alloy_armor
+	name = "mechanical alloy armor"
+	desc = "A suit made out of mechanicall alloy plates sewed together with bat sinew."
+	icon_state = "mechanical_alloy"
+	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/resonator, /obj/item/mining_scanner, /obj/item/t_scanner/adv_mining_scanner, /obj/item/gun/energy/kinetic_accelerator, /obj/item/pickaxe, /obj/item/spear)
+	armor = list(MELEE = 45, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 50, BIO = 60, RAD = 50, FIRE = 100, ACID = 100)
+	hoodtype = /obj/item/clothing/head/hooded/alloy_armor
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	resistance_flags = FIRE_PROOF | ACID_PROOF
+	transparent_protection = HIDEGLOVES|HIDESUITSTORAGE|HIDEJUMPSUIT|HIDESHOES
+
+/obj/item/clothing/head/hooded/alloy_armor
+	name = "mechanical alloy helmet"
+	desc = "A helmet made out of mechanical alloy and bat sinew."
+	icon_state = "mechanical_alloy"
+	armor = list(MELEE = 45, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 50, BIO = 60, RAD = 50, FIRE = 100, ACID = 100)
+	clothing_flags = SNUG_FIT
+	resistance_flags = FIRE_PROOF | ACID_PROOF
+	actions_types = list(/datum/action/item_action/alloy_resonance)
+	var/resonance_cooldown = 0
+
+/obj/item/clothing/head/hooded/alloy_armor/proc/resonate(mob/user)
+	if(resonance_cooldown > world.time)
+		to_chat(span_warning("[src] is not ready to resonate yet! Wait [round((resonance_cooldown - world.time) / 10)] more seconds before activating resonance once again!"))
+		return
+
+	if(!lavaland_equipment_pressure_check(get_turf(user)))
+		to_chat(span_warning("Pressure here is too high for [src] to resonate with enough power!"))
+		return
+
+	resonance_cooldown = world.time + RESONANCE_COOLDOWN
+	user.visible_message(span_warning("[user]'s [src] starts resonating and emitting a high-pitched sound!"))
+	playsound(get_turf(user), 'sound/effects/clockcult_gateway_disrupted.ogg', 100, TRUE)
+	for(var/obj/projectile/proj in range(RESONANCE_RANGE, get_turf(user)))
+		proj.set_angle(Get_Angle(user, proj))
+
+#undef RESONANCE_RANGE
+#undef RESONANCE_COOLDOWN
 #undef MOOK_ATTACK_NEUTRAL
 #undef MOOK_ATTACK_WARMUP
 #undef MOOK_ATTACK_ACTIVE

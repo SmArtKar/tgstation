@@ -861,3 +861,13 @@
 	var/obj/item/clothing/head/helmet/space/hardsuit/exosuit/helmet = target
 	button.icon_state = "bg_exosuit[helmet.on ? "_on" : ""]"
 
+/datum/action/item_action/alloy_resonance
+	name = "Alloy Resonance"
+	desc = "Activate your armor, making it resonate with all projectiles in the air, reflecting them."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "alloy_gear"
+
+/datum/action/item_action/alloy_resonance/Trigger()
+	if(istype(target, /obj/item/clothing/head/hooded/alloy_armor))
+		var/obj/item/clothing/head/hooded/alloy_armor/helmet = target
+		helmet.resonate(owner)
