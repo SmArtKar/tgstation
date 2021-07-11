@@ -151,7 +151,7 @@
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/Beamu(mob/living/living_target, beam_id = 0)
 	if(combatant_state == SEEDLING_STATE_ACTIVE && living_target && beam_id == solar_beam_identifier)
-		if(living_target.z == z)
+		if(living_target.z == z || get_dist(src, living_target) <= aggro_vision_range)
 			update_icons()
 			var/obj/effect/temp_visual/solarbeam_killsat/S = new (get_turf(src))
 			var/matrix/starting = matrix()
