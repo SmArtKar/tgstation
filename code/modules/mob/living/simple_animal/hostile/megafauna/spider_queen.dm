@@ -1,5 +1,26 @@
+/**
+ *
+ * Cave Spider Queen
+ *
+ * It is that the title says. Just a thick, big spider mommy.
+ *
+ * Attack patterns:
+ * 1. Queen dashes, destroying everything in her path.
+ * 2. Same as 1, but triple.
+ * 3. 3 black cocoons are created. If they aren't destroyed in 5 seconds, they release small cave spider babies.
+ * 4. Queen shoots a bunch of web balls in a shotgun-like pattern, flinging everything they hit to itself.
+ * 5. Queen slams the ground, creating a powerful shockwave.
+ *
+ * Killing it drops spider silk and spider eyes. Spider silk can be used on suits and helmets to give them additional 15 melee armor(up to 80), while spider eyes
+ *
+ * Intended difficulty: Hard
+ *
+ */
+
 #define VORE_PROBABLILITY 40
 #define EGG_LENGTH 5 SECONDS
+#define SPIDER_SILK_LIMIT 80
+#define SPIDER_SILK_BUFF 15
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen
 	name = "cave spider queen"
@@ -31,8 +52,8 @@
 	ranged_cooldown_time = 30
 	aggro_vision_range = 18
 
-	loot = list()
-	crusher_loot = list()
+	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk)
+	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk)
 
 	wander = TRUE
 	gps_name = "Webbed Signal"
@@ -81,6 +102,7 @@
 	if(prob(40))
 		triple_charge()
 		if(prob(40 + anger_modifier))
+			SLEEP_CHECK_DEATH(5)
 			shockwave()
 			ranged_cooldown = world.time + 60
 		return
@@ -239,7 +261,7 @@
 					L.Stun(10)
 					L.apply_damage_type(20, BRUTE)
 					hit_things += L
-		sleep(iteration_duration)
+		SLEEP_CHECK_DEATH(iteration_duration)
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby
 	name = "baby cave spider"
@@ -315,6 +337,125 @@
 			L.Paralyze(1 SECONDS)
 		QDEL_IN(web, 3 SECONDS)
 
+/datum/status_effect/spider_damage_tracker
+	id = "spider_damage_tracker"
+	duration = -1
+	alert_type = null
+	var/damage = 0
+	var/lasthealth
+
+/datum/status_effect/spider_damage_tracker/tick()
+	if((lasthealth - owner.health) > 0)
+		damage += (lasthealth - owner.health)
+	lasthealth = owner.health
+
+/obj/item/organ/eyes/night_vision/spider
+	name = "spider eyes"
+	desc = "Eight eyes instead of two!"
+	eye_icon_state = "spidereyes"
+	icon_state = "eyeballs-spider"
+	flash_protect = FLASH_PROTECTION_SENSITIVE
+	overlay_ignore_lighting = TRUE
+	var/active_icon = FALSE
+	var/list/active_friends = list()
+	var/list/former_friends = list()
+
+/obj/item/organ/eyes/night_vision/spider/on_life(delta_time, times_fired)
+	var/turf/owner_turf = get_turf(owner)
+	var/lums = owner_turf.get_lumcount()
+	if(lums > 0.75)
+		if(active_icon)
+			active_icon = FALSE
+			eye_icon_state = initial(icon_state)
+			owner.update_appearance()
+	else
+		if(!active_icon)
+			active_icon = TRUE
+			eye_icon_state = "[initial(icon_state)]_active"
+			owner.update_appearance()
+
+	for(var/mob/living/simple_animal/M in view(7, owner_turf)) //You also look like spider so they don't attack you as long as you don't attack them
+		if(!(M in active_friends) && !(M in former_friends) && isspider(M))
+			active_friends += M
+			M.apply_status_effect(/datum/status_effect/spider_damage_tracker)
+			M.faction |= owner.real_name
+
+	for(var/mob/living/simple_animal/M in active_friends)
+		if(!(M in view(7, get_turf(owner_turf))))
+			M.faction -= owner.real_name
+			M.remove_status_effect(/datum/status_effect/spider_damage_tracker)
+			active_friends -= M
+			continue
+
+		var/datum/status_effect/spider_damage_tracker/C = M.has_status_effect(/datum/status_effect/spider_damage_tracker)
+		if(istype(C) && C.damage > 0)
+			M.faction -= owner.real_name
+			M.remove_status_effect(/datum/status_effect/spider_damage_tracker)
+			active_friends -= M
+			former_friends += M
+
+	. = ..()
+
+/obj/item/organ/eyes/night_vision/spider/Insert(mob/living/carbon/eye_owner, special = FALSE)
+	. = ..()
+	ADD_TRAIT(eye_owner, TRAIT_THERMAL_VISION, ORGAN_TRAIT)
+
+/obj/item/organ/eyes/night_vision/spider/Remove(mob/living/carbon/eye_owner, special = FALSE)
+	REMOVE_TRAIT(eye_owner, TRAIT_THERMAL_VISION, ORGAN_TRAIT)
+	for(var/mob/living/simple_animal/M in active_friends)
+		M.faction -= eye_owner.real_name
+		M.remove_status_effect(/datum/status_effect/spider_damage_tracker)
+		active_friends -= M
+		former_friends += M
+
+	active_friends = list()
+	former_friends = list()
+
+	. = ..()
+
+/obj/item/organ/eyes/night_vision/spider/attack(mob/M, mob/living/carbon/user, obj/target) //Surgery sucks
+	if(M != user)
+		return ..()
+
+	user.visible_message(span_warning("[user] presses [src] against [user.p_their()] face and they suddenly start growing in!"), span_userdanger("You press [src] against your face and suddenly they grow in and replace your eyes!"))
+	user.temporarilyRemoveItemFromInventory(src, TRUE)
+	user.emote("scream")
+	src.Insert(user)
+
+/obj/item/stack/sheet/spidersilk
+	name = "spider silk cloth"
+	icon = 'icons/obj/mining.dmi'
+	desc = "A very tough and resistant cloth made from spider silk."
+	singular_name = "spider silk cloth"
+	icon_state = "sheet-spidersilk"
+	max_amount = 3
+	novariants = FALSE
+	item_flags = NOBLUDGEON
+	w_class = WEIGHT_CLASS_SMALL
+	merge_type = /obj/item/stack/sheet/spidersilk
+
+/obj/item/stack/sheet/spidersilk/afterattack(atom/A, mob/user, proximity)
+	. = ..()
+	if(!proximity)
+		return
+
+	if(!istype(A, /obj/item/clothing/suit) || !istype(A, /obj/item/clothing/head))
+		return
+
+	var/obj/item/clothing/target = A
+	if(((MELEE in target.armor) && target.armor[MELEE] >= SPIDER_SILK_LIMIT) || HAS_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED))
+		to_chat(user, span_warning("[target] can't be upgraded further!"))
+		return
+
+	if(!(MELEE in target.armor))
+		target.armor[MELEE] = SPIDER_SILK_BUFF
+	else
+		target.armor[MELEE] = min(SPIDER_SILK_LIMIT, target.armor[MELEE] + SPIDER_SILK_BUFF)
+	to_chat(user, span_notice("You successfully upgrade [target] with [src]"))
+	ADD_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED, GENERIC_ITEM_TRAIT)
+	use(1)
 
 #undef VORE_PROBABLILITY
+#undef SPIDER_SILK_LIMIT
+#undef SPIDER_SILK_BUFF
 #undef EGG_LENGTH

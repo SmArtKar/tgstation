@@ -148,6 +148,17 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"gk" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/window/reinforced/survival_pod/indestructible{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
 "gt" = (
 /obj/effect/turf_decal/siding/yellow/corner{
 	dir = 1
@@ -344,6 +355,16 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"nx" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/structure/window/reinforced/survival_pod/indestructible,
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
 "nX" = (
 /obj/machinery/ancient_server,
 /obj/effect/turf_decal/delivery,
@@ -359,6 +380,19 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"oB" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/window/reinforced/survival_pod/indestructible{
+	dir = 8
 	},
 /turf/open/indestructible{
 	icon_state = "darkfull";
@@ -536,6 +570,16 @@
 "tO" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"tU" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/structure/window/reinforced/survival_pod/indestructible{
+	dir = 1
 	},
 /turf/open/indestructible{
 	icon_state = "darkfull";
@@ -904,6 +948,19 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"HL" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/window/reinforced/survival_pod/indestructible{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
 "Ih" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
@@ -1184,6 +1241,18 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "podfloor";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"QX" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/obj/structure/window/reinforced/survival_pod/indestructible{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
@@ -2057,8 +2126,8 @@ ZG
 CP
 xh
 tO
-LA
-LA
+HL
+HL
 iO
 xh
 PW
@@ -2507,7 +2576,7 @@ xp
 xp
 ZU
 xS
-PW
+nx
 nX
 ZU
 xS
@@ -2528,7 +2597,7 @@ ZU
 xS
 PW
 PX
-CP
+gk
 xS
 PW
 VI
@@ -2553,7 +2622,7 @@ VI
 VI
 CP
 xh
-PW
+nx
 WE
 CP
 xS
@@ -2574,7 +2643,7 @@ ZU
 xS
 Pn
 DA
-ZU
+tU
 xS
 PW
 VI
@@ -3023,8 +3092,8 @@ ci
 ZU
 xS
 xW
-RJ
-ht
+QX
+oB
 PV
 xh
 PW

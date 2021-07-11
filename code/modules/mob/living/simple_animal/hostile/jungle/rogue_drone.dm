@@ -25,6 +25,12 @@
 	attack_verb_continuous = "drills"
 	attack_verb_simple = "drills"
 	var/nogib = FALSE
+	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
+
+/mob/living/simple_animal/hostile/rogue_drone/death(gibbed)
+	if(master_ai)
+		master_ai.drones -= src
+	. = ..()
 
 /mob/living/simple_animal/hostile/rogue_drone/Initialize(mapload)
 	. = ..()

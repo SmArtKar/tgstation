@@ -14,6 +14,9 @@
  *
  * Melee attack just shoots amber shards point-blank
  *
+ * It's loot consists of an Amber Core(which is used for crafting) and either Crystal Gauntlets that allow you to shoot crystal shards with your hands OR a one-use crystal fruit that completely aheals you and gives you 50% damage reduction for 30 seconds.
+ * When killed with crusher it also drops a crystal shard that stuns and makes creatures vunerable for a bit.
+ *
  * Intended difficulty: Hard
  *
  */
@@ -419,7 +422,7 @@
 	bonus_value = 4
 
 /obj/item/crusher_trophy/crystal_shard/effect_desc()
-	return "mark detonation to stun creatures and make them more vunerable for <b>[bonus_value*0.1]</b> second\s"
+	return "mark detonation to stun creatures and make them more vunerable for a bit"
 
 /obj/item/crusher_trophy/crystal_shard/on_mark_detonation(mob/living/target, mob/living/user)
 	if(ishostile(target))
@@ -427,7 +430,7 @@
 		H.Stun(bonus_value)
 		var/initial_coeff = H.damage_coeff
 		H.damage_coeff = list(BRUTE = 1.2, BURN = 1.2, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
-		sleep(bonus_value)
+		sleep(bonus_value * 5)
 		H.damage_coeff = initial_coeff
 
 /obj/item/clothing/gloves/crystal
@@ -457,9 +460,6 @@
 
 /obj/item/clothing/gloves/crystal/proc/shootie(mob/living/carbon/human/H, atom/A, proximity)
 	SIGNAL_HANDLER
-
-	if(H.Adjacent(A))
-		return
 
 	var/obj/projectile/proj = new /obj/projectile/crystal(get_turf(H))
 	proj.preparePixelProjectile(get_turf(A), get_turf(H))

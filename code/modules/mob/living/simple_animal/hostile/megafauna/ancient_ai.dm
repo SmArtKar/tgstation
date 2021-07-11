@@ -18,6 +18,7 @@
 *
 * After killing the AI you get some Experimental Components(required to craft some cool shit) and a badass exoskeleton armor that gives you HUDs and allows you to perform a few sick tricks.
 * When killed with crusher, it will also drop it's core that will allow you to shoot 3 heat-seeking missiles on right click(these are harmless for humans)
+* It also has "common" loot that drops per everybody in the group that killed it. It consists of an experimental drone pet that serves as a combat companion and a mob bait.
 *
 * Intended difficulty: OH GOD OH FUCK
 *
@@ -73,6 +74,7 @@
 	var/initial_servers = 0
 	var/bullethell = FALSE
 	var/floorshock = FALSE
+	var/list/drones = list()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -157,6 +159,9 @@
 			server.icon_state = "ai_server_active_dusted"
 			server.update_icon()
 		server.master_ai = src
+
+	for(var/obj/machinery/rogue_drone_spawner/drone_spawner in range(12, src))
+		drone_spawner.master_ai = src
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/laser_flower()
 	bullethell = TRUE
@@ -245,16 +250,18 @@
 	anchored = TRUE
 
 	var/has_drone = TRUE
+	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
 /obj/machinery/rogue_drone_spawner/proc/spawn_drone()
-	if(!has_drone)
+	if(!has_drone || LAZYLEN(master_ai.drones) >= 6)
 		return
 
 	icon_state = "[initial(icon_state)]_empty"
 	update_icon()
 	flick("[initial(icon_state)]_activate", src)
 	has_drone = FALSE
-	new /mob/living/simple_animal/hostile/rogue_drone(get_turf(src))
+	var/mob/living/simple_animal/hostile/rogue_drone/drone = new(get_turf(src))
+	drone.master_ai = master_ai
 	addtimer(CALLBACK(src, .proc/recreate_drone), DRONE_RESPAWN_COOLDOWN)
 
 /obj/machinery/rogue_drone_spawner/proc/recreate_drone()
@@ -546,6 +553,7 @@
 
 #define PROTON_ACTIVE_ARMOR list(MELEE = 75, BULLET = 40, LASER = 10, ENERGY = 20, BOMB = 50, BIO = 100, RAD = 100, FIRE = 100, ACID = 100)
 #define PROTON_INACTIVE_ARMOR list(MELEE = 20, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 0, BIO = 100, RAD = 50, FIRE = 100, ACID = 100)
+#define PROTON_ARMOR_DIFFERENCE list(MELEE = 55, BULLET = 20, ENERGY = 10, BOBM = 50, RAD = 50)
 
 #define PROTON_JUMP_COOLDOWN 5 SECONDS //A bit better than jump boots
 #define PROTON_JUMP_RANGE 5
@@ -566,7 +574,7 @@
 	inhand_icon_state = "syndicate-black"
 	slowdown = 0
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/exosuit
-	armor = PROTON_ACTIVE_ARMOR
+	armor = PROTON_INACTIVE_ARMOR
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	resistance_flags = FIRE_PROOF | LAVA_PROOF | ACID_PROOF | FREEZE_PROOF
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/pickaxe, /obj/item/spear, /obj/item/organ/regenerative_core, /obj/item/kitchen/knife, /obj/item/kinetic_crusher, /obj/item/resonator, /obj/item/gun/energy/kinetic_accelerator)
@@ -589,6 +597,7 @@
 /obj/item/clothing/suit/space/hardsuit/exosuit/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_OCLOTHING)
+		check_pressure()
 		RegisterSignal(user, COMSIG_MOVABLE_MOVED, .proc/check_pressure)
 		RegisterSignal(user, COMSIG_KB_LIVING_RESIST_DOWN, .proc/extend_hook)
 
@@ -608,16 +617,18 @@
 		return
 	active = TRUE
 
-	armor = PROTON_ACTIVE_ARMOR
-	helmet.armor = PROTON_ACTIVE_ARMOR
+	for(var/armor_tag in PROTON_ARMOR_DIFFERENCE)
+		armor[armor_tag] += PROTON_ARMOR_DIFFERENCE[armor_tag]
+		helmet.armor[armor_tag] += PROTON_ARMOR_DIFFERENCE[armor_tag]
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/proc/deactivate()
 	if(!active)
 		return
 	active = FALSE
 
-	armor = PROTON_INACTIVE_ARMOR
-	helmet.armor = PROTON_INACTIVE_ARMOR
+	for(var/armor_tag in PROTON_ARMOR_DIFFERENCE)
+		armor[armor_tag] -= PROTON_ARMOR_DIFFERENCE[armor_tag]
+		helmet.armor[armor_tag] -= PROTON_ARMOR_DIFFERENCE[armor_tag]
 	activate_dash() //Deactivates dash
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/proc/check_cell(mob/user, charge_required, no_discharge = FALSE)
@@ -758,7 +769,7 @@
 	desc = "An advanced helmet with a complex HUD. It's dusty and one of the stripes is faded but other than that, it is in a good condition."
 	icon_state = "hardsuit0-exosuit"
 	hardsuit_type = "exosuit"
-	armor = PROTON_ACTIVE_ARMOR
+	armor = PROTON_INACTIVE_ARMOR
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	resistance_flags = FIRE_PROOF | LAVA_PROOF | ACID_PROOF | FREEZE_PROOF
 	actions_types = list(/datum/action/item_action/toggle_helmet_light/exosuit)
@@ -972,6 +983,9 @@
 	force = 0
 	throwforce = 0
 
+/obj/structure/window/reinforced/survival_pod/indestructible
+	resistance_flags = INDESTRUCTIBLE
+
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN
 #undef LASER_FLOWER_LENGTH
@@ -979,6 +993,7 @@
 
 #undef PROTON_ACTIVE_ARMOR
 #undef PROTON_INACTIVE_ARMOR
+#undef PROTON_ARMOR_DIFFERENCE
 
 #undef PROTON_JUMP_COOLDOWN
 #undef PROTON_JUMP_RANGE

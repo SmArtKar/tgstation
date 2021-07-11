@@ -378,6 +378,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// This mob can strip other mobs.
 #define TRAIT_CAN_STRIP "can_strip"
 
+#define TRAIT_SPIDER_SILK_UPGRADED "spider_silk_upgraded"
+
 // If present on a mob or mobmind, allows them to "suplex" an immovable rod
 // turning it into a glorified potted plant, and giving them an
 // achievement. Can also be used on rod-form wizards.
