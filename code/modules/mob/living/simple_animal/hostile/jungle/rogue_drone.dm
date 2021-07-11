@@ -1,4 +1,4 @@
-#define HEALTH_LOST_PER_REPAIR 75
+#define HEALTH_LOST_PER_REPAIR 175
 #define ATTACK_LOST_PER_REPAIR 5
 
 /mob/living/simple_animal/hostile/rogue_drone
@@ -55,8 +55,8 @@
 	icon_state = "drone_repair_green"
 	icon_living = "drone_repair_green"
 	icon_dead = "drone_repair_dead"
-	health = 250
-	maxHealth = 250
+	health = 600
+	maxHealth = 600
 	melee_damage_lower = 20
 	melee_damage_upper = 20
 	faction = list("neutral")

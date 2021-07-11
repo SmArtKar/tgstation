@@ -11,7 +11,7 @@
  * 4. Queen shoots a bunch of web balls in a shotgun-like pattern, flinging everything they hit to itself.
  * 5. Queen slams the ground, creating a powerful shockwave.
  *
- * Killing it drops spider silk and spider eyes. Spider silk can be used on suits and helmets to give them additional 15 melee armor(up to 80), while spider eyes
+ * Killing it drops spider silk and spider eyes. Spider silk can be used on suits and helmets to give them additional 10 melee armor(up to 80), while spider eyes
  *
  * Intended difficulty: Hard
  *
@@ -20,7 +20,7 @@
 #define VORE_PROBABLILITY 40
 #define EGG_LENGTH 5 SECONDS
 #define SPIDER_SILK_LIMIT 80
-#define SPIDER_SILK_BUFF 15
+#define SPIDER_SILK_BUFF 10
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen
 	name = "cave spider queen"
@@ -52,8 +52,8 @@
 	ranged_cooldown_time = 30
 	aggro_vision_range = 18
 
-	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk)
-	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk)
+	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk, /obj/structure/spider/queen_egg/mount)
+	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk, /obj/structure/spider/queen_egg/mount)
 
 	wander = TRUE
 	gps_name = "Webbed Signal"
@@ -296,6 +296,7 @@
 	icon_state = "cocoon_black"
 	var/birth_timer
 	var/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/mommy
+	var/spider_type = /mob/living/simple_animal/hostile/jungle/cave_spider/baby
 
 /obj/structure/spider/queen_egg/Initialize(mapload)
 	. = ..()
@@ -307,7 +308,7 @@
 	. = ..()
 
 /obj/structure/spider/queen_egg/proc/give_birth()
-	var/mob/living/simple_animal/hostile/jungle/cave_spider/baby/spidey = new(get_turf(src))
+	var/mob/living/simple_animal/hostile/jungle/cave_spider/baby/spidey = new spider_type(get_turf(src))
 	new /obj/effect/decal/cleanable/insectguts(get_turf(src))
 	visible_message(span_warning("[src] bursts, revealing a [spidey]!"))
 	mommy.babies.Add(spidey)
@@ -316,6 +317,9 @@
 
 /obj/structure/spider/queen_egg/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	return
+
+/obj/structure/spider/queen_egg/mount
+	spider_type = /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
 
 /obj/projectile/web_ball
 	name = "ball of web"
@@ -454,6 +458,22 @@
 	to_chat(user, span_notice("You successfully upgrade [target] with [src]"))
 	ADD_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED, GENERIC_ITEM_TRAIT)
 	use(1)
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
+	name = "tamed baby cave spider"
+	desc = "A pitch-black cave spider baby with glowing purple eyes and turquoise stripe on it's back. It seems completely friendly and non-hostile."
+	maxHealth = 300
+	health = 300
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	ranged = FALSE
+	faction = list("neutral", "jungle", "spiders")
+	can_buckle = TRUE
+	buckle_lying = 0
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/Initialize()
+	. = ..()
+	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount)
 
 #undef VORE_PROBABLILITY
 #undef SPIDER_SILK_LIMIT
