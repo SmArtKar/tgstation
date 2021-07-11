@@ -277,7 +277,7 @@
 	desc = "A suit made out of mechanicall alloy plates sewed together with bat sinew."
 	icon_state = "mechanical_alloy"
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/resonator, /obj/item/mining_scanner, /obj/item/t_scanner/adv_mining_scanner, /obj/item/gun/energy/kinetic_accelerator, /obj/item/pickaxe, /obj/item/spear)
-	armor = list(MELEE = 40, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 50, BIO = 60, RAD = 50, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 50, BIO = 60, RAD = 50, FIRE = 100, ACID = 100)
 	hoodtype = /obj/item/clothing/head/hooded/alloy_armor
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	resistance_flags = FIRE_PROOF | ACID_PROOF
