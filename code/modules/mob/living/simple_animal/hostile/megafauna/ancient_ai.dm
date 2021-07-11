@@ -79,7 +79,6 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/Initialize()
 	. = ..()
-	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, ROUNDSTART_TRAIT)
 	update_appearance()
 	status_flags |= GODMODE
 

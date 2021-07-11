@@ -1,6 +1,7 @@
 /turf/open
 	plane = FLOOR_PLANE
 	var/slowdown = 0 //negative for faster, positive for slower
+	var/slowdown_type = /datum/movespeed_modifier/turf_slowdown
 
 	var/footstep = null
 	var/barefootstep = null

@@ -52,3 +52,7 @@
 	for(var/i = 1 to killers)
 		for(var/common_looty in common_loot_list)
 			loot.Add(common_looty)
+
+/mob/living/simple_animal/hostile/megafauna/jungle/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, ROUNDSTART_TRAIT)

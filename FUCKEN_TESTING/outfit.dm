@@ -3,7 +3,7 @@
 
 	belt = /obj/item/storage/belt/mining/healeys
 	ears = /obj/item/radio/headset/headset_cargo/mining
-	shoes = /obj/item/clothing/shoes/jackboots
+	shoes = /obj/item/clothing/shoes/workboots/mining/explorer
 	gloves = /obj/item/clothing/gloves/combat
 	uniform = /obj/item/clothing/under/syndicate
 	l_pocket = /obj/item/gps

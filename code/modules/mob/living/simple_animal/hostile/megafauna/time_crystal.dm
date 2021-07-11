@@ -19,7 +19,7 @@
  */
 
 #define AMBER_TIMESTOP_RANGE 1
-#define AMBER_TIMESTOP_DURATION 5 SECONDS
+#define AMBER_TIMESTOP_DURATION 3 SECONDS
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal
 	name = "time crystal"
@@ -28,7 +28,7 @@
 	maxHealth = 2500
 	icon_state = "crystal"
 	icon_living = "crystal"
-	health_doll_icon = "crystal_dropped"
+	icon_dead = "crystal_dropped"
 	friendly_verb_continuous = "stares down"
 	friendly_verb_simple = "stare down"
 	icon = 'icons/mob/jungle/amber_crystal_big.dmi'
@@ -38,7 +38,7 @@
 	speed = 14
 	move_to_delay = 14
 	ranged = TRUE
-	ranged_cooldown_time = 40
+	ranged_cooldown_time = 20
 	aggro_vision_range = 18
 
 	loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/amber_core)
@@ -54,6 +54,10 @@
 
 	var/obj/effect/temp_visual/crystal_killbeam/beam
 
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_MOVE_FLYING, ROUNDSTART_TRAIT)
+
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
 
@@ -61,10 +65,6 @@
 	if(dropped)
 		return
 	. = ..()
-
-/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, ROUNDSTART_TRAIT)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/update_icon(updates)
 	if(dropped)
@@ -119,12 +119,12 @@
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	playsound(get_turf(src), 'sound/effects/ethereal_revive.ogg', 100) //Fits pretty well I guess?
 	for(var/i in 1 to 5)
-		shoot_projectile(start_turf, i * 72, proj_type = /obj/projectile/chronosphere)
+		shoot_projectile(start_turf, i * 72, proj_type = /obj/projectile/chronosphere, homing = TRUE)
 		SLEEP_CHECK_DEATH(3)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/OpenFire()
 	anger_modifier =  (1 -(health / maxHealth)) * 100
-	ranged_cooldown = world.time + 4 SECONDS
+	ranged_cooldown = world.time + 2 SECONDS
 
 	if(beaming || dropped)
 		return
@@ -133,9 +133,10 @@
 		do_dash()
 		return
 
-	if(prob(clamp((140 - anger_modifier), 40, 60)))
+	if(prob(clamp((140 - anger_modifier), 10, 30)))
 		if(get_dist(src, target) > 3) //No point-blank chronospheres
 			chronospheres()
+			return
 	else
 		spawn_turrets()
 		return
@@ -144,7 +145,10 @@
 		drop_n_beam()
 		return
 
-	spiral_shoot()
+	if(prob(80))
+		spiral_shoot()
+	else
+		do_dash()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/spawn_turrets()
 	if(!has_orbiting)
@@ -177,7 +181,7 @@
 	flick("crystal_drop", src)
 	SLEEP_CHECK_DEATH(3)
 	flick("crystal_beam_telegraph", src)
-	addtimer(CALLBACK(src, .proc/start_beaming), 2 SECONDS)
+	addtimer(CALLBACK(src, .proc/start_beaming), 3 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/start_beaming()
 	beaming = TRUE
@@ -195,7 +199,7 @@
 	flick("crystal_beam_stop", src)
 	if(beam && !QDELETED(beam))
 		qdel(beam)
-	addtimer(CALLBACK(src, .proc/get_the_fuck_up), 3)
+	addtimer(CALLBACK(src, .proc/get_the_fuck_up), 3 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/get_the_fuck_up()
 	dropped = FALSE
@@ -222,10 +226,9 @@
 /obj/projectile/crystal_shards
 	name = "crystal shards"
 	icon_state = "crystal_spray"
-	damage = 15
+	damage = 10
 	damage_type = BRUTE
 	speed = 2
-	stamina = 20
 
 /obj/projectile/crystal_shards/slow
 	speed = 4
@@ -238,7 +241,7 @@
 /obj/projectile/amber_crystal
 	name = "amber crystal"
 	icon_state = "crystal1"
-	damage = 40
+	damage = 30
 	damage_type = BRUTE
 	speed = 2
 
@@ -261,7 +264,7 @@
 	icon_state = "chrono"
 	damage = 0
 	nodamage = TRUE
-	speed = 12 //You can outrun it
+	speed = 6 //You can outrun it
 	range = 24
 	homing = TRUE
 

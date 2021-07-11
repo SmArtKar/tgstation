@@ -40,12 +40,13 @@
 	projectiletype = /obj/projectile/cave_spider_web
 	crusher_drop_mod = 10 //They spawn in packs
 	crusher_loot = /obj/item/crusher_trophy/spider_webweaver
+	var/jump_mod = 1
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/OpenFire(atom/targeting)
 	if(get_dist(src, targeting) > WEB_DISTANCE)
 		return
 
-	if(prob(100 - health / maxHealth))
+	if(prob((100 - health / maxHealth) * jump_mod))
 		throw_at(targeting, WEB_DISTANCE, 2, src, FALSE, TRUE)
 		visible_message("<span class='danger'>[src] jumps at [targeting]!</span>")
 		return
@@ -69,8 +70,7 @@
 		var/datum/beam/web = firer.Beam(targeted, icon_state = "web", maxdistance = WEB_DISTANCE, beam_type=/obj/effect/ebeam/web)
 		if(isliving(targeted))
 			var/mob/living/L = targeted
-			L.Paralyze(2 SECONDS)
-			L.throw_at(firer, WEB_DISTANCE, 2, firer, FALSE, TRUE)
+			L.safe_throw_at(firer, WEB_DISTANCE, 2, firer, FALSE, TRUE, gentle = TRUE)
 		QDEL_IN(web, 3 SECONDS)
 
 /obj/effect/ebeam/web
@@ -134,11 +134,22 @@
 		if(prob(15) && T != src)
 			new /mob/living/simple_animal/hostile/jungle/cave_spider(T)
 
-	for(var/turf/open/T in range(2, src))
-		if(prob(60) && !istype(T, /turf/open/water/jungle))
-			new /obj/structure/spider/stickyweb(T)
+	for(var/turf/open/T in range(3, src))
+		if(sqrt((T.x - x) ** 2 + (T.y - y) ** 2) > 3) //I want it to be a CIRCLE
+			continue
+
+		var/probability = 30
+		for(var/turf/possible_turf in range(1, T))
+			if(locate(/obj/structure/spider/stickyweb) in possible_turf || isclosedturf(possible_turf))
+				probability += 15
+
+		if(prob(probability) && !istype(T, /turf/open/water/jungle))
+			new /obj/structure/spider/stickyweb/cave(T)
 
 	return INITIALIZE_HINT_QDEL
+
+/obj/structure/spider/stickyweb/cave/atmos_expose(datum/gas_mixture/air, exposed_temperature)
+	return
 
 /obj/item/crusher_trophy/spider_webweaver //A bit weaker than normal cave spider attack
 	name = "cave spider's web weaver"
@@ -168,8 +179,7 @@
 	SIGNAL_HANDLER
 	if(isliving(target))
 		var/mob/living/L = target
-		L.Paralyze(2 SECONDS)
-		L.throw_at(firer, WEB_DISTANCE, 1, firer, FALSE, TRUE)
+		L.safe_throw_at(firer, WEB_DISTANCE, 1, firer, FALSE, TRUE, gentle = TRUE)
 		var/datum/beam/web = firer.Beam(target, icon_state = "web")
 		QDEL_IN(web, 3 SECONDS)
 
