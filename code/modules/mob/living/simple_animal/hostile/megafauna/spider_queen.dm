@@ -13,7 +13,7 @@
  *
  * Killing it drops spider silk and spider eyes. Spider silk can be used on suits and helmets to give them additional 10 melee armor(up to 80), while spider eyes
  *
- * Intended difficulty: Hard
+ * Intended difficulty: Very Hard
  *
  */
 
@@ -53,8 +53,8 @@
 	aggro_vision_range = 18
 	light_range = 0
 
-	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk, /obj/structure/spider/queen_egg/mount)
-	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk, /obj/structure/spider/queen_egg/mount)
+	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye)
+	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye)
 
 	wander = TRUE
 	gps_name = "Webbed Signal"
@@ -478,6 +478,39 @@
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/Initialize()
 	. = ..()
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount)
+	AddElement(/datum/element/pet_bonus, "chitters happily!")
+
+/obj/effect/spawner/lootdrop/spider_queen
+	name = "spider queen loot spawner"
+	loot = list(/obj/item/stack/sheet/spidersilk = 1, /obj/structure/spider/queen_egg/mount = 1)
+
+/obj/item/flashlight/spider_eye
+	name = "spider queen eye"
+	desc = "A giant eye of a spider queen. It looks squishy..."
+	custom_price = PAYCHECK_EASY
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "spider_eye"
+	inhand_icon_state = null
+	worn_icon_state = null
+	w_class = WEIGHT_CLASS_SMALL
+	slot_flags = null
+	custom_materials = list()
+	actions_types = list()
+	light_system = MOVABLE_LIGHT_DIRECTIONAL
+	light_range = 3
+	light_color = "#993FD4"
+	flashlight_sound = 'sound/misc/splort.ogg'
+
+/obj/item/flashlight/spider_eye/attack_self(mob/user)
+	on = TRUE
+	playsound(user, flashlight_sound, 40, TRUE)
+	update_brightness(user)
+	addtimer(CALLBACK(src, .proc/turnOff, user), 5 SECONDS)
+
+/obj/item/flashlight/spider_eye/proc/turnOff(mob/user)
+	on = FALSE
+	playsound(user, flashlight_sound, 40, TRUE)
+	update_brightness(user)
 
 #undef VORE_PROBABLILITY
 #undef SPIDER_SILK_LIMIT
