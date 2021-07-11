@@ -135,10 +135,10 @@
 
 /datum/map_generator/cave_generator/jungle/deep
 	mob_spawn_chance = 8
-	feature_spawn_chance = 0.25
-	feature_spawn_list = list(/obj/structure/ladder/dirt_hole = 30, /obj/structure/geyser/jungle/wittel = 6, /obj/structure/geyser/jungle/random = 2, /obj/structure/geyser/jungle/plasma_oxide = 10, /obj/structure/geyser/jungle/protozine = 10, /obj/structure/geyser/jungle/hollowwater = 10)
+	feature_spawn_chance = 0.1
+	feature_spawn_list = list(/obj/structure/ladder/dirt_hole = 10, /obj/structure/geyser/jungle/wittel = 6, /obj/structure/geyser/jungle/random = 2, /obj/structure/geyser/jungle/plasma_oxide = 10, /obj/structure/geyser/jungle/protozine = 10, /obj/structure/geyser/jungle/hollowwater = 10)
 
 /datum/map_generator/cave_generator/jungle/deep/bottom
-	feature_spawn_chance = 0.1
-	feature_spawn_list = list(/obj/structure/geyser/jungle/wittel = 6, /obj/structure/geyser/jungle/random = 2, /obj/structure/geyser/jungle/plasma_oxide = 10, /obj/structure/geyser/jungle/protozine = 10, /obj/structure/geyser/jungle/hollowwater = 10)
+	feature_spawn_chance = 0.05
+	feature_spawn_list = list(/obj/structure/ladder/dirt_hole = 5, /obj/structure/geyser/jungle/wittel = 6, /obj/structure/geyser/jungle/random = 2, /obj/structure/geyser/jungle/plasma_oxide = 10, /obj/structure/geyser/jungle/protozine = 10, /obj/structure/geyser/jungle/hollowwater = 10)
 	closed_turf_types =  list(/turf/closed/mineral/random/jungle/strong = 1) //These walls make plasmacutters almost useless, you'll need to make use of your KA.

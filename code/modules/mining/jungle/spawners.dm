@@ -4,7 +4,7 @@
 	icon = 'icons/mob/nest.dmi'
 	icon_state = "hole"
 	faction = list("jungle")
-	max_mobs = 4
+	max_mobs = 3
 	spawn_time = 15 SECONDS
 	max_integrity = 250
 	mob_types = list(/mob/living/simple_animal/hostile/jungle/cave_spider)
@@ -28,7 +28,7 @@
 	new /obj/structure/closet/crate/necropolis/tendril/jungle(loc)
 
 /obj/structure/spawner/jungle/bat
-	max_mobs = 10
+	max_mobs = 8
 	spawn_time = 5 SECONDS
 	mob_types = list(/mob/living/simple_animal/hostile/jungle/bat)
 

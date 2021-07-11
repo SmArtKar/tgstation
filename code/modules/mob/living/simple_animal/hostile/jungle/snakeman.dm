@@ -42,7 +42,7 @@
 
 /mob/living/simple_animal/hostile/jungle/snakeman/proc/exit_anger()
 	visible_message("<span class='notice'>[src]'s skin slowly turns back to normal color.</span>")
-	damage_coeff = initial(damage_coeff)
+	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 	remove_movespeed_modifier(/datum/movespeed_modifier/slaughter)
 	anger_state = FALSE
 	remove_atom_colour(FIXED_COLOUR_PRIORITY)

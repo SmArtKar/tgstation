@@ -223,6 +223,7 @@
 	resistance_flags = INDESTRUCTIBLE
 	allow_up = FALSE
 	crafted = TRUE //So you can make ladders to climb back up
+	obj_flags = CAN_BE_HIT | BLOCK_Z_OUT_DOWN
 
 /obj/structure/ladder/dirt_hole/Initialize()
 	. = ..()

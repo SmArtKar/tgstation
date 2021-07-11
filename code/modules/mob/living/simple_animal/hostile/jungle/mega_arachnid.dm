@@ -11,9 +11,9 @@
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 4, /obj/item/stack/sheet/bone = 4)
-	maxHealth = 350
-	health = 350
-	speed = 1
+	maxHealth = 500
+	health = 500
+	speed = 14
 	ranged = 1
 	pixel_x = -16
 	base_pixel_x = -16

@@ -13,12 +13,12 @@
 	response_disarm_simple = "flail at"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	speak_chance = 0
-	maxHealth = 30
-	health = 30
+	maxHealth = 10
+	health = 10
 	see_in_dark = 10
-	harm_intent_damage = 10
-	melee_damage_lower = 10
-	melee_damage_upper = 10
+	harm_intent_damage = 5
+	melee_damage_lower = 5
+	melee_damage_upper = 5
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	butcher_results = list(/obj/item/food/meat/slab = 1)
@@ -60,11 +60,11 @@
 
 		if(L.stat != DEAD)
 			maxHealth = min(maxHealth + 1, initial(maxHealth) * 2) //These can stack their max HP up to x2. With each victim they become more powerful
-			adjustBruteLoss(-10)
+			adjustBruteLoss(-2)
 			L.blood_volume -= 5 //Not a lot, but they attack in swarms
 			return
 
-		maxHealth = min(maxHealth + 10, initial(maxHealth) * 2) //Full heal and +10 maxHP for the bat that secures the kill
+		maxHealth = min(maxHealth + 5, initial(maxHealth) * 2) //Full heal and +10 maxHP for the bat that secures the kill
 		adjustBruteLoss(-maxHealth)
 		L.blood_volume -= 40
 

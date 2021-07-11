@@ -54,7 +54,7 @@
 	light_range = 0
 
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye)
-	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye)
+	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye, /obj/item/crusher_trophy/spider_leg)
 
 	wander = TRUE
 	gps_name = "Webbed Signal"
@@ -513,6 +513,31 @@
 	on = FALSE
 	playsound(user, flashlight_sound, 40, TRUE)
 	update_brightness(user)
+
+/obj/item/crusher_trophy/spider_leg
+	name = "queen spider leg"
+	desc = "A leg ripped off from a spider queen. Suitable as a trophy for a kinetic crusher."
+	icon_state = "crystal_shard"
+	denied_type = /obj/item/crusher_trophy/spider_leg
+
+/obj/item/crusher_trophy/spider_leg/effect_desc()
+	return "mark detonation to create a shockwave, throwing your enemies away from you"
+
+/obj/item/crusher_trophy/spider_leg/on_mark_detonation(mob/living/target, mob/living/user)
+	var/list/hit_things = list()
+	var/turf/T = get_turf(user)
+	for(var/i in 1 to 3)
+		T = get_step(T, get_dir(user, target))
+		if(!T)
+			return
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		for(var/mob/living/L in T.contents)
+			if(L != src && !(L in hit_things) && !faction_check(L.faction, user.faction))
+				var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
+				L.safe_throw_at(throwtarget, 5, 1, src)
+				L.apply_damage_type(10, BRUTE)
+				hit_things += L
+		sleep(3)
 
 #undef VORE_PROBABLILITY
 #undef SPIDER_SILK_LIMIT

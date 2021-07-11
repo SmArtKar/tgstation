@@ -82,6 +82,9 @@
 		else
 			icon_state = "crystal_single"
 
+	if(stat == DEAD)
+		icon_state = "crystal_dropped"
+
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/crystal_shards, homing = FALSE, turf/startloc = get_turf(src))
@@ -429,10 +432,9 @@
 	if(ishostile(target))
 		var/mob/living/simple_animal/hostile/H = target
 		H.Stun(bonus_value)
-		var/initial_coeff = H.damage_coeff
 		H.damage_coeff = list(BRUTE = 1.2, BURN = 1.2, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
 		sleep(bonus_value * 5)
-		H.damage_coeff = initial_coeff
+		H.damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 
 /obj/item/clothing/gloves/crystal
 	name = "crystal gauntlets"
