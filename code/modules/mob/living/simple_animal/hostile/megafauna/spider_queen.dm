@@ -371,12 +371,14 @@
 	if(lums > 0.75)
 		if(active_icon)
 			active_icon = FALSE
-			eye_icon_state = initial(icon_state)
+			eye_icon_state = initial(eye_icon_state)
+			icon_state = initial(icon_state)
 			owner.update_appearance()
 	else
 		if(!active_icon)
 			active_icon = TRUE
-			eye_icon_state = "[initial(icon_state)]_active"
+			eye_icon_state = "[initial(eye_icon_state)]_active"
+			icon_state = "[initial(icon_state)]_active"
 			owner.update_appearance()
 
 	for(var/mob/living/simple_animal/M in view(7, owner_turf)) //You also look like spider so they don't attack you as long as you don't attack them
