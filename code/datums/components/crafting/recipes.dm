@@ -844,7 +844,8 @@
 	result = /obj/item/clothing/suit/hooded/alloy_armor
 	time = 60
 	reqs = list(/obj/item/stack/sheet/sinew/bat = 3,
-				/obj/item/stack/sheet/mechanical_alloy = 3)
+				/obj/item/amber_core = 1,
+				/obj/item/stack/sheet/mechanical_alloy = 2)
 	category = CAT_PRIMAL
 
 /datum/crafting_recipe/godslayer
