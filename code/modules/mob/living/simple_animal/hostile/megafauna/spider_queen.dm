@@ -51,6 +51,7 @@
 	ranged = TRUE
 	ranged_cooldown_time = 30
 	aggro_vision_range = 18
+	light_range = 0
 
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk, /obj/structure/spider/queen_egg/mount)
 	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/stack/sheet/spidersilk, /obj/structure/spider/queen_egg/mount)
@@ -462,14 +463,17 @@
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
 	name = "tamed baby cave spider"
 	desc = "A pitch-black cave spider baby with glowing purple eyes and turquoise stripe on it's back. It seems completely friendly and non-hostile."
-	maxHealth = 300
-	health = 300
+	maxHealth = 400 //Made it tough so it won't get instakilled by fauna
+	health = 400
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	ranged = FALSE
 	faction = list("neutral", "jungle", "spiders")
 	can_buckle = TRUE
 	buckle_lying = 0
+	move_force = MOVE_FORCE_NORMAL
+	move_resist = MOVE_FORCE_NORMAL
+	pull_force = MOVE_FORCE_NORMAL
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/Initialize()
 	. = ..()

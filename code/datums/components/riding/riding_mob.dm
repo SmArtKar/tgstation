@@ -319,12 +319,12 @@
 	set_vehicle_dir_layer(WEST, OBJ_LAYER)
 
 /datum/component/riding/creature/cave_spider_mount
-	vehicle_move_delay = 0
+	vehicle_move_delay = 0.9 //Just a tiiiiny bit faster
 
 /datum/component/riding/creature/cave_spider_mount/handle_specials()
 	. = ..()
-	set_riding_offsets(RIDING_OFFSET_ALL, list(TEXT_NORTH = list(0, 8), TEXT_SOUTH = list(0, 8), TEXT_EAST = list(0, 6), TEXT_WEST = list(0, 6)))
-	set_vehicle_dir_layer(SOUTH, ABOVE_MOB_LAYER)
+	set_riding_offsets(RIDING_OFFSET_ALL, list(TEXT_NORTH = list(0, 12), TEXT_SOUTH = list(0, 12), TEXT_EAST = list(0, 9), TEXT_WEST = list(0, 9)))
+	set_vehicle_dir_layer(SOUTH, OBJ_LAYER)
 	set_vehicle_dir_layer(NORTH, OBJ_LAYER)
 	set_vehicle_dir_layer(EAST, OBJ_LAYER)
 	set_vehicle_dir_layer(WEST, OBJ_LAYER)

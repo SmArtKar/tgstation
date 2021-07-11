@@ -50,6 +50,7 @@
 	wander = FALSE
 	gps_name = "Vibrating Signal"
 	del_on_death = FALSE
+	light_color = LIGHT_COLOR_ORANGE
 
 	var/has_orbiting = TRUE
 	var/dropped = FALSE
