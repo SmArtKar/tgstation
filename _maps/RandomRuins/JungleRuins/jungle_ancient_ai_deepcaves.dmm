@@ -297,6 +297,10 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"kP" = (
+/obj/structure/flora/rock/pile,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "kX" = (
 /obj/machinery/giant_arm_holder,
 /turf/closed/indestructible/syndicate,
@@ -965,6 +969,10 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"FJ" = (
+/mob/living/simple_animal/hostile/jungle/snakeman,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "GT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/yellow{
@@ -1012,6 +1020,10 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"HQ" = (
+/obj/structure/flora/rock,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "Ih" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
@@ -1883,8 +1895,8 @@ Da
 CE
 ac
 ra
-CE
-CE
+kP
+FJ
 ra
 JU
 Fb
@@ -1932,7 +1944,7 @@ CE
 CE
 CE
 CE
-CE
+HQ
 CQ
 CE
 Da
@@ -1976,7 +1988,7 @@ ac
 ra
 CE
 In
-CE
+kP
 CE
 CE
 CQ
@@ -2065,8 +2077,8 @@ Da
 Da
 CE
 CQ
-CE
-CE
+FJ
+HQ
 CE
 Ja
 Lt

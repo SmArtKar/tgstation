@@ -34,7 +34,7 @@
 		icon_state = base_icon_state
 	. = ..()
 
-/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/Initialize(mapload, spawn_more = TRUE, len = 9)
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/Initialize(mapload, spawn_more = TRUE, len = 6)
 	. = ..()
 	if(len < 3)
 		stack_trace("Mud Worm Megafauna created with invalid len ([len]). Reverting to 3. Ping SmArtKar on discord and blame his ass.")
@@ -142,19 +142,17 @@
 	ranged_cooldown = world.time + 40
 	anger_modifier = clamp((1 - round(get_length() / 10)) * 30, 0, 20)
 
-	if(get_dist(src, target) >= aggro_vision_range || prob(anger_modifier + 20))
+	if(get_dist(src, target) >= aggro_vision_range || prob(anger_modifier + 35))
 		charge()
 		return
 
 	if(prob(25 + anger_modifier))
 		shoot_projectile(get_turf(target))
-		SLEEP_CHECK_DEATH(1 SECONDS)
-		start_trail()
 		return
 
 	if(prob(40))
 		toothanfall()
-		if(get_length() > 5)
+		if(get_length() > 3)
 			return
 
 	start_trail()
@@ -271,13 +269,13 @@
 		return
 	create_reagents(5)
 	reagents.add_reagent(/datum/reagent/toxin/acid, 5)
-	var/datum/effect_system/smoke_spread/chem/long/s = new
+	var/datum/effect_system/smoke_spread/chem/s = new
 	s.set_up(reagents, 0, get_turf(src))
 	s.start()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/start_trail()
 	acid_trail = TRUE
-	addtimer(CALLBACK(src, .proc/stop_trail), 10 SECONDS)
+	addtimer(CALLBACK(src, .proc/stop_trail), 3 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/stop_trail()
 	acid_trail = FALSE
@@ -292,7 +290,7 @@
 /obj/projectile/acid_ball/on_hit(atom/target, blocked, pierce_hit)
 	create_reagents(30)
 	reagents.add_reagent(/datum/reagent/toxin/acid, 30)
-	var/datum/effect_system/smoke_spread/chem/long/s = new
+	var/datum/effect_system/smoke_spread/chem/s = new
 	s.set_up(reagents, 3, target)
 	s.start()
 	. = ..()
@@ -327,9 +325,3 @@
 			flame_hit[L] = TRUE
 		else
 			L.adjustBruteLoss(10)
-
-/obj/effect/particle_effect/smoke/chem/long
-	lifetime = 5 SECONDS
-
-/datum/effect_system/smoke_spread/chem/long
-	effect_type = /obj/effect/particle_effect/smoke/chem/long
