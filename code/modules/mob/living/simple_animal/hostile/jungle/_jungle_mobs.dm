@@ -59,7 +59,7 @@
 	name = "cave mob spawner"
 	var/land_mobs = list(/obj/effect/spawner/jungle/cave_spider_nest = 30, /obj/effect/spawner/jungle/cave_bat_nest = 50, /mob/living/simple_animal/hostile/jungle/snakeman = 40, /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle = 20, /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle = 10, /mob/living/simple_animal/hostile/jungle/mega_arachnid = 10, \
 	/obj/structure/spawner/jungle = 5, /obj/structure/spawner/jungle/bat = 5, /obj/structure/spawner/jungle/mega_arachnid = 1, /obj/structure/spawner/jungle/snakeman = 4, /obj/structure/spawner/jungle/spider_big = 3, SPAWN_MEGAFAUNA = 1)
-	var/megafauna = list(/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal = 1, /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen = 2)
+	var/megafauna = list(/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal = 1, /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen = 2, /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm = 2)
 	var/water_mobs = list(/mob/living/simple_animal/hostile/retaliate/snake/jungle = 3, /mob/living/simple_animal/hostile/retaliate/frog/jungle = 2)
 
 /obj/effect/spawner/jungle/cave_mob_spawner/Initialize()

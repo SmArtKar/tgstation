@@ -428,6 +428,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 ///If the item will block the cargo shuttle from flying to centcom
 #define TRAIT_BANNED_FROM_CARGO_SHUTTLE "banned_from_cargo_shuttle"
 
+///This mob will never be showed as point of interest to ghosts
+#define TRAIT_NEVER_POI "never_point_of_interest"
+
 // item traits
 #define TRAIT_NODROP "nodrop"
 /// cannot be inserted in a storage.

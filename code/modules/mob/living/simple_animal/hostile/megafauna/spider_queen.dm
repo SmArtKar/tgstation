@@ -58,6 +58,7 @@
 
 	wander = TRUE
 	gps_name = "Webbed Signal"
+	deathmessage = "stops moving as it falls to the ground, dead"
 	del_on_death = FALSE
 	pixel_x = -3
 	var/list/vored = list()
@@ -258,9 +259,9 @@
 			for(var/mob/living/L in T.contents)
 				if(L != src && !(L in hit_things) && !faction_check(L.faction, faction))
 					var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
-					L.safe_throw_at(throwtarget, 5, 1, src)
-					L.Stun(10)
-					L.apply_damage_type(20, BRUTE)
+					L.safe_throw_at(throwtarget, 6 / i, 1, src)
+					L.Stun(10 / i)
+					L.apply_damage_type(20 / i, BRUTE)
 					hit_things += L
 		SLEEP_CHECK_DEATH(iteration_duration)
 

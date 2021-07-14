@@ -1,4 +1,10 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ac" = (
+/obj/structure/fence/corner{
+	dir = 8
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "aN" = (
 /obj/effect/turf_decal/delivery,
 /obj/machinery/rogue_drone_spawner,
@@ -148,6 +154,10 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"fd" = (
+/obj/effect/mob_spawn/human/corpse/nanotrasensoldier,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "gk" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -323,6 +333,11 @@
 	},
 /turf/closed/indestructible/syndicate,
 /area/ruin/powered/ancient_ai)
+"ls" = (
+/mob/living/simple_animal/hostile/jungle/bat,
+/mob/living/simple_animal/hostile/jungle/bat,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "mt" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/delivery,
@@ -474,6 +489,12 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"ra" = (
+/obj/structure/fence/corner{
+	dir = 5
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "rl" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
@@ -862,6 +883,13 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"Ch" = (
+/mob/living/simple_animal/hostile/jungle/bat,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
+"CE" = (
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "CP" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -870,6 +898,12 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"CQ" = (
+/obj/structure/fence{
+	dir = 4
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "CZ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light/broken{
@@ -902,6 +936,23 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"EI" = (
+/obj/item/keycard/blue{
+	desc = "An old, dusty blue keycard. It has "AB3L" written on it with a permanent marker";
+	name = "old keycard";
+	puzzle_id = "ab3l"
+	},
+/turf/open/indestructible{
+	icon_state = "darkfull";
+	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
+	},
+/area/ruin/powered/ancient_ai)
+"Fb" = (
+/obj/structure/fence/corner{
+	dir = 10
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "Fn" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
@@ -974,6 +1025,15 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"In" = (
+/mob/living/simple_animal/hostile/jungle/mega_arachnid{
+	health = 800;
+	maxHealth = 800;
+	melee_damage_lower = 45;
+	melee_damage_upper = 45
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "IK" = (
 /obj/machinery/light/broken{
 	dir = 8
@@ -983,6 +1043,14 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"Ja" = (
+/obj/item/keycard/blue{
+	desc = "An old, dusty blue keycard. It has "AB3L" written on it with a permanent marker";
+	name = "old keycard";
+	puzzle_id = "ab3l"
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "Ju" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -1007,6 +1075,10 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"JU" = (
+/obj/structure/fence,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "JW" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/yellow{
@@ -1098,6 +1170,12 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"Lt" = (
+/mob/living/simple_animal/hostile/jungle/bat,
+/mob/living/simple_animal/hostile/jungle/bat,
+/mob/living/simple_animal/hostile/jungle/bat,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "LA" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -1313,6 +1391,12 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"SC" = (
+/obj/structure/fence/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "SF" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838"
@@ -1456,6 +1540,10 @@
 	initial_gas_mix = "o2=14;n2=30;TEMP=293.15"
 	},
 /area/ruin/powered/ancient_ai)
+"VU" = (
+/obj/structure/fence/door,
+/turf/open/floor/plating/dirt/jungle,
+/area/template_noop)
 "WB" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -1702,10 +1790,10 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
+CE
+CE
+CE
+CE
 Da
 Da
 Da
@@ -1747,13 +1835,13 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+ac
+JU
+JU
+Fb
+CE
+CE
 Da
 Da
 Yd
@@ -1792,15 +1880,15 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+ac
+ra
+CE
+CE
+ra
+JU
+Fb
+CE
 Da
 Yd
 Yd
@@ -1838,15 +1926,15 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+VU
+CE
+CE
+CE
+CE
+CE
+CQ
+CE
 Da
 Yd
 VI
@@ -1883,16 +1971,16 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+ac
+ra
+CE
+In
+CE
+CE
+CE
+CQ
+CE
 Da
 Yd
 CZ
@@ -1929,16 +2017,16 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+CQ
+CE
+CE
+CE
+CE
+fd
+ls
+CQ
+CE
 Da
 Yd
 VI
@@ -1975,14 +2063,14 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+CQ
+CE
+CE
+CE
+Ja
+Lt
+Ch
 Yd
 Yd
 Yd
@@ -2021,12 +2109,12 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
-Da
-Da
+CE
+SC
+Fb
+CE
+CE
+CE
 Yd
 Yd
 Yd
@@ -2068,10 +2156,10 @@ Da
 Da
 Da
 Da
-Da
-Da
-Da
-Da
+CE
+SC
+JU
+JU
 Yd
 Yd
 OD
@@ -2115,8 +2203,8 @@ Da
 Da
 Da
 Da
-Da
-Da
+CE
+CE
 Yd
 Yd
 Ri
@@ -2697,7 +2785,7 @@ VI
 wZ
 VI
 Yd
-VI
+EI
 YJ
 YJ
 Yd

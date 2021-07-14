@@ -246,6 +246,8 @@ Turf and target are separate in case you want to teleport some distance from a t
 		if(skip_mindless && (!M.mind && !M.ckey))
 			if(!isbot(M) && !iscameramob(M) && !ismegafauna(M))
 				continue
+		if(HAS_TRAIT(M, TRAIT_NEVER_POI))
+			continue
 		if(M.client && M.client.holder && M.client.holder.fakekey) //stealthmins
 			continue
 		var/name = avoid_assoc_duplicate_keys(M.name, namecounts) + M.get_realname_string()
