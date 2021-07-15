@@ -406,7 +406,7 @@
 	. = ..()
 
 /obj/effect/temp_visual/crystal_killbeam/process()
-	if(!target)
+	if(!target || prob(10)) //Movement is a bit randomy
 		return
 
 	if(get_turf(src) == get_turf(target))
@@ -449,28 +449,37 @@
 	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
 	resistance_flags = LAVA_PROOF | FIRE_PROOF | ACID_PROOF
 	armor = list(MELEE = 15, BULLET = 25, LASER = 15, ENERGY = 15, BOMB = 100, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	var/charges = 10
 
 /obj/item/clothing/gloves/crystal/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_GLOVES)
-		RegisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK, .proc/shootie)
+		RegisterSignal(user, COMSIG_MOB_CLICKON, .proc/shootie)
 	else
 		UnregisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK)
 
 /obj/item/clothing/gloves/crystal/dropped(mob/user)
 	. = ..()
-	UnregisterSignal(user, COMSIG_HUMAN_EARLY_UNARMED_ATTACK)
+	UnregisterSignal(user, COMSIG_MOB_CLICKON)
 
 /obj/item/clothing/gloves/crystal/proc/shootie(mob/living/carbon/human/H, atom/A, proximity)
 	SIGNAL_HANDLER
+
+	if(charges <= 0)
+		to_chat(H, span_warning("[src] are out of shards! Wait a bit for them to recharge!"))
 
 	var/obj/projectile/proj = new /obj/projectile/crystal(get_turf(H))
 	proj.preparePixelProjectile(get_turf(A), get_turf(H))
 	proj.firer = H
 	proj.original = A
 	H.changeNext_move(CLICK_CD_RAPID)
+	charges -= 1
 
 	proj.fire()
+	addtimer(CALLBACK(src, .proc/recharge), 15 SECONDS)
+
+/obj/item/clothing/gloves/crystal/proc/recharge()
+	charges = min(10, charges + 1)
 
 /obj/effect/spawner/lootdrop/time_crystal
 	name = "time crystal loot spawner"

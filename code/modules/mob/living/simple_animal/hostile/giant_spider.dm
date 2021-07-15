@@ -658,6 +658,10 @@
 	faction = list("jungle")
 	speak_chance = 0
 
+/mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+
 /**
  * # Scrawny Tarantula
  *
@@ -684,6 +688,10 @@
 	melee_damage_lower = 15
 	melee_damage_upper = 15
 
+/mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+
 /**
  * # Scrawny Nurse Spider
  *
@@ -703,6 +711,10 @@
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("jungle")
 	speak_chance = 0
+
+/mob/living/simple_animal/hostile/giant_spider/nurse/scrawny/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
 
 /**
  * # Flesh Spider

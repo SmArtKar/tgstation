@@ -66,7 +66,7 @@
 
 /mob/living/simple_animal/hostile/rogue_drone/Initialize(mapload)
 	. = ..()
-	REMOVE_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
 
 /mob/living/simple_animal/hostile/rogue_drone/pet_drone/proc/activate(mob/owner)
 	faction.Add("[REF(owner)]")

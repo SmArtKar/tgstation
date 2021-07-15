@@ -23,8 +23,8 @@
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 0.25, CLONE = 1.2, STAMINA = 0, OXY = 1)
 	unsuitable_cold_damage = 10
 	unsuitable_heat_damage = 10
-	melee_damage_lower = 20
-	melee_damage_upper = 20
+	melee_damage_lower = 15
+	melee_damage_upper = 15
 	faction = list("jungle", "spiders")
 	pass_flags = PASSTABLE
 	move_to_delay = 2

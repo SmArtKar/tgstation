@@ -5,10 +5,10 @@
 	icon_living = "head"
 	base_icon_state = "head"
 	icon = 'icons/mob/jungle/mud_worm.dmi'
-	maxHealth = 300
-	health = 300
-	melee_damage_lower = 20
-	melee_damage_upper = 20
+	maxHealth = 150
+	health = 150
+	melee_damage_lower = 30
+	melee_damage_upper = 30
 	move_resist = MOVE_FORCE_OVERPOWERING+1
 	movement_type = GROUND
 
@@ -17,6 +17,9 @@
 
 	del_on_death = TRUE
 	faction = list("boss", "jungle")
+	loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm)
+	crusher_loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
+	gps_name = "Crushing Signal"
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/back
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/front
@@ -115,6 +118,7 @@
 		has_armor = FALSE
 		update_icon()
 		return
+
 	if(base_icon_state == "body")
 		front.back = back
 		back.front = front
@@ -127,6 +131,10 @@
 
 	if(back)
 		back.update_worm()
+
+	if(front)
+		loot = list()
+		crusher_loot = list()
 
 	. = ..()
 
@@ -274,8 +282,11 @@
 	create_reagents(5)
 	reagents.add_reagent(/datum/reagent/toxin/acid, 5)
 	var/datum/effect_system/smoke_spread/chem/s = new
-	s.set_up(reagents, 0, get_turf(src))
+	s.set_up(reagents, 0, get_turf(src), silent = TRUE)
 	s.start()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/acid_act(acidpwr, acid_volume) //Immune to acid
+	return
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/start_trail()
 	acid_trail = TRUE
@@ -292,10 +303,10 @@
 	speed = 2
 
 /obj/projectile/acid_ball/on_hit(atom/target, blocked, pierce_hit)
-	create_reagents(30)
-	reagents.add_reagent(/datum/reagent/toxin/acid, 30)
+	create_reagents(10)
+	reagents.add_reagent(/datum/reagent/toxin/acid, 10)
 	var/datum/effect_system/smoke_spread/chem/s = new
-	s.set_up(reagents, 3, target)
+	s.set_up(reagents, 2, target, silent = TRUE)
 	s.start()
 	. = ..()
 
@@ -304,8 +315,8 @@
 /obj/effect/temp_visual/fireball/giant_tooth //Does brute damage instead of burn and does not set on fire
 	name = "giant tooth"
 	desc = "Get out of the way!"
-	icon = 'icons/obj/guns/projectiles.dmi'
-	icon_state = "tooth"
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "giant_tooth"
 	duration = 8
 
 /obj/effect/temp_visual/target/tooth
@@ -329,3 +340,112 @@
 			flame_hit[L] = TRUE
 		else
 			L.adjustBruteLoss(10)
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser
+	name = "lesser mud worm"
+	desc = "A smaller and calmer version mud worm."
+	maxHealth = 25
+	health = 25
+	faction = list("neutral")
+
+	obj_damage = 80
+	melee_damage_upper = 30
+	melee_damage_lower = 30
+	mouse_opacity = MOUSE_OPACITY_ICON
+	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
+
+	loot = list()
+	crusher_loot = list()
+	attack_action_types = list()
+	var/player_cooldown = 0
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser/Initialize(mapload, spawn_more = TRUE, len = 3)
+	toggle_ai(AI_OFF)
+	. = ..()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser/grant_achievement(medaltype,scoretype)
+	return
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser/OpenFire()
+	if(charging)
+		return
+
+	if(ranged_cooldown >= world.time)
+		to_chat(src, span_warning("You need to wait [(ranged_cooldown - world.time) / 10] seconds before spewing acid again!"))
+		return
+
+	ranged_cooldown = world.time + 120
+	shoot_projectile(get_turf(target))
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser/AltClickOn(atom/movable/A)
+	if(!istype(A))
+		return
+
+	if(player_cooldown >= world.time)
+		to_chat(src, span_warning("You need to wait [(player_cooldown - world.time) / 10] seconds before charging again!"))
+		return
+
+	player_cooldown = world.time + 200
+	GiveTarget(A)
+	charge()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser/Destroy()
+	if(back)
+		qdel(back)
+	. = ..()
+
+/obj/effect/proc_holder/spell/targeted/shapeshift/mud_worm
+	name = "Worm Form"
+	desc = "Take on the shape a lesser mud worm."
+	invocation = "CHOOOOOOOMP!!"
+	convert_damage = FALSE
+
+	shapeshift_type = /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/lesser
+
+/obj/item/worm_tongue
+	name = "squishy tongue"
+	desc = "A giant tongue of some dead mud worm. You're not eating this, right? Riiiight?"
+	icon = 'icons/obj/surgery.dmi'
+	icon_state = "roro core"
+
+/obj/item/worm_tongue/attack_self(mob/living/carbon/human/user)
+	if(!istype(user))
+		return
+
+	to_chat(user, span_danger("Power courses through you! You can now shift your form at will."))
+	if(user.mind)
+		var/obj/effect/proc_holder/spell/targeted/shapeshift/mud_worm/worm = new
+		user.mind.AddSpell(worm)
+
+	playsound(user.loc, 'sound/items/eatfood.ogg', 50, TRUE)
+	qdel(src)
+
+/obj/item/crusher_trophy/blaster_tubes/giant_tooth
+	name = "giant tooth"
+	desc = "A giant tooth ripped out of a mud worm's mouth. Suitable as a trophy for a kinetic crusher."
+	icon_state = "giant_tooth"
+	bonus_value = 10
+
+/obj/item/crusher_trophy/blaster_tubes/giant_tooth/effect_desc()
+	return "mark detonation to make the next destabilizer shot deal <b>[bonus_value]</b> damage"
+
+/obj/item/crusher_trophy/blaster_tubes/giant_tooth/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
+	if(deadly_shot)
+		marker.name = "giant tooth"
+		marker.icon_state = "tooth_spin"
+		marker.damage = bonus_value
+		marker.nodamage = FALSE
+		deadly_shot = FALSE
+
+/obj/item/armor_scales
+	name = "armor scales"
+	desc = "Hardened dirt, mud and rocks in form of natural armor scales."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "armor_scales"
+	w_class = WEIGHT_CLASS_TINY
+	force = 0
+	throwforce = 0
+
+/obj/effect/spawner/lootdrop/mud_worm
+	name = "mud worm loot spawner"
+	loot = list(/obj/item/clothing/gloves/crystal = 2, /obj/item/crystal_fruit = 1)

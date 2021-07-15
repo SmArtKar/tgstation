@@ -318,12 +318,6 @@
 		var/turf/target = get_step(src, direction)
 		shoot_projectile(target)
 
-	sleep(2)
-
-	for(var/direction in GLOB.alldirs)
-		var/turf/target = get_step(src, direction)
-		shoot_projectile(target)
-
 /obj/machinery/laser_flower/proc/shoot_projectile(target)
 	var/turf/startloc = get_turf(src)
 	var/obj/projectile/P = new /obj/projectile/beam/laser/kinetic(startloc)

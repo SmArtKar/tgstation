@@ -42,8 +42,8 @@
 	move_to_delay = 4
 	footstep_type = FOOTSTEP_MOB_CLAW
 
-	melee_damage_lower = 25
-	melee_damage_upper = 25
+	melee_damage_lower = 35
+	melee_damage_upper = 35
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	attack_sound = 'sound/weapons/bite.ogg'
@@ -375,12 +375,18 @@
 			eye_icon_state = initial(eye_icon_state)
 			icon_state = initial(icon_state)
 			owner.update_appearance()
+			for(var/X in actions)
+				var/datum/action/A = X
+				A.UpdateButtonIcon()
 	else
 		if(!active_icon)
 			active_icon = TRUE
 			eye_icon_state = "[initial(eye_icon_state)]_active"
 			icon_state = "[initial(icon_state)]_active"
 			owner.update_appearance()
+			for(var/X in actions)
+				var/datum/action/A = X
+				A.UpdateButtonIcon()
 
 	for(var/mob/living/simple_animal/M in view(7, owner_turf)) //You also look like spider so they don't attack you as long as you don't attack them
 		if(!(M in active_friends) && !(M in former_friends) && isspider(M))
@@ -442,11 +448,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 	merge_type = /obj/item/stack/sheet/spidersilk
 
-/obj/item/stack/sheet/spidersilk/afterattack(atom/A, mob/user, proximity)
-	. = ..()
-	if(!proximity)
-		return
-
+/obj/item/stack/sheet/spidersilk/attack(atom/A, mob/user, proximity)
 	if(!istype(A, /obj/item/clothing/suit) || !istype(A, /obj/item/clothing/head))
 		return
 
@@ -466,8 +468,8 @@
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
 	name = "tamed baby cave spider"
 	desc = "A pitch-black cave spider baby with glowing purple eyes and turquoise stripe on it's back. It seems completely friendly and non-hostile."
-	maxHealth = 400 //Made it tough so it won't get instakilled by fauna
-	health = 400
+	maxHealth = 300 //Made it tough so it won't get instakilled by fauna
+	health = 300
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	ranged = FALSE
@@ -509,11 +511,17 @@
 	playsound(user, flashlight_sound, 40, TRUE)
 	update_brightness(user)
 	addtimer(CALLBACK(src, .proc/turnOff, user), 5 SECONDS)
+	for(var/X in actions)
+		var/datum/action/A = X
+		A.UpdateButtonIcon()
 
 /obj/item/flashlight/spider_eye/proc/turnOff(mob/user)
 	on = FALSE
 	playsound(user, flashlight_sound, 40, TRUE)
 	update_brightness(user)
+	for(var/X in actions)
+		var/datum/action/A = X
+		A.UpdateButtonIcon()
 
 /obj/item/crusher_trophy/spider_leg
 	name = "queen spider leg"
