@@ -233,7 +233,7 @@
 	name = "axe head"
 	desc = "A shiny metal axe head. Suitable as a trophy for a kinetic crusher."
 	icon_state = "axe_head"
-	denied_type = /obj/item/crusher_trophy/axe_head
+	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack)
 
 /obj/item/crusher_trophy/axe_head/effect_desc()
 	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time."
@@ -245,16 +245,16 @@
 	. = ..()
 	if(.)
 		crusher.AddComponent(/datum/component/two_handed, force_wielded=10) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
-		crusher.charge_time -= 3
-		crusher.detonation_damage -= 40
+		crusher.charge_time -= 5
+		crusher.detonation_damage -= 35
 		crusher.backstab_bonus -= 20
 
 /obj/item/crusher_trophy/axe_head/remove_from(obj/item/kinetic_crusher/crusher, mob/living/user)
 	. = ..()
 	if(.)
 		crusher.AddComponent(/datum/component/two_handed, force_wielded=20)
-		crusher.charge_time += 3
-		crusher.detonation_damage += 40
+		crusher.charge_time += 5
+		crusher.detonation_damage += 35
 		crusher.backstab_bonus += 20
 
 /obj/item/stack/sheet/mechanical_alloy

@@ -161,7 +161,7 @@
 
 /obj/item/dash_knife/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/butchering, 50, 100) //COMSIG_RIGHT_CLICK_USE COMSIG_ITEM_PRE_UNEQUIP
+	AddComponent(/datum/component/butchering, 50, 100)
 
 /obj/item/dash_knife/equipped(mob/user, slot)
 	. = ..()
@@ -207,12 +207,4 @@
 
 	var/mob/user = loc
 	dash_cooldown = world.time += 10 SECONDS
-	ADD_TRAIT(user, TRAIT_STUNIMMUNE, GENERIC_ITEM_TRAIT)
-	user.throw_at(target, get_dist(target, user) - 1, 1, user, FALSE, TRUE, callback = CALLBACK(src, .proc/charging_end))
-
-/obj/item/dash_knife/proc/charging_end()
-	if(!ismob(loc))
-		return
-
-	var/mob/user = loc
-	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, GENERIC_ITEM_TRAIT)
+	user.throw_at(target, get_dist(target, user) - 1, 1, user, FALSE, TRUE)

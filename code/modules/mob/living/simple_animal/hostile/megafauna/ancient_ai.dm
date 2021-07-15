@@ -726,8 +726,7 @@
 			return
 		dash_timer = 0
 		var/atom/target = get_edge_target_turf(user, direction)
-		if (user.throw_at(target, PROTON_DASH_RANGE, 1, spin = FALSE, diagonals_first = TRUE, callback = CALLBACK(src, .proc/dash_end, user)))
-			ADD_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
+		if(user.throw_at(target, PROTON_DASH_RANGE, 1, spin = FALSE, diagonals_first = TRUE))
 			playsound(user, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
 			dash_cooldown = world.time + PROTON_DASH_COOLDOWN
 		else
@@ -735,9 +734,6 @@
 			to_chat(user, span_warning("Something prevents you from dashing!"))
 	else
 		dash_timer = world.time
-
-/obj/item/clothing/suit/space/hardsuit/exosuit/proc/dash_end(mob/living/user)
-	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, SUIT_TRAIT)
 
 /obj/item/clothing/suit/space/hardsuit/exosuit/proc/extend_hook(mob/user)
 	if(hook.loc != src)

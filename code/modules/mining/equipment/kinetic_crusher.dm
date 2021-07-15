@@ -232,11 +232,23 @@
 		..()
 
 /obj/item/crusher_trophy/proc/add_to(obj/item/kinetic_crusher/H, mob/living/user)
-	for(var/t in H.trophies)
-		var/obj/item/crusher_trophy/T = t
-		if(istype(T, denied_type) || istype(src, T.denied_type))
-			to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
-			return FALSE
+	if(ispath(denied_type, /obj/item/crusher_trophy))
+		for(var/t in H.trophies)
+			var/obj/item/crusher_trophy/T = t
+			if(istype(T, denied_type) || istype(src, T.denied_type))
+				to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+				return FALSE
+	else if(islist(denied_type))
+		for(var/t in H.trophies)
+			var/obj/item/crusher_trophy/T = t
+			if(istype(src, T.denied_type))
+				to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+				return FALSE
+			for(var/denied_path in denied_type)
+				if(istype(T, denied_path))
+					to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+					return FALSE
+
 	if(!user.transferItemToLoc(src, H))
 		return
 	H.trophies += src
