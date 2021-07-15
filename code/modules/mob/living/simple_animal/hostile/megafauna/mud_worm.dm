@@ -92,6 +92,11 @@
 	if(base_icon_state == "head" && back)
 		setDir(back.dir)
 
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/GiveTarget(new_target)
+	. = ..()
+	if(front)
+		front.GiveTarget(new_target)
+
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/adjustBruteLoss(amount, updating_health, forced)
 	if(back && !has_armor && base_icon_state == "head")
 		back.adjustBruteLoss(amount, updating_health, forced)
@@ -171,8 +176,7 @@
 			already_hit.Add(victim)
 			victim.visible_message(span_danger("[src] slams into [victim]!"), span_userdanger("[src] slams into you!"))
 			victim.apply_damage(30, BRUTE, wound_bonus = CANT_WOUND)
-			var/throwtarget = get_edge_target_turf(get_turf(src), get_dir(get_turf(src), victim))
-			victim.safe_throw_at(throwtarget, 6, 1, src)
+			victim.safe_throw_at(charging, 6, 1, src)
 			playsound(get_turf(victim), 'sound/effects/meteorimpact.ogg', 100, TRUE)
 			shake_camera(victim, 4, 3)
 	. = ..()
@@ -223,7 +227,7 @@
 		return
 
 	already_hit = list()
-	charging = TRUE
+	charging = target_turf
 	DestroySurroundings()
 	walk(src, 0)
 	setDir(dir)
