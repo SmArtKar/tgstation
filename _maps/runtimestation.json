@@ -6,7 +6,9 @@
 	"shuttles": {
 		"cargo": "cargo_delta"
 	},
-    "mining": null,
+    "minetype": null,
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
     "traits": [
 		{
 			"Up": 1,
@@ -27,6 +29,7 @@
             "Gravity":true
 		},
 		{
+            "Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/openspace",
 			"Linkage": null,
@@ -34,6 +37,15 @@
             "Station":true,
             "Gravity":true,
             "Jungle Ruins":true,
+            "Weather_Acidrain":true
+		},
+		{
+			"Down": -1,
+			"Baseturf": "/turf/open/openspace",
+			"Linkage": null,
+            "Mining":true,
+            "Station":true,
+            "Gravity":true,
             "Weather_Acidrain":true
 		}
 	]

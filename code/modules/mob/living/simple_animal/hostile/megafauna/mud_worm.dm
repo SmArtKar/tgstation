@@ -448,4 +448,151 @@
 
 /obj/effect/spawner/lootdrop/mud_worm
 	name = "mud worm loot spawner"
-	loot = list(/obj/item/clothing/gloves/crystal = 2, /obj/item/crystal_fruit = 1)
+	loot = list(/obj/item/dual_sword = 1, /obj/item/book/granter/spell/powerdash = 1)
+
+/obj/item/book/granter/spell/powerdash
+	spell = /obj/effect/proc_holder/spell/targeted/powerdash
+	spellname = "power dash"
+	icon_state ="bookdash"
+	desc = "Release your inner energy and use it to move around."
+	remarks = list("Okay, so I need to place my feet like this and...", "Ugh, is this stance really required?", "Why am I supposed to drink Space Cola before I use this spell?", "Faster, faster, FASTER!")
+
+/obj/item/book/granter/spell/powerdash/recoil(mob/user)
+	..()
+	var/turf/T = get_edge_target_turf(user, pick(GLOB.alldirs))
+	user.throw_at(T, 10, 4, TRUE, TRUE)
+
+
+/obj/effect/proc_holder/spell/targeted/powerdash
+	name = "Power Dash"
+	desc = "Makes you dash forward as everybody around you gets thrown backwards. Gives you a speed boost for a while afterwards."
+	charge_max = 10 SECONDS
+	clothes_req = FALSE
+	invocation = "UNLIMITED SPEED!"
+	invocation_type = INVOCATION_SHOUT
+	school = SCHOOL_EVOCATION
+	max_targets = 0
+	range = 3
+	include_user = TRUE
+	selection_type = "view"
+	action_icon_state = "repulse"
+	sound = 'sound/effects/clockcult_gateway_disrupted.ogg'
+
+/obj/effect/proc_holder/spell/targeted/powerdash/cast(list/targets, mob/user = usr)
+	if(!isliving(user))
+		return FALSE
+
+	var/atom/target = get_edge_target_turf(user, user.dir)
+	var/atom/antitarget = get_edge_target_turf(user, get_dir(target, user))
+
+	var/list/victims = list()
+	for(var/mob/living/victim in targets)
+		if(get_dir(user, victim) != user.dir && victim != user)
+			victims.Add(victim)
+
+	if (user.throw_at(target, 5, 2, spin = FALSE, diagonals_first = TRUE))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(user))
+		for(var/mob/living/victim in victims)
+			victim.throw_at(antitarget, 3, 1, spin = TRUE, diagonals_first = TRUE)
+			new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(victim))
+		user.add_movespeed_modifier(/datum/movespeed_modifier/power_dash)
+		addtimer(CALLBACK(user, /mob.proc/remove_movespeed_modifier, /datum/movespeed_modifier/power_dash), 5 SECONDS)
+		return TRUE
+	else
+		to_chat(user, span_warning("Something prevents you from dashing forward!"))
+		return FALSE
+
+
+#define PARRY_ACTIVE_TIME 12
+#define PARRY_STAGGER_TIME 12
+
+/obj/item/dual_sword //A neat yet hard to use sword. Deals 40 damage to animals and 10 to humans, attacks everything in front of player and allows you to parry for PARRY_ACTIVE_TIME, altrough failed parries stagger you for PARRY_STAGGER_TIME making you unable to act
+	name = "double-bladed sword"
+	desc = "No, it's not an energy sword. Yeah, sad, I know."
+	icon = 'icons/obj/items_and_weapons.dmi'
+	icon_state = "dual_blade0"
+	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
+	force = 5
+	throwforce = 5
+	throw_speed = 1
+	throw_range = 1
+	sharpness = SHARP_EDGED
+	w_class = WEIGHT_CLASS_NORMAL
+	hitsound = 'sound/weapons/bladeslice.ogg'
+	flags_1 = CONDUCT_1
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_BACK
+	armour_penetration = 15
+	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	block_chance = 15
+	wound_bonus = -30
+	var/swiping = FALSE
+	var/parrying = FALSE
+
+/obj/item/dual_sword/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/two_handed, force_unwielded = 5, force_wielded = 10)
+	AddComponent(/datum/component/butchering, 50, 100)
+
+/obj/item/dual_sword/attack(mob/living/M, mob/living/user, params)
+	var/pre_force = force
+	if(isanimal(M))
+		force *= 4
+	. = ..()
+	force = pre_force
+
+/obj/item/dual_sword/pre_attack(atom/A, mob/living/user, params)
+	if(swiping || get_turf(A) == get_turf(user))
+		return ..()
+
+	var/list/modifiers = params2list(params)
+	if(LAZYACCESS(modifiers, RIGHT_CLICK))
+		parry(user)
+		return TRUE
+
+	var/turf/user_turf = get_turf(user)
+	var/dir_to_target = get_dir(user_turf, get_turf(A))
+	swiping = TRUE
+	var/static/list/slash_angles = list(0, 45, -45)
+	for(var/i in slash_angles)
+		var/turf/T = get_step(user_turf, turn(dir_to_target, i))
+		for(var/mob/living/simple_animal/V in T) //Perfect against swarming enemies
+			if(user.Adjacent(V))
+				melee_attack_chain(user, V)
+
+	swiping = FALSE
+	return TRUE
+
+/obj/item/dual_sword/hit_reaction(mob/living/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	if(!parrying)
+		return ..()
+	playsound(owner, 'sound/effects/bang.ogg', 50)
+	var/modifier = 1
+	if(isanimal(hitby))
+		modifier = 3
+
+	final_block_chance += 20 * modifier
+	if(attack_type == THROWN_PROJECTILE_ATTACK)
+		final_block_chance += 30
+	if(attack_type == LEAP_ATTACK)
+		final_block_chance = 100
+
+	. = ..()
+	if(. && isliving(hitby))
+		attack(hitby, owner)
+	parrying = FALSE
+
+/obj/item/dual_sword/proc/parry(mob/living/user)
+	to_chat(user, span_notice("You prepare to parry!"))
+	user.changeNext_move(PARRY_ACTIVE_TIME)
+	addtimer(CALLBACK(src, .proc/check_parry_stagger, user), PARRY_ACTIVE_TIME)
+
+/obj/item/dual_sword/proc/check_parry_stagger(mob/living/user)
+	if(!parrying)
+		return
+	to_chat(user, span_warning("You fail to parry, staggering yourself!"))
+	user.changeNext_move(PARRY_STAGGER_TIME)
+
+#undef PARRY_ACTIVE_TIME
+#undef PARRY_STAGGER_TIME

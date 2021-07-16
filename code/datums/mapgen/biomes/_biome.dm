@@ -94,6 +94,12 @@
 
 /datum/biome/mountain/generate_turf(turf/gen_turf)
 	. = ..()
+	var/turf/top_turf = locate(gen_turf.x, gen_turf.y, gen_turf.z + 1)
+	if(top_turf)
+		top_turf.ChangeTurf(turf_type, null, CHANGETURF_DEFER_CHANGE)
+
+/datum/biome/mountain/generate_turf(turf/gen_turf)
+	. = ..()
 	gen_turf.cut_overlay(/obj/effect/fullbright)
 	gen_turf.dynamic_lighting = TRUE
 	gen_turf.lighting_build_overlay()

@@ -108,6 +108,7 @@
 
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/jungle_generator
+	outdoors = TRUE
 
 /area/mine/planetgeneration_caves
 	name = "planet caves generation area"

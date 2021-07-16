@@ -179,7 +179,7 @@ GLOBAL_DATUM_INIT(openspace_backdrop_one_for_all, /atom/movable/openspace_backdr
 	drill_below = FALSE
 
 /turf/open/openspace/icemoon/jungle
-	name = "ice chasm"
+	name = "jungle chasm"
 	baseturfs = /turf/open/openspace/icemoon/jungle
 	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
 	replacement_turf = /turf/open/floor/plating/dirt/jungle
