@@ -64,9 +64,9 @@
 	ai_controller = /datum/ai_controller/hostile_friend
 	var/steel_applied = FALSE
 
-/mob/living/simple_animal/hostile/rogue_drone/Initialize(mapload)
+/mob/living/simple_animal/hostile/rogue_drone/pet_drone/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	REMOVE_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
 
 /mob/living/simple_animal/hostile/rogue_drone/pet_drone/proc/activate(mob/owner)
 	faction.Add("[REF(owner)]")

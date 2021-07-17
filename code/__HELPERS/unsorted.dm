@@ -1518,3 +1518,13 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 			stack_trace("WARNING! podspawn vareditting \"[variable_name]\" to \"[variable_value]\" was rejected by the pod!")
 	new /obj/effect/pod_landingzone(landing_location, pod)
 	return pod
+
+/proc/combine_dirs(dir1, dir2)
+	if((dir1 == NORTH && dir2 == EAST) || (dir1 == EAST && dir2 == NORTH))
+		return NORTHEAST
+	else if((dir1 == SOUTH && dir2 == EAST) || (dir1 == EAST && dir2 == SOUTH))
+		return SOUTHEAST
+	else if((dir1 == NORTH && dir2 == WEST) || (dir1 == WEST && dir2 == NORTH))
+		return NORTHWEST
+	else if((dir1 == SOUTH && dir2 == WEST) || (dir1 == WEST && dir2 == SOUTH))
+		return SOUTHWEST

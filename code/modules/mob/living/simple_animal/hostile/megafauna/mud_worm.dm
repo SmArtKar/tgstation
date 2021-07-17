@@ -20,6 +20,9 @@
 	loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm)
 	crusher_loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
 	gps_name = "Crushing Signal"
+	light_range = 1
+	light_power = 2
+	light_color = LIGHT_COLOR_BROWN
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/back
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/front
@@ -28,7 +31,8 @@
 	var/prev_loc
 	var/charging = FALSE
 	var/list/already_hit = list()
-	var/acid_trail
+	var/acid_trail = FALSE
+	var/obj/effect/decal/cleanable/blood/xtracks/thick/prev_trail
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/update_icon(updates)
 	if(has_armor)
@@ -283,6 +287,23 @@
 	var/obj/effect/decal/cleanable/blood/gibs/decal = new /obj/effect/decal/cleanable/blood/xtracks/thick(drop_location())
 	decal.setDir(dir)
 
+	var/rev_dir
+	if(dir == NORTH)
+		rev_dir = SOUTH
+	else if(dir == SOUTH)
+		rev_dir = NORTH
+	else if(dir == EAST)
+		rev_dir = WEST
+	else if(dir == WEST)
+		rev_dir = EAST
+
+	if(!prev_trail || !istype(prev_trail) || prev_trail.dir == dir || prev_trail.dir == rev_dir)
+		prev_trail = decal
+		return
+
+	prev_trail.setDir(combine_dirs(rev_dir, prev_trail.dir))
+	prev_trail = decal
+
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/acid_act(acidpwr, acid_volume) //Immune to acid
 	return
 
@@ -292,6 +313,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/stop_trail()
 	acid_trail = FALSE
+	prev_trail = null
 
 /obj/projectile/acid_ball
 	name = "sphere of acid"
@@ -573,8 +595,10 @@
 	final_block_chance += 20 * modifier
 	if(attack_type == THROWN_PROJECTILE_ATTACK)
 		final_block_chance += 30
-	if(attack_type == LEAP_ATTACK)
+	else if(attack_type == LEAP_ATTACK)
 		final_block_chance = 100
+	else if(attack_type == PROJECTILE_ATTACK)
+		final_block_chance = 0 //Don't bring a sword to a gunfight
 
 	. = ..()
 	if(. && isliving(hitby))
@@ -604,7 +628,7 @@
 	victim.acid_act(10, 5)
 
 /obj/effect/decal/cleanable/blood/xtracks/thick/get_timer()
-	drytime = world.time + 1 MINUTES
+	drytime = world.time + 15 SECONDS
 
 /obj/effect/decal/cleanable/blood/xtracks/thick/dry()
 	qdel(src)

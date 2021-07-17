@@ -33,6 +33,10 @@
 	weather_immunities = list(ACID) //Evolved or something, I dunno
 	ai_controller = /datum/ai_controller/monkey/jungle
 
+/mob/living/carbon/human/species/monkey/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+
 /mob/living/carbon/human/species/monkey/punpun //except for a few special persistence features, pun pun is just a normal monkey
 	name = "Pun Pun" //C A N O N
 	unique_name = FALSE
