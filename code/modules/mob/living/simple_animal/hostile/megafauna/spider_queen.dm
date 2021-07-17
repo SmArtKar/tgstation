@@ -289,7 +289,8 @@
 	. += emissive_appearance(icon, "[icon_state]_glow")
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/death(gibbed)
-	mommy.babies.Remove(src)
+	if(mommy)
+		mommy.babies.Remove(src)
 	. = ..()
 
 /obj/structure/spider/queen_egg
@@ -312,7 +313,7 @@
 /obj/structure/spider/queen_egg/proc/give_birth()
 	var/mob/living/simple_animal/hostile/jungle/cave_spider/baby/spidey = new spider_type(get_turf(src))
 	new /obj/effect/decal/cleanable/insectguts(get_turf(src))
-	visible_message(span_warning("[src] bursts, revealing a [spidey]!"))
+	visible_message(span_warning("[src] bursts, revealing [spidey]!"))
 	mommy.babies.Add(spidey)
 	spidey.mommy = mommy
 	qdel(src)
@@ -322,6 +323,18 @@
 
 /obj/structure/spider/queen_egg/mount
 	spider_type = /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
+
+/obj/structure/spider/queen_egg/mount/give_birth()
+	var/mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/spidey = new spider_type(get_turf(src))
+	new /obj/effect/decal/cleanable/insectguts(get_turf(src))
+	visible_message(span_warning("[src] bursts, revealing [spidey]!"))
+	var/mob/living/carbon/human/new_owner
+	for(var/mob/living/carbon/human/try_for_owner in range(8, get_turf(src)))
+		if(!ismonkey(try_for_owner))
+			new_owner = try_for_owner
+			break
+	spidey.get_owner(new_owner)
+	qdel(src)
 
 /obj/projectile/web_ball
 	name = "ball of web"
@@ -479,11 +492,20 @@
 	move_force = MOVE_FORCE_NORMAL
 	move_resist = MOVE_FORCE_NORMAL
 	pull_force = MOVE_FORCE_NORMAL
+	ai_controller = /datum/ai_controller/hostile_friend
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/Initialize()
 	. = ..()
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount)
 	AddElement(/datum/element/pet_bonus, "chitters happily!")
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/proc/get_owner(mob/living/owner)
+	faction.Add("[REF(owner)]")
+	if(ai_controller)
+		var/datum/ai_controller/hostile_friend/ai_current_controller = ai_controller
+		ai_current_controller.befriend(owner)
+		can_have_ai = FALSE
+		toggle_ai(AI_OFF)
 
 /obj/effect/spawner/lootdrop/spider_queen
 	name = "spider queen loot spawner"

@@ -61,7 +61,7 @@
 	melee_damage_upper = 20
 	faction = list("neutral")
 	nogib = TRUE
-	//ai_controller = /datum/ai_controller/hostile_friend
+	ai_controller = /datum/ai_controller/hostile_friend
 	var/steel_applied = FALSE
 
 /mob/living/simple_animal/hostile/rogue_drone/Initialize(mapload)
@@ -70,11 +70,11 @@
 
 /mob/living/simple_animal/hostile/rogue_drone/pet_drone/proc/activate(mob/owner)
 	faction.Add("[REF(owner)]")
-	/*if(ai_controller)
+	if(ai_controller)
 		var/datum/ai_controller/hostile_friend/ai_current_controller = ai_controller
 		ai_current_controller.befriend(owner)
 		can_have_ai = FALSE
-		toggle_ai(AI_OFF)*/
+		toggle_ai(AI_OFF)
 
 /mob/living/simple_animal/hostile/rogue_drone/pet_drone/attackby(obj/item/I, mob/living/user, params)
 	if(stat == DEAD)

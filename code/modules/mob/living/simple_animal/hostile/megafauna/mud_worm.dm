@@ -279,11 +279,9 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/puff()
 	if(!acid_trail)
 		return
-	create_reagents(5)
-	reagents.add_reagent(/datum/reagent/toxin/acid, 5)
-	var/datum/effect_system/smoke_spread/chem/s = new
-	s.set_up(reagents, 0, get_turf(src), silent = TRUE)
-	s.start()
+
+	var/obj/effect/decal/cleanable/blood/gibs/decal = new /obj/effect/decal/cleanable/blood/xtracks/thick(drop_location())
+	decal.setDir(dir)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/acid_act(acidpwr, acid_volume) //Immune to acid
 	return
@@ -593,6 +591,23 @@
 		return
 	to_chat(user, span_warning("You fail to parry, staggering yourself!"))
 	user.changeNext_move(PARRY_STAGGER_TIME)
+
+/obj/effect/decal/cleanable/blood/xtracks/thick
+	icon_state = "xtracks-thick"
+
+/obj/effect/decal/cleanable/blood/xtracks/thick/on_entered(datum/source, atom/movable/arrived) //Get your ass burned off
+	. = ..()
+	if(!isliving(arrived))
+		return
+
+	var/mob/living/victim = arrived
+	victim.acid_act(10, 5)
+
+/obj/effect/decal/cleanable/blood/xtracks/thick/get_timer()
+	drytime = world.time + 1 MINUTES
+
+/obj/effect/decal/cleanable/blood/xtracks/thick/dry()
+	qdel(src)
 
 #undef PARRY_ACTIVE_TIME
 #undef PARRY_STAGGER_TIME
