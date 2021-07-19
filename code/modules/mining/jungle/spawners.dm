@@ -57,7 +57,7 @@
 
 	if(!istype(item, /obj/item/skeleton_key) || spawned_loot)
 		return FALSE
-	var/loot = rand(1,23)
+	var/loot = rand(1,22)
 	switch(loot)
 		if(1)
 			new /obj/item/shared_storage/red(src)
@@ -70,7 +70,7 @@
 		if(5)
 			new /obj/item/reagent_containers/glass/bottle/potion/flight(src)
 		if(6)
-			new /obj/item/dash_knife(src)
+			new /obj/item/clothing/neck/necklace/memento_mori(src)
 		if(7)
 			new /obj/item/disk/design_disk/modkit_disc/resonator_blast(src)
 		if(8)
@@ -104,8 +104,6 @@
 		if(22)
 			new /obj/item/borg/upgrade/modkit/lifesteal(src)
 			new /obj/item/bedsheet/cult(src)
-		if(23)
-			new /obj/item/clothing/neck/necklace/memento_mori(src)
 	spawned_loot = TRUE
 	qdel(item)
 	to_chat(user, span_notice("You disable the magic lock, revealing the loot."))

@@ -97,7 +97,7 @@
 		charge()
 		return
 
-	if(prob(50 - anger_modifier) && LAZYLEN(babies) < 8)
+	if(prob(50 - anger_modifier) && LAZYLEN(babies) < 3)
 		triple_birth()
 		return
 
@@ -159,7 +159,7 @@
 			shake_camera(victim, 4, 3)
 	. = ..()
 
-/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/charge(chargepast = 2, delay = 3) //If you try to run from me I will groundpound your ass
+/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/charge(chargepast = 2, delay = 6) //If you try to run from me I will groundpound your ass
 	var/turf/chargeturf = get_turf(target)
 	var/dir = get_dir(src, chargeturf)
 	var/turf/target_turf = get_ranged_target_turf(chargeturf, dir, chargepast)
@@ -172,7 +172,7 @@
 	walk(src, 0)
 	setDir(dir)
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
-	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = 3)
+	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
 	SLEEP_CHECK_DEATH(delay)
 	var/movespeed = 0.5
 	walk_towards(src, target_turf, movespeed)
@@ -338,6 +338,7 @@
 
 /obj/projectile/web_ball
 	name = "ball of web"
+	icon_state = "webball"
 	nodamage = TRUE
 	speed = 4
 

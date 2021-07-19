@@ -319,7 +319,7 @@
 	set_vehicle_dir_layer(WEST, OBJ_LAYER)
 
 /datum/component/riding/creature/cave_spider_mount
-	vehicle_move_delay = 1 //As fast as human
+	vehicle_move_delay = 1.2
 
 /datum/component/riding/creature/cave_spider_mount/handle_specials()
 	. = ..()

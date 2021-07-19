@@ -130,10 +130,28 @@
 	icon = 'icons/obj/flora/jungletrees.dmi'
 	pixel_x = -48
 	pixel_y = -20
+	var/obj/effect/overlay/jungle_tree_shadow/shadow
 
 /obj/structure/flora/tree/jungle/Initialize()
 	icon_state = "[icon_state][rand(1, 6)]"
+	AddComponent(/datum/component/largetransparency, -1, 1, 2, 2)
+	shadow = new(get_turf(src))
+	shadow.pixel_x = pixel_x
+	shadow.pixel_y = pixel_y
+	shadow.icon = icon
+	shadow.icon_state = "[icon_state]_shadow"
 	. = ..()
+
+/obj/structure/flora/tree/jungle/Destroy()
+	qdel(shadow)
+	. = ..()
+
+/obj/effect/overlay/jungle_tree_shadow
+	name = "tree shadow"
+	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	layer = 4.95
+	icon = 'icons/obj/flora/jungletrees.dmi'
 
 /obj/structure/flora/tree/jungle/small
 	pixel_y = 0
@@ -480,6 +498,9 @@
 	pixel_x = -16
 	pixel_y = -12
 	layer = ABOVE_ALL_MOB_LAYER
+
+/obj/structure/flora/junglebush/large/Initialize()
+	AddComponent(/datum/component/largetransparency, 0, 0, 0, 0)
 
 /obj/structure/flora/rock/pile/largejungle
 	name = "rocks"

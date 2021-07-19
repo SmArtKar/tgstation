@@ -230,7 +230,7 @@
 		puff()
 
 
-/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/charge(chargepast = 5, delay = 3) //Stolen from spider queen where it was stolen from bubblegum
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/charge(chargepast = 5, delay = 6) //Stolen from spider queen where it was stolen from bubblegum
 	var/turf/chargeturf = get_turf(target)
 	var/dir = get_dir(src, chargeturf)
 	var/turf/target_turf = get_ranged_target_turf(chargeturf, dir, chargepast)
@@ -243,6 +243,7 @@
 	DestroySurroundings()
 	walk(src, 0)
 	setDir(dir)
+	INVOKE_ASYNC(src, .proc/anim_decoy, delay, delay / get_length())
 	SLEEP_CHECK_DEATH(delay)
 	var/movespeed = 0.5
 	walk_towards(src, target_turf, movespeed)
@@ -250,6 +251,13 @@
 	walk(src, 0)
 	charging = FALSE
 	already_hit = list()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/anim_decoy(delay = 6, sleep_delay)
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc, src)
+	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
+	if(back)
+		SLEEP_CHECK_DEATH(sleep_delay)
+		back.anim_decoy(delay, sleep_delay)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/acid_ball)
 	if(!isnum(set_angle) && (!marker || marker == loc))
@@ -323,8 +331,8 @@
 	speed = 2
 
 /obj/projectile/acid_ball/on_hit(atom/target, blocked, pierce_hit)
-	create_reagents(10)
-	reagents.add_reagent(/datum/reagent/toxin/acid, 10)
+	create_reagents(15)
+	reagents.add_reagent(/datum/reagent/toxin/acid, 15)
 	var/datum/effect_system/smoke_spread/chem/s = new
 	s.set_up(reagents, 2, target, silent = TRUE)
 	s.start()
