@@ -128,7 +128,7 @@
 /obj/item/boomerang/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force, gentle = FALSE, quickstart = TRUE)
 	if(ishuman(thrower))
 		var/mob/living/carbon/human/H = thrower
-		H.throw_mode_off(THROW_MODE_TOGGLE) //so they can catch it on the return.
+		H.throw_mode_on(THROW_MODE_TOGGLE) //so they can catch it on the return.
 	return ..()
 
 /obj/item/boomerang/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
@@ -139,70 +139,3 @@
 		addtimer(CALLBACK(src, /atom/movable.proc/throw_at, thrown_by, throw_range+2, throw_speed, null, TRUE), 1)
 	. = ..()
 	throwforce = initial(throwforce)
-
-/obj/item/dash_knife
-	name = "posessed knife"
-	desc = "A small wooden knife posessed by some kind of spirit. Right-click while holding it in an offhand to perform a dash with a cooldown."
-	icon_state = "crysknife"
-	inhand_icon_state = "crysknife"
-	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
-	force = 10
-	w_class = WEIGHT_CLASS_SMALL
-	sharpness = SHARP_EDGED
-	slot_flags = ITEM_SLOT_BELT
-	hitsound = 'sound/weapons/bladeslice.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
-	var/atom/second_item
-	var/dash_cooldown = 0
-
-/obj/item/dash_knife/Initialize(mapload)
-	. = ..()
-	AddComponent(/datum/component/butchering, 50, 100)
-
-/obj/item/dash_knife/equipped(mob/user, slot)
-	. = ..()
-	if(slot == ITEM_SLOT_HANDS)
-		check_other_equip()
-		RegisterSignal(user, COMSIG_MOB_EQUIPPED_ITEM, .proc/check_other_equip)
-
-/obj/item/dash_knife/dropped(mob/user)
-	. = ..()
-	UnregisterSignal(user, COMSIG_MOB_EQUIPPED_ITEM)
-
-/obj/item/dash_knife/proc/check_other_equip()
-	SIGNAL_HANDLER
-
-	if(!ismob(loc))
-		return
-	var/mob/user = loc
-	var/atom/target
-	if(user.get_inactive_held_item() == src)
-		target = user.get_active_held_item()
-	else
-		target = user.get_inactive_held_item()
-
-	if(!target)
-		return
-
-	second_item = target
-	RegisterSignal(target, COMSIG_RIGHT_CLICK_USE, .proc/dash, override = TRUE)
-	RegisterSignal(target, COMSIG_ITEM_PRE_UNEQUIP, .proc/unequipped_other_item)
-
-/obj/item/dash_knife/proc/unequipped_other_item()
-	SIGNAL_HANDLER
-
-	UnregisterSignal(second_item, COMSIG_RIGHT_CLICK_USE)
-	UnregisterSignal(second_item, COMSIG_ITEM_PRE_UNEQUIP)
-	second_item = null
-
-/obj/item/dash_knife/proc/dash(atom/target)
-	SIGNAL_HANDLER
-
-	if(dash_cooldown > world.time || !ismob(loc))
-		return
-
-	var/mob/user = loc
-	dash_cooldown = world.time += 10 SECONDS
-	user.throw_at(target, get_dist(target, user) - 1, 1, user, FALSE, TRUE)

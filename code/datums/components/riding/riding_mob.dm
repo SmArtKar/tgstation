@@ -319,7 +319,7 @@
 	set_vehicle_dir_layer(WEST, OBJ_LAYER)
 
 /datum/component/riding/creature/cave_spider_mount
-	vehicle_move_delay = 1.2
+	vehicle_move_delay = 1.1
 
 /datum/component/riding/creature/cave_spider_mount/handle_specials()
 	. = ..()
@@ -328,6 +328,9 @@
 	set_vehicle_dir_layer(NORTH, OBJ_LAYER)
 	set_vehicle_dir_layer(EAST, OBJ_LAYER)
 	set_vehicle_dir_layer(WEST, OBJ_LAYER)
+
+/datum/component/riding/creature/cave_spider_mount/common
+	vehicle_move_delay = 1.75
 
 /datum/component/riding/creature/megacarp/handle_specials()
 	. = ..()

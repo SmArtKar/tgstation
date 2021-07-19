@@ -467,6 +467,17 @@
 
 	if(charges <= 0)
 		to_chat(H, span_warning("[src] are out of shards! Wait a bit for them to recharge!"))
+		return
+
+	if(!H.throw_mode || H.get_active_held_item() || H.pulling || H.buckled || H.incapacitated())
+		return
+
+	if(!A || !(isturf(A) || isturf(A.loc)))
+		return
+
+	if(HAS_TRAIT(H, TRAIT_HANDS_BLOCKED))
+		to_chat(H, span_warning("You need free use of your hands to shoot crystals!"))
+		return
 
 	var/obj/projectile/proj = new /obj/projectile/crystal(get_turf(H))
 	proj.preparePixelProjectile(get_turf(A), get_turf(H))

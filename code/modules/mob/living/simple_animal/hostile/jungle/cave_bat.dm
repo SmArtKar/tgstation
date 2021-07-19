@@ -36,6 +36,9 @@
 	crusher_drop_mod = 2.5 //They spawn in large amounts, up to 11 in a pack.
 	crusher_loot = /obj/item/crusher_trophy/bat_wing
 	butcher_results = list(/obj/item/food/meat/slab = 1, /obj/item/stack/sheet/sinew/bat = 1, /obj/item/stack/sheet/bone = 1)
+	move_resist = MOVE_RESIST_DEFAULT
+	move_force = MOVE_FORCE_DEFAULT
+	pull_force = PULL_FORCE_DEFAULT
 
 /mob/living/simple_animal/hostile/jungle/bat/Initialize()
 	. = ..()

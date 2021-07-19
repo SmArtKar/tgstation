@@ -17,8 +17,9 @@
 
 	del_on_death = TRUE
 	faction = list("boss", "jungle")
-	loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm)
+	loot = list(/obj/item/worm_tongue, /obj/effect/spawner/lootdrop/mud_worm)
 	crusher_loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
+	common_loot = list(/obj/item/armor_scales)
 	gps_name = "Crushing Signal"
 	light_range = 1
 	light_power = 2

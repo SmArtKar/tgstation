@@ -139,6 +139,18 @@
 	seed = /obj/item/seeds/jungle/beerroot
 	distill_reagent = /datum/reagent/consumable/ethanol/beer
 
+/obj/item/food/grown/jungle_flora/beerroot/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/cut_beerroot, 4, 30)
+
+/obj/item/food/cut_beerroot
+	name = "beerroot slice"
+	desc = "Tasty slice of beerroot full of alcholol."
+	icon = 'icons/obj/flora/jungleflora.dmi'
+	icon_state = "beerroot_slices"
+	foodtypes = VEGETABLES | ALCOHOL
+	tastes = list("beer" = 1, "piss water" = 3, "parties" = 1)
+	food_reagents = list(/datum/reagent/consumable/ethanol/beer = 3)
+
 /obj/item/seeds/jungle/beerroot
 	name = "pack of beerroot seeds"
 	desc = "These seeds grow into thick roots that produce beer."
@@ -154,3 +166,67 @@
 	graft_gene = /datum/plant_gene/trait/brewing
 
 	reagents_add = list(/datum/reagent/consumable/ethanol/beer = 0.2)
+
+/// Bagelshroom
+
+/obj/structure/flora/ash/jungle_plant/bagelshroom
+	name = "bagelshroom"
+	desc = "Small mushrooms with orange caps. These are especially good if fried!"
+	icon_state = "bagelshroom"
+
+	harvested_name = "harvested bagelshrooms"
+	harvested_desc = "A colony of tiny bagelshrooms. Looks like someone already had harvested them recently, let em grow up."
+
+	harvest = /obj/item/food/grown/jungle_flora/bagelshroom
+	harvest_message_low = "Almost all of bagelshrooms were too young and you only managed to find one good."
+	harvest_message_med = "You pick up a few decent bagelshrooms."
+	harvest_message_high = "You collect almost whole colony, nice one!"
+	number_of_variants = 2
+
+/obj/item/food/grown/jungle_flora/bagelshroom
+	name = "bagelshroom"
+	desc = "An nice orange mushroom on a white leg. It smells of bread."
+	icon_state = "bagelshroom"
+	w_class = WEIGHT_CLASS_TINY
+	foodtypes = VEGETABLES
+	seed = /obj/item/seeds/jungle/bagelshroom
+
+/obj/item/food/grown/jungle_flora/bagelshroom/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/cut_bagelshroom, 2, 15)
+
+/obj/item/food/cut_bagelshroom
+	name = "cut bagelshroom"
+	desc = "Half of a bagelshroom. Where did the other one go?"
+	icon = 'icons/obj/flora/jungleflora.dmi'
+	icon_state = "cut_bagelshroom"
+	tastes = list("bread" = 2, "mushrooms" = 1, "dirt" = 1)
+	foodtypes = VEGETABLES
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/flour = 4)
+
+/obj/item/food/cut_bagelshroom/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/fried_bagelshroom, rand(10 SECONDS, 20 SECONDS), TRUE)
+
+/obj/item/food/fried_bagelshroom
+	name = "fried bagelshroom"
+	desc = "A tasty, griled bagelshroom."
+	icon = 'icons/obj/flora/jungleflora.dmi'
+	icon_state = "cut_bagelshroom"
+	tastes = list("bread" = 2, "mushrooms" = 1, "bagels" = 3)
+	foodtypes = VEGETABLES | GRAIN
+	food_reagents = list(/datum/reagent/consumable/nutriment = 6)
+
+/obj/item/seeds/jungle/bagelshroom
+	name = "pack of bagelshroom mycelium"
+	desc = "This mycelium grows into bagelshrooms."
+	icon_state = "mycelium-bagelshroom"
+	species = "bagelshroom"
+	plantname = "Bagelshrooms"
+	icon_grow = "bagelshroom-grow"
+	icon_dead = "bagelshroom-dead"
+	growthstages = 3
+	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
+	product = /obj/item/food/grown/jungle_flora/bagelshroom
+	genes = list(/datum/plant_gene/trait/repeated_harvest)
+	graft_gene = /datum/plant_gene/trait/repeated_harvest
+
+	reagents_add = list(/datum/reagent/consumable/nutriment = 0.1, /datum/reagent/consumable/flour = 0.2)

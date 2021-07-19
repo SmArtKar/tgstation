@@ -43,12 +43,12 @@
 		crusher_kill = TRUE
 
 	var/rare_loot_amount = min(1, round(killers / rarity))
-	var/rare_loot_list = (crusher_kill ? rare_crusher_loot : rare_loot)
+	var/rare_loot_list = (crusher_kill && LAZYLEN(rare_crusher_loot) ? rare_crusher_loot : rare_loot)
 	for(var/i = 1 to rare_loot_amount)
 		for(var/rare_looty in rare_loot_list)
 			loot.Add(rare_looty)
 
-	var/common_loot_list = (crusher_kill ? common_crusher_loot : common_loot)
+	var/common_loot_list = (crusher_kill && LAZYLEN(common_crusher_loot) ? common_crusher_loot : common_loot)
 	for(var/i = 1 to killers)
 		for(var/common_looty in common_loot_list)
 			loot.Add(common_looty)

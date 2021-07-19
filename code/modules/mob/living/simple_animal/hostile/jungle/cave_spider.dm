@@ -9,8 +9,7 @@
 	mob_biotypes = MOB_ORGANIC | MOB_BUG
 	speak_emote = list("chitters")
 	emote_hear = list("chitters")
-	speed = 3
-	turns_per_move = 4
+	speed = 2
 	see_in_dark = 4
 	butcher_results = list(/obj/item/food/meat/slab/spider = 1, /obj/item/food/spiderleg = 8)
 	response_help_continuous = "pets"
@@ -40,7 +39,22 @@
 	projectiletype = /obj/projectile/cave_spider_web
 	crusher_drop_mod = 10 //They spawn in packs
 	crusher_loot = /obj/item/crusher_trophy/spider_webweaver
+	move_resist = MOVE_RESIST_DEFAULT
+	move_force = MOVE_FORCE_DEFAULT
+	pull_force = PULL_FORCE_DEFAULT
 	var/jump_mod = 1
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/Initialize()
+	. = ..()
+	AddComponent(/datum/component/tameable, food_types = list(/obj/item/food/grown/jungle_flora/bagelshroom), tame_chance = 15, bonus_tame_chance = 5, after_tame = CALLBACK(src, .proc/tamed))
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/proc/tamed(mob/living/tamer)
+	can_buckle = TRUE
+	buckle_lying = 0
+	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount/common)
+	AddElement(/datum/element/pet_bonus, "chitters happily!")
+	can_have_ai = FALSE
+	toggle_ai(AI_OFF)
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/OpenFire(atom/targeting)
 	if(get_dist(src, targeting) > WEB_DISTANCE)
