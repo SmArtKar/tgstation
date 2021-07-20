@@ -202,7 +202,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/OpenFire()
 	anger_modifier = clamp((initial_servers / servers) + (shield_toggled ? 0 : 1), 0, 6)
-	ranged_cooldown = world.time + ((5 + anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
+	ranged_cooldown = world.time + ((5 - anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
 
 	if(get_dist(src, target) <= 2 && !floorshock)
 		activate_floor_shock()

@@ -120,7 +120,7 @@
 		SLEEP_CHECK_DEATH(1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/AttackingTarget(atom/attacked_target) //It just point-blanks you in melee
-	shoot_projectile(get_turf(attacked_target), proj_type = pick(/obj/projectile/amber_crystal, /obj/projectile/chronosphere))
+	OpenFire()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/chronospheres()
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))

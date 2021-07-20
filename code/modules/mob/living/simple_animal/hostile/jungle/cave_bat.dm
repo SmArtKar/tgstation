@@ -104,7 +104,7 @@
 /obj/item/crusher_trophy/bat_wing/on_mark_detonation(mob/living/target, mob/living/user)
 	target.apply_status_effect(STATUS_EFFECT_BLOODYMARK)
 
-/obj/item/crusher_trophy/demon_claws/on_melee_hit(mob/living/target, mob/living/user)
+/obj/item/crusher_trophy/bat_wing/on_melee_hit(mob/living/target, mob/living/user)
 	if(target.has_status_effect(STATUS_EFFECT_BLOODYMARK))
 		user.heal_ordered_damage(3, list(BRUTE, BURN, OXY))
 		if(iscarbon(user))

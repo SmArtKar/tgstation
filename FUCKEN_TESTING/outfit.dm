@@ -89,7 +89,6 @@
 	mob_species = /datum/species/human
 	short_desc = "You're a debug miner on some jungle planet. Blame SmArtKar for forcing you to do this."
 	flavour_text = "You're a debug miner on some jungle planet. Blame SmArtKar for forcing you to do this. Explore this land, kill monsters, die and repeat again! Just don't abuse suicides to get infinite starting gear, okay?"
-	assignedrole = "Debug Miner"
 
 /obj/effect/mob_spawn/human/debug_miner/Destroy()
 	new /obj/effect/mob_spawn/human/debug_miner(get_turf(src))

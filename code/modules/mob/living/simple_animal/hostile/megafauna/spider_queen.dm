@@ -278,6 +278,7 @@
 	crusher_drop_mod = 0
 	jump_mod = 0.5
 	ranged_cooldown_time = 4 SECONDS
+	tameable = FALSE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/mommy
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/Initialize()

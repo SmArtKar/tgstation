@@ -2,7 +2,8 @@
 /datum/map_template/ruin/jungle
 	prefix = "_maps/RandomRuins/JungleRuins/"
 	allow_duplicates = FALSE
-	cost = 5
+	always_place = TRUE
+	cost = 0
 
 /datum/map_template/ruin/jungle/cave
 	name = "jungle cave ruin"

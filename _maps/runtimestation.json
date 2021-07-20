@@ -21,7 +21,7 @@
 		{
 			"Up": 1,
 			"Down": -1,
-			"Baseturf": "/turf/open/openspace",
+			"Baseturf": "/turf/open/openspace/icemoon/jungle",
             "Mining":true,
             "Station":false,
 			"Linkage": null,
@@ -31,7 +31,7 @@
 		{
             "Up": 1,
 			"Down": -1,
-			"Baseturf": "/turf/open/openspace",
+			"Baseturf": "/turf/open/openspace/icemoon/jungle",
 			"Linkage": null,
             "Mining":true,
             "Station":true,
@@ -41,7 +41,7 @@
 		},
 		{
 			"Down": -1,
-			"Baseturf": "/turf/open/openspace",
+			"Baseturf": "/turf/open/openspace/icemoon/jungle",
 			"Linkage": null,
             "Mining":true,
             "Station":true,

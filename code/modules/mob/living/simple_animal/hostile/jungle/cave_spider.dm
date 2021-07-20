@@ -43,10 +43,12 @@
 	move_force = MOVE_FORCE_DEFAULT
 	pull_force = PULL_FORCE_DEFAULT
 	var/jump_mod = 1
+	var/tameable = TRUE
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/Initialize()
 	. = ..()
-	AddComponent(/datum/component/tameable, food_types = list(/obj/item/food/grown/jungle_flora/bagelshroom), tame_chance = 15, bonus_tame_chance = 5, after_tame = CALLBACK(src, .proc/tamed))
+	if(tameable)
+		AddComponent(/datum/component/tameable, food_types = list(/obj/item/food/grown/jungle_flora/bagelshroom), tame_chance = 15, bonus_tame_chance = 5, after_tame = CALLBACK(src, .proc/tamed))
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/proc/tamed(mob/living/tamer)
 	can_buckle = TRUE
