@@ -17,8 +17,8 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner
 	name = "demonic miner"
 	desc = "A body of some poor dead miner, posessed by an ancient demon."
-	health = 3000
-	maxHealth = 3000
+	health = 3500
+	maxHealth = 3500
 	icon_state = "demonic_miner"
 	icon_living = "demonic_miner"
 	icon = 'icons/mob/jungle/demonic_miner.dmi'
@@ -52,9 +52,10 @@
 	deathmessage = "falls to the ground as demon that possesses it dies."
 	deathsound = "bodyfall"
 	footstep_type = FOOTSTEP_MOB_HEAVY
+	alpha = 175 //as long as it's not awake
 	var/demon_form = FALSE
-	var/noaction = FALSE
-	var/nodamage = FALSE
+	var/noaction = TRUE
+	var/imps = 8
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/Initialize()
 	. = ..()
@@ -77,6 +78,14 @@
 		else
 			new /obj/effect/temp_visual/dir_setting/miner_death/demonic(loc, dir)
 
+/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/imp_death()
+	imps -= 1
+	if(imps <= 0)
+		noaction = FALSE
+		status_flags &= ~GODMODE
+		visible_message(span_danger("[src] exists stasis as it's last servant was killed!"), span_userdanger("You exit stasis as your last servant was killed!"))
+		alpha = 255
+
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/ex_act(severity, target)
 	adjustBruteLoss(-30 * severity)
 	visible_message(span_danger("[src] absorbs the explosion!"), span_userdanger("You absorb the explosion!"))
@@ -86,7 +95,7 @@
 
 	flick("jaunt_[demon_form ? "demon_" : ""]start", src)
 	noaction = TRUE
-	nodamage = TRUE
+	status_flags |= GODMODE
 	set_density(FALSE)
 	playsound(target_turf, 'sound/magic/ethereal_enter.ogg', 50, TRUE, -1)
 	SLEEP_CHECK_DEATH(9)
@@ -100,12 +109,10 @@
 	flick("jaunt_[demon_form ? "demon_" : ""]end", src)
 	SLEEP_CHECK_DEATH(9)
 	noaction = FALSE
-	nodamage = FALSE
+	status_flags &= ~GODMODE
 	set_density(TRUE)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	if(nodamage)
-		return FALSE
 	. = ..()
 	if(. && health <= maxHealth * 0.5 && !demon_form)
 		become_demon()
@@ -113,7 +120,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/become_demon()
 	demon_form = TRUE
 	noaction = TRUE
-	nodamage = TRUE
+	status_flags |= GODMODE
 	spin(30, 2)
 	SLEEP_CHECK_DEATH(30)
 	playsound(src, 'sound/effects/explosion3.ogg', 100, TRUE)
@@ -121,8 +128,9 @@
 	armour_penetration = 100
 	melee_damage_lower = 30
 	melee_damage_upper = 30
+	add_movespeed_modifier(/datum/movespeed_modifier/demonic_miner)
 	update_icon()
-	nodamage = FALSE
+	status_flags &= ~GODMODE
 	noaction = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/channel_ray(starting_angle = 0, ending_angle = 360, angle_step = 5, fixed_time = 0)
@@ -439,5 +447,24 @@
 	armour_penetration = 100
 	speed = 2
 	damage_type = BURN
+
+/mob/living/simple_animal/hostile/imp/demonic_miner
+	maxHealth = 40
+	health = 40
+	wander = FALSE
+	weather_immunities = list(WEATHER_LAVA)
+	var/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/king
+	var/beam
+
+/mob/living/simple_animal/hostile/imp/demonic_miner/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	king = locate(/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner) in range(4, src)
+	beam = Beam(king, icon_state = "blood_beam_thin", beam_type = /obj/effect/ebeam/demonic)
+
+/mob/living/simple_animal/hostile/imp/demonic_miner/Destroy()
+	king.imp_death()
+	qdel(beam)
+	. = ..()
 
 #undef BLOOD_JAUNT_LENGTH
