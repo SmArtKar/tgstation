@@ -55,10 +55,11 @@
 	alpha = 175 //as long as it's not awake
 	var/demon_form = FALSE
 	var/noaction = TRUE
-	var/imps = 8
+	var/imps = 0
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/Initialize()
 	. = ..()
+	status_flags |= GODMODE
 	pixel_y = -1
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/update_icon(updates)
@@ -453,6 +454,7 @@
 	health = 40
 	wander = FALSE
 	weather_immunities = list(WEATHER_LAVA)
+	faction = list("hell", "jungle", "boss")
 	var/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/king
 	var/beam
 
@@ -460,6 +462,7 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
 	king = locate(/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner) in range(4, src)
+	king.imps += 1
 	beam = Beam(king, icon_state = "blood_beam_thin", beam_type = /obj/effect/ebeam/demonic)
 
 /mob/living/simple_animal/hostile/imp/demonic_miner/Destroy()
