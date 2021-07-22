@@ -1,0 +1,1196 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/template_noop,
+/area/template_noop)
+"b" = (
+/turf/open/lava/smooth{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"d" = (
+/obj/structure/stone_tile/block/cracked,
+/obj/structure/stone_tile/cracked{
+	dir = 4
+	},
+/turf/open/lava/smooth{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"e" = (
+/mob/living/simple_animal/hostile/imp{
+	faction = list("hell", "jungle", "boss");
+	health = 20;
+	maxHealth = 20
+	},
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"f" = (
+/obj/structure/stone_tile/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/cracked{
+	dir = 8
+	},
+/obj/structure/stone_tile,
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"g" = (
+/obj/structure/railing/corner,
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"h" = (
+/obj/structure/railing{
+	dir = 5
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"j" = (
+/mob/living/simple_animal/hostile/imp{
+	faction = list("hell", "jungle", "boss");
+	health = 20;
+	maxHealth = 20
+	},
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"l" = (
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"m" = (
+/obj/structure/railing{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"n" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"o" = (
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"p" = (
+/obj/structure/stone_tile/slab/cracked{
+	dir = 5
+	},
+/obj/structure/stone_tile/slab/cracked{
+	dir = 9
+	},
+/turf/open/lava/smooth{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"r" = (
+/obj/structure/railing/corner{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"s" = (
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"u" = (
+/obj/structure/railing/corner{
+	dir = 1
+	},
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"v" = (
+/obj/structure/railing{
+	dir = 9
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"x" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"y" = (
+/obj/structure/railing{
+	dir = 10
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"z" = (
+/obj/structure/stone_tile/slab,
+/turf/open/lava/smooth{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"A" = (
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"E" = (
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"F" = (
+/obj/structure/railing{
+	dir = 6
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"H" = (
+/obj/structure/stone_tile/surrounding/cracked{
+	dir = 6
+	},
+/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner,
+/turf/open/lava/smooth{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"J" = (
+/turf/closed/indestructible/cult,
+/area/ruin/unpowered/demonic_miner_arena)
+"K" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"L" = (
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/structure/stone_tile{
+	dir = 1
+	},
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"M" = (
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"N" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"O" = (
+/obj/effect/decal/cleanable/blood/old,
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"P" = (
+/obj/structure/railing/corner{
+	dir = 1
+	},
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"T" = (
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/cult{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"U" = (
+/obj/structure/railing,
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"V" = (
+/obj/structure/railing/corner,
+/obj/structure/railing/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"W" = (
+/obj/structure/stone_tile/slab/cracked,
+/turf/open/lava/smooth{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+"Z" = (
+/obj/structure/railing/corner{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/unpowered/demonic_miner_arena)
+
+(1,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+l
+l
+l
+l
+l
+l
+l
+l
+l
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}
+(2,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+l
+l
+l
+l
+l
+g
+m
+V
+m
+E
+l
+l
+l
+l
+l
+a
+a
+a
+a
+a
+a
+a
+"}
+(3,1,1) = {"
+a
+a
+a
+a
+a
+l
+l
+l
+l
+l
+l
+g
+F
+b
+J
+b
+h
+E
+K
+l
+l
+l
+l
+l
+a
+a
+a
+a
+a
+"}
+(4,1,1) = {"
+a
+a
+a
+a
+l
+l
+l
+l
+l
+l
+l
+U
+b
+b
+J
+b
+b
+M
+l
+l
+l
+l
+l
+l
+l
+a
+a
+a
+a
+"}
+(5,1,1) = {"
+a
+a
+a
+l
+l
+l
+l
+J
+J
+l
+l
+Z
+J
+J
+J
+J
+J
+r
+l
+l
+J
+J
+l
+l
+l
+l
+a
+a
+a
+"}
+(6,1,1) = {"
+a
+a
+l
+l
+l
+l
+l
+K
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+a
+a
+"}
+(7,1,1) = {"
+a
+a
+l
+l
+l
+l
+l
+l
+l
+l
+l
+K
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+a
+a
+"}
+(8,1,1) = {"
+a
+l
+l
+l
+J
+l
+l
+l
+l
+g
+m
+m
+m
+E
+l
+g
+m
+m
+m
+E
+l
+l
+l
+l
+J
+l
+l
+l
+a
+"}
+(9,1,1) = {"
+a
+l
+l
+l
+J
+l
+l
+l
+J
+J
+b
+b
+b
+M
+l
+U
+b
+b
+b
+J
+J
+l
+l
+l
+J
+l
+l
+l
+a
+"}
+(10,1,1) = {"
+a
+l
+l
+l
+l
+l
+l
+g
+J
+b
+b
+b
+b
+x
+l
+U
+b
+b
+b
+b
+J
+E
+l
+l
+l
+l
+l
+l
+a
+"}
+(11,1,1) = {"
+l
+l
+l
+l
+l
+l
+l
+U
+b
+b
+b
+v
+n
+r
+K
+Z
+N
+y
+b
+b
+b
+M
+K
+l
+l
+l
+l
+l
+l
+"}
+(12,1,1) = {"
+l
+l
+g
+m
+E
+l
+l
+U
+b
+b
+v
+r
+l
+l
+l
+l
+l
+Z
+y
+b
+b
+M
+l
+l
+g
+m
+E
+l
+l
+"}
+(13,1,1) = {"
+l
+g
+F
+b
+J
+l
+l
+U
+b
+b
+M
+l
+l
+e
+s
+j
+l
+l
+U
+b
+b
+M
+l
+l
+J
+b
+h
+E
+l
+"}
+(14,1,1) = {"
+l
+U
+b
+b
+J
+l
+l
+Z
+N
+n
+r
+l
+j
+o
+W
+f
+e
+K
+Z
+N
+N
+r
+l
+l
+J
+b
+b
+M
+l
+"}
+(15,1,1) = {"
+l
+g
+J
+J
+J
+l
+l
+l
+l
+l
+l
+l
+T
+d
+H
+z
+s
+l
+l
+K
+l
+l
+l
+l
+J
+J
+J
+u
+l
+"}
+(16,1,1) = {"
+l
+U
+b
+b
+J
+l
+l
+g
+m
+m
+E
+l
+j
+L
+p
+A
+j
+l
+g
+m
+m
+E
+l
+l
+J
+b
+b
+M
+l
+"}
+(17,1,1) = {"
+l
+Z
+y
+b
+J
+l
+l
+U
+b
+b
+M
+l
+l
+j
+T
+e
+l
+K
+U
+b
+b
+M
+l
+l
+J
+b
+v
+r
+l
+"}
+(18,1,1) = {"
+l
+l
+Z
+N
+r
+l
+l
+U
+b
+b
+h
+O
+l
+l
+l
+l
+l
+g
+F
+b
+b
+M
+l
+l
+Z
+N
+r
+l
+l
+"}
+(19,1,1) = {"
+l
+l
+l
+K
+l
+l
+l
+U
+b
+b
+b
+h
+m
+E
+K
+g
+m
+F
+b
+b
+b
+M
+l
+l
+l
+K
+l
+l
+l
+"}
+(20,1,1) = {"
+a
+l
+l
+l
+l
+K
+l
+Z
+J
+b
+b
+b
+b
+M
+l
+U
+b
+b
+b
+b
+J
+r
+l
+l
+l
+l
+l
+l
+a
+"}
+(21,1,1) = {"
+a
+l
+l
+l
+J
+l
+l
+l
+J
+J
+b
+b
+b
+M
+l
+U
+b
+b
+b
+J
+J
+l
+l
+l
+J
+l
+l
+l
+a
+"}
+(22,1,1) = {"
+a
+l
+l
+l
+J
+l
+l
+l
+l
+Z
+N
+N
+N
+r
+l
+Z
+N
+N
+N
+r
+K
+l
+l
+l
+J
+l
+l
+l
+a
+"}
+(23,1,1) = {"
+a
+a
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+K
+l
+l
+l
+l
+l
+l
+l
+a
+a
+"}
+(24,1,1) = {"
+a
+a
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+l
+a
+a
+"}
+(25,1,1) = {"
+a
+a
+a
+l
+l
+l
+l
+J
+J
+l
+l
+g
+J
+J
+J
+J
+J
+E
+l
+l
+J
+J
+l
+l
+l
+l
+a
+a
+a
+"}
+(26,1,1) = {"
+a
+a
+a
+a
+l
+l
+l
+l
+l
+l
+l
+U
+b
+b
+J
+b
+b
+M
+l
+l
+l
+l
+l
+l
+l
+a
+a
+a
+a
+"}
+(27,1,1) = {"
+a
+a
+a
+a
+a
+l
+l
+l
+l
+l
+l
+Z
+y
+b
+J
+b
+v
+r
+l
+l
+l
+l
+l
+l
+a
+a
+a
+a
+a
+"}
+(28,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+l
+l
+l
+l
+l
+Z
+N
+P
+N
+r
+l
+l
+l
+l
+l
+a
+a
+a
+a
+a
+a
+a
+"}
+(29,1,1) = {"
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+l
+l
+l
+l
+l
+l
+l
+l
+l
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+"}

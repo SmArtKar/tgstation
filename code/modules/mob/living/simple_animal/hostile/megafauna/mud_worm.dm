@@ -1,3 +1,20 @@
+/**
+ * Mud Worm
+ *
+ * A multi-segment worm with thick armor plates you need to destroy first before kiling the segment.
+ * It has 200 HP * 2 health bars * 7 segments = 2800 HP. It becomes angrier and harder with each segment.
+ *
+ * Attack patterns:
+ * 1. Worm charges into player. In case player is hit, worm drags them until charge is ended
+ * 2. Worm starts creating an acid trail that disappears after a while. Walking over the trail damages you and your gear.
+ * 3. Worm spews an acid ball, creating a cloud of well, sulphuric acid.
+ * 4. Worm spews it's teeth, making them fall at the player from above similar to ash drake's fireball attack. This attack also activates acid trail when worm is on low HP.
+ *
+ *
+ * Intended Difficulty: Hard
+ *
+ */
+
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm
 	name = "mud worm"
 	desc = "A huge multi-segmented worm with a lot of rocks and mud stuck to it, forming some sort of armor."
@@ -5,8 +22,8 @@
 	icon_living = "head"
 	base_icon_state = "head"
 	icon = 'icons/mob/jungle/mud_worm.dmi'
-	maxHealth = 150
-	health = 150
+	maxHealth = 200
+	health = 200
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	move_resist = MOVE_FORCE_OVERPOWERING+1
@@ -16,7 +33,6 @@
 	ranged_cooldown_time = 40
 
 	del_on_death = TRUE
-	faction = list("boss", "jungle")
 	loot = list(/obj/item/worm_tongue, /obj/effect/spawner/lootdrop/mud_worm)
 	crusher_loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
 	common_loot = list(/obj/item/armor_scales)
@@ -43,7 +59,12 @@
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/Initialize(mapload, spawn_more = TRUE, len = 6)
+	if(!spawn_more)
+		true_spawn = FALSE
+		ADD_TRAIT(src, TRAIT_NEVER_POI, MEGAFAUNA_TRAIT)
+
 	. = ..()
+
 	if(len < 3)
 		stack_trace("Mud Worm Megafauna created with invalid len ([len]). Reverting to 3. Ping SmArtKar on discord and blame his ass.")
 		len = 3
@@ -53,8 +74,6 @@
 	update_icon()
 
 	if(!spawn_more)
-		true_spawn = FALSE
-		ADD_TRAIT(src, TRAIT_NEVER_POI, MEGAFAUNA_TRAIT)
 		return
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/prev = src

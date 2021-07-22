@@ -86,9 +86,10 @@
 		selected_biome = SSmapping.biomes[selected_biome] //Get the instance of this biome from SSmapping
 		selected_biome.generate_turf(gen_turf)
 		if(selected_biome.natural_light)
-			gen_turf.set_light_power(8)
-			gen_turf.set_light_range(2)
 			gen_turf.set_light_on(TRUE)
+			gen_turf.set_light_power(8)
+			gen_turf.set_light_range(3)
+			//gen_turf.AddComponent(/datum/component/sunlight)
 
 		if(selected_biome.generate_caves)
 			var/area/old_area = gen_turf.loc

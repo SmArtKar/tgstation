@@ -67,6 +67,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/Initialize()
 	. = ..()
+	AddComponent(/datum/component/knockback, 7, FALSE, TRUE)
 	update_appearance()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/update_overlays()

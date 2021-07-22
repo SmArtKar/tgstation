@@ -35,7 +35,6 @@
 	friendly_verb_continuous = "stares down"
 	friendly_verb_simple = "stare down"
 	icon = 'icons/mob/jungle/amber_crystal_big.dmi'
-	faction = list("boss", "jungle")
 	speak_emote = list("vibrates")
 	mob_biotypes = MOB_MINERAL | MOB_BEAST | MOB_EPIC
 	speed = 14

@@ -6,6 +6,9 @@
  */
 
 /mob/living/simple_animal/hostile/megafauna/jungle
+	faction = list("boss", "jungle")
+	weather_immunities = list(WEATHER_ACID)
+
 	var/list/rare_loot = list()
 	var/list/rare_crusher_loot = list()
 	var/rarity = 1
