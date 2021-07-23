@@ -108,34 +108,3 @@
 	qdel(item)
 	to_chat(user, span_notice("You disable the magic lock, revealing the loot."))
 	return TRUE
-
-
-
-
-
-
-/obj/item/boomerang
-	name = "boomerang"
-	desc = "A wooden boomerang with a bit of vine growing on it. Just be careful to catch it when thrown!"
-	throw_speed = 2
-	icon_state = "boomerang_jungle"
-	inhand_icon_state = "boomerang_jungle"
-	force = 5
-	throwforce = 10
-	throw_range = 10
-	custom_materials = list(/datum/material/wood = 10000)
-
-/obj/item/boomerang/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force, gentle = FALSE, quickstart = TRUE)
-	if(ishuman(thrower))
-		var/mob/living/carbon/human/H = thrower
-		H.throw_mode_on(THROW_MODE_TOGGLE) //so they can catch it on the return.
-	return ..()
-
-/obj/item/boomerang/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	if(isanimal(hit_atom))
-		throwforce = 30
-	var/mob/thrown_by = thrownby?.resolve()
-	if(thrown_by)
-		addtimer(CALLBACK(src, /atom/movable.proc/throw_at, thrown_by, throw_range+2, throw_speed, null, TRUE), 1)
-	. = ..()
-	throwforce = initial(throwforce)

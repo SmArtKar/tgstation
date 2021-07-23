@@ -863,7 +863,7 @@
 
 /datum/action/item_action/alloy_resonance
 	name = "Alloy Resonance"
-	desc = "Activate your armor, making it resonate with all projectiles in the air, reflecting them."
+	desc = "Activate your armor to make it resonate, stunning and damaging all hostile mobs in view."
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "alloy_gear"
 
