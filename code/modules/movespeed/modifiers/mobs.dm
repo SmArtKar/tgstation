@@ -130,4 +130,4 @@
 	multiplicative_slowdown = 1
 
 /datum/movespeed_modifier/demonic_miner
-	multiplicative_slowdown = -4
+	multiplicative_slowdown = -2

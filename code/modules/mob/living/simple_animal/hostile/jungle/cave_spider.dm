@@ -17,8 +17,8 @@
 	response_disarm_continuous = "gently pushes aside"
 	response_disarm_simple = "gently push aside"
 	initial_language_holder = /datum/language_holder/spider
-	maxHealth = 150
-	health = 150
+	maxHealth = 100
+	health = 100
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 0.25, CLONE = 1.2, STAMINA = 0, OXY = 1)
 	unsuitable_cold_damage = 10
 	unsuitable_heat_damage = 10

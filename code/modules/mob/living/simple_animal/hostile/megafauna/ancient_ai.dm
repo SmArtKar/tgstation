@@ -245,7 +245,7 @@
 	icon_state = "drone_spawner"
 
 	max_integrity = 200
-	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 75, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -279,7 +279,7 @@
 	icon_state = "laser_flower"
 
 	max_integrity = 200
-	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 75, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -480,7 +480,7 @@
 	anchored = TRUE
 
 	max_integrity = 400
-	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 0, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 

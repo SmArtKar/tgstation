@@ -35,10 +35,11 @@
 	ranged = TRUE
 	vision_range = 18
 	rapid_melee = 1
+	melee_queue_distance = 2
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
 
-	speed = 5
+	speed = 1
 	move_to_delay = 20
 	wander = FALSE
 	gps_name = "Posessed Signal"
@@ -263,11 +264,17 @@
 	if(noaction)
 		return
 
+	if(ranged_cooldown < world.time)
+		OpenFire()
+
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/AttackingTarget()
 	if(noaction)
 		return
+
+	if(ranged_cooldown < world.time)
+		OpenFire()
 
 	. = ..()
 
@@ -276,7 +283,7 @@
 		return
 
 	anger_modifier = clamp(((maxHealth - health) / 100),0,20)
-	ranged_cooldown = world.time + ((demon_form ? 2 : 5) SECONDS)
+	ranged_cooldown = world.time + ((demon_form ? 2 : 4) SECONDS)
 
 	var/picked_attack = rand(1, 6)
 	switch(picked_attack)
@@ -287,7 +294,7 @@
 			spiral_shoot()
 		if(2)
 			channel_ray(Get_Angle(src, target) - 45, Get_Angle(src, target) + 45)
-			ranged_cooldown = world.time + ((demon_form ? 3 : 7) SECONDS)
+			ranged_cooldown = world.time + ((demon_form ? 3 : 6) SECONDS)
 		if(3)
 			triple_blast_line()
 		if(4)

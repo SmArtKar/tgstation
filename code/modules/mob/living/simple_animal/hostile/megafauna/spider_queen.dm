@@ -552,7 +552,7 @@
 /obj/item/crusher_trophy/spider_leg
 	name = "queen spider leg"
 	desc = "A leg ripped off from a spider queen. Suitable as a trophy for a kinetic crusher."
-	icon_state = "crystal_shard"
+	icon_state = "spider_leg"
 	denied_type = /obj/item/crusher_trophy/spider_leg
 
 /obj/item/crusher_trophy/spider_leg/effect_desc()
@@ -572,7 +572,7 @@
 				L.safe_throw_at(throwtarget, 5, 1, src)
 				L.apply_damage_type(10, BRUTE)
 				hit_things += L
-		sleep(3)
+		sleep(1)
 
 #undef VORE_PROBABLILITY
 #undef SPIDER_SILK_LIMIT
