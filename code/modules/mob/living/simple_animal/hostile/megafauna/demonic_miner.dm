@@ -276,18 +276,18 @@
 		return
 
 	anger_modifier = clamp(((maxHealth - health) / 100),0,20)
-	ranged_cooldown = world.time + ((demon_form ? 3 : 5) SECONDS)
+	ranged_cooldown = world.time + ((demon_form ? 2 : 5) SECONDS)
 
 	var/picked_attack = rand(1, 6)
 	switch(picked_attack)
 		if(1)
 			jaunt_at(target)
 			ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) SECONDS)
-			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + 2 SECONDS)
+			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) SECONDS))
 			spiral_shoot()
 		if(2)
 			channel_ray(Get_Angle(src, target) - 45, Get_Angle(src, target) + 45)
-			ranged_cooldown = world.time + 7 SECONDS
+			ranged_cooldown = world.time + ((demon_form ? 3 : 7) SECONDS)
 		if(3)
 			triple_blast_line()
 		if(4)
@@ -303,7 +303,7 @@
 			if(demon_form)
 				SLEEP_CHECK_DEATH(2)
 				blast_circle(target)
-			ranged_cooldown = world.time + 4 SECONDS
+			ranged_cooldown = world.time + ((demon_form ? 2 : 4) SECONDS) SECONDS
 		if(7)
 			if(demon_form)
 				blast_line_directions(GLOB.alldirs)

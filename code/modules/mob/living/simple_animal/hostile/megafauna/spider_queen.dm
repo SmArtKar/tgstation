@@ -464,7 +464,8 @@
 	w_class = WEIGHT_CLASS_SMALL
 	merge_type = /obj/item/stack/sheet/spidersilk
 
-/obj/item/stack/sheet/spidersilk/attack(atom/A, mob/user, proximity)
+/obj/item/stack/sheet/spidersilk/afterattack(atom/A, mob/living/user, proximity_flag, clickparams)
+	. = ..()
 	if(!istype(A, /obj/item/clothing/suit) || !istype(A, /obj/item/clothing/head))
 		return
 
