@@ -37,7 +37,8 @@
 
 	H.fully_replace_character_name(null, H.ckey)
 	var/obj/item/clothing/suit/hooded/explorer/suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-	suit.ToggleHood()
+	if(istype(suit))
+		suit.ToggleHood()
 
 	var/obj/item/card/id/id = H.get_item_by_slot(ITEM_SLOT_ID)
 	id.registered_name = H.ckey
@@ -76,6 +77,43 @@
 		core.preserved()
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
 
+/obj/item/storage/box/kc_debug/PopulateContents()
+	for(var/T in subtypesof(/obj/item/crusher_trophy))
+		new T(src)
+
+/obj/item/storage/box/boss_loot/PopulateContents()
+	new /obj/item/stack/sheet/spidersilk(src)
+	new /obj/item/flashlight/spider_eye(src)
+	new /obj/item/organ/eyes/night_vision/spider(src)
+	new /obj/item/worm_tongue(src)
+	new /obj/item/dual_sword(src)
+	new /obj/item/book/granter/spell/powerdash(src)
+	new /obj/item/crystal_fruit()
+
+/datum/outfit/debug_miner/ultra
+	name = "Ultra Debug Miner"
+
+	belt = /obj/item/storage/belt/mining/healeys
+	ears = /obj/item/radio/headset/headset_cargo/mining
+	shoes = /obj/item/clothing/shoes/workboots/mining/explorer
+	gloves = /obj/item/clothing/gloves/crystal
+	uniform = /obj/item/clothing/under/syndicate
+	l_pocket = /obj/item/gps
+	r_pocket = /obj/item/storage/bag/ore/holding
+	glasses = /obj/item/clothing/glasses/meson/night
+	suit = /obj/item/clothing/suit/space/hardsuit/exosuit
+
+	backpack_contents = list(
+		/obj/item/storage/box/healeys = 1,\
+		/obj/item/flashlight/seclite=1,\
+		/obj/item/kitchen/knife/combat/survival=1,\
+		/obj/item/gun/energy/kinetic_accelerator=1,\
+		/obj/item/kinetic_crusher=1,\
+		/obj/item/gun/energy/plasmacutter/adv = 1,\
+		/obj/item/storage/box/boss_loot = 1,\
+		/obj/item/storage/box/kc_debug = 1,\
+		)
+
 /obj/effect/mob_spawn/human/debug_miner
 	name = "debug mining cryostasis sleeper"
 	desc = "A humming sleeper with a silhouetted occupant inside. Its stasis function is broken and it's likely being used as a bed."
@@ -91,5 +129,8 @@
 	flavour_text = "You're a debug miner on some jungle planet. Blame SmArtKar for forcing you to do this. Explore this land, kill monsters, die and repeat again! Just don't abuse suicides to get infinite starting gear, okay?"
 
 /obj/effect/mob_spawn/human/debug_miner/Destroy()
-	new /obj/effect/mob_spawn/human/debug_miner(get_turf(src))
+	new type(get_turf(src))
 	return ..()
+
+/obj/effect/mob_spawn/human/debug_miner/ultra
+	outfit = /datum/outfit/debug_miner/ultra
