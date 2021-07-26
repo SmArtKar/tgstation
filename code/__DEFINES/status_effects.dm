@@ -49,6 +49,8 @@
 
 #define STATUS_EFFECT_CRYSTAL_HEART /datum/status_effect/crystal_heart
 
+#define STATUS_EFFECT_DEMONSTONE /datum/status_effect/demonic_energy //Turns you into a glass cannon. As long as you don't get hit, you stack "souls" you get from attacking and killing mobs, but you also become much more vunerable
+
 /////////////
 // DEBUFFS //
 /////////////

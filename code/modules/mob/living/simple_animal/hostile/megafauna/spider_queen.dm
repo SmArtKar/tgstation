@@ -518,7 +518,6 @@
 /obj/item/flashlight/spider_eye
 	name = "spider queen eye"
 	desc = "A giant eye of a spider queen. It looks squishy..."
-	custom_price = PAYCHECK_EASY
 	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "spider_eye"
 	inhand_icon_state = null

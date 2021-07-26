@@ -12,7 +12,7 @@
  *
  */
 
-#define BLOOD_JAUNT_LENGTH 2 SECONDS
+#define BLOOD_JAUNT_LENGTH 1 SECONDS
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner
 	name = "demonic miner"
@@ -39,15 +39,15 @@
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
 
-	speed = 1
-	move_to_delay = 20
+	speed = 6
+	move_to_delay = 6
 	wander = FALSE
 	gps_name = "Posessed Signal"
 
 	pixel_y = -1
 
-	crusher_loot = list(/obj/effect/decal/remains)
-	loot = list(/obj/effect/decal/remains)
+	crusher_loot = list(/obj/effect/decal/remains, /obj/item/demon_stone)
+	loot = list(/obj/effect/decal/remains, /obj/item/demon_stone)
 	del_on_death = TRUE
 	blood_volume = BLOOD_VOLUME_NORMAL
 	deathmessage = "falls to the ground as demon that possesses it dies."
@@ -248,7 +248,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/spiral_shoot(negative = pick(TRUE, FALSE), counter_start = 8)
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
-	for(var/i in 1 to 80)
+	for(var/i in 1 to 32)
 		if(negative)
 			counter--
 		else
@@ -258,6 +258,9 @@
 		if(counter < 1)
 			counter = 16
 		shoot_projectile(start_turf, counter * 22.5)
+		shoot_projectile(start_turf, ((counter + 4) % 16) * 22.5)
+		shoot_projectile(start_turf, ((counter + 8) % 16) * 22.5)
+		shoot_projectile(start_turf, ((counter + 12) % 16) * 22.5)
 		SLEEP_CHECK_DEATH(1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/Move()
@@ -265,7 +268,7 @@
 		return
 
 	if(ranged_cooldown < world.time)
-		OpenFire()
+		INVOKE_ASYNC(src, .proc/OpenFire)
 
 	. = ..()
 
@@ -274,7 +277,7 @@
 		return
 
 	if(ranged_cooldown < world.time)
-		OpenFire()
+		INVOKE_ASYNC(src, .proc/OpenFire)
 
 	. = ..()
 
@@ -476,5 +479,26 @@
 	king.imp_death()
 	qdel(beam)
 	. = ..()
+
+/obj/item/demon_stone
+	name = "demonic stone"
+	desc = "A pretty big red gem that contains remains of an ancient demon. If you put it close enough to your ears you are able to hear odd wishpers..."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "demon_stone"
+	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/demon_stone/attack_self(mob/living/user)
+	if(!ishuman(user))
+		return
+
+	if(tgui_alert(user, "Are you sure to break [src]? Doing so will allow you to harvest souls of your fallen enemies, but they will haunt you forever...", "Demonic Stone", list("Yes", "No")) != "Yes")
+		return
+
+	user.emote("scream")
+	user.apply_status_effect(STATUS_EFFECT_DEMONSTONE)
+	user.visible_message(span_danger("[user] breaks [src] in their hand and thousands of voices flood your mind."), span_userdanger("Thousads of voices and demonic visions flood your mind as you break [src] in your hand. Oh fuck."))
+	playsound(user, 'sound/effects/glassbr3.ogg', 100)
+	playsound(user, 'sound/magic/curse.ogg', 100)
+	qdel(src)
 
 #undef BLOOD_JAUNT_LENGTH

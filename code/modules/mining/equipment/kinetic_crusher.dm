@@ -29,6 +29,7 @@
 	var/charge_time = 15
 	var/detonation_damage = 50
 	var/backstab_bonus = 30
+	var/strong_miner_bonus = 20
 	var/wielded = FALSE // track wielded status on item
 
 /obj/item/kinetic_crusher/Initialize()
@@ -138,6 +139,9 @@
 		for(var/t in trophies)
 			var/obj/item/crusher_trophy/T = t
 			T.on_mark_detonation(target, user)
+		var/misc_bonus = 0
+		if(HAS_TRAIT(user, TRAIT_STRONG_MINER))
+			misc_bonus += strong_miner_bonus
 		if(!QDELETED(L))
 			if(!QDELETED(C))
 				C.total_damage += target_health - L.health //we did some damage, but let's not assume how much we did
@@ -146,13 +150,13 @@
 			var/def_check = L.getarmor(type = BOMB)
 			if((user.dir & backstab_dir) && (L.dir & backstab_dir))
 				if(!QDELETED(C))
-					C.total_damage += detonation_damage + backstab_bonus //cheat a little and add the total before killing it, so certain mobs don't have much lower chances of giving an item
-				L.apply_damage(detonation_damage + backstab_bonus, BRUTE, blocked = def_check)
+					C.total_damage += detonation_damage + backstab_bonus + misc_bonus //cheat a little and add the total before killing it, so certain mobs don't have much lower chances of giving an item
+				L.apply_damage(detonation_damage + backstab_bonus + misc_bonus, BRUTE, blocked = def_check)
 				playsound(user, 'sound/weapons/kenetic_accel.ogg', 100, TRUE) //Seriously who spelled it wrong
 			else
 				if(!QDELETED(C))
-					C.total_damage += detonation_damage
-				L.apply_damage(detonation_damage, BRUTE, blocked = def_check)
+					C.total_damage += detonation_damage + misc_bonus
+				L.apply_damage(detonation_damage + misc_bonus, BRUTE, blocked = def_check)
 
 /obj/item/kinetic_crusher/proc/Recharge()
 	if(!charged)

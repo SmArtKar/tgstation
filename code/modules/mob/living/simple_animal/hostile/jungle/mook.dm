@@ -239,13 +239,13 @@
 	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time."
 
 /obj/item/crusher_trophy/axe_head/on_mark_detonation(mob/living/target, mob/living/user)
-	user.changeNext_move(CLICK_CD_RANGE)
+	user.changeNext_move(CLICK_CD_RAPID)
 
 /obj/item/crusher_trophy/axe_head/add_to(obj/item/kinetic_crusher/crusher, mob/living/user)
 	. = ..()
 	if(.)
 		crusher.AddComponent(/datum/component/two_handed, force_wielded=10) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
-		crusher.charge_time -= 5
+		crusher.charge_time -= 10
 		crusher.detonation_damage -= 35
 		crusher.backstab_bonus -= 20
 
@@ -253,7 +253,7 @@
 	. = ..()
 	if(.)
 		crusher.AddComponent(/datum/component/two_handed, force_wielded=20)
-		crusher.charge_time += 5
+		crusher.charge_time += 10
 		crusher.detonation_damage += 35
 		crusher.backstab_bonus += 20
 

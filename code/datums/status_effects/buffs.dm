@@ -586,7 +586,7 @@
 
 /atom/movable/screen/alert/status_effect/crystal_heart
 	name = "Crystal Heart"
-	desc = "Your heart has been crystallised by consuming a crystal fruit, giving you awesome power for a brief moment!"
+	desc = "Your heart has been crystallised by consuming a crystal fruit, giving you great power for a brief moment!"
 	icon_state = "crystallization"
 
 /datum/status_effect/crystal_heart
@@ -626,3 +626,165 @@
 		H.physiology.clone_mod *= 2
 		H.physiology.stamina_mod *= 2
 	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+
+/// Demonic energy
+
+#define SOULS_PER_HUMAN 5
+#define SOULS_PER_MEGAFAUNA 20
+#define SOUL_DAMAGE_COEFF 3.2
+
+#define SOULS_LEVEL_ONE 10
+#define SOULS_LEVEL_TWO 30
+#define SOULS_LEVEL_THREE 50
+#define SOULS_LEVEL_FOUR 75
+
+#define LEVEL_ONE_TRAITS 	list(TRAIT_IGNOREDAMAGESLOWDOWN)
+#define LEVEL_TWO_TRAITS 	list(TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_HARDLY_WOUNDED)
+#define LEVEL_THREE_TRAITS  list(TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_HARDLY_WOUNDED, TRAIT_NOSOFTCRIT, TRAIT_SLEEPIMMUNE)
+#define LEVEL_FOUR_TRAITS   list(TRAIT_IGNORESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_NEVER_WOUNDED, TRAIT_NOSOFTCRIT, TRAIT_NOHARDCRIT, TRAIT_SLEEPIMMUNE, TRAIT_NODISMEMBER, TRAIT_NOBLEED)
+
+/datum/status_effect/demonic_energy
+	id = "demonic_energy"
+	duration = -1
+	tick_interval = 4
+	alert_type = /atom/movable/screen/alert/status_effect/demonic_energy
+	var/consumed_souls = 0
+	var/level = 0
+	var/tracked_mobs = list()
+	var/given_traits = list()
+
+/datum/status_effect/demonic_energy/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/target = owner
+	target.dna.features["mcolor"] = "A02720"
+	if(isethereal(target))
+		var/datum/species/ethereal/species = target.dna.species
+		species.current_color = "A02720" //Unique demon crystal-only color
+		species.spec_updatehealth(target)
+	target.updateappearance(mutcolor_update=1)
+
+	RegisterSignal(target, COMSIG_MOB_APPLY_DAMGE, .proc/on_damage)
+
+/datum/status_effect/demonic_energy/tick()
+	check_tracked_mobs()
+
+/datum/status_effect/demonic_energy/proc/update_souls()
+	if(consumed_souls < SOULS_LEVEL_ONE)
+		level = 0
+	else if(consumed_souls < SOULS_LEVEL_TWO)
+		level = 1
+	else if(consumed_souls < SOULS_LEVEL_THREE)
+		level = 2
+	else if(consumed_souls < SOULS_LEVEL_FOUR)
+		level = 3
+	else
+		level = 4
+
+	linked_alert.icon_state = "[initial(linked_alert.icon_state)][level]"
+	for(var/trait_type in given_traits)
+		REMOVE_TRAIT(owner, trait_type, DEMON_STONE_TRAIT)
+
+	var/new_traits = list()
+	owner.remove_filter("demonstone_outline")
+	switch(level)
+		if(1)
+			new_traits = LEVEL_ONE_TRAITS
+		if(2)
+			new_traits = LEVEL_TWO_TRAITS
+			owner.add_filter("demonstone_outline", 9, list("type" = "outline", "color" = "#ffa4a4", "size" = 1))
+		if(3)
+			new_traits = LEVEL_THREE_TRAITS
+			owner.add_filter("demonstone_outline", 9, list("type" = "outline", "color" = "#ff4b4b", "size" = 1))
+		if(4)
+			new_traits = LEVEL_FOUR_TRAITS
+			owner.add_filter("demonstone_outline", 9, list("type" = "outline", "color" = "#ff0000", "size" = 1))
+
+	for(var/trait_type in new_traits)
+		ADD_TRAIT(owner, trait_type, DEMON_STONE_TRAIT)
+
+/datum/status_effect/demonic_energy/proc/souls_required()
+	switch(level)
+		if(0)
+			return SOULS_LEVEL_ONE - consumed_souls
+		if(1)
+			return SOULS_LEVEL_TWO - consumed_souls
+		if(2)
+			return SOULS_LEVEL_THREE - consumed_souls
+		if(3)
+			return SOULS_LEVEL_FOUR - consumed_souls
+
+/datum/status_effect/demonic_energy/proc/check_tracked_mobs()
+	var/list/possible_targets = list()
+	for(var/mob/living/possible_target in range(7, get_turf(owner)))
+		if(possible_target.stat != DEAD && !faction_check(owner.faction, possible_target.stat))
+			possible_targets.Add(possible_target)
+			if(!(possible_target in tracked_mobs))
+				register_death(possible_target)
+
+	for(var/mob/living/being_tracked in tracked_mobs)
+		if(!(being_tracked in possible_targets))
+			UnregisterSignal(being_tracked, COMSIG_LIVING_DEATH)
+
+	tracked_mobs = possible_targets
+
+/datum/status_effect/demonic_energy/proc/register_death(mob/living/victim)
+	if(ishuman(victim))
+		RegisterSignal(victim, COMSIG_LIVING_DEATH, .proc/harvest_soul_human)
+	else if(ismegafauna(victim))
+		RegisterSignal(victim, COMSIG_LIVING_DEATH, .proc/harvest_soul_megafauna)
+	else
+		RegisterSignal(victim, COMSIG_LIVING_DEATH, .proc/harvest_soul)
+
+/datum/status_effect/demonic_energy/proc/harvest_soul_human()
+	SIGNAL_HANDLER
+	consumed_souls += SOULS_PER_HUMAN
+	update_souls()
+
+/datum/status_effect/demonic_energy/proc/harvest_soul_megafauna() //Shitcode but I don't have much of a choice
+	SIGNAL_HANDLER
+	consumed_souls += SOULS_PER_MEGAFAUNA
+	update_souls()
+
+/datum/status_effect/demonic_energy/proc/harvest_soul()
+	SIGNAL_HANDLER
+	consumed_souls += 1
+	update_souls()
+
+/datum/status_effect/demonic_energy/proc/on_damage(attacker, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+	if(consumed_souls > 0)
+		owner.adjustCloneLoss(consumed_souls * SOUL_DAMAGE_COEFF)
+		to_chat(owner, span_colossus("As you get attacked, souls contained withing you escape, damaging you even more!"))
+		playsound(owner, 'sound/machines/clockcult/ark_scream.ogg', 50, TRUE)
+		owner.emote("scream")
+
+	consumed_souls = 0
+	update_souls()
+
+/atom/movable/screen/alert/status_effect/demonic_energy
+	name = "Demonic Energy"
+	desc = "Your soul has been consumed by the crystal, making you incredibly strong in cost of becoming really vunerable to attacks."
+	icon_state = "demonic_energy"
+	alerttooltipstyle = "cult"
+
+/atom/movable/screen/alert/status_effect/demonic_energy/MouseEntered(location,control,params)
+	desc = initial(desc)
+	var/datum/status_effect/demonic_energy/status = attached_effect
+	desc += "<br><font size=3><b>Current Consumed Souls: [status.consumed_souls]</b></font>\
+	[status.level < 3 ? "<br>You need [status.souls_required()] souls to ascend to the next level" : ""]</b>"
+	return ..()
+
+#undef SOULS_PER_HUMAN
+#undef SOULS_PER_MEGAFAUNA
+#undef SOUL_DAMAGE_COEFF
+
+#undef SOULS_LEVEL_ONE
+#undef SOULS_LEVEL_TWO
+#undef SOULS_LEVEL_THREE
+
+#undef LEVEL_ONE_TRAITS
+#undef LEVEL_TWO_TRAITS
+#undef LEVEL_THREE_TRAITS

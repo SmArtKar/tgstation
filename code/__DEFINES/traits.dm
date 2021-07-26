@@ -364,6 +364,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait applied to [/datum/mind] to stop someone from using the cursed hot springs to polymorph more than once.
 #define TRAIT_HOT_SPRING_CURSED "hot_spring_cursed"
 
+/// Mobs with this trait deal more damage when using KC/KA
+#define TRAIT_STRONG_MINER "strong_miner"
+
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic
@@ -683,6 +686,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define DRONE_SHY_TRAIT "drone_shy"
 /// Pacifism trait given by stabilized light pink extracts.
 #define STABILIZED_LIGHT_PINK_TRAIT "stabilized_light_pink"
+#define DEMON_STONE_TRAIT "demon_stone_trait"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and
