@@ -1,7 +1,7 @@
 #define HEALTH_LOST_PER_REPAIR 75
 #define ATTACK_LOST_PER_REPAIR 5
 
-/mob/living/simple_animal/hostile/rogue_drone
+/mob/living/simple_animal/hostile/jungle/rogue_drone
 	name = "rogue drone"
 	desc = "A malfunctioning repair drone that now has only one goal - to kill. It's monitor is glowing bright red and it is holding a small handdrill in it's claws."
 	icon = 'icons/mob/drone.dmi'
@@ -27,21 +27,21 @@
 	var/nogib = FALSE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
-/mob/living/simple_animal/hostile/rogue_drone/death(gibbed)
+/mob/living/simple_animal/hostile/jungle/rogue_drone/death(gibbed)
 	if(master_ai)
 		master_ai.drones -= src
 	. = ..()
 
-/mob/living/simple_animal/hostile/rogue_drone/Initialize(mapload)
+/mob/living/simple_animal/hostile/jungle/rogue_drone/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
 
-/mob/living/simple_animal/hostile/rogue_drone/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)
+/mob/living/simple_animal/hostile/jungle/rogue_drone/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)
 	return
 
-/mob/living/simple_animal/hostile/rogue_drone/AttackingTarget()
+/mob/living/simple_animal/hostile/jungle/rogue_drone/AttackingTarget()
 	. = ..()
-	if(. && isliving(target) && !istype(target, /mob/living/simple_animal/hostile/rogue_drone) && !nogib)
+	if(. && isliving(target) && !istype(target, /mob/living/simple_animal/hostile/jungle/rogue_drone) && !nogib)
 		var/mob/living/L = target
 		if(L.stat != DEAD)
 			if(L.health <= HEALTH_THRESHOLD_DEAD && HAS_TRAIT(L, TRAIT_NODEATH)) //Gibs the poor dead souls
@@ -49,7 +49,7 @@
 		else
 			L.gib()
 
-/mob/living/simple_animal/hostile/rogue_drone/pet_drone
+/mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone
 	name = "experimental drone"
 	desc = "An experimental companion drone with additional reinforcements."
 	icon_state = "drone_repair_green"
@@ -64,11 +64,11 @@
 	ai_controller = /datum/ai_controller/hostile_friend
 	var/steel_applied = FALSE
 
-/mob/living/simple_animal/hostile/rogue_drone/pet_drone/Initialize(mapload)
+/mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone/Initialize(mapload)
 	. = ..()
 	REMOVE_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
 
-/mob/living/simple_animal/hostile/rogue_drone/pet_drone/proc/activate(mob/owner)
+/mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone/proc/activate(mob/owner)
 	faction.Add("[REF(owner)]")
 	if(ai_controller)
 		var/datum/ai_controller/hostile_friend/ai_current_controller = ai_controller
@@ -76,7 +76,7 @@
 		can_have_ai = FALSE
 		toggle_ai(AI_OFF)
 
-/mob/living/simple_animal/hostile/rogue_drone/pet_drone/attackby(obj/item/I, mob/living/user, params)
+/mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone/attackby(obj/item/I, mob/living/user, params)
 	if(stat == DEAD)
 		if(istype(I, /obj/item/stack/sheet/iron))
 			if(maxHealth <= 0)

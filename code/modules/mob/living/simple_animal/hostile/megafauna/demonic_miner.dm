@@ -46,8 +46,8 @@
 
 	pixel_y = -1
 
-	crusher_loot = list(/obj/effect/decal/remains, /obj/item/demon_stone)
-	loot = list(/obj/effect/decal/remains, /obj/item/demon_stone)
+	crusher_loot = list(/obj/effect/decal/remains/human, /obj/item/demon_stone, /obj/item/crusher_trophy/demon_horn)
+	loot = list(/obj/effect/decal/remains/human, /obj/item/demon_stone)
 	del_on_death = TRUE
 	blood_volume = BLOOD_VOLUME_NORMAL
 	deathmessage = "falls to the ground as demon that possesses it dies."
@@ -496,9 +496,46 @@
 
 	user.emote("scream")
 	user.apply_status_effect(STATUS_EFFECT_DEMONSTONE)
-	user.visible_message(span_danger("[user] breaks [src] in their hand and thousands of voices flood your mind."), span_userdanger("Thousads of voices and demonic visions flood your mind as you break [src] in your hand. Oh fuck."))
+	user.visible_message(span_danger("[user] breaks [src] in their hand and thousands demonic voices flood your mind!"), span_userdanger("Thousads voices and demonic visions flood your mind as you break [src] in your hand. Oh fuck."))
 	playsound(user, 'sound/effects/glassbr3.ogg', 100)
 	playsound(user, 'sound/magic/curse.ogg', 100)
 	qdel(src)
 
 #undef BLOOD_JAUNT_LENGTH
+
+/obj/item/crusher_trophy/demon_horn //Glory kills!
+	name = "demon horn"
+	desc = "A big red horn. Suitable as a trophy for a kinetic crusher."
+	icon_state = "demon_horn"
+	denied_type = /obj/item/crusher_trophy/demon_horn
+	var/buffing = FALSE
+	var/stop_buff_timer
+
+/obj/item/crusher_trophy/demon_horn/effect_desc()
+	return "kills with mark detonation to give you a temporary boost in speed and armor."
+
+/obj/item/crusher_trophy/demon_horn/on_mark_detonation(mob/living/target, mob/living/user)
+	sleep(2) //Just enough time for target to process their health. 1 tick does not work for some reason
+	if(!QDELETED(target) && target.stat != DEAD)
+		return
+
+	if(QDELETED(user) || user.stat == DEAD)
+		return
+
+	if(!buffing)
+		user.add_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
+		user.physiology.damage_resistance += 15
+		user.physiology.stun_mod *= 0.75
+		user.physiology.bleed_mod *= 0.75
+		buffing = TRUE
+
+	if(stop_buff_timer)
+		qdel(stop_buff_timer)
+	stop_buff_timer = addtimer(CALLBACK(src, .proc/stop_buff, user), 3 SECONDS, TIMER_STOPPABLE)
+
+/obj/item/crusher_trophy/demon_horn/proc/stop_buff(mob/living/user)
+	user.remove_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
+	user.physiology.damage_resistance -= 15
+	user.physiology.stun_mod /= 0.75
+	user.physiology.bleed_mod /= 0.75
+	buffing = FALSE

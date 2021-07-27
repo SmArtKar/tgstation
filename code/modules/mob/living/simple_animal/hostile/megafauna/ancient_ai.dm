@@ -260,7 +260,7 @@
 	update_icon()
 	flick("[initial(icon_state)]_activate", src)
 	has_drone = FALSE
-	var/mob/living/simple_animal/hostile/rogue_drone/drone = new(get_turf(src))
+	var/mob/living/simple_animal/hostile/jungle/rogue_drone/drone = new(get_turf(src))
 	drone.master_ai = master_ai
 	addtimer(CALLBACK(src, .proc/recreate_drone), DRONE_RESPAWN_COOLDOWN)
 
@@ -911,7 +911,7 @@
 
 /obj/item/personal_drone_shell/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	if(!..()) //not caught
-		var/mob/living/simple_animal/hostile/rogue_drone/pet_drone/pet = new(get_turf(src))
+		var/mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone/pet = new(get_turf(src))
 		var/mob/thrown_by = thrownby?.resolve()
 		if(thrown_by)
 			pet.activate(thrown_by)

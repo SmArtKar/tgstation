@@ -131,3 +131,6 @@
 
 /datum/movespeed_modifier/demonic_miner
 	multiplicative_slowdown = -2
+
+/datum/movespeed_modifier/glory_kill
+	multiplicative_slowdown = -0.3
