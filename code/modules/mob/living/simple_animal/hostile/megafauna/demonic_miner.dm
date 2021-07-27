@@ -519,21 +519,23 @@
 	if(!QDELETED(target) && target.stat != DEAD)
 		return
 
-	if(QDELETED(user) || user.stat == DEAD)
+	if(QDELETED(user) || user.stat == DEAD || !ishuman(user))
 		return
 
+	var/mob/living/carbon/human/human_user = user
+
 	if(!buffing)
-		user.add_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
-		user.physiology.damage_resistance += 15
-		user.physiology.stun_mod *= 0.75
-		user.physiology.bleed_mod *= 0.75
+		human_user.add_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
+		human_user.physiology.damage_resistance += 15
+		human_user.physiology.stun_mod *= 0.75
+		human_user.physiology.bleed_mod *= 0.75
 		buffing = TRUE
 
 	if(stop_buff_timer)
 		qdel(stop_buff_timer)
-	stop_buff_timer = addtimer(CALLBACK(src, .proc/stop_buff, user), 3 SECONDS, TIMER_STOPPABLE)
+	stop_buff_timer = addtimer(CALLBACK(src, .proc/stop_buff, human_user), 3 SECONDS, TIMER_STOPPABLE)
 
-/obj/item/crusher_trophy/demon_horn/proc/stop_buff(mob/living/user)
+/obj/item/crusher_trophy/demon_horn/proc/stop_buff(mob/living/carbon/human/user)
 	user.remove_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
 	user.physiology.damage_resistance -= 15
 	user.physiology.stun_mod /= 0.75
