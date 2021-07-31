@@ -247,7 +247,7 @@
 	for(var/i in shotgun_shot_angles)
 		shoot_projectile(target_turf, angle_to_target + i)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shockwave(range = 3, iteration_duration = 5)
+/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shockwave(range = 3, iteration_duration = 2)
 	visible_message("<span class='boldwarning'>[src] smashes the ground around them!</span>")
 	playsound(src, 'sound/weapons/sonic_jackhammer.ogg', 200, 1) //I mean, why not?
 	SLEEP_CHECK_DEATH(10)
