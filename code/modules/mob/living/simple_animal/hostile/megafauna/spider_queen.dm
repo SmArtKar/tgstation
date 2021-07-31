@@ -479,7 +479,7 @@
 	else
 		target.armor[MELEE] = min(SPIDER_SILK_LIMIT, target.armor[MELEE] + SPIDER_SILK_BUFF)
 	to_chat(user, span_notice("You successfully upgrade [target] with [src]"))
-	ADD_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED, GENERIC_ITEM_TRAIT)
+	ADD_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED, MEGAFAUNA_TRAIT)
 	use(1)
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
