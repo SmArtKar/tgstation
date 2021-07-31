@@ -466,7 +466,7 @@
 
 /obj/item/stack/sheet/spidersilk/afterattack(atom/A, mob/living/user, proximity_flag, clickparams)
 	. = ..()
-	if(!istype(A, /obj/item/clothing/suit) || !istype(A, /obj/item/clothing/head))
+	if(!istype(A, /obj/item/clothing/suit) && !istype(A, /obj/item/clothing/head))
 		return
 
 	var/obj/item/clothing/target = A
