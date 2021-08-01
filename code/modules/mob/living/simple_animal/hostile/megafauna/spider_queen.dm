@@ -518,7 +518,7 @@
 /obj/item/flashlight/spider_eye
 	name = "spider queen eye"
 	desc = "A giant eye of a spider queen. It looks squishy..."
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "spider_eye"
 	inhand_icon_state = null
 	worn_icon_state = null

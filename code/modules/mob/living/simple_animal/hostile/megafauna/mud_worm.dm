@@ -363,7 +363,7 @@
 /obj/effect/temp_visual/fireball/giant_tooth //Does brute damage instead of burn and does not set on fire
 	name = "giant tooth"
 	desc = "Get out of the way!"
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "giant_tooth"
 	duration = 8
 
@@ -488,7 +488,7 @@
 /obj/item/armor_scales
 	name = "armor scales"
 	desc = "Hardened dirt, mud and rocks in form of natural armor scales."
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "armor_scales"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0
@@ -586,7 +586,7 @@
 /obj/item/dual_sword/attack(mob/living/M, mob/living/user, params)
 	var/pre_force = force
 	if(isanimal(M))
-		force *= 4
+		force *= 3
 	. = ..()
 	force = pre_force
 

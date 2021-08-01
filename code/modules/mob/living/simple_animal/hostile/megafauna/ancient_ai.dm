@@ -823,7 +823,7 @@
 /obj/item/gun/magic/exosuit_hook
 	name = "magnetic grappling hook"
 	desc = "A powerful magnet on a chain that is designed to pull you towards your target."
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "hook_exo"
 	inhand_icon_state = null
 	fire_sound = 'sound/weapons/batonextend.ogg'
@@ -850,7 +850,7 @@
 	desc = "A magnet on a chain."
 	projectile_type = /obj/projectile/exosuit_hook
 	caliber = CALIBER_HOOK
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "hook_exo"
 	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect
 
@@ -864,7 +864,7 @@
 /obj/projectile/exosuit_hook
 	name = "magnetic hook"
 	icon_state = "hook_exo"
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	pass_flags = PASSTABLE
 	damage = 5 //A bit of damage from the impact
 	damage_type = BRUTE
@@ -970,7 +970,7 @@
 /obj/item/experimental_components
 	name = "experimental components"
 	desc = "A bunch of dark-blue circuitry glued together for some reason. And they call that high tech?"
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "experimental_components"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0

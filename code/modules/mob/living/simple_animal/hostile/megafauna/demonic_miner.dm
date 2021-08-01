@@ -483,7 +483,7 @@
 /obj/item/demon_stone
 	name = "demonic stone"
 	desc = "A pretty big red gem that contains remains of an ancient demon. If you put it close enough to your ears you are able to hear odd wishpers..."
-	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "demon_stone"
 	w_class = WEIGHT_CLASS_SMALL
 
