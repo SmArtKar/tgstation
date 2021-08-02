@@ -171,7 +171,7 @@
 	name = "cave spider's web weaver"
 	desc = "A ripped off web weaver. Suitable as a trophy for a kinetic crusher."
 	icon_state = "spider_webweaver"
-	denied_type = /obj/item/crusher_trophy/spider_webweaver
+	denied_type = list(/obj/item/crusher_trophy/spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
 	var/web_shot = FALSE
 
 /obj/item/crusher_trophy/spider_webweaver/effect_desc()

@@ -289,7 +289,7 @@
 	name = "leaper eye"
 	desc = "A blood-red eye of a leaper. Suitable as a trophy for a kinetic crusher."
 	icon_state = "leaper_eye"
-	denied_type = /obj/item/crusher_trophy/leaper_eye
+	denied_type = list(/obj/item/crusher_trophy/ai_core, /obj/item/crusher_trophy/leaper_eye)
 	var/jump_cooldown = 0
 
 /obj/item/crusher_trophy/leaper_eye/effect_desc()
@@ -303,9 +303,9 @@
 	if(isclosedturf(target) || isclosedturf(get_turf(target)))
 		return
 
-	jump_cooldown = world.time + 10 SECONDS
+	jump_cooldown = world.time + 5 SECONDS
 	new /obj/effect/temp_visual/leaper_crush_small(get_turf(target))
-	addtimer(CALLBACK(src, .proc/jump, target, user), 1 SECONDS)
+	addtimer(CALLBACK(src, .proc/jump, target, user), 0.5 SECONDS)
 
 /obj/item/crusher_trophy/leaper_eye/proc/jump(atom/target, mob/living/user)
 	var/old_density = user.density

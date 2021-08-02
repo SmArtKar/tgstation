@@ -510,7 +510,7 @@
 	name = "AI core"
 	desc = "A potato with a lot of wires. Suitable as a trophy for a kinetic crusher."
 	icon_state = "ai_core"
-	denied_type = /obj/item/crusher_trophy/ai_core
+	denied_type = list(/obj/item/crusher_trophy/ai_core, /obj/item/crusher_trophy/leaper_eye)
 	var/rocket_cooldown = 0
 
 /obj/item/crusher_trophy/ai_core/effect_desc()
@@ -533,14 +533,14 @@
 		P.original = target
 		P.fire(target)
 		P.homing_target = target
-		sleep(5)
+		sleep(3)
 
 /**
  *
  * P.R.O.T.O.N. Exosuit
  *
  * A cool cybernetic suit that gives you HUDs and allows to perorm some sick tricks for more movement
- * It's as good as H.E.C.K. in terms of armor
+ * Better than H.E.C.K. in terms of armor
  * However, all those sick features and armor only work in low-pressure enviroment to prevent it's use onboard and require power from internal cell, so don't forget to bring some!
  *
  **/

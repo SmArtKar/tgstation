@@ -244,7 +244,8 @@
 /obj/item/crusher_trophy/axe_head/add_to(obj/item/kinetic_crusher/crusher, mob/living/user)
 	. = ..()
 	if(.)
-		crusher.AddComponent(/datum/component/two_handed, force_wielded=10) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
+		var/datum/component/two_handed/wielded = crusher.GetComponent(/datum/component/two_handed)
+		crusher.AddComponent(/datum/component/two_handed, force_wielded = wielded.force_wielded * 0.5) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
 		crusher.charge_time -= 10
 		crusher.detonation_damage -= 35
 		crusher.backstab_bonus -= 20
@@ -252,7 +253,8 @@
 /obj/item/crusher_trophy/axe_head/remove_from(obj/item/kinetic_crusher/crusher, mob/living/user)
 	. = ..()
 	if(.)
-		crusher.AddComponent(/datum/component/two_handed, force_wielded=20)
+		var/datum/component/two_handed/wielded = crusher.GetComponent(/datum/component/two_handed)
+		crusher.AddComponent(/datum/component/two_handed, force_wielded = wielded.force_wielded * 2)
 		crusher.charge_time += 10
 		crusher.detonation_damage += 35
 		crusher.backstab_bonus += 20

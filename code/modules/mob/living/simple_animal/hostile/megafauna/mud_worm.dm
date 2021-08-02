@@ -473,6 +473,7 @@
 	desc = "A giant tooth ripped out of a mud worm's mouth. Suitable as a trophy for a kinetic crusher."
 	icon_state = "giant_tooth"
 	bonus_value = 10
+	denied_type = list(/obj/item/crusher_trophy/spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
 
 /obj/item/crusher_trophy/blaster_tubes/giant_tooth/effect_desc()
 	return "mark detonation to make the next destabilizer shot deal <b>[bonus_value]</b> damage"
