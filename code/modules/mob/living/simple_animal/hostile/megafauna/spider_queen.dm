@@ -558,6 +558,9 @@
 	return "mark detonation to create a shockwave, throwing your enemies away from you"
 
 /obj/item/crusher_trophy/spider_leg/on_mark_detonation(mob/living/target, mob/living/user)
+	INVOKE_ASYNC(src, .proc/create_shockwave, target, user)
+
+/obj/item/crusher_trophy/spider_leg/proc/create_shockwave(mob/living/target, mob/living/user)
 	var/list/hit_things = list()
 	var/turf/T = get_turf(user)
 	for(var/i in 1 to 3)

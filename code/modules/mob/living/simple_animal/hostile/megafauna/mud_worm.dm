@@ -558,7 +558,7 @@
 /obj/item/dual_sword //A neat yet hard to use sword. Deals 40 damage to animals and 10 to humans, attacks everything in front of player and allows you to parry for PARRY_ACTIVE_TIME, altrough failed parries stagger you for PARRY_STAGGER_TIME making you unable to act
 	name = "double-bladed sword"
 	desc = "No, it's not an energy sword. Yeah, sad, I know."
-	icon = 'icons/obj/items_and_weapons.dmi'
+	icon = 'icons/obj/jungle/artefacts.dmi'
 	icon_state = "dual_blade0"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'

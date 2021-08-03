@@ -428,8 +428,11 @@
 	return "mark detonation to stun creatures and make them more vunerable for a bit"
 
 /obj/item/crusher_trophy/crystal_shard/on_mark_detonation(mob/living/target, mob/living/user)
-	if(ishostile(target))
-		var/mob/living/simple_animal/hostile/H = target
+	INVOKE_ASYNC(src, .proc/weaken_mob, target, user)
+
+/obj/item/crusher_trophy/crystal_shard/proc/weaken_mob(mob/living/target, mob/living/user)
+	if(isanimal(target))
+		var/mob/living/simple_animal/H = target
 		H.Stun(bonus_value)
 		H.damage_coeff = list(BRUTE = 1.2, BURN = 1.2, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
 		sleep(bonus_value * 5)

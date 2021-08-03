@@ -666,7 +666,7 @@
 		species.spec_updatehealth(target)
 	target.updateappearance(mutcolor_update=1)
 
-	RegisterSignal(target, COMSIG_MOB_APPLY_DAMGE, .proc/on_damage)
+	RegisterSignal(target, COMSIG_MOB_APPLY_DAMGE, .proc/on_recieved_damage)
 
 /datum/status_effect/demonic_energy/tick()
 	check_tracked_mobs()
@@ -753,7 +753,7 @@
 	consumed_souls += 1
 	update_souls()
 
-/datum/status_effect/demonic_energy/proc/on_damage(attacker, damage, damagetype, def_zone)
+/datum/status_effect/demonic_energy/proc/on_recieved_damage(attacker, damage, damagetype, def_zone)
 	SIGNAL_HANDLER
 	if(consumed_souls > 0)
 		owner.adjustCloneLoss(consumed_souls * SOUL_DAMAGE_COEFF)

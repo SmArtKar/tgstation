@@ -21,7 +21,6 @@
 	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
 	slowdown = 4 //We're swimming, not walking
 	layer = 1.98 //We need other turfs to be above it
-	slowdown_type = /datum/movespeed_modifier/turf_slowdown/jungle
 
 	var/flora_list = list(/obj/structure/flora/aquatic/rock = 1, /obj/structure/flora/aquatic/rock/pile = 1, /obj/structure/flora/aquatic/seaweed = 8)
 	var/flora_prob = 8

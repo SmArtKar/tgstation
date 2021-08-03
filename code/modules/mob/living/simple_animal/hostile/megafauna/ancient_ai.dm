@@ -516,15 +516,7 @@
 /obj/item/crusher_trophy/ai_core/effect_desc()
 	return "ranged right click attacks to shoot out 3 heat-seeking missiles. This ability has a 10 seconds cooldown."
 
-/obj/item/crusher_trophy/ai_core/on_right_click(atom/target, mob/living/user)
-	if(rocket_cooldown > world.time)
-		to_chat(user, "<span class='warning'>[src] hasn't fully recovered from the previous blast! Wait [round((rocket_cooldown - world.time) / 10)] more seconds!</span>")
-		return
-
-	if(isclosedturf(target) || isclosedturf(get_turf(target)))
-		return
-
-	rocket_cooldown = world.time + 10 SECONDS
+/obj/item/crusher_trophy/ai_core/proc/shoot_rockets(mob/living/user, atom/target)
 	for(var/i = 1 to 3)
 		var/turf/startloc = get_turf(user)
 		var/obj/projectile/P = new /obj/projectile/bullet/a84mm/ancient/at/seeking(startloc)
@@ -534,6 +526,17 @@
 		P.fire(target)
 		P.homing_target = target
 		sleep(3)
+
+/obj/item/crusher_trophy/ai_core/on_right_click(atom/target, mob/living/user)
+	if(rocket_cooldown > world.time)
+		to_chat(user, "<span class='warning'>[src] hasn't fully recovered from the previous blast! Wait [round((rocket_cooldown - world.time) / 10)] more seconds!</span>")
+		return
+
+	if(isclosedturf(target) || isclosedturf(get_turf(target)))
+		return
+
+	rocket_cooldown = world.time + 10 SECONDS
+	INVOKE_ASYNC(src, .proc/shoot_rockets, user, target)
 
 /**
  *

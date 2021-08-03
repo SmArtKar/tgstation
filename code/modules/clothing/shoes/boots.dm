@@ -91,11 +91,11 @@
 /obj/item/clothing/shoes/workboots/mining/explorer/equipped(mob/living/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_FEET)
-		user.add_movespeed_mod_immunities(/datum/movespeed_modifier/turf_slowdown/jungle)
+		user.add_movespeed_mod_immunities(/datum/movespeed_modifier/turf_slowdown)
 
 /obj/item/clothing/shoes/workboots/mining/explorer/dropped(mob/living/user)
 	. = ..()
-	user.remove_movespeed_mod_immunities(/datum/movespeed_modifier/turf_slowdown/jungle)
+	user.remove_movespeed_mod_immunities(/datum/movespeed_modifier/turf_slowdown)
 /obj/item/clothing/shoes/russian
 	name = "russian boots"
 	desc = "Comfy shoes."
