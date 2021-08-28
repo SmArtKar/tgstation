@@ -106,7 +106,7 @@
 
 /obj/item/crusher_trophy/bat_wing/on_melee_hit(mob/living/target, mob/living/user)
 	if(target.has_status_effect(STATUS_EFFECT_BLOODYMARK))
-		user.heal_ordered_damage(3, list(BRUTE, BURN, OXY))
+		user.heal_ordered_damage(2, list(BRUTE, BURN, OXY))
 		if(iscarbon(user))
 			var/mob/living/carbon/carbie = user
 			carbie.blood_volume += carbie.blood_volume >= BLOOD_VOLUME_NORMAL ? 0 : 10

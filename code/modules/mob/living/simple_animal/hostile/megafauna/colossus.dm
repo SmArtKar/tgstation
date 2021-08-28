@@ -105,7 +105,7 @@
 				alternating_dir_shots()
 		return
 
-	if(enrage(target))
+	if(check_proj_immunity(target))
 		if(move_to_delay == initial(move_to_delay))
 			visible_message(span_colossus("\"<b>You can't dodge.</b>\""))
 		ranged_cooldown = world.time + 30
@@ -125,15 +125,6 @@
 			blast()
 		else
 			alternating_dir_shots()
-
-/mob/living/simple_animal/hostile/megafauna/colossus/proc/enrage(mob/living/L)
-	if(ishuman(L))
-		var/mob/living/carbon/human/H = L
-		if(H.mind)
-			if(istype(H.mind.martial_art, /datum/martial_art/the_sleeping_carp))
-				. = TRUE
-		if (is_species(H, /datum/species/golem/sand))
-			. = TRUE
 
 /mob/living/simple_animal/hostile/megafauna/colossus/proc/alternating_dir_shots()
 	ranged_cooldown = world.time + 40

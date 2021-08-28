@@ -1,3 +1,5 @@
+#define CRUSHER_TROPHY_LIMIT 6
+
 /*********************Mining Hammer****************/
 /obj/item/kinetic_crusher
 	icon = 'icons/obj/mining.dmi'
@@ -31,6 +33,7 @@
 	var/backstab_bonus = 30
 	var/strong_miner_bonus = 20
 	var/wielded = FALSE // track wielded status on item
+	var/trophy_capacity = CRUSHER_TROPHY_LIMIT
 
 /obj/item/kinetic_crusher/Initialize()
 	. = ..()
@@ -236,6 +239,9 @@
 		..()
 
 /obj/item/crusher_trophy/proc/add_to(obj/item/kinetic_crusher/H, mob/living/user)
+	if(LAZYLEN(H.trophies) > H.trophy_capacity)
+		to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+		return FALSE
 	if(ispath(denied_type, /obj/item/crusher_trophy))
 		for(var/t in H.trophies)
 			var/obj/item/crusher_trophy/T = t
@@ -476,3 +482,5 @@
 
 /obj/effect/temp_visual/hierophant/wall/crusher
 	duration = 75
+
+#undef CRUSHER_TROPHY_LIMIT

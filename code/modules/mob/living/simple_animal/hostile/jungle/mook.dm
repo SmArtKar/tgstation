@@ -233,7 +233,7 @@
 	name = "axe head"
 	desc = "A shiny metal axe head. Suitable as a trophy for a kinetic crusher."
 	icon_state = "axe_head"
-	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack)
+	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack, /obj/item/crusher_trophy/crystal_shard)
 
 /obj/item/crusher_trophy/axe_head/effect_desc()
 	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time."

@@ -77,7 +77,7 @@
 	name = "acid sack"
 	desc = "A still pulsing sack full of acidic blood. Suitable as a trophy for a kinetic crusher."
 	icon_state = "acid_sack"
-	denied_type = /obj/item/crusher_trophy/acid_sack
+	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack)
 
 /obj/item/crusher_trophy/acid_sack/effect_desc()
 	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer."
@@ -93,7 +93,7 @@
 /obj/item/crusher_trophy/acid_sack/add_to(obj/item/kinetic_crusher/H, mob/living/user)
 	for(var/t in H.trophies)
 		var/obj/item/crusher_trophy/T = t
-		if(istype(T, denied_type) || istype(T, /obj/item/crusher_trophy/axe_head) || istype(src, T.denied_type))	//Conflicts with Axe Head. I don't want them to stack sack effect infinitely
+		if(istype(T, denied_type) || istype(src, T.denied_type))	//Conflicts with Axe Head. I don't want them to stack sack effect infinitely
 			to_chat(user, "<span class='warning'>You can't seem to attach [src] to [H]. Maybe remove a few trophies?</span>")
 			return FALSE
 	if(!user.transferItemToLoc(src, H))

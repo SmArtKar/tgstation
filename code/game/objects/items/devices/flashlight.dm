@@ -18,7 +18,6 @@
 	light_power = 1
 	light_on = FALSE
 	var/on = FALSE
-	var/flashlight_sound = 'sound/weapons/magin.ogg'
 
 
 /obj/item/flashlight/Initialize()
@@ -39,7 +38,7 @@
 
 /obj/item/flashlight/attack_self(mob/user)
 	on = !on
-	playsound(user, on ? flashlight_sound : flashlight_sound, 40, TRUE)
+	playsound(user, on ? 'sound/weapons/magin.ogg' : 'sound/weapons/magout.ogg', 40, TRUE)
 	update_brightness(user)
 	update_action_buttons()
 	return 1

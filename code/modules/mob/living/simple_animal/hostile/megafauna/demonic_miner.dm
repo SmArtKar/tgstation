@@ -8,6 +8,8 @@
  *
  * This one literraly ate my soul out, go kill him as brutally as you can ~SmArtKar
  *
+ * P.S. If you wonder if he's killable - after a shitton of training and failed attempts I killed him with starting gear, so yeah, he's very hard but possible to kill.
+ *
  * Intended Difficulty: OH FUCK OH GOD
  *
  */
@@ -34,7 +36,8 @@
 	melee_damage_upper = 20
 	ranged = TRUE
 	vision_range = 18
-	rapid_melee = 1
+	aggro_vision_range = 21
+	rapid_melee = 3
 	melee_queue_distance = 2
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
@@ -46,8 +49,10 @@
 
 	pixel_y = -1
 
-	crusher_loot = list(/obj/effect/decal/remains/human, /obj/item/demon_stone, /obj/item/crusher_trophy/demon_horn)
-	loot = list(/obj/effect/decal/remains/human, /obj/item/demon_stone)
+	common_loot = list(/obj/item/demon_stone, /obj/effect/spawner/lootdrop/demonic_miner)
+	common_crusher_loot = list(/obj/item/demon_stone, /obj/effect/spawner/lootdrop/demonic_miner, /obj/item/crusher_trophy/demon_horn) //Let's reward everybody who killed this guy, he's hard and loot is only usable for fauna killing.
+	loot = list(/obj/effect/decal/remains/human)
+
 	del_on_death = TRUE
 	blood_volume = BLOOD_VOLUME_NORMAL
 	deathmessage = "falls to the ground as demon that possesses it dies."
@@ -102,12 +107,14 @@
 	playsound(target_turf, 'sound/magic/ethereal_enter.ogg', 50, TRUE, -1)
 	SLEEP_CHECK_DEATH(9)
 	invisibility = INVISIBILITY_MAXIMUM
+	alpha = 0 //To hide HUDs
 	addtimer(CALLBACK(src, .proc/end_jaunt, target_turf), BLOOD_JAUNT_LENGTH)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/end_jaunt(turf/target_turf)
 	forceMove(target_turf)
 	playsound(target_turf, 'sound/magic/ethereal_exit.ogg', 50, TRUE, -1)
 	invisibility = initial(invisibility)
+	alpha = 255
 	flick("jaunt_[demon_form ? "demon_" : ""]end", src)
 	SLEEP_CHECK_DEATH(9)
 	noaction = FALSE
@@ -130,7 +137,8 @@
 	armour_penetration = 100
 	melee_damage_lower = 30
 	melee_damage_upper = 30
-	add_movespeed_modifier(/datum/movespeed_modifier/demonic_miner)
+	speed = 2
+	move_to_delay = 2
 	update_icon()
 	status_flags &= ~GODMODE
 	noaction = FALSE
@@ -142,7 +150,7 @@
 		angle_step *= -1
 
 	var/turf/cur_turf = get_turf(src)
-	var/turf/target_turf = get_turf_in_angle(current_angle, cur_turf, 40)
+	var/turf/target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
 
 	var/obj/effect/temp_beam_target/temp_target = new(get_turf(target_turf))
 	var/obj/effect/abstract/demon_beam_splash/splash = new(cur_turf)
@@ -174,7 +182,7 @@
 
 		current_angle += angle_step
 		cur_time += 1
-		target_turf = get_turf_in_angle(current_angle, cur_turf, 40)
+		target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
 		setDir(angle2dir(current_angle))
 		SLEEP_CHECK_DEATH(1)
 
@@ -246,6 +254,15 @@
 	P.fire(set_angle)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/spiral_shoot(negative = pick(TRUE, FALSE), counter_start = 8)
+	var/obj/effect/temp_visual/decoy/decoy = new /obj/effect/temp_visual/decoy(loc, src)
+	animate(decoy, alpha = 0, color = "#FF0000", transform = matrix() * 2, time = 6)
+	SLEEP_CHECK_DEATH(6)
+	if(check_proj_immunity(target)) //Don't try to cheese this fella
+		for(var/i = 1 to 3)
+			blast_circle(target)
+			SLEEP_CHECK_DEATH(3)
+		channel_ray(Get_Angle(src, target) - 45, Get_Angle(src, target) + 45)
+		return
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
 	for(var/i in 1 to 32)
@@ -285,23 +302,33 @@
 	if(noaction)
 		return
 
-	anger_modifier = clamp(((maxHealth - health) / 100),0,20)
-	ranged_cooldown = world.time + ((demon_form ? 2 : 4) SECONDS)
+	anger_modifier = 1 - (clamp(((maxHealth - health) / 100),0,20) * 0.01)
+	ranged_cooldown = world.time + ((demon_form ? 2 : 4) * anger_modifier SECONDS)
+
+	if(get_dist(src, target) > 7) //Punush them for running away, you can't get away from the demon
+		jaunt_at(target)
+		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) * anger_modifier SECONDS)
+		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
+		blast_line_directions()
+		spiral_shoot()
 
 	var/picked_attack = rand(1, 6)
 	switch(picked_attack)
 		if(1)
 			jaunt_at(target)
-			ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) SECONDS)
-			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) SECONDS))
+			ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) * anger_modifier SECONDS)
+			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
 			spiral_shoot()
 		if(2)
 			channel_ray(Get_Angle(src, target) - 45, Get_Angle(src, target) + 45)
-			ranged_cooldown = world.time + ((demon_form ? 3 : 6) SECONDS)
+			ranged_cooldown = world.time + ((demon_form ? 3 : 6) * anger_modifier SECONDS)
 		if(3)
+			if(demon_form)
+				shoot_projectile(get_turf(target), proj_type = /obj/projectile/bloody_orb)
 			triple_blast_line()
 		if(4)
 			blast_circle(target)
+			spiral_shoot()
 		if(5)
 			if(demon_form)
 				blast_line(target)
@@ -313,7 +340,7 @@
 			if(demon_form)
 				SLEEP_CHECK_DEATH(2)
 				blast_circle(target)
-			ranged_cooldown = world.time + ((demon_form ? 2 : 4) SECONDS) SECONDS
+			ranged_cooldown = world.time + (demon_form ? 2 : 4) * anger_modifier SECONDS
 		if(7)
 			if(demon_form)
 				blast_line_directions(GLOB.alldirs)
@@ -321,6 +348,16 @@
 				spiral_shoot()
 				return
 			blast_line_directions()
+		if(8)
+			if(demon_form) //Oh boy
+				for(var/i = 1 to 3)
+					shoot_projectile(null, (i * 120 + rand(60)) % 360, proj_type = /obj/projectile/bloody_orb)
+				spiral_shoot()
+				return
+
+			for(var/i = 1 to 3)
+				blast_circle(target)
+				SLEEP_CHECK_DEATH(3)
 
 /obj/effect/ebeam/demonic
 	name = "demonic beam"
@@ -335,14 +372,18 @@
 	light_range = 1
 	light_power = 0.5
 	light_color = COLOR_RED_LIGHT
+	var/blast_type = /obj/effect/temp_visual/demonic_blast
 
 /obj/effect/temp_visual/demonic_blast_warning/Destroy()
-	new /obj/effect/temp_visual/demonic_blast(get_turf(src))
+	new blast_type(get_turf(src))
 	. = ..()
 
 /obj/effect/temp_visual/demonic_blast_warning/quick
 	icon_state = "demonic_blast_warning_quick"
 	duration = 2
+
+/obj/effect/temp_visual/demonic_blast_warning/quick/friendly_fire
+	blast_type = /obj/effect/temp_visual/demonic_blast/friendly_fire
 
 /obj/effect/temp_visual/demonic_blast
 	name = "demonic blast"
@@ -351,6 +392,7 @@
 	light_range = 2
 	light_power = 0.5
 	light_color = COLOR_RED_LIGHT
+	var/friendly_fire = FALSE
 
 /obj/effect/temp_visual/demonic_blast/Initialize()
 	. = ..()
@@ -360,10 +402,13 @@
 
 	playsound(src, 'sound/magic/mm_hit.ogg', 100, TRUE)
 	for(var/mob/living/target in my_turf)
-		if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner))
+		if(friendly_fire && (istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner)) || faction_check(target.faction, list("jungle", "boss")))
 			continue
 		target.adjustFireLoss(20)
 		to_chat(target, span_userdanger("You're hit by a demonic blast!"))
+
+/obj/effect/temp_visual/demonic_blast/friendly_fire
+	friendly_fire = TRUE
 
 /obj/effect/temp_visual/dir_setting/miner_death/demonic
 	icon = 'icons/mob/jungle/demonic_miner.dmi'
@@ -373,7 +418,7 @@
 	icon_state = "demon_form_death"
 
 /obj/effect/abstract/demon_beam_splash
-	icon = 'icons/mob/jungle/demonic_miner_big.dmi'
+	icon = 'icons/effects/64x64.dmi'
 	icon_state = "beam_splash_red_nodir"
 	layer = RIPPLE_LAYER
 	pixel_x = -16
@@ -412,6 +457,7 @@
 
 	for(var/beam_target in beam_targets)
 		Beam(beam_target, icon_state = "blood_beam_thin", beam_type = /obj/effect/ebeam/demonic, time = 10)
+		QDEL_IN(beam_target, 10)
 
 		var/target_turf = get_turf(beam_target)
 		var/end_turf = get_ranged_target_turf_direct(src, target_turf, 40, 0)
@@ -428,9 +474,6 @@
 				playsound(victim, 'sound/machines/clockcult/ark_damage.ogg', 50, TRUE)
 				to_chat(victim, span_userdanger("You're hit by a demonic beam!"))
 
-	for(var/beam_target in beam_targets)
-		qdel(beam_target)
-
 	QDEL_IN(src, 5)
 
 /obj/projectile/bloody_orb/proc/cast_rays()
@@ -438,7 +481,7 @@
 	var/turf/cur_turf = get_turf(src)
 	for(var/i = 1 to 5)
 		var/angle = rand(1, 359)
-		var/turf/target_turf = get_turf_in_angle(angle, cur_turf, 40)
+		var/turf/target_turf = get_turf_in_angle(angle, cur_turf, 15)
 		var/obj/effect/temp_beam_target/temp_target = new(get_turf(target_turf))
 
 		for(var/turf/check_turf in getline(cur_turf, target_turf))
@@ -458,6 +501,7 @@
 	armour_penetration = 100
 	speed = 2
 	damage_type = BURN
+	flag = MAGIC
 
 /mob/living/simple_animal/hostile/imp/demonic_miner
 	maxHealth = 40
@@ -470,7 +514,7 @@
 
 /mob/living/simple_animal/hostile/imp/demonic_miner/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 	king = locate(/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner) in range(4, src)
 	king.imps += 1
 	beam = Beam(king, icon_state = "blood_beam_thin", beam_type = /obj/effect/ebeam/demonic)
@@ -503,6 +547,56 @@
 
 #undef BLOOD_JAUNT_LENGTH
 
+/mob/living/simple_animal/hostile/jungle/hellborn_shadow
+	name = "hellborn shadow"
+	desc = "A transparent, dark red spirit from the depths of hell, coming for your soul."
+	response_help_continuous = "thinks better of touching"
+	response_help_simple = "think better of touching"
+	response_disarm_continuous = "flails at"
+	response_disarm_simple = "flail at"
+	response_harm_continuous = "punches"
+	response_harm_simple = "punch"
+	icon = 'icons/mob/jungle/jungle_monsters.dmi'
+	icon_state = "spirit"
+	icon_living = "spirit"
+	speed = 8
+	move_to_delay = 8
+	combat_mode = TRUE
+	attack_sound = 'sound/magic/demon_attack1.ogg'
+	attack_vis_effect = ATTACK_EFFECT_CLAW
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	minbodytemp = 0
+	maxbodytemp = INFINITY
+	faction = list("jungle", "boss", "hell")
+	weather_immunities = list(WEATHER_ACID, WEATHER_LAVA)
+	attack_verb_continuous = "flails at"
+	attack_verb_simple = "flail at"
+	maxHealth = 40
+	health = 40
+	healable = 0
+	obj_damage = 10
+	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
+	melee_damage_lower = 5
+	melee_damage_upper = 5
+	vision_range = 2
+	aggro_vision_range = 4
+	see_in_dark = 8
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+	del_on_death = TRUE
+	deathmessage = "screams in agony as it sublimates into a cloud of sulfurous smoke."
+	deathsound = 'sound/magic/demon_dies.ogg'
+	var/obj/item/crusher_trophy/demon_horn/horn
+
+/mob/living/simple_animal/hostile/jungle/hellborn_shadow/Initialize(mapload, creator)
+	. = ..()
+	horn = creator
+	horn.spirits.Add(src)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
+
+/mob/living/simple_animal/hostile/jungle/hellborn_shadow/death(gibbed)
+	horn.spirits.Remove(src)
+	. = ..()
+
 /obj/item/crusher_trophy/demon_horn //Glory kills!
 	name = "demon horn"
 	desc = "A big red horn. Suitable as a trophy for a kinetic crusher."
@@ -510,34 +604,398 @@
 	denied_type = /obj/item/crusher_trophy/demon_horn
 	var/buffing = FALSE
 	var/stop_buff_timer
+	var/list/spirits = list()
 
 /obj/item/crusher_trophy/demon_horn/effect_desc()
-	return "kills with mark detonation to give you a temporary boost in speed and armor."
+	return "kills with mark detonation to give you a temporary boost in speed and armor as well as light healing. While fighting megafauna, small low-health spirits will appear around the user."
 
 /obj/item/crusher_trophy/demon_horn/on_mark_detonation(mob/living/target, mob/living/user)
-	sleep(2) //Just enough time for target to process their health. 1 tick does not work for some reason
-	if(!QDELETED(target) && target.stat != DEAD)
-		return
+	INVOKE_ASYNC(src, .proc/glory_kill_check, target, user)
+
+/obj/item/crusher_trophy/demon_horn/proc/glory_kill_check(mob/living/target, mob/living/user)
+	sleep(1) //Just enough time for target to process their health. Doesn't work without sleep cuz crusher code.
 
 	if(QDELETED(user) || user.stat == DEAD || !ishuman(user))
 		return
 
 	var/mob/living/carbon/human/human_user = user
+	human_user.heal_ordered_damage(15, list(BRUTE, BURN, TOX, OXY))
 
 	if(!buffing)
 		human_user.add_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
-		human_user.physiology.damage_resistance += 15
-		human_user.physiology.stun_mod *= 0.75
-		human_user.physiology.bleed_mod *= 0.75
+		human_user.physiology.damage_resistance += 50
+		human_user.physiology.stun_mod *= 0.25
+		human_user.physiology.bleed_mod *= 0.25
 		buffing = TRUE
 
 	if(stop_buff_timer)
-		qdel(stop_buff_timer)
-	stop_buff_timer = addtimer(CALLBACK(src, .proc/stop_buff, human_user), 3 SECONDS, TIMER_STOPPABLE)
+		deltimer(stop_buff_timer)
+	stop_buff_timer = addtimer(CALLBACK(src, .proc/stop_buff, human_user), 5 SECONDS, TIMER_STOPPABLE)
 
 /obj/item/crusher_trophy/demon_horn/proc/stop_buff(mob/living/carbon/human/user)
 	user.remove_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
-	user.physiology.damage_resistance -= 15
-	user.physiology.stun_mod /= 0.75
-	user.physiology.bleed_mod /= 0.75
+	user.physiology.damage_resistance -= 50
+	user.physiology.stun_mod /= 0.25
+	user.physiology.bleed_mod /= 0.25
 	buffing = FALSE
+
+/obj/item/crusher_trophy/demon_horn/add_to(obj/item/kinetic_crusher/H, mob/living/user)
+	. = ..()
+	if(.)
+		START_PROCESSING(SSfastprocess, src)
+
+/obj/item/crusher_trophy/demon_horn/remove_from(obj/item/kinetic_crusher/H, mob/living/user)
+	. = ..()
+	if(.)
+		STOP_PROCESSING(SSfastprocess, src)
+
+/obj/item/crusher_trophy/demon_horn/process(delta_time)
+	var/mob/living/carbon/human/user
+	var/atom/loc_iter = loc
+	while(!user)
+		if(isturf(loc_iter) || isarea(loc_iter))
+			return
+
+		if(ishuman(loc_iter))
+			user = loc_iter
+			break
+
+		loc_iter = loc_iter.loc
+
+	var/mob/living/simple_animal/hostile/megafauna/jungle/attacker
+	for(var/mob/living/simple_animal/hostile/megafauna/jungle/mega in GLOB.megafauna)
+		if(mega.spawns_minions)
+			continue
+
+		if(mega.target == user)
+			attacker = mega
+			break
+
+	if(!attacker)
+		return
+
+	var/list/possible_turfs = list()
+	for(var/turf/open/possible_spawn in view(7, user))
+		if(!possible_spawn.is_blocked_turf())
+			possible_turfs.Add(possible_spawn)
+
+	if(LAZYLEN(spirits) < 5 && DT_PROB(25, delta_time))
+		var/turf/spirit_spawn = pick_n_take(possible_turfs)
+		new /mob/living/simple_animal/hostile/jungle/hellborn_shadow(spirit_spawn, src)
+		new /obj/effect/temp_visual/guardian/phase(spirit_spawn)
+
+	for(var/mob/living/simple_animal/hostile/jungle/hellborn_shadow/shadow as anything in spirits)
+		if(get_dist(shadow, user) > 9)
+			new /obj/effect/temp_visual/guardian/phase/out(get_turf(shadow))
+			spirits.Remove(shadow)
+			qdel(shadow)
+
+/obj/effect/spawner/lootdrop/demonic_miner
+	name = "demonic miner loot spawner"
+	loot = list(/obj/item/gun/magic/staff/blood_claymore = 1, /obj/item/book/granter/spell/throwing_knives = 1, /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound = 1)
+
+#define MAXIMUM_BLOOD 100
+#define TELEPORT_BLOOD 5
+#define BLOOD_REGEN 1
+
+/obj/item/gun/magic/staff/blood_claymore
+	name = "bloodied claymore"
+	desc = "An ancient claymore."
+	icon = 'icons/obj/jungle/artefacts.dmi'
+	fire_sound = 'sound/magic/wand_teleport.ogg'
+	ammo_type = /obj/item/ammo_casing/magic/blood_wave
+	icon_state = "bloody_claymore1"
+	inhand_icon_state = "bloody_claymore1"
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	sharpness = SHARP_EDGED
+
+	force = 20
+	armour_penetration = 50
+	block_chance = 25
+	max_charges = 3
+	recharge_rate = 10 //Forces you to go in close combat
+	school = SCHOOL_EVOCATION
+	var/blood = 0
+
+/obj/effect/temp_visual/dir_setting/firing_effect/cult
+	icon = 'icons/effects/cult_effects.dmi'
+	icon_state = "bloodsparkles"
+	duration = 3
+
+/obj/item/ammo_casing/magic/blood_wave
+	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect/cult
+	projectile_type = /obj/projectile/magic/blood_wave
+
+/obj/projectile/magic/blood_wave
+	name = "blood wave"
+	icon_state = "blood_wave"
+	damage = 25
+	damage_type = BURN
+	flag = MAGIC
+	nodamage = FALSE
+
+/obj/projectile/magic/blood_wave/on_hit(atom/target, blocked = FALSE)
+	if(isliving(target))
+		var/mob/living/victim = target
+		victim.apply_status_effect(STATUS_EFFECT_DEMON_MARK, fired_from)
+
+/obj/item/gun/magic/staff/blood_claymore/update_icon(updates)
+	icon_state = "bloody_claymore[clamp(round(blood / MAXIMUM_BLOOD * 3) + (charges > 0 ? 1 : 0), 0, 3)]"
+	inhand_icon_state = icon_state
+	. = ..()
+
+/obj/item/gun/magic/staff/blood_claymore/afterattack(atom/target, mob/living/user, proximity, params)
+	if(LAZYACCESS(params2list(params), RIGHT_CLICK))
+		teleport(target, user)
+		return
+
+	. = ..()
+	if(!proximity || !isliving(target))
+		return
+
+	var/mob/living/victim = target
+	if(victim.has_status_effect(STATUS_EFFECT_DEMON_MARK) && victim.stat != DEAD) // Hitting mobs allows to recharge faster. No dead farming tho!
+		blood = clamp(blood + BLOOD_REGEN, 0, MAXIMUM_BLOOD)
+		victim.Beam(user, icon_state="blood_mid_light", time = 0.5 SECONDS)
+		playsound(get_turf(victim), 'sound/magic/exit_blood.ogg', 50, TRUE)
+		recharge_newshot()
+
+/obj/item/gun/magic/staff/blood_claymore/recharge_newshot()
+	. = ..()
+	update_icon()
+
+/obj/item/gun/magic/staff/blood_claymore/process_fire(atom/target, mob/living/user, message, params, zone_override, bonus_spread)
+	. = ..()
+	update_icon()
+
+/obj/item/gun/magic/staff/blood_claymore/Initialize()
+	. = ..()
+	AddComponent(/datum/component/butchering, 15, 125, 0, hitsound)
+	AddComponent(/datum/component/lifesteal, 8)
+	AddElement(/datum/element/update_icon_updates_onmob)
+
+/obj/item/gun/magic/staff/blood_claymore/attack_self(mob/user)
+	if(blood < MAXIMUM_BLOOD)
+		to_chat(user, span_warning("[src] does not have enough blood stored inside to use it's true potential!"))
+		return
+
+	var/turf/cur_turf = get_turf(user)
+
+	playsound(cur_turf, 'sound/magic/exit_blood.ogg', 100, TRUE)
+	playsound(cur_turf, 'sound/magic/curse.ogg', 100, TRUE)
+	user.visible_message(span_danger("[user] lets out a horrible screech as [user.p_they()] begin swinging [src] in circles!"))
+
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, type)
+
+	var/current_angle = 0
+	var/turf/target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
+
+	var/obj/effect/temp_beam_target/temp_target = new(get_turf(target_turf))
+	var/obj/effect/abstract/demon_beam_splash/splash = new(cur_turf)
+	var/beam
+	var/list/already_hit = list()
+
+	user.spin(72, 1)
+
+	while(current_angle < 360)
+		for(var/turf/check_turf in getline(cur_turf, target_turf))
+			if(isclosedturf(check_turf))
+				target_turf = check_turf
+				break
+
+			for(var/mob/living/victim in check_turf.contents)
+				if(victim != user && !faction_check(victim.faction, user.faction) && !(victim in already_hit) && isanimal(victim))
+					victim.Paralyze(20)
+					victim.adjustBruteLoss(375) //Only hits animals but much stronger than demonic miner's one because duh mobs have huge health pools and it is our ultimate attack
+					playsound(victim, 'sound/machines/clockcult/ark_damage.ogg', 50, TRUE)
+					to_chat(victim, span_userdanger("You're hit by a demonic ray!"))
+					already_hit.Add(victim)
+
+		temp_target.forceMove(target_turf)
+		beam = Beam(temp_target, icon_state = "bsa_beam_red", beam_type = /obj/effect/ebeam/demonic, time = 1)
+		var/matrix/splash_matrix = matrix()
+		splash_matrix.Turn(current_angle)
+		splash_matrix.Translate(cos(current_angle + 90) * 16, -sin(current_angle + 90) * 16)
+		splash.transform = splash_matrix
+
+		current_angle += 5
+		target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
+		setDir(angle2dir(current_angle))
+		sleep(1)
+
+	qdel(beam)
+	qdel(temp_target)
+	qdel(splash)
+
+	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, type)
+	blood = 0
+	update_icon()
+
+/obj/item/gun/magic/staff/blood_claymore/proc/teleport(atom/target, mob/living/user)
+	if(blood < TELEPORT_BLOOD)
+		to_chat(user, span_warning("[src] does not have enough blood stored inside to use it's blood jaunt!"))
+		return
+
+	new /obj/effect/temp_visual/guardian/phase/out(get_turf(user))
+	var/obj/effect/dummy/phased_mob/holder = new(get_turf(user))
+	user.forceMove(holder)
+
+	var/turf/teleturf
+	for(var/turf/check_turf in (getline(get_turf(user), get_turf(target)) - get_turf(user)))
+		if(isclosedturf(check_turf) || check_turf.is_blocked_turf())
+			break
+		if(teleturf)
+			new /obj/effect/temp_visual/demonic_blast_warning/quick/friendly_fire(teleturf)
+		teleturf = check_turf
+		sleep(1)
+
+	if(!teleturf)
+		return
+
+	do_teleport(user, teleturf, channel = TELEPORT_CHANNEL_MAGIC, forced = TRUE)
+	new /obj/effect/temp_visual/guardian/phase(get_turf(user))
+	qdel(holder)
+	blood -= TELEPORT_BLOOD
+
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+#undef MAXIMUM_BLOOD
+#undef TELEPORT_BLOOD
+#undef BLOOD_REGEN
+
+/obj/projectile/magic/throwing_knife //Really good, you can use it as your main weapon
+	name = "demonic throwing knife"
+	icon_state = "throwing_knife"
+	damage = 5
+	damage_type = BRUTE
+	nodamage = FALSE
+	armour_penetration = 0
+	flag = MELEE
+	hitsound = 'sound/weapons/rapierhit.ogg'
+
+/obj/projectile/magic/throwing_knife/on_hit(target, blocked = FALSE)
+	if(isanimal(target))
+		damage *= 6 //300 damage per full barrage
+	. = ..()
+	if(!.)
+		return
+	if(isanimal(target) && !blocked && isliving(firer))
+		var/mob/living/victim = target
+		if(victim.stat == DEAD)
+			return
+		victim = firer
+		victim.heal_ordered_damage(5, list(BRUTE, BURN, TOX, OXY)) //Pretty good, 50 healed damage per barrage if all knives hit
+
+/obj/effect/proc_holder/spell/targeted/infinite_guns/throwing_knives
+	name = "Summon Knives"
+	desc = "Summon a barrage of demonic throwing knives that will home on their target."
+	action_icon_state = "throwing_knives"
+	action_background_icon_state = "bg_demon"
+	clothes_req = FALSE
+	summon_path = /obj/item/gun/ballistic/rifle/enchanted/throwing_knife
+	charge_max = 170
+
+/obj/item/ammo_casing/magic/throwing_knife
+	projectile_type = /obj/projectile/magic/throwing_knife
+	firing_effect_type = /obj/effect/temp_visual/dir_setting/firing_effect/cult
+
+/obj/item/gun/ballistic/rifle/enchanted/throwing_knife
+	name = "demonic throwing knife"
+	desc = "A very sharp throwing knife. It's abnormaly cold."
+	fire_sound = 'sound/weapons/guillotine.ogg' //Hilarious, but it actually fits
+	pin = /obj/item/firing_pin/magic
+	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon_state = "throwing_knife"
+	inhand_icon_state = "edagger"
+	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
+	slot_flags = null
+	can_bayonet = FALSE
+	item_flags = DROPDEL | ABSTRACT
+	flags_1 = NONE
+	trigger_guard = TRIGGER_GUARD_ALLOW_ALL
+	show_bolt_icon = FALSE
+	guns_left = 10
+	hitsound = 'sound/weapons/rapierhit.ogg'
+	force = 10
+	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	sharpness = SHARP_EDGED
+
+	mag_type = /obj/item/ammo_box/magazine/internal/throwing_knife
+
+/obj/item/gun/ballistic/rifle/enchanted/throwing_knife/Initialize()
+	. = ..()
+	AddComponent(/datum/component/butchering, 15, 125, 0, hitsound)
+	AddComponent(/datum/component/lifesteal, 5)
+
+/obj/item/gun/ballistic/rifle/enchanted/throwing_knife/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
+	. = ..()
+	if(!.)
+		return
+	user.changeNext_move(CLICK_CD_RAPID)
+
+obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/user)
+	qdel(src)
+
+/obj/item/book/granter/spell/throwing_knives
+	spell = /obj/effect/proc_holder/spell/targeted/infinite_guns/throwing_knives
+	spellname = "knife summoning"
+	icon_state ="bookknives"
+	desc = "Summon a barrage of demonic throwing knives."
+	remarks = list("Nal'fh ra B'hr'auh!", "Don't let demons posess you...", "Target their heads, not their feet...", "I saw that move in my favorite cartoon from Space Japan!", "Don't forget to charge cells in these knives or they won't have that cool glow...")
+
+/obj/item/book/granter/spell/throwing_knives/recoil(mob/user)
+	..()
+	for(var/i = 1 to rand(2, 5))
+		playsound(user, 'sound/weapons/guillotine.ogg', 100)
+		var/obj/projectile/magic/throwing_knife/knife = new(get_turf(user))
+		knife.original = user
+		knife.def_zone = BODY_ZONE_CHEST
+		knife.spread = 0
+		knife.preparePixelProjectile(user, get_turf(user))
+		knife.fire()
+		sleep(1)
+
+/mob/living/simple_animal/pet/dog/corgi/narsie/hellhound
+	name = "hellhound"
+	desc = "A pitch-black hound with glowing red eyes that came straight from hell."
+	ai_controller = /datum/ai_controller/dog/agressive
+
+	health = 250
+	maxHealth = 250
+	melee_damage_lower = 15
+	melee_damage_upper = 25
+
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	weather_immunities = list(WEATHER_ACID, WEATHER_LAVA)
+	minbodytemp = 0
+	maxbodytemp = 450
+
+/mob/living/simple_animal/pet/dog/corgi/narsie/hellhound/try_feast()
+	for(var/mob/living/simple_animal/victim in range(1, src))
+		var/devourable = (victim != src && !istype(victim, /mob/living/simple_animal/pet/dog/corgi/narsie)) && (istype(victim, /mob/living/simple_animal/pet) || victim.stat == DEAD) && !istype(victim, /mob/living/simple_animal/hostile/megafauna) && (victim.mob_biotypes & MOB_ORGANIC) && !victim.ckey
+
+		if(devourable) //He gibs either pets or non-megafauna clientless organic monsters
+			visible_message(span_warning("[src] devours [victim]!"), \
+			"<span class='cult big bold'>DELICIOUS SOULS</span>")
+			playsound(src, 'sound/magic/demon_attack1.ogg', 75, TRUE)
+			narsie_act()
+			victim.gib()
+
+/mob/living/simple_animal/pet/dog/corgi/narsie/hellhound/narsie_act()
+	adjustBruteLoss(-100)
+
+/mob/living/simple_animal/pet/dog/corgi/narsie/hellhound/CanAllowThrough(atom/movable/mover, border_dir)
+	. = ..()
+	if(istype(mover, /obj/projectile/kinetic))
+		return TRUE
+	else if(istype(mover, /obj/projectile/destabilizer))
+		return TRUE
+	else if(istype(mover, /obj/projectile/magic/blood_wave))
+		return TRUE
+	else if(istype(mover, /obj/projectile/magic/throwing_knife))
+		return TRUE

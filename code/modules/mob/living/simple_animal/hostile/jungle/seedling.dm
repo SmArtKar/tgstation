@@ -36,7 +36,6 @@
 	var/combatant_state = SEEDLING_STATE_NEUTRAL
 	loot = list(/obj/item/organ/regenerative_core/legion/shining_core)
 	crusher_loot = /obj/item/crusher_trophy/tail_spike/seedling_petal
-	var/obj/seedling_weakpoint/weak_point
 	var/mob/living/beam_debuff_target
 	var/solar_beam_identifier = 0
 
@@ -103,7 +102,7 @@
 	seedling_screen_object.transform = final
 
 /atom/movable/screen/seedling
-	icon = 'icons/mob/jungle/arachnid.dmi'
+	icon = 'icons/mob/jungle/seedling.dmi'
 	icon_state = "seedling_beam_indicator"
 	screen_loc = "CENTER:-16,CENTER:-16"
 

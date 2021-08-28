@@ -59,7 +59,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Initialize()
 	. = ..()
-	ADD_TRAIT(src, TRAIT_MOVE_FLYING, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_MOVE_FLYING, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -101,6 +101,10 @@
 	proj.fire(set_angle)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/spiral_shoot(negative = pick(TRUE, FALSE), counter_start = 8)
+	if(check_proj_immunity(target)) //Oh boi
+		do_dash()
+		chronospheres()
+		return
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
 	playsound(get_turf(src), 'sound/effects/ethereal_revive_fail.ogg', 100)
@@ -421,8 +425,8 @@
 	name = "crystal shard"
 	desc = "A bright orange amber shard. Suitable as a trophy for a kinetic crusher."
 	icon_state = "crystal_shard"
-	denied_type = /obj/item/crusher_trophy/crystal_shard
-	bonus_value = 4
+	denied_type = list(/obj/item/crusher_trophy/crystal_shard, /obj/item/crusher_trophy/axe_head)
+	bonus_value = 3
 
 /obj/item/crusher_trophy/crystal_shard/effect_desc()
 	return "mark detonation to stun creatures and make them more vunerable for a bit"
@@ -434,9 +438,9 @@
 	if(isanimal(target))
 		var/mob/living/simple_animal/H = target
 		H.Stun(bonus_value)
-		H.damage_coeff = list(BRUTE = 1.2, BURN = 1.2, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
+		var/damage_coeffs = H.damage_coeff
 		sleep(bonus_value * 5)
-		H.damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
+		H.damage_coeff = damage_coeffs
 
 /obj/item/clothing/gloves/crystal
 	name = "crystal gauntlets"

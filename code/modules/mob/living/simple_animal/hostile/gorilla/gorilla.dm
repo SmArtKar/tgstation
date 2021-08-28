@@ -119,4 +119,4 @@
 
 /mob/living/simple_animal/hostile/gorilla/jungle/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)

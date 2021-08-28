@@ -3,6 +3,7 @@
 /mob/living/simple_animal/hostile/jungle/cave_spider
 	name = "cave spider"
 	desc = "A big, yet not huge, furred spider. It has a surprisingly big web weaver."
+	icon = 'icons/mob/jungle/jungle_monsters.dmi'
 	icon_state = "cave_spider"
 	icon_living = "cave_spider"
 	icon_dead = "cave_spider_dead"

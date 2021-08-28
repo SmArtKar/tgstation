@@ -660,7 +660,7 @@
 
 /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 
 /**
  * # Scrawny Tarantula
@@ -690,7 +690,7 @@
 
 /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 
 /**
  * # Scrawny Nurse Spider
@@ -714,7 +714,7 @@
 
 /mob/living/simple_animal/hostile/giant_spider/nurse/scrawny/jungle/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 
 /**
  * # Flesh Spider

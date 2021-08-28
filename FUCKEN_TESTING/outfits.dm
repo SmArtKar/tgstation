@@ -83,12 +83,18 @@
 
 /obj/item/storage/box/boss_loot/PopulateContents()
 	new /obj/item/stack/sheet/spidersilk(src)
-	new /obj/item/flashlight/spider_eye(src)
+	new /obj/item/spider_eye(src)
 	new /obj/item/organ/eyes/night_vision/spider(src)
 	new /obj/item/worm_tongue(src)
 	new /obj/item/dual_sword(src)
 	new /obj/item/book/granter/spell/powerdash(src)
-	new /obj/item/crystal_fruit()
+	new /obj/item/crystal_fruit(src)
+	new /obj/item/demon_stone(src)
+	new /obj/item/gun/magic/staff/blood_claymore(src)
+	new /obj/item/book/granter/spell/throwing_knives(src)
+	new /obj/item/experimental_components(src)
+	new /obj/item/armor_scales(src)
+	new /obj/item/amber_core(src)
 
 /datum/outfit/debug_miner/ultra
 	name = "Ultra Debug Miner"

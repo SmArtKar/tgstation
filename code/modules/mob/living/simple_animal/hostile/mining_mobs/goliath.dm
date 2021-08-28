@@ -182,8 +182,12 @@
 	name = "goliath tentacle"
 	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
 	icon_state = "Goliath_tentacle_spawn"
+	base_icon_state = "Goliath"
 	layer = BELOW_MOB_LAYER
 	var/mob/living/spawner
+	var/stun_length = 10 SECONDS
+	var/lower_damage = 10
+	var/upper_damage = 15
 
 /obj/effect/temp_visual/goliath_tentacle/Initialize(mapload, mob/living/new_spawner)
 	. = ..()
@@ -208,7 +212,7 @@
 			new /obj/effect/temp_visual/goliath_tentacle(T, spawner)
 
 /obj/effect/temp_visual/goliath_tentacle/proc/tripanim()
-	icon_state = "Goliath_tentacle_wiggle"
+	icon_state = "[base_icon_state]_tentacle_wiggle"
 	deltimer(timerid)
 	timerid = addtimer(CALLBACK(src, .proc/trip), 3, TIMER_STOPPABLE)
 
@@ -217,9 +221,12 @@
 	for(var/mob/living/L in loc)
 		if((!QDELETED(spawner) && spawner.faction_check_mob(L)) || L.stat == DEAD)
 			continue
-		visible_message(span_danger("[src] grabs hold of [L]!"))
-		L.Stun(100)
-		L.adjustBruteLoss(rand(10,15))
+		if(stun_length)
+			visible_message(span_danger("[src] grabs hold of [L]!"))
+			L.Stun(stun_length)
+		else
+			visible_message(span_danger("[src] attacks [L]!"))
+		L.adjustBruteLoss(rand(lower_damage, upper_damage))
 		latched = TRUE
 	if(!latched)
 		retract()
@@ -228,7 +235,7 @@
 		timerid = addtimer(CALLBACK(src, .proc/retract), 10, TIMER_STOPPABLE)
 
 /obj/effect/temp_visual/goliath_tentacle/proc/retract()
-	icon_state = "Goliath_tentacle_retract"
+	icon_state = "[base_icon_state]_tentacle_retract"
 	deltimer(timerid)
 	timerid = QDEL_IN(src, 7)
 

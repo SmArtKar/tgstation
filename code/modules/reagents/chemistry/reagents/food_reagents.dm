@@ -561,7 +561,19 @@
 	var/obj/effect/decal/cleanable/food/flour/reagentdecal = new(exposed_turf)
 	reagentdecal = locate() in exposed_turf //Might have merged with flour already there.
 	if(reagentdecal)
-		reagentdecal.reagents.add_reagent(/datum/reagent/consumable/flour, reac_volume)
+		reagentdecal.reagents.add_reagent(type, reac_volume)
+
+/datum/reagent/consumable/flour/bagelshroom
+	name = "Bagelshroom Flour"
+	description = "Nutritious powder somewhat resembling flour that can be find inside bagelshroom caps."
+	color = "#ffeec7" // rgb: 0, 0, 0
+	taste_description = "bitter rice"
+
+/datum/reagent/consumable/flour/bagelshroom/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
+	if(DT_PROB(30, delta_time))
+		M.heal_bodypart_damage(brute = 0.5, burn = 0.5)
+		. = TRUE
+	..()
 
 /datum/reagent/consumable/cherryjelly
 	name = "Cherry Jelly"

@@ -131,6 +131,7 @@
 #define BB_DOG_ORDER_MODE "BB_DOG_ORDER_MODE"
 #define BB_DOG_PLAYING_DEAD "BB_DOG_PLAYING_DEAD"
 #define BB_DOG_HARASS_TARGET "BB_DOG_HARASS_TARGET"
+#define BB_DOG_AGRESSIVE "BB_DOG_AGRESSIVE"
 
 /// Basically, what is our vision/hearing range for picking up on things to fetch/
 #define AI_DOG_VISION_RANGE	10

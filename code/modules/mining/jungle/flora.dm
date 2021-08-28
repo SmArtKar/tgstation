@@ -201,7 +201,7 @@
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "dirt" = 1)
 	foodtypes = VEGETABLES
-	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/flour = 4)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/flour/bagelshroom = 4)
 
 /obj/item/food/cut_bagelshroom/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/fried_bagelshroom, rand(10 SECONDS, 20 SECONDS), TRUE)
@@ -229,4 +229,4 @@
 	genes = list(/datum/plant_gene/trait/repeated_harvest)
 	graft_gene = /datum/plant_gene/trait/repeated_harvest
 
-	reagents_add = list(/datum/reagent/consumable/nutriment = 0.1, /datum/reagent/consumable/flour = 0.2)
+	reagents_add = list(/datum/reagent/consumable/nutriment = 0.1, /datum/reagent/consumable/flour/bagelshroom = 0.2)

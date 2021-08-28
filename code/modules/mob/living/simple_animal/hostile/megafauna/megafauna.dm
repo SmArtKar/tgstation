@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(megafauna)
+
 /mob/living/simple_animal/hostile/megafauna
 	name = "boss of this gym"
 	desc = "Attack the weak point for massive damage."
@@ -59,6 +61,7 @@
 /mob/living/simple_animal/hostile/megafauna/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/simple_flying)
+	GLOB.megafauna += src
 	if(gps_name && true_spawn)
 		AddComponent(/datum/component/gps, gps_name)
 	ADD_TRAIT(src, TRAIT_NO_TELEPORT, MEGAFAUNA_TRAIT)
@@ -100,6 +103,7 @@
 			grant_achievement(achievement_type, score_achievement_type, crusher_kill, force_grant)
 			SSblackbox.record_feedback("tally", tab, 1, "[initial(name)]")
 	loot_manipulation()
+	GLOB.megafauna -= src
 	return ..()
 
 /// For jungle megafauna
@@ -183,6 +187,16 @@
 		L.client.give_award(/datum/award/score/boss_score, L) //Score progression for bosses killed in general
 		L.client.give_award(score_achievement_type, L) //Score progression for specific boss killed
 	return TRUE
+
+/mob/living/simple_animal/hostile/megafauna/proc/check_proj_immunity(mob/living/L)
+	if(ishuman(L))
+		var/mob/living/carbon/human/H = L
+		if(H.mind)
+			if(istype(H.mind.martial_art, /datum/martial_art/the_sleeping_carp))
+				return TRUE
+		if (is_species(H, /datum/species/golem/sand))
+			return TRUE
+	return FALSE
 
 /datum/action/innate/megafauna_attack
 	name = "Megafauna Attack"

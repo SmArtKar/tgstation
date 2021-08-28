@@ -34,7 +34,7 @@
 
 /mob/living/simple_animal/hostile/jungle/rogue_drone/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/jungle/rogue_drone/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)
 	return
@@ -66,7 +66,7 @@
 
 /mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone/Initialize(mapload)
 	. = ..()
-	REMOVE_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	REMOVE_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 
 /mob/living/simple_animal/hostile/jungle/rogue_drone/pet_drone/proc/activate(mob/owner)
 	faction.Add("[REF(owner)]")

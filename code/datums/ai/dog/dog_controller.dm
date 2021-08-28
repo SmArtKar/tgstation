@@ -7,13 +7,19 @@
 		BB_FETCH_IGNORE_LIST = list(),\
 		BB_DOG_ORDER_MODE = DOG_COMMAND_NONE,\
 		BB_DOG_PLAYING_DEAD = FALSE,\
-		BB_DOG_HARASS_TARGET = null)
+		BB_DOG_HARASS_TARGET = null,\
+		BB_DOG_AGRESSIVE = FALSE)
 	ai_movement = /datum/ai_movement/jps
 	planning_subtrees = list(/datum/ai_planning_subtree/dog)
 
 	COOLDOWN_DECLARE(heel_cooldown)
 	COOLDOWN_DECLARE(command_cooldown)
 
+/datum/ai_controller/dog/agressive/TryPossessPawn(atom/new_pawn)
+	. = ..()
+	if(. & AI_CONTROLLER_INCOMPATIBLE)
+		return
+	blackboard[BB_DOG_AGRESSIVE] = TRUE
 
 /datum/ai_controller/dog/process(delta_time)
 	if(ismob(pawn))
@@ -292,4 +298,7 @@
 			blackboard[BB_DOG_HARASS_TARGET] = WEAKREF(pointed_movable)
 			if(living_pawn.buckled)
 				LAZYADD(current_behaviors, GET_AI_BEHAVIOR(/datum/ai_behavior/resist))//in case they are in bed or something
-			LAZYADD(current_behaviors, GET_AI_BEHAVIOR(/datum/ai_behavior/harass))
+			if(blackboard[BB_DOG_AGRESSIVE])
+				LAZYADD(current_behaviors, GET_AI_BEHAVIOR(/datum/ai_behavior/harass/agressive))
+			else
+				LAZYADD(current_behaviors, GET_AI_BEHAVIOR(/datum/ai_behavior/harass))

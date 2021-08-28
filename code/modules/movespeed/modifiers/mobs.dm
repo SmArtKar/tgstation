@@ -127,8 +127,5 @@
 /datum/movespeed_modifier/morph_disguised
 	multiplicative_slowdown = 1
 
-/datum/movespeed_modifier/demonic_miner
-	multiplicative_slowdown = -2
-
 /datum/movespeed_modifier/glory_kill
 	multiplicative_slowdown = -0.3

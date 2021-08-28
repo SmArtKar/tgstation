@@ -209,3 +209,6 @@
 
 	living_pawn.melee_damage_lower = old_melee_lower
 	living_pawn.melee_damage_upper = old_melee_upper
+
+/datum/ai_behavior/harass/agressive
+	required_distance = 1

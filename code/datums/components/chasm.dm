@@ -28,6 +28,9 @@
 		/obj/effect/wisp,
 		))
 
+	var/stun_time = 10 SECONDS
+	var/brute_loss = 30
+
 /datum/component/chasm/Initialize(turf/target)
 	RegisterSignal(parent, COMSIG_ATOM_ENTERED, .proc/Entered)
 	target_turf = target
@@ -107,8 +110,8 @@
 		AM.forceMove(T)
 		if(isliving(AM))
 			var/mob/living/L = AM
-			L.Paralyze(100)
-			L.adjustBruteLoss(30)
+			L.Paralyze(stun_time)
+			L.adjustBruteLoss(brute_loss)
 		falling_atoms -= falling_ref
 
 	else
@@ -151,3 +154,30 @@
 			AM.color = oldcolor
 			AM.transform = oldtransform
 			AM.throw_at(get_edge_target_turf(parent,pick(GLOB.alldirs)),rand(1, 10),rand(1, 10))
+
+/datum/component/chasm/bluespace
+	stun_time = 3 SECONDS
+	brute_loss = 50
+
+/datum/component/chasm/bluespace/Initialize()
+	RegisterSignal(parent, COMSIG_ATOM_ENTERED, .proc/Entered)
+	pick_destignation()
+	START_PROCESSING(SSobj, src)
+
+/datum/component/chasm/bluespace/proc/pick_destignation()
+	var/list/range_turfs = list()
+	for(var/turf/open/possible_turf in orange(14, parent))
+		if(istype(possible_turf, /turf/open/chasm/bluespace) || possible_turf.is_blocked_turf())
+			continue
+		range_turfs.Add(possible_turf)
+
+	for(var/turf/open/excluded_turf in orange(5, parent))
+		if(excluded_turf in range_turfs)
+			range_turfs.Remove(excluded_turf)
+	target_turf = pick(range_turfs)
+
+/datum/component/chasm/bluespace/drop(atom/movable/AM)
+	. = ..()
+	if(target_turf)
+		new /obj/effect/temp_visual/sparks_bluespace(target_turf)
+	pick_destignation() //Each time we pick new destignation

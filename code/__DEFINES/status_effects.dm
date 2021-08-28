@@ -124,6 +124,8 @@
 
 #define STATUS_EFFECT_BLOODYMARK /datum/status_effect/bloody_mark
 
+#define STATUS_EFFECT_DEMON_MARK /datum/status_effect/demon_mark
+
 //Deals with covering the target in ants.
 #define STATUS_EFFECT_ANTS /datum/status_effect/ants
 

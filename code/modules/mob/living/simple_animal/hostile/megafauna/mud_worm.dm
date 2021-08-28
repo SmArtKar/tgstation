@@ -33,9 +33,12 @@
 	ranged_cooldown_time = 40
 
 	del_on_death = TRUE
-	loot = list(/obj/item/worm_tongue, /obj/effect/spawner/lootdrop/mud_worm)
-	crusher_loot = list(/obj/item/worm_tongue, /obj/item/armor_scales, /obj/effect/spawner/lootdrop/mud_worm, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
+	loot = list(/obj/item/worm_tongue)
+	crusher_loot = list(/obj/item/worm_tongue, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
 	common_loot = list(/obj/item/armor_scales)
+	rare_loot = list(/obj/effect/spawner/lootdrop/mud_worm)
+	rarity = 2
+
 	gps_name = "Crushing Signal"
 	light_range = 1
 	light_power = 2
@@ -239,6 +242,9 @@
 	var/able_to_move = FALSE
 	for(var/direction in GLOB.cardinals)
 		var/turf/stepped = get_step(get_turf(src), direction)
+		if(!stepped)
+			continue
+
 		if(!(locate(type) in stepped) && !((isclosedturf(stepped) || stepped.is_blocked_turf()) && !ismineralturf(stepped)))
 			able_to_move = TRUE
 			break

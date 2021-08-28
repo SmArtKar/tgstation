@@ -586,12 +586,12 @@
 
 /atom/movable/screen/alert/status_effect/crystal_heart
 	name = "Crystal Heart"
-	desc = "Your heart has been crystallised by consuming a crystal fruit, giving you great power for a brief moment!"
+	desc = "Your heart has been crystallised from consuming a crystal fruit, giving you great power for a brief moment!"
 	icon_state = "crystallization"
 
 /datum/status_effect/crystal_heart
 	id = "crystal_heart"
-	duration = 30 SECONDS
+	duration = 15 SECONDS
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = /atom/movable/screen/alert/status_effect/crystal_heart
 
@@ -638,10 +638,10 @@
 #define SOULS_LEVEL_THREE 50
 #define SOULS_LEVEL_FOUR 75
 
-#define LEVEL_ONE_TRAITS 	list(TRAIT_IGNOREDAMAGESLOWDOWN)
-#define LEVEL_TWO_TRAITS 	list(TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_HARDLY_WOUNDED)
-#define LEVEL_THREE_TRAITS  list(TRAIT_IGNOREDAMAGESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_HARDLY_WOUNDED, TRAIT_NOSOFTCRIT, TRAIT_SLEEPIMMUNE)
-#define LEVEL_FOUR_TRAITS   list(TRAIT_IGNORESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_NEVER_WOUNDED, TRAIT_NOSOFTCRIT, TRAIT_NOHARDCRIT, TRAIT_SLEEPIMMUNE, TRAIT_NODISMEMBER, TRAIT_NOBLEED)
+#define LEVEL_ONE_TRAITS 	list()
+#define LEVEL_TWO_TRAITS 	list(TRAIT_STRONG_MINER)
+#define LEVEL_THREE_TRAITS  list(TRAIT_STRONG_MINER)
+#define LEVEL_FOUR_TRAITS   list(TRAIT_IGNORESLOWDOWN, TRAIT_STRONG_MINER)
 
 /datum/status_effect/demonic_energy
 	id = "demonic_energy"

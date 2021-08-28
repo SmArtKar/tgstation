@@ -35,7 +35,7 @@
 
 /mob/living/carbon/human/species/monkey/jungle/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 
 /mob/living/carbon/human/species/monkey/punpun //except for a few special persistence features, pun pun is just a normal monkey
 	name = "Pun Pun" //C A N O N

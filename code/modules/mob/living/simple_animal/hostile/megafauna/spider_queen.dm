@@ -53,12 +53,14 @@
 	aggro_vision_range = 18
 	light_range = 0
 
-	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye)
-	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/effect/spawner/lootdrop/spider_queen, /obj/item/flashlight/spider_eye, /obj/item/crusher_trophy/spider_leg)
+	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye)
+	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye, /obj/item/crusher_trophy/spider_leg)
+	common_loot = list(/obj/effect/spawner/lootdrop/spider_queen)
+	spawns_minions = TRUE
 
 	wander = TRUE
 	gps_name = "Webbed Signal"
-	deathmessage = "stops moving as it falls to the ground, dead"
+	deathmessage = "drops dead, it's legs curling upwards"
 	del_on_death = FALSE
 	pixel_x = -3
 	var/list/vored = list()
@@ -249,8 +251,8 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shockwave(range = 3, iteration_duration = 2)
 	visible_message("<span class='boldwarning'>[src] smashes the ground around them!</span>")
-	playsound(src, 'sound/weapons/sonic_jackhammer.ogg', 200, 1) //I mean, why not?
-	SLEEP_CHECK_DEATH(10)
+	playsound(src, 'sound/weapons/sonic_jackhammer.ogg', 200, 1)
+	SLEEP_CHECK_DEATH(5)
 	var/list/hit_things = list()
 	for(var/i in 1 to range)
 		for(var/turf/T in (view(i, src) - view(i - 1, src)))
@@ -260,7 +262,7 @@
 			for(var/mob/living/L in T.contents)
 				if(L != src && !(L in hit_things) && !faction_check(L.faction, faction))
 					var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
-					L.safe_throw_at(throwtarget, 6 / i, 1, src)
+					L.throw_at(throwtarget, 6 / i, 1, src)
 					L.Stun(10 / i)
 					L.apply_damage_type(20 / i, BRUTE)
 					hit_things += L
@@ -485,8 +487,8 @@
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
 	name = "tamed baby cave spider"
 	desc = "A pitch-black cave spider baby with glowing purple eyes and turquoise stripe on it's back. It seems completely friendly and non-hostile."
-	maxHealth = 300 //Made it tough so it won't get instakilled by fauna
-	health = 300
+	maxHealth = 250 //Made it tough so it won't get instakilled by fauna
+	health = 250
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	ranged = FALSE
@@ -511,11 +513,26 @@
 		can_have_ai = FALSE
 		toggle_ai(AI_OFF)
 
+/mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/attacked_by(obj/item/I, mob/living/user)
+	. = ..()
+	if(!istype(I, /obj/item/food/grown/jungle_flora/bagelshroom) && !istype(I, /obj/item/food/cut_bagelshroom))
+		return
+
+	if(stat == DEAD)
+		to_chat(user, span_warning("[src] is dead!"))
+
+	user.visible_message(span_notice("[user] hand-feeds [I] to [src]."), span_notice("You hand-feed [src] to [user]."))
+	new /obj/effect/temp_visual/heart(loc)
+	if(prob(50))
+		manual_emote("chitters happily!")
+	qdel(I)
+	adjustHealth(-75) //Heal it with bagelshrooms!
+
 /obj/effect/spawner/lootdrop/spider_queen
 	name = "spider queen loot spawner"
 	loot = list(/obj/item/stack/sheet/spidersilk = 1, /obj/structure/spider/queen_egg/mount = 1)
 
-/obj/item/flashlight/spider_eye
+/obj/item/spider_eye
 	name = "spider queen eye"
 	desc = "A giant eye of a spider queen. It looks squishy..."
 	icon = 'icons/obj/jungle/artefacts.dmi'
@@ -529,21 +546,21 @@
 	light_system = MOVABLE_LIGHT_DIRECTIONAL
 	light_range = 3
 	light_color = "#993FD4"
-	flashlight_sound = 'sound/misc/splort.ogg'
+	light_on = FALSE
 
-/obj/item/flashlight/spider_eye/attack_self(mob/user)
-	on = TRUE
-	playsound(user, flashlight_sound, 40, TRUE)
-	update_brightness(user)
+/obj/item/spider_eye/attack_self(mob/user)
+	playsound(user, 'sound/misc/splort.ogg', 40, TRUE)
+	icon_state = initial(icon_state)
+	set_light_on(TRUE)
 	addtimer(CALLBACK(src, .proc/turnOff, user), 5 SECONDS)
 	for(var/X in actions)
 		var/datum/action/A = X
 		A.UpdateButtonIcon()
 
-/obj/item/flashlight/spider_eye/proc/turnOff(mob/user)
-	on = FALSE
-	playsound(user, flashlight_sound, 40, TRUE)
-	update_brightness(user)
+/obj/item/spider_eye/proc/turnOff(mob/user)
+	playsound(user, 'sound/misc/splort.ogg', 40, TRUE)
+	icon_state = "[initial(icon_state)]-on"
+	set_light_on(FALSE)
 	for(var/X in actions)
 		var/datum/action/A = X
 		A.UpdateButtonIcon()
@@ -571,7 +588,7 @@
 		for(var/mob/living/L in T.contents)
 			if(L != src && !(L in hit_things) && !faction_check(L.faction, user.faction))
 				var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
-				L.safe_throw_at(throwtarget, 5, 1, src)
+				L.throw_at(throwtarget, 5, 1, src)
 				L.apply_damage_type(10, BRUTE)
 				hit_things += L
 		sleep(1)

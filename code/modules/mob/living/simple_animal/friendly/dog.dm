@@ -522,6 +522,9 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 
 /mob/living/simple_animal/pet/dog/corgi/narsie/Life(delta_time = SSMOBS_DT, times_fired)
 	..()
+	try_feast()
+
+/mob/living/simple_animal/pet/dog/corgi/narsie/proc/try_feast()
 	for(var/mob/living/simple_animal/pet/P in range(1, src))
 		if(P != src && !istype(P,/mob/living/simple_animal/pet/dog/corgi/narsie))
 			visible_message(span_warning("[src] devours [P]!"), \

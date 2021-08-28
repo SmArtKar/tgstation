@@ -12,3 +12,7 @@
 	name = "Demonic Miner Arena"
 	icon_state = "dk_yellow"
 	ambience_index = AMBIENCE_SPOOKY
+
+/area/ruin/unpowered/vine_kraken
+	name = "Vine Kraken Nest"
+	icon_state = "dk_yellow"

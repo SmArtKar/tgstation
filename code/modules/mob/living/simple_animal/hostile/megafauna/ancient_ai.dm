@@ -66,6 +66,7 @@
 	loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade, /obj/item/experimental_components)
 	crusher_loot = list(/obj/item/clothing/suit/space/hardsuit/exosuit, /obj/item/malf_upgrade, /obj/item/experimental_components, /obj/item/crusher_trophy/ai_core)
 	common_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon)
+	spawns_minions = TRUE
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
 	var/shield_toggled = TRUE
@@ -202,7 +203,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/OpenFire()
 	anger_modifier = clamp((initial_servers / servers) + (shield_toggled ? 0 : 1), 0, 6)
-	ranged_cooldown = world.time + ((5 - anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
+	ranged_cooldown = world.time + ((4 - anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
 
 	if(get_dist(src, target) <= 2 && !floorshock)
 		activate_floor_shock()
@@ -217,7 +218,7 @@
 	else
 		rocket_type = /obj/projectile/bullet/a84mm/ancient/at
 
-	if(prob(anger_modifier * 5) && !bullethell)
+	if(prob(anger_modifier * 10) && !bullethell)
 		if(prob(anger_modifier * 5))
 			laser_flower_bullethell()
 			return
@@ -226,7 +227,7 @@
 	if(prob(anger_modifier * 5 + 10))
 		spawn_drones()
 	else if(prob(anger_modifier * 5 + 20))
-		violent_smash()
+		INVOKE_ASYNC(src, .proc/violent_smash)
 
 	if(prob(25))
 		activate_floor_shock()
@@ -549,8 +550,8 @@
  **/
 
 #define PROTON_ACTIVE_ARMOR list(MELEE = 85, BULLET = 40, LASER = 10, ENERGY = 20, BOMB = 50, BIO = 100, RAD = 100, FIRE = 100, ACID = 100)
-#define PROTON_INACTIVE_ARMOR list(MELEE = 20, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 0, BIO = 100, RAD = 50, FIRE = 100, ACID = 100)
-#define PROTON_ARMOR_DIFFERENCE list(MELEE = 65, BULLET = 20, ENERGY = 10, BOBM = 50, RAD = 50)
+#define PROTON_INACTIVE_ARMOR list(MELEE = 45, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 0, BIO = 100, RAD = 50, FIRE = 100, ACID = 100)
+#define PROTON_ARMOR_DIFFERENCE list(MELEE = 40, BULLET = 20, ENERGY = 10, BOBM = 50, RAD = 50)
 
 #define PROTON_JUMP_COOLDOWN 5 SECONDS //A bit better than jump boots
 #define PROTON_JUMP_RANGE 5

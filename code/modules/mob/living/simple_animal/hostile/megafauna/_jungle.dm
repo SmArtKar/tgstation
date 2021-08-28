@@ -17,6 +17,7 @@
 	var/list/common_crusher_loot = list()
 
 	var/list/former_targets = list()
+	var/spawns_minions = FALSE
 	crusher_damage_required = 0.3 //Because if you gangbang the boss it won't really be super high if there's a PKA user
 
 /mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target) //Even if you hit once, you'll count
@@ -58,4 +59,4 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/Initialize()
 	. = ..()
-	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, INNATE_TRAIT)

@@ -347,7 +347,7 @@
 		hammer_synced = new_hammer_synced
 
 /datum/status_effect/crusher_mark/on_apply()
-	if(owner.mob_size >= MOB_SIZE_LARGE || HAS_TRAIT(owner, TRAIT_CRUSHER_VUNERABLE))
+	if((owner.mob_size >= MOB_SIZE_LARGE || HAS_TRAIT(owner, TRAIT_CRUSHER_VUNERABLE)) && owner.stat != DEAD)
 		marked_underlay = mutable_appearance('icons/effects/effects.dmi', "shield2")
 		marked_underlay.pixel_x = -owner.pixel_x
 		marked_underlay.pixel_y = -owner.pixel_y
@@ -1071,3 +1071,36 @@
 	name = "Flesh Servant"
 	desc = "You are a Ghoul! A eldritch monster reanimated to serve its master."
 	icon_state = "mind_control"
+
+/datum/status_effect/demon_mark
+	id = "demon_mark"
+	duration = 100
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = null
+	var/mutable_appearance/marked_underlay
+	var/obj/item/gun/magic/staff/blood_claymore/claymore
+
+/datum/status_effect/demon_mark/on_creation(mob/living/new_owner, obj/item/gun/magic/staff/blood_claymore/new_claymore)
+	. = ..()
+	if(.)
+		claymore = new_claymore
+
+/datum/status_effect/demon_mark/on_apply()
+	if((owner.mob_size >= MOB_SIZE_LARGE || HAS_TRAIT(owner, TRAIT_CRUSHER_VUNERABLE)) && owner.stat != DEAD)
+		marked_underlay = mutable_appearance('icons/effects/effects.dmi', "demonic_mark")
+		marked_underlay.pixel_x = -owner.pixel_x
+		marked_underlay.pixel_y = -owner.pixel_y
+		owner.underlays += marked_underlay
+		return TRUE
+	return FALSE
+
+/datum/status_effect/demon_mark/Destroy()
+	claymore = null
+	if(owner)
+		owner.underlays -= marked_underlay
+	QDEL_NULL(marked_underlay)
+	return ..()
+
+/datum/status_effect/demon_mark/be_replaced()
+	owner.underlays -= marked_underlay
+	..()

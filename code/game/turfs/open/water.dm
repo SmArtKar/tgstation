@@ -60,9 +60,6 @@
 			continue
 		qdel(plant)
 
-	for(var/obj/structure/ladder/dirt_hole/hole in src) //Neither do we want holes
-		qdel(hole)
-
 	if(prob(flora_prob))
 		var/area/A = loc
 
@@ -91,7 +88,6 @@
 
 /turf/open/water/jungle/singularity_pull(S, current_size)
 	return
-
 
 /turf/open/water/jungle/attackby(obj/item/C, mob/user, params)
 	..()
@@ -154,7 +150,7 @@
 
 			L.adjust_fire_stacks(-10 * delta_time)
 
-			if(L.mob_size <= MOB_SIZE_SMALL || L.body_position == LYING_DOWN) //Lying/small mobs choke in water
+			if(L.mob_size <= MOB_SIZE_SMALL || L.body_position == LYING_DOWN) //Lying/small mobs drown in water
 				if(L.losebreath < 5)
 					L.losebreath = min(5, L.losebreath + 1)
 
