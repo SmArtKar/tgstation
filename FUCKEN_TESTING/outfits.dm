@@ -15,7 +15,7 @@
 	backpack_contents = list(
 		/obj/item/storage/box/healeys = 1,\
 		/obj/item/flashlight/seclite=1,\
-		/obj/item/kitchen/knife/combat/survival=1,\
+		/obj/item/knife/combat/survival=1,\
 		/obj/item/mining_voucher=2,\
 		/obj/item/gun/energy/kinetic_accelerator=1,\
 		/obj/item/kinetic_crusher=1,\
@@ -104,15 +104,14 @@
 	shoes = /obj/item/clothing/shoes/workboots/mining/explorer
 	gloves = /obj/item/clothing/gloves/crystal
 	uniform = /obj/item/clothing/under/syndicate
-	l_pocket = /obj/item/gps
-	r_pocket = /obj/item/storage/bag/ore/holding
 	glasses = /obj/item/clothing/glasses/meson/night
-	suit = /obj/item/clothing/suit/space/hardsuit/exosuit
+	back = /obj/item/mod/control/pre_equipped/exotic
+	suit = null
 
 	backpack_contents = list(
 		/obj/item/storage/box/healeys = 1,\
 		/obj/item/flashlight/seclite=1,\
-		/obj/item/kitchen/knife/combat/survival=1,\
+		/obj/item/knife/combat/survival=1,\
 		/obj/item/gun/energy/kinetic_accelerator=1,\
 		/obj/item/kinetic_crusher=1,\
 		/obj/item/gun/energy/plasmacutter/adv = 1,\
@@ -120,23 +119,20 @@
 		/obj/item/storage/box/kc_debug = 1,\
 		)
 
-/obj/effect/mob_spawn/human/debug_miner
+/obj/effect/mob_spawn/ghost_role/human/debug_miner
 	name = "debug mining cryostasis sleeper"
 	desc = "A humming sleeper with a silhouetted occupant inside. Its stasis function is broken and it's likely being used as a bed."
-	mob_name = "a debug miner"
+	prompt_name = "a debug miner"
 	icon = 'icons/obj/lavaland/spawners.dmi'
 	icon_state = "cryostasis_sleeper"
 	outfit = /datum/outfit/debug_miner
-	roundstart = FALSE
-	death = FALSE
-	random = TRUE
-	mob_species = /datum/species/human
-	short_desc = "You're a debug miner on some jungle planet. Blame SmArtKar for forcing you to do this."
-	flavour_text = "You're a debug miner on some jungle planet. Blame SmArtKar for forcing you to do this. Explore this land, kill monsters, die and repeat again! Just don't abuse suicides to get infinite starting gear, okay?"
+	you_are_text = "You're smartkar's mining slave."
+	flavour_text = "You're smartkar's mining slave. Cope with it."
+	spawner_job_path = /datum/job/hermit
 
-/obj/effect/mob_spawn/human/debug_miner/Destroy()
+/obj/effect/mob_spawn/ghost_role/human/debug_miner/Destroy()
 	new type(get_turf(src))
 	return ..()
 
-/obj/effect/mob_spawn/human/debug_miner/ultra
+/obj/effect/mob_spawn/ghost_role/human/debug_miner/ultra
 	outfit = /datum/outfit/debug_miner/ultra

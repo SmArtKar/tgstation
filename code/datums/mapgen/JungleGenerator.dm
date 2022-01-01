@@ -100,7 +100,7 @@
 
 	cave_area.RunGeneration()
 
-	//spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle, /area/mine/planetgeneration) ///Uncomment if you want to spawn rivers as well. Do not uncomment unless lighting shit is reworked.
+	spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle, /area/mine/planetgeneration) ///Uncomment if you want to spawn rivers as well. Do not uncomment unless lighting shit is reworked.
 
 /turf/open/genturf
 	name = "ungenerated turf"
@@ -112,7 +112,10 @@
 	name = "planet generation area"
 
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
+
 	map_generator = /datum/map_generator/jungle_generator
+	static_lighting = FALSE
+	base_lighting_alpha = 255
 	outdoors = TRUE
 
 /area/mine/planetgeneration_caves
@@ -120,10 +123,12 @@
 
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/cave_generator/jungle/surface
+	base_lighting_alpha = 0
 
 /area/mine/planetgeneration_caves/deep
 	name = "jungle caves generation area"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep
+	base_lighting_alpha = 0
 
 /area/mine/planetgeneration_caves/deep/bottom
 	name = "deep jungle caves generation area"

@@ -43,8 +43,8 @@
 	ranged_cooldown_time = 20
 	aggro_vision_range = 18
 
-	loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/amber_core)
-	crusher_loot = list(/obj/effect/spawner/lootdrop/time_crystal, /obj/item/amber_core, /obj/item/crusher_trophy/crystal_shard)
+	loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/amber_core)
+	crusher_loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/amber_core, /obj/item/crusher_trophy/crystal_shard)
 
 	wander = FALSE
 	gps_name = "Vibrating Signal"
@@ -225,8 +225,8 @@
 
 	while(get_dist(src, target) > 6)
 		var/turf/next_turf = get_step(get_turf(src), get_dir(src, target))
+		var/chronofield = new /obj/effect/timestop(get_turf(src), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, list(src))
 		Move(next_turf)
-		var/chronofield = make_field(/datum/proximity_monitor/advanced/timestop/amber, list("current_range" = 1, "host" = src, "immune" = list(src), "check_anti_magic" = FALSE, "check_holy" = FALSE))
 		QDEL_IN(chronofield, AMBER_TIMESTOP_DURATION)
 		SLEEP_CHECK_DEATH(1)
 
@@ -280,7 +280,7 @@
 
 /obj/projectile/chronosphere/on_range()
 	new /obj/effect/temp_visual/chronoexplosion(get_turf(src))
-	new /obj/effect/timestop/amber(get_turf(src), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, list(firer))
+	new /obj/effect/timestop(get_turf(src), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, list(firer))
 	. = ..()
 
 
@@ -288,7 +288,7 @@
 	if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal) || istype(target, /mob/living/simple_animal/hostile/jungle/crystal_turret))
 		return PROJECTILE_PIERCE_PHASE
 
-	new /obj/effect/timestop/amber(get_turf(target), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, list(firer))
+	new /obj/effect/timestop(get_turf(target), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, list(firer))
 	. = ..()
 
 /obj/projectile/crystal
@@ -318,39 +318,6 @@
 		name = "weakened [name]"
 		damage = damage * 0.25
 		pressure_decreased = TRUE
-
-/obj/effect/timestop/amber
-	invisibility = 101
-	sound_on_del = FALSE
-
-/obj/effect/timestop/amber/timestop()
-	target = get_turf(src)
-	chronofield = make_field(/datum/proximity_monitor/advanced/timestop/amber, list("current_range" = freezerange, "host" = src, "immune" = immune, "check_anti_magic" = check_anti_magic, "check_holy" = check_holy))
-	QDEL_IN(src, duration)
-
-/datum/proximity_monitor/advanced/timestop/amber
-	var/list/immune_types = list(/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal,
-								 /obj/projectile/crystal_shards,
-								 /obj/projectile/amber_crystal,
-								 /obj/projectile/chronosphere,
-								 /mob/living/simple_animal/hostile/jungle/crystal_turret,
-								 /obj/effect/temp_visual/crystal_killbeam)
-
-/datum/proximity_monitor/advanced/timestop/amber/freeze_atom(atom/movable/A)
-	if(isprojectile(A))
-		var/obj/projectile/proj = A
-		if(proj.firer in immune)
-			return FALSE
-	for(var/immune_type in immune_types)
-		if(istype(A, immune_type))
-			return
-	. = ..()
-
-/datum/proximity_monitor/advanced/timestop/amber/into_the_negative_zone(atom/A)
-	A.add_atom_colour("#DE9E41", TEMPORARY_COLOUR_PRIORITY)
-
-/datum/proximity_monitor/advanced/timestop/amber/escape_the_negative_zone(atom/A)
-	A.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
 
 /mob/living/simple_animal/hostile/jungle/crystal_turret
 	name = "floating crystal"
@@ -426,7 +393,7 @@
 	desc = "A bright orange amber shard. Suitable as a trophy for a kinetic crusher."
 	icon_state = "crystal_shard"
 	denied_type = list(/obj/item/crusher_trophy/crystal_shard, /obj/item/crusher_trophy/axe_head)
-	bonus_value = 3
+	bonus_value = 5
 
 /obj/item/crusher_trophy/crystal_shard/effect_desc()
 	return "mark detonation to stun creatures and make them more vunerable for a bit"
@@ -439,7 +406,7 @@
 		var/mob/living/simple_animal/H = target
 		H.Stun(bonus_value)
 		var/damage_coeffs = H.damage_coeff
-		sleep(bonus_value * 5)
+		sleep(bonus_value * 6)
 		H.damage_coeff = damage_coeffs
 
 /obj/item/clothing/gloves/crystal
@@ -454,7 +421,7 @@
 	heat_protection = HANDS
 	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
 	resistance_flags = LAVA_PROOF | FIRE_PROOF | ACID_PROOF
-	armor = list(MELEE = 15, BULLET = 25, LASER = 15, ENERGY = 15, BOMB = 100, BIO = 0, RAD = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 15, BULLET = 25, LASER = 15, ENERGY = 15, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
 	var/charges = 10
 
 /obj/item/clothing/gloves/crystal/equipped(mob/user, slot)
@@ -498,7 +465,7 @@
 /obj/item/clothing/gloves/crystal/proc/recharge()
 	charges = min(10, charges + 1)
 
-/obj/effect/spawner/lootdrop/time_crystal
+/obj/effect/spawner/random/time_crystal
 	name = "time crystal loot spawner"
 	loot = list(/obj/item/clothing/gloves/crystal = 2, /obj/item/crystal_fruit = 1)
 

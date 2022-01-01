@@ -1,4 +1,5 @@
 /mob/living/carbon/human/species/monkey
+	icon_state = "monkey" //for mapping
 	race = /datum/species/monkey
 	ai_controller = /datum/ai_controller/monkey
 	faction = list("neutral", "monkey")
@@ -20,7 +21,7 @@
 /mob/living/carbon/human/species/monkey/angry
 	ai_controller = /datum/ai_controller/monkey/angry
 
-/mob/living/carbon/human/species/monkey/angry/Initialize()
+/mob/living/carbon/human/species/monkey/angry/Initialize(mapload)
 	. = ..()
 	if(prob(10))
 		var/obj/item/clothing/head/helmet/justice/escape/helmet = new(src)
@@ -30,7 +31,6 @@
 /mob/living/carbon/human/species/monkey/jungle
 	faction = list("jungle")
 	race = /datum/species/monkey/jungle //Resistant to pressure and don't need as much oxygen
-	weather_immunities = list(WEATHER_ACID)
 	ai_controller = /datum/ai_controller/monkey/jungle
 
 /mob/living/carbon/human/species/monkey/jungle/Initialize(mapload)
@@ -49,7 +49,7 @@
 	var/relic_mask
 	var/memory_saved = FALSE
 
-/mob/living/carbon/human/species/monkey/punpun/Initialize()
+/mob/living/carbon/human/species/monkey/punpun/Initialize(mapload)
 	Read_Memory()
 
 	var/name_to_use = name

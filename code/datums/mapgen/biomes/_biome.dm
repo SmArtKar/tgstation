@@ -22,7 +22,7 @@
 /datum/biome/proc/generate_turf(turf/gen_turf)
 	gen_turf.ChangeTurf(turf_type, null, CHANGETURF_DEFER_CHANGE)
 	if(length(fauna_types) && prob(fauna_density))
-		var/mob/fauna = pickweight(fauna_types)
+		var/mob/fauna = pick_weight(fauna_types)
 		var/can_spawn = TRUE
 
 		for(var/mob/living/simple_animal/hostile/thing in orange(8, gen_turf))
@@ -41,7 +41,7 @@
 			new fauna(gen_turf)
 
 	if(length(flora_types) && prob(flora_density))
-		var/obj/structure/flora = pickweight(flora_types)
+		var/obj/structure/flora = pick(flora_types)
 		new flora(gen_turf)
 
 /datum/biome/mudlands
@@ -91,12 +91,6 @@
 	turf_type = /turf/closed/mineral/random/jungle
 	natural_light = FALSE
 	generate_caves = TRUE
-
-/datum/biome/mountain/generate_turf(turf/gen_turf)
-	. = ..()
-	gen_turf.cut_overlay(/obj/effect/fullbright)
-	gen_turf.dynamic_lighting = TRUE
-	gen_turf.lighting_build_overlay()
 
 /datum/biome/mountain/high/generate_turf(turf/gen_turf)
 	. = ..()

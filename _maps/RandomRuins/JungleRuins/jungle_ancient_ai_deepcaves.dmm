@@ -5,7 +5,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "aN" = (
 /obj/effect/turf_decal/delivery,
 /obj/machinery/rogue_drone_spawner,
@@ -156,10 +156,10 @@
 	},
 /area/ruin/powered/ancient_ai)
 "fd" = (
-/obj/effect/mob_spawn/human/corpse/nanotrasensoldier,
+/obj/effect/mob_spawn/corpse/human/nanotrasensoldier,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "gk" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -303,7 +303,7 @@
 /obj/structure/flora/rock/pile,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "kX" = (
 /obj/machinery/giant_arm_holder,
 /turf/closed/indestructible/syndicate,
@@ -345,7 +345,7 @@
 /mob/living/simple_animal/hostile/jungle/bat,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "mt" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/delivery,
@@ -503,7 +503,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "rl" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
@@ -896,11 +896,11 @@
 /mob/living/simple_animal/hostile/jungle/bat,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "CE" = (
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "CP" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -915,7 +915,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "CZ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light/broken{
@@ -965,7 +965,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "Fn" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
@@ -982,7 +982,7 @@
 /mob/living/simple_animal/hostile/jungle/snakeman,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "GT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/yellow{
@@ -1034,7 +1034,7 @@
 /obj/structure/flora/rock,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "Ih" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838";
@@ -1057,7 +1057,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "IK" = (
 /obj/machinery/light/broken{
 	dir = 8
@@ -1075,7 +1075,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "Ju" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -1104,7 +1104,7 @@
 /obj/structure/fence,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "JW" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/yellow{
@@ -1202,7 +1202,7 @@
 /mob/living/simple_animal/hostile/jungle/bat,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "LA" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
@@ -1424,7 +1424,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "SF" = (
 /obj/effect/turf_decal/siding/blue{
 	color = "#383838"
@@ -1572,7 +1572,7 @@
 /obj/structure/fence/door,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
-/area/template_noop)
+/area/ruin/powered/ancient_ai)
 "WB" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9

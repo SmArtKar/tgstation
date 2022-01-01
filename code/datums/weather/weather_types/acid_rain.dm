@@ -25,7 +25,7 @@
 	target_trait = ZTRAIT_ACIDRAIN
 	weather_color = COLOR_GREEN_GRAY
 
-	immunity_type = WEATHER_ACID // temp
+	immunity_type = TRAIT_ACID_IMMUNE
 
 	barometer_predictable = TRUE
 

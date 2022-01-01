@@ -49,8 +49,8 @@
 
 	pixel_y = -1
 
-	common_loot = list(/obj/item/demon_stone, /obj/effect/spawner/lootdrop/demonic_miner)
-	common_crusher_loot = list(/obj/item/demon_stone, /obj/effect/spawner/lootdrop/demonic_miner, /obj/item/crusher_trophy/demon_horn) //Let's reward everybody who killed this guy, he's hard and loot is only usable for fauna killing.
+	common_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/demonic_miner)
+	common_crusher_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/demonic_miner, /obj/item/crusher_trophy/demon_horn) //Let's reward everybody who killed this guy, he's hard and loot is only usable for fauna killing.
 	loot = list(/obj/effect/decal/remains/human)
 
 	del_on_death = TRUE
@@ -160,7 +160,7 @@
 	noaction = TRUE
 
 	while((ending_angle > starting_angle && current_angle < ending_angle) || (ending_angle < starting_angle && current_angle > ending_angle))
-		for(var/turf/check_turf in getline(cur_turf, target_turf))
+		for(var/turf/check_turf in get_line(cur_turf, target_turf))
 			if(isclosedturf(check_turf))
 				target_turf = check_turf
 				break
@@ -196,7 +196,7 @@
 		targeting = target
 	var/target_turf = get_turf(targeting)
 	var/end_turf = get_ranged_target_turf_direct(src, target_turf, 40, 0)
-	var/turf_line = getline(get_turf(src), end_turf) - get_turf(src)
+	var/turf_line = get_line(get_turf(src), end_turf) - get_turf(src)
 	for(var/turf/targeting_turf in turf_line)
 		if(isclosedturf(targeting_turf))
 			return
@@ -261,11 +261,11 @@
 		for(var/i = 1 to 3)
 			blast_circle(target)
 			SLEEP_CHECK_DEATH(3)
-		channel_ray(Get_Angle(src, target) - 45, Get_Angle(src, target) + 45)
+		channel_ray(get_angle(src, target) - 45, get_angle(src, target) + 45)
 		return
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
-	for(var/i in 1 to 32)
+	for(var/i in 1 to 16)
 		if(negative)
 			counter--
 		else
@@ -284,7 +284,7 @@
 	if(noaction)
 		return
 
-	if(ranged_cooldown < world.time)
+	if(ranged_cooldown < world.time) //Because of some shitcode fuckery
 		INVOKE_ASYNC(src, .proc/OpenFire)
 
 	. = ..()
@@ -293,7 +293,7 @@
 	if(noaction)
 		return
 
-	if(ranged_cooldown < world.time)
+	if(ranged_cooldown < world.time) //Because of some shitcode fuckery
 		INVOKE_ASYNC(src, .proc/OpenFire)
 
 	. = ..()
@@ -312,7 +312,7 @@
 		blast_line_directions()
 		spiral_shoot()
 
-	var/picked_attack = rand(1, 6)
+	var/picked_attack = rand(1, 8)
 	switch(picked_attack)
 		if(1)
 			jaunt_at(target)
@@ -320,7 +320,7 @@
 			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
 			spiral_shoot()
 		if(2)
-			channel_ray(Get_Angle(src, target) - 45, Get_Angle(src, target) + 45)
+			channel_ray(get_angle(src, target) - 45, get_angle(src, target) + 45)
 			ranged_cooldown = world.time + ((demon_form ? 3 : 6) * anger_modifier SECONDS)
 		if(3)
 			if(demon_form)
@@ -461,7 +461,7 @@
 
 		var/target_turf = get_turf(beam_target)
 		var/end_turf = get_ranged_target_turf_direct(src, target_turf, 40, 0)
-		var/turf_line = getline(get_turf(src), end_turf)
+		var/turf_line = get_line(get_turf(src), end_turf)
 		for(var/turf/targeting_turf in turf_line)
 			if(isclosedturf(targeting_turf))
 				break
@@ -484,7 +484,7 @@
 		var/turf/target_turf = get_turf_in_angle(angle, cur_turf, 15)
 		var/obj/effect/temp_beam_target/temp_target = new(get_turf(target_turf))
 
-		for(var/turf/check_turf in getline(cur_turf, target_turf))
+		for(var/turf/check_turf in get_line(cur_turf, target_turf))
 			if(isclosedturf(check_turf))
 				target_turf = check_turf
 				break
@@ -501,13 +501,12 @@
 	armour_penetration = 100
 	speed = 2
 	damage_type = BURN
-	flag = MAGIC
 
 /mob/living/simple_animal/hostile/imp/demonic_miner
 	maxHealth = 40
 	health = 40
 	wander = FALSE
-	weather_immunities = list(WEATHER_LAVA)
+	weather_immunities = list(TRAIT_LAVA_IMMUNE)
 	faction = list("hell", "jungle", "boss")
 	var/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/king
 	var/beam
@@ -568,7 +567,7 @@
 	minbodytemp = 0
 	maxbodytemp = INFINITY
 	faction = list("jungle", "boss", "hell")
-	weather_immunities = list(WEATHER_ACID, WEATHER_LAVA)
+	weather_immunities = list(TRAIT_ACID_IMMUNE, TRAIT_LAVA_IMMUNE)
 	attack_verb_continuous = "flails at"
 	attack_verb_simple = "flail at"
 	maxHealth = 40
@@ -690,7 +689,7 @@
 			spirits.Remove(shadow)
 			qdel(shadow)
 
-/obj/effect/spawner/lootdrop/demonic_miner
+/obj/effect/spawner/random/demonic_miner
 	name = "demonic miner loot spawner"
 	loot = list(/obj/item/gun/magic/staff/blood_claymore = 1, /obj/item/book/granter/spell/throwing_knives = 1, /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound = 1)
 
@@ -734,7 +733,6 @@
 	icon_state = "blood_wave"
 	damage = 25
 	damage_type = BURN
-	flag = MAGIC
 	nodamage = FALSE
 
 /obj/projectile/magic/blood_wave/on_hit(atom/target, blocked = FALSE)
@@ -774,7 +772,7 @@
 /obj/item/gun/magic/staff/blood_claymore/Initialize()
 	. = ..()
 	AddComponent(/datum/component/butchering, 15, 125, 0, hitsound)
-	AddComponent(/datum/component/lifesteal, 8)
+	AddElement(/datum/element/lifesteal, 8)
 	AddElement(/datum/element/update_icon_updates_onmob)
 
 /obj/item/gun/magic/staff/blood_claymore/attack_self(mob/user)
@@ -801,7 +799,7 @@
 	user.spin(72, 1)
 
 	while(current_angle < 360)
-		for(var/turf/check_turf in getline(cur_turf, target_turf))
+		for(var/turf/check_turf in get_line(cur_turf, target_turf))
 			if(isclosedturf(check_turf))
 				target_turf = check_turf
 				break
@@ -809,7 +807,7 @@
 			for(var/mob/living/victim in check_turf.contents)
 				if(victim != user && !faction_check(victim.faction, user.faction) && !(victim in already_hit) && isanimal(victim))
 					victim.Paralyze(20)
-					victim.adjustBruteLoss(375) //Only hits animals but much stronger than demonic miner's one because duh mobs have huge health pools and it is our ultimate attack
+					victim.adjustBruteLoss(600) //Only hits animals but much stronger than demonic miner's one because duh mobs have huge health pools and it is our ultimate attack
 					playsound(victim, 'sound/machines/clockcult/ark_damage.ogg', 50, TRUE)
 					to_chat(victim, span_userdanger("You're hit by a demonic ray!"))
 					already_hit.Add(victim)
@@ -844,7 +842,7 @@
 	user.forceMove(holder)
 
 	var/turf/teleturf
-	for(var/turf/check_turf in (getline(get_turf(user), get_turf(target)) - get_turf(user)))
+	for(var/turf/check_turf in (get_line(get_turf(user), get_turf(target)) - get_turf(user)))
 		if(isclosedturf(check_turf) || check_turf.is_blocked_turf())
 			break
 		if(teleturf)
@@ -878,7 +876,7 @@
 
 /obj/projectile/magic/throwing_knife/on_hit(target, blocked = FALSE)
 	if(isanimal(target))
-		damage *= 6 //300 damage per full barrage
+		damage *= 10 //500 damage per full barrage
 	. = ..()
 	if(!.)
 		return
@@ -891,7 +889,7 @@
 
 /obj/effect/proc_holder/spell/targeted/infinite_guns/throwing_knives
 	name = "Summon Knives"
-	desc = "Summon a barrage of demonic throwing knives that will home on their target."
+	desc = "Summon a barrage of demonic throwing knives."
 	action_icon_state = "throwing_knives"
 	action_background_icon_state = "bg_demon"
 	clothes_req = FALSE
@@ -930,7 +928,7 @@
 /obj/item/gun/ballistic/rifle/enchanted/throwing_knife/Initialize()
 	. = ..()
 	AddComponent(/datum/component/butchering, 15, 125, 0, hitsound)
-	AddComponent(/datum/component/lifesteal, 5)
+	AddElement(/datum/element/lifesteal, 5)
 
 /obj/item/gun/ballistic/rifle/enchanted/throwing_knife/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	. = ..()
@@ -965,13 +963,13 @@ obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/use
 	desc = "A pitch-black hound with glowing red eyes that came straight from hell."
 	ai_controller = /datum/ai_controller/dog/agressive
 
-	health = 250
-	maxHealth = 250
+	health = 300
+	maxHealth = 300
 	melee_damage_lower = 15
 	melee_damage_upper = 25
 
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	weather_immunities = list(WEATHER_ACID, WEATHER_LAVA)
+	weather_immunities = list(TRAIT_ACID_IMMUNE, TRAIT_LAVA_IMMUNE)
 	minbodytemp = 0
 	maxbodytemp = 450
 
@@ -987,7 +985,7 @@ obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/use
 			victim.gib()
 
 /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound/narsie_act()
-	adjustBruteLoss(-100)
+	adjustBruteLoss(-200)
 
 /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()

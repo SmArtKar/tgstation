@@ -19,7 +19,7 @@
 
 #define VORE_PROBABLILITY 40
 #define EGG_LENGTH 5 SECONDS
-#define SPIDER_SILK_LIMIT 80
+#define SPIDER_SILK_LIMIT 60
 #define SPIDER_SILK_BUFF 10
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen
@@ -55,7 +55,7 @@
 
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye)
 	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye, /obj/item/crusher_trophy/spider_leg)
-	common_loot = list(/obj/effect/spawner/lootdrop/spider_queen)
+	common_loot = list(/obj/effect/spawner/random/spider_queen)
 	spawns_minions = TRUE
 
 	wander = TRUE
@@ -69,7 +69,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/Initialize()
 	. = ..()
-	AddComponent(/datum/component/knockback, 7, FALSE, TRUE)
+	AddElement(/datum/element/knockback, 7, FALSE, TRUE)
 	update_appearance()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/update_overlays()
@@ -93,7 +93,7 @@
 		GiveTarget(null)
 		return
 
-	ranged_cooldown = world.time + 30
+	ranged_cooldown = world.time + 35
 	anger_modifier = clamp(((maxHealth - health)/60), 0, 20)
 
 	if(get_dist(src, target) > aggro_vision_range / 2 || prob(anger_modifier + 25))
@@ -109,7 +109,7 @@
 		if(prob(40 + anger_modifier))
 			SLEEP_CHECK_DEATH(5)
 			shockwave()
-			ranged_cooldown = world.time + 60
+			ranged_cooldown = world.time + 70
 		return
 
 	shotgun()
@@ -236,13 +236,13 @@
 		if(isopenturf(fitting_turf) && !fitting_turf.is_blocked_turf())
 			possible_turfs[fitting_turf] = get_dist(src, fitting_turf)
 
-	var/obj/structure/spider/queen_egg/egg = new(pickweight(possible_turfs))
+	var/obj/structure/spider/queen_egg/egg = new(pick_weight(possible_turfs))
 	egg.mommy = src
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shotgun(set_angle)
 	ranged_cooldown = world.time + 20
 	var/turf/target_turf = get_turf(target)
-	var/angle_to_target = Get_Angle(src, target_turf)
+	var/angle_to_target = get_angle(src, target_turf)
 	if(isnum(set_angle))
 		angle_to_target = set_angle
 	var/static/list/shotgun_shot_angles = list(12.5, 7.5, 2.5, -2.5, -7.5, -12.5)
@@ -467,14 +467,13 @@
 	merge_type = /obj/item/stack/sheet/spidersilk
 
 /obj/item/stack/sheet/spidersilk/afterattack(atom/A, mob/living/user, proximity_flag, clickparams)
-	. = ..()
 	if(!istype(A, /obj/item/clothing/suit) && !istype(A, /obj/item/clothing/head))
-		return
+		return ..()
 
 	var/obj/item/clothing/target = A
 	if(((MELEE in target.armor) && target.armor[MELEE] >= SPIDER_SILK_LIMIT) || HAS_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED))
 		to_chat(user, span_warning("[target] can't be upgraded further!"))
-		return
+		return ..()
 
 	if(!(MELEE in target.armor))
 		target.armor[MELEE] = SPIDER_SILK_BUFF
@@ -487,8 +486,8 @@
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount
 	name = "tamed baby cave spider"
 	desc = "A pitch-black cave spider baby with glowing purple eyes and turquoise stripe on it's back. It seems completely friendly and non-hostile."
-	maxHealth = 250 //Made it tough so it won't get instakilled by fauna
-	health = 250
+	maxHealth = 300 //Made it tough so it won't get instakilled by fauna
+	health = 300
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	ranged = FALSE
@@ -528,7 +527,7 @@
 	qdel(I)
 	adjustHealth(-75) //Heal it with bagelshrooms!
 
-/obj/effect/spawner/lootdrop/spider_queen
+/obj/effect/spawner/random/spider_queen
 	name = "spider queen loot spawner"
 	loot = list(/obj/item/stack/sheet/spidersilk = 1, /obj/structure/spider/queen_egg/mount = 1)
 

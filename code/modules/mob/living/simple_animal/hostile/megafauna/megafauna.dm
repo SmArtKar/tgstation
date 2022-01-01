@@ -12,11 +12,11 @@ GLOBAL_LIST_EMPTY(megafauna)
 	obj_damage = 400
 	light_range = 3
 	faction = list("mining", "boss")
-	weather_immunities = list(WEATHER_LAVA,WEATHER_ASH)
+	weather_immunities = list(TRAIT_LAVA_IMMUNE,TRAIT_ASHSTORM_IMMUNE)
 	robust_searching = TRUE
 	ranged_ignores_vision = TRUE
 	stat_attack = DEAD
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_plas" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	damage_coeff = list(BRUTE = 1, BURN = 0.5, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 	minbodytemp = 0
 	maxbodytemp = INFINITY
@@ -163,12 +163,19 @@ GLOBAL_LIST_EMPTY(megafauna)
 		if (EXPLODE_LIGHT)
 			adjustBruteLoss(50)
 
-/// Sets the next time the megafauna can use a melee or ranged attack, in deciseconds
-/mob/living/simple_animal/hostile/megafauna/proc/SetRecoveryTime(buffer_time, ranged_buffer_time)
-	recovery_time = world.time + buffer_time
-	ranged_cooldown = world.time + buffer_time
-	if(isnum(ranged_buffer_time))
-		ranged_cooldown = world.time + ranged_buffer_time
+/// Sets/adds the next time the megafauna can use a melee or ranged attack, in deciseconds. It is a list to allow using named args. Use the ignore_staggered var if youre setting the cooldown to ranged_cooldown_time.
+/mob/living/simple_animal/hostile/megafauna/proc/update_cooldowns(list/cooldown_updates, ignore_staggered = FALSE)
+	if(!ignore_staggered && has_status_effect(STATUS_EFFECT_STAGGER))
+		for(var/update in cooldown_updates)
+			cooldown_updates[update] *= 2
+	if(cooldown_updates[COOLDOWN_UPDATE_SET_MELEE])
+		recovery_time = world.time + cooldown_updates[COOLDOWN_UPDATE_SET_MELEE]
+	if(cooldown_updates[COOLDOWN_UPDATE_ADD_MELEE])
+		recovery_time += cooldown_updates[COOLDOWN_UPDATE_ADD_MELEE]
+	if(cooldown_updates[COOLDOWN_UPDATE_SET_RANGED])
+		ranged_cooldown = world.time + cooldown_updates[COOLDOWN_UPDATE_SET_RANGED]
+	if(cooldown_updates[COOLDOWN_UPDATE_ADD_RANGED])
+		ranged_cooldown += cooldown_updates[COOLDOWN_UPDATE_ADD_RANGED]
 
 /// Grants medals and achievements to surrounding players
 /mob/living/simple_animal/hostile/megafauna/proc/grant_achievement(medaltype, scoretype, crusher_kill, list/grant_achievement = list())
@@ -180,6 +187,7 @@ GLOBAL_LIST_EMPTY(megafauna)
 	for(var/mob/living/L in grant_achievement)
 		if(L.stat || !L.client)
 			continue
+		L?.mind.add_memory(MEMORY_MEGAFAUNA_KILL, list(DETAIL_PROTAGONIST = L, DETAIL_DEUTERAGONIST = src), STORY_VALUE_LEGENDARY, memory_flags = MEMORY_CHECK_BLIND_AND_DEAF)
 		L.client.give_award(/datum/award/achievement/boss/boss_killer, L)
 		L.client.give_award(achievement_type, L)
 		if(crusher_kill && istype(L.get_active_held_item(), /obj/item/kinetic_crusher))

@@ -2,7 +2,7 @@
 	open_turf_types =  list(/turf/open/floor/plating/dirt/jungle = 1)
 	closed_turf_types =  list(/turf/closed/mineral/random/jungle = 1)
 
-	mob_spawn_list = list(/obj/effect/spawner/jungle/cave_mob_spawner) //We use a single spawner so it can separate water and land mobs
+	mob_spawn_list = list(/obj/effect/spawner/jungle/cave_mob_spawner = 1) //We use a single spawner so it can separate water and land mobs
 	//megafauna_spawn_list = list()
 	flora_spawn_list = list(/obj/structure/flora/rock = 2, /obj/structure/flora/rock/pile = 4, /obj/structure/flora/grass/jungle/b = 2, /obj/structure/flora/rock/jungle = 1)
 	//feature_spawn_list = list()
@@ -32,7 +32,7 @@
 		if(gen_turf.turf_flags & NO_RUINS)
 			stored_flags |= NO_RUINS
 
-		var/turf/new_turf = pickweight(closed ? closed_turf_types : open_turf_types)
+		var/turf/new_turf = pick_weight(closed ? closed_turf_types : open_turf_types)
 
 		new_turf = gen_turf.ChangeTurf(new_turf, initial(new_turf.baseturfs), CHANGETURF_DEFER_CHANGE)
 
@@ -49,7 +49,7 @@
 				if(!(A.area_flags & FLORA_ALLOWED))
 					can_spawn = FALSE
 				if(can_spawn)
-					spawned_flora = pickweight(flora_spawn_list)
+					spawned_flora = pick_weight(flora_spawn_list)
 					spawned_flora = new spawned_flora(new_open_turf)
 
 			//FEATURE SPAWNING HERE
@@ -60,7 +60,7 @@
 				if(!(A.area_flags & FLORA_ALLOWED))
 					can_spawn = FALSE
 
-				var/atom/picked_feature = pickweight(feature_spawn_list)
+				var/atom/picked_feature = pick_weight(feature_spawn_list)
 
 				for(var/obj/structure/F in range(7, new_open_turf))
 					if(istype(F, picked_feature))
@@ -73,7 +73,7 @@
 					spawned_feature = new picked_feature(new_open_turf)
 
 			if(prob(special_turf_chance))
-				special_gen_turfs[new_open_turf] = pickweight(special_turfs)
+				special_gen_turfs[new_open_turf] = pick_weight(special_turfs)
 
 			//MOB SPAWNING HERE
 
@@ -83,13 +83,13 @@
 				if(!(A.area_flags & MOB_SPAWN_ALLOWED))
 					can_spawn = FALSE
 
-				var/atom/picked_mob = pickweight(mob_spawn_list)
+				var/atom/picked_mob = pick_weight(mob_spawn_list)
 
 				if(picked_mob == SPAWN_MEGAFAUNA)
 					if((A.area_flags & MEGAFAUNA_SPAWN_ALLOWED) && megafauna_spawn_list?.len)
-						picked_mob = pickweight(megafauna_spawn_list)
+						picked_mob = pick_weight(megafauna_spawn_list)
 					else
-						picked_mob = pickweight(mob_spawn_list - SPAWN_MEGAFAUNA)
+						picked_mob = pick_weight(mob_spawn_list - SPAWN_MEGAFAUNA)
 
 				for(var/thing in urange(12, new_open_turf))
 					if(!ishostile(thing) && !istype(thing, /obj/effect/spawner))

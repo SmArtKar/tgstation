@@ -9,7 +9,7 @@
 
 /obj/projectile/bullet/gyro/on_hit(atom/target, blocked = FALSE)
 	..()
-	explosion(target, devastation_range = -1, light_impact_range = 2)
+	explosion(target, devastation_range = -1, light_impact_range = 2, explosion_cause = src)
 	return BULLET_ACT_HIT
 
 /// PM9 HEDP rocket
@@ -55,9 +55,9 @@
 
 /obj/projectile/bullet/a84mm/he/do_boom(atom/target, blocked=0)
 	if(!isliving(target)) //if the target isn't alive, so is a wall or something
-		explosion(target, heavy_impact_range = 1, light_impact_range = 2, flame_range = 3, flash_range = 4)
+		explosion(target, heavy_impact_range = 1, light_impact_range = 2, flame_range = 3, flash_range = 4, explosion_cause = src)
 	else
-		explosion(target, light_impact_range = 2, flame_range = 3, flash_range = 4)
+		explosion(target, light_impact_range = 2, flame_range = 3, flash_range = 4,  explosion_cause = src)
 
 /// PM9 weak rocket
 /obj/projectile/bullet/a84mm/weak
@@ -68,9 +68,9 @@
 
 /obj/projectile/bullet/a84mm/weak/do_boom(atom/target, blocked=0)
 	if(!isliving(target)) //if the target isn't alive, so is a wall or something
-		explosion(target, heavy_impact_range = 1, light_impact_range = 2, flame_range = 3, flash_range = 4)
+		explosion(target, heavy_impact_range = 1, light_impact_range = 2, flame_range = 3, flash_range = 4, explosion_cause = src)
 	else
-		explosion(target, light_impact_range = 2, flame_range = 3, flash_range = 4)
+		explosion(target, light_impact_range = 2, flame_range = 3, flash_range = 4, explosion_cause = src)
 
 /// Mech BRM-6 missile
 /obj/projectile/bullet/a84mm_br
@@ -101,7 +101,7 @@
 	..()
 	for(var/i in sturdy)
 		if(istype(target, i))
-			explosion(target, heavy_impact_range = 1, light_impact_range = 1, flash_range = 2)
+			explosion(target, heavy_impact_range = 1, light_impact_range = 1, flash_range = 2, explosion_cause = src)
 			return BULLET_ACT_HIT
 	//if(istype(target, /turf/closed) || ismecha(target))
 	new /obj/item/broken_missile(get_turf(src), 1)
@@ -114,7 +114,7 @@
 	speed = 2
 
 /obj/projectile/bullet/a84mm/ancient/do_boom(atom/target)
-	explosion(target, devastation_range = -1, heavy_impact_range = 0, light_impact_range = 1, flame_range = 2, flash_range = -1, adminlog = FALSE)
+	explosion(target, devastation_range = -1, heavy_impact_range = 0, light_impact_range = 0, flame_range = 1, flash_range = -1, adminlog = FALSE)
 
 /obj/projectile/bullet/a84mm/he/ancient
 	damage = 45
@@ -122,7 +122,7 @@
 	speed = 2
 
 /obj/projectile/bullet/a84mm/he/ancient/do_boom(atom/target, blocked=0)
-	explosion(target, light_impact_range = 1, flame_range = 2, flash_range = 0)
+	explosion(target, light_impact_range = 0, flame_range = 1, flash_range = -1)
 
 /obj/projectile/bullet/a84mm/ancient/heavy //Nasty ones
 	name ="\improper RDX rocket"
@@ -132,7 +132,7 @@
 	dismemberment = 40
 
 /obj/projectile/bullet/a84mm/ancient/heavy/do_boom(atom/target)
-	explosion(target, devastation_range = -1, heavy_impact_range = 1, light_impact_range = 2, flame_range = 3, flash_range = 2, adminlog = FALSE) //These ones are an exception and do flash
+	explosion(target, devastation_range = -1, heavy_impact_range = 1, light_impact_range = 1, flame_range = 2, flash_range = -1, adminlog = FALSE) //These ones are an exception and do flash
 
 /obj/projectile/bullet/a84mm/ancient/at
 	name ="\improper AT rocket"
@@ -145,9 +145,8 @@
 	explosion(target, devastation_range = -1, heavy_impact_range = -1, light_impact_range = 0, flame_range = 1, flash_range = -1, adminlog = FALSE)
 
 /obj/projectile/bullet/a84mm/ancient/at/seeking
-	damage = 15
 	speed = 0
-
 	homing = TRUE
+	homing_turn_speed = 20
 
 #undef SEEKING_ROTATION_PER_TICK

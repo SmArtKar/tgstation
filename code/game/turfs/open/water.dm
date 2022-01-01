@@ -66,7 +66,7 @@
 		if(!(A.area_flags & FLORA_ALLOWED))
 			return
 
-		var/flora_type = pickweight(flora_list)
+		var/flora_type = pick_weight(flora_list)
 		new flora_type(src)
 
 /turf/open/water/jungle/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)

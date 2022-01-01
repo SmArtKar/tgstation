@@ -46,9 +46,10 @@
 		var/obj/item/assembly/timer/T = S
 		G.det_time = T.saved_time*10
 	else if(istype(S,/obj/item/assembly/prox_sensor))
-		var/obj/item/grenade/chem_grenade/G = holder
-		G.landminemode = S
-		S.proximity_monitor.wire = TRUE
+		var/obj/item/assembly/prox_sensor/sensor = S
+		var/obj/item/grenade/chem_grenade/grenade = holder
+		grenade.landminemode = sensor
+		sensor.proximity_monitor.set_ignore_if_not_on_turf(FALSE)
 	fingerprint = S.fingerprintslast
 	return ..()
 
@@ -58,8 +59,7 @@
 	message_admins("\An [assembly] has pulsed a grenade, which was installed by [fingerprint].")
 	log_game("\An [assembly] has pulsed a grenade, which was installed by [fingerprint].")
 	var/mob/M = get_mob_by_ckey(fingerprint)
-	var/turf/T = get_turf(M)
-	G.log_grenade(M, T) //Used in arm_grenade() too but this one conveys where the mob who triggered the bomb is
+	G.log_grenade(M) //Used in arm_grenade() too but this one conveys where the mob who triggered the bomb is
 	if(G.landminemode)
 		G.detonate() ///already armed
 	else

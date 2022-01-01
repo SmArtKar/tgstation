@@ -36,7 +36,7 @@
 	loot = list(/obj/item/worm_tongue)
 	crusher_loot = list(/obj/item/worm_tongue, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
 	common_loot = list(/obj/item/armor_scales)
-	rare_loot = list(/obj/effect/spawner/lootdrop/mud_worm)
+	rare_loot = list(/obj/effect/spawner/random/mud_worm)
 	rarity = 2
 
 	gps_name = "Crushing Signal"
@@ -501,7 +501,7 @@
 	force = 0
 	throwforce = 0
 
-/obj/effect/spawner/lootdrop/mud_worm
+/obj/effect/spawner/random/mud_worm
 	name = "mud worm loot spawner"
 	loot = list(/obj/item/dual_sword = 1, /obj/item/book/granter/spell/powerdash = 1)
 
@@ -516,7 +516,6 @@
 	..()
 	var/turf/T = get_edge_target_turf(user, pick(GLOB.alldirs))
 	user.throw_at(T, 10, 4, TRUE, TRUE)
-
 
 /obj/effect/proc_holder/spell/targeted/powerdash
 	name = "Power Dash"

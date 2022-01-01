@@ -29,7 +29,6 @@
             "Gravity":true
 		},
 		{
-            "Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/openspace/icemoon/jungle",
 			"Linkage": null,
@@ -37,15 +36,6 @@
             "Station":true,
             "Gravity":true,
             "Jungle Ruins":true,
-            "Weather_Acidrain":true
-		},
-		{
-			"Down": -1,
-			"Baseturf": "/turf/open/openspace/icemoon/jungle",
-			"Linkage": null,
-            "Mining":true,
-            "Station":true,
-            "Gravity":true,
             "Weather_Acidrain":true
 		}
 	]

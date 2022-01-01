@@ -56,6 +56,7 @@
 	buckle_lying = 0
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount/common)
 	AddElement(/datum/element/pet_bonus, "chitters happily!")
+	faction = list("neutral", "spiders")
 	can_have_ai = FALSE
 	toggle_ai(AI_OFF)
 

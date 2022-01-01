@@ -9,9 +9,9 @@
 	desc = "A terrifying moster made out entirely of jungle vines."
 	health = 3000
 	maxHealth = 3000
-	icon_state = "demonic_miner"
-	icon_living = "demonic_miner"
-	icon = 'icons/mob/jungle/demonic_miner.dmi'
+	icon_state = "vine_kraken"
+	icon_living = "vine_kraken"
+	icon = 'icons/mob/jungle/vine_kraken.dmi'
 
 	attack_sound = 'sound/creatures/venus_trap_hit.ogg'
 	mob_biotypes = MOB_ORGANIC|MOB_PLANT|MOB_EPIC
@@ -28,6 +28,10 @@
 	attack_verb_continuous = "stabs"
 	attack_verb_simple = "stabs"
 	obj_damage = 200
+	pixel_x = -8
+	base_pixel_x = -8
+	pixel_y = -8
+	base_pixel_y = -8
 
 	wander = FALSE
 	speed = 3
@@ -49,7 +53,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/OpenFire()
 	anger_modifier = clamp(((maxHealth - health) / 80), 0, 20)
-	ranged_cooldown = world.time + 3 SECONDS
+	ranged_cooldown = world.time + 4 SECONDS
 
 	if(check_proj_immunity(target)) //Become enraged if we get attacked by someone immune to projectiles
 		if(!throw_spree)
@@ -124,11 +128,11 @@
 				qdel(vines[vine_target])
 				vine_targets.Remove(vine_target)
 
-		var/target_angle = Get_Angle(src, target)
+		var/target_angle = get_angle(src, target)
 		if(target_angle < 0)
 			target_angle += 360
 		for(var/atom/vine_target in vine_targets)
-			var/vine_angle = Get_Angle(src, vine_target)
+			var/vine_angle = get_angle(src, vine_target)
 			if(vine_angle < 0)
 				vine_angle += 360
 			if(abs(vine_angle - target_angle) < 30)
@@ -197,7 +201,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/solar_barrage()
 	var/static/list/barrage_shot_angles = list(12.5, 7.5, 2.5, -2.5, -7.5, -12.5)
-	var/target_angle = Get_Angle(src, target)
+	var/target_angle = get_angle(src, target)
 	var/turf/target_turf = get_turf(target)
 	for(var/i in barrage_shot_angles)
 		shoot_projectile(target_turf, target_angle + i, proj_type = /obj/projectile/solar)
@@ -224,7 +228,7 @@
 	immobile = TRUE
 	walk_to(src, 0)
 	for(var/i = 1 to 3)
-		shoot_projectile(null, Get_Angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
+		shoot_projectile(null, get_angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
 		SLEEP_CHECK_DEATH(1 SECONDS)
 	immobile = FALSE
 

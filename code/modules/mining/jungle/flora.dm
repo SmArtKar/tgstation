@@ -98,7 +98,7 @@
 	icon_state = "rapsberry"
 	w_class = WEIGHT_CLASS_TINY
 	foodtypes = FRUIT
-	tastes = list("incredible sweetness" = 5, "bitter raspberries" = 2, "chineese noodles" = 1) //Hard joke
+	tastes = list("incredible sweetness" = 5, "bitter raspberries" = 2, "chineese noodles" = 1) //Hard joke, basically a chineese knockoff of normal raspberries
 	seed = /obj/item/seeds/jungle/rapsberry
 	wine_power = 20
 

@@ -35,7 +35,7 @@
 	var/wielded = FALSE // track wielded status on item
 	var/trophy_capacity = CRUSHER_TROPHY_LIMIT
 
-/obj/item/kinetic_crusher/Initialize()
+/obj/item/kinetic_crusher/Initialize(mapload)
 	. = ..()
 	RegisterSignal(src, COMSIG_TWOHANDED_WIELD, .proc/on_wield)
 	RegisterSignal(src, COMSIG_TWOHANDED_UNWIELD, .proc/on_unwield)
