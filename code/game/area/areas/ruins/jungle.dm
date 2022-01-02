@@ -20,3 +20,7 @@
 /area/ruin/powered/bluespace_lab
 	name = "Abandoned Bluespace Lab"
 	icon_state = "dk_yellow"
+
+/area/ruin/jungle_mining_facility
+	name = "Abandoned Mining Facility"
+	icon_state = "dk_yellow"

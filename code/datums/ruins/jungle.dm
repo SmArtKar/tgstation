@@ -54,3 +54,29 @@
 	id = "bug_habitat_jungle"
 	description = "An independently funded research outpost, long abandoned. Their mission, to boldly go where no insect life would ever live, ever, and look for bugs."
 	suffix = "jungle_bughouse_surface.dmm"
+
+/datum/map_template/ruin/jungle/pizza
+	name = "Moffuchi's Pizzeria"
+	id = "pizzeria_jungle"
+	description = "Moffuchi's Family Pizzeria chain has a reputation for providing affordable artisanal meals of questionable edibility. This particular pizzeria seems to have been abandoned for some time."
+	suffix = "jungle_pizza_surface.dmm"
+
+/datum/map_template/ruin/jungle/cave/free_golem
+	name = "Free Golem Ship"
+	id = "golem-ship"
+	description = "Lumbering humanoids, made out of precious metals, move inside this ship. They frequently leave to mine more minerals, which they somehow turn into more of them. \
+	Seem very intent on research and individual liberty, and also geology-based naming?"
+	prefix = "_maps/RandomRuins/AnywhereRuins/"
+	suffix = "golem_ship.dmm"
+
+/datum/map_template/ruin/jungle/cave/deep/mining_facility
+	name = "Abandoned Mining Facility"
+	id = "jungle_mining_facility"
+	description = "An old, abandoned mining facility filled with monkeys."
+	suffix = "jungle_abandoned_mining_facility_deepcaves.dmm"
+
+/datum/map_template/ruin/jungle/cave/monkey_cave
+	name = "Banana Shrine"
+	id = "monkey_cave"
+	description = "An ancient shrine of the Honkmother, worshipped by monkeys."
+	suffix = "jungle_monkey_cave_underground.dmm"

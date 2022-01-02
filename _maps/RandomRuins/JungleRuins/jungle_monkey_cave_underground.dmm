@@ -1,0 +1,23 @@
+"a" = (/turf/template_noop,/area/template_noop)
+"f" = (/turf/closed/mineral/random/jungle,/area/template_noop)
+"o" = (/mob/living/simple_animal/hostile/gorilla/jungle,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"x" = (/obj/structure/table/wood,/obj/item/gun/magic/staff/honk,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"y" = (/obj/structure/statue/bananium/clown,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"C" = (/obj/structure/table/wood,/obj/item/reagent_containers/spray/waterflower/superlube,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"I" = (/obj/structure/table/wood,/obj/item/grown/bananapeel/bluespace,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"Q" = (/mob/living/carbon/human/species/monkey/jungle,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"T" = (/obj/structure/table/wood,/obj/item/clothing/shoes/clown_shoes/banana_shoes,/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"X" = (/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+
+(1,1,1) = {"
+afffffffaa
+ffXQXXXfff
+fXXXXxXXof
+fXQXIyCXXf
+fXXoXTXQXf
+ffXXXXXXXf
+fffXQXXfff
+fffffXfffa
+afffXXffaa
+aaffQffaaa
+"}
