@@ -856,7 +856,7 @@
 	name = "exotic"
 	desc = "A prototype suit with inbuilt armor and servos for extended mobility."
 	default_skin = "exotic"
-	armor = list(MELEE = 30, BULLET = 30, LASER = 30, ENERGY = 40, BOMB = 55, BIO = 100, FIRE = 100, ACID = 100, WOUND = 15)
+	armor = list(MELEE = 30, BULLET = 20, LASER = 0, ENERGY = 30, BOMB = 55, BIO = 100, FIRE = 100, ACID = 100, WOUND = 15)
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	siemens_coefficient = 0

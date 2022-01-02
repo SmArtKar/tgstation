@@ -16,3 +16,7 @@
 /area/ruin/unpowered/vine_kraken
 	name = "Vine Kraken Nest"
 	icon_state = "dk_yellow"
+
+/area/ruin/powered/bluespace_lab
+	name = "Abandoned Bluespace Lab"
+	icon_state = "dk_yellow"

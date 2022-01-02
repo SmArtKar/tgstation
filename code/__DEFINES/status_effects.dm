@@ -53,6 +53,8 @@
 
 #define STATUS_EFFECT_DEMONSTONE /datum/status_effect/demonic_energy //Turns you into a glass cannon. As long as you don't get hit, you stack "souls" you get from attacking and killing mobs, but you also become much more vunerable
 
+#define STATUS_EFFECT_VINE_RING /datum/status_effect/vine_ring //Reflects half of incoming damage and breaks
+
 /////////////
 // DEBUFFS //
 /////////////

@@ -18,19 +18,19 @@
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	src.Insert(user)
 
-/obj/item/organ/heart/spider_mother/Insert(mob/living/carbon/human/H, special = 0)
+/obj/item/organ/heart/spider_mother/Insert(mob/living/carbon/human/target, special = 0)
 	. = ..()
-	if(!istype(H))
+	if(!istype(target))
 		return
 
-	H.physiology.tox_mod *= 0.5 //That actually can save you in mortal combat against spiders
+	target.physiology.tox_mod *= 0.5 //This actually can save you in mortal combat against spiders
 
-/obj/item/organ/heart/spider_mother/Remove(mob/living/carbon/human/H, special = 0)
+/obj/item/organ/heart/spider_mother/Remove(mob/living/carbon/human/target, special = 0)
 	. = ..()
-	if(!istype(H))
+	if(!istype(target))
 		return
 
-	H.physiology.tox_mod *= 2
+	target.physiology.tox_mod *= 2
 
 /obj/item/organ/heart/spider_mother/on_life(delta_time, times_fired)
 	. = ..()

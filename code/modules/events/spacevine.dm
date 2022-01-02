@@ -591,6 +591,6 @@
 /proc/isvineimmune(atom/A)
 	if(isliving(A))
 		var/mob/living/M = A
-		if(("vines" in M.faction) || ("plants" in M.faction))
+		if(("vines" in M.faction) || ("plants" in M.faction) || HAS_TRAIT(M, TRAIT_VINE_IMMUNE))
 			return TRUE
 	return FALSE

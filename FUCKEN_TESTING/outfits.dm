@@ -95,6 +95,14 @@
 	new /obj/item/experimental_components(src)
 	new /obj/item/armor_scales(src)
 	new /obj/item/amber_core(src)
+	new /obj/item/guardiancreator/tech/spacetime(src)
+	new /obj/item/gilded_card(src)
+	new /obj/item/gun/magic/staff/vine(src)
+	new /obj/item/organ/heart/jungle(src)
+
+/obj/item/mod/control/pre_equipped/exotic/debug
+	cell = /obj/item/stock_parts/cell/infinite
+	initial_modules = list(/obj/item/mod/module/storage/bluespace, /obj/item/mod/module/welding, /obj/item/mod/module/visor/night, /obj/item/mod/module/mouthhole, /obj/item/mod/module/longfall, /obj/item/mod/module/orebag, /obj/item/mod/module/gps)
 
 /datum/outfit/debug_miner/ultra
 	name = "Ultra Debug Miner"
@@ -105,7 +113,7 @@
 	gloves = /obj/item/clothing/gloves/crystal
 	uniform = /obj/item/clothing/under/syndicate
 	glasses = /obj/item/clothing/glasses/meson/night
-	back = /obj/item/mod/control/pre_equipped/exotic
+	back = /obj/item/mod/control/pre_equipped/exotic/debug
 	suit = null
 
 	backpack_contents = list(

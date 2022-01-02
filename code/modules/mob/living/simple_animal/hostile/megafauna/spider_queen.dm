@@ -98,6 +98,7 @@
 
 	if(get_dist(src, target) > aggro_vision_range / 2 || prob(anger_modifier + 25))
 		charge()
+		ranged_cooldown = world.time + 50
 		return
 
 	if(prob(50 - anger_modifier) && LAZYLEN(babies) < 3)
@@ -106,6 +107,7 @@
 
 	if(prob(40))
 		triple_charge()
+		ranged_cooldown = world.time + 50
 		if(prob(40 + anger_modifier))
 			SLEEP_CHECK_DEATH(5)
 			shockwave()
@@ -263,7 +265,7 @@
 				if(L != src && !(L in hit_things) && !faction_check(L.faction, faction))
 					var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
 					L.throw_at(throwtarget, 6 / i, 1, src)
-					L.Stun(10 / i)
+					L.Stun(4 / i)
 					L.apply_damage_type(20 / i, BRUTE)
 					hit_things += L
 		SLEEP_CHECK_DEATH(iteration_duration)
@@ -503,6 +505,8 @@
 	. = ..()
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount)
 	AddElement(/datum/element/pet_bonus, "chitters happily!")
+	can_have_ai = FALSE
+	toggle_ai(AI_OFF)
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby/mount/proc/get_owner(mob/living/owner)
 	faction.Add("[REF(owner)]")

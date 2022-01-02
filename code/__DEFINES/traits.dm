@@ -363,6 +363,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// This trait means that said mob can be attacked with crusher regardless of it's size
 #define TRAIT_CRUSHER_VUNERABLE "crusher_vunerable"
 
+/// This traits prevents mobs from getting damaged by vines
+#define TRAIT_VINE_IMMUNE "vine_immune"
+
 /// Mobs will always attack this regardless of their parameters
 #define TRAIT_MOB_HATED "mob_hated"
 

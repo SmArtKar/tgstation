@@ -641,10 +641,10 @@
 #define SOULS_LEVEL_THREE 50
 #define SOULS_LEVEL_FOUR 75
 
-#define LEVEL_ONE_TRAITS 	list()
-#define LEVEL_TWO_TRAITS 	list(TRAIT_STRONG_MINER)
-#define LEVEL_THREE_TRAITS  list(TRAIT_STRONG_MINER)
-#define LEVEL_FOUR_TRAITS   list(TRAIT_IGNORESLOWDOWN, TRAIT_STRONG_MINER)
+#define LEVEL_ONE_TRAITS 	list(TRAIT_STUNRESISTANCE)
+#define LEVEL_TWO_TRAITS 	list(TRAIT_STUNRESISTANCE, TRAIT_STRONG_MINER)
+#define LEVEL_THREE_TRAITS  list(TRAIT_STUNRESISTANCE, TRAIT_STRONG_MINER, TRAIT_NOHUNGER, TRAIT_NOBREATH)
+#define LEVEL_FOUR_TRAITS   list(TRAIT_NOFIRE, TRAIT_STUNIMMUNE, TRAIT_IGNORESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_NOHUNGER, TRAIT_NOBREATH)
 
 /datum/status_effect/demonic_energy
 	id = "demonic_energy"
@@ -825,3 +825,51 @@
 	. = ..()
 	to_chat(owner, span_warning("You don't feel any healthier."))
 
+/datum/status_effect/vine_ring
+	id = "vine_ring"
+	duration = 300
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = /atom/movable/screen/alert/status_effect/vine_ring
+	var/mutable_appearance/ring_underlay
+	var/mutable_appearance/ring_overlay
+
+/datum/status_effect/vine_ring/on_apply()
+	if(owner.stat != DEAD)
+		ring_underlay = mutable_appearance('icons/effects/effects.dmi', "vine_ring_bottom")
+		ring_underlay.pixel_x = -owner.pixel_x
+		ring_underlay.pixel_y = -owner.pixel_y
+		owner.underlays += ring_underlay
+
+		ring_overlay = mutable_appearance('icons/effects/effects.dmi', "vine_ring_top")
+		ring_overlay.pixel_x = -owner.pixel_x
+		ring_overlay.pixel_y = -owner.pixel_y
+		owner.overlays += ring_overlay
+
+		RegisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE, .proc/on_recieved_damage)
+		return TRUE
+	return FALSE
+
+/datum/status_effect/vine_ring/Destroy()
+	if(owner)
+		owner.underlays -= ring_underlay
+		owner.overlays -= ring_overlay
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE)
+	QDEL_NULL(ring_underlay)
+	QDEL_NULL(ring_overlay)
+	return ..()
+
+/datum/status_effect/vine_ring/proc/on_recieved_damage(attacker, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+
+	to_chat(owner, span_danger("Your vine ring partially reflects the attack, but shatters in the process!"))
+	owner.remove_status_effect(STATUS_EFFECT_VINE_RING)
+
+/datum/status_effect/vine_ring/be_replaced()
+	owner.underlays -= ring_underlay
+	owner.overlays -= ring_overlay
+	..()
+
+/atom/movable/screen/alert/status_effect/vine_ring
+	name = "Blessing of the Jungle"
+	desc = "You're surronded by a ring of thorny blooming vines that will reflect half of any incoming attack!"
+	icon_state = "vine_ring"

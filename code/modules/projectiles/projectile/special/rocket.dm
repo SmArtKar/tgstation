@@ -130,9 +130,10 @@
 	icon_state= "missile_heavy"
 	damage = 80
 	dismemberment = 40
+	speed = 2
 
 /obj/projectile/bullet/a84mm/ancient/heavy/do_boom(atom/target)
-	explosion(target, devastation_range = -1, heavy_impact_range = 1, light_impact_range = 1, flame_range = 2, flash_range = -1, adminlog = FALSE) //These ones are an exception and do flash
+	explosion(target, devastation_range = -1, heavy_impact_range = 0, light_impact_range = 1, flame_range = 2, flash_range = -1, adminlog = FALSE) //These ones are an exception and do flash
 
 /obj/projectile/bullet/a84mm/ancient/at
 	name ="\improper AT rocket"

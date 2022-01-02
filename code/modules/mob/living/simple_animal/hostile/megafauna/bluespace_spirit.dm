@@ -40,7 +40,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/OpenFire(atom/A)
 	anger_modifier =  (1 -(health / maxHealth)) * 100
-	ranged_cooldown = world.time + 3 * (1.5 - anger_modifier) SECONDS
+	ranged_cooldown = world.time + (3 * (1.5 - anger_modifier) + 0.5) SECONDS
 
 	if(mimicking)
 		shotgun()
@@ -67,7 +67,8 @@
 			shoot_projectile_reverse()
 
 	if(prob(45))
-		if(prob(40))
+		if(prob(30))
+			ranged_cooldown = world.time + (4 * (1.5 - anger_modifier) + 0.5) SECONDS
 			triple_charge()
 		else
 			charge()
@@ -75,6 +76,7 @@
 			shotgun()
 	else
 		if(prob(25))
+			ranged_cooldown = world.time + (4 * (1.5 - anger_modifier) + 0.5) SECONDS
 			more_bouncers()
 			SLEEP_CHECK_DEATH(8)
 			clone_rush()
@@ -287,7 +289,6 @@
 	name = "bluespace blast"
 	icon_state = "gaussblue"
 	damage = 10
-	armour_penetration = 30
 	damage_type = BRUTE
 	speed = 1
 
@@ -331,7 +332,7 @@
 /obj/projectile/bluespace_blast/bouncer
 	name = "bluespace bouncer"
 	icon_state = "bluespace_bouncer"
-	damage = 65
+	damage = 35
 	armour_penetration = 100
 	speed = 2
 
@@ -716,8 +717,8 @@
 /obj/item/gilded_card
 	name = "gilded card"
 	desc = "A strange guilded blue card with illegible text on it."
-	icon = 'icons/obj/objects.dmi'
-	icon_state = "demonic_crystal"
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "gilded_card"
 
 /obj/item/gilded_card/attack_self(mob/living/user)
 	if(!iscarbon(user))
@@ -725,7 +726,7 @@
 		return
 	forceMove(user)
 	to_chat(user, span_danger("You play the card and suddenly realise that you've made a fatal mistake."))
-	resurrect()
+	resurrect(user)
 
 /obj/item/gilded_card/proc/resurrect(mob/living/carbon/user)
 	var/turf/target = find_safe_turf()

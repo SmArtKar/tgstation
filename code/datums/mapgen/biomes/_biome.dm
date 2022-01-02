@@ -9,10 +9,14 @@
 	var/flora_density = 0
 	///Chance of having a mob from the fauna types list spawn
 	var/fauna_density = 0
+	///Chance of having a special structure from the special types list spawn
+	var/special_density = 0
 	///list of type paths of objects that can be spawned when the turf spawns flora
 	var/list/flora_types = list(/obj/structure/flora/grass/jungle)
 	///list of type paths of mobs that can be spawned when the turf spawns fauna
 	var/list/fauna_types = list()
+	///list of type paths of mobs that can be spawned when the turf spawns special structures
+	var/list/special_types = list()
 	///Is this biome exposed to the sun?
 	var/natural_light = TRUE
 	///Should we generate caves in this biome?
@@ -41,8 +45,12 @@
 			new fauna(gen_turf)
 
 	if(length(flora_types) && prob(flora_density))
-		var/obj/structure/flora = pick(flora_types)
+		var/flora = pick(flora_types)
 		new flora(gen_turf)
+
+	if(length(special_types) && prob(special_density))
+		var/special_construction = pick(special_types)
+		new special_construction(gen_turf)
 
 /datum/biome/mudlands
 	turf_type = /turf/open/floor/plating/dirt/jungle/dark
@@ -50,6 +58,7 @@
 	flora_density = 3
 	fauna_types = list(/mob/living/simple_animal/hostile/retaliate/snake/jungle = 3, /mob/living/simple_animal/hostile/retaliate/frog/jungle = 2, /mob/living/simple_animal/hostile/lizard/jungle = 2)
 	fauna_density = 1
+
 /datum/biome/plains
 	turf_type = /turf/open/floor/plating/grass/jungle/green
 	flora_types = list(/obj/structure/flora/ash/jungle_plant, /obj/structure/flora/grass/jungle, /obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)

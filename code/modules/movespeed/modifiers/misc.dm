@@ -7,3 +7,6 @@
 
 /datum/movespeed_modifier/power_dash
 	multiplicative_slowdown = -0.5
+
+/datum/movespeed_modifier/jungle_heart
+	multiplicative_slowdown = -0.2

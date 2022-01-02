@@ -88,6 +88,8 @@ GLOBAL_DATUM_INIT(orbit_menu, /datum/orbit_menu, new)
 		var/list/serialized = list()
 
 		var/mob/mob_poi = new_mob_pois[name]
+		if(HAS_TRAIT(mob_poi, TRAIT_NEVER_POI))
+			continue
 
 		var/poi_ref = REF(mob_poi)
 		serialized["ref"] = poi_ref

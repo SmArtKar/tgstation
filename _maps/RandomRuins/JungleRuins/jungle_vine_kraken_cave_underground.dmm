@@ -1,32 +1,47 @@
-"a" = (/turf/open/space/basic,/area/space)
+"a" = (/turf/template_noop,/area/template_noop)
+"b" = (/obj/structure/flora/grass/jungle,/turf/open/floor/plating/dirt/jungle,/area/ruin/unpowered/vine_kraken)
+"c" = (/obj/structure/flora/grass/jungle,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"f" = (/obj/structure/flora/junglebush/large,/turf/open/floor/plating/dirt/jungle/dark,/area/ruin/unpowered/vine_kraken)
+"i" = (/obj/structure/flora/junglebush/large,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"p" = (/obj/structure/flora/grass/jungle/b,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"q" = (/obj/structure/flora/junglebush/b,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"x" = (/obj/structure/flora/tree/jungle,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"y" = (/turf/open/floor/plating/dirt/jungle/dark,/area/ruin/unpowered/vine_kraken)
+"E" = (/obj/structure/flora/junglebush/c,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"G" = (/obj/structure/flora/tree/jungle,/turf/open/floor/plating/dirt/jungle/dark,/area/ruin/unpowered/vine_kraken)
+"L" = (/obj/structure/flora/junglebush,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
 "O" = (/turf/closed/mineral/random/jungle,/area/ruin/unpowered/vine_kraken)
-"S" = (/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken,/turf/open/floor/plating/dirt/jungle,/area/ruin/unpowered/vine_kraken)
+"S" = (/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken,/turf/open/floor/plating/dirt/jungle/dark,/area/ruin/unpowered/vine_kraken)
+"T" = (/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"U" = (/obj/structure/flora/tree/jungle/small,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"V" = (/obj/structure/flora/rock/jungle,/turf/open/floor/plating/grass/jungle/green,/area/ruin/unpowered/vine_kraken)
+"X" = (/obj/effect/mob_spawn/corpse/human/miner/explorer,/turf/open/floor/plating/dirt/jungle/dark,/area/ruin/unpowered/vine_kraken)
 "Y" = (/turf/open/floor/plating/dirt/jungle,/area/ruin/unpowered/vine_kraken)
 
 (1,1,1) = {"
 aaaaaOOOOaaaaOOOOOOOOaaaaa
-aaaaOOOOOOOOOOYYYOOOOOaaaa
-aaaOOOOOOOYYYYYYYYYOOOOOOa
-aaOOOOOOYYYYYYYYYYYYYOOOOa
-aaaOOYYYYYYYYYYYYYYYYYYOOO
-aaOOYYYYYYYYYYYYOOYYYYYYOO
-aOOYYYYYYYYYYYYOOOOYYYYYOO
-aOYYYYYYYYYYYYYYOOOOYYYYOO
-OOYYYYYYYYOOYYYYYOYYYYYYYO
-OYYYYYYYYOOOYYYYYYYYYYYYYO
-OYYYYYYYOOOYYYYYYYYYYYYYYO
-OOYYYYYYYOYYSYYYYYYYYYYYOO
-aOYYYYYYYYYYYYYYYYYYYYYYOa
-aOOYYYYYYYYYYYYYYYYYYYYOOa
-aaOOYYYYYYYYYYYYYYYYYYYOOO
-aOOOYYYYYOOOOYYYYYYYYYOOOO
-aOOYYYYYOOYYOOYYYYYYYOOOOO
-OOOYYYYYOYYYOOOYYYYOOOOOOa
-OOOYYYYYOOYYYOOYYOOOOOOOOa
+aaaaOOOOOOOOOOLyyOOOOOaaaa
+aaaOOOOOOOEcTTTyyYYOOOOOOa
+aaOOOOOOyyTLiTyyYYYYpOOOOa
+aaaOOTTTyyyTTyyyyyyLTTqOOO
+aaOOTLxTyyyyyyyyOOqTpUTqOO
+aOOTcTLTyYYyyyyOOOOpLTLTOO
+aOTpiLTyyYYYyYTcOOOOqTTLOO
+OOGqTTyyYYOOYTTfpOyyTpTTyO
+OyyyyyyyYOOOYTcTTTYyyTLyyO
+OYYyyyYYOOOyyYTTLYYYyyyyyO
+OOYYYYYYyOyySYYYYYYYYYyyOO
+aOYYYYYYyyyyYYYYYYYyyyyyOa
+aOOYYYYYYyyyYYYYYYyyTTyOOa
+aaOOYYYYyyyyYTpcYYyTTTqOOO
+aOOOYYYyyOOOOEUpTYyTTcOOOO
+aOOYYYYyOOcLOOcqTYyyTOOOOO
+OOOYYYYyOXypOOOTYyyOOOOOOa
+OOOYYYYyOOYyyOOYYOOOOOOOOa
 aOOOYYYYYOYYOOYYOOOOOOOOaa
-aOOOYYYYYYYYOYYYOOOOOOaaaa
-aOOOOYYYYYYYYYYOOOOOOaaaaa
-aaOOOOYYYOOOYYYOOaaaaaaaaa
+aOOOYYTTYYYYOYYYOOOOOOaaaa
+aOOOOTEUpbYYYYYOOOOOOaaaaa
+aaOOOOVcLOOOYYYOOaaaaaaaaa
 aaOOOOOOOOOOOYOOaaaaaaaaaa
 aaaOOOOOOOOOOOOaaaaaaaaaaa
 aaaaOOOOOaaOOOaaaaaaaaaaaa
