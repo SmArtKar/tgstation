@@ -720,4 +720,12 @@
 		proj.Range()
 	. = ..()
 
+/turf/closed/mineral/random/jungle/strong/corrupted
+	name = "corrupted rock"
+	desc = "A weird, pulsating blob of biomass that looks like rock at first glance."
+	icon = 'icons/turf/mining.dmi'
+	smooth_icon = 'icons/turf/walls/smoothdirt_corrupted.dmi'
+	icon_state = "corrupted_dirt"
+	base_icon_state = "smoothrocks"
+
 #undef MINING_MESSAGE_COOLDOWN

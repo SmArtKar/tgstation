@@ -25,6 +25,11 @@
 	var/flora_list = list(/obj/structure/flora/aquatic/rock = 1, /obj/structure/flora/aquatic/rock/pile = 1, /obj/structure/flora/aquatic/seaweed = 8)
 	var/flora_prob = 8
 
+/turf/open/water/jungle/corrupted
+	name = "corrupted water"
+	desc = "Is that... blood?!"
+	icon_state = "riverwater_motion_corrupted"
+
 /turf/open/water/jungle/ex_act(severity, target)
 	contents_explosion(severity, target)
 

@@ -538,7 +538,7 @@
 /obj/item/spider_eye
 	name = "spider queen eye"
 	desc = "A giant eye of a spider queen. It looks squishy..."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "spider_eye"
 	inhand_icon_state = null
 	worn_icon_state = null
@@ -592,7 +592,7 @@
 			if(L != src && !(L in hit_things) && !faction_check(L.faction, user.faction))
 				var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
 				L.throw_at(throwtarget, 5, 1, src)
-				L.apply_damage_type(10, BRUTE)
+				L.adjustBruteLoss(10)
 				hit_things += L
 		sleep(1)
 

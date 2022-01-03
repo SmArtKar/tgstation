@@ -63,9 +63,10 @@
 	ranged_message = null
 	ranged_ignores_vision = TRUE
 
-	loot = list(/obj/item/mod/control/pre_equipped/exotic, /obj/item/malf_upgrade)
-	crusher_loot = list(/obj/item/mod/control/pre_equipped/exotic, /obj/item/malf_upgrade, /obj/item/crusher_trophy/ai_core)
-	common_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon, /obj/item/experimental_components)
+	loot = list(/obj/item/malf_upgrade)
+	crusher_loot = list(/obj/item/malf_upgrade)
+	common_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
+	common_crusher_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
 	spawns_minions = TRUE
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
@@ -269,6 +270,7 @@
 	has_drone = FALSE
 	var/mob/living/simple_animal/hostile/jungle/rogue_drone/drone = new(get_turf(src))
 	drone.master_ai = master_ai
+	drone.GiveTarget(master_ai.target)
 	addtimer(CALLBACK(src, .proc/recreate_drone), DRONE_RESPAWN_COOLDOWN)
 
 /obj/machinery/rogue_drone_spawner/proc/recreate_drone()
@@ -619,7 +621,7 @@
 /obj/item/experimental_components
 	name = "experimental components"
 	desc = "A bunch of dark-blue circuitry glued together for some reason. And they call that high tech?"
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "experimental_components"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0

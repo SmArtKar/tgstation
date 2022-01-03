@@ -70,6 +70,32 @@
 	if(prob(floor_variance))
 		icon_state = "[initial(icon_state)][rand(0,12)]"
 
+/turf/open/floor/plating/dirt/jungle/corrupted
+	name = "corrupted dirt"
+	desc = "If you look closer, you actually realise that's it's a patch of spiky, moving biomass. Probably not a great idea to step on this."
+	slowdown = 0.75
+
+/turf/open/floor/plating/dirt/jungle/corrupted/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	. = ..()
+	if(prob(15) && isliving(arrived))
+		var/mob/living/victim = arrived
+		var/damage = 1
+		if(HAS_TRAIT(victim, TRAIT_LIGHT_STEP))
+			damage *= 0.75
+
+		var/picked_def_zone = pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+		var/obj/item/bodypart/bodypart = victim.get_bodypart(picked_def_zone)
+		if(!istype(bodypart))
+			victim.adjustBruteLoss(5 * damage)
+			to_chat(victim, span_userdanger("[src] stabs you with it's small spikes!"))
+			return
+
+		if(bodypart.status == BODYPART_ROBOTIC)
+			damage *= 0.75
+
+		victim.apply_damage(5 * damage, BRUTE, bodypart)
+		to_chat(victim, span_userdanger("[src] stabs your [bodypart] with it's small spikes!"))
+
 /turf/open/floor/plating/grass/jungle
 	name = "jungle grass"
 	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
@@ -89,3 +115,34 @@
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_FLOOR_GRASS)
 	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_FLOOR_GRASS)
 	layer = HIGH_TURF_LAYER
+
+
+/turf/open/floor/plating/grass/jungle/corrupted
+	name = "corrupted grass"
+	desc = "If you look closer, you actually realise that's it's a patch of spiky, moving biomass. Probably not a great idea to step on this."
+	slowdown = 0.75
+
+	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_FLOOR_GRASS_JUNGLE)
+	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_FLOOR_GRASS_JUNGLE)
+	layer = HIGH_TURF_LAYER
+
+/turf/open/floor/plating/grass/jungle/corrupted/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	. = ..()
+	if(prob(15) && isliving(arrived))
+		var/mob/living/victim = arrived
+		var/damage = 1
+		if(HAS_TRAIT(victim, TRAIT_LIGHT_STEP))
+			damage *= 0.75
+
+		var/picked_def_zone = pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+		var/obj/item/bodypart/bodypart = victim.get_bodypart(picked_def_zone)
+		if(!istype(bodypart))
+			victim.adjustBruteLoss(5 * damage)
+			to_chat(victim, span_userdanger("[src] stabs you with it's small spikes!"))
+			return
+
+		if(bodypart.status == BODYPART_ROBOTIC)
+			damage *= 0.75
+
+		victim.apply_damage(5 * damage, BRUTE, bodypart)
+		to_chat(victim, span_userdanger("[src] stabs your [bodypart] with it's small spikes!"))

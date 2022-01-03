@@ -49,7 +49,7 @@
 	description = "Turns out that keeping your abductees unconscious is really important. Who knew?"
 	suffix = "jungle_ufo_crash_surface.dmm"
 
-/datum/map_template/ruin/jungle
+/datum/map_template/ruin/jungle/bughouse
 	name = "Insect Research Station"
 	id = "bug_habitat_jungle"
 	description = "An independently funded research outpost, long abandoned. Their mission, to boldly go where no insect life would ever live, ever, and look for bugs."

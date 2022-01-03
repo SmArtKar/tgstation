@@ -137,8 +137,8 @@
 	armour_penetration = 100
 	melee_damage_lower = 30
 	melee_damage_upper = 30
-	speed = 2
-	move_to_delay = 2
+	speed = 4
+	move_to_delay = 4
 	update_icon()
 	status_flags &= ~GODMODE
 	noaction = FALSE
@@ -303,9 +303,9 @@
 		return
 
 	anger_modifier = 1 - (clamp(((maxHealth - health) / 100),0,20) * 0.01)
-	ranged_cooldown = world.time + ((demon_form ? 2 : 4) * anger_modifier SECONDS)
+	ranged_cooldown = world.time + (4 * anger_modifier SECONDS)
 
-	if(get_dist(src, target) > 7) //Punush them for running away, you can't get away from the demon
+	if(get_dist(src, target) > 12) //Punush them for running away, you can't get away from the demon
 		jaunt_at(target)
 		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) * anger_modifier SECONDS)
 		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
@@ -393,8 +393,30 @@
 	light_power = 0.5
 	light_color = COLOR_RED_LIGHT
 	var/friendly_fire = FALSE
+	var/default_blast = TRUE
 
 /obj/effect/temp_visual/demonic_blast/Initialize()
+	. = ..()
+	if(default_blast)
+		var/turf/my_turf = get_turf(src)
+		if(!locate(/mob/living) in my_turf)
+			return
+
+		playsound(src, 'sound/magic/mm_hit.ogg', 100, TRUE)
+		for(var/mob/living/target in my_turf)
+			if(friendly_fire && (istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner)) || faction_check(target.faction, list("jungle", "boss")))
+				continue
+			target.adjustFireLoss(20)
+			to_chat(target, span_userdanger("You're hit by a demonic blast!"))
+
+
+/obj/effect/temp_visual/demonic_blast/friendly_fire
+	friendly_fire = TRUE
+
+/obj/effect/temp_visual/demonic_blast/demonslayer
+	default_blast = FALSE
+
+/obj/effect/temp_visual/demonic_blast/demonslayer/Initialize(mapload, mob/caster)
 	. = ..()
 	var/turf/my_turf = get_turf(src)
 	if(!locate(/mob/living) in my_turf)
@@ -402,13 +424,13 @@
 
 	playsound(src, 'sound/magic/mm_hit.ogg', 100, TRUE)
 	for(var/mob/living/target in my_turf)
-		if(friendly_fire && (istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner)) || faction_check(target.faction, list("jungle", "boss")))
+		if(target == caster || caster.faction_check_mob(target))
 			continue
-		target.adjustFireLoss(20)
+		if(isanimal(target))
+			target.adjustFireLoss(40)
+		else
+			target.adjustFireLoss(15)
 		to_chat(target, span_userdanger("You're hit by a demonic blast!"))
-
-/obj/effect/temp_visual/demonic_blast/friendly_fire
-	friendly_fire = TRUE
 
 /obj/effect/temp_visual/dir_setting/miner_death/demonic
 	icon = 'icons/mob/jungle/demonic_miner.dmi'
@@ -502,6 +524,24 @@
 	speed = 2
 	damage_type = BURN
 
+/obj/projectile/demonic_energy/nohuman
+	damage = 20
+	speed = 1
+
+/obj/projectile/demonic_energy/nohuman/on_hit(atom/target, blocked, pierce_hit)
+	if(firer == target)
+		set_angle(rand(0, 360))
+		return BULLET_ACT_FORCE_PIERCE
+	if(isliving(firer) && isliving(target))
+		var/mob/living/living_firer = firer
+		if(living_firer.faction_check_mob(target))
+			set_angle(rand(0, 360))
+			return BULLET_ACT_FORCE_PIERCE
+	if(!isanimal(target))
+		damage = 3 //Deals miniscule amounts of damage to humans and silicons
+		armour_penetration = 15
+	. = ..()
+
 /mob/living/simple_animal/hostile/imp/demonic_miner
 	maxHealth = 40
 	health = 40
@@ -526,7 +566,7 @@
 /obj/item/demon_stone
 	name = "demonic stone"
 	desc = "A pretty big red gem that contains remains of an ancient demon. If you put it close enough to your ears you are able to hear odd wishpers..."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "demon_stone"
 	w_class = WEIGHT_CLASS_SMALL
 
@@ -700,13 +740,15 @@
 /obj/item/gun/magic/staff/blood_claymore
 	name = "bloodied claymore"
 	desc = "An ancient claymore."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	fire_sound = 'sound/magic/wand_teleport.ogg'
 	ammo_type = /obj/item/ammo_casing/magic/blood_wave
 	icon_state = "bloody_claymore1"
 	inhand_icon_state = "bloody_claymore1"
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
 	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
 	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	sharpness = SHARP_EDGED
@@ -739,6 +781,9 @@
 	if(isliving(target))
 		var/mob/living/victim = target
 		victim.apply_status_effect(STATUS_EFFECT_DEMON_MARK, fired_from)
+	if(!isanimal(target))
+		damage = 10
+	. = ..()
 
 /obj/item/gun/magic/staff/blood_claymore/update_icon(updates)
 	icon_state = "bloody_claymore[clamp(round(blood / MAXIMUM_BLOOD * 3) + (charges > 0 ? 1 : 0), 0, 3)]"
@@ -876,7 +921,7 @@
 
 /obj/projectile/magic/throwing_knife/on_hit(target, blocked = FALSE)
 	if(isanimal(target))
-		damage *= 10 //500 damage per full barrage
+		damage *= 7 //350 damage per full barrage
 	. = ..()
 	if(!.)
 		return
@@ -885,7 +930,7 @@
 		if(victim.stat == DEAD)
 			return
 		victim = firer
-		victim.heal_ordered_damage(5, list(BRUTE, BURN, TOX, OXY)) //Pretty good, 50 healed damage per barrage if all knives hit
+		victim.heal_ordered_damage(3.5, list(BRUTE, BURN, TOX, OXY)) //Pretty good, 35 healed damage per barrage if all knives hit
 
 /obj/effect/proc_holder/spell/targeted/infinite_guns/throwing_knives
 	name = "Summon Knives"
@@ -894,7 +939,7 @@
 	action_background_icon_state = "bg_demon"
 	clothes_req = FALSE
 	summon_path = /obj/item/gun/ballistic/rifle/enchanted/throwing_knife
-	charge_max = 170
+	charge_max = 20 SECONDS
 
 /obj/item/ammo_casing/magic/throwing_knife
 	projectile_type = /obj/projectile/magic/throwing_knife
@@ -905,7 +950,7 @@
 	desc = "A very sharp throwing knife. It's abnormaly cold."
 	fire_sound = 'sound/weapons/guillotine.ogg' //Hilarious, but it actually fits
 	pin = /obj/item/firing_pin/magic
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "throwing_knife"
 	inhand_icon_state = "edagger"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'

@@ -722,7 +722,7 @@
 /datum/status_effect/demonic_energy/proc/check_tracked_mobs()
 	var/list/possible_targets = list()
 	for(var/mob/living/possible_target in range(7, get_turf(owner)))
-		if(possible_target.stat != DEAD && !faction_check(owner.faction, possible_target.stat))
+		if(possible_target.stat != DEAD && !faction_check(owner.faction, possible_target.faction))
 			possible_targets.Add(possible_target)
 			if(!(possible_target in tracked_mobs))
 				register_death(possible_target)

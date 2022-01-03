@@ -21,7 +21,7 @@
  *
  */
 
-#define AMBER_TIMESTOP_RANGE 1
+#define AMBER_TIMESTOP_RANGE 2
 #define AMBER_TIMESTOP_DURATION 3 SECONDS
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal
@@ -472,7 +472,7 @@
 /obj/item/crystal_fruit //One-use full heal and buff for 30 seconds. When you're truely fucked.
 	name = "crystal fruit"
 	desc = "Legends say that eating this fruit will give you \"awesome power\". It's not specified what these are."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "crystal_fruit"
 
 /obj/item/crystal_fruit/attack_self(mob/user)
@@ -499,7 +499,7 @@
 /obj/item/amber_core
 	name = "amber core"
 	desc = "Strange crystal made of very dense amber found in one of Time Crystals."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "amber_core"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0

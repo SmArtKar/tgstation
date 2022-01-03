@@ -22,8 +22,8 @@
 	icon_living = "head"
 	base_icon_state = "head"
 	icon = 'icons/mob/jungle/mud_worm.dmi'
-	maxHealth = 200
-	health = 200
+	maxHealth = 250
+	health = 250
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	move_resist = MOVE_FORCE_OVERPOWERING+1
@@ -369,7 +369,7 @@
 /obj/effect/temp_visual/fireball/giant_tooth //Does brute damage instead of burn and does not set on fire
 	name = "giant tooth"
 	desc = "Get out of the way!"
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "giant_tooth"
 	duration = 8
 
@@ -495,7 +495,7 @@
 /obj/item/armor_scales
 	name = "armor scales"
 	desc = "Hardened dirt, mud and rocks in form of natural armor scales."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "armor_scales"
 	w_class = WEIGHT_CLASS_TINY
 	force = 0
@@ -563,7 +563,7 @@
 /obj/item/dual_sword //A neat yet hard to use sword. Deals 40 damage to animals and 10 to humans, attacks everything in front of player and allows you to parry for PARRY_ACTIVE_TIME, altrough failed parries stagger you for PARRY_STAGGER_TIME making you unable to act
 	name = "double-bladed sword"
 	desc = "No, it's not an energy sword. Yeah, sad, I know."
-	icon = 'icons/obj/jungle/artefacts.dmi'
+	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "dual_blade0"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'

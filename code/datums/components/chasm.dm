@@ -157,8 +157,8 @@
 			AM.throw_at(get_edge_target_turf(parent,pick(GLOB.alldirs)),rand(1, 10),rand(1, 10))
 
 /datum/component/chasm/bluespace
-	stun_time = 3 SECONDS
-	brute_loss = 50
+	stun_time = 1 SECONDS
+	brute_loss = 25
 
 /datum/component/chasm/bluespace/Initialize()
 	RegisterSignal(parent, COMSIG_ATOM_ENTERED, .proc/Entered)

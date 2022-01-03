@@ -888,6 +888,13 @@
 	reqs = list(/obj/item/ice_energy_crystal = 1, /obj/item/wendigo_skull = 1, /obj/item/clockwork_alloy = 1)
 	category = CAT_PRIMAL
 
+/datum/crafting_recipe/demonslayer
+	name = "Armour of the Demonslayer"
+	result = /obj/item/clothing/suit/hooded/cloak/demonslayer
+	time = 60
+	reqs = list(/obj/item/bluespace_megacrystal = 1, /obj/item/experimental_components = 1, /obj/item/demon_stone = 1, /obj/item/spider_eye = 1)
+	category = CAT_PRIMAL
+
 /datum/crafting_recipe/firebrand
 	name = "Firebrand"
 	result = /obj/item/match/firebrand

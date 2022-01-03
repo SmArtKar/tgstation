@@ -4,7 +4,6 @@
 #define PERLIN_NOISE_ZOOM 65
 //Defines the level at which mountains spawn
 #define MOUNTAIN_LEVEL 0.85
-#define HIGH_MOUNTAIN_LEVEL 0.87
 
 /datum/map_generator/jungle_generator
 	///2D list of all biomes based on heat and humidity combos.
@@ -78,10 +77,8 @@
 				if(0.75 to 1)
 					humidity_level = BIOME_HIGH_HUMIDITY
 			selected_biome = possible_biomes[heat_level][humidity_level]
-		else if(height < HIGH_MOUNTAIN_LEVEL) //Over MOUNTAIN_LEVEL; It's a mountain
+		else //Over MOUNTAIN_LEVEL; It's a mountain
 			selected_biome = /datum/biome/mountain
-		else
-			selected_biome = /datum/biome/mountain/high
 
 		selected_biome = SSmapping.biomes[selected_biome] //Get the instance of this biome from SSmapping
 		selected_biome.generate_turf(gen_turf)

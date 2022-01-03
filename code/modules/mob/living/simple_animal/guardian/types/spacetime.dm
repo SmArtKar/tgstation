@@ -45,6 +45,7 @@
 			environment_smash = initial(environment_smash)
 			pass_flags &= ~(PASSCLOSEDTURF | PASSGLASS | PASSGRILLE | PASSMACHINE | PASSSTRUCTURE | PASSTABLE | PASSMOB | PASSDOORS | PASSVEHICLE)
 			alpha = 255
+			color = "#ffffff"
 			density = TRUE
 			to_chat(src, "[span_danger("<B>You switch to combat mode.")]</B>")
 			toggle = FALSE

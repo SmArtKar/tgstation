@@ -2885,6 +2885,7 @@
 #include "code\modules\mining\jungle\flora.dm"
 #include "code\modules\mining\jungle\mining_loot.dm"
 #include "code\modules\mining\jungle\spawners.dm"
+#include "code\modules\mining\jungle\demonslayer.dm"
 #include "code\modules\mining\laborcamp\laborshuttle.dm"
 #include "code\modules\mining\laborcamp\laborstacker.dm"
 #include "code\modules\mining\lavaland\ash_flora.dm"

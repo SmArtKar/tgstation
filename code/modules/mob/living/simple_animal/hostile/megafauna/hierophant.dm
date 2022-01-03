@@ -577,7 +577,7 @@ Difficulty: Hard
 	var/monster_damage_boost = TRUE
 	var/damage = 10
 
-/obj/effect/temp_visual/hierophant/chaser/Initialize(mapload, new_caster, new_target, new_speed, is_friendly_fire)
+/obj/effect/temp_visual/hierophant/chaser/Initialize(mapload, new_caster, new_target, new_speed, is_friendly_fire=FALSE)
 	. = ..()
 	target = new_target
 	friendly_fire_check = is_friendly_fire

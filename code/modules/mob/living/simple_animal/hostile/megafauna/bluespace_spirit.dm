@@ -23,14 +23,14 @@
 	aggro_vision_range = 21
 
 	wander = FALSE
-	speed = 2
-	move_to_delay = 2
+	speed = 3
+	move_to_delay = 3
 	retreat_distance = 3
 	minimum_distance = 3
 	gps_name = "Quantum Signal"
 
-	loot = list(/obj/item/guardiancreator/tech/spacetime)
-	crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/crusher_trophy/bluespace_rift)
+	loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal)
+	crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
 
 	var/list/copies = list()
 	var/charging = FALSE
@@ -48,37 +48,42 @@
 
 	if(enraged) //You really want to try and hit the real one or you're gonna be fucked
 		charge()
+		SLEEP_CHECK_DEATH(5)
 		if(prob(85))
 			if(prob(35))
 				more_bouncers()
 
 			for(var/i = 1 to 3)
-				shotgun(list(-10.5, -7, -3.5, 0, 3.5, 7, 10.5))
+				shotgun()
 				SLEEP_CHECK_DEATH(5)
 		else
 			spiral_shoot_reverse(counter_length = 16)
 		ranged_cooldown = world.time + 0.5 SECONDS
 		return
 
-	if(prob(25 + anger_modifier / 3))
-		triple_bouncer()
-	else
-		if(prob(10 + anger_modifier / 4))
-			shoot_projectile_reverse()
+
+	if(health / maxHealth < 0.5)
+		if(prob(25 + anger_modifier / 3))
+			triple_bouncer()
+		else
+			if(prob(10 + anger_modifier / 4))
+				shoot_projectile_reverse()
 
 	if(prob(45))
 		if(prob(30))
-			ranged_cooldown = world.time + (4 * (1.5 - anger_modifier) + 0.5) SECONDS
 			triple_charge()
 		else
 			charge()
-			SLEEP_CHECK_DEATH(5)
-			shotgun()
+			if(health / maxHealth < 0.5)
+				SLEEP_CHECK_DEATH(5)
+				shotgun()
 	else
 		if(prob(25))
-			ranged_cooldown = world.time + (4 * (1.5 - anger_modifier) + 0.5) SECONDS
-			more_bouncers()
-			SLEEP_CHECK_DEATH(8)
+			if(health / maxHealth < 0.5)
+				more_bouncers()
+			else
+				triple_bouncer()
+			SLEEP_CHECK_DEATH(15)
 			clone_rush()
 			return
 
@@ -88,7 +93,8 @@
 				SLEEP_CHECK_DEATH(3)
 		else
 			bluespace_collapse()
-			triple_bouncer()
+			if(health / maxHealth < 0.5)
+				triple_bouncer()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/bluespace_blast)
 	if(!isnum(set_angle) && (!marker || marker == loc))
@@ -235,7 +241,7 @@
 				continue
 			turfs.Remove(turf_to_remove)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shotgun(shot_angles = list(3.5, 0, -3.5))
+/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shotgun(shot_angles = list(5, 0, -5))
 	var/turf/target_turf = get_turf(target)
 	var/angle_to_target = get_angle(src, target_turf)
 	for(var/i in shot_angles)
@@ -269,7 +275,7 @@
 	enraged = TRUE
 	speed = 0
 	move_to_delay = 0 //Speedy
-	addtimer(CALLBACK(src, .proc/stop_rage), 20 SECONDS)
+	addtimer(CALLBACK(src, .proc/stop_rage), 15 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/stop_rage()
 	enraged = FALSE
@@ -288,7 +294,7 @@
 /obj/projectile/bluespace_blast
 	name = "bluespace blast"
 	icon_state = "gaussblue"
-	damage = 10
+	damage = 7
 	damage_type = BRUTE
 	speed = 1
 
@@ -301,7 +307,7 @@
 	ricochet_incidence_leeway = 0
 
 /obj/projectile/bluespace_blast/slow
-	speed = 2
+	speed = 4
 
 /obj/projectile/bluespace_blast/check_ricochet_flag(atom/A)
 	return TRUE
@@ -332,9 +338,9 @@
 /obj/projectile/bluespace_blast/bouncer
 	name = "bluespace bouncer"
 	icon_state = "bluespace_bouncer"
-	damage = 35
+	damage = 45
 	armour_penetration = 100
-	speed = 2
+	speed = 4
 
 	ricochets_max = 30 //Fun time!
 	ricochet_chance = 600
@@ -390,6 +396,7 @@
 	light_power = 0.65
 	light_color = COLOR_MODERATE_BLUE
 	smoothing_groups = list(SMOOTH_GROUP_TURF_CHASM)
+	normal_chasm = FALSE
 
 /turf/open/chasm/bluespace/Initialize()
 	. = ..()
@@ -572,6 +579,15 @@
 		return
 	manipulator.wash(CLEAN_TYPE_BLOOD)
 	return ..()
+
+/obj/item/bluespace_megacrystal
+	name = "bluespace megacrystal"
+	desc = "A giant bluespace crystal that can be probably used for something... if only you could find where you should stick it."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "bluespace_megacrystal"
+	w_class = WEIGHT_CLASS_TINY
+	force = 0
+	throwforce = 0
 
 #define LEFT_SLASH "Left Slash"
 #define RIGHT_SLASH "Right Slash"

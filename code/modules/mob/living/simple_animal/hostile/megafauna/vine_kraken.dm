@@ -12,6 +12,7 @@
 	maxHealth = 3000
 	icon_state = "vine_kraken"
 	icon_living = "vine_kraken"
+	icon_dead = "vine_kraken_dead"
 	icon = 'icons/mob/jungle/vine_kraken.dmi'
 
 	attack_sound = 'sound/creatures/venus_trap_hit.ogg'
@@ -39,8 +40,8 @@
 	move_to_delay = 3
 	gps_name = "Solar Signal"
 
-	loot = list(/obj/item/gun/magic/staff/vine, /obj/item/organ/heart/jungle)
-	crusher_loot = list(/obj/item/gun/magic/staff/vine, /obj/item/organ/heart/jungle, /obj/item/crusher_trophy/vine_tentacle)
+	loot = list(/obj/item/gun/magic/staff/vine, /obj/item/organ/heart/jungle, /obj/item/green_rose)
+	crusher_loot = list(/obj/item/gun/magic/staff/vine, /obj/item/organ/heart/jungle, /obj/item/green_rose, /obj/item/crusher_trophy/vine_tentacle)
 
 
 	var/list/vines = list()
@@ -66,15 +67,14 @@
 		ranged_cooldown = world.time + 2 SECONDS
 		return
 
-	if(prob(35 + anger_modifier) && !throw_spree)
+	if(prob(45 + anger_modifier) && !throw_spree)
 		throwing_spree()
-		ranged_cooldown = world.time + 2 SECONDS
-		return
+		ranged_cooldown = ranged_cooldown + 2 SECONDS
 
 	if(health < maxHealth * 0.35)
-		if(prob(30))
-			INVOKE_ASYNC(src, .proc/spiral_shoot)
-		SLEEP_CHECK_DEATH(0.5 SECONDS)
+		if(prob(65))
+			throwing_spree()
+			SLEEP_CHECK_DEATH(5)
 		var/radius_active = FALSE
 		if(prob(25))
 			triple_radius()
@@ -83,6 +83,7 @@
 		if(prob(35))
 			vine_attack()
 			if(prob(anger_modifier + 15) && !radius_active)
+				throwing_spree()
 				SLEEP_CHECK_DEATH(2 SECONDS)
 				INVOKE_ASYNC(src, .proc/attack_in_radius)
 				ranged_cooldown = world.time + 12 SECONDS
@@ -91,7 +92,7 @@
 		else
 			solar_barrage()
 			vine_attack()
-			SLEEP_CHECK_DEATH(0.5 SECONDS)
+			SLEEP_CHECK_DEATH(6)
 			vine_attack()
 	else
 		var/attack_type = rand(1, 5)
@@ -171,6 +172,7 @@
 	for(var/atom/vine_target in vine_targets)
 		if(!vine_target || QDELETED(vine_target) || !(vine_target in view_objects))
 			QDEL_NULL(vines[vine_target])
+			vines.Remove(vine_target)
 			vine_targets.Remove(vine_target)
 
 	if(!isliving(hit_atom))
@@ -278,6 +280,11 @@
 	attack_in_radius(FALSE, FALSE)
 	immobile = FALSE
 
+/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/death(gibbed, list/force_grant)
+	for(var/atom/vine_target in vine_targets)
+		qdel(vines[vine_target])
+	. = ..()
+
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/throwing_spree()
 	throw_spree = rand(2, 4)
 
@@ -337,6 +344,7 @@
 		kraken.vines[target] = vine
 		kraken.vine_targets.Add(target)
 		kraken.process_vine_move(target, throwing_proj)
+		QDEL_IN(vine, 10 SECONDS)
 	if(staff)
 		QDEL_IN(vine, 2 SECONDS)
 		if(isliving(target))
@@ -473,7 +481,6 @@
 	ADD_TRAIT(target, TRAIT_VINE_IMMUNE, ORGAN_TRAIT)
 	ADD_TRAIT(target, TRAIT_MOVE_FLOATING, ORGAN_TRAIT)
 	ADD_TRAIT(target, TRAIT_NO_FLOATING_ANIM, ORGAN_TRAIT)
-	target.add_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 	owner.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
 
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, .proc/on_move)
@@ -491,7 +498,6 @@
 	REMOVE_TRAIT(target, TRAIT_VINE_IMMUNE, ORGAN_TRAIT)
 	REMOVE_TRAIT(target, TRAIT_MOVE_FLOATING, ORGAN_TRAIT)
 	REMOVE_TRAIT(target, TRAIT_NO_FLOATING_ANIM, ORGAN_TRAIT)
-	target.remove_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 	owner.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
 
 	UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
@@ -520,7 +526,8 @@
 			break
 
 	if(should_shoot)
-		shoot_projectile(get_turf(owner), set_angle = target_angle + rand(-7, 7))
+		var/turf/start_turf = get_step(get_turf(owner), pick(GLOB.alldirs))
+		shoot_projectile(start_turf, set_angle = target_angle + rand(-7, 7))
 
 /obj/item/organ/heart/jungle/proc/shoot_projectile(turf/marker, set_angle)
 	if(!isnum(set_angle) && (!marker || marker == loc))
@@ -604,6 +611,15 @@
 
 /obj/item/crusher_trophy/vine_tentacle/on_mark_detonation(mob/living/target, mob/living/user)
 	user.apply_status_effect(STATUS_EFFECT_VINE_RING)
+
+/obj/item/green_rose
+	name = "green rose"
+	desc = "A strange rose of odd green color. Weird."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "green_rose"
+	w_class = WEIGHT_CLASS_TINY
+	force = 0
+	throwforce = 0
 
 #undef VINE_DELETE_CHANCE
 #undef VINE_MIN_DELETE

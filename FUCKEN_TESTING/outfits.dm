@@ -99,6 +99,8 @@
 	new /obj/item/gilded_card(src)
 	new /obj/item/gun/magic/staff/vine(src)
 	new /obj/item/organ/heart/jungle(src)
+	new /obj/item/bluespace_megacrystal(src)
+	new /obj/item/green_rose(src)
 
 /obj/item/mod/control/pre_equipped/exotic/debug
 	cell = /obj/item/stock_parts/cell/infinite
