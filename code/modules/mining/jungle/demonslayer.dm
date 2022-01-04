@@ -1,21 +1,16 @@
 #define DASH_COOLDOWN 5 SECONDS
-#define DASH_COOLDOWN_HIT 7 SECONDS
+#define DASH_COOLDOWN_HIT 7 SECONDS //So you can still be killed by chaining a few attacks
 #define DASH_RANGE_PERFECT 3
 #define DASH_RANGE 5
 
 #define MAX_CULMINATION_CHARGE 100
-#define PROJECTILE_HIT_MULTIPLIER 1.5
-#define DAMAGE_TO_CHARGE_SCALE 0.75
 #define CHARGE_DRAINED_PER_SECOND 3
-#define CULMINATION_MELEE_ARMOR_ADDED 30
-#define CULMINATION_ATTACK_SPEED_MODIFIER 0.25
-#define CHARGE_PER_KILL 35
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer
 	name = "helmet of the demonslayer"
 	icon_state = "demonslayer"
 	desc = "A helmet fashioned from parts of everything you've killed along your path through this jungle."
-	armor = list(MELEE = 40, BULLET = 25, LASER = 25, ENERGY = 25, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 30, BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100)
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT
 	cold_protection = HEAD
 	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
@@ -40,7 +35,6 @@
 		if(culmination_charge == 0)
 			if(ishuman(loc))
 				end_culmination(loc)
-	check_tracked_mobs()
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -54,49 +48,9 @@
 	. = ..()
 	end_culmination(user)
 
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/check_tracked_mobs()
-	if(!ishuman(loc))
-		return
-	var/mob/living/carbon/human/owner = loc
-	var/list/possible_targets = list()
-	for(var/mob/living/possible_target in range(7, get_turf(owner)))
-		if(possible_target.stat != DEAD && !faction_check(owner.faction, possible_target.faction))
-			possible_targets.Add(possible_target)
-			if(!(possible_target in tracked_mobs))
-				RegisterSignal(possible_target, COMSIG_LIVING_DEATH, .proc/harvest_soul)
-
-	for(var/mob/living/being_tracked in tracked_mobs)
-		if(!(being_tracked in possible_targets))
-			UnregisterSignal(being_tracked, COMSIG_LIVING_DEATH)
-
-	tracked_mobs = possible_targets
-
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/harvest_soul()
-	SIGNAL_HANDLER
-	culmination_charge += CHARGE_PER_KILL
-
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(culmination_active)
-		return
-	var/culmination_value = damage * DAMAGE_TO_CHARGE_SCALE
-	if(attack_type == PROJECTILE_ATTACK)
-		culmination_value *= PROJECTILE_HIT_MULTIPLIER
-	culmination_charge = clamp(round(culmination_charge +culmination_value), 0, MAX_CULMINATION_CHARGE)
-	if(culmination_charge >= MAX_CULMINATION_CHARGE)
-		to_chat(owner, span_notice("Culmination is fully charged."))
-		balloon_alert(owner, "culmination charged")
-
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/IsReflect()
-	return culmination_active
-
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/culmination(mob/living/carbon/human/user)
 	to_chat(user, span_warning("You start the Culmination."))
 	playsound(user, 'sound/magic/ethereal_enter.ogg', 50)
-	user.physiology.armor.melee += CULMINATION_MELEE_ARMOR_ADDED
-	user.next_move_modifier *= CULMINATION_ATTACK_SPEED_MODIFIER
-	user.add_atom_colour(COLOR_BUBBLEGUM_RED, TEMPORARY_COLOUR_PRIORITY)
-	ADD_TRAIT(user, TRAIT_NOGUNS, CLOTHING_TRAIT)
-	ADD_TRAIT(src, TRAIT_NODROP, CLOTHING_TRAIT)
 	culmination_active = TRUE
 
 	for(var/shoot_dir in GLOB.cardinals)
@@ -123,18 +77,13 @@
 		return
 	to_chat(user, span_warning("You finish the Culmination."))
 	playsound(user, 'sound/magic/summonitems_generic.ogg', 50)
-	user.physiology.armor.melee -= CULMINATION_MELEE_ARMOR_ADDED
-	user.next_move_modifier /= CULMINATION_ATTACK_SPEED_MODIFIER
-	user.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, COLOR_BUBBLEGUM_RED)
-	REMOVE_TRAIT(user, TRAIT_NOGUNS, CLOTHING_TRAIT)
-	REMOVE_TRAIT(src, TRAIT_NODROP, CLOTHING_TRAIT)
 
-/obj/item/clothing/suit/hooded/cloak/demonslayer //Basically ancient AI modsuit but cooler, as it's dashes are instant, are automatically performed to prevent getting hit and you can also cast two cool spells
+/obj/item/clothing/suit/hooded/cloak/demonslayer //Basically ancient AI modsuit but cooler, as it's dashes are instant, are automatically performed to prevent getting hit and you can also cast two cool spells. If you can make it then you're totally worthy, as it's very unlikely someone will defeat all bosses in one round without dying
 	name = "armor of the demonslayer"
 	desc = "A suit of armor fashioned from parts of everything you've killed along your path through this jungle."
 	icon_state = "demonslayer"
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/resonator, /obj/item/mining_scanner, /obj/item/t_scanner/adv_mining_scanner, /obj/item/gun/energy/kinetic_accelerator, /obj/item/pickaxe, /obj/item/spear, /obj/item/kinetic_crusher)
-	armor = list(MELEE = 40, BULLET = 25, LASER = 25, ENERGY = 25, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100) ///Armor is not that high but instead you get dashes to dodge the attack
+	armor = list(MELEE = 30, BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100) ///Armor is not that high but instead you get dashes to dodge the attack
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL
 	hoodtype = /obj/item/clothing/head/hooded/cloakhood/demonslayer
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
@@ -146,11 +95,24 @@
 	transparent_protection = HIDEGLOVES|HIDESUITSTORAGE|HIDEJUMPSUIT|HIDESHOES
 
 	var/dash_cooldown = 0
+	var/dash_active = FALSE
 	var/obj/effect/proc_holder/spell/chasers
 
 /obj/item/clothing/suit/hooded/cloak/demonslayer/Initialize(mapload)
 	. = ..()
 	chasers = new /obj/effect/proc_holder/spell/targeted/demonic_chasers()
+	START_PROCESSING(SSobj, src)
+
+/obj/item/clothing/suit/hooded/cloak/demonslayer/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	. = ..()
+
+/obj/item/clothing/suit/hooded/cloak/demonslayer/process()
+	if(dash_cooldown < world.time && dash_active == FALSE)
+		dash_active = TRUE
+		if(ishuman(loc))
+			balloon_alert(loc, "demonic dash recharged")
+
 
 /obj/item/clothing/suit/hooded/cloak/demonslayer/proc/can_activate()
 	if(!ishuman(loc))
@@ -169,7 +131,6 @@
 		dash_cooldown = world.time + DASH_COOLDOWN_HIT //You need to not get hit in 7 seconds for it to work
 		return FALSE
 
-	dash_cooldown = world.time + DASH_COOLDOWN
 	var/turf/destination_holder = get_turf(owner)
 	var/turf/destination
 
@@ -183,7 +144,6 @@
 			destination = destination_holder
 
 	if(!destination)
-		dash_cooldown = 0
 		return FALSE
 
 	var/possible_destinations = list()
@@ -200,8 +160,9 @@
 		new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer(destination, owner.dir)
 		playsound(destination, 'sound/effects/phasein.ogg', 25, TRUE)
 		playsound(destination, "sparks", 50, TRUE)
+		dash_active = FALSE
+		dash_cooldown = world.time + DASH_COOLDOWN
 		return TRUE
-	dash_cooldown = 0
 	return FALSE
 
 /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer
@@ -238,7 +199,6 @@
 	if(dash_cooldown > world.time || !can_activate())
 		return
 
-	dash_cooldown = world.time + DASH_COOLDOWN
 	var/turf/destination
 
 	var/counter = 0
@@ -251,7 +211,6 @@
 		counter += 1
 
 	if(!destination)
-		dash_cooldown = 0
 		return
 
 	var/possible_destinations = list()
@@ -268,8 +227,8 @@
 		new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer(destination, owner.dir)
 		playsound(destination, 'sound/effects/phasein.ogg', 25, TRUE)
 		playsound(destination, "sparks", 50, TRUE)
-		return
-	dash_cooldown = 0
+		dash_cooldown = world.time + DASH_COOLDOWN
+		dash_active = FALSE
 
 /obj/effect/temp_visual/hierophant/chaser/demonslayer
 	icon_state = "demonic_blast_warning_quick"
@@ -322,22 +281,18 @@
 	set_angle(rand(0, 360))
 	return BULLET_ACT_FORCE_PIERCE
 
-/obj/projectile/demonslayer_orb/proc/spiral_shoot(negative = pick(TRUE, FALSE), counter_start = 8)
+/obj/projectile/demonslayer_orb/proc/spiral_shoot(negative = pick(TRUE, FALSE))
+	STOP_PROCESSING(SSprojectiles, src) //So it doesn't move while shooting
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
-	var/counter = counter_start
-	for(var/i in 1 to 16)
+	for(var/counter in 0 to 8)
 		if(negative)
 			counter--
 		else
 			counter++
-		if(counter > 16)
-			counter = 1
-		if(counter < 1)
-			counter = 16
-		shoot_projectile(start_turf, counter * 22.5)
-		shoot_projectile(start_turf, ((counter + 4) % 16) * 22.5)
-		shoot_projectile(start_turf, ((counter + 8) % 16) * 22.5)
-		shoot_projectile(start_turf, ((counter + 12) % 16) * 22.5)
+		shoot_projectile(start_turf, counter * 11.25)
+		shoot_projectile(start_turf, counter * 11.25 + 90)
+		shoot_projectile(start_turf, counter * 11.25 + 180)
+		shoot_projectile(start_turf, counter * 11.25 + 270)
 		sleep(1)
 	qdel(src)
 
@@ -354,7 +309,7 @@
 		if(demonslayer.culmination_active)
 			to_chat(owner, span_warning("Culmination is already active!"))
 			return
-		if(demonslayer.culmination_charge < 100)
+		if(demonslayer.culmination_charge < MAX_CULMINATION_CHARGE)
 			to_chat(owner, span_warning("You don't have a full charge."))
 			return
 		demonslayer.culmination(owner)
@@ -368,9 +323,4 @@
 #undef DASH_RANGE_PERFECT
 
 #undef MAX_CULMINATION_CHARGE
-#undef PROJECTILE_HIT_MULTIPLIER
-#undef DAMAGE_TO_CHARGE_SCALE
 #undef CHARGE_DRAINED_PER_SECOND
-#undef CULMINATION_MELEE_ARMOR_ADDED
-#undef CULMINATION_ATTACK_SPEED_MODIFIER
-#undef HEALTH_TO_CHARGE

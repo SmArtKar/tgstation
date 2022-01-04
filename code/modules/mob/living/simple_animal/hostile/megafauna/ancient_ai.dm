@@ -1,29 +1,3 @@
-/**
-*
-* Ancient AI
-*
-* Even though we're fighting against an arena itself and not against some mob, I still make it a megafauna because why the fuck not.
-* So yeah, this is the main controller of ancient AI arena. This boss can be found in deep jungle caves in a special arena.
-*
-* Ancient AI has a few different moves:
-* 1. A few turrets activate and shoot rockets.
-* 2. Some turfs become electrified, damaging and stunning everybody who walks ontop of them.
-* 3. Giant manipulators activate and perform a few swings, damaging everything they collide with
-* 4. Giant manipulators activate and try to grab the player and throw him afterwards
-* 5. Laser Flower turrets activate, flooding the arena with slow laser bullethell. This attack is performed rarely and only on low HP.
-* 6. A bunch of hostile drones are spawned, targeting player. This attack is only performed on low HP.
-*
-* To kill the AI you need to break it's servers which can be done by either brute force(very slow) or by dodging rockets and making them hit the servers.
-* After servers are broken, you can finish the AI by destroying it's core whose shields were deactivated.
-*
-* After killing the AI you get some Experimental Components(required to craft some cool shit) and a badass exoskeleton armor that gives you HUDs and allows you to perform a few sick tricks.
-* When killed with crusher, it will also drop it's core that will allow you to shoot 3 heat-seeking missiles on right click(these are harmless for humans)
-* It also has "common" loot that drops per everybody in the group that killed it. It consists of an experimental drone pet that serves as a combat companion and a mob bait.
-*
-* Intended difficulty: OH GOD OH FUCK
-*
-**/
-
 #define FLOOR_SHOCK_LENGTH 10 SECONDS
 #define DRONE_RESPAWN_COOLDOWN 10 SECONDS
 #define LASER_FLOWER_LENGTH 2 SECONDS
@@ -64,9 +38,10 @@
 	ranged_ignores_vision = TRUE
 
 	loot = list(/obj/item/malf_upgrade)
-	crusher_loot = list(/obj/item/malf_upgrade)
-	common_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
-	common_crusher_loot = list(/obj/item/personal_drone_shell, /obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
+	common_loot = list(/obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
+	common_crusher_loot = list(/obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
+	rare_loot = list(/obj/item/personal_drone_shell)
+	rarity = 2
 	spawns_minions = TRUE
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
@@ -253,12 +228,15 @@
 	icon_state = "drone_spawner"
 
 	max_integrity = 200
-	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 75, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
 	var/has_drone = TRUE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
+
+/obj/machinery/rogue_drone_spawner/ex_act(severity, target)
+	return
 
 /obj/machinery/rogue_drone_spawner/proc/spawn_drone()
 	if(!has_drone || LAZYLEN(master_ai.drones) >= 6)
@@ -288,12 +266,15 @@
 	icon_state = "laser_flower"
 
 	max_integrity = 200
-	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 75, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
 	var/active = FALSE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
+
+/obj/machinery/laser_flower/ex_act(severity, target)
+	return
 
 /obj/machinery/laser_flower/update_icon()
 	if(machine_stat & BROKEN)
@@ -373,26 +354,27 @@
 /obj/machinery/giant_arm_holder/update_icon()
 	cut_overlays()
 
-	var/mutable_appearance/arm_1 = mutable_appearance(icon, "arm_1")
+	var/mutable_appearance/arm_1 = mutable_appearance('icons/obj/jungle/96x96.dmi', "arm_1")
 	var/matrix/arm_1_matrix = matrix()
 	arm_1_matrix.Turn(angle_1 - 45)
+	arm_1_matrix.Translate(-16, -16)
 	arm_1.transform = arm_1_matrix
 	add_overlay(arm_1)
 
 
-	var/mutable_appearance/arm_2 = mutable_appearance(icon, "arm_2")
+	var/mutable_appearance/arm_2 = mutable_appearance('icons/obj/jungle/96x96.dmi', "arm_2")
 	var/matrix/arm_2_matrix = matrix()
 	arm_2_matrix.Turn(angle_2 - 45)
-	arm_2_matrix.Translate(cos(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1, -sin(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1)
+	arm_2_matrix.Translate(round(cos(angle_1) * round(sqrt(42 ** 2 / 2)) * 2 + 1) - 16, round(-sin(angle_1) * round(sqrt(42 ** 2 / 2)) * 2) - 16)
 	arm_2.transform = arm_2_matrix
 	add_overlay(arm_2)
 
 
-	var/mutable_appearance/arm_3 = mutable_appearance(icon, "arm_3")
+	var/mutable_appearance/arm_3 = mutable_appearance('icons/obj/jungle/96x96.dmi', "arm_3")
 	var/matrix/arm_3_matrix = matrix()
 	arm_3_matrix.Turn(angle_3 - 45)
-	arm_3_matrix.Translate(cos(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1, -sin(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1)
-	arm_3_matrix.Translate(cos(angle_2) * round(sqrt(25 ** 2 / 2)) * 2 + 1, -sin(angle_2) * round(sqrt(25 ** 2 / 2)) * 2 + 1)
+	arm_3_matrix.Translate(round(cos(angle_1) * round(sqrt(42 ** 2 / 2)) * 2 + 1) - 16, round(-sin(angle_1) * round(sqrt(42 ** 2 / 2)) * 2) - 16)
+	arm_3_matrix.Translate(round(cos(angle_2) * round(sqrt(42 ** 2 / 2)) * 2 + 1), round(-sin(angle_2) * round(sqrt(42 ** 2 / 2)) * 2))
 	arm_3.transform = arm_3_matrix
 	add_overlay(arm_3)
 
@@ -404,7 +386,7 @@
 		angle_1 = min(angle_1 + speed, default_angle + 90)
 		angle_2 = min(angle_1 + round(speed / 2), default_angle + 90)
 		angle_3 = min(angle_1 + round(speed / 2), default_angle + 90)
-		speed *= 2
+		speed = max(15, speed * 2)
 		check_damage()
 		sleep(1)
 		update_icon()
@@ -423,7 +405,7 @@
 		angle_1 = max(angle_1 - speed, default_angle - 90)
 		angle_2 = max(angle_1 - round(speed / 2), default_angle - 90)
 		angle_3 = max(angle_1 - round(speed / 2), default_angle - 90)
-		speed *= 2
+		speed = max(15, speed * 2)
 		check_damage()
 		sleep(1)
 		update_icon()
@@ -446,30 +428,43 @@
 
 
 /obj/machinery/giant_arm_holder/proc/check_damage()
-	var/first_joint_x = round((cos(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1) / 32) + 1
-	var/first_joint_y = round((sin(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1) / 32)
-	var/second_joint_x = round(((cos(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1) + (cos(angle_2) * round(sqrt(25 ** 2 / 2)) * 2 + 1)) / 32) + 1
-	var/second_joint_y = round(((sin(angle_1) * round(sqrt(25 ** 2 / 2)) * 2 + 1) + (sin(angle_2) * round(sqrt(25 ** 2 / 2)) * 2 + 1)) / 32)
+	var/first_joint_x = (cos(angle_1) * round(sqrt(42 ** 2 / 2)) * 2 + 1) / 32
+	var/first_joint_y = (sin(angle_1) * round(sqrt(42 ** 2 / 2)) * 2) / 32
+	var/second_joint_x = (cos(angle_2) * round(sqrt(42 ** 2 / 2)) * 2 + 1) / 32 + first_joint_x
+	var/second_joint_y = (sin(angle_2) * round(sqrt(42 ** 2 / 2)) * 2) / 32 + first_joint_y
+
+	if(first_joint_x - round(first_joint_x) > 0.35)
+		first_joint_x = round(first_joint_x) + 1
+	else
+		first_joint_x = round(first_joint_x)
+
+	if(first_joint_y - round(first_joint_y) > 0.35)
+		first_joint_y = round(first_joint_y) + 1
+	else
+		first_joint_y = round(first_joint_y)
+
+	if(second_joint_x - round(second_joint_x) > 0.35)
+		second_joint_x = round(second_joint_x) + 1
+	else
+		second_joint_x = round(second_joint_x)
+
+	if(second_joint_y - round(second_joint_y) > 0.35)
+		second_joint_y = round(second_joint_y) + 1
+	else
+		second_joint_y = round(second_joint_y)
 
 	var/turf/first_joint = locate(first_joint_x + x, y - first_joint_y, z)
 	var/turf/second_joint = locate(second_joint_x + x, y - second_joint_y, z)
 	var/list/already_thrown = list()
 
-	for(var/mob/living/target in first_joint)
-		if(target in already_thrown)
-			continue
-		already_thrown.Add(target)
-		to_chat(target, span_userdanger("You're hit by a giant manipulator!"))
-		target.adjustBruteLoss(20)
-		target.throw_at(get_edge_target_turf(target, get_dir(src, target)), 6, 3)
-
-	for(var/mob/living/target in second_joint)
-		if(target in already_thrown)
-			continue
-		already_thrown.Add(target)
-		to_chat(target, span_userdanger("You're hit by a giant manipulator!"))
-		target.adjustBruteLoss(20)
-		target.throw_at(get_edge_target_turf(target, get_dir(src, target)), 6, 3)
+	for(var/turf/target_turf in (get_line(get_turf(src), first_joint) + get_line(first_joint, second_joint)))
+		for(var/mob/living/target in target_turf)
+			if(target in already_thrown)
+				continue
+			already_thrown.Add(target)
+			to_chat(target, span_userdanger("You're hit by a giant manipulator!"))
+			target.adjustBruteLoss(20)
+			target.throw_at(get_edge_target_turf(target, get_dir(src, target)), 6, 3)
 
 /obj/machinery/giant_arm_holder/dir_1
 	default_angle = 225
@@ -488,8 +483,8 @@
 	density = TRUE
 	anchored = TRUE
 
-	max_integrity = 200
-	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
+	max_integrity = 400
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
@@ -497,6 +492,9 @@
 	. = ..()
 	if(master_ai)
 		master_ai.GiveTarget(user)
+
+/obj/machinery/ancient_server/ex_act(severity, target)
+	return
 
 /obj/machinery/ancient_server/Destroy()
 	master_ai.server_list.Remove(src)
@@ -523,7 +521,7 @@
 	var/rocket_cooldown = 0
 
 /obj/item/crusher_trophy/ai_core/effect_desc()
-	return "ranged right click attacks to shoot out 3 heat-seeking missiles. This ability has a 10 seconds cooldown."
+	return "ranged right click attacks to shoot out 3 heat-seeking missiles"
 
 /obj/item/crusher_trophy/ai_core/proc/shoot_rockets(mob/living/user, atom/target)
 	for(var/i = 1 to 3)

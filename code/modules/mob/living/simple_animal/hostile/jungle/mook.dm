@@ -36,7 +36,7 @@
 	var/struck_target_leap = FALSE
 
 	footstep_type = FOOTSTEP_MOB_BAREFOOT
-	crusher_drop_mod = 10
+	crusher_drop_mod = 20
 	crusher_loot = /obj/item/crusher_trophy/axe_head
 
 /mob/living/simple_animal/hostile/jungle/mook/CanAllowThrough(atom/movable/mover, border_dir)
@@ -236,7 +236,7 @@
 	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack, /obj/item/crusher_trophy/crystal_shard)
 
 /obj/item/crusher_trophy/axe_head/effect_desc()
-	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time."
+	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time"
 
 /obj/item/crusher_trophy/axe_head/on_mark_detonation(mob/living/target, mob/living/user)
 	user.changeNext_move(CLICK_CD_RAPID)

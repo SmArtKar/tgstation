@@ -1,22 +1,3 @@
-/**
- *
- * Cave Spider Queen
- *
- * It is that the title says. Just a thick, big spider mommy.
- *
- * Attack patterns:
- * 1. Queen dashes, destroying everything in her path.
- * 2. Same as 1, but triple.
- * 3. 3 black cocoons are created. If they aren't destroyed in 5 seconds, they release small cave spider babies.
- * 4. Queen shoots a bunch of web balls in a shotgun-like pattern, flinging everything they hit to itself.
- * 5. Queen slams the ground, creating a powerful shockwave.
- *
- * Killing it drops spider silk and spider eyes. Spider silk can be used on suits and helmets to give them additional 10 melee armor(up to 80), while spider eyes
- *
- * Intended difficulty: Very Hard
- *
- */
-
 #define VORE_PROBABLILITY 40
 #define EGG_LENGTH 5 SECONDS
 #define SPIDER_SILK_LIMIT 60
@@ -54,8 +35,8 @@
 	light_range = 0
 
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye)
-	crusher_loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye, /obj/item/crusher_trophy/spider_leg)
 	common_loot = list(/obj/effect/spawner/random/spider_queen)
+	common_crusher_loot = list(/obj/effect/spawner/random/spider_queen, /obj/item/crusher_trophy/spider_leg)
 	spawns_minions = TRUE
 
 	wander = TRUE
@@ -179,6 +160,7 @@
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
 	SLEEP_CHECK_DEATH(delay)
+	qdel(D)
 	var/movespeed = 0.5
 	walk_towards(src, target_turf, movespeed)
 	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed)
@@ -591,7 +573,7 @@
 		for(var/mob/living/L in T.contents)
 			if(L != src && !(L in hit_things) && !faction_check(L.faction, user.faction))
 				var/throwtarget = get_edge_target_turf(T, get_dir(T, L))
-				L.throw_at(throwtarget, 5, 1, src)
+				L.throw_at(throwtarget, 5, 1, user)
 				L.adjustBruteLoss(10)
 				hit_things += L
 		sleep(1)

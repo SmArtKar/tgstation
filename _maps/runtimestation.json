@@ -5,38 +5,5 @@
 	"map_file": "runtimestation.dmm",
 	"shuttles": {
 		"cargo": "cargo_delta"
-	},
-    "minetype": null,
-	"space_ruin_levels": 0,
-	"space_empty_levels": 0,
-    "traits": [
-		{
-			"Up": 1,
-			"Linkage": null,
-            "Mining":true,
-            "Station":false,
-            "Jungle Deep Cave Ruins":true,
-            "Gravity":true
-		},
-		{
-			"Up": 1,
-			"Down": -1,
-			"Baseturf": "/turf/open/openspace/icemoon/jungle",
-            "Mining":true,
-            "Station":false,
-			"Linkage": null,
-            "Jungle Cave Ruins":true,
-            "Gravity":true
-		},
-		{
-			"Down": -1,
-			"Baseturf": "/turf/open/openspace/icemoon/jungle",
-			"Linkage": null,
-            "Mining":true,
-            "Station":true,
-            "Gravity":true,
-            "Jungle Ruins":true,
-            "Weather_Acidrain":true
-		}
-	]
+	}
 }

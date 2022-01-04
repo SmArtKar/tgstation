@@ -892,7 +892,7 @@
 	name = "Armour of the Demonslayer"
 	result = /obj/item/clothing/suit/hooded/cloak/demonslayer
 	time = 60
-	reqs = list(/obj/item/bluespace_megacrystal = 1, /obj/item/experimental_components = 1, /obj/item/demon_stone = 1, /obj/item/spider_eye = 1)
+	reqs = list(/obj/item/bluespace_megacrystal = 1, /obj/item/experimental_components = 1, /obj/item/demon_stone = 1, /obj/item/spider_eye = 1, /obj/item/green_rose = 1, /obj/item/armor_scales = 1)
 	category = CAT_PRIMAL
 
 /datum/crafting_recipe/firebrand

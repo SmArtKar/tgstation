@@ -33,7 +33,7 @@
 	stat_attack = HARD_CRIT
 	robust_searching = TRUE
 	speak_emote = list("squeaks")
-	crusher_drop_mod = 2.5 //They spawn in large amounts, up to 11 in a pack.
+	crusher_drop_mod = 5 //They spawn in large amounts, up to 11 in a pack.
 	crusher_loot = /obj/item/crusher_trophy/bat_wing
 	butcher_results = list(/obj/item/food/meat/slab = 1, /obj/item/stack/sheet/sinew/bat = 1, /obj/item/stack/sheet/bone = 1)
 	move_resist = MOVE_RESIST_DEFAULT
@@ -99,7 +99,7 @@
 	denied_type = /obj/item/crusher_trophy/bat_wing
 
 /obj/item/crusher_trophy/bat_wing/effect_desc()
-	return "mark detonation to apply a bloody mark to the target. For each hit you land at the marked creature will regenerate some of your health and blood."
+	return "mark detonation to apply a bloody mark to the target. For each hit you land at the marked creature will regenerate some of your health and blood"
 
 /obj/item/crusher_trophy/bat_wing/on_mark_detonation(mob/living/target, mob/living/user)
 	target.apply_status_effect(STATUS_EFFECT_BLOODYMARK)

@@ -21,12 +21,16 @@
 	id = "ancient_ai"
 	description = "Ancient AI with it's arena. Endgame boss."
 	suffix = "jungle_ancient_ai_deepcaves.dmm"
+	cost = 0
+	always_place = TRUE
 
 /datum/map_template/ruin/jungle/cave/deep/demonic_miner
 	name = "Demonic Miner Arena"
 	id = "demonic_miner"
 	description = "A possessed body of some dead miner. Endgame boss."
 	suffix = "jungle_demonic_miner_deepcaves.dmm"
+	cost = 0
+	always_place = TRUE
 
 /datum/map_template/ruin/jungle/cave/vine_kraken
 	name = "Vine Kraken Nest"
@@ -42,6 +46,8 @@
 	id = "bluespace_lab"
 	description = "An abandoned bluespace lab with an angry spirit inside."
 	suffix = "jungle_bluespace_lab_deepcaves.dmm"
+	cost = 0
+	always_place = TRUE
 
 /datum/map_template/ruin/jungle/ufo_crash
 	name = "UFO Crash"

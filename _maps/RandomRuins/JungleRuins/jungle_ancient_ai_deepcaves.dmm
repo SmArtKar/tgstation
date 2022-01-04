@@ -3,7 +3,6 @@
 /obj/structure/fence/corner{
 	dir = 8
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "aN" = (
@@ -156,8 +155,7 @@
 	},
 /area/ruin/powered/ancient_ai)
 "fd" = (
-/obj/effect/mob_spawn/corpse/human/nanotrasensoldier,
-/obj/effect/mapping_helpers/no_lava,
+/obj/effect/mob_spawn/corpse/human/miner/explorer,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "gk" = (
@@ -301,7 +299,6 @@
 /area/ruin/powered/ancient_ai)
 "kP" = (
 /obj/structure/flora/rock/pile,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "kX" = (
@@ -343,7 +340,6 @@
 "ls" = (
 /mob/living/simple_animal/hostile/jungle/bat,
 /mob/living/simple_animal/hostile/jungle/bat,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "mt" = (
@@ -501,7 +497,6 @@
 /obj/structure/fence/corner{
 	dir = 5
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "rl" = (
@@ -894,11 +889,9 @@
 /area/ruin/powered/ancient_ai)
 "Ch" = (
 /mob/living/simple_animal/hostile/jungle/bat,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "CE" = (
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "CP" = (
@@ -913,7 +906,6 @@
 /obj/structure/fence{
 	dir = 4
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "CZ" = (
@@ -963,7 +955,6 @@
 /obj/structure/fence/corner{
 	dir = 10
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "Fn" = (
@@ -980,7 +971,6 @@
 /area/ruin/powered/ancient_ai)
 "FJ" = (
 /mob/living/simple_animal/hostile/jungle/snakeman,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "GT" = (
@@ -1032,7 +1022,6 @@
 /area/ruin/powered/ancient_ai)
 "HQ" = (
 /obj/structure/flora/rock,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "Ih" = (
@@ -1055,7 +1044,6 @@
 	melee_damage_lower = 45;
 	melee_damage_upper = 45
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "IK" = (
@@ -1073,7 +1061,6 @@
 	name = "old keycard";
 	puzzle_id = "ab3l"
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "Ju" = (
@@ -1102,7 +1089,6 @@
 /area/ruin/powered/ancient_ai)
 "JU" = (
 /obj/structure/fence,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "JW" = (
@@ -1200,7 +1186,6 @@
 /mob/living/simple_animal/hostile/jungle/bat,
 /mob/living/simple_animal/hostile/jungle/bat,
 /mob/living/simple_animal/hostile/jungle/bat,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "LA" = (
@@ -1422,7 +1407,6 @@
 /obj/structure/fence/corner{
 	dir = 4
 	},
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "SF" = (
@@ -1570,7 +1554,6 @@
 /area/ruin/powered/ancient_ai)
 "VU" = (
 /obj/structure/fence/door,
-/obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
 "WB" = (

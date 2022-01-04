@@ -12,7 +12,7 @@
 	magic_fluff_string = "<span class='holoparasite'>..And draw the Chrono Legionnaire, the master of unknown.</span>"
 	tech_fluff_string = "<span class='holoparasite'>Boot sequence complete. Bluespace combat modules active. Holoparasite swarm online.</span>"
 	carp_fluff_string = "<span class='holoparasite'>CARP CARP CARP! Caught one, it's a bluespace carp. This fishy can manipulate space-time!</span>"
-	miner_fluff_string = "<span class='holoparasite'>You encounter... Bluespace, a master of space-time.</span>"
+	miner_fluff_string = "<span class='holoparasite'>You encounter... Bluespace, a master of space and time.</span>"
 	see_invisible = SEE_INVISIBLE_LIVING
 	see_in_dark = 8
 	toggle_button_type = /atom/movable/screen/guardian/toggle_mode
@@ -108,12 +108,18 @@
 	for(var/mob/living/target in my_turf)
 		if(target == author)
 			continue
+		var/damage = 1
 		if(isguardian(author))
-			var/mob/living/simple_animal/hostile/guardian/guardian = author
+			var/mob/living/simple_animal/hostile/guardian/spacetime/guardian = author
 			if(guardian.summoner)
 				if(target == guardian.summoner)
 					continue
-		target.adjustFireLoss(20)
+			if(guardian.toggle)
+				damage *= 0.5
+
+		if(!isanimal(target))
+			damage *= 0.5
+		target.adjustFireLoss(20 * damage)
 		to_chat(target, span_userdanger("You're hit by a bluespace blast!"))
 
 /mob/living/simple_animal/hostile/guardian/spacetime/ranged_secondary_attack(atom/target, modifiers)

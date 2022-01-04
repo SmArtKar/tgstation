@@ -1,7 +1,7 @@
 #define VINE_DELETE_CHANCE 15
 #define VINE_MIN_DELETE 4
 #define VINE_MAX 6
-#define THROW_MOVE_COOLDOWN 3 SECONDS
+#define THROW_MOVE_COOLDOWN 1 SECONDS
 #define POWER_THROW_MOVE_COOLDOWN 0.5 SECONDS
 #define STAFF_VINE_COOLDOWN 5 SECONDS
 
@@ -40,9 +40,9 @@
 	move_to_delay = 3
 	gps_name = "Solar Signal"
 
-	loot = list(/obj/item/gun/magic/staff/vine, /obj/item/organ/heart/jungle, /obj/item/green_rose)
-	crusher_loot = list(/obj/item/gun/magic/staff/vine, /obj/item/organ/heart/jungle, /obj/item/green_rose, /obj/item/crusher_trophy/vine_tentacle)
-
+	loot = list(/obj/item/organ/heart/jungle, /obj/item/green_rose)
+	common_loot = list(/obj/item/gun/magic/staff/vine)
+	common_crusher_loot = list(/obj/item/gun/magic/staff/vine, /obj/item/crusher_trophy/vine_tentacle)
 
 	var/list/vines = list()
 	var/list/vine_targets = list()
@@ -58,7 +58,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/OpenFire()
 	anger_modifier = clamp(((maxHealth - health) / 80), 0, 20)
-	ranged_cooldown = world.time + 4 SECONDS
+	ranged_cooldown = world.time + 5 SECONDS
 
 	if(check_proj_immunity(target)) //Become enraged if we get attacked by someone immune to projectiles
 		if(!throw_spree)
@@ -83,9 +83,9 @@
 		if(prob(35))
 			vine_attack()
 			if(prob(anger_modifier + 15) && !radius_active)
-				throwing_spree()
-				SLEEP_CHECK_DEATH(2 SECONDS)
 				INVOKE_ASYNC(src, .proc/attack_in_radius)
+				SLEEP_CHECK_DEATH(2 SECONDS)
+				throwing_spree()
 				ranged_cooldown = world.time + 12 SECONDS
 			else
 				solar_barrage()
@@ -114,10 +114,6 @@
 				INVOKE_ASYNC(src, .proc/spiral_shoot)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/Goto(target, delay, minimum_distance)
-	if(target == src.target)
-		approaching_target = TRUE
-	else
-		approaching_target = FALSE
 	if(!already_moving && world.time > move_cooldown && !immobile)
 		if(throw_spree)
 			throw_spree -= 1
@@ -138,7 +134,9 @@
 		var/view_objects = view(15, get_turf(src))
 		for(var/atom/vine_target in vine_targets)
 			if(!vine_target || QDELETED(vine_target) || !(vine_target in view_objects))
-				QDEL_NULL(vines[vine_target])
+				var/vine_to_delete = vines[vine_target]
+				vines.Remove(vine_target)
+				qdel(vine_to_delete)
 				vine_targets.Remove(vine_target)
 
 		var/target_angle = get_angle(src, target)
@@ -171,8 +169,9 @@
 	var/view_objects = view(15, get_turf(src))
 	for(var/atom/vine_target in vine_targets)
 		if(!vine_target || QDELETED(vine_target) || !(vine_target in view_objects))
-			QDEL_NULL(vines[vine_target])
+			var/vine_to_delete = vines[vine_target]
 			vines.Remove(vine_target)
+			qdel(vine_to_delete)
 			vine_targets.Remove(vine_target)
 
 	if(!isliving(hit_atom))
@@ -218,6 +217,10 @@
 	walk_to(src, get_turf(targeting), get_dist(get_turf(target), get_turf(targeting)), move_to_delay)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/solar_barrage()
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
+	animate(D, alpha = 0, transform = matrix() * 1.5, time = 4)
+	SLEEP_CHECK_DEATH(4)
+	qdel(D)
 	var/static/list/barrage_shot_angles = list(12.5, 7.5, 2.5, -2.5, -7.5, -12.5)
 	var/target_angle = get_angle(src, target)
 	var/turf/target_turf = get_turf(target)
@@ -286,6 +289,10 @@
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/throwing_spree()
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
+	animate(D, alpha = 0, transform = matrix() * 1.5, time = 4)
+	SLEEP_CHECK_DEATH(4)
+	qdel(D)
 	throw_spree = rand(2, 4)
 
 /obj/effect/temp_visual/target/vine_tentacle
@@ -452,9 +459,9 @@
 	afterattack(target, user, flag, params)
 	chambered = old_casing
 
-/obj/item/organ/heart/jungle
-	name = "Heart of The Jungle"
-	desc = "A green, thorny heart with a large rose blooming out of it. This looks important."
+/obj/item/organ/heart/jungle //Gives player great mobility at cost of rendering normal healing useless. Only hardcore, only seedling cores.
+	name = "heart of the jungle"
+	desc = "A green, thorny heart with a large rose blooming out of it. Legends say that this heart will allow you to move around using vines, but at what cost?.."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "heart-vine-on"
 	base_icon_state = "heart-vine-off"
@@ -464,15 +471,6 @@
 	var/list/vines = list()
 	var/list/vine_targets = list()
 
-/obj/item/organ/heart/jungle/attack(mob/M, mob/living/carbon/user, obj/target) //Stolen from demon heart code
-	if(M != user)
-		return ..()
-	user.visible_message("<span class='warning'>[user] raises [src] to [user.p_their()] mouth and devours it in a single bite!</span>", \
-		"<span class='warning'>You close your eyes and devour [src]! It feels thorny and hot!</span>")
-	playsound(user, 'sound/magic/demon_consume.ogg', 50, TRUE)
-	user.temporarilyRemoveItemFromInventory(src, TRUE)
-	src.Insert(user)
-
 /obj/item/organ/heart/jungle/Insert(mob/living/carbon/target, special = 0)
 	. = ..()
 	if(!istype(target))
@@ -481,7 +479,8 @@
 	ADD_TRAIT(target, TRAIT_VINE_IMMUNE, ORGAN_TRAIT)
 	ADD_TRAIT(target, TRAIT_MOVE_FLOATING, ORGAN_TRAIT)
 	ADD_TRAIT(target, TRAIT_NO_FLOATING_ANIM, ORGAN_TRAIT)
-	owner.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+	target.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+	target.add_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, .proc/on_move)
 
@@ -498,20 +497,37 @@
 	REMOVE_TRAIT(target, TRAIT_VINE_IMMUNE, ORGAN_TRAIT)
 	REMOVE_TRAIT(target, TRAIT_MOVE_FLOATING, ORGAN_TRAIT)
 	REMOVE_TRAIT(target, TRAIT_NO_FLOATING_ANIM, ORGAN_TRAIT)
-	owner.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+	target.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+	target.remove_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 
 	UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
 
 	tentacle.Remove(target)
+
+/obj/item/organ/heart/jungle/on_life(delta_time, times_fired)
+	for(var/datum/reagent/reagent in owner.reagents.reagent_list)
+		if(!istype(reagent, /datum/reagent/medicine))
+			continue
+		owner.reagents.remove_reagent(reagent.type, reagent.metabolization_rate * delta_time / owner.metabolism_efficiency * 9) //Basically renders chems useless so you have to rely solely on seedling cores
+	. = ..()
 
 /obj/item/organ/heart/jungle/proc/on_move(atom/movable/movable, atom/old_loc)
 	var/should_shoot = TRUE
 
 	if((LAZYLEN(vines) > VINE_MIN_DELETE && prob(VINE_DELETE_CHANCE)) || LAZYLEN(vines) > VINE_MAX)
 		var/to_delete = pick(vines)
-		QDEL_NULL(vines[to_delete])
-		vines -= to_delete
-		vine_targets -= to_delete
+		var/vine_to_delete = vines[to_delete]
+		vines.Remove(to_delete)
+		qdel(vine_to_delete)
+		vine_targets.Remove(to_delete)
+
+	var/view_objects = view(15, get_turf(src))
+	for(var/atom/vine_target in vine_targets)
+		if(!vine_target || QDELETED(vine_target) || !(vine_target in view_objects) || get_dist(owner, vine_target) > 10)
+			var/vine_to_delete = vines[vine_target]
+			vines.Remove(vine_target)
+			qdel(vine_to_delete)
+			vine_targets.Remove(vine_target)
 
 	var/target_angle = get_angle(old_loc, get_turf(movable))
 	if(target_angle < 0)
@@ -543,7 +559,7 @@
 	name = "vine tentacle"
 	icon_state = "tentacle_jungle"
 	nodamage = TRUE
-	range = 40
+	range = 11
 	pass_flags = PASSTABLE | PASSMOB
 	speed = 0
 	var/tentacle
@@ -558,10 +574,9 @@
 
 /obj/projectile/heart_vine_tentacle/on_hit(atom/target, blocked = FALSE)
 	qdel(tentacle)
-	tentacle = firer.Beam(src, icon_state = "vine_jungle[blooming ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
+	tentacle = firer.Beam(target, icon_state = "vine_jungle[blooming ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
 	heart_origin.vines[target] = tentacle
-	heart_origin.vine_targets.Add(target)
-	QDEL_IN(tentacle, rand(5, 10) SECONDS)
+	heart_origin.vine_targets += target
 	. = ..()
 
 /obj/item/organ/cyberimp/arm/vine_tentacle
@@ -607,7 +622,7 @@
 	bonus_value = 5
 
 /obj/item/crusher_trophy/vine_tentacle/effect_desc()
-	return "mark detonation to spawn a ring of vines around you that will reflect half of incoming damage"
+	return "mark detonation to spawn a ring of vines around you that will heal you for half of incoming damage"
 
 /obj/item/crusher_trophy/vine_tentacle/on_mark_detonation(mob/living/target, mob/living/user)
 	user.apply_status_effect(STATUS_EFFECT_VINE_RING)

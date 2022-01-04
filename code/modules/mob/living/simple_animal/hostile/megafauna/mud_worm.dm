@@ -34,8 +34,8 @@
 
 	del_on_death = TRUE
 	loot = list(/obj/item/worm_tongue)
-	crusher_loot = list(/obj/item/worm_tongue, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
 	common_loot = list(/obj/item/armor_scales)
+	common_crusher_loot = list(/obj/item/armor_scales, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
 	rare_loot = list(/obj/effect/spawner/random/mud_worm)
 	rarity = 2
 

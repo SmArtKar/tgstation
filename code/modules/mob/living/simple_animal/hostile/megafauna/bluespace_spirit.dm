@@ -29,8 +29,8 @@
 	minimum_distance = 3
 	gps_name = "Quantum Signal"
 
-	loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal)
-	crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
+	common_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal) //Let's reward everybody who killed this fella
+	common_crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
 
 	var/list/copies = list()
 	var/charging = FALSE
@@ -147,7 +147,7 @@
 			var/reset_turf = turf.type
 			if(reset_turf != /turf/open/chasm/bluespace)
 				turf.ChangeTurf(/turf/open/chasm/bluespace, flags = CHANGETURF_INHERIT_AIR)
-				addtimer(CALLBACK(turf, /turf.proc/ChangeTurf, reset_turf, null, CHANGETURF_INHERIT_AIR), 5 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE)
+				addtimer(CALLBACK(turf, /turf.proc/ChangeTurf, reset_turf, null, CHANGETURF_INHERIT_AIR), 3 SECONDS, TIMER_OVERRIDE|TIMER_UNIQUE)
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/CanAllowThrough(atom/movable/mover, border_dir)
@@ -221,6 +221,8 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/bluespace_collapse(collapse_amount = rand(4, 6))
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = COLOR_BLUE, transform = matrix() * 2, time = 3)
+	SLEEP_CHECK_DEATH(3)
+	qdel(D)
 	var/list/turfs = list()
 	for(var/turf/open/possible_turf in orange(7, get_turf(target)))
 		if(possible_turf.is_blocked_turf())
@@ -290,6 +292,8 @@
 	for(var/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/hallucination/fake in copies)
 		fake.visible_message(span_danger("[fake] starts spinning and explodes in a shower of sparks!"))
 		INVOKE_ASYNC(fake, /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/hallucination.proc/fake_hit, TRUE)
+
+	Stun(2 SECONDS) //As a reward for player for hitting the real guy
 
 /obj/projectile/bluespace_blast
 	name = "bluespace blast"
@@ -460,7 +464,7 @@
 	playsound(src, "sparks", 75, TRUE)
 	new /obj/effect/temp_visual/sparks_bluespace(get_turf(src))
 	for(var/turf/open/possible_turf in orange(3, src))
-		if(prob(40))
+		if(prob(30))
 			new /obj/effect/temp_visual/sparks_bluespace(possible_turf)
 	flick("jaunt_start", src)
 	sleep(round(13 * 0.7))
@@ -477,19 +481,26 @@
 	icon_state = "sparks_bluespace"
 	duration = 6
 
+#define MAX_PARTICLE_CONNECTIONS 4
+#define MAX_PARTICLES 7
+
 /obj/item/crusher_trophy/bluespace_rift
 	name = "bluespace rift"
 	desc = "A rift in space and time, created by an unknown anomaly. Suitable as a trophy for a kinetic crusher."
 	icon_state = "bluespace_rift"
 	denied_type = list(/obj/item/crusher_trophy/bluespace_rift)
 	bonus_value = 15
+	var/list/bluespace_particles = list()
 
 /obj/item/crusher_trophy/bluespace_rift/effect_desc()
-	return "mark detonations to create bluespace particles that will connect together using beams. Whenever an enemy passes through the beam, they get damaged for <b>[bonus_value]</b>."
+	return "mark detonations to create bluespace particles that will connect together using beams. Whenever an enemy passes through the beam, they get damaged for <b>[bonus_value]</b>"
 
 /obj/item/crusher_trophy/bluespace_rift/on_mark_detonation(mob/living/target, mob/living/user)
 	var/obj/effect/bluespace_particle/particle = new(get_turf(target), user)
 	playsound(get_turf(target), 'sound/magic/lightningbolt.ogg', 25, TRUE)
+	if(LAZYLEN(bluespace_particles) >= MAX_PARTICLES)
+		qdel(pick_n_take(bluespace_particles))
+	bluespace_particles += particle
 	QDEL_IN(particle, 30 SECONDS)
 
 /obj/effect/bluespace_particle
@@ -502,16 +513,26 @@
 /obj/effect/bluespace_particle/Initialize(mapload, mob/living/author)
 	. = ..()
 
+	var/connection_count = 0
 	for(var/obj/effect/bluespace_particle/particle in orange(6, get_turf(src)))
 		if(!istype(particle) || particle == src)
 			continue
 		var/datum/beam/particle_beam = Beam(particle, icon_state = "bluespace_beam", beam_type = /obj/effect/ebeam/bluespace_blast)
-		particle.particle_beams.Add(particle_beam) //If they already exist, they are gonna die earlier than us, so we don't need to track our beams ourselves
+		particle.particle_beams[particle_beam] = src
+		particle_beams[particle_beam] = particle
+		connection_count += 1
+		if(connection_count >= MAX_PARTICLE_CONNECTIONS)
+			break
 
 /obj/effect/bluespace_particle/Destroy(force)
 	for(var/particle_beam in particle_beams)
+		var/obj/effect/bluespace_particle/connected_to = particle_beams[particle_beam]
+		connected_to.particle_beams -= particle_beam
 		qdel(particle_beam)
 	. = ..()
+
+#undef MAX_PARTICLE_CONNECTIONS
+#undef MAX_PARTICLES
 
 /obj/effect/ebeam/bluespace_blast
 	name = "bluespace blast"

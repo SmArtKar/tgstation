@@ -1,26 +1,3 @@
-/**
- *
- * Time Crystal
- *
- * A sentient amber crystal with time manipulation abilities.
- * It actually has only one attack actually related to time but I don't care.
- *
- * Attack patterns:
- * 1. 3 small orbiting crystals are released. These crystals will float to random positions around the main crystal and shoot player with amber shards until destroyed.
- * 2. Time Crystal start shooting wave-like patterns of amber shards in all directions
- * 3. Crystal shoots a few slow chronospheres that stop time around them after a few seconds.
- * 4. If distance between crystal and player is too big crystal dashes towards the player, leaving timestop fields behind itself
- * 5. Crystal falls into the ground and starts preparing a powerful laser attack. After it's ready, it shoots into the sky and several player-following lasers are created, damaging everything in their path.
- *
- * Melee attack just shoots amber shards point-blank
- *
- * It's loot consists of an Amber Core(which is used for crafting) and either Crystal Gauntlets that allow you to shoot crystal shards with your hands OR a one-use crystal fruit that completely aheals you and gives you 50% damage reduction for 30 seconds.
- * When killed with crusher it also drops a crystal shard that stuns and makes creatures vunerable for a bit.
- *
- * Intended difficulty: Hard
- *
- */
-
 #define AMBER_TIMESTOP_RANGE 2
 #define AMBER_TIMESTOP_DURATION 3 SECONDS
 
@@ -43,8 +20,9 @@
 	ranged_cooldown_time = 20
 	aggro_vision_range = 18
 
-	loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/amber_core)
-	crusher_loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/amber_core, /obj/item/crusher_trophy/crystal_shard)
+	loot = list(/obj/item/amber_core)
+	common_loot = list(/obj/effect/spawner/random/time_crystal)
+	common_crusher_loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/crusher_trophy/crystal_shard)
 
 	wander = FALSE
 	gps_name = "Vibrating Signal"

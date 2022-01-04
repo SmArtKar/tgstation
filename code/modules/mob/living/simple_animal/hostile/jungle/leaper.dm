@@ -299,7 +299,7 @@
 	var/jump_cooldown = 0
 
 /obj/item/crusher_trophy/leaper_eye/effect_desc()
-	return "ranged right click attacks to make you jump onto your target instead. This ability has a 10 seconds cooldown."
+	return "ranged right click attacks to make you jump onto your target instead"
 
 /obj/item/crusher_trophy/leaper_eye/on_right_click(atom/target, mob/living/user)
 	if(jump_cooldown > world.time)

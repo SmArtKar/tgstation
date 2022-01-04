@@ -1,19 +1,3 @@
-/**
- * Demonic Miner
- *
- * Basically jungle demonic frost miner. Second endgame boss as alternative to ancient AI
- *
- * This fucker has like what, 8-10 patterns and attack moves, I am not going to list all of them
- * Just know that he can: Use a giant laser beam, spawn lines/circles of hiero-like blasts under you, jaunt, shoot projectiles in spirals and shoot spheres that create warning lasers and then shoot real ones.
- *
- * This one literraly ate my soul out, go kill him as brutally as you can ~SmArtKar
- *
- * P.S. If you wonder if he's killable - after a shitton of training and failed attempts I killed him with starting gear, so yeah, he's very hard but possible to kill.
- *
- * Intended Difficulty: OH FUCK OH GOD
- *
- */
-
 #define BLOOD_JAUNT_LENGTH 1 SECONDS
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner
@@ -646,7 +630,7 @@
 	var/list/spirits = list()
 
 /obj/item/crusher_trophy/demon_horn/effect_desc()
-	return "kills with mark detonation to give you a temporary boost in speed and armor as well as light healing. While fighting megafauna, small low-health spirits will appear around the user."
+	return "kills with mark detonation to give you a temporary boost in speed and armor as well as light healing. While fighting megafauna, small low-health spirits will appear around the user"
 
 /obj/item/crusher_trophy/demon_horn/on_mark_detonation(mob/living/target, mob/living/user)
 	INVOKE_ASYNC(src, .proc/glory_kill_check, target, user)
@@ -1013,7 +997,7 @@ obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/use
 	melee_damage_lower = 15
 	melee_damage_upper = 25
 
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 3, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	weather_immunities = list(TRAIT_ACID_IMMUNE, TRAIT_LAVA_IMMUNE)
 	minbodytemp = 0
 	maxbodytemp = 450

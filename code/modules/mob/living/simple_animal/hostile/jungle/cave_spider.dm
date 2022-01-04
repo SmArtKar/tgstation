@@ -38,7 +38,7 @@
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	ranged = TRUE
 	projectiletype = /obj/projectile/cave_spider_web
-	crusher_drop_mod = 10 //They spawn in packs
+	crusher_drop_mod = 15 //They spawn in packs
 	crusher_loot = /obj/item/crusher_trophy/spider_webweaver
 	move_resist = MOVE_RESIST_DEFAULT
 	move_force = MOVE_FORCE_DEFAULT
@@ -177,7 +177,7 @@
 	var/web_shot = FALSE
 
 /obj/item/crusher_trophy/spider_webweaver/effect_desc()
-	return "mark detonation to turn next shot into a ball of web that will stun enemies and pull them at you upon hit."
+	return "mark detonation to turn next shot into a ball of web that will stun enemies and pull them at you upon hit"
 
 /obj/item/crusher_trophy/spider_webweaver/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
 	if(web_shot)

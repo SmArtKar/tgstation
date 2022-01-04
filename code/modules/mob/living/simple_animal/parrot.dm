@@ -1013,7 +1013,7 @@ GLOBAL_LIST_INIT(strippable_parrot_items, create_strippable_list(list(
 	no_headset = TRUE
 	speak_chance = 0 //No spam
 	faction = list("jungle")
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 3, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	weather_immunities = list(TRAIT_ACID_IMMUNE)
 
 /mob/living/simple_animal/parrot/jungle/Initialize(mapload)

@@ -92,7 +92,7 @@
 	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack)
 
 /obj/item/crusher_trophy/acid_sack/effect_desc()
-	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer."
+	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer"
 
 /obj/item/crusher_trophy/acid_sack/on_mark_detonation(mob/living/target, mob/living/user)
 	user.apply_status_effect(STATUS_EFFECT_ACID_SACK)

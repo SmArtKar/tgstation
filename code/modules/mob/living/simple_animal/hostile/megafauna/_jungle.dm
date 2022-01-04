@@ -5,6 +5,8 @@
  * Why? Because dying together is more fun than dying alone!
  */
 
+#define ARMOR_PER_ENEMY 0.15
+
 /mob/living/simple_animal/hostile/megafauna/jungle
 	faction = list("boss", "jungle")
 	weather_immunities = list(TRAIT_ACID_IMMUNE)
@@ -15,15 +17,31 @@
 
 	var/list/common_loot = list()
 	var/list/common_crusher_loot = list()
+	damage_coeff = list(BRUTE = 1, BURN = 0.5, TOX = 0.75, CLONE = 1, STAMINA = 0, OXY = 1)
 
 	var/list/former_targets = list()
 	var/spawns_minions = FALSE
-	crusher_damage_required = 0.3 //Because if you gangbang the boss it won't really be super high if there's a PKA user
+	crusher_damage_required = 0.3 //Because if you kill the boss with a team it won't really be super high if there's a PKA user
+
+/mob/living/simple_animal/hostile/megafauna/jungle/proc/update_armor()
+	var/enemies = 0
+	for(var/mob/living/possible_enemy in range(aggro_vision_range, get_turf(src)))
+		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
+			enemies += 1
+
+	enemies -= 1 //So we don't gain armor from a single guy
+
+	if(enemies <= 1)
+		return
+
+	for(var/coeff in damage_coeff)
+		damage_coeff[coeff] = clamp(damage_coeff[coeff] - ARMOR_PER_ENEMY * enemies, 0.2, 1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target) //Even if you hit once, you'll count
 	. = ..()
 	if(!(new_target in former_targets))
 		former_targets.Add(new_target)
+		update_armor()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/CanAttack(atom/the_target)
 	. = ..()
@@ -33,6 +51,7 @@
 			if(L.stat > stat_attack)
 				if(L == target || (L in former_targets))
 					former_targets.Remove(former_targets)
+					update_armor()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/loot_manipulation()
 	. = ..()
@@ -60,3 +79,5 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/Initialize()
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, INNATE_TRAIT)
+
+#undef ARMOR_PER_ENEMY

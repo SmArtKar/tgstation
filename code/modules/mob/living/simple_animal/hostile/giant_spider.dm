@@ -86,7 +86,9 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/giant_spider/mob_negates_gravity()
-	return (locate(/obj/structure/spider/stickyweb) in loc) || ..()
+	if(locate(/obj/structure/spider/stickyweb) in loc)
+		return TRUE
+	return ..()
 
 /**
  * # Spider Hunter
@@ -622,7 +624,7 @@
 	menu_description = "Fast spider variant specializing in catching running prey and toxin injection, but has less damage than a normal hunter spider at the cost of a little more health. Toxin injection of 10u per bite."
 
 /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 3, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("jungle")
 	speak_chance = 0
 
@@ -648,7 +650,7 @@
 	menu_description = "A weaker variant of the tarantula with reduced amount of health and damage, very slow when not on webbing. It also has a charge ability to close distance with a target after a small windup. Does not inject toxin."
 
 /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 3, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("jungle")
 	speak_chance = 0
 	health = 100
@@ -676,7 +678,7 @@
 	menu_description = "Weaker version of the nurse spider, specializing in healing their brethren and placing webbings very swiftly, but has very low amount of health and deals low damage. Toxin injection of 3u per bite."
 
 /mob/living/simple_animal/hostile/giant_spider/nurse/scrawny/jungle
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	atmos_requirements = list("min_oxy" = 3, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("jungle")
 	speak_chance = 0
 
