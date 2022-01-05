@@ -24,3 +24,7 @@
 /area/ruin/jungle_mining_facility
 	name = "Abandoned Mining Facility"
 	icon_state = "dk_yellow"
+
+/area/ruin/jungle_monkey_altar
+	name = "Ancient Honkmother Altar"
+	icon_state = "dk_yellow"

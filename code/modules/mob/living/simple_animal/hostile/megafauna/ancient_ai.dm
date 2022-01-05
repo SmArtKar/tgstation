@@ -54,7 +54,7 @@
 	var/floorshock = FALSE
 	var/list/drones = list()
 
-/mob/living/simple_animal/hostile/megafauna/jungle/proc/update_armor()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/update_armor()
 	var/enemies = 0
 	for(var/mob/living/possible_enemy in range(aggro_vision_range, get_turf(src)))
 		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))

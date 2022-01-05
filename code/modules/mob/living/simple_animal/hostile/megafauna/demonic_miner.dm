@@ -509,7 +509,7 @@
 	damage_type = BURN
 
 /obj/projectile/demonic_energy/nohuman
-	damage = 20
+	damage = 30
 	speed = 1
 
 /obj/projectile/demonic_energy/nohuman/on_hit(atom/target, blocked, pierce_hit)

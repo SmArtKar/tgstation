@@ -313,7 +313,7 @@
 	min_val = 0
 
 /datum/config_entry/number/jungle_budget
-	default = 90
+	default = 60
 	integer = FALSE
 	min_val = 0
 

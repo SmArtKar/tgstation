@@ -255,7 +255,8 @@
 	immobile = TRUE
 	walk_to(src, 0)
 	for(var/i = 1 to 3)
-		shoot_projectile(null, get_angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
+		var/turf/start_turf = get_step(get_turf(src), pick(GLOB.alldirs))
+		shoot_projectile(start_turf, get_angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
 		SLEEP_CHECK_DEATH(1 SECONDS)
 	immobile = FALSE
 
@@ -521,7 +522,7 @@
 		qdel(vine_to_delete)
 		vine_targets.Remove(to_delete)
 
-	var/view_objects = view(15, get_turf(src))
+	var/view_objects = view(15, get_turf(owner))
 	for(var/atom/vine_target in vine_targets)
 		if(!vine_target || QDELETED(vine_target) || !(vine_target in view_objects) || get_dist(owner, vine_target) > 10)
 			var/vine_to_delete = vines[vine_target]

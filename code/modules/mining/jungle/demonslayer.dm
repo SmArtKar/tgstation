@@ -5,6 +5,11 @@
 
 #define MAX_CULMINATION_CHARGE 100
 #define CHARGE_DRAINED_PER_SECOND 3
+#define CHARGE_GAIN_PER_SECOND 0.05
+#define CULMINATION_DASH_MODIFIER 0.25
+#define CULMINATION_ATTACK_COOLDOWN 0.25
+#define CULMINATION__MELEE_ARMOR_ADDED 30
+#define HEALTH_TO_CHARGE 0.025
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer
 	name = "helmet of the demonslayer"
@@ -23,39 +28,116 @@
 	var/culmination_charge = 0
 	var/culmination_active = FALSE
 	var/list/tracked_mobs = list()
+	var/obj/item/clothing/suit/hooded/cloak/demonslayer/demonslayer_suit
+	var/list/cached_health_values = list()
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/examine()
 	. = ..()
 	. += span_notice("Culmination is [culmination_charge]% charged.")
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/process(delta_time)
-	. = ..()
+	if(!ishuman(loc))
+		return
+
+	var/mob/living/carbon/human/user = loc
+
 	if(culmination_active)
 		culmination_charge = clamp(culmination_charge - CHARGE_DRAINED_PER_SECOND * delta_time, 0, MAX_CULMINATION_CHARGE)
 		if(culmination_charge == 0)
-			if(ishuman(loc))
-				end_culmination(loc)
+			end_culmination(user)
+		return
 
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/Destroy()
-	STOP_PROCESSING(SSobj, src)
+	var/mob/living/simple_animal/hostile/megafauna/jungle/attacker
+	for(var/mob/living/simple_animal/hostile/megafauna/jungle/mega in GLOB.megafauna)
+		if(mega.target == user || ((user in mega.former_targets) && get_dist(user, mega) <= mega.aggro_vision_range))
+			attacker = mega
+			break
+
+
+	if(!attacker)
+		return
+
+	culmination_charge = clamp(culmination_charge + CHARGE_GAIN_PER_SECOND * delta_time, 0, MAX_CULMINATION_CHARGE)
+	if(!(attacker in cached_health_values))
+		cached_health_values[attacker] = attacker.health
+	else
+		if(attacker.health < cached_health_values[attacker])
+			culmination_charge = clamp(culmination_charge + (cached_health_values[attacker] - attacker.health) * HEALTH_TO_CHARGE, 0, MAX_CULMINATION_CHARGE)
+			cached_health_values[attacker] = attacker.health
+
+/obj/item/clothing/head/hooded/cloakhood/demonslayer/equipped(mob/user, slot)
 	. = ..()
+	if(slot == ITEM_SLOT_HEAD)
+		demonslayer_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+
+/obj/item/clothing/head/hooded/cloakhood/demonslayer/dropped(mob/user)
+	. = ..()
+	end_culmination(user)
+	demonslayer_suit = null
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/dropped(mob/user)
+/obj/item/clothing/head/hooded/cloakhood/demonslayer/Destroy()
+	STOP_PROCESSING(SSobj, src)
 	. = ..()
-	end_culmination(user)
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/culmination(mob/living/carbon/human/user)
 	to_chat(user, span_warning("You start the Culmination."))
 	playsound(user, 'sound/magic/ethereal_enter.ogg', 50)
 	culmination_active = TRUE
 
+	ADD_TRAIT(src, TRAIT_NODROP, BERSERK_TRAIT)
+	ADD_TRAIT(demonslayer_suit, TRAIT_NODROP, BERSERK_TRAIT)
+	demonslayer_suit.dash_cooldown_modifier = CULMINATION_DASH_MODIFIER
+
+	icon_state = "[initial(icon_state)]_culmination"
+	worn_icon_state = "[initial(icon_state)]_culmination"
+	demonslayer_suit.icon_state = "[initial(demonslayer_suit.icon_state)]_culmination"
+	demonslayer_suit.worn_icon_state = "[initial(demonslayer_suit.icon_state)]_culmination"
+
+	update_icon()
+	demonslayer_suit.update_icon()
+	user.update_icon()
+
+	user.next_move_modifier *= CULMINATION_ATTACK_COOLDOWN
+	user.add_movespeed_modifier(/datum/movespeed_modifier/berserk)
+	user.physiology.armor.melee += CULMINATION__MELEE_ARMOR_ADDED
+
 	for(var/shoot_dir in GLOB.cardinals)
 		var/turf/target = get_step(get_turf(user), shoot_dir)
 		shoot_projectile(target)
+
+/obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/end_culmination(mob/living/carbon/human/user)
+	if(!culmination_active)
+		return
+	culmination_active = FALSE
+	if(QDELETED(user))
+		return
+
+	REMOVE_TRAIT(src, TRAIT_NODROP, BERSERK_TRAIT)
+	REMOVE_TRAIT(demonslayer_suit, TRAIT_NODROP, BERSERK_TRAIT)
+	demonslayer_suit.dash_cooldown_modifier = initial(demonslayer_suit.dash_cooldown_modifier)
+
+	icon_state = initial(icon_state)
+	worn_icon_state = initial(icon_state)
+	demonslayer_suit.icon_state = initial(demonslayer_suit.icon_state)
+	demonslayer_suit.worn_icon_state = initial(demonslayer_suit.icon_state)
+
+	update_icon()
+	demonslayer_suit.update_icon()
+	user.update_icon()
+
+	user.next_move_modifier /= CULMINATION_ATTACK_COOLDOWN
+	user.remove_movespeed_modifier(/datum/movespeed_modifier/berserk)
+	user.physiology.armor.melee -= CULMINATION__MELEE_ARMOR_ADDED
+
+	to_chat(user, span_warning("You finish the Culmination."))
+	playsound(user, 'sound/magic/summonitems_generic.ogg', 50)
+
+/obj/item/clothing/head/hooded/cloakhood/demonslayer/IsReflect(def_zone)
+	return culmination_active
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/shoot_projectile(turf/marker, set_angle)
 	if(!ishuman(loc))
@@ -68,15 +150,6 @@
 	P.preparePixelProjectile(marker, startloc)
 	P.firer = owner
 	P.fire(set_angle)
-
-/obj/item/clothing/head/hooded/cloakhood/demonslayer/proc/end_culmination(mob/living/carbon/human/user)
-	if(!culmination_active)
-		return
-	culmination_active = FALSE
-	if(QDELETED(user))
-		return
-	to_chat(user, span_warning("You finish the Culmination."))
-	playsound(user, 'sound/magic/summonitems_generic.ogg', 50)
 
 /obj/item/clothing/suit/hooded/cloak/demonslayer //Basically ancient AI modsuit but cooler, as it's dashes are instant, are automatically performed to prevent getting hit and you can also cast two cool spells. If you can make it then you're totally worthy, as it's very unlikely someone will defeat all bosses in one round without dying
 	name = "armor of the demonslayer"
@@ -96,6 +169,7 @@
 
 	var/dash_cooldown = 0
 	var/dash_active = FALSE
+	var/dash_cooldown_modifier = 1
 	var/obj/effect/proc_holder/spell/chasers
 
 /obj/item/clothing/suit/hooded/cloak/demonslayer/Initialize(mapload)
@@ -128,10 +202,11 @@
 
 /obj/item/clothing/suit/hooded/cloak/demonslayer/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	if(dash_cooldown > world.time || !can_activate())
-		dash_cooldown = world.time + DASH_COOLDOWN_HIT //You need to not get hit in 7 seconds for it to work
+		dash_cooldown = world.time + DASH_COOLDOWN_HIT * dash_cooldown_modifier //You need to not get hit in 7 seconds for it to work
 		return FALSE
 
-	var/turf/destination_holder = get_turf(owner)
+	var/turf/owner_loc = get_turf(owner)
+	var/turf/destination_holder = owner_loc
 	var/turf/destination
 
 	for(var/i = 1 to DASH_RANGE)
@@ -153,15 +228,16 @@
 
 	destination = pick(possible_destinations)
 
-	playsound(get_turf(owner), "sparks", 50, TRUE)
-	new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer/out(get_turf(owner), owner.dir)
+	playsound(owner_loc, "sparks", 50, TRUE)
+	new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer/out(owner_loc, owner.dir)
 
 	if(do_teleport(owner, destination, channel = TELEPORT_CHANNEL_CULT)) //Technically it uses a cult demon stone soooo
 		new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer(destination, owner.dir)
+		owner_loc.Beam(destination, "bsa_beam_red", time = 4)
 		playsound(destination, 'sound/effects/phasein.ogg', 25, TRUE)
 		playsound(destination, "sparks", 50, TRUE)
 		dash_active = FALSE
-		dash_cooldown = world.time + DASH_COOLDOWN
+		dash_cooldown = world.time + DASH_COOLDOWN * dash_cooldown_modifier
 		return TRUE
 	return FALSE
 
@@ -199,10 +275,11 @@
 	if(dash_cooldown > world.time || !can_activate())
 		return
 
+	var/turf/owner_loc = get_turf(owner)
 	var/turf/destination
 
 	var/counter = 0
-	for(var/turf/destination_holder in get_line(get_turf(owner), get_turf(target)))
+	for(var/turf/destination_holder in get_line(owner_loc, get_turf(target)))
 		if(istype(destination_holder, /turf/closed) || counter > DASH_RANGE)
 			break
 		if(!destination_holder.is_blocked_turf())
@@ -220,14 +297,15 @@
 
 	destination = pick(possible_destinations)
 
-	playsound(get_turf(owner), "sparks", 50, TRUE)
-	new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer/out(get_turf(owner), owner.dir)
+	playsound(owner_loc, "sparks", 50, TRUE)
+	new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer/out(owner_loc, owner.dir)
 
 	if(do_teleport(owner, destination, channel = TELEPORT_CHANNEL_CULT)) //Technically it uses a cult demon stone soooo
 		new /obj/effect/temp_visual/dir_setting/cult/phase/demonslayer(destination, owner.dir)
+		owner_loc.Beam(destination, "bsa_beam_red", time = 4)
 		playsound(destination, 'sound/effects/phasein.ogg', 25, TRUE)
 		playsound(destination, "sparks", 50, TRUE)
-		dash_cooldown = world.time + DASH_COOLDOWN
+		dash_cooldown = world.time + DASH_COOLDOWN * dash_cooldown_modifier
 		dash_active = FALSE
 
 /obj/effect/temp_visual/hierophant/chaser/demonslayer
@@ -324,3 +402,6 @@
 
 #undef MAX_CULMINATION_CHARGE
 #undef CHARGE_DRAINED_PER_SECOND
+#undef CULMINATION_DASH_MODIFIER
+#undef CULMINATION_ATTACK_COOLDOWN
+#undef CULMINATION__MELEE_ARMOR_ADDED

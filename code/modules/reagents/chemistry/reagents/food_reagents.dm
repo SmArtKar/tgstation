@@ -548,6 +548,7 @@
 /datum/reagent/consumable/flour/bagelshroom/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
 	if(DT_PROB(30, delta_time))
 		M.heal_bodypart_damage(brute = 0.5, burn = 0.5)
+		M.adjustToxLoss(-0.5, TRUE)
 		. = TRUE
 	..()
 
