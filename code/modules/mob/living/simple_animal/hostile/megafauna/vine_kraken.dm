@@ -332,6 +332,9 @@
 	var/throwing_proj = FALSE
 	var/staff = FALSE
 
+/obj/projectile/vine_tentacle/low_range
+	range = 5
+
 /obj/projectile/vine_tentacle/staff
 	nodamage = FALSE
 	damage = 10
@@ -355,14 +358,15 @@
 
 /obj/projectile/vine_tentacle/on_hit(atom/target, blocked = FALSE)
 	qdel(tentacle)
-	var/vine = firer.Beam(target, icon_state = "vine_jungle[throwing_proj ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
 	if(istype(firer, /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken))
+		var/vine = firer.Beam(target, icon_state = "vine_jungle[throwing_proj ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
 		var/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/kraken = firer
 		kraken.vines[target] = vine
 		kraken.vine_targets.Add(target)
 		kraken.process_vine_move(target, throwing_proj)
 		QDEL_IN(vine, 10 SECONDS)
 	if(staff)
+		var/vine = firer.Beam(target, icon_state = "vine_jungle[throwing_proj ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
 		QDEL_IN(vine, 2 SECONDS)
 		if(isliving(target))
 			var/mob/living/victim = target
@@ -623,6 +627,13 @@
 	attack_verb_continuous = list("flogs", "whips", "lashes")
 	attack_verb_simple = list("flog", "whip", "lash")
 	hitsound = 'sound/weapons/whip.ogg'
+
+/obj/item/vine_tentacle/attack(mob/living/M, mob/living/user, params)
+	var/obj/projectile/P = new /obj/projectile/vine_tentacle/low_range(get_turf(user))
+	P.preparePixelProjectile(get_turf(M), get_turf(user))
+	P.firer = user
+	P.fire()
+	. = ..()
 
 /obj/item/crusher_trophy/vine_tentacle
 	name = "vine tentacle"

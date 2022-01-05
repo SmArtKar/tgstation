@@ -183,12 +183,12 @@
 	anger_modifier = clamp((1 - round(get_length() / 10)) * 30, 0, 20)
 
 	if(get_dist(src, target) >= aggro_vision_range || prob(anger_modifier + 35))
-		charge()
+		for(var/mob/living/targeting in former_targets)
+			charge(targeting)
 		return
 
 	if(prob(25 + anger_modifier))
 		shoot_projectile(get_turf(target))
-		return
 
 	if(prob(40))
 		toothanfall()
@@ -256,8 +256,8 @@
 		puff()
 
 
-/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/charge(chargepast = 5, delay = 6) //Stolen from spider queen where it was stolen from bubblegum
-	var/turf/chargeturf = get_turf(target)
+/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/charge(atom/targeting, chargepast = 5, delay = 6) //Stolen from spider queen where it was stolen from bubblegum
+	var/turf/chargeturf = get_turf(targeting)
 	var/dir = get_dir(src, chargeturf)
 	var/turf/target_turf = get_ranged_target_turf(chargeturf, dir, chargepast)
 

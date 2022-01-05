@@ -35,7 +35,7 @@
 	var/dropped = FALSE
 	var/beaming = FALSE
 
-	var/obj/effect/temp_visual/crystal_killbeam/beam
+	var/list/killer_beams
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Initialize()
 	. = ..()
@@ -182,8 +182,10 @@
 	update_icon()
 	flick("crystal_beam_start", src)
 
-	beam = new(get_turf(target))
-	beam.target = target
+	for(var/mob/living/targeting in former_targets)
+		var/obj/effect/temp_visual/crystal_killbeam/beam = new(get_turf(targeting))
+		killer_beams += beam
+		beam.target = targeting
 
 	addtimer(CALLBACK(src, .proc/stop_beaming), 10 SECONDS)
 
@@ -191,8 +193,10 @@
 	beaming = FALSE
 	update_icon()
 	flick("crystal_beam_stop", src)
-	if(beam && !QDELETED(beam))
-		qdel(beam)
+	for(var/obj/effect/temp_visual/crystal_killbeam/beam in killer_beams)
+		killer_beams -= beam
+		if(beam && !QDELETED(beam))
+			qdel(beam)
 	addtimer(CALLBACK(src, .proc/get_the_fuck_up), 3 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/get_the_fuck_up()
