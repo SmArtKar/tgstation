@@ -660,13 +660,13 @@
 	name = "MOD booster module"
 	desc = "An experimental module designed to launch the user forwards. Only works in low-pressure enviroments."
 	icon_state = "longfall"
-	module_type = MODULE_USABLE
+	module_type = MODULE_ACTIVE
 	complexity = 0
-	use_power_cost = DEFAULT_CELL_DRAIN
+	use_power_cost = DEFAULT_CELL_DRAIN * 0.5
 	incompatible_modules = list(/obj/item/mod/module/dispenser)
 	cooldown_time = 1 SECONDS
 
-/obj/item/mod/module/jumper/on_use()
+/obj/item/mod/module/jumper/on_select_use(atom/target)
 	. = ..()
 	if(!.)
 		return
@@ -674,18 +674,12 @@
 		balloon_alert(mod.wearer, "pressure is too high!")
 		return
 
-	var/atom/target = get_edge_target_turf(mod.wearer, mod.wearer.dir) //gets the user's direction
+	var/atom/jump_target = get_edge_target_turf(mod.wearer, mod.wearer.dir) //gets the user's direction
 
 	ADD_TRAIT(mod.wearer, TRAIT_MOVE_FLOATING, LEAPING_TRAIT)  //Throwing itself doesn't protect mobs against lava (because gulag).
-	if (mod.wearer.throw_at(target, 4, 3, spin = FALSE, diagonals_first = TRUE, callback = TRAIT_CALLBACK_REMOVE(mod.wearer, TRAIT_MOVE_FLOATING, LEAPING_TRAIT)))
+	if (mod.wearer.throw_at(jump_target, 4, 3, spin = FALSE, diagonals_first = TRUE, callback = TRAIT_CALLBACK_REMOVE(mod.wearer, TRAIT_MOVE_FLOATING, LEAPING_TRAIT), gentle = TRUE))
 		playsound(src, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
 		mod.wearer.visible_message(span_warning("[usr] dashes forward into the air!"))
 		drain_power(use_power_cost)
 	else
 		to_chat(mod.wearer, span_warning("Something prevents you from dashing forward!"))
-
-/obj/item/mod/module/jumper/on_select_use(atom/target)
-	. = ..()
-	if(!.)
-		return
-	on_use()

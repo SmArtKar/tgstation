@@ -91,20 +91,25 @@
 	use_power_cost = DEFAULT_CELL_DRAIN
 	incompatible_modules = list(/obj/item/mod/module/tether)
 	cooldown_time = 1.5 SECONDS
-	var/zero_g = TRUE
+	var/tether_type = /obj/projectile/tether
 
 /obj/item/mod/module/tether/on_use()
-	if(zero_g && mod.wearer.has_gravity(get_turf(src)))
+	if(!gravity_check())
+		return FALSE
+	return ..()
+
+/obj/item/mod/module/tether/proc/gravity_check()
+	if(mod.wearer.has_gravity(get_turf(src)))
 		balloon_alert(mod.wearer, "too much gravity!")
 		playsound(src, 'sound/weapons/gun/general/dry_fire.ogg', 25, TRUE)
 		return FALSE
-	return ..()
+	return TRUE
 
 /obj/item/mod/module/tether/on_select_use(atom/target)
 	. = ..()
 	if(!.)
 		return
-	var/obj/projectile/tether = new /obj/projectile/tether(mod.wearer.loc)
+	var/obj/projectile/tether = new tether_type(mod.wearer.loc)
 	tether.preparePixelProjectile(target, mod.wearer)
 	tether.firer = mod.wearer
 	INVOKE_ASYNC(tether, /obj/projectile.proc/fire)
@@ -131,12 +136,22 @@
 
 /obj/projectile/tether/on_hit(atom/target)
 	. = ..()
+	fling(target)
+
+/obj/projectile/tether/proc/fling(atom/target)
 	if(firer)
 		firer.throw_at(target, 10, 1, firer, FALSE, FALSE, null, MOVE_FORCE_NORMAL, TRUE)
 
-/obj/projectile/tether/Destroy()
+/obj/projectile/tether/Destroy(atom/target)
 	QDEL_NULL(line)
 	return ..()
+
+/obj/projectile/tether/advanced
+	speed = 0.2
+
+/obj/projectile/tether/advanced/fling(atom/target)
+	if(firer)
+		firer.throw_at(target, 10, 3, firer, FALSE, FALSE, null, MOVE_FORCE_NORMAL, TRUE)
 
 //Radiation Protection
 
@@ -213,11 +228,11 @@
 	name = "MOD advanced tether module"
 	desc = "An advanced version of a normal tether module that offers users extreme mobility in low-pressurised enviroments."
 	complexity = 0
-	zero_g = FALSE
+	tether_type = /obj/projectile/tether/advanced
 
-/obj/item/mod/module/tether/advanced/on_use()
+/obj/item/mod/module/tether/advanced/gravity_check()
 	if(!lavaland_equipment_pressure_check(get_turf(src)))
 		balloon_alert(mod.wearer, "too much pressure!")
 		playsound(src, 'sound/weapons/gun/general/dry_fire.ogg', 25, TRUE)
 		return FALSE
-	return ..()
+	return TRUE

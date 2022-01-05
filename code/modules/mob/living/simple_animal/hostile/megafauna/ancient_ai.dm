@@ -2,6 +2,7 @@
 #define DRONE_RESPAWN_COOLDOWN 10 SECONDS
 #define LASER_FLOWER_LENGTH 2 SECONDS
 #define LASER_FLOWER_BULLETHELL_LENGTH 6 SECONDS
+#define SERVER_ARMOR_PER_MINER 15
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai
 	name = "ancient AI"
@@ -52,6 +53,26 @@
 	var/bullethell = FALSE
 	var/floorshock = FALSE
 	var/list/drones = list()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/proc/update_armor()
+	var/enemies = 0
+	for(var/mob/living/possible_enemy in range(aggro_vision_range, get_turf(src)))
+		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
+			enemies += 1
+
+	enemies -= 1 //So we don't gain armor from a single guy
+
+	if(enemies <= 1)
+		return
+
+	damage_coeff = initial(damage_coeff)
+	for(var/coeff in damage_coeff)
+		damage_coeff[coeff] = clamp(damage_coeff[coeff] - 0.15 * enemies, 0.2, 1)
+
+	for(var/obj/machinery/ancient_server/server in server_list)
+		server.armor = initial(server.armor)
+		server.armor[MELEE] = min(server.armor[MELEE] + SERVER_ARMOR_PER_MINER, 80)
+		server.armor[BOMB] = min(server.armor[BOMB] + SERVER_ARMOR_PER_MINER, 80)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -182,13 +203,14 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/OpenFire()
 	if(servers > 0)
-		anger_modifier = clamp((initial_servers / servers) + (shield_toggled ? 0 : 1), 0, 6)
+		anger_modifier = clamp((initial_servers / servers) - (shield_toggled ? 1 : 0), 0, 6)
 	else
 		anger_modifier = 6
 	ranged_cooldown = world.time + ((6 - anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
 
 	if(get_dist(src, target) <= 2 && !floorshock)
 		activate_floor_shock()
+		ranged_cooldown = world.time + 2 SECONDS / (shield_toggled ? 1 : 2)
 		return
 
 	if(anger_modifier == 6)
@@ -211,15 +233,12 @@
 	else if(prob(anger_modifier * 5 + 20))
 		INVOKE_ASYNC(src, .proc/violent_smash)
 
+	sleep(2)
+
 	if(prob(25))
 		activate_floor_shock()
 	else
 		activate_turrets()
-
-
-
-
-
 
 /obj/machinery/rogue_drone_spawner
 	name = "drone pedestal"
@@ -228,7 +247,7 @@
 	icon_state = "drone_spawner"
 
 	max_integrity = 200
-	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -266,7 +285,7 @@
 	icon_state = "laser_flower"
 
 	max_integrity = 200
-	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -483,8 +502,8 @@
 	density = TRUE
 	anchored = TRUE
 
-	max_integrity = 400
-	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 0, FIRE = 100, ACID = 100)
+	max_integrity = 300
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
@@ -597,10 +616,15 @@
 		deactivate()
 		return
 
-	log_combat(user, null, "lured mobs in the area", src)
+/obj/item/bait_beacon/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(.)
+		return .
+
+	log_combat(throwingdatum.thrower, null, "lured mobs in the area", src)
 
 	icon_state = "batterer"
-	playsound(user, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
+	playsound(src, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
 
 	for(var/mob/living/simple_animal/hostile/M in urange(10, src))
 		M.GiveTarget(src)
@@ -632,19 +656,4 @@
 #undef DRONE_RESPAWN_COOLDOWN
 #undef LASER_FLOWER_LENGTH
 #undef LASER_FLOWER_BULLETHELL_LENGTH
-
-#undef PROTON_ACTIVE_ARMOR
-#undef PROTON_INACTIVE_ARMOR
-#undef PROTON_ARMOR_DIFFERENCE
-
-#undef PROTON_JUMP_COOLDOWN
-#undef PROTON_JUMP_RANGE
-#undef PROTON_JUMP_SPEED
-#undef PROTON_DASH_RANGE
-#undef PROTON_DASH_TICK_PRESS
-#undef PROTON_DASH_COOLDOWN
-#undef PROTON_HOOK_COOLDOWN
-
-#undef PROTON_JUMP_COST
-#undef PROTON_DASH_COST
-#undef PROTON_HOOK_COST
+#undef SERVER_ARMOR_PER_MINER

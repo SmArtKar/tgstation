@@ -1183,7 +1183,6 @@ DEFINE_BITFIELD(turret_flags, list(
 	return 10
 
 /obj/machinery/porta_turret/ancient_ai/shootAt(atom/movable/target)
-	to_chat(target, "CUM")
 	if(master_ai && master_ai.rocket_type)
 		stun_projectile = master_ai.rocket_type
 		lethal_projectile = master_ai.rocket_type

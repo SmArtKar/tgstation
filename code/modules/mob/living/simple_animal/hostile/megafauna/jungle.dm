@@ -34,8 +34,9 @@
 	if(enemies <= 1)
 		return
 
+	damage_coeff = initial(damage_coeff)
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = clamp(damage_coeff[coeff] - ARMOR_PER_ENEMY * enemies, 0.2, 1)
+		damage_coeff[coeff] = max(damage_coeff[coeff] - ARMOR_PER_ENEMY * enemies, 0.2)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target) //Even if you hit once, you'll count
 	. = ..()
