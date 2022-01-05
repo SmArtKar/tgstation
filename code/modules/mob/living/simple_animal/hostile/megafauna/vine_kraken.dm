@@ -27,6 +27,7 @@
 	ranged = TRUE
 	vision_range = 16
 	aggro_vision_range = 16
+	former_target_vision_range = 16
 	attack_verb_continuous = "stabs"
 	attack_verb_simple = "stabs"
 	obj_damage = 200
@@ -90,10 +91,13 @@
 			else
 				solar_barrage()
 		else
+			ranged_cooldown = ranged_cooldown + 2 SECONDS
 			solar_barrage()
 			vine_attack()
 			SLEEP_CHECK_DEATH(6)
 			vine_attack()
+			SLEEP_CHECK_DEATH(6)
+			throwing_spree()
 	else
 		var/attack_type = rand(1, 5)
 		switch(attack_type)
@@ -157,6 +161,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+
 	if((LAZYLEN(vines) > VINE_MIN_DELETE && prob(VINE_DELETE_CHANCE)) || LAZYLEN(vines) > VINE_MAX)
 		var/to_delete = pick(vines)
 		var/vine_to_delete = vines[to_delete]
@@ -184,6 +189,9 @@
 				if(!dunked.anchored)
 					var/turf/throw_target = get_ranged_target_turf(dunked, get_dir(src, hit_atom), 40)
 					dunked.throw_at(throw_target, 40, 4)
+		if(istype(hit_atom, /turf/closed/mineral))
+			var/turf/closed/mineral/rock = hit_atom
+			rock.gets_drilled(src)
 		if(throw_spree)
 			SLEEP_CHECK_DEATH(5)
 			Goto(target, move_to_delay, 1)
@@ -246,6 +254,7 @@
 		SLEEP_CHECK_DEATH(1)
 
 		if(health != prev_health)
+			immobile = FALSE
 			throwing_spree()
 			solar_barrage()
 			return

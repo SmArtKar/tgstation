@@ -1167,6 +1167,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	resistance_flags = INDESTRUCTIBLE
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
+	var/being_used = FALSE
 
 /obj/machinery/porta_turret/ancient_ai/New()
 	. = ..()
@@ -1197,6 +1198,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	return
 
 /obj/machinery/porta_turret/ancient_ai/proc/showShoot(atom/movable/target)
+	being_used = TRUE
 	new /obj/effect/temp_visual/turret_telegraph(get_turf(src))
 	addtimer(CALLBACK(src, .proc/pew_pew, target), 10)
 
@@ -1207,6 +1209,7 @@ DEFINE_BITFIELD(turret_flags, list(
 	shootAt(target)
 	sleep(3)
 	toggle_on(FALSE)
+	being_used = FALSE
 	update_icon()
 
 /obj/effect/temp_visual/turret_telegraph

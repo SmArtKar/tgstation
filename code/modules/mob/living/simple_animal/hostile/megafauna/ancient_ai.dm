@@ -33,6 +33,7 @@
 	robust_searching = TRUE
 	vision_range = 13
 	aggro_vision_range = 13
+	former_target_vision_range = 16
 	stat_attack = HARD_CRIT
 	ranged = TRUE
 	ranged_message = null
@@ -99,14 +100,14 @@
 	if(shield_toggled)
 		. += "ai_shield"
 
-/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_turrets()
+/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_turrets(turret_target = target, turret_amount = 4)
 	var/list/working_turrets = list()
 
 	for(var/obj/machinery/porta_turret/ancient_ai/turret in range(12, src))
 		if(turret.master_ai != src)
 			turret.master_ai = src
 
-		if(turret.machine_stat & BROKEN)
+		if((turret.machine_stat & BROKEN) || turret.being_used)
 			continue
 
 		if(!(target in view(6, turret)))
@@ -114,9 +115,9 @@
 
 		working_turrets.Add(turret)
 
-	for(var/i = 1 to 4)
+	for(var/i = 1 to turret_amount)
 		var/obj/machinery/porta_turret/ancient_ai/turret = pick_n_take(working_turrets)
-		turret.showShoot(target)
+		turret.showShoot(turret_target)
 		sleep(5)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_floor_shock()
@@ -239,6 +240,9 @@
 		activate_floor_shock()
 	else
 		activate_turrets()
+		if(LAZYLEN(former_targets) > 1)
+			for(var/mob/living/possible_target in (former_targets - target))
+				activate_turrets(possible_target, 2)
 
 /obj/machinery/rogue_drone_spawner
 	name = "drone pedestal"
@@ -267,7 +271,7 @@
 	has_drone = FALSE
 	var/mob/living/simple_animal/hostile/jungle/rogue_drone/drone = new(get_turf(src))
 	drone.master_ai = master_ai
-	drone.GiveTarget(master_ai.target)
+	drone.GiveTarget(pick(master_ai.former_targets))
 	addtimer(CALLBACK(src, .proc/recreate_drone), DRONE_RESPAWN_COOLDOWN)
 
 /obj/machinery/rogue_drone_spawner/proc/recreate_drone()

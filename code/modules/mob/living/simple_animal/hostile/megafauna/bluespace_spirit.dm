@@ -21,6 +21,7 @@
 	ranged = TRUE
 	vision_range = 12
 	aggro_vision_range = 21
+	former_target_vision_range = 21
 
 	wander = FALSE
 	speed = 3

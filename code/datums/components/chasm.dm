@@ -169,7 +169,7 @@
 /datum/component/chasm/bluespace/proc/pick_destignation()
 	var/list/range_turfs = list()
 	for(var/turf/open/possible_turf in orange(11, parent))
-		if(istype(possible_turf, /turf/open/chasm/bluespace) || possible_turf.is_blocked_turf() || parent.area.type != possible_turf.area.type) //Only in the area of the same type
+		if(istype(possible_turf, /turf/open/chasm/bluespace) || possible_turf.is_blocked_turf())
 			continue
 		range_turfs.Add(possible_turf)
 

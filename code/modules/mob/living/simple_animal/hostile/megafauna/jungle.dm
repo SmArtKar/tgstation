@@ -20,8 +20,16 @@
 	damage_coeff = list(BRUTE = 1, BURN = 0.5, TOX = 0.75, CLONE = 1, STAMINA = 0, OXY = 1)
 
 	var/list/former_targets = list()
+	var/former_target_vision_range = 18
 	var/spawns_minions = FALSE
 	crusher_damage_required = 0.3 //Because if you kill the boss with a team it won't really be super high if there's a PKA user
+
+/mob/living/simple_animal/hostile/megafauna/jungle/Life(delta_time, times_fired)
+	. = ..()
+	for(var/former_target in former_targets)
+		if(get_dist(former_targets, src) > former_target_vision_range)
+			former_targets.Remove(former_target)
+			update_armor()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/proc/update_armor()
 	var/enemies = 0

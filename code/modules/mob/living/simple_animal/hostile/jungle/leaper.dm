@@ -152,7 +152,7 @@
 	desc = "Incoming miner!"
 	layer = BELOW_MOB_LAYER
 	icon_state = "lily_pad"
-	duration = 1 SECONDS //A bit faster
+	duration = 0.5 SECONDS //A bit faster
 
 /mob/living/simple_animal/hostile/jungle/leaper/Initialize(mapload)
 	. = ..()
@@ -309,14 +309,14 @@
 	if(isclosedturf(target) || isclosedturf(get_turf(target)))
 		return
 
-	jump_cooldown = world.time + 5 SECONDS
+	jump_cooldown = world.time + 3 SECONDS
 	new /obj/effect/temp_visual/leaper_crush_small(get_turf(target))
 	addtimer(CALLBACK(src, .proc/jump, target, user), 0.5 SECONDS)
 
 /obj/item/crusher_trophy/leaper_eye/proc/jump(atom/target, mob/living/user)
 	var/old_density = user.density
 	user.density = FALSE
-	throw_at(user, get_dist(user, target), 1, user, FALSE, callback = CALLBACK(src, .proc/crush, target, user, old_density))
+	throw_at(user, get_dist(user, target), 3, user, FALSE, callback = CALLBACK(src, .proc/crush, target, user, old_density), gentle = TRUE)
 
 /obj/item/crusher_trophy/leaper_eye/proc/crush(atom/target, mob/living/user, old_density) //More suitable for quick escapes/sudden attacks
 	playsound(user, 'sound/effects/meteorimpact.ogg', 100, TRUE)
@@ -334,7 +334,8 @@
 			victim.throw_at(throwtarget, 5, 1)
 			visible_message("<span class='warning'>[victim] is thrown clear of [user]!</span>")
 
-	jump_cooldown = world.time + 10 SECONDS
+	jump_cooldown = world.time + 7 SECONDS
+
 /mob/living/simple_animal/hostile/jungle/leaper/add_cell_sample()
 	. = ..()
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_LEAPER, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 5)

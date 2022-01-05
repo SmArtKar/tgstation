@@ -32,6 +32,7 @@
 	ranged = TRUE
 	ranged_cooldown_time = 30
 	aggro_vision_range = 18
+	former_target_vision_range = 24
 	light_range = 0
 
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye)

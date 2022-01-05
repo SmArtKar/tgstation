@@ -21,6 +21,7 @@
 	ranged = TRUE
 	vision_range = 18
 	aggro_vision_range = 21
+	former_target_vision_range = 21
 	rapid_melee = 3
 	melee_queue_distance = 2
 	attack_verb_continuous = "claws"
@@ -289,12 +290,20 @@
 	anger_modifier = 1 - (clamp(((maxHealth - health) / 100),0,20) * 0.01)
 	ranged_cooldown = world.time + (4 * anger_modifier SECONDS)
 
+	if(prob(25) && LAZYLEN(former_targets) > 1)
+		target = pick(former_targets)
+		new /mob/living/simple_animal/hostile/imp/jungle(get_turf(src)) //Leaves a small "present" behind when changes targets
+		jaunt_at(target)
+		ranged_cooldown = world.time += BLOOD_JAUNT_LENGTH
+		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH)
+
 	if(get_dist(src, target) > 12) //Punush them for running away, you can't get away from the demon
 		jaunt_at(target)
 		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) * anger_modifier SECONDS)
 		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
 		blast_line_directions()
 		spiral_shoot()
+		return
 
 	var/picked_attack = rand(1, 8)
 	switch(picked_attack)
@@ -525,6 +534,11 @@
 		damage = 3 //Deals miniscule amounts of damage to humans and silicons
 		armour_penetration = 15
 	. = ..()
+
+/mob/living/simple_animal/hostile/imp/jungle
+	wander = FALSE
+	weather_immunities = list(TRAIT_LAVA_IMMUNE)
+	faction = list("hell", "jungle", "boss")
 
 /mob/living/simple_animal/hostile/imp/demonic_miner
 	maxHealth = 40

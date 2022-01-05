@@ -20,6 +20,7 @@
 	ranged = TRUE
 	ranged_cooldown_time = 20
 	aggro_vision_range = 18
+	former_target_vision_range = 18
 
 	loot = list(/obj/item/amber_core)
 	common_loot = list(/obj/effect/spawner/random/time_crystal)
