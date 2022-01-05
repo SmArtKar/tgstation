@@ -202,8 +202,14 @@ GLOBAL_LIST_EMPTY(megafauna)
 		if(H.mind)
 			if(istype(H.mind.martial_art, /datum/martial_art/the_sleeping_carp))
 				return TRUE
-		if (is_species(H, /datum/species/golem/sand))
+		if(is_species(H, /datum/species/golem/sand))
 			return TRUE
+		if(is_species(H, /datum/species/shadow/nightmare))
+			var/turf/T = H.loc
+			if(istype(T))
+				var/light_amount = T.get_lumcount()
+				if(light_amount < SHADOW_SPECIES_LIGHT_THRESHOLD)
+					return TRUE
 	return FALSE
 
 /datum/action/innate/megafauna_attack

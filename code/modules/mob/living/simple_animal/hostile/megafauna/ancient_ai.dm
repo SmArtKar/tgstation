@@ -181,8 +181,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/laser_flower_bullethell()
 	bullethell = TRUE
 	for(var/obj/machinery/laser_flower/turret in range(12, src))
-		if(prob(75))
-			turret.toggle_with_warning(TRUE)
+		turret.toggle_with_warning(TRUE)
 
 	addtimer(CALLBACK(src, .proc/deactivate_flowers), LASER_FLOWER_BULLETHELL_LENGTH)
 
@@ -211,8 +210,6 @@
 
 	if(get_dist(src, target) <= 2 && !floorshock)
 		activate_floor_shock()
-		ranged_cooldown = world.time + 2 SECONDS / (shield_toggled ? 1 : 2)
-		return
 
 	if(anger_modifier == 6)
 		rocket_type = /obj/projectile/bullet/a84mm/ancient/heavy
@@ -238,6 +235,8 @@
 
 	if(prob(25))
 		activate_floor_shock()
+		if(!!bullethell)
+			laser_flower()
 	else
 		activate_turrets()
 		if(LAZYLEN(former_targets) > 1)

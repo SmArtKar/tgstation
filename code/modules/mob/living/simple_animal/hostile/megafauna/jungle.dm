@@ -27,7 +27,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/Life(delta_time, times_fired)
 	. = ..()
 	for(var/former_target in former_targets)
-		if(get_dist(former_targets, src) > former_target_vision_range)
+		if(get_dist(former_target, src) > former_target_vision_range)
 			former_targets.Remove(former_target)
 			update_armor()
 
@@ -56,11 +56,10 @@
 	. = ..()
 	if(robust_searching)
 		if(isliving(the_target))
-			var/mob/living/L = the_target
-			if(L.stat > stat_attack)
-				if(L == target || (L in former_targets))
-					former_targets.Remove(former_targets)
-					update_armor()
+			var/mob/living/possible_corpse = the_target
+			if(possible_corpse.stat == DEAD && (possible_corpse in former_targets))
+				former_targets.Remove(possible_corpse)
+				update_armor()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/loot_manipulation()
 	. = ..()
