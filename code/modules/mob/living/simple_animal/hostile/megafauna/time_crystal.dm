@@ -1,5 +1,6 @@
 #define AMBER_TIMESTOP_RANGE 2
 #define AMBER_TIMESTOP_DURATION 3 SECONDS
+#define CRYSTAL_TURRET_HEALING 20
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal
 	name = "time crystal"
@@ -146,18 +147,22 @@
 	update_icon()
 
 	var/list/possible_turfs = list()
+	var/list/view_turfs = view(6, src)
 	for(var/turf/open/possible_turret in range(6, src))
-		if(!possible_turret.is_blocked_turf_ignore_climbable())
+		if(!possible_turret.is_blocked_turf_ignore_climbable() && (possible_turret in view_turfs))
 			possible_turfs.Add(possible_turret)
 
 	var/mob/living/simple_animal/hostile/jungle/crystal_turret/turret = new(pick_n_take(possible_turfs))
 	turret.GiveTarget(turret)
+	turret.master_crystal = src
 
 	turret = new /mob/living/simple_animal/hostile/jungle/crystal_turret/second(pick_n_take(possible_turfs))
 	turret.GiveTarget(turret)
+	turret.master_crystal = src
 
 	turret = new /mob/living/simple_animal/hostile/jungle/crystal_turret/third(pick_n_take(possible_turfs))
 	turret.GiveTarget(turret)
+	turret.master_crystal = src
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/drop_n_beam()
 	if(has_orbiting)
@@ -318,6 +323,13 @@
 	move_resist = MOVE_FORCE_VERY_STRONG
 	pull_force = MOVE_FORCE_VERY_STRONG
 	del_on_death = TRUE
+	var/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/master_crystal
+
+/mob/living/simple_animal/hostile/jungle/crystal_turret/Life(delta_time, times_fired)
+	. = ..()
+	if(DT_PROB(30, delta_time))
+		master_crystal.adjustHealth(CRYSTAL_TURRET_HEALING)
+		new /obj/effect/temp_visual/heal(get_turf(master_crystal), "#DE9E41")
 
 /mob/living/simple_animal/hostile/jungle/crystal_turret/Move() //Does not move by itself
 	return
@@ -354,7 +366,7 @@
 	. = ..()
 
 /obj/effect/temp_visual/crystal_killbeam/process()
-	if(!target || prob(10)) //Movement is a bit randomy
+	if(!target || prob(20))
 		return
 
 	if(get_turf(src) == get_turf(target))
@@ -485,3 +497,4 @@
 
 #undef AMBER_TIMESTOP_RANGE
 #undef AMBER_TIMESTOP_DURATION
+#undef CRYSTAL_TURRET_HEALING

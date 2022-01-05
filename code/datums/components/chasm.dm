@@ -26,6 +26,7 @@
 		/obj/effect/dummy/phased_mob,
 		/obj/effect/mapping_helpers,
 		/obj/effect/wisp,
+		/obj/effect/ebeam,
 		))
 
 	var/stun_time = 10 SECONDS
@@ -167,12 +168,12 @@
 
 /datum/component/chasm/bluespace/proc/pick_destignation()
 	var/list/range_turfs = list()
-	for(var/turf/open/possible_turf in orange(14, parent))
-		if(istype(possible_turf, /turf/open/chasm/bluespace) || possible_turf.is_blocked_turf())
+	for(var/turf/open/possible_turf in orange(11, parent))
+		if(istype(possible_turf, /turf/open/chasm/bluespace) || possible_turf.is_blocked_turf() || parent.area.type != possible_turf.area.type) //Only in the area of the same type
 			continue
 		range_turfs.Add(possible_turf)
 
-	for(var/turf/open/excluded_turf in orange(5, parent))
+	for(var/turf/open/excluded_turf in orange(2, parent))
 		if(excluded_turf in range_turfs)
 			range_turfs.Remove(excluded_turf)
 	target_turf = pick(range_turfs)

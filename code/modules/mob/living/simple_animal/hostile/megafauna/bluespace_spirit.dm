@@ -293,7 +293,7 @@
 		fake.visible_message(span_danger("[fake] starts spinning and explodes in a shower of sparks!"))
 		INVOKE_ASYNC(fake, /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/hallucination.proc/fake_hit, TRUE)
 
-	Stun(2 SECONDS) //As a reward for player for hitting the real guy
+	Stun(3 SECONDS) //As a reward for player for hitting the real guy
 
 /obj/projectile/bluespace_blast
 	name = "bluespace blast"
@@ -404,7 +404,7 @@
 
 /turf/open/chasm/bluespace/Initialize()
 	. = ..()
-	AddComponent(/datum/component/chasm/bluespace) //We lead to a random open turf in 14 tile radius, but not closer than 6 tiles to initial location
+	AddComponent(/datum/component/chasm/bluespace) //We lead to a random open turf in 11 tile radius, but not closer than 3 tiles to initial location
 
 /// Hallucination mob
 
