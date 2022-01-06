@@ -57,22 +57,24 @@
 		if(prob(85))
 			if(prob(35))
 				more_bouncers()
-
-			for(var/i = 1 to 3)
-				shotgun()
-				SLEEP_CHECK_DEATH(5)
+				bluespace_collapse()
+			else
+				for(var/i = 1 to 3)
+					shotgun()
+					SLEEP_CHECK_DEATH(5)
 		else
 			spiral_shoot_reverse(counter_length = 16)
 		ranged_cooldown = world.time + 0.5 SECONDS
 		return
 
 
-	if(health / maxHealth < 0.5)
+	if(health / maxHealth > 0.5)
 		if(prob(25 + anger_modifier / 3))
 			triple_bouncer()
 		else
 			if(prob(10 + anger_modifier / 4))
 				shoot_projectile_reverse()
+				return
 
 	if(prob(45))
 		if(prob(30))
@@ -81,21 +83,24 @@
 			charge()
 			if(health / maxHealth < 0.5)
 				SLEEP_CHECK_DEATH(5)
-				shotgun()
+				bluespace_collapse()
 	else
 		if(prob(25))
-			if(health / maxHealth < 0.5)
+			if(health / maxHealth < 0.25)
 				more_bouncers()
 			else
 				triple_bouncer()
 			SLEEP_CHECK_DEATH(15)
 			clone_rush()
 			return
+		else if(prob(10 + anger_modifier / 5))
+			shoot_projectile_reverse()
+			return
 
 		if(prob(40))
 			for(var/i = 1 to 3)
 				shotgun()
-				SLEEP_CHECK_DEATH(3)
+				SLEEP_CHECK_DEATH(5)
 		else
 			bluespace_collapse()
 			if(health / maxHealth < 0.5)
@@ -254,8 +259,10 @@
 	for(var/i in shot_angles)
 		shoot_projectile(target_turf, angle_to_target + i, proj_type = /obj/projectile/bluespace_blast/slow)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/clone_rush(directions = pick(GLOB.cardinals, GLOB.diagonals))
+/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/clone_rush()
 	charge(target, chasm_charge = FALSE)
+	var/list/directions_orig = pick(GLOB.cardinals, GLOB.diagonals)
+	var/list/directions = directions_orig.Copy()
 	var/turf/start_turf = get_step(get_turf(src), get_dir(get_step(get_turf(src), pick_n_take(directions)), get_turf(src))) //Try figuring what this is :)))) Jokes aside, this shitty line of code gets a turf in an INVERSE direction from what it picks
 	new /obj/effect/temp_visual/sparks_bluespace(start_turf)
 	retreat_distance = 2
@@ -303,7 +310,7 @@
 /obj/projectile/bluespace_blast
 	name = "bluespace blast"
 	icon_state = "gaussblue"
-	damage = 5
+	damage = 10
 	damage_type = BRUTE
 	speed = 1
 

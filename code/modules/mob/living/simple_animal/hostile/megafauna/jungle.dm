@@ -5,7 +5,7 @@
  * Why? Because dying together is more fun than dying alone!
  */
 
-#define ARMOR_PER_ENEMY 0.15
+#define ARMOR_PER_ENEMY 0.1
 
 /mob/living/simple_animal/hostile/megafauna/jungle
 	faction = list("boss", "jungle")
@@ -28,6 +28,8 @@
 									   /datum/award/achievement/boss/demonic_miner_kill, /datum/award/achievement/boss/vine_kraken_kill, \
 									   /datum/award/achievement/boss/time_crystal_kill, /datum/award/achievement/boss/bluespace_spirit_kill, \
 									   /datum/award/achievement/boss/ancient_ai_kill) // Awards you need to have to get a jungle king award
+
+	var/list/initial_damage_coeff
 
 /mob/living/simple_animal/hostile/megafauna/jungle/Life(delta_time, times_fired)
 	. = ..()
@@ -73,7 +75,7 @@
 	if(enemies <= 1)
 		return
 
-	damage_coeff = initial(damage_coeff)
+	damage_coeff = initial_damage_coeff
 	for(var/coeff in damage_coeff)
 		damage_coeff[coeff] = max(damage_coeff[coeff] - ARMOR_PER_ENEMY * enemies, 0.2)
 
@@ -117,6 +119,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/Initialize()
 	. = ..()
+	initial_damage_coeff = damage_coeff.Copy()
 	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, INNATE_TRAIT)
 
 #undef ARMOR_PER_ENEMY

@@ -469,11 +469,11 @@
 
 /obj/effect/spawner/random/time_crystal
 	name = "time crystal loot spawner"
-	loot = list(/obj/item/clothing/gloves/crystal = 2, /obj/item/crystal_fruit = 1)
+	loot = list(/obj/item/clothing/gloves/crystal = 1, /obj/item/crystal_fruit = 2)
 
 /obj/item/crystal_fruit //One-use full heal and buff for 30 seconds. When you're truely fucked.
 	name = "crystal fruit"
-	desc = "Legends say that eating this fruit will give you \"awesome power\". It's not specified what these are."
+	desc = "Legends say that eating this fruit will give you \"great power\". It's not specified what these are."
 	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "crystal_fruit"
 

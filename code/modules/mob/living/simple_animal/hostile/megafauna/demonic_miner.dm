@@ -498,6 +498,10 @@
 
 	QDEL_IN(src, 5)
 
+/obj/projectile/bloody_orb/on_hit(atom/target, blocked, pierce_hit)
+	fire(rand(0, 360))
+	return BULLET_ACT_FORCE_PIERCE
+
 /obj/projectile/bloody_orb/proc/cast_rays()
 	addtimer(CALLBACK(src, .proc/start_rays), 5 SECONDS)
 	var/turf/cur_turf = get_turf(src)

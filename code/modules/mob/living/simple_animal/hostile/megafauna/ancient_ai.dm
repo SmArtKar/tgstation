@@ -2,7 +2,7 @@
 #define DRONE_RESPAWN_COOLDOWN 10 SECONDS
 #define LASER_FLOWER_LENGTH 2 SECONDS
 #define LASER_FLOWER_BULLETHELL_LENGTH 6 SECONDS
-#define SERVER_ARMOR_PER_MINER 15
+#define SERVER_ARMOR_PER_MINER 10
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai
 	name = "ancient AI"
@@ -72,7 +72,7 @@
 
 	damage_coeff = initial(damage_coeff)
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = clamp(damage_coeff[coeff] - 0.15 * enemies, 0.2, 1)
+		damage_coeff[coeff] = clamp(damage_coeff[coeff] - 0.1 * enemies, 0.2, 1)
 
 	for(var/obj/machinery/ancient_server/server in server_list)
 		server.armor = initial(server.armor)

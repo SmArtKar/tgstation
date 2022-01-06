@@ -259,6 +259,7 @@
 		if(health != prev_health)
 			immobile = FALSE
 			throwing_spree()
+			solar_barrage()
 			return
 	immobile = FALSE
 
