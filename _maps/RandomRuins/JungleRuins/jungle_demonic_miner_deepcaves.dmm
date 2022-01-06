@@ -18,7 +18,7 @@
 /area/ruin/unpowered/demonic_miner_arena)
 "e" = (
 /obj/effect/decal/cleanable/blood/old,
-/mob/living/simple_animal/hostile/imp/demonic_miner,
+/mob/living/simple_animal/hostile/imp/jungle/demonic_miner,
 /turf/open/floor/cult{
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
@@ -36,7 +36,7 @@
 	},
 /area/ruin/unpowered/demonic_miner_arena)
 "j" = (
-/mob/living/simple_animal/hostile/imp/demonic_miner,
+/mob/living/simple_animal/hostile/imp/jungle/demonic_miner,
 /turf/open/floor/cult{
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},

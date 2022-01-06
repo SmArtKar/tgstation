@@ -39,6 +39,10 @@
 	ranged_message = null
 	ranged_ignores_vision = TRUE
 
+	achievement_type = /datum/award/achievement/boss/ancient_ai_kill
+	crusher_achievement_type = /datum/award/achievement/boss/ancient_ai_crusher
+	score_achievement_type = /datum/award/score/ancient_ai_score
+
 	loot = list(/obj/item/malf_upgrade)
 	common_loot = list(/obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
 	common_crusher_loot = list(/obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
@@ -88,12 +92,13 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/GiveTarget(new_target)
 	. = ..()
-	if(icon_state == "ai_complex_offline")
-		icon_state = "ai_complex_online"
-		update_icon()
-		playsound(src, 'sound/ai/default/aimalf.ogg', 50, TRUE)
-		activate_servers()
-	flick("ai_complex_syndicate", src)
+	if(new_target)
+		if(icon_state == "ai_complex_offline")
+			icon_state = "ai_complex_online"
+			update_icon()
+			playsound(src, 'sound/ai/default/aimalf.ogg', 50, TRUE)
+			activate_servers()
+		flick("ai_complex_syndicate", src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/update_overlays()
 	. = ..()
@@ -136,10 +141,13 @@
 	floorshock = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/spawn_drones()
-
+	var/list/drone_spawners = list()
 	for(var/obj/machinery/rogue_drone_spawner/spawner in range(12, src))
-		if(prob(50))
-			spawner.spawn_drone()
+		drone_spawners += spawner
+
+	for(var/i = 1 to rand(3, 4))
+		var/obj/machinery/rogue_drone_spawner/spawner = pick_n_take(drone_spawners)
+		spawner.spawn_drone()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/violent_smash()
 
@@ -208,8 +216,10 @@
 		anger_modifier = 6
 	ranged_cooldown = world.time + ((6 - anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
 
-	if(get_dist(src, target) <= 2 && !floorshock)
-		activate_floor_shock()
+	for(var/mob/living/possible_target in former_targets)
+		if(get_dist(src, possible_target) <= 2 && !floorshock)
+			activate_floor_shock()
+			break
 
 	if(anger_modifier == 6)
 		rocket_type = /obj/projectile/bullet/a84mm/ancient/heavy
@@ -226,7 +236,7 @@
 			return
 		laser_flower()
 
-	if(prob(anger_modifier * 5 + 10))
+	if(prob(anger_modifier * 5 + 10) && LAZYLEN(drones) < 5)
 		spawn_drones()
 	else if(prob(anger_modifier * 5 + 20))
 		INVOKE_ASYNC(src, .proc/violent_smash)

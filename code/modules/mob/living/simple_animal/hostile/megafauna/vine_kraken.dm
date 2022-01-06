@@ -36,6 +36,10 @@
 	pixel_y = -8
 	base_pixel_y = -8
 
+	achievement_type = /datum/award/achievement/boss/vine_kraken_kill
+	crusher_achievement_type = /datum/award/achievement/boss/vine_kraken_crusher
+	score_achievement_type = /datum/award/score/vine_kraken_score
+
 	wander = FALSE
 	speed = 3
 	move_to_delay = 3
@@ -92,7 +96,6 @@
 				solar_barrage()
 		else
 			ranged_cooldown = ranged_cooldown + 2 SECONDS
-			solar_barrage()
 			vine_attack()
 			SLEEP_CHECK_DEATH(6)
 			vine_attack()
@@ -256,7 +259,6 @@
 		if(health != prev_health)
 			immobile = FALSE
 			throwing_spree()
-			solar_barrage()
 			return
 	immobile = FALSE
 

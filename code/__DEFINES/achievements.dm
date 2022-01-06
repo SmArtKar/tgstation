@@ -80,6 +80,15 @@
 #define BOSS_MEDAL_SWARMERS   "Swarmer Beacon Killer"
 #define BOSS_MEDAL_WENDIGO    "Wendigo Killer"
 #define BOSS_MEDAL_KINGGOAT   "King Goat Killer"
+#define BOSS_MEDAL_TIME_CRYSTAL   "Time Crystal Killer"
+#define BOSS_MEDAL_VINE_KRAKEN "Vine Kraken Killer"
+#define BOSS_MEDAL_DEMONIC_MINER   "Demonic Miner Killer"
+#define BOSS_MEDAL_MUD_WORM   "Mud Worm Killer"
+#define BOSS_MEDAL_SPIDER_QUEEN   "Spider Queen Killer"
+#define BOSS_MEDAL_ANCIENT_AI    "Ancient AI Killer"
+#define BOSS_MEDAL_BLUESPACE_SPIRIT   "Bluespace Spirit Killer"
+
+#define BOSS_MEDAL_JUNGLE_KING   "King of The Jungle" //Special medal for killing all jungle bosses
 
 #define BOSS_MEDAL_MINER_CRUSHER "Blood-drunk Miner Crusher"
 #define BOSS_MEDAL_FROSTMINER_CRUSHER "Demonic-frost Miner Crusher"
@@ -91,6 +100,13 @@
 #define BOSS_MEDAL_SWARMERS_CRUSHER "Swarmer Beacon Crusher"
 #define BOSS_MEDAL_WENDIGO_CRUSHER "Wendigo Crusher"
 #define BOSS_MEDAL_KINGGOAT_CRUSHER "King Goat Crusher"
+#define BOSS_MEDAL_TIME_CRYSTAL_CRUSHER   "Time Crystal Crusher"
+#define BOSS_MEDAL_VINE_KRAKEN_CRUSHER "Vine Kraken Crusher"
+#define BOSS_MEDAL_DEMONIC_MINER_CRUSHER   "Demonic Miner Crusher"
+#define BOSS_MEDAL_MUD_WORM_CRUSHER   "Mud Worm Crusher"
+#define BOSS_MEDAL_SPIDER_QUEEN_CRUSHER   "Spider Queen Crusher"
+#define BOSS_MEDAL_ANCIENT_AI_CRUSHER    "Ancient AI Crusher"
+#define BOSS_MEDAL_BLUESPACE_SPIRIT_CRUSHER   "Bluespace Spirit Crusher"
 
 // Medal hub IDs for boss-kill scores
 #define BOSS_SCORE          "Bosses Killed"
@@ -105,6 +121,13 @@
 #define WENDIGO_SCORE  "Wendigos Killed"
 #define KINGGOAT_SCORE      "King Goat Killed"
 #define TENDRIL_CLEAR_SCORE  "Tendrils Killed"
+#define ANCIENT_AI_SCORE      "Ancient AIs Killed"
+#define BLUESPACE_SPIRIT_SCORE  "Bluespace Spirits Killed"
+#define MUD_WORM_SCORE      "Mud Worms Killed"
+#define SPIDER_QUEEN_SCORE "Spider Queens Killed"
+#define TIME_CRYSTAL_SCORE  "Time Crystals Killed"
+#define VINE_KRAKEN_SCORE      "Vine Krakens Killed"
+#define DEMONIC_MINER_SCORE  "Demonic Miners Killed"
 
 // DB ID for hardcore random mode
 #define HARDCORE_RANDOM_SCORE "Hardcore Random Score"

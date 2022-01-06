@@ -34,6 +34,10 @@
 
 	pixel_y = -1
 
+	achievement_type = /datum/award/achievement/boss/demonic_miner_kill
+	crusher_achievement_type = /datum/award/achievement/boss/demonic_miner_crusher
+	score_achievement_type = /datum/award/score/jungle_demonic_miner_score
+
 	common_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/demonic_miner)
 	common_crusher_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/demonic_miner, /obj/item/crusher_trophy/demon_horn) //Let's reward everybody who killed this guy, he's hard and loot is only usable for fauna killing.
 	loot = list(/obj/effect/decal/remains/human)
@@ -291,7 +295,7 @@
 	ranged_cooldown = world.time + (4 * anger_modifier SECONDS)
 
 	if(prob(25) && LAZYLEN(former_targets) > 1)
-		target = pick(former_targets)
+		target = pick(former_targets - target)
 		new /mob/living/simple_animal/hostile/imp/jungle(get_turf(src)) //Leaves a small "present" behind when changes targets
 		jaunt_at(target)
 		ranged_cooldown = world.time += BLOOD_JAUNT_LENGTH
@@ -299,10 +303,13 @@
 
 	if(get_dist(src, target) > 12) //Punush them for running away, you can't get away from the demon
 		jaunt_at(target)
-		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) * anger_modifier SECONDS)
-		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
+		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 1 : 3) * anger_modifier SECONDS)
+		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 1) * anger_modifier SECONDS))
+		if(prob(35))
+			ranged_cooldown = ranged_cooldown + 2 SECONDS
+			SLEEP_CHECK_DEATH((demon_form ? 0 : 1) * anger_modifier SECONDS)
+			spiral_shoot()
 		blast_line_directions()
-		spiral_shoot()
 		return
 
 	var/picked_attack = rand(1, 8)
@@ -536,27 +543,27 @@
 	. = ..()
 
 /mob/living/simple_animal/hostile/imp/jungle
-	wander = FALSE
+	maxHealth = 40
+	health = 40
 	weather_immunities = list(TRAIT_LAVA_IMMUNE)
 	faction = list("hell", "jungle", "boss")
 
-/mob/living/simple_animal/hostile/imp/demonic_miner
-	maxHealth = 40
-	health = 40
+/mob/living/simple_animal/hostile/imp/jungle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
+
+/mob/living/simple_animal/hostile/imp/jungle/demonic_miner
 	wander = FALSE
-	weather_immunities = list(TRAIT_LAVA_IMMUNE)
-	faction = list("hell", "jungle", "boss")
 	var/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/king
 	var/beam
 
-/mob/living/simple_animal/hostile/imp/demonic_miner/Initialize(mapload)
+/mob/living/simple_animal/hostile/imp/jungle/demonic_miner/Initialize(mapload)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
 	king = locate(/mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner) in range(4, src)
 	king.imps += 1
 	beam = Beam(king, icon_state = "blood_beam_thin", beam_type = /obj/effect/ebeam/demonic)
 
-/mob/living/simple_animal/hostile/imp/demonic_miner/Destroy()
+/mob/living/simple_animal/hostile/imp/jungle/demonic_miner/Destroy()
 	king.imp_death()
 	qdel(beam)
 	. = ..()

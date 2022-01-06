@@ -52,3 +52,38 @@
 	name = "Wendigos Killed"
 	desc = "You've killed HOW many?"
 	database_id = WENDIGO_SCORE
+
+/datum/award/score/ancient_ai_score
+	name = "Ancient AIs Killed"
+	desc = "You've killed HOW many?"
+	database_id = ANCIENT_AI_SCORE
+
+/datum/award/score/bluespace_spirit_score
+	name = "Bluespace Spirits Killed"
+	desc = "You've killed HOW many?"
+	database_id = BLUESPACE_SPIRIT_SCORE
+
+/datum/award/score/mud_worm_score
+	name = "Mud Worms Killed"
+	desc = "You've killed HOW many?"
+	database_id = MUD_WORM_SCORE
+
+/datum/award/score/spider_queen_score
+	name = "Spider Queens Killed"
+	desc = "You've killed HOW many?"
+	database_id = SPIDER_QUEEN_SCORE
+
+/datum/award/score/time_crystal_score
+	name = "Time Crystals Killed"
+	desc = "You've killed HOW many?"
+	database_id = TIME_CRYSTAL_SCORE
+
+/datum/award/score/vine_kraken_score
+	name = "Vine Krakens Killed"
+	desc = "You've killed HOW many?"
+	database_id = VINE_KRAKEN_SCORE
+
+/datum/award/score/jungle_demonic_miner_score
+	name = "Demonic Miners Killed"
+	desc = "You've killed HOW many?"
+	database_id = DEMONIC_MINER_SCORE

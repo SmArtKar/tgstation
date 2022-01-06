@@ -35,6 +35,10 @@
 	former_target_vision_range = 24
 	light_range = 0
 
+	achievement_type = /datum/award/achievement/boss/spider_queen_kill
+	crusher_achievement_type = /datum/award/achievement/boss/spider_queen_crusher
+	score_achievement_type = /datum/award/score/spider_queen_score
+
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye)
 	common_loot = list(/obj/effect/spawner/random/spider_queen)
 	common_crusher_loot = list(/obj/effect/spawner/random/spider_queen, /obj/item/crusher_trophy/spider_leg)

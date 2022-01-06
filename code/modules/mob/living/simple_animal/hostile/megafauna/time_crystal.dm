@@ -22,6 +22,10 @@
 	aggro_vision_range = 18
 	former_target_vision_range = 18
 
+	achievement_type = /datum/award/achievement/boss/time_crystal_kill
+	crusher_achievement_type = /datum/award/achievement/boss/time_crystal_crusher
+	score_achievement_type = /datum/award/score/time_crystal_score
+
 	loot = list(/obj/item/amber_core)
 	common_loot = list(/obj/effect/spawner/random/time_crystal)
 	common_crusher_loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/crusher_trophy/crystal_shard)
@@ -106,6 +110,9 @@
 	OpenFire()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/chronospheres()
+	var/obj/effect/temp_visual/decoy/decoy = new /obj/effect/temp_visual/decoy(loc, src)
+	animate(decoy, alpha = 0, transform = matrix() * 2, time = 6)
+	SLEEP_CHECK_DEATH(6)
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	playsound(get_turf(src), 'sound/effects/ethereal_revive.ogg', 100) //Fits pretty well I guess?
 	for(var/i in 1 to 5)
@@ -124,7 +131,7 @@
 		return
 
 	if(prob(clamp((140 - anger_modifier), 10, 30)))
-		if(get_dist(src, target) > 3) //No point-blank chronospheres
+		if(get_dist(src, target) > 2) //No point-blank chronospheres
 			chronospheres()
 			return
 	else

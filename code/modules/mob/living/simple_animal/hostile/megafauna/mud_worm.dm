@@ -44,6 +44,10 @@
 	light_power = 2
 	light_color = LIGHT_COLOR_BROWN
 
+	achievement_type = /datum/award/achievement/boss/mud_worm_kill
+	crusher_achievement_type = /datum/award/achievement/boss/mud_worm_crusher
+	score_achievement_type = /datum/award/score/mud_worm_score
+
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/back
 	var/mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/front
 	var/list/all_fragments = list()
@@ -179,7 +183,7 @@
 	if(charging)
 		return
 
-	ranged_cooldown = world.time + 40
+	ranged_cooldown = world.time + 4 SECONDS
 	anger_modifier = clamp((1 - round(get_length() / 10)) * 30, 0, 20)
 
 	if(get_dist(src, target) >= aggro_vision_range || prob(anger_modifier + 35))

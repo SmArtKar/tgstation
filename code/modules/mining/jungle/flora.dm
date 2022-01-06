@@ -111,8 +111,8 @@
 	icon_grow = "berry-grow"
 	icon_dead = "berry-dead"
 	product = /obj/item/food/grown/jungle_flora/rapsberry
-	genes = list(/datum/plant_gene/trait/repeated_harvest, /datum/plant_gene/trait/maxchem)
-	reagents_add = list(/datum/reagent/consumable/sugar = 0.04, /datum/reagent/consumable/nutriment = 0.02, /datum/reagent/consumable/nutriment/vitamin = 0.1, /datum/reagent/consumable/vitfro = 0.08)
+	genes = list(/datum/plant_gene/trait/repeated_harvest, /datum/plant_gene/trait/maxchem, /datum/plant_gene/trait/injector)
+	reagents_add = list(/datum/reagent/consumable/sugar = 0.04, /datum/reagent/consumable/nutriment = 0.02, /datum/reagent/consumable/nutriment/vitamin = 0.06, /datum/reagent/consumable/vitfro = 0.08)
 
 /// Beer Root
 

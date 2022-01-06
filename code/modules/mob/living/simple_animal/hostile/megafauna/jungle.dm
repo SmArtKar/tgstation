@@ -24,12 +24,43 @@
 	var/spawns_minions = FALSE
 	crusher_damage_required = 0.3 //Because if you kill the boss with a team it won't really be super high if there's a PKA user
 
+	var/static/list/king_awards = list(/datum/award/achievement/boss/spider_queen_kill, /datum/award/achievement/boss/mud_worm_kill, \
+									   /datum/award/achievement/boss/demonic_miner_kill, /datum/award/achievement/boss/vine_kraken_kill, \
+									   /datum/award/achievement/boss/time_crystal_kill, /datum/award/achievement/boss/bluespace_spirit_kill, \
+									   /datum/award/achievement/boss/ancient_ai_kill) // Awards you need to have to get a jungle king award
+
 /mob/living/simple_animal/hostile/megafauna/jungle/Life(delta_time, times_fired)
 	. = ..()
 	for(var/former_target in former_targets)
 		if(get_dist(former_target, src) > former_target_vision_range)
 			former_targets.Remove(former_target)
 			update_armor()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/grant_achievement(medaltype, scoretype, crusher_kill, list/grant_achievement = list())
+	if(!achievement_type || (flags_1 & ADMIN_SPAWNED_1) || !SSachievements.achievements_enabled)
+		return FALSE
+	if(!grant_achievement.len)
+		for(var/mob/living/former_target in former_targets)
+			grant_achievement += former_target
+	for(var/mob/living/cool_guy in grant_achievement)
+		if(cool_guy.stat || !cool_guy.client)
+			continue
+		cool_guy?.mind.add_memory(MEMORY_MEGAFAUNA_KILL, list(DETAIL_PROTAGONIST = cool_guy, DETAIL_DEUTERAGONIST = src), STORY_VALUE_LEGENDARY, memory_flags = MEMORY_CHECK_BLIND_AND_DEAF)
+		cool_guy.client.give_award(/datum/award/achievement/boss/boss_killer, cool_guy)
+		cool_guy.client.give_award(achievement_type, cool_guy)
+		if(crusher_kill && istype(cool_guy.get_active_held_item(), /obj/item/kinetic_crusher))
+			cool_guy.client.give_award(crusher_achievement_type, cool_guy)
+		cool_guy.client.give_award(/datum/award/score/boss_score, cool_guy)
+		cool_guy.client.give_award(score_achievement_type, cool_guy)
+
+		for(var/award_type in king_awards)
+			if(!cool_guy.client.get_award_status(award_type))
+				return TRUE
+
+		if(!cool_guy.client.get_award_status(/datum/award/achievement/boss/jungle_king))
+			cool_guy.client.give_award(/datum/award/achievement/boss/jungle_king, cool_guy)
+
+	return TRUE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/proc/update_armor()
 	var/enemies = 0

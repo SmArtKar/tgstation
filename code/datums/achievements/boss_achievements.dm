@@ -67,6 +67,54 @@
 	database_id = BOSS_MEDAL_WENDIGO
 	icon = "wendigo"
 
+/datum/award/achievement/boss/time_crystal_kill
+	name = "Time Crystal Killer"
+	desc = "Sadly, there were no mosquitoes stuck inside."
+	database_id = BOSS_MEDAL_TIME_CRYSTAL
+	icon = "time_crystal"
+
+/datum/award/achievement/boss/vine_kraken_kill
+	name = "Vine Kraken Killer"
+	desc = "Congratulations, you've ruined the local ecosystem."
+	database_id = BOSS_MEDAL_VINE_KRAKEN
+	icon = "vine_kraken"
+
+/datum/award/achievement/boss/demonic_miner_kill
+	name = "Demonic Miner Killer"
+	desc = "RIP AND TEAR UNTIL IT'S DONE!!"
+	database_id = BOSS_MEDAL_DEMONIC_MINER
+	icon = "demonic_miner"
+
+/datum/award/achievement/boss/mud_worm_kill
+	name = "Mud Worm Killer"
+	desc = "You should really hope Space PETA doesn't come after you."
+	database_id = BOSS_MEDAL_MUD_WORM
+	icon = "mud_worm"
+
+/datum/award/achievement/boss/spider_queen_kill
+	name = "Spider Queen Killer"
+	desc = "GET THESE THINGS OF ME!!"
+	database_id = BOSS_MEDAL_SPIDER_QUEEN
+	icon = "spider_queen"
+
+/datum/award/achievement/boss/ancient_ai_kill
+	name = "Ancient AI Killer"
+	desc = "So AI indeed was malf after all..."
+	database_id = BOSS_MEDAL_ANCIENT_AI
+	icon = "ancient_ai"
+
+/datum/award/achievement/boss/bluespace_spirit_kill
+	name = "Bluespace Spirit Killer"
+	desc = "It ain't so easy now, is it?"
+	database_id = BOSS_MEDAL_BLUESPACE_SPIRIT
+	icon = "bluespace_spirit"
+
+/datum/award/achievement/boss/jungle_king
+	name = "King of The Jungle"
+	desc = "After all these years, you've finally conquered it all."
+	database_id = BOSS_MEDAL_JUNGLE_KING
+	icon = "jungle_king"
+
 /datum/award/achievement/boss/blood_miner_crusher
 	name = "Blood-Drunk Miner Crusher"
 	desc = "I guess he couldn't handle his drink that well."
@@ -120,6 +168,48 @@
 	desc = "You've now ruined years of mythical storytelling."
 	database_id = BOSS_MEDAL_WENDIGO_CRUSHER
 	icon = "wendigo"
+
+/datum/award/achievement/boss/time_crystal_crusher
+	name = "Time Crystal Crusher"
+	desc = "Sadly, there were no mosquitoes stuck inside."
+	database_id = BOSS_MEDAL_TIME_CRYSTAL_CRUSHER
+	icon = "time_crystal"
+
+/datum/award/achievement/boss/vine_kraken_crusher
+	name = "Vine Kraken Crusher"
+	desc = "Congratulations, you've ruined the local ecosystem."
+	database_id = BOSS_MEDAL_VINE_KRAKEN_CRUSHER
+	icon = "vine_kraken"
+
+/datum/award/achievement/boss/demonic_miner_crusher
+	name = "Demonic Miner Crusher"
+	desc = "RIP AND TEAR UNTIL IT'S DONE!!"
+	database_id = BOSS_MEDAL_DEMONIC_MINER_CRUSHER
+	icon = "demonic_miner"
+
+/datum/award/achievement/boss/mud_worm_crusher
+	name = "Mud Worm Crusher"
+	desc = "You should really hope Space PETA doesn't come after you."
+	database_id = BOSS_MEDAL_MUD_WORM_CRUSHER
+	icon = "mud_worm"
+
+/datum/award/achievement/boss/spider_queen_crusher
+	name = "Spider Queen Crusher"
+	desc = "GET THESE THINGS OF ME!!"
+	database_id = BOSS_MEDAL_SPIDER_QUEEN_CRUSHER
+	icon = "spider_queen"
+
+/datum/award/achievement/boss/ancient_ai_crusher
+	name = "Ancient AI Crusher"
+	desc = "So AI indeed was malf after all..."
+	database_id = BOSS_MEDAL_ANCIENT_AI_CRUSHER
+	icon = "ancient_ai"
+
+/datum/award/achievement/boss/bluespace_spirit_crusher
+	name = "Bluespace Spirit Crusher"
+	desc = "It ain't so easy now, is it?"
+	database_id = BOSS_MEDAL_BLUESPACE_SPIRIT_CRUSHER
+	icon = "bluespace_spirit"
 
 //should be removed soon
 /datum/award/achievement/boss/king_goat_kill

@@ -859,3 +859,30 @@
 /// Currently unused and does nothing. Appears in strange seeds.
 /datum/plant_gene/trait/plant_type/alien_properties
 	name ="?????"
+
+///Unique to rapsberries, this trait allows you to inject all chemicals from the plant into yourself upon using it in-hand
+/datum/plant_gene/trait/injector
+	name = "Hollow spikes"
+	rate = 0.04
+	mutability_flags = PLANT_GENE_REMOVABLE | PLANT_GENE_GRAFTABLE
+
+/datum/plant_gene/trait/injector/on_new_plant(obj/item/our_plant, newloc)
+	. = ..()
+	if(!.)
+		return
+
+	RegisterSignal(our_plant, COMSIG_ITEM_ATTACK_SELF, .proc/inject_contents)
+
+/datum/plant_gene/trait/injector/proc/inject_contents(obj/item/plant, mob/living/user)
+	if(plant.reagents.total_volume && user.try_inject(user, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))
+		to_chat(user, span_warning("As you squash [plant] in your hand, you can feel thousands of small needles piercing your skin and injecting their contents into your bloodstream!"))
+		var/list/injected = list()
+		for(var/datum/reagent/injected_reagent in plant.reagents.reagent_list)
+			injected += injected_reagent.name
+		var/contained = english_list(injected)
+		log_combat(user, user, "injected", src, "([contained])")
+
+		plant.reagents.trans_to(user, plant.reagents.total_volume, transfered_by = user, methods = INJECT)
+	else
+		to_chat(user, span_warning("You squash [plant] in your hand, but it's needles can't manage to inject you with their contents."))
+	qdel(plant)

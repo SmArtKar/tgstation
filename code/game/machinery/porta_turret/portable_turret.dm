@@ -1216,3 +1216,6 @@ DEFINE_BITFIELD(turret_flags, list(
 	icon = 'icons/mob/telegraphing/telegraph_holographic.dmi'
 	icon_state = "target_circle"
 	duration = 13
+
+/obj/effect/temp_visual/turret_telegraph/fast
+	duration = 5

@@ -23,6 +23,10 @@
 	aggro_vision_range = 21
 	former_target_vision_range = 21
 
+	achievement_type = /datum/award/achievement/boss/bluespace_spirit_kill
+	crusher_achievement_type = /datum/award/achievement/boss/bluespace_spirit_crusher
+	score_achievement_type = /datum/award/score/bluespace_spirit_score
+
 	wander = FALSE
 	speed = 3
 	move_to_delay = 3
@@ -299,7 +303,7 @@
 /obj/projectile/bluespace_blast
 	name = "bluespace blast"
 	icon_state = "gaussblue"
-	damage = 7
+	damage = 5
 	damage_type = BRUTE
 	speed = 1
 
@@ -344,7 +348,6 @@
 	name = "bluespace bouncer"
 	icon_state = "bluespace_bouncer"
 	damage = 45
-	armour_penetration = 100
 	speed = 4
 
 	ricochets_max = 30 //Fun time!
