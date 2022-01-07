@@ -22,8 +22,8 @@
 	icon_living = "head"
 	base_icon_state = "head"
 	icon = 'icons/mob/jungle/mud_worm.dmi'
-	maxHealth = 250
-	health = 250
+	maxHealth = 400
+	health = 400
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	move_resist = MOVE_FORCE_OVERPOWERING+1

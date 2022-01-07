@@ -5,7 +5,7 @@
  * Why? Because dying together is more fun than dying alone!
  */
 
-#define ARMOR_PER_ENEMY 0.1
+#define ARMOR_PER_ENEMY 0.15
 
 /mob/living/simple_animal/hostile/megafauna/jungle
 	faction = list("boss", "jungle")

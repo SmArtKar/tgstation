@@ -72,7 +72,7 @@
 
 	damage_coeff = initial(damage_coeff)
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = clamp(damage_coeff[coeff] - 0.1 * enemies, 0.2, 1)
+		damage_coeff[coeff] = clamp(damage_coeff[coeff] - 0.15 * enemies, 0.2, 1)
 
 	for(var/obj/machinery/ancient_server/server in server_list)
 		server.armor = initial(server.armor)
@@ -122,8 +122,9 @@
 
 	for(var/i = 1 to turret_amount)
 		var/obj/machinery/porta_turret/ancient_ai/turret = pick_n_take(working_turrets)
-		turret.showShoot(turret_target)
-		sleep(5)
+		if(turret)
+			turret.showShoot(turret_target)
+			sleep(5)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_floor_shock()
 	if(floorshock)
@@ -145,7 +146,7 @@
 	for(var/obj/machinery/rogue_drone_spawner/spawner in range(12, src))
 		drone_spawners += spawner
 
-	for(var/i = 1 to rand(3, 4))
+	for(var/i = 1 to rand(3, 2 + LAZYLEN(former_targets) * 3))
 		var/obj/machinery/rogue_drone_spawner/spawner = pick_n_take(drone_spawners)
 		spawner.spawn_drone()
 
@@ -202,7 +203,7 @@
 	update_appearance()
 
 	if(servers > 0)
-		addtimer(CALLBACK(src, .proc/activate_shield), 5 SECONDS)
+		addtimer(CALLBACK(src, .proc/activate_shield), 7.5 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/activate_shield()
 	shield_toggled = TRUE
@@ -214,7 +215,7 @@
 		anger_modifier = clamp((initial_servers / servers) - (shield_toggled ? 1 : 0), 0, 6)
 	else
 		anger_modifier = 6
-	ranged_cooldown = world.time + ((6 - anger_modifier / 2) SECONDS) / (shield_toggled ? 1 : 2)
+	ranged_cooldown = world.time + ((4.5 - anger_modifier / 3) SECONDS) / (shield_toggled ? 1 : 2)
 
 	for(var/mob/living/possible_target in former_targets)
 		if(get_dist(src, possible_target) <= 2 && !floorshock)
@@ -236,7 +237,7 @@
 			return
 		laser_flower()
 
-	if(prob(anger_modifier * 5 + 10) && LAZYLEN(drones) < 5)
+	if(prob(anger_modifier * 5 + 20) && LAZYLEN(drones) < 4 + LAZYLEN(former_targets) * 3)
 		spawn_drones()
 	else if(prob(anger_modifier * 5 + 20))
 		INVOKE_ASYNC(src, .proc/violent_smash)
@@ -251,7 +252,7 @@
 		activate_turrets()
 		if(LAZYLEN(former_targets) > 1)
 			for(var/mob/living/possible_target in (former_targets - target))
-				activate_turrets(possible_target, 2)
+				activate_turrets(possible_target, rand(2, 4))
 
 /obj/machinery/rogue_drone_spawner
 	name = "drone pedestal"
@@ -271,7 +272,7 @@
 	return
 
 /obj/machinery/rogue_drone_spawner/proc/spawn_drone()
-	if(!has_drone || LAZYLEN(master_ai.drones) >= 6)
+	if(!has_drone || LAZYLEN(master_ai.drones) >= 4 + LAZYLEN(master_ai.former_targets) * 3)
 		return
 
 	icon_state = "[initial(icon_state)]_empty"
@@ -418,10 +419,10 @@
 		angle_1 = min(angle_1 + speed, default_angle + 90)
 		angle_2 = min(angle_1 + round(speed / 2), default_angle + 90)
 		angle_3 = min(angle_1 + round(speed / 2), default_angle + 90)
-		speed = max(15, speed * 2)
+		speed = min(15, speed * 2)
 		check_damage()
-		sleep(1)
 		update_icon()
+		sleep(1)
 
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 
@@ -429,18 +430,18 @@
 		angle_2 = min(angle_2 + speed, default_angle + 90)
 		angle_3 = min(angle_3 + speed, default_angle + 90)
 		check_damage()
-		sleep(1)
 		update_icon()
+		sleep(1)
 
 	speed = 2
 	while(angle_1 > default_angle - 90)
 		angle_1 = max(angle_1 - speed, default_angle - 90)
 		angle_2 = max(angle_1 - round(speed / 2), default_angle - 90)
 		angle_3 = max(angle_1 - round(speed / 2), default_angle - 90)
-		speed = max(15, speed * 2)
+		speed = min(15, speed * 2)
 		check_damage()
-		sleep(1)
 		update_icon()
+		sleep(1)
 
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 
@@ -448,15 +449,15 @@
 		angle_2 = max(angle_2 - speed, default_angle - 90)
 		angle_3 = max(angle_3 - speed, default_angle - 90)
 		check_damage()
-		sleep(1)
 		update_icon()
+		sleep(1)
 
 	while(angle_1 < default_angle)
 		angle_1 = min(angle_1 + 3, default_angle)
 		angle_2 = min(angle_2 + 3, default_angle)
 		angle_3 = min(angle_3 + 3, default_angle)
-		sleep(1)
 		update_icon()
+		sleep(1)
 
 
 /obj/machinery/giant_arm_holder/proc/check_damage()
@@ -524,6 +525,11 @@
 	. = ..()
 	if(master_ai)
 		master_ai.GiveTarget(user)
+
+/obj/machinery/ancient_server/bullet_act(obj/projectile/Proj)
+	if(master_ai && Proj.firer)
+		master_ai.GiveTarget(Proj.firer)
+	. = ..()
 
 /obj/machinery/ancient_server/ex_act(severity, target)
 	return

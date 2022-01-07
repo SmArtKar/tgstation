@@ -15,7 +15,7 @@
 	name = "helmet of the demonslayer"
 	icon_state = "demonslayer"
 	desc = "A helmet fashioned from parts of everything you've killed along your path through this jungle."
-	armor = list(MELEE = 30, BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 35, BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100)
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT
 	cold_protection = HEAD
 	min_cold_protection_temperature = FIRE_HELM_MIN_TEMP_PROTECT
@@ -156,7 +156,7 @@
 	desc = "A suit of armor fashioned from parts of everything you've killed along your path through this jungle."
 	icon_state = "demonslayer"
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/resonator, /obj/item/mining_scanner, /obj/item/t_scanner/adv_mining_scanner, /obj/item/gun/energy/kinetic_accelerator, /obj/item/pickaxe, /obj/item/spear, /obj/item/kinetic_crusher)
-	armor = list(MELEE = 30, BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100) ///Armor is not that high but instead you get dashes to dodge the attack
+	armor = list(MELEE = 35, BULLET = 20, LASER = 20, ENERGY = 20, BOMB = 50, BIO = 50, FIRE = 100, ACID = 100) ///Armor is not that high but instead you get dashes to dodge the attack
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL
 	hoodtype = /obj/item/clothing/head/hooded/cloakhood/demonslayer
 	cold_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS

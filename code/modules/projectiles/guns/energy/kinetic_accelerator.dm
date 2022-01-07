@@ -199,7 +199,7 @@
 				return PROJECTILE_PIERCE_PHASE
 			modkit.projectile_prehit(src, target, kinetic_gun)
 	if(HAS_TRAIT(firer, TRAIT_STRONG_MINER))
-		damage = damage + 15
+		damage = damage + 10
 	if(!pressure_decrease_active && !lavaland_equipment_pressure_check(get_turf(target)))
 		name = "weakened [name]"
 		damage = damage * pressure_decrease

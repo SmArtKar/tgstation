@@ -1,6 +1,6 @@
 #define VORE_PROBABLILITY 40
 #define EGG_LENGTH 5 SECONDS
-#define SPIDER_SILK_LIMIT 60
+#define SPIDER_SILK_LIMIT 50
 #define SPIDER_SILK_BUFF 10
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen
@@ -79,25 +79,27 @@
 		GiveTarget(null)
 		return
 
-	ranged_cooldown = world.time + 35
+	ranged_cooldown = world.time + 3 SECONDS
 	anger_modifier = clamp(((maxHealth - health)/60), 0, 20)
 
-	if(get_dist(src, target) > aggro_vision_range / 2 || prob(anger_modifier + 25))
+	if(get_dist(src, target) > aggro_vision_range / 2 || prob(anger_modifier + 35))
 		charge()
-		ranged_cooldown = world.time + 50
+		if(prob(anger_modifier + 25))
+			SLEEP_CHECK_DEATH(5)
+			triple_birth()
 		return
 
 	if(prob(50 - anger_modifier) && LAZYLEN(babies) < 3)
+		ranged_cooldown = ranged_cooldown - 1.5 SECONDS
 		triple_birth()
 		return
 
-	if(prob(40))
+	if(prob(50))
+		ranged_cooldown = ranged_cooldown + 2 SECONDS
 		triple_charge()
-		ranged_cooldown = world.time + 50
 		if(prob(40 + anger_modifier))
 			SLEEP_CHECK_DEATH(5)
 			shockwave()
-			ranged_cooldown = world.time + 70
 		return
 
 	shotgun()
@@ -166,7 +168,7 @@
 	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
 	SLEEP_CHECK_DEATH(delay)
 	qdel(D)
-	var/movespeed = 0.5
+	var/movespeed = 0.6
 	walk_towards(src, target_turf, movespeed)
 	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed)
 	walk(src, 0)
@@ -333,14 +335,17 @@
 	name = "ball of web"
 	icon_state = "webball"
 	nodamage = TRUE
+	range = 10
 	speed = 4
+	var/web_beam
 
 /obj/projectile/web_ball/fire(set_angle)
 	. = ..()
 
-	firer.Beam(src, icon_state = "web", beam_type=/obj/effect/ebeam/web)
+	web_beam = firer.Beam(src, icon_state = "web", beam_type=/obj/effect/ebeam/web)
 
 /obj/projectile/web_ball/on_hit(atom/movable/targeted, blocked, pierce_hit)
+	qdel(web_beam)
 	. = ..()
 	if (. == BULLET_ACT_HIT)
 		var/datum/beam/web = firer.Beam(targeted, icon_state = "web", beam_type=/obj/effect/ebeam/web)
@@ -459,15 +464,17 @@
 	if(!istype(A, /obj/item/clothing/suit) && !istype(A, /obj/item/clothing/head))
 		return ..()
 
+
 	var/obj/item/clothing/target = A
 	if(((MELEE in target.armor) && target.armor[MELEE] >= SPIDER_SILK_LIMIT) || HAS_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED))
 		to_chat(user, span_warning("[target] can't be upgraded further!"))
 		return ..()
 
-	if(!(MELEE in target.armor))
-		target.armor[MELEE] = SPIDER_SILK_BUFF
+
+	if(!target.armor.melee)
+		target.armor.melee = SPIDER_SILK_BUFF
 	else
-		target.armor[MELEE] = min(SPIDER_SILK_LIMIT, target.armor[MELEE] + SPIDER_SILK_BUFF)
+		target.armor.melee = min(SPIDER_SILK_LIMIT, target.armor.melee + SPIDER_SILK_BUFF)
 	to_chat(user, span_notice("You successfully upgrade [target] with [src]"))
 	ADD_TRAIT(target, TRAIT_SPIDER_SILK_UPGRADED, MEGAFAUNA_TRAIT)
 	use(1)

@@ -18,6 +18,7 @@
 	var/check_anti_magic = FALSE
 	var/check_holy = FALSE
 	var/sound_on_del = TRUE
+	var/chronofield_type = /datum/proximity_monitor/advanced/timestop
 
 /obj/effect/timestop/Initialize(mapload, radius, time, list/immune_atoms, start = TRUE) //Immune atoms assoc list atom = TRUE
 	. = ..()
@@ -45,7 +46,7 @@
 /obj/effect/timestop/proc/timestop()
 	target = get_turf(src)
 	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, -1)
-	chronofield = new (src, freezerange, TRUE, immune, check_anti_magic, check_holy)
+	chronofield = new chronofield_type(src, freezerange, TRUE, immune, check_anti_magic, check_holy)
 	QDEL_IN(src, duration)
 
 /obj/effect/timestop/magic

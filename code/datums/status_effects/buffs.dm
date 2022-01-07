@@ -836,13 +836,13 @@
 /datum/status_effect/vine_ring/on_apply()
 	if(owner.stat != DEAD)
 		ring_underlay = mutable_appearance('icons/effects/effects.dmi', "vine_ring_bottom")
-		ring_underlay.pixel_x = -owner.pixel_x
-		ring_underlay.pixel_y = -owner.pixel_y
+		ring_underlay.pixel_x = owner.pixel_x
+		ring_underlay.pixel_y = owner.pixel_y
 		owner.underlays += ring_underlay
 
 		ring_overlay = mutable_appearance('icons/effects/effects.dmi', "vine_ring_top")
-		ring_overlay.pixel_x = -owner.pixel_x
-		ring_overlay.pixel_y = -owner.pixel_y
+		ring_overlay.pixel_x = owner.pixel_x
+		ring_overlay.pixel_y = owner.pixel_y
 		owner.overlays += ring_overlay
 
 		RegisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE, .proc/on_recieved_damage)

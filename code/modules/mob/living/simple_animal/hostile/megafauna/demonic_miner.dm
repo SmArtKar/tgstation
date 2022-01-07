@@ -467,6 +467,7 @@
 
 /obj/projectile/bloody_orb/on_hit(atom/target, blocked, pierce_hit)
 	start_rays()
+	return BULLET_ACT_FORCE_PIERCE
 
 /obj/projectile/bloody_orb/proc/start_rays()
 	speed = INFINITY //Don't move
@@ -499,11 +500,10 @@
 	QDEL_IN(src, 5)
 
 /obj/projectile/bloody_orb/on_hit(atom/target, blocked, pierce_hit)
-	fire(rand(0, 360))
-	return BULLET_ACT_FORCE_PIERCE
+	start_rays()
 
 /obj/projectile/bloody_orb/proc/cast_rays()
-	addtimer(CALLBACK(src, .proc/start_rays), 5 SECONDS)
+	addtimer(CALLBACK(src, .proc/start_rays), 3 SECONDS)
 	var/turf/cur_turf = get_turf(src)
 	for(var/i = 1 to 5)
 		var/angle = rand(1, 359)
@@ -742,7 +742,7 @@
 	name = "demonic miner loot spawner"
 	loot = list(/obj/item/gun/magic/staff/blood_claymore = 1, /obj/item/book/granter/spell/throwing_knives = 1, /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound = 1)
 
-#define MAXIMUM_BLOOD 100
+#define MAXIMUM_BLOOD 50
 #define TELEPORT_BLOOD 5
 #define BLOOD_REGEN 1
 
@@ -767,7 +767,7 @@
 	block_chance = 25
 	max_charges = 3
 	recharge_rate = 10 //Forces you to go in close combat
-	school = SCHOOL_EVOCATION
+	school = SCHOOL_FORBIDDEN
 	var/blood = 0
 
 /obj/effect/temp_visual/dir_setting/firing_effect/cult
@@ -809,7 +809,7 @@
 		return
 
 	var/mob/living/victim = target
-	if(victim.has_status_effect(STATUS_EFFECT_DEMON_MARK) && victim.stat != DEAD) // Hitting mobs allows to recharge faster. No dead farming tho!
+	if(victim.has_status_effect(STATUS_EFFECT_DEMON_MARK) && victim.stat != DEAD) // Hitting mobs allows to recharge faster.
 		blood = clamp(blood + BLOOD_REGEN, 0, MAXIMUM_BLOOD)
 		victim.Beam(user, icon_state="blood_mid_light", time = 0.5 SECONDS)
 		playsound(get_turf(victim), 'sound/magic/exit_blood.ogg', 50, TRUE)
@@ -861,7 +861,7 @@
 			for(var/mob/living/victim in check_turf.contents)
 				if(victim != user && !faction_check(victim.faction, user.faction) && !(victim in already_hit) && isanimal(victim))
 					victim.Paralyze(20)
-					victim.adjustBruteLoss(600) //Only hits animals but much stronger than demonic miner's one because duh mobs have huge health pools and it is our ultimate attack
+					victim.adjustBruteLoss(500) //Only hits animals but much stronger than demonic miner's one because duh mobs have huge health pools and it is our ultimate attack that requires 50 hits
 					playsound(victim, 'sound/machines/clockcult/ark_damage.ogg', 50, TRUE)
 					to_chat(victim, span_userdanger("You're hit by a demonic ray!"))
 					already_hit.Add(victim)

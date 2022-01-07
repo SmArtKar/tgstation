@@ -33,6 +33,7 @@
 	retreat_distance = 3
 	minimum_distance = 3
 	gps_name = "Quantum Signal"
+	del_on_death = TRUE
 
 	common_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal) //Let's reward everybody who killed this fella
 	common_crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
@@ -45,7 +46,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/OpenFire(atom/A)
 	anger_modifier =  (1 -(health / maxHealth)) * 100
-	ranged_cooldown = world.time + (3 * (1.5 - anger_modifier) + 0.5) SECONDS
+	ranged_cooldown = world.time + (4 * (1.5 - anger_modifier) + 0.5) SECONDS
 
 	if(mimicking)
 		shotgun()
@@ -54,57 +55,48 @@
 	if(enraged) //You really want to try and hit the real one or you're gonna be fucked
 		charge()
 		SLEEP_CHECK_DEATH(5)
-		if(prob(85))
-			if(prob(35))
-				more_bouncers()
-				bluespace_collapse()
-			else
-				for(var/i = 1 to 3)
-					shotgun()
-					SLEEP_CHECK_DEATH(5)
-		else
+		if(prob(65))
 			spiral_shoot_reverse(counter_length = 16)
-		ranged_cooldown = world.time + 0.5 SECONDS
+		else
+			bluespace_collapse()
+
+		ranged_cooldown = world.time + 3 SECONDS
 		return
 
 
-	if(health / maxHealth > 0.5)
+	if(health / maxHealth < 0.5)
 		if(prob(25 + anger_modifier / 3))
 			triple_bouncer()
 		else
-			if(prob(10 + anger_modifier / 4))
-				shoot_projectile_reverse()
-				return
+			if(prob(30))
+				spiral_shoot_reverse()
 
-	if(prob(45))
-		if(prob(30))
-			triple_charge()
+	if(prob(30 + anger_modifier / 5))
+		if(prob(60))
+			chop_chop_chop()
 		else
 			charge()
 			if(health / maxHealth < 0.5)
 				SLEEP_CHECK_DEATH(5)
 				bluespace_collapse()
-	else
+	else if(health / maxHealth < 0.5)
 		if(prob(25))
 			if(health / maxHealth < 0.25)
-				more_bouncers()
+				chop_chop_chop()
 			else
 				triple_bouncer()
 			SLEEP_CHECK_DEATH(15)
 			clone_rush()
 			return
 		else if(prob(10 + anger_modifier / 5))
-			shoot_projectile_reverse()
-			return
-
+			spiral_shoot_reverse()
+	else
 		if(prob(40))
 			for(var/i = 1 to 3)
 				shotgun()
 				SLEEP_CHECK_DEATH(5)
 		else
 			bluespace_collapse()
-			if(health / maxHealth < 0.5)
-				triple_bouncer()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/bluespace_blast)
 	if(!isnum(set_angle) && (!marker || marker == loc))
@@ -253,6 +245,49 @@
 				continue
 			turfs.Remove(turf_to_remove)
 
+/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/chop_chop_chop(beam_amount = rand(4, 6))
+
+	ranged_cooldown = world.time + 3 SECONDS + beam_amount * 16
+
+	var/list/beam_targets = list()
+	var/list/full_beam_targets = list()
+
+	for(var/i = 1 to beam_amount)
+		for(var/mob/targeting in former_targets)
+			var/list/possible_targets = list()
+			for(var/turf/possible_target in range(9, get_turf(targeting)))
+				if((possible_targets in full_beam_targets) || get_dist(possible_target, targeting) < 8)
+					continue
+				possible_targets += possible_target
+
+			var/turf/first_target = pick(possible_targets)
+			var/turf/second_target = locate(targeting.x - (first_target.x - targeting.x), targeting.y - (first_target.y - targeting.y), targeting.z)
+
+			beam_targets[first_target] = second_target
+			full_beam_targets += first_target
+			full_beam_targets += second_target
+
+		for(var/turf/first_target in beam_targets)
+			var/turf/second_target = beam_targets[first_target]
+			first_target.Beam(second_target, icon_state = "bluespace_beam_prepare", time = 8)
+
+		SLEEP_CHECK_DEATH(8)
+		playsound(get_turf(src), 'sound/magic/lightningbolt.ogg', 50, TRUE)
+
+		for(var/turf/first_target in beam_targets)
+			var/turf/second_target = beam_targets[first_target]
+			first_target.Beam(second_target, icon_state = "bluespace_beam", time = 8)
+			for(var/turf/check_turf in get_line(first_target, second_target))
+				for(var/mob/living/victim in check_turf.contents)
+					if(!faction_check(victim.faction, list("jungle", "boss")))
+						victim.adjustBruteLoss(30)
+						to_chat(victim, span_userdanger("You're hit by a bluespace collapse beam!"))
+						if(ishuman(victim))
+							var/mob/living/carbon/human/human_victim = victim
+							human_victim.electrocution_animation(1 SECONDS)
+
+		SLEEP_CHECK_DEATH(5)
+
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shotgun(shot_angles = list(5, 0, -5))
 	var/turf/target_turf = get_turf(target)
 	var/angle_to_target = get_angle(src, target_turf)
@@ -310,11 +345,11 @@
 /obj/projectile/bluespace_blast
 	name = "bluespace blast"
 	icon_state = "gaussblue"
-	damage = 10
+	damage = 5
 	damage_type = BRUTE
 	speed = 1
 
-	ricochets_max = 2
+	ricochets_max = 1
 	ricochet_chance = 80
 	ricochet_decay_chance = 0.9
 	ricochet_decay_damage = 0.9
@@ -392,7 +427,6 @@
 	for(var/turf/check_turf in get_line(get_turf(src), target_turf))
 		for(var/mob/living/victim in check_turf.contents)
 			if(!faction_check(victim.faction, list("jungle", "boss")))
-				victim.Paralyze(1) //Make em drop
 				victim.adjustBruteLoss(30)
 				to_chat(victim, span_userdanger("You're hit by a bluespace collapse beam!"))
 				if(ishuman(victim))
@@ -462,6 +496,7 @@
 		INVOKE_ASYNC(fake, .proc/fake_hit)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/hallucination/proc/fake_hit(fast = FALSE)
+	Stun(10 SECONDS)
 	suicide_active = TRUE
 	sleep(rand(0, 4))
 	if(!fast)
@@ -478,7 +513,7 @@
 		if(prob(30))
 			new /obj/effect/temp_visual/sparks_bluespace(possible_turf)
 	flick("jaunt_start", src)
-	sleep(round(13 * 0.7))
+	sleep(9)
 	playsound(get_turf(src), 'sound/effects/explosion3.ogg', 75, TRUE)
 	summoner.copies.Remove(src)
 	qdel(src)

@@ -55,6 +55,14 @@
 	var/move_cooldown
 	var/immobile = FALSE
 	var/throw_spree = 0
+	var/second_stage = FALSE
+
+/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/Life(delta_time, times_fired)
+	. = ..()
+	if(health < maxHealth * 0.5 && !second_stage)
+		second_stage = TRUE
+		damage_coeff = list(BRUTE = 0.7, BURN = 0.25, TOX = 0.5, CLONE = 1, STAMINA = 0, OXY = 1)
+		initial_damage_coeff = list(BRUTE = 0.7, BURN = 0.25, TOX = 0.5, CLONE = 1, STAMINA = 0, OXY = 1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/Destroy()
 	for(var/vine in vines)
