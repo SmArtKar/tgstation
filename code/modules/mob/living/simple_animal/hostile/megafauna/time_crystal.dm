@@ -419,9 +419,9 @@
 		sleep(bonus_value * 6)
 		H.damage_coeff = damage_coeffs
 
-#define DEFENSIVE_STANCE_COOLDOWN 15 SECONDS
+#define DEFENSIVE_STANCE_COOLDOWN 20 SECONDS
 #define SHIELD_MOVE_COOLDOWN 4
-#define MAX_STANCE_DURATION 15
+#define MAX_STANCE_DURATION 50
 
 /obj/item/clothing/gloves/crystal
 	name = "crystal gauntlets"
@@ -445,9 +445,9 @@
 /obj/item/clothing/gloves/crystal/equipped(mob/living/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_GLOVES)
-		RegisterSignal(user, COMSIG_MOB_MIDDLECLICKON, .proc/use_shield)
+		RegisterSignal(user, COMSIG_MOB_ALTCLICKON, .proc/use_shield)
 	else
-		UnregisterSignal(user, COMSIG_MOB_MIDDLECLICKON)
+		UnregisterSignal(user, COMSIG_MOB_ALTCLICKON)
 		if(active)
 			drop_shield(user)
 
@@ -459,7 +459,7 @@
 
 /obj/item/clothing/gloves/crystal/dropped(mob/living/user)
 	. = ..()
-	UnregisterSignal(user, COMSIG_MOB_MIDDLECLICKON)
+	UnregisterSignal(user, COMSIG_MOB_ALTCLICKON)
 	if(active)
 		drop_shield(user)
 
@@ -495,8 +495,7 @@
 		human_user.physiology.clone_mod *= 0.1
 		human_user.physiology.stamina_mod *= 0.1
 
-	slowdown = 12
-	user.update_equipment_speed_mods()
+	user.add_movespeed_modifier(/datum/movespeed_modifier/crystal_shield)
 
 /obj/item/clothing/gloves/crystal/proc/drop_shield(mob/living/user)
 	playsound(get_turf(user), 'sound/effects/ethereal_revive_fail.ogg', 100)
@@ -506,7 +505,7 @@
 	REMOVE_TRAIT(user, TRAIT_NOGUNS, MEGAFAUNA_TRAIT)
 	user.next_move_modifier /= SHIELD_MOVE_COOLDOWN
 	STOP_PROCESSING(SSobj, src)
-	stance_cooldown = world.time + DEFENSIVE_STANCE_COOLDOWN + stance_duration * 10
+	stance_cooldown = world.time + DEFENSIVE_STANCE_COOLDOWN
 	stance_duration = 0
 
 	if(ishuman(user))
@@ -518,15 +517,14 @@
 		human_user.physiology.clone_mod *= 10
 		human_user.physiology.stamina_mod *= 10
 
-	slowdown = 0
-	user.update_equipment_speed_mods()
+	user.remove_movespeed_modifier(/datum/movespeed_modifier/crystal_shield)
 
 #undef DEFENSIVE_STANCE_COOLDOWN
 #undef SHIELD_MOVE_COOLDOWN
 
 /obj/effect/spawner/random/time_crystal
 	name = "time crystal loot spawner"
-	loot = list(/obj/item/clothing/gloves/crystal = 1, /obj/item/crystal_fruit = 2, /obj/item/amber_hourglass = 2)
+	loot = list(/obj/item/clothing/gloves/crystal = 1, /obj/item/crystal_fruit = 1, /obj/item/amber_hourglass = 1)
 
 /obj/item/crystal_fruit //One-use full heal and buff for 30 seconds. When you're truely fucked.
 	name = "crystal fruit"

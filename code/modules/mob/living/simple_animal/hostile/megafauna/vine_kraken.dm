@@ -71,7 +71,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/OpenFire()
 	anger_modifier = clamp(((maxHealth - health) / 80), 0, 20)
-	ranged_cooldown = world.time + 5 SECONDS
+	ranged_cooldown = world.time + 4 SECONDS
 
 	if(check_proj_immunity(target)) //Become enraged if we get attacked by someone immune to projectiles
 		if(!throw_spree)
@@ -84,7 +84,11 @@
 		throwing_spree()
 		ranged_cooldown = ranged_cooldown + 2 SECONDS
 
-	if(health < maxHealth * 0.35)
+	if(health < maxHealth * 0.5)
+		for(var/mob/living/possible_target in former_targets)
+			if(get_dist(src, possible_target) < 4 && prob(80))
+				INVOKE_ASYNC(src, .proc/spiral_shoot, 0)
+				break
 		if(prob(65))
 			throwing_spree()
 			SLEEP_CHECK_DEATH(5)
@@ -246,7 +250,7 @@
 	for(var/i in barrage_shot_angles)
 		shoot_projectile(target_turf, target_angle + i, proj_type = /obj/projectile/solar)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/spiral_shoot(counter_start = 8, blasts_per_circle = 16, negative = pick(TRUE, FALSE), proj_type = /obj/projectile/solar_particle)
+/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/spiral_shoot(delay = 1, counter_start = 8, blasts_per_circle = 16, negative = pick(TRUE, FALSE), proj_type = /obj/projectile/solar_particle)
 	immobile = TRUE
 	walk_to(src, 0)
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
@@ -261,8 +265,8 @@
 			counter = 1
 		if(counter < 1)
 			counter = blasts_per_circle
-		shoot_projectile(start_turf, counter * (360 / blasts_per_circle), proj_type = /obj/projectile/solar_particle)
-		SLEEP_CHECK_DEATH(1)
+		shoot_projectile(start_turf, counter * (360 / blasts_per_circle), proj_type = proj_type)
+		SLEEP_CHECK_DEATH(delay)
 
 		if(health != prev_health)
 			immobile = FALSE

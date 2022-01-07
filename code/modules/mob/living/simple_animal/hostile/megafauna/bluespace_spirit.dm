@@ -44,6 +44,17 @@
 	var/mimicking = FALSE
 	var/enraged = FALSE
 
+/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/Life(delta_time, times_fired)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/living_target = target
+		if(living_target.stat == DEAD || (living_target.stat == SOFT_CRIT && !HAS_TRAIT(living_target, TRAIT_NOSOFTCRIT)) || (living_target.stat == HARD_CRIT && !HAS_TRAIT(living_target, TRAIT_NOHARDCRIT)))
+			retreat_distance = 0
+			minimum_distance = 0
+		else
+			retreat_distance = initial(retreat_distance)
+			minimum_distance = initial(minimum_distance)
+
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/OpenFire(atom/A)
 	anger_modifier =  (1 -(health / maxHealth)) * 100
 	ranged_cooldown = world.time + (4 * (1.5 - anger_modifier) + 0.5) SECONDS

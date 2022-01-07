@@ -378,7 +378,7 @@
 	name = "Culmination"
 	desc = "Increase melee speed and melee armor for a short amount of time, as well as shoots four blood orbs that split into more projectiles for area-wide damage."
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
-	button_icon_state = "berserk_mode"
+	button_icon_state = "culmination"
 	background_icon_state = "bg_demon"
 
 /datum/action/item_action/culmination/Trigger()

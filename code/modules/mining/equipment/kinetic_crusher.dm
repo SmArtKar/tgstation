@@ -239,7 +239,7 @@
 		..()
 
 /obj/item/crusher_trophy/proc/add_to(obj/item/kinetic_crusher/H, mob/living/user)
-	if(LAZYLEN(H.trophies) > H.trophy_capacity)
+	if(LAZYLEN(H.trophies) >= H.trophy_capacity)
 		to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
 		return FALSE
 	if(ispath(denied_type, /obj/item/crusher_trophy))

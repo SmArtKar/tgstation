@@ -1,6 +1,6 @@
 #define VORE_PROBABLILITY 40
 #define EGG_LENGTH 5 SECONDS
-#define SPIDER_SILK_LIMIT 50
+#define SPIDER_SILK_LIMIT 60
 #define SPIDER_SILK_BUFF 10
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen

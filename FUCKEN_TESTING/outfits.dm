@@ -101,6 +101,10 @@
 	new /obj/item/organ/heart/jungle(src)
 	new /obj/item/bluespace_megacrystal(src)
 	new /obj/item/green_rose(src)
+	new /obj/item/personal_drone_shell(src)
+	new /obj/item/bait_beacon(src)
+	new /obj/item/organ/cyberimp/chest/thrusters/wingpack(src)
+	new /obj/item/amber_hourglass(src)
 
 /obj/item/mod/control/pre_equipped/exotic/debug
 	cell = /obj/item/stock_parts/cell/infinite

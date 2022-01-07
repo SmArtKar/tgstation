@@ -13,3 +13,6 @@
 
 /datum/movespeed_modifier/berserk
 	multiplicative_slowdown = -0.2
+
+/datum/movespeed_modifier/crystal_shield
+	multiplicative_slowdown = 12 //VERY slow

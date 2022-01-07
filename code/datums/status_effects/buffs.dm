@@ -143,7 +143,7 @@
 
 /datum/status_effect/acid_sack //Lower damage protection but normal hits reset the timer so if you want you can trade mark detonation damage to protection.
 	id = "acid_sack"
-	duration = 15
+	duration = 20
 	tick_interval = 0
 	alert_type = /atom/movable/screen/alert/status_effect/acid_sack
 

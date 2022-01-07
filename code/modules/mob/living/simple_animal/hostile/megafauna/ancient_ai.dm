@@ -44,10 +44,8 @@
 	score_achievement_type = /datum/award/score/ancient_ai_score
 
 	loot = list(/obj/item/malf_upgrade)
-	common_loot = list(/obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
-	common_crusher_loot = list(/obj/item/bait_beacon, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
-	rare_loot = list(/obj/item/personal_drone_shell)
-	rarity = 2
+	common_loot = list(/obj/effect/spawner/random/ancient_ai, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
+	common_crusher_loot = list(/obj/effect/spawner/random/ancient_ai, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
 	spawns_minions = TRUE
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
@@ -146,7 +144,7 @@
 	for(var/obj/machinery/rogue_drone_spawner/spawner in range(12, src))
 		drone_spawners += spawner
 
-	for(var/i = 1 to rand(3, 2 + LAZYLEN(former_targets) * 3))
+	for(var/i = 1 to max(3 + LAZYLEN(former_targets) * 3 - LAZYLEN(drones), rand(3, 2 + LAZYLEN(former_targets) * 3)))
 		var/obj/machinery/rogue_drone_spawner/spawner = pick_n_take(drone_spawners)
 		spawner.spawn_drone()
 
@@ -237,7 +235,7 @@
 			return
 		laser_flower()
 
-	if(prob(anger_modifier * 5 + 20) && LAZYLEN(drones) < 4 + LAZYLEN(former_targets) * 3)
+	if(prob(anger_modifier * 5 + 20) && LAZYLEN(drones) < 3 + LAZYLEN(former_targets) * 3)
 		spawn_drones()
 	else if(prob(anger_modifier * 5 + 20))
 		INVOKE_ASYNC(src, .proc/violent_smash)
@@ -272,7 +270,7 @@
 	return
 
 /obj/machinery/rogue_drone_spawner/proc/spawn_drone()
-	if(!has_drone || LAZYLEN(master_ai.drones) >= 4 + LAZYLEN(master_ai.former_targets) * 3)
+	if(!has_drone || LAZYLEN(master_ai.drones) >= 3 + LAZYLEN(master_ai.former_targets) * 3)
 		return
 
 	icon_state = "[initial(icon_state)]_empty"
@@ -553,35 +551,87 @@
 
 /obj/item/crusher_trophy/ai_core
 	name = "AI core"
-	desc = "A potato with a lot of wires. Suitable as a trophy for a kinetic crusher."
+	desc = "A potato with a lot of wires in it. Suitable as a trophy for a kinetic crusher."
 	icon_state = "ai_core"
 	denied_type = list(/obj/item/crusher_trophy/ai_core, /obj/item/crusher_trophy/leaper_eye)
-	var/rocket_cooldown = 0
+	var/drone_cooldown = 0
 
 /obj/item/crusher_trophy/ai_core/effect_desc()
-	return "ranged right click attacks to shoot out 3 heat-seeking missiles"
+	return "ranged right click attacks to create a flying drone that attack your enemies with long-ranged destabilizing force"
 
-/obj/item/crusher_trophy/ai_core/proc/shoot_rockets(mob/living/user, atom/target)
-	for(var/i = 1 to 3)
-		var/turf/startloc = get_turf(user)
-		var/obj/projectile/P = new /obj/projectile/bullet/a84mm/ancient/at/seeking(startloc)
-		P.preparePixelProjectile(target, startloc)
-		P.firer = user
-		P.original = target
-		P.fire(target)
-		P.homing_target = target
-		sleep(3)
 
 /obj/item/crusher_trophy/ai_core/on_right_click(atom/target, mob/living/user)
-	if(rocket_cooldown > world.time)
-		to_chat(user, "<span class='warning'>[src] hasn't fully recovered from the previous blast! Wait [round((rocket_cooldown - world.time) / 10)] more seconds!</span>")
+	if(drone_cooldown > world.time)
+		to_chat(user, span_warning("Wait [round((drone_cooldown - world.time) / 10)] more seconds before trying to create another drone!"))
 		return
 
 	if(isclosedturf(target) || isclosedturf(get_turf(target)))
 		return
 
-	rocket_cooldown = world.time + 10 SECONDS
-	INVOKE_ASYNC(src, .proc/shoot_rockets, user, target)
+	drone_cooldown = world.time + 30 SECONDS
+
+	var/mob/living/simple_animal/hostile/crusher_drone/drone = new(get_turf(user))
+	drone.faction = list("[REF(user)]")
+	drone.GiveTarget(target)
+	drone.crusher = loc
+	addtimer(CALLBACK(drone, /mob/living.proc/death), 25 SECONDS)
+
+/mob/living/simple_animal/hostile/crusher_drone
+	name = "V0.R.T.X. drone"
+	desc = "An outdated version of an automated defence drone that were made to help protect colonies from local fauna. This one is linked to a kinetic crusher."
+	icon = 'icons/mob/jungle/jungle_monsters.dmi'
+	icon_state = "crusher_drone"
+	icon_living = "crusher_drone"
+	mob_biotypes = MOB_ROBOTIC
+	combat_mode = FALSE
+	stop_automated_movement = TRUE
+	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_plas" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
+	faction = list("neutral")
+	maxHealth = 200
+	health = 200
+	obj_damage = 0
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	del_on_death = TRUE
+	deathmessage = "slowly floats down to the ground as it shuts down."
+	deathsound = 'sound/voice/borg_deathsound.ogg'
+	ranged_cooldown_time = 2 SECONDS
+	var/obj/item/kinetic_crusher/crusher
+
+/mob/living/simple_animal/hostile/crusher_drone/CanAllowThrough(atom/movable/mover, border_dir)
+	. = ..()
+	if(istype(mover, /obj/projectile/kinetic))
+		return TRUE
+	else if(istype(mover, /obj/projectile/destabilizer))
+		return TRUE
+
+/mob/living/simple_animal/hostile/crusher_drone/Move()
+	return
+
+/mob/living/simple_animal/hostile/crusher_drone/AttackingTarget(atom/attacked_target)
+	Shoot(target)
+
+/mob/living/simple_animal/hostile/crusher_drone/Shoot(mob/targeted)
+	var/obj/projectile/destabilizer/proj = new /obj/projectile/destabilizer/long_range(get_turf(src))
+	for(var/obj/item/crusher_trophy/trophy in crusher.trophies)
+		trophy.on_projectile_fire(proj, src)
+	proj.preparePixelProjectile(get_turf(target), get_turf(src))
+	proj.firer = src
+	proj.hammer_synced = crusher
+	playsound(src, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
+	proj.fire()
+
+/obj/projectile/destabilizer/long_range
+	range = 9
+
+/mob/living/simple_animal/hostile/crusher_drone/CanAttack(atom/the_target)
+	if(isliving(the_target))
+		var/mob/living/living_target = the_target
+		if(living_target.has_status_effect(STATUS_EFFECT_CRUSHERMARK))
+			var/datum/status_effect/crusher_mark/mark = living_target.has_status_effect(STATUS_EFFECT_CRUSHERMARK)
+			if(mark.hammer_synced == crusher)
+				return FALSE
+	return ..()
 
 /**
  *
@@ -630,23 +680,23 @@
 	if(!user)
 		return
 
-	active = !active
-	if(!active)
-		deactivate()
-		return
+	active = FALSE
+	deactivate()
 
 /obj/item/bait_beacon/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
 	if(.)
 		return .
 
-	log_combat(throwingdatum.thrower, null, "lured mobs in the area", src)
+	active = TRUE
 
 	icon_state = "batterer"
 	playsound(src, 'sound/effects/stealthoff.ogg', 50, TRUE, TRUE)
 
 	for(var/mob/living/simple_animal/hostile/M in urange(10, src))
 		M.GiveTarget(src)
+
+	addtimer(CALLBACK(src, .proc/deactivate), 5 SECONDS)
 
 /obj/item/bait_beacon/proc/deactivate()
 	icon_state = "battererburnt"
@@ -670,6 +720,111 @@
 
 /obj/structure/window/reinforced/survival_pod/indestructible
 	resistance_flags = INDESTRUCTIBLE
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack
+	name = "implantable wingpack"
+	desc = "A prototype which can be used anywhere if there's enough air. Sadly, due to high costs this model has never made it to mass production."
+	icon_state = "wingpack"
+	base_icon_state = "wingpack"
+	actions_types = list(/datum/action/item_action/organ_action/toggle, /datum/action/item_action/organ_action/wingpack_rockets)
+	var/mutable_appearance/wingpack_overlay
+	var/mutable_appearance/wingpack_underlay
+	var/rocket_cooldown = 0
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/Insert(mob/living/carbon/thruster_owner, special = 0)
+	. = ..()
+	update_owner_overlays(thruster_owner)
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/Remove(mob/living/carbon/thruster_owner, special = 0)
+	. = ..()
+	thruster_owner.overlays -= wingpack_overlay
+	thruster_owner.underlays -= wingpack_underlay
+	qdel(wingpack_overlay)
+	qdel(wingpack_underlay)
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/toggle(silent = FALSE)
+	if(!on)
+		if((organ_flags & ORGAN_FAILING))
+			if(!silent)
+				to_chat(owner, span_warning("Your wingpack seems to be broken!"))
+			return FALSE
+		if(allow_thrust(0.01))
+			on = TRUE
+			ion_trail.start()
+			RegisterSignal(owner, COMSIG_MOVABLE_MOVED, .proc/move_react)
+			RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, .proc/pre_move_react)
+			RegisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE, .proc/spacemove_react)
+			ADD_TRAIT(owner, TRAIT_MOVE_FLOATING, MEGAFAUNA_TRAIT)
+			if(!silent)
+				to_chat(owner, span_notice("You turn your wingpack on."))
+	else
+		ion_trail.stop()
+		UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+		UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
+		UnregisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE)
+		REMOVE_TRAIT(owner, TRAIT_MOVE_FLOATING, MEGAFAUNA_TRAIT)
+		if(!silent)
+			to_chat(owner, span_notice("You turn your wingpack off."))
+		on = FALSE
+	update_owner_overlays()
+	update_appearance()
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/update_owner_overlays(mob/living/carbon/thruster_owner = owner)
+	if(wingpack_overlay || wingpack_underlay)
+		thruster_owner.overlays -= wingpack_overlay
+		thruster_owner.underlays -= wingpack_underlay
+		qdel(wingpack_overlay)
+		qdel(wingpack_underlay)
+
+	wingpack_underlay = mutable_appearance('icons/effects/effects.dmi', "wingpack-underlay[on ? "-on" : ""]")
+	wingpack_overlay = mutable_appearance('icons/effects/effects.dmi', "wingpack-overlay[on ? "-on" : ""]")
+
+	thruster_owner.overlays += wingpack_overlay
+	thruster_owner.underlays += wingpack_underlay
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/rocket_strike()
+	playsound(get_turf(owner), 'sound/machines/terminal_on.ogg', 50, TRUE)
+	var/strike_successfull = FALSE
+	for(var/mob/living/simple_animal/hostile/possible_target in view(9, owner))
+		to_chat(owner, "[possible_target] [possible_target.faction] [owner.faction] [owner.faction_check_mob(possible_target)]")
+		if(owner.faction_check_mob(possible_target))
+			continue
+
+		podspawn(list(
+			"target" = get_turf(possible_target),
+			"style" = STYLE_MISSILE,
+			"effectMissile" = TRUE,
+			"explosionSize" = list(0,0,1,2)
+		))
+		strike_successfull = TRUE
+		playsound(get_turf(owner), 'sound/weapons/gun/general/rocket_launch.ogg', 50, TRUE)
+		sleep(3)
+
+	if(strike_successfull)
+		to_chat(owner, span_notice("Overlord Smartstrike activated. Targets acquired. Launching rockets."))
+		rocket_cooldown = world.time + 30 SECONDS
+	else
+		to_chat(owner, span_notice("Overlord Smartstrike activated. Failed to acquire targets. Aborting launch."))
+		rocket_cooldown = world.time + 10 SECONDS
+
+/datum/action/item_action/organ_action/wingpack_rockets
+	name = "Activate Overlord Smartstrike"
+	desc = "Activate your wingpack's built-in rocket turrets, raining hellfire from the sky."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "sniper_zoom"
+
+/datum/action/item_action/organ_action/wingpack_rockets/Trigger()
+	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
+		var/obj/item/organ/cyberimp/chest/thrusters/wingpack/wingpack = target
+		if(wingpack.rocket_cooldown > world.time)
+			to_chat(owner, span_warning("Your wingpack hasn't yet recovered from previous Overlord Smartstrike. Wait [DisplayTimeText(wingpack.rocket_cooldown - world.time)] before using it again!"))
+			return
+
+		wingpack.rocket_strike()
+
+/obj/effect/spawner/random/ancient_ai
+	name = "ancient AI loot spawner"
+	loot = list(/obj/item/personal_drone_shell = 1, /obj/item/bait_beacon = 1, /obj/item/organ/cyberimp/chest/thrusters/wingpack = 2) // 50% for good shit, 50% for meh
 
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN
