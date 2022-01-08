@@ -577,8 +577,8 @@
 	addtimer(CALLBACK(drone, /mob/living.proc/death), 25 SECONDS)
 
 /mob/living/simple_animal/hostile/crusher_drone
-	name = "V0.R.T.X. drone"
-	desc = "An outdated version of an automated defence drone that were made to help protect colonies from local fauna. This one is linked to a kinetic crusher."
+	name = "V.0.R.T.X. drone"
+	desc = "An outdated version of an automated defence drone that were made to help protect colonies from local fauna. This one is linked to a kinetic crusher and shares it's tropheys."
 	icon = 'icons/mob/jungle/jungle_monsters.dmi'
 	icon_state = "crusher_drone"
 	icon_living = "crusher_drone"
@@ -595,6 +595,7 @@
 	del_on_death = TRUE
 	deathmessage = "slowly floats down to the ground as it shuts down."
 	deathsound = 'sound/voice/borg_deathsound.ogg'
+	ranged = 1
 	ranged_cooldown_time = 2 SECONDS
 	var/obj/item/kinetic_crusher/crusher
 
@@ -609,13 +610,18 @@
 	return
 
 /mob/living/simple_animal/hostile/crusher_drone/AttackingTarget(atom/attacked_target)
-	Shoot(target)
+	Shoot(attacked_target)
 
 /mob/living/simple_animal/hostile/crusher_drone/Shoot(mob/targeted)
+	if(!targeted)
+		return
+
+	setDir(get_dir(src, targeted))
+
 	var/obj/projectile/destabilizer/proj = new /obj/projectile/destabilizer/long_range(get_turf(src))
 	for(var/obj/item/crusher_trophy/trophy in crusher.trophies)
 		trophy.on_projectile_fire(proj, src)
-	proj.preparePixelProjectile(get_turf(target), get_turf(src))
+	proj.preparePixelProjectile(get_turf(targeted), get_turf(src))
 	proj.firer = src
 	proj.hammer_synced = crusher
 	playsound(src, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
@@ -623,15 +629,6 @@
 
 /obj/projectile/destabilizer/long_range
 	range = 9
-
-/mob/living/simple_animal/hostile/crusher_drone/CanAttack(atom/the_target)
-	if(isliving(the_target))
-		var/mob/living/living_target = the_target
-		if(living_target.has_status_effect(STATUS_EFFECT_CRUSHERMARK))
-			var/datum/status_effect/crusher_mark/mark = living_target.has_status_effect(STATUS_EFFECT_CRUSHERMARK)
-			if(mark.hammer_synced == crusher)
-				return FALSE
-	return ..()
 
 /**
  *

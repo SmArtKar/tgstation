@@ -258,7 +258,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/chop_chop_chop(beam_amount = rand(4, 6))
 
-	ranged_cooldown = world.time + 3 SECONDS + beam_amount * 16
+	ranged_cooldown = world.time + 3 SECONDS + beam_amount * 12
 
 	var/list/beam_targets = list()
 	var/list/full_beam_targets = list()
@@ -282,7 +282,7 @@
 			var/turf/second_target = beam_targets[first_target]
 			first_target.Beam(second_target, icon_state = "bluespace_beam_prepare", time = 8)
 
-		SLEEP_CHECK_DEATH(8)
+		SLEEP_CHECK_DEATH(6)
 		playsound(get_turf(src), 'sound/magic/lightningbolt.ogg', 50, TRUE)
 
 		for(var/turf/first_target in beam_targets)
@@ -290,14 +290,15 @@
 			first_target.Beam(second_target, icon_state = "bluespace_beam", time = 8)
 			for(var/turf/check_turf in get_line(first_target, second_target))
 				for(var/mob/living/victim in check_turf.contents)
-					if(!faction_check(victim.faction, list("jungle", "boss")))
-						victim.adjustBruteLoss(30)
-						to_chat(victim, span_userdanger("You're hit by a bluespace collapse beam!"))
-						if(ishuman(victim))
-							var/mob/living/carbon/human/human_victim = victim
-							human_victim.electrocution_animation(1 SECONDS)
+					if(faction_check_mob(victim))
+						continue
+					victim.adjustBruteLoss(30)
+					to_chat(victim, span_userdanger("You're hit by a bluespace collapse beam!"))
+					if(ishuman(victim))
+						var/mob/living/carbon/human/human_victim = victim
+						human_victim.electrocution_animation(1 SECONDS)
 
-		SLEEP_CHECK_DEATH(5)
+		SLEEP_CHECK_DEATH(6)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shotgun(shot_angles = list(5, 0, -5))
 	var/turf/target_turf = get_turf(target)
