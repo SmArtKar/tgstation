@@ -274,10 +274,10 @@
 	walk(src, 0)
 	setDir(dir)
 	INVOKE_ASYNC(src, .proc/anim_decoy, delay, delay / get_length())
-	SLEEP_CHECK_DEATH(delay)
+	SLEEP_CHECK_DEATH(delay, src)
 	var/movespeed = 0.5
 	walk_towards(src, target_turf, movespeed)
-	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed)
+	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed, src)
 	walk(src, 0)
 	charging = FALSE
 	already_hit = list()
@@ -286,7 +286,7 @@
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc, src)
 	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
 	if(back)
-		SLEEP_CHECK_DEATH(sleep_delay)
+		SLEEP_CHECK_DEATH(sleep_delay, src)
 		back.anim_decoy(delay, sleep_delay)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/acid_ball)
@@ -316,7 +316,7 @@
 
 	for(var/i = 1 to round(LAZYLEN(turfs_for_pick) / 9))
 		new /obj/effect/temp_visual/target/tooth(pick_n_take(turfs_for_pick))
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/proc/puff()
 	if(!acid_trail)

@@ -94,7 +94,7 @@
 	status_flags |= GODMODE
 	set_density(FALSE)
 	playsound(target_turf, 'sound/magic/ethereal_enter.ogg', 50, TRUE, -1)
-	SLEEP_CHECK_DEATH(9)
+	SLEEP_CHECK_DEATH(9, src)
 	invisibility = INVISIBILITY_MAXIMUM
 	alpha = 0 //To hide HUDs
 	addtimer(CALLBACK(src, .proc/end_jaunt, target_turf), BLOOD_JAUNT_LENGTH)
@@ -105,7 +105,7 @@
 	invisibility = initial(invisibility)
 	alpha = 255
 	flick("jaunt_[demon_form ? "demon_" : ""]end", src)
-	SLEEP_CHECK_DEATH(9)
+	SLEEP_CHECK_DEATH(9, src)
 	noaction = FALSE
 	status_flags &= ~GODMODE
 	set_density(TRUE)
@@ -120,7 +120,7 @@
 	noaction = TRUE
 	status_flags |= GODMODE
 	spin(30, 2)
-	SLEEP_CHECK_DEATH(30)
+	SLEEP_CHECK_DEATH(30, src)
 	playsound(src, 'sound/effects/explosion3.ogg', 100, TRUE)
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	armour_penetration = 100
@@ -173,7 +173,7 @@
 		cur_time += 1
 		target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
 		setDir(angle2dir(current_angle))
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 	noaction = FALSE
 	qdel(beam)
@@ -195,7 +195,7 @@
 			continue
 
 		new /obj/effect/temp_visual/demonic_blast_warning(targeting_turf)
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/blast_line_directions(list/dirs = pick(GLOB.cardinals, GLOB.diagonals))
 	for(var/blast_dir in dirs)
@@ -207,13 +207,13 @@
 			else
 				new /obj/effect/temp_visual/demonic_blast_warning(target_turf)
 
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/triple_blast_line()
 	blast_line(target)
-	SLEEP_CHECK_DEATH(3)
+	SLEEP_CHECK_DEATH(3, src)
 	blast_line(target)
-	SLEEP_CHECK_DEATH(3)
+	SLEEP_CHECK_DEATH(3, src)
 	blast_line(target)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/blast_circle(atom/targeting = null, attack_range = 2)
@@ -224,7 +224,7 @@
 	for(var/turf/targeting_turf in range(attack_range, target_turf))
 		if(sqrt((targeting_turf.x - target_turf.x) ** 2 + (targeting_turf.y - target_turf.y) ** 2) > cur_range)
 			cur_range = sqrt((targeting_turf.x - target_turf.x) ** 2 + (targeting_turf.y - target_turf.y) ** 2)
-			SLEEP_CHECK_DEATH(demon_form ? 0 : 2)
+			SLEEP_CHECK_DEATH(demon_form ? 0 : 2, src)
 
 		if(cur_range > attack_range)
 			continue
@@ -245,11 +245,11 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/spiral_shoot(negative = pick(TRUE, FALSE), counter_start = 8)
 	var/obj/effect/temp_visual/decoy/decoy = new /obj/effect/temp_visual/decoy(loc, src)
 	animate(decoy, alpha = 0, color = "#FF0000", transform = matrix() * 2, time = 6)
-	SLEEP_CHECK_DEATH(6)
+	SLEEP_CHECK_DEATH(6, src)
 	if(check_proj_immunity(target)) //Don't try to cheese this fella
 		for(var/i = 1 to 3)
 			blast_circle(target)
-			SLEEP_CHECK_DEATH(3)
+			SLEEP_CHECK_DEATH(3, src)
 		channel_ray(get_angle(src, target) - 45, get_angle(src, target) + 45)
 		return
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
@@ -267,7 +267,7 @@
 		shoot_projectile(start_turf, ((counter + 4) % 16) * 22.5)
 		shoot_projectile(start_turf, ((counter + 8) % 16) * 22.5)
 		shoot_projectile(start_turf, ((counter + 12) % 16) * 22.5)
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/Move()
 	if(noaction)
@@ -299,15 +299,15 @@
 		new /mob/living/simple_animal/hostile/imp/jungle(get_turf(src)) //Leaves a small "present" behind when changes targets
 		jaunt_at(target)
 		ranged_cooldown = world.time += BLOOD_JAUNT_LENGTH
-		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH)
+		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH, src)
 
 	if(get_dist(src, target) > 12) //Punush them for running away, you can't get away from the demon
 		jaunt_at(target)
 		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 1 : 3) * anger_modifier SECONDS)
-		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 1) * anger_modifier SECONDS))
+		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 1) * anger_modifier SECONDS), src)
 		if(prob(35))
 			ranged_cooldown = ranged_cooldown + 2 SECONDS
-			SLEEP_CHECK_DEATH((demon_form ? 0 : 1) * anger_modifier SECONDS)
+			SLEEP_CHECK_DEATH((demon_form ? 0 : 1) * anger_modifier SECONDS, src)
 			spiral_shoot()
 		blast_line_directions()
 		return
@@ -317,7 +317,7 @@
 		if(1)
 			jaunt_at(target)
 			ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 3 : 5) * anger_modifier SECONDS)
-			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS))
+			SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 2) * anger_modifier SECONDS), src)
 			spiral_shoot()
 		if(2)
 			channel_ray(get_angle(src, target) - 45, get_angle(src, target) + 45)
@@ -335,16 +335,16 @@
 			shoot_projectile(get_turf(target), proj_type = /obj/projectile/bloody_orb)
 		if(6)
 			blast_circle(target)
-			SLEEP_CHECK_DEATH(demon_form ? 2 : 4)
+			SLEEP_CHECK_DEATH(demon_form ? 2 : 4, src)
 			blast_circle(target, (demon_form ? 2 : 1))
 			if(demon_form)
-				SLEEP_CHECK_DEATH(2)
+				SLEEP_CHECK_DEATH(2, src)
 				blast_circle(target)
 			ranged_cooldown = world.time + (demon_form ? 2 : 4) * anger_modifier SECONDS
 		if(7)
 			if(demon_form)
 				blast_line_directions(GLOB.alldirs)
-				SLEEP_CHECK_DEATH(4)
+				SLEEP_CHECK_DEATH(4, src)
 				spiral_shoot()
 				return
 			blast_line_directions()
@@ -357,7 +357,7 @@
 
 			for(var/i = 1 to 3)
 				blast_circle(target)
-				SLEEP_CHECK_DEATH(3)
+				SLEEP_CHECK_DEATH(3, src)
 
 /obj/effect/ebeam/demonic
 	name = "demonic beam"

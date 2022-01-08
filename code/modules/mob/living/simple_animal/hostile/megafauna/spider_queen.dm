@@ -85,7 +85,7 @@
 	if(get_dist(src, target) > aggro_vision_range / 2 || prob(anger_modifier + 35))
 		charge()
 		if(prob(anger_modifier + 25))
-			SLEEP_CHECK_DEATH(5)
+			SLEEP_CHECK_DEATH(5, src)
 			triple_birth()
 		return
 
@@ -98,7 +98,7 @@
 		ranged_cooldown = ranged_cooldown + 2 SECONDS
 		triple_charge()
 		if(prob(40 + anger_modifier))
-			SLEEP_CHECK_DEATH(5)
+			SLEEP_CHECK_DEATH(5, src)
 			shockwave()
 		return
 
@@ -166,11 +166,11 @@
 	setDir(dir)
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
-	SLEEP_CHECK_DEATH(delay)
+	SLEEP_CHECK_DEATH(delay, src)
 	qdel(D)
 	var/movespeed = 0.6
 	walk_towards(src, target_turf, movespeed)
-	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed)
+	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed, src)
 	walk(src, 0)
 	charging = FALSE
 
@@ -243,7 +243,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shockwave(range = 3, iteration_duration = 2)
 	visible_message("<span class='boldwarning'>[src] smashes the ground around them!</span>")
 	playsound(src, 'sound/weapons/sonic_jackhammer.ogg', 200, 1)
-	SLEEP_CHECK_DEATH(5)
+	SLEEP_CHECK_DEATH(5, src)
 	var/list/hit_things = list()
 	for(var/i in 1 to range)
 		for(var/turf/T in (view(i, src) - view(i - 1, src)))
@@ -257,7 +257,7 @@
 					L.Stun(4 / i)
 					L.apply_damage_type(20 / i, BRUTE)
 					hit_things += L
-		SLEEP_CHECK_DEATH(iteration_duration)
+		SLEEP_CHECK_DEATH(iteration_duration, src)
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/baby
 	name = "baby cave spider"

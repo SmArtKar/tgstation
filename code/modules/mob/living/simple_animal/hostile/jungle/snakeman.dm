@@ -59,7 +59,7 @@
 /mob/living/simple_animal/hostile/jungle/snakeman/alpha/proc/axe_smack()
 	playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 50, TRUE)
 	visible_message("<span class='boldwarning'>[src] smashes it's axe into the ground!</span>")
-	SLEEP_CHECK_DEATH(1)
+	SLEEP_CHECK_DEATH(1, src)
 	var/target_turf = get_turf(target)
 	var/end_turf = get_ranged_target_turf_direct(src, target_turf, 40, 0)
 	var/turf_line = get_line(get_turf(src), end_turf) - get_turf(src)
@@ -74,7 +74,7 @@
 				victim.throw_at(throwtarget, 4, 1, src)
 				victim.apply_damage_type(15, BRUTE)
 				hit_things += victim
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/jungle/snakeman/OpenFire()
 	if(anger_state) //Somehow

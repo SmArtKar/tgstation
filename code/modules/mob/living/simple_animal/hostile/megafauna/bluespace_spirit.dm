@@ -65,7 +65,7 @@
 
 	if(enraged) //You really want to try and hit the real one or you're gonna be fucked
 		charge()
-		SLEEP_CHECK_DEATH(5)
+		SLEEP_CHECK_DEATH(5, src)
 		if(prob(65))
 			spiral_shoot_reverse(counter_length = 16)
 		else
@@ -77,10 +77,10 @@
 
 	if(health / maxHealth < 0.5)
 		if(prob(25 + anger_modifier / 3))
-			triple_bouncer()
+			spiral_shoot_reverse()
 		else
 			if(prob(30))
-				spiral_shoot_reverse()
+				triple_bouncer()
 
 	if(prob(30 + anger_modifier / 5))
 		if(prob(60))
@@ -88,7 +88,7 @@
 		else
 			charge()
 			if(health / maxHealth < 0.5)
-				SLEEP_CHECK_DEATH(5)
+				SLEEP_CHECK_DEATH(5, src)
 				bluespace_collapse()
 	else if(health / maxHealth < 0.5)
 		if(prob(25))
@@ -96,7 +96,7 @@
 				chop_chop_chop()
 			else
 				triple_bouncer()
-			SLEEP_CHECK_DEATH(15)
+			SLEEP_CHECK_DEATH(15, src)
 			clone_rush()
 			return
 		else if(prob(10 + anger_modifier / 5))
@@ -105,7 +105,7 @@
 		if(prob(40))
 			for(var/i = 1 to 3)
 				shotgun()
-				SLEEP_CHECK_DEATH(5)
+				SLEEP_CHECK_DEATH(5, src)
 		else
 			bluespace_collapse()
 
@@ -121,7 +121,7 @@
 	P.fire(set_angle)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shoot_projectile_reverse(turf/startloc, set_angle, proj_type = /obj/projectile/bluespace_blast, turf/marker = get_turf(src))
-	if(!isnum(set_angle) && (!marker || marker == loc))
+	if(!isnum(set_angle) && (!startloc || startloc == loc))
 		return
 	var/obj/projectile/P = new proj_type(startloc)
 	P.preparePixelProjectile(marker, startloc)
@@ -150,7 +150,7 @@
 
 		if(target_turf)
 			shoot_projectile_reverse(target_turf)
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/Move()
 	if(charging)
@@ -180,9 +180,9 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/more_bouncers()
 	triple_bouncer()
-	SLEEP_CHECK_DEATH(8)
+	SLEEP_CHECK_DEATH(8, src)
 	triple_bouncer(180)
-	SLEEP_CHECK_DEATH(8)
+	SLEEP_CHECK_DEATH(8, src)
 	triple_bouncer()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/charge(atom/chargeat = target, delay = 3, chargepast = 2, chasm_charge = TRUE)
@@ -203,10 +203,10 @@
 	setDir(dir)
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = COLOR_BLUE, transform = matrix() * 2, time = 3)
-	SLEEP_CHECK_DEATH(delay)
+	SLEEP_CHECK_DEATH(delay, src)
 	var/movespeed = 1
 	walk_towards(src, T, movespeed)
-	SLEEP_CHECK_DEATH(get_dist(src, T) * movespeed)
+	SLEEP_CHECK_DEATH(get_dist(src, T) * movespeed, src)
 	pass_flags &= ~(PASSGLASS | PASSGRILLE | PASSMACHINE | PASSSTRUCTURE | PASSTABLE | PASSMOB | PASSDOORS)
 	walk(src, 0)
 	if(chasm_charge)
@@ -234,7 +234,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/bluespace_collapse(collapse_amount = rand(4, 6))
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = COLOR_BLUE, transform = matrix() * 2, time = 3)
-	SLEEP_CHECK_DEATH(3)
+	SLEEP_CHECK_DEATH(3, src)
 	qdel(D)
 	var/list/turfs = list()
 	for(var/turf/open/possible_turf in orange(7, get_turf(target)))
@@ -282,7 +282,7 @@
 			var/turf/second_target = beam_targets[first_target]
 			first_target.Beam(second_target, icon_state = "bluespace_beam_prepare", time = 8)
 
-		SLEEP_CHECK_DEATH(6)
+		SLEEP_CHECK_DEATH(6, src)
 		playsound(get_turf(src), 'sound/magic/lightningbolt.ogg', 50, TRUE)
 
 		for(var/turf/first_target in beam_targets)
@@ -298,7 +298,7 @@
 						var/mob/living/carbon/human/human_victim = victim
 						human_victim.electrocution_animation(1 SECONDS)
 
-		SLEEP_CHECK_DEATH(6)
+		SLEEP_CHECK_DEATH(6, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shotgun(shot_angles = list(5, 0, -5))
 	var/turf/target_turf = get_turf(target)

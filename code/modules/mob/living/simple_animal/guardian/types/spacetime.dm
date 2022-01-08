@@ -71,7 +71,7 @@
 /mob/living/simple_animal/hostile/guardian/spacetime/Shoot(atom/targeted_atom)
 	for(var/turf/target_turf in range(1, get_turf(targeted_atom)))
 		new /obj/effect/temp_visual/bluespace_blast_warning(target_turf, src)
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /obj/effect/temp_visual/bluespace_blast_warning
 	name = "bluespace blast warning"
@@ -128,7 +128,7 @@
 
 	ranged_cooldown = world.time + 15 SECONDS
 	new /obj/effect/temp_visual/bluespace_collapse/nodamage(get_turf(target))
-	SLEEP_CHECK_DEATH(7)
+	SLEEP_CHECK_DEATH(7, src)
 	new /obj/effect/temp_visual/chronoexplosion(get_turf(target))
 	playsound(get_turf(target), 'sound/magic/lightningbolt.ogg', 50, TRUE)
 	for(var/mob/living/victim in range(1, get_turf(target)))

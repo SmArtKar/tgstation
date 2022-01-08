@@ -91,7 +91,7 @@
 				break
 		if(prob(65))
 			throwing_spree()
-			SLEEP_CHECK_DEATH(5)
+			SLEEP_CHECK_DEATH(5, src)
 		var/radius_active = FALSE
 		if(prob(25))
 			triple_radius()
@@ -101,7 +101,7 @@
 			vine_attack()
 			if(prob(anger_modifier + 15) && !radius_active)
 				INVOKE_ASYNC(src, .proc/attack_in_radius)
-				SLEEP_CHECK_DEATH(2 SECONDS)
+				SLEEP_CHECK_DEATH(2 SECONDS, src)
 				throwing_spree()
 				ranged_cooldown = world.time + 12 SECONDS
 			else
@@ -109,9 +109,9 @@
 		else
 			ranged_cooldown = ranged_cooldown + 2 SECONDS
 			vine_attack()
-			SLEEP_CHECK_DEATH(6)
+			SLEEP_CHECK_DEATH(6, src)
 			vine_attack()
-			SLEEP_CHECK_DEATH(6)
+			SLEEP_CHECK_DEATH(6, src)
 			throwing_spree()
 	else
 		var/attack_type = rand(1, 5)
@@ -127,7 +127,7 @@
 					attack_in_radius()
 			if(4)
 				attack_in_radius()
-				SLEEP_CHECK_DEATH(1.5 SECONDS)
+				SLEEP_CHECK_DEATH(1.5 SECONDS, src)
 				vine_attack()
 			if(5)
 				INVOKE_ASYNC(src, .proc/spiral_shoot)
@@ -208,7 +208,7 @@
 			var/turf/closed/mineral/rock = hit_atom
 			rock.gets_drilled(src)
 		if(throw_spree)
-			SLEEP_CHECK_DEATH(5)
+			SLEEP_CHECK_DEATH(5, src)
 			Goto(target, move_to_delay, 1)
 		return
 
@@ -218,7 +218,7 @@
 	var/turf/throw_target = get_ranged_target_turf(victim, get_dir(src, hit_atom), 40)
 	victim.throw_at(throw_target, 40, 3) //YEEEEEEET
 	if(throw_spree)
-		SLEEP_CHECK_DEATH(5)
+		SLEEP_CHECK_DEATH(5, src)
 		Goto(target, move_to_delay, 1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/vine_tentacle, mark_target = TRUE, turf/startloc = get_turf(src))
@@ -242,7 +242,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/solar_barrage()
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, transform = matrix() * 1.5, time = 4)
-	SLEEP_CHECK_DEATH(4)
+	SLEEP_CHECK_DEATH(4, src)
 	qdel(D)
 	var/static/list/barrage_shot_angles = list(12.5, 7.5, 2.5, -2.5, -7.5, -12.5)
 	var/target_angle = get_angle(src, target)
@@ -266,7 +266,7 @@
 		if(counter < 1)
 			counter = blasts_per_circle
 		shoot_projectile(start_turf, counter * (360 / blasts_per_circle), proj_type = proj_type)
-		SLEEP_CHECK_DEATH(delay)
+		SLEEP_CHECK_DEATH(delay, src)
 
 		if(health != prev_health)
 			immobile = FALSE
@@ -281,7 +281,7 @@
 	for(var/i = 1 to 3)
 		var/turf/start_turf = get_step(get_turf(src), pick(GLOB.alldirs))
 		shoot_projectile(start_turf, get_angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
-		SLEEP_CHECK_DEATH(1 SECONDS)
+		SLEEP_CHECK_DEATH(1 SECONDS, src)
 	immobile = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/attack_in_radius(negative = FALSE, immobilize = TRUE)
@@ -302,9 +302,9 @@
 	immobile = TRUE
 	walk_to(src, 0)
 	attack_in_radius(FALSE, FALSE)
-	SLEEP_CHECK_DEATH(20)
+	SLEEP_CHECK_DEATH(20, src)
 	attack_in_radius(TRUE, FALSE)
-	SLEEP_CHECK_DEATH(20)
+	SLEEP_CHECK_DEATH(20, src)
 	attack_in_radius(FALSE, FALSE)
 	immobile = FALSE
 
@@ -316,7 +316,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/throwing_spree()
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, transform = matrix() * 1.5, time = 4)
-	SLEEP_CHECK_DEATH(4)
+	SLEEP_CHECK_DEATH(4, src)
 	qdel(D)
 	throw_spree = rand(2, 4)
 

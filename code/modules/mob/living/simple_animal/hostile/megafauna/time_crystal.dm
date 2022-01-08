@@ -113,7 +113,7 @@
 		if(counter < 1)
 			counter = 16
 		shoot_projectile(start_turf, counter * 22.5, proj_type = /obj/projectile/colossus/crystal_shards/slow)
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/AttackingTarget(atom/attacked_target) //It just point-blanks you in melee
 	OpenFire()
@@ -121,12 +121,12 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/chronospheres()
 	var/obj/effect/temp_visual/decoy/decoy = new /obj/effect/temp_visual/decoy(loc, src)
 	animate(decoy, alpha = 0, transform = matrix() * 2, time = 6)
-	SLEEP_CHECK_DEATH(6)
+	SLEEP_CHECK_DEATH(6, src)
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	playsound(get_turf(src), 'sound/effects/ethereal_revive.ogg', 100) //Fits pretty well I guess?
 	for(var/i in 1 to 5)
 		shoot_projectile(start_turf, i * 72, proj_type = /obj/projectile/chronosphere, homing = TRUE)
-		SLEEP_CHECK_DEATH(3)
+		SLEEP_CHECK_DEATH(3, src)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/OpenFire()
 	anger_modifier =  (1 -(health / maxHealth)) * 100
@@ -192,7 +192,7 @@
 	ranged_cooldown = world.time + 15 SECONDS //We don't want other attacks while beaming
 	update_icon()
 	flick("crystal_drop", src)
-	SLEEP_CHECK_DEATH(3)
+	SLEEP_CHECK_DEATH(3, src)
 	flick("crystal_beam_telegraph", src)
 	addtimer(CALLBACK(src, .proc/start_beaming), 3 SECONDS)
 
@@ -234,7 +234,7 @@
 		var/turf/next_turf = get_step(get_turf(src), get_dir(src, target))
 		new /obj/effect/timestop/time_crystal(get_turf(src), 1, AMBER_TIMESTOP_DURATION, list(src))
 		Move(next_turf)
-		SLEEP_CHECK_DEATH(1)
+		SLEEP_CHECK_DEATH(1, src)
 
 	ranged_cooldown = world.time + 2 SECONDS
 	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)

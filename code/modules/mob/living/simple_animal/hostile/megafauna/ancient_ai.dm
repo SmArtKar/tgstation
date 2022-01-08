@@ -791,7 +791,8 @@
 			"target" = get_turf(possible_target),
 			"style" = STYLE_MISSILE,
 			"effectMissile" = TRUE,
-			"explosionSize" = list(0,0,1,2)
+			"explosionSize" = list(0,0,1,2),
+			delays = list(POD_FALLING = 2)
 		))
 		strike_successfull = TRUE
 		playsound(get_turf(owner), 'sound/weapons/gun/general/rocket_launch.ogg', 50, TRUE)
