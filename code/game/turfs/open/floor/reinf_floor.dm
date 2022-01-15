@@ -249,5 +249,5 @@
 
 	var/mob/living/victim = arrived
 	if(victim.electrocute_act(25, src, 1, SHOCK_NOGLOVES|SHOCK_NOSTUN))
-		victim.add_confusion(5)
+		victim.add_confusion(2)
 		victim.visible_message(span_danger("[src] electrocutes [victim]!"), span_userdanger("[src] electrocutes you!"))

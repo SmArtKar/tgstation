@@ -16,3 +16,5 @@
 	variable = TRUE
 	blacklisted_movetypes = (FLYING|FLOATING)
 
+/datum/movespeed_modifier/status_effect/demon_stone
+	multiplicative_slowdown = -0.5

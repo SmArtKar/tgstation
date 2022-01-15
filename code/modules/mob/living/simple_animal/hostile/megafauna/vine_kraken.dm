@@ -55,14 +55,6 @@
 	var/move_cooldown
 	var/immobile = FALSE
 	var/throw_spree = 0
-	var/second_stage = FALSE
-
-/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/Life(delta_time, times_fired)
-	. = ..()
-	if(health < maxHealth * 0.5 && !second_stage)
-		second_stage = TRUE
-		damage_coeff = list(BRUTE = 0.7, BURN = 0.25, TOX = 0.5, CLONE = 1, STAMINA = 0, OXY = 1)
-		initial_damage_coeff = list(BRUTE = 0.7, BURN = 0.25, TOX = 0.5, CLONE = 1, STAMINA = 0, OXY = 1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/Destroy()
 	for(var/vine in vines)
@@ -594,12 +586,12 @@
 /obj/projectile/heart_vine_tentacle/fire(setAngle)
 	if(firer)
 		blooming = prob(33)
-		tentacle = firer.Beam(src, icon_state = "vine_jungle[blooming ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
+		tentacle = firer.Beam(src, icon_state = "vine_jungle[blooming ? "_blooming" : ""]")
 	..()
 
 /obj/projectile/heart_vine_tentacle/on_hit(atom/target, blocked = FALSE)
 	qdel(tentacle)
-	tentacle = firer.Beam(target, icon_state = "vine_jungle[blooming ? "_blooming" : ""]", beam_type = /obj/effect/ebeam/vine)
+	tentacle = firer.Beam(target, icon_state = "vine_jungle[blooming ? "_blooming" : ""]")
 	heart_origin.vines[target] = tentacle
 	heart_origin.vine_targets += target
 	. = ..()

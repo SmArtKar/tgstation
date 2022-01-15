@@ -1,5 +1,6 @@
 #define DASH_COOLDOWN 5 SECONDS
-#define DASH_COOLDOWN_HIT 7 SECONDS //So you can still be killed by chaining a few attacks
+#define AUTO_DASH_COOLDOWN 7 SECONDS //So you can still be killed by chaining a few attacks
+#define DASH_COOLDOWN_HIT 10 SECONDS
 #define DASH_RANGE_PERFECT 3
 #define DASH_RANGE 5
 
@@ -10,6 +11,7 @@
 #define CULMINATION_ATTACK_COOLDOWN 0.25
 #define CULMINATION__MELEE_ARMOR_ADDED 30
 #define HEALTH_TO_CHARGE 0.025
+#define CHARGE_ON_HIT -25
 
 /obj/item/clothing/head/hooded/cloakhood/demonslayer
 	name = "helmet of the demonslayer"
@@ -203,6 +205,8 @@
 /obj/item/clothing/suit/hooded/cloak/demonslayer/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	if(dash_cooldown > world.time || !can_activate())
 		dash_cooldown = world.time + DASH_COOLDOWN_HIT * dash_cooldown_modifier //You need to not get hit in 7 seconds for it to work
+		var/obj/item/clothing/head/hooded/cloakhood/demonslayer/demon_hood = hood
+		demon_hood.culmination_charge = clamp(demon_hood.culmination_charge - CHARGE_ON_HIT, 0, MAX_CULMINATION_CHARGE)
 		return FALSE
 
 	var/turf/owner_loc = get_turf(owner)
@@ -237,7 +241,7 @@
 		playsound(destination, 'sound/effects/phasein.ogg', 25, TRUE)
 		playsound(destination, "sparks", 50, TRUE)
 		dash_active = FALSE
-		dash_cooldown = world.time + DASH_COOLDOWN * dash_cooldown_modifier
+		dash_cooldown = world.time + AUTO_DASH_COOLDOWN * dash_cooldown_modifier
 		return TRUE
 	return FALSE
 

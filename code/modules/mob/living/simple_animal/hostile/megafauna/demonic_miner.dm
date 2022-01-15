@@ -38,8 +38,8 @@
 	crusher_achievement_type = /datum/award/achievement/boss/demonic_miner_crusher
 	score_achievement_type = /datum/award/score/jungle_demonic_miner_score
 
-	common_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/demonic_miner)
-	common_crusher_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/demonic_miner, /obj/item/crusher_trophy/demon_horn) //Let's reward everybody who killed this guy, he's hard and loot is only usable for fauna killing.
+	common_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/boss/demonic_miner)
+	common_crusher_loot = list(/obj/item/demon_stone, /obj/effect/spawner/random/boss/demonic_miner, /obj/item/crusher_trophy/demon_horn) //Let's reward everybody who killed this guy, he's hard and loot is only usable for fauna killing.
 	loot = list(/obj/effect/decal/remains/human)
 
 	del_on_death = TRUE
@@ -738,7 +738,7 @@
 			spirits.Remove(shadow)
 			qdel(shadow)
 
-/obj/effect/spawner/random/demonic_miner
+/obj/effect/spawner/random/boss/demonic_miner
 	name = "demonic miner loot spawner"
 	loot = list(/obj/item/gun/magic/staff/blood_claymore = 1, /obj/item/book/granter/spell/throwing_knives = 1, /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound = 1)
 

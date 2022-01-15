@@ -36,7 +36,7 @@
 	loot = list(/obj/item/worm_tongue)
 	common_loot = list(/obj/item/armor_scales)
 	common_crusher_loot = list(/obj/item/armor_scales, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
-	rare_loot = list(/obj/effect/spawner/random/mud_worm)
+	rare_loot = list(/obj/effect/spawner/random/boss/mud_worm)
 	rarity = 2
 
 	gps_name = "Crushing Signal"
@@ -68,7 +68,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm/Initialize(mapload, spawn_more = TRUE, len = 6)
 	if(!spawn_more)
 		true_spawn = FALSE
-		ADD_TRAIT(src, TRAIT_NEVER_POI, MEGAFAUNA_TRAIT)
+		ADD_TRAIT(src, TRAIT_NEVER_POI, INNATE_TRAIT)
 
 	. = ..()
 
@@ -505,7 +505,7 @@
 	force = 0
 	throwforce = 0
 
-/obj/effect/spawner/random/mud_worm
+/obj/effect/spawner/random/boss/mud_worm
 	name = "mud worm loot spawner"
 	loot = list(/obj/item/dual_sword = 1, /obj/item/book/granter/spell/powerdash = 1)
 

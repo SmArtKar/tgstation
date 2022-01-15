@@ -589,52 +589,48 @@
 
 /atom/movable/screen/alert/status_effect/crystal_heart
 	name = "Crystal Heart"
-	desc = "Your heart has been crystallised from consuming a crystal fruit, giving you great power for a brief moment!"
+	desc = "You have been granted increased defence and endurance from consuming a crystal fruit."
 	icon_state = "crystallization"
 
 /datum/status_effect/crystal_heart
 	id = "crystal_heart"
-	duration = 15 SECONDS
+	duration = 1 MINUTES
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = /atom/movable/screen/alert/status_effect/crystal_heart
 
 /datum/status_effect/crystal_heart/on_apply()
 	. = ..()
-	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
-
-/datum/status_effect/crystal_heart/on_remove()
-	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
-
-/datum/status_effect/crystal_heart/on_apply()
-	. = ..()
 	if(.)
-		ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+		ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, TIME_CRYSTAL_TRAIT)
+		ADD_TRAIT(owner, TRAIT_NOSOFTCRIT, TIME_CRYSTAL_TRAIT)
+		ADD_TRAIT(owner, TRAIT_NOHARDCRIT, TIME_CRYSTAL_TRAIT)
 		if(ishuman(owner))
 			var/mob/living/carbon/human/H = owner
-			H.physiology.brute_mod *= 0.5
-			H.physiology.burn_mod *= 0.5
-			H.physiology.tox_mod *= 0.5
-			H.physiology.oxy_mod *= 0.5
-			H.physiology.clone_mod *= 0.5
-			H.physiology.stamina_mod *= 0.5
+			H.physiology.brute_mod *= 0.66
+			H.physiology.burn_mod *= 0.66
+			H.physiology.tox_mod *= 0.66
+			H.physiology.oxy_mod *= 0.66
+			H.physiology.clone_mod *= 0.66
+			H.physiology.stamina_mod *= 0.66
 
 /datum/status_effect/crystal_heart/on_remove()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.physiology.brute_mod *= 2
-		H.physiology.burn_mod *= 2
-		H.physiology.tox_mod *= 2
-		H.physiology.oxy_mod *= 2
-		H.physiology.clone_mod *= 2
-		H.physiology.stamina_mod *= 2
-	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
+		H.physiology.brute_mod /= 0.66
+		H.physiology.burn_mod /= 0.66
+		H.physiology.tox_mod /= 0.66
+		H.physiology.oxy_mod /= 0.66
+		H.physiology.clone_mod /= 0.66
+		H.physiology.stamina_mod /= 0.66
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, TIME_CRYSTAL_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_NOSOFTCRIT, TIME_CRYSTAL_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_NOHARDCRIT, TIME_CRYSTAL_TRAIT)
 
 /// Demonic energy
 
 #define SOULS_PER_HUMAN 5
 #define SOULS_PER_MEGAFAUNA 20
-#define SOUL_DAMAGE_COEFF 3.2
+#define SOUL_DAMAGE_COEFF 2
 
 #define SOULS_LEVEL_ONE 10
 #define SOULS_LEVEL_TWO 30
@@ -642,7 +638,7 @@
 #define SOULS_LEVEL_FOUR 75
 
 #define LEVEL_ONE_TRAITS 	list(TRAIT_STUNRESISTANCE)
-#define LEVEL_TWO_TRAITS 	list(TRAIT_STUNRESISTANCE, TRAIT_STRONG_MINER)
+#define LEVEL_TWO_TRAITS 	list(TRAIT_STUNRESISTANCE, TRAIT_STRONG_MINER, TRAIT_NOHUNGER)
 #define LEVEL_THREE_TRAITS  list(TRAIT_STUNRESISTANCE, TRAIT_STRONG_MINER, TRAIT_NOHUNGER, TRAIT_NOBREATH)
 #define LEVEL_FOUR_TRAITS   list(TRAIT_NOFIRE, TRAIT_STUNIMMUNE, TRAIT_IGNORESLOWDOWN, TRAIT_STRONG_MINER, TRAIT_NOHUNGER, TRAIT_NOBREATH)
 
@@ -655,6 +651,9 @@
 	var/level = 0
 	var/tracked_mobs = list()
 	var/given_traits = list()
+	var/prev_health = 0
+	var/mutable_appearance/orb_underlay
+	var/mutable_appearance/orb_overlay
 
 /datum/status_effect/demonic_energy/on_apply()
 	. = ..()
@@ -662,6 +661,7 @@
 		return
 
 	var/mob/living/carbon/human/target = owner
+	prev_health = target.health
 	target.dna.features["mcolor"] = "A02720"
 	if(isethereal(target))
 		var/datum/species/ethereal/species = target.dna.species
@@ -669,7 +669,11 @@
 		species.spec_updatehealth(target)
 	target.updateappearance(mutcolor_update=1)
 
-	RegisterSignal(target, COMSIG_MOB_APPLY_DAMAGE, .proc/on_recieved_damage)
+	RegisterSignal(target, COMSIG_CARBON_HEALTH_UPDATE, .proc/update_health)
+
+/datum/status_effect/demonic_energy/on_remove()
+	UnregisterSignal(owner, COMSIG_CARBON_HEALTH_UPDATE)
+	. = ..()
 
 /datum/status_effect/demonic_energy/tick()
 	check_tracked_mobs()
@@ -691,22 +695,42 @@
 		REMOVE_TRAIT(owner, trait_type, DEMON_STONE_TRAIT)
 
 	var/new_traits = list()
-	owner.remove_filter("demonstone_outline")
+
+	if(orb_overlay && !QDELETED(orb_overlay))
+		owner.underlays -= orb_underlay
+		owner.overlays -= orb_overlay
+		qdel(orb_underlay)
+		qdel(orb_overlay)
+
+	if(level > 0)
+		orb_underlay = mutable_appearance('icons/effects/effects.dmi', "blood_orb_[level]_bottom")
+		orb_overlay = mutable_appearance('icons/effects/effects.dmi', "blood_orb_[level]_top")
+
+		orb_underlay.pixel_x = owner.pixel_x
+		orb_underlay.pixel_y = owner.pixel_y
+		orb_overlay.pixel_x = owner.pixel_x
+		orb_overlay.pixel_y = owner.pixel_y
+
+		owner.underlays += orb_underlay
+		owner.overlays += orb_overlay
+
 	switch(level)
 		if(1)
 			new_traits = LEVEL_ONE_TRAITS
 		if(2)
 			new_traits = LEVEL_TWO_TRAITS
-			owner.add_filter("demonstone_outline", 9, list("type" = "outline", "color" = "#ffa4a4", "size" = 1))
 		if(3)
 			new_traits = LEVEL_THREE_TRAITS
-			owner.add_filter("demonstone_outline", 9, list("type" = "outline", "color" = "#ff4b4b", "size" = 1))
 		if(4)
 			new_traits = LEVEL_FOUR_TRAITS
-			owner.add_filter("demonstone_outline", 9, list("type" = "outline", "color" = "#ff0000", "size" = 1))
 
 	for(var/trait_type in new_traits)
 		ADD_TRAIT(owner, trait_type, DEMON_STONE_TRAIT)
+
+	if(level >= 3)
+		owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/demon_stone)
+	else
+		owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/demon_stone)
 
 /datum/status_effect/demonic_energy/proc/souls_required()
 	switch(level)
@@ -756,8 +780,15 @@
 	consumed_souls += 1
 	update_souls()
 
-/datum/status_effect/demonic_energy/proc/on_recieved_damage(attacker, damage, damagetype, def_zone)
+/datum/status_effect/demonic_energy/proc/update_health(mob/living/source)
 	SIGNAL_HANDLER
+
+	if(owner.health >= prev_health)
+		prev_health = owner.health
+		return
+
+	prev_health = owner.health
+
 	if(consumed_souls > 0)
 		owner.adjustCloneLoss(consumed_souls * SOUL_DAMAGE_COEFF)
 		to_chat(owner, span_colossus("As you get attacked, souls contained withing you escape, damaging you even more!"))

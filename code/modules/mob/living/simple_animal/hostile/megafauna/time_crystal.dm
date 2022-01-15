@@ -27,8 +27,8 @@
 	score_achievement_type = /datum/award/score/time_crystal_score
 
 	loot = list(/obj/item/amber_core)
-	common_loot = list(/obj/effect/spawner/random/time_crystal)
-	common_crusher_loot = list(/obj/effect/spawner/random/time_crystal, /obj/item/crusher_trophy/crystal_shard)
+	common_loot = list(/obj/effect/spawner/random/boss/time_crystal)
+	common_crusher_loot = list(/obj/effect/spawner/random/boss/time_crystal, /obj/item/crusher_trophy/crystal_shard)
 
 	wander = FALSE
 	gps_name = "Vibrating Signal"
@@ -139,15 +139,12 @@
 		do_dash()
 		return
 
-	if(prob(clamp((140 - anger_modifier), 10, 30)))
-		if(get_dist(src, target) > 2) //No point-blank chronospheres
-			chronospheres()
-			return
+	if(prob(min(30 + anger_modifier / 3, 50)) && get_dist(src, target) > 2)
+		chronospheres()
 	else
 		spawn_turrets()
-		return
 
-	if(prob(25))
+	if(prob(max(0, 25 - anger_modifier * 3)))
 		drop_n_beam()
 		return
 
@@ -481,7 +478,7 @@
 	shield_effect.pixel_x = user.pixel_x
 	shield_effect.pixel_y = user.pixel_y
 	user.overlays += shield_effect
-	ADD_TRAIT(user, TRAIT_NOGUNS, MEGAFAUNA_TRAIT)
+	ADD_TRAIT(user, TRAIT_NOGUNS, TIME_CRYSTAL_TRAIT)
 	user.next_move_modifier *= SHIELD_MOVE_COOLDOWN
 	stance_duration = 0
 	START_PROCESSING(SSobj, src)
@@ -502,7 +499,7 @@
 	active = FALSE
 	user.overlays -= shield_effect
 	QDEL_NULL(shield_effect)
-	REMOVE_TRAIT(user, TRAIT_NOGUNS, MEGAFAUNA_TRAIT)
+	REMOVE_TRAIT(user, TRAIT_NOGUNS, TIME_CRYSTAL_TRAIT)
 	user.next_move_modifier /= SHIELD_MOVE_COOLDOWN
 	STOP_PROCESSING(SSobj, src)
 	stance_cooldown = world.time + DEFENSIVE_STANCE_COOLDOWN
@@ -522,13 +519,13 @@
 #undef DEFENSIVE_STANCE_COOLDOWN
 #undef SHIELD_MOVE_COOLDOWN
 
-/obj/effect/spawner/random/time_crystal
+/obj/effect/spawner/random/boss/time_crystal
 	name = "time crystal loot spawner"
 	loot = list(/obj/item/clothing/gloves/crystal = 1, /obj/item/crystal_fruit = 1, /obj/item/amber_hourglass = 1)
 
-/obj/item/crystal_fruit //One-use full heal and buff for 30 seconds. When you're truely fucked.
+/obj/item/crystal_fruit
 	name = "crystal fruit"
-	desc = "Legends say that eating this fruit will give you \"great power\". It's not specified what these are."
+	desc = "A strange fruit made out of amber crystals. Legends say these increase"
 	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "crystal_fruit"
 
@@ -553,7 +550,7 @@
 
 /obj/item/amber_core
 	name = "amber core"
-	desc = "Strange crystal made of very dense amber that can be found in Time Crystals."
+	desc = "Strange core made of very dense amber that can be found in Time Crystals."
 	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "amber_core"
 	w_class = WEIGHT_CLASS_TINY
@@ -602,7 +599,7 @@
 		saved_bodyparts = owner.save_bodyparts()
 
 		activated = TRUE
-		ADD_TRAIT(owner, TRAIT_AMBER_REWIND, MEGAFAUNA_TRAIT)
+		ADD_TRAIT(owner, TRAIT_AMBER_REWIND, TIME_CRYSTAL_TRAIT)
 	else
 		rewind()
 
@@ -628,6 +625,7 @@
 /obj/item/amber_hourglass/proc/rewind()
 	to_chat(owner, span_notice("You remember a time not so long ago..."))
 	sleep(3)
+	playsound(get_turf(owner), 'sound/effects/ethereal_revive_fail.ogg', 100)
 	var/area/destination_area = original_turf.loc
 	if(destination_area.area_flags & NOTELEPORT)
 		to_chat(owner, span_warning("For some reason, your head aches and fills with mental fog when you try to think of where you were... It feels like you're now going against some dull, unstoppable universal force."))
@@ -639,8 +637,7 @@
 		owner.setOrganLoss(ORGAN_SLOT_BRAIN, brain_loss)
 		owner.apply_saved_bodyparts(saved_bodyparts)
 	to_chat(owner, span_warning("[src] shatters as it fulfils it's purpose!"))
-	REMOVE_TRAIT(owner, TRAIT_AMBER_REWIND, MEGAFAUNA_TRAIT)
-	playsound(get_turf(owner), 'sound/effects/ethereal_revive_fail.ogg', 100)
+	REMOVE_TRAIT(owner, TRAIT_AMBER_REWIND, TIME_CRYSTAL_TRAIT)
 	qdel(src)
 
 #undef AMBER_TIMESTOP_RANGE

@@ -11,8 +11,8 @@
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 2, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide = 1)
 	speak_emote = list("roars")
-	maxHealth = 260
-	health = 260
+	maxHealth = 480 //240 in anger
+	health = 480
 	melee_damage_lower = 20
 	melee_damage_upper = 20
 	attack_sound = 'sound/weapons/pierce_slow.ogg'
@@ -40,8 +40,8 @@
 	move_to_delay = 5
 	ranged_cooldown_time = 3 SECONDS
 
-	maxHealth = 360
-	health = 360
+	maxHealth = 560 //280 in anger
+	health = 560
 	melee_damage_lower = 25
 	melee_damage_upper = 25
 	attack_sound = 'sound/weapons/bladeslice.ogg'

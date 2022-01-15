@@ -138,6 +138,8 @@
 /// Doubles attack cooldowns on simplemobs and recovery time on megafauna.
 #define STATUS_EFFECT_STAGGER /datum/status_effect/stagger
 
+#define STATUS_EFFECT_BLUESPACE_INSTABILITY /datum/status_effect/bluespace_instability
+
 /////////////
 // NEUTRAL //
 /////////////

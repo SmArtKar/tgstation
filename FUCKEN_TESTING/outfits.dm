@@ -96,7 +96,6 @@
 	new /obj/item/armor_scales(src)
 	new /obj/item/amber_core(src)
 	new /obj/item/guardiancreator/tech/spacetime(src)
-	new /obj/item/gilded_card(src)
 	new /obj/item/gun/magic/staff/vine(src)
 	new /obj/item/organ/heart/jungle(src)
 	new /obj/item/bluespace_megacrystal(src)

@@ -35,8 +35,8 @@
 	gps_name = "Quantum Signal"
 	del_on_death = TRUE
 
-	common_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal) //Let's reward everybody who killed this fella
-	common_crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
+	common_loot = list(/obj/effect/spawner/random/boss/bluespace_spirit, /obj/item/bluespace_megacrystal) //Rewarding everybody who killed him because he becomes very difficult with multiple players
+	common_crusher_loot = list(/obj/effect/spawner/random/boss/bluespace_spirit, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
 
 	var/list/copies = list()
 	var/charging = FALSE
@@ -63,6 +63,11 @@
 		shotgun()
 		return
 
+	if(prob(min(15 * (LAZYLEN(former_targets) - 1), 30)))
+		GiveTarget(pick(former_targets))
+		charge()
+		SLEEP_CHECK_DEATH(5, src)
+
 	if(enraged) //You really want to try and hit the real one or you're gonna be fucked
 		charge()
 		SLEEP_CHECK_DEATH(5, src)
@@ -76,8 +81,9 @@
 
 
 	if(health / maxHealth < 0.5)
-		if(prob(25 + anger_modifier / 3))
+		if(prob(30 + anger_modifier / 3))
 			spiral_shoot_reverse()
+			SLEEP_CHECK_DEATH(5, src)
 		else
 			if(prob(30))
 				triple_bouncer()
@@ -99,14 +105,16 @@
 			SLEEP_CHECK_DEATH(15, src)
 			clone_rush()
 			return
-		else if(prob(10 + anger_modifier / 5))
+		else if(prob(35 + anger_modifier / 5))
 			spiral_shoot_reverse()
 	else
-		if(prob(40))
+		if(prob(25))
 			for(var/i = 1 to 3)
 				shotgun()
 				SLEEP_CHECK_DEATH(5, src)
 		else
+			if(prob(65))
+				spiral_shoot_reverse()
 			bluespace_collapse()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/bluespace_blast)
@@ -236,25 +244,26 @@
 	animate(D, alpha = 0, color = COLOR_BLUE, transform = matrix() * 2, time = 3)
 	SLEEP_CHECK_DEATH(3, src)
 	qdel(D)
-	var/list/turfs = list()
-	for(var/turf/open/possible_turf in orange(7, get_turf(target)))
-		if(possible_turf.is_blocked_turf())
-			continue
-		turfs.Add(possible_turf)
-
-	for(var/i = 1 to collapse_amount)
-		var/turf/collapse_turf = pick_n_take(turfs)
-		var/collapse_angle = (target && get_dist(collapse_turf, target) < 4 ? get_angle(collapse_turf, target) : rand(0, 360))
-		var/turf/target_turf = get_turf_in_angle(collapse_angle, collapse_turf, 15)
-		for(var/turf/check_turf in get_line(collapse_turf, target_turf))
-			if(isclosedturf(check_turf))
-				target_turf = check_turf
-				break
-		new /obj/effect/temp_visual/bluespace_collapse(collapse_turf, target_turf)
-		for(var/turf/open/turf_to_remove in orange(2, collapse_turf))
-			if(sqrt((turf_to_remove.x - collapse_turf.x) ** 2 + (turf_to_remove.y - collapse_turf.y) ** 2) > 2 || !(turf_to_remove in turfs))
+	for(var/mob/living/collapse_target in former_targets)
+		var/list/turfs = list()
+		for(var/turf/open/possible_turf in orange(7, get_turf(collapse_target)))
+			if(possible_turf.is_blocked_turf())
 				continue
-			turfs.Remove(turf_to_remove)
+			turfs.Add(possible_turf)
+
+		for(var/i = 1 to collapse_amount)
+			var/turf/collapse_turf = pick_n_take(turfs)
+			var/collapse_angle = (collapse_target && get_dist(collapse_turf, collapse_target) < 4 ? get_angle(collapse_turf, collapse_target) : rand(0, 360))
+			var/turf/target_turf = get_turf_in_angle(collapse_angle, collapse_turf, 15)
+			for(var/turf/check_turf in get_line(collapse_turf, target_turf))
+				if(isclosedturf(check_turf))
+					target_turf = check_turf
+					break
+			new /obj/effect/temp_visual/bluespace_collapse(collapse_turf, target_turf)
+			for(var/turf/open/turf_to_remove in orange(2, collapse_turf))
+				if(sqrt((turf_to_remove.x - collapse_turf.x) ** 2 + (turf_to_remove.y - collapse_turf.y) ** 2) > 2 || !(turf_to_remove in turfs))
+					continue
+				turfs.Remove(turf_to_remove)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/chop_chop_chop(beam_amount = rand(4, 6))
 
@@ -530,11 +539,6 @@
 	summoner.copies.Remove(src)
 	qdel(src)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/death(gibbed)
-	if(prob(10))
-		new /obj/item/gilded_card(get_turf(src))
-	. = ..()
-
 /obj/effect/temp_visual/sparks_bluespace
 	icon_state = "sparks_bluespace"
 	duration = 6
@@ -613,20 +617,22 @@
 /obj/item/guardiancreator/tech/spacetime
 	name = "experimental holoparasite injector"
 	desc = "An experimental version of holoparasites that specialise on manipulating space and time via bluespace. It can also be used in override mode, giving the user manual control over the holoparasites. (Override mode is activated through alt-click)"
-	theme = "magic"
 	mob_name = "Experimental Holoparasite"
-	use_message = "<span class='holoparasite'>You start to power on the injector...</span>"
-	used_message = "<span class='holoparasite'>The injector has already been used.</span>"
-	failure_message = "<span class='holoparasite bold'>...ERROR. BOOT SEQUENCE ABORTED. AI FAILED TO INTIALIZE. PLEASE CONTACT SUPPORT OR TRY AGAIN LATER.</span>"
-	ling_failure = "<span class='holoparasite bold'>The holoparasites recoil in horror. They want nothing to do with a creature like you.</span>"
 	possible_guardians = list("Spacetime")
 	allowling = FALSE
 
 /obj/item/guardiancreator/tech/spacetime/AltClick(mob/user)
+	if(used)
+		return
 	to_chat("<span class='holoparasite'>You override the holoparasite AI, making the injector spew out a solid chunk of nanites. Use it in-hand to gain special abilities.</span>")
 	used = TRUE
 	var/obj/item/organ/cyberimp/arm/spacetime_manipulator/manip = new(get_turf(src))
 	user.put_in_hands(manip)
+
+/obj/item/guardiancreator/tech/spacetime/spawn_guardian(mob/living/user, mob/dead/candidate)
+	. = ..()
+	if(.)
+		user.apply_status_effect(STATUS_EFFECT_BLUESPACE_INSTABILITY)
 
 /obj/item/organ/cyberimp/arm/spacetime_manipulator
 	name = "blue shard"
@@ -639,7 +645,7 @@
 	extend_sound = 'sound/magic/mandswap.ogg'
 	retract_sound = 'sound/magic/mandswap.ogg'
 
-/obj/item/organ/cyberimp/arm/spacetime_manipulator/attack_self(mob/user, modifiers)
+/obj/item/organ/cyberimp/arm/spacetime_manipulator/attack_self(mob/living/user, modifiers)
 	. = ..()
 	to_chat(user, span_userdanger("The mass goes up your arm and goes inside it!"))
 	playsound(user, 'sound/magic/demon_consume.ogg', 50, TRUE)
@@ -648,6 +654,7 @@
 	SetSlotFromZone()
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	Insert(user)
+	user.apply_status_effect(STATUS_EFFECT_BLUESPACE_INSTABILITY)
 
 /obj/item/organ/cyberimp/arm/spacetime_manipulator/screwdriver_act(mob/living/user, obj/item/screwtool)
 	return
@@ -809,25 +816,7 @@
 #undef ATTACK_PARTICLE
 #undef ATTACK_CLOAK
 
-/obj/item/gilded_card
-	name = "gilded card"
-	desc = "A strange guilded blue card with illegible text on it."
-	icon = 'icons/obj/lavaland/artefacts.dmi'
-	icon_state = "gilded_card"
 
-/obj/item/gilded_card/attack_self(mob/living/user)
-	if(!iscarbon(user))
-		to_chat(user, span_notice("A dark presence stops you from playing the card."))
-		return
-	forceMove(user)
-	to_chat(user, span_danger("You play the card and suddenly realise that you've made a fatal mistake."))
-	resurrect(user)
-
-/obj/item/gilded_card/proc/resurrect(mob/living/carbon/user)
-	var/turf/target = find_safe_turf()
-	user.forceMove(target)
-	user.revive(full_heal = TRUE, admin_revive = TRUE)
-	INVOKE_ASYNC(user, /mob/living/carbon.proc/set_species, /datum/species/shadow)
-	to_chat(user, span_notice("You blink and find yourself in [get_area_name(target)]... feeling a bit darker."))
-	playsound(target, 'sound/effects/curse2.ogg', 80, TRUE)
-	qdel(src)
+/obj/effect/spawner/random/boss/bluespace_spirit
+	name = "bluespace spirit loot spawner"
+	loot = list(/obj/item/guardiancreator/tech/spacetime = 1)

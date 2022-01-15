@@ -1172,3 +1172,30 @@
 
 /datum/movespeed_modifier/freezing_blast
 	multiplicative_slowdown = 1
+
+/datum/status_effect/bluespace_instability
+	id = "bluespace_instability"
+	status_type = STATUS_EFFECT_REPLACE
+	duration = -1
+	alert_type = /atom/movable/screen/alert/status_effect/bluespace_instability
+
+/atom/movable/screen/alert/status_effect/bluespace_instability
+	name = "Bluespace Instability"
+	desc = "Your attempts to mess with bluespace have made you unstable! Your armor is lowered and sometimes you will randomly teleport around!"
+	icon_state = "bluespace_instability"
+
+/datum/status_effect/bluespace_instability/on_apply()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/human_owner = owner
+		human_owner.physiology.damage_resistance -= 20
+	return ..()
+
+/datum/status_effect/bluespace_instability/on_remove()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/human_owner = owner
+		human_owner.physiology.damage_resistance += 20
+
+/datum/status_effect/bluespace_instability/tick()
+	. = ..()
+	if(prob(5))
+		do_teleport(owner, get_turf(owner), 2, asoundin = 'sound/effects/phasein.ogg', channel = TELEPORT_CHANNEL_BLUESPACE)

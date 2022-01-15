@@ -44,8 +44,8 @@
 	score_achievement_type = /datum/award/score/ancient_ai_score
 
 	loot = list(/obj/item/malf_upgrade)
-	common_loot = list(/obj/effect/spawner/random/ancient_ai, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic)
-	common_crusher_loot = list(/obj/effect/spawner/random/ancient_ai, /obj/item/experimental_components, /obj/item/mod/control/pre_equipped/exotic, /obj/item/crusher_trophy/ai_core)
+	common_loot = list(/obj/effect/spawner/random/boss/ancient_ai, /obj/item/experimental_components, /obj/effect/spawner/random/boss/ancient_ai/valuable)
+	common_crusher_loot = list(/obj/effect/spawner/random/boss/ancient_ai, /obj/item/experimental_components, /obj/effect/spawner/random/boss/ancient_ai/valuable, /obj/item/crusher_trophy/ai_core)
 	spawns_minions = TRUE
 
 	var/rocket_type = /obj/projectile/bullet/a84mm/ancient/at
@@ -75,7 +75,7 @@
 	for(var/obj/machinery/ancient_server/server in server_list)
 		server.armor = initial(server.armor)
 		server.armor[MELEE] = min(server.armor[MELEE] + SERVER_ARMOR_PER_MINER, 80)
-		server.armor[BOMB] = min(server.armor[BOMB] + SERVER_ARMOR_PER_MINER, 80)
+		server.armor[BOMB] = min(server.armor[BOMB] + SERVER_ARMOR_PER_MINER, 95)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -259,7 +259,7 @@
 	icon_state = "drone_spawner"
 
 	max_integrity = 200
-	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 65, BIO = 100, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -297,7 +297,7 @@
 	icon_state = "laser_flower"
 
 	max_integrity = 200
-	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 75, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 65, BIO = 100, FIRE = 100, ACID = 100)
 	density = TRUE
 	anchored = TRUE
 
@@ -415,8 +415,8 @@
 	var/speed = 5
 	while(angle_1 < default_angle + 90)
 		angle_1 = min(angle_1 + speed, default_angle + 90)
-		angle_2 = min(angle_1 + round(speed / 2), default_angle + 90)
-		angle_3 = min(angle_1 + round(speed / 2), default_angle + 90)
+		angle_2 = min(angle_2 + round(speed / 2), default_angle + 90)
+		angle_3 = min(angle_3 + round(speed / 2), default_angle + 90)
 		speed = min(15, speed * 2)
 		check_damage()
 		update_icon()
@@ -434,8 +434,8 @@
 	speed = 2
 	while(angle_1 > default_angle - 90)
 		angle_1 = max(angle_1 - speed, default_angle - 90)
-		angle_2 = max(angle_1 - round(speed / 2), default_angle - 90)
-		angle_3 = max(angle_1 - round(speed / 2), default_angle - 90)
+		angle_2 = max(angle_2 - round(speed / 2), default_angle - 90)
+		angle_3 = max(angle_3 - round(speed / 2), default_angle - 90)
 		speed = min(15, speed * 2)
 		check_damage()
 		update_icon()
@@ -515,7 +515,7 @@
 	anchored = TRUE
 
 	max_integrity = 300
-	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 50, BIO = 0, FIRE = 100, ACID = 100)
+	armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 65, BIO = 0, FIRE = 100, ACID = 100)
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
@@ -720,13 +720,15 @@
 
 /obj/item/organ/cyberimp/chest/thrusters/wingpack
 	name = "implantable wingpack"
-	desc = "A prototype which can be used anywhere if there's enough air. Sadly, due to high costs this model has never made it to mass production."
+	desc = "A prototype wingpack which can be used anywhere if there's enough air. Sadly, due to high production cost and poor performance in high pressure this model has never made it to mass production."
 	icon_state = "wingpack"
 	base_icon_state = "wingpack"
-	actions_types = list(/datum/action/item_action/organ_action/toggle, /datum/action/item_action/organ_action/wingpack_rockets)
+	actions_types = list(/datum/action/item_action/organ_action/toggle/wingpack, /datum/action/item_action/organ_action/wingpack_rockets, /datum/action/item_action/organ_action/wingpack_ascend, /datum/action/item_action/organ_action/wingpack_choose_beacon)
 	var/mutable_appearance/wingpack_overlay
 	var/mutable_appearance/wingpack_underlay
 	var/rocket_cooldown = 0
+	var/ascend_cooldown = 0
+	var/obj/structure/extraction_point/beacon
 
 /obj/item/organ/cyberimp/chest/thrusters/wingpack/Insert(mob/living/carbon/thruster_owner, special = 0)
 	. = ..()
@@ -747,69 +749,124 @@
 			return FALSE
 		if(allow_thrust(0.01))
 			on = TRUE
-			ion_trail.start()
 			RegisterSignal(owner, COMSIG_MOVABLE_MOVED, .proc/move_react)
 			RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, .proc/pre_move_react)
 			RegisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE, .proc/spacemove_react)
-			ADD_TRAIT(owner, TRAIT_MOVE_FLOATING, MEGAFAUNA_TRAIT)
+			ADD_TRAIT(owner, TRAIT_MOVE_FLOATING, ANCIENT_AI_TRAIT)
 			if(!silent)
 				to_chat(owner, span_notice("You turn your wingpack on."))
+			update_owner_overlays(overlay_modifier = "-on")
 	else
-		ion_trail.stop()
 		UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
 		UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
 		UnregisterSignal(owner, COMSIG_MOVABLE_SPACEMOVE)
-		REMOVE_TRAIT(owner, TRAIT_MOVE_FLOATING, MEGAFAUNA_TRAIT)
+		REMOVE_TRAIT(owner, TRAIT_MOVE_FLOATING, ANCIENT_AI_TRAIT)
 		if(!silent)
 			to_chat(owner, span_notice("You turn your wingpack off."))
 		on = FALSE
-	update_owner_overlays()
+		update_owner_overlays()
 	update_appearance()
 
-/obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/update_owner_overlays(mob/living/carbon/thruster_owner = owner)
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/update_owner_overlays(mob/living/carbon/thruster_owner = owner, overlay_modifier = "")
 	if(wingpack_overlay || wingpack_underlay)
 		thruster_owner.overlays -= wingpack_overlay
 		thruster_owner.underlays -= wingpack_underlay
 		qdel(wingpack_overlay)
 		qdel(wingpack_underlay)
 
-	wingpack_underlay = mutable_appearance('icons/effects/effects.dmi', "wingpack-underlay[on ? "-on" : ""]")
-	wingpack_overlay = mutable_appearance('icons/effects/effects.dmi', "wingpack-overlay[on ? "-on" : ""]")
+	wingpack_underlay = mutable_appearance('icons/effects/effects.dmi', "wingpack-underlay[overlay_modifier]")
+	wingpack_overlay = mutable_appearance('icons/effects/effects.dmi', "wingpack-overlay[overlay_modifier]")
 
 	thruster_owner.overlays += wingpack_overlay
 	thruster_owner.underlays += wingpack_underlay
 
 /obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/rocket_strike()
 	playsound(get_turf(owner), 'sound/machines/terminal_on.ogg', 50, TRUE)
+	playsound(get_turf(owner), 'sound/mecha/mechmove03.ogg', 50, TRUE)
 	var/strike_successfull = FALSE
+	var/strikes_left = 3
 	for(var/mob/living/simple_animal/hostile/possible_target in view(9, owner))
-		to_chat(owner, "[possible_target] [possible_target.faction] [owner.faction] [owner.faction_check_mob(possible_target)]")
-		if(owner.faction_check_mob(possible_target))
+		if(owner.faction_check_mob(possible_target) || possible_target.stat == DEAD)
 			continue
+
+		strikes_left -= 1
 
 		podspawn(list(
 			"target" = get_turf(possible_target),
 			"style" = STYLE_MISSILE,
 			"effectMissile" = TRUE,
-			"explosionSize" = list(0,0,1,2),
-			delays = list(POD_FALLING = 2)
+			"explosionSize" = list(0,1,1,2),
+			delays = list(POD_TRANSIT = 0, POD_FALLING = 2, POD_OPENING = 0, POD_LEAVING = 0)
 		))
 		strike_successfull = TRUE
 		playsound(get_turf(owner), 'sound/weapons/gun/general/rocket_launch.ogg', 50, TRUE)
+		if(!strikes_left)
+			break
 		sleep(3)
 
 	if(strike_successfull)
 		to_chat(owner, span_notice("Overlord Smartstrike activated. Targets acquired. Launching rockets."))
-		rocket_cooldown = world.time + 30 SECONDS
+		rocket_cooldown = world.time + 15 SECONDS
 	else
 		to_chat(owner, span_notice("Overlord Smartstrike activated. Failed to acquire targets. Aborting launch."))
-		rocket_cooldown = world.time + 10 SECONDS
+		rocket_cooldown = world.time + 5 SECONDS
+
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/ascend() //escape all nasty situations with ease using your wingpack
+	ascend_cooldown = world.time + 10 MINUTES
+	ADD_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
+	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)
+	if(owner.buckled)
+		owner.buckled.unbuckle_mob(owner, TRUE)
+	owner.status_flags |= GODMODE
+	update_owner_overlays(overlay_modifier = "-ascend")
+	var/prev_pixel_z = owner.pixel_z
+
+	playsound(get_turf(owner), 'sound/vehicles/rocketlaunch.ogg', 100, TRUE)
+	animate(owner, pixel_z = prev_pixel_z + 96, time = 40, easing = ELASTIC_EASING)
+	owner.spin(40, 4)
+	sleep(40)
+
+	animate(owner, pixel_z = 512, time = 15)
+	owner.spin(15, 1)
+	sleep(15)
+
+	var/list/flooring_near_beacon = list()
+	for(var/turf/open/floor in orange(1, beacon))
+		flooring_near_beacon += floor
+	owner.forceMove(pick(flooring_near_beacon))
+
+	animate(owner, pixel_z = prev_pixel_z + 96, time = 15)
+	owner.spin(15, 1)
+	sleep(15)
+
+	animate(src, pixel_z = prev_pixel_z, time = 20, flags = ANIMATION_END_NOW)
+	owner.spin(40, 4)
+	sleep(40)
+
+	REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)
+	owner.status_flags &= ~GODMODE
+	update_owner_overlays(overlay_modifier = "-on")
+
+/datum/action/item_action/organ_action/toggle/wingpack
+	background_icon_state = "bg_tech_blue"
+
+/datum/action/item_action/organ_action/toggle/wingpack/Trigger()
+	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
+		var/obj/item/organ/cyberimp/chest/thrusters/wingpack/wingpack = target
+		if(!do_after(owner, 2 SECONDS, owner, timed_action_flags = IGNORE_HELD_ITEM))
+			to_chat(owner, span_warning("You have to stand still to toggle your wingpack!"))
+			return
+
+		playsound(get_turf(owner), 'sound/mecha/mechmove03.ogg', 50, TRUE)
+		wingpack.toggle()
 
 /datum/action/item_action/organ_action/wingpack_rockets
 	name = "Activate Overlord Smartstrike"
-	desc = "Activate your wingpack's built-in rocket turrets, raining hellfire from the sky."
+	desc = "Activate your wingpack's built-in rocket launchers, raining hellfire from the sky."
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "sniper_zoom"
+	background_icon_state = "bg_tech_blue"
 
 /datum/action/item_action/organ_action/wingpack_rockets/Trigger()
 	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
@@ -818,11 +875,67 @@
 			to_chat(owner, span_warning("Your wingpack hasn't yet recovered from previous Overlord Smartstrike. Wait [DisplayTimeText(wingpack.rocket_cooldown - world.time)] before using it again!"))
 			return
 
+		if(!wingpack.on)
+			to_chat(owner, span_warning("Your wingpack has to be on to use Overlord Smartstrike!"))
+			return
+
 		wingpack.rocket_strike()
 
-/obj/effect/spawner/random/ancient_ai
+/datum/action/item_action/organ_action/wingpack_ascend
+	name = "Begin Ascend"
+	desc = "Overload your thrusters to ascend into the air and escape any nasty situation."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "wingpack_ascend"
+	background_icon_state = "bg_tech_blue"
+
+/datum/action/item_action/organ_action/wingpack_ascend/Trigger()
+	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
+		var/obj/item/organ/cyberimp/chest/thrusters/wingpack/wingpack = target
+		if(wingpack.ascend_cooldown > world.time)
+			to_chat(owner, span_warning("Your wingpack hasn't yet recovered from previous thruster overload. Wait [DisplayTimeText(wingpack.ascend_cooldown - world.time)] before using it again!"))
+			return
+
+		if(!wingpack.on)
+			to_chat(owner, span_warning("Your wingpack has to be on to begin ascension!"))
+			return
+
+		if(!wingpack.beacon)
+			to_chat(owner, span_warning("You don't have a beacon selected!"))
+			return
+
+		wingpack.ascend()
+
+/datum/action/item_action/organ_action/wingpack_choose_beacon
+	name = "Select Extraction Point"
+	desc = "Select an extraction point to which your wingpack will deliver you when you overload it."
+	icon_icon = 'icons/obj/fulton.dmi'
+	button_icon_state = "extraction_point"
+	background_icon_state = "bg_tech_blue"
+
+/datum/action/item_action/organ_action/wingpack_choose_beacon/Trigger()
+	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
+		var/obj/item/organ/cyberimp/chest/thrusters/wingpack/wingpack = target
+		var/list/possible_beacons = list()
+		for(var/obj/structure/extraction_point/extraction_point as anything in GLOB.total_extraction_beacons)
+			possible_beacons += extraction_point
+
+		if(!length(possible_beacons))
+			to_chat(owner, span_warning("There are no extraction beacons availible!"))
+			return
+		else
+			var/chosen_beacon = tgui_input_list(owner, "Beacon to connect to", "Implantable Wingpack", sort_names(possible_beacons))
+			if(isnull(chosen_beacon))
+				return
+			wingpack.beacon = chosen_beacon
+			to_chat(owner, span_notice("You link your wingpack to the beacon system."))
+
+/obj/effect/spawner/random/boss/ancient_ai
 	name = "ancient AI loot spawner"
-	loot = list(/obj/item/personal_drone_shell = 1, /obj/item/bait_beacon = 1, /obj/item/organ/cyberimp/chest/thrusters/wingpack = 2) // 50% for good shit, 50% for meh
+	loot = list(/obj/item/personal_drone_shell = 1, /obj/item/bait_beacon = 1)
+
+/obj/effect/spawner/random/boss/ancient_ai/valuable
+	name = "ancient AI valuable loot spawner"
+	loot = list(/obj/item/organ/cyberimp/chest/thrusters/wingpack = 1, /obj/item/mod/control/pre_equipped/exotic = 1)
 
 #undef FLOOR_SHOCK_LENGTH
 #undef DRONE_RESPAWN_COOLDOWN

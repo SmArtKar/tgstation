@@ -776,7 +776,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define DRONE_SHY_TRAIT "drone_shy"
 /// Pacifism trait given by stabilized light pink extracts.
 #define STABILIZED_LIGHT_PINK_TRAIT "stabilized_light_pink"
-#define DEMON_STONE_TRAIT "demon_stone_trait"
+#define DEMON_STONE_TRAIT "demon_stone"
+#define ANCIENT_AI_TRAIT "ancient_ai"
+#define TIME_CRYSTAL_TRAIT "time_crystal"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and

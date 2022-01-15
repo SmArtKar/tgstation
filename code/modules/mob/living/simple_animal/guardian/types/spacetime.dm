@@ -148,5 +148,5 @@
 		else
 			to_chat(victim, span_userdanger("The tremors from the bluespace collapse landing sends you flying!"))
 			var/fly_away_direction = get_dir(src, victim)
-			victim.throw_at(get_edge_target_turf(victim, fly_away_direction), 4, 3)
+			victim.throw_at(get_edge_target_turf(victim, fly_away_direction), 4, 2)
 			victim.adjustBruteLoss(30 * damage_mod)

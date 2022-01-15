@@ -40,8 +40,8 @@
 	score_achievement_type = /datum/award/score/spider_queen_score
 
 	loot = list(/obj/item/organ/eyes/night_vision/spider, /obj/item/spider_eye)
-	common_loot = list(/obj/effect/spawner/random/spider_queen)
-	common_crusher_loot = list(/obj/effect/spawner/random/spider_queen, /obj/item/crusher_trophy/spider_leg)
+	common_loot = list(/obj/effect/spawner/random/boss/spider_queen)
+	common_crusher_loot = list(/obj/effect/spawner/random/boss/spider_queen, /obj/item/crusher_trophy/spider_leg)
 	spawns_minions = TRUE
 
 	wander = TRUE
@@ -243,7 +243,6 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shockwave(range = 3, iteration_duration = 2)
 	visible_message("<span class='boldwarning'>[src] smashes the ground around them!</span>")
 	playsound(src, 'sound/weapons/sonic_jackhammer.ogg', 200, 1)
-	SLEEP_CHECK_DEATH(5, src)
 	var/list/hit_things = list()
 	for(var/i in 1 to range)
 		for(var/turf/T in (view(i, src) - view(i - 1, src)))
@@ -525,7 +524,7 @@
 	qdel(I)
 	adjustHealth(-75) //Heal it with bagelshrooms!
 
-/obj/effect/spawner/random/spider_queen
+/obj/effect/spawner/random/boss/spider_queen
 	name = "spider queen loot spawner"
 	loot = list(/obj/item/stack/sheet/spidersilk = 1, /obj/structure/spider/queen_egg/mount = 1)
 
