@@ -812,12 +812,11 @@
 		rocket_cooldown = world.time + 5 SECONDS
 
 /obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/ascend() //escape all nasty situations with ease using your wingpack
-	ascend_cooldown = world.time + 10 MINUTES
+	ascend_cooldown = world.time + 15 MINUTES
 	ADD_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
 	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)
 	if(owner.buckled)
 		owner.buckled.unbuckle_mob(owner, TRUE)
-	owner.status_flags |= GODMODE
 	update_owner_overlays(overlay_modifier = "-ascend")
 	var/prev_pixel_z = owner.pixel_z
 
@@ -845,7 +844,6 @@
 
 	REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)
-	owner.status_flags &= ~GODMODE
 	update_owner_overlays(overlay_modifier = "-on")
 
 /datum/action/item_action/organ_action/toggle/wingpack
