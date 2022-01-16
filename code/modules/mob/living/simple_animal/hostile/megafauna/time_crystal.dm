@@ -625,7 +625,7 @@
 
 	var/mob/living/simple_animal/hostile/megafauna/jungle/attacker
 	for(var/mob/living/simple_animal/hostile/megafauna/jungle/mega in GLOB.megafauna)
-		if(mega.target == user || ((user in mega.former_targets) && get_dist(user, mega) <= mega.aggro_vision_range))
+		if(mega.target == owner || ((owner in mega.former_targets) && get_dist(owner, mega) <= mega.aggro_vision_range))
 			attacker = mega
 			break
 

@@ -487,6 +487,7 @@
 	var/obj/item/organ/cyberimp/arm/vine_tentacle/tentacle
 	var/list/vines = list()
 	var/list/vine_targets = list()
+	var/active = TRUE
 
 /obj/item/organ/heart/jungle/Insert(mob/living/carbon/target, special = 0)
 	. = ..()
@@ -527,14 +528,15 @@
 			continue
 		owner.reagents.remove_reagent(reagent.type, reagent.metabolization_rate * delta_time / owner.metabolism_efficiency * 9) //Basically renders chems useless so you have to rely solely on seedling cores
 
-	if(get_area(owner).type in GLOB.the_station_areas)
+	var/area/owner_area = get_area(owner)
+	if(owner_area.type in GLOB.the_station_areas)
 		active = FALSE
-		target.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
-		target.remove_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
+		owner.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+		owner.remove_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 	else
 		active = TRUE
-		target.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
-		target.add_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
+		owner.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+		owner.add_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 	. = ..()
 
 /obj/item/organ/heart/jungle/proc/on_move(atom/movable/movable, atom/old_loc)

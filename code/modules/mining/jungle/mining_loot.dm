@@ -52,7 +52,7 @@
 
 /obj/item/clothing/suit/hooded/alloy_armor/process(delta_time)
 	var/new_slowdown = 0
-	if(!lavaland_equipment_pressure_check(get_turf(user)))
+	if(!lavaland_equipment_pressure_check(get_turf(src)))
 		new_slowdown = 1.5
 
 	if(slowdown != new_slowdown)
