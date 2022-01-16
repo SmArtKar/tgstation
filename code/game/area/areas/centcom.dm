@@ -91,6 +91,10 @@
 /area/centcom/supplypod/loading/ert
 	name = "ERT Bay"
 	loading_id = "5"
+
+/area/centcom/space_cutter
+	name = "Subspace Pocket"
+
 //THUNDERDOME
 
 /area/tdome

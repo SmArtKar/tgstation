@@ -222,9 +222,9 @@
 
 	if(anger_modifier == 6)
 		rocket_type = /obj/projectile/bullet/a84mm/ancient/heavy
-	else if(anger_modifier > 4)
+	else if(anger_modifier > 3)
 		rocket_type = /obj/projectile/bullet/a84mm/ancient
-	else if(anger_modifier > 1)
+	else if(anger_modifier > 0)
 		rocket_type = /obj/projectile/bullet/a84mm/he/ancient
 	else
 		rocket_type = /obj/projectile/bullet/a84mm/ancient/at
@@ -812,7 +812,7 @@
 		rocket_cooldown = world.time + 5 SECONDS
 
 /obj/item/organ/cyberimp/chest/thrusters/wingpack/proc/ascend() //escape all nasty situations with ease using your wingpack
-	ascend_cooldown = world.time + 15 MINUTES
+	ascend_cooldown = world.time + 10 MINUTES
 	ADD_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
 	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)
 	if(owner.buckled)
@@ -849,6 +849,8 @@
 /datum/action/item_action/organ_action/toggle/wingpack
 	background_icon_state = "bg_tech_blue"
 
+	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_IMMOBILE|AB_CHECK_LYING
+
 /datum/action/item_action/organ_action/toggle/wingpack/Trigger()
 	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
 		var/obj/item/organ/cyberimp/chest/thrusters/wingpack/wingpack = target
@@ -865,6 +867,8 @@
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "sniper_zoom"
 	background_icon_state = "bg_tech_blue"
+
+	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_IMMOBILE|AB_CHECK_LYING
 
 /datum/action/item_action/organ_action/wingpack_rockets/Trigger()
 	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))
@@ -885,6 +889,8 @@
 	icon_icon = 'icons/mob/actions/actions_items.dmi'
 	button_icon_state = "wingpack_ascend"
 	background_icon_state = "bg_tech_blue"
+
+	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_IMMOBILE|AB_CHECK_LYING
 
 /datum/action/item_action/organ_action/wingpack_ascend/Trigger()
 	if(istype(target, /obj/item/organ/cyberimp/chest/thrusters/wingpack))

@@ -35,8 +35,9 @@
 	gps_name = "Quantum Signal"
 	del_on_death = TRUE
 
-	common_loot = list(/obj/effect/spawner/random/boss/bluespace_spirit, /obj/item/bluespace_megacrystal) //Rewarding everybody who killed him because he becomes very difficult with multiple players
-	common_crusher_loot = list(/obj/effect/spawner/random/boss/bluespace_spirit, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
+	loot = list(/obj/item/space_cutter)
+	common_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal) //Rewarding everybody who killed him because he becomes very difficult with multiple players
+	common_crusher_loot = list(/obj/item/guardiancreator/tech/spacetime, /obj/item/bluespace_megacrystal, /obj/item/crusher_trophy/bluespace_rift)
 
 	var/list/copies = list()
 	var/charging = FALSE
@@ -718,7 +719,7 @@
 
 /obj/item/cursed_katana/spacetime_manipulator/proc/repulse(mob/living/target, mob/user)
 	visible_message(span_warning("[user] repulses everything around them!</span>"))
-	playsound(user, 'sound/weapons/sonic_jackhammer.ogg', 200, 1)
+	playsound(user, 'sound/weapons/sonic_jackhammer.ogg', 100, 1)
 	sleep(2)
 	for(var/turf/target_turf in view(1, user))
 		if(!target_turf)
@@ -816,7 +817,147 @@
 #undef ATTACK_PARTICLE
 #undef ATTACK_CLOAK
 
+#define CUT_COOLDOWN 30 SECONDS
+#define SPIT_OUT_TIME 3 SECONDS
+#define SPIT_OUT_STUN 7.5 SECONDS
 
-/obj/effect/spawner/random/boss/bluespace_spirit
-	name = "bluespace spirit loot spawner"
-	loot = list(/obj/item/guardiancreator/tech/spacetime = 1)
+/obj/effect/landmark/space_cutter
+	name = "space cutter room"
+	icon_state = "space_cutter"
+
+/obj/effect/landmark/space_cutter/Initialize(mapload)
+	. = ..()
+	new /obj/structure/pocket_rift(get_turf(src), TRUE)
+
+/obj/item/space_cutter
+	name = "The Space Cutter"
+	desc = "An experimental sword with a bluespace blade, capable of cutting space-time. Sadly it's not able to cut flesh at all."
+	icon = 'icons/obj/lavaland/artefacts.dmi'
+	icon_state = "space_cutter"
+	inhand_icon_state = "space_cutter"
+	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
+	force = 0
+	w_class = WEIGHT_CLASS_NORMAL
+	throwforce = 0
+	throw_range = 5
+	throw_speed = 2
+	var/cut_cooldown = 0
+	var/obj/structure/pocket_rift/rift
+
+/obj/item/space_cutter/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(!user.Adjacent(target))
+		return
+
+	if(cut_cooldown > world.time)
+		to_chat(user, span_warning("[src] hasn't cooled down it's bluespace circuitry yet. Wait [DisplayTimeText(cut_cooldown - world.time)] before using it again!"))
+		return
+
+	if(!do_after(user, 5 SECONDS, target = get_turf(target)))
+		return
+
+	if(rift)
+		qdel(rift)
+
+	cut_cooldown = world.time + CUT_COOLDOWN
+	user.visible_message(span_warning("[user] swings [src] in the air and forms a bluespace rift!"))
+	rift = new(get_turf(target))
+	playsound(get_turf(target), 'sound/magic/forcewall.ogg', 50, TRUE)
+
+/obj/structure/pocket_rift
+	name = "bluespace rift"
+	desc = "An odd bluespace rift that leads somewhere unknown..."
+	icon = 'icons/obj/carp_rift.dmi'
+	icon_state = "carp_rift"
+	anchored = TRUE
+	density = TRUE
+
+	armor = list(MELEE = 100, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 100, BIO = 100, FIRE = 100, ACID = 100)
+	resistance_flags = INDESTRUCTIBLE
+
+	var/obj/structure/pocket_rift/connected_rift
+	var/collapsing = FALSE
+	var/source_portal = FALSE
+
+/obj/structure/pocket_rift/Initialize(mapload, source_port = FALSE)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_MOB_HATED, INNATE_TRAIT)
+	source_portal = source_port
+	var/obj/effect/landmark/space_cutter/landmark = locate(/obj/effect/landmark/space_cutter) in GLOB.landmarks_list
+	if(get_turf(src) == get_turf(landmark))
+		source_portal = TRUE
+		return
+
+	connected_rift = locate(/obj/structure/pocket_rift) in get_turf(landmark)
+	if(!connected_rift)
+		return
+
+	connected_rift.connected_rift = src
+
+/obj/structure/pocket_rift/Bumped(atom/movable/mover)
+	. = ..()
+	attempt_teleport(mover)
+
+/obj/structure/pocket_rift/attack_hand(mob/living/user, list/modifiers)
+	. = ..()
+	attempt_teleport(user)
+
+/obj/structure/pocket_rift/proc/attempt_teleport(atom/mover)
+	if(isanimal(mover) || !connected_rift)
+		to_chat(mover, span_warning("An unknown presence stops you from entering [src]!"))
+		return
+
+	var/turf/target_turf = get_turf(connected_rift)
+	if(do_teleport(mover, target_turf, null, channel = TELEPORT_CHANNEL_QUANTUM, asoundin = 'sound/effects/phasein.ogg', forced = TRUE))
+		for(var/mob/living/simple_animal/hostile/possible_attacker in range(21, get_turf(src)))
+			if(possible_attacker.target == mover)
+				possible_attacker.GiveTarget(src)
+
+	to_chat(mover, span_notice("You enter [src] and find yourself in [get_area_name(target_turf)]."))
+
+/obj/structure/pocket_rift/attack_generic(mob/user, damage_amount, damage_type, damage_flag, sound_effect, armor_penetration)
+	if(!collapsing && !source_portal)
+		collapse(user)
+		return
+	return ..()
+
+/obj/structure/pocket_rift/attack_paw(mob/user, list/modifiers)
+	if(!collapsing && !source_portal)
+		collapse(user)
+		return
+	return ..()
+
+/obj/structure/pocket_rift/attackby(obj/item/I, mob/living/user, params)
+	if(!collapsing && !source_portal)
+		collapse(user)
+		return
+	return ..()
+
+/obj/structure/pocket_rift/bullet_act(obj/projectile/proj)
+	if(!collapsing && !source_portal)
+		collapse(proj)
+		return
+	return ..()
+
+/obj/structure/pocket_rift/proc/collapse(atom/attacker)
+	collapsing = TRUE
+	visible_message(span_danger("[src] starts collapsing and folding on itself as it is hit by [attacker]!"))
+	playsound(src, 'sound/magic/repulse.ogg', 100)
+	playsound(connected_rift, 'sound/magic/repulse.ogg', 100) //Gives a small audio hint that the portal is collapsing
+	addtimer(CALLBACK(src, .proc/collapse_destroy), SPIT_OUT_TIME)
+
+/obj/structure/pocket_rift/proc/collapse_destroy()
+	visible_message(span_danger("[src] fully collapses!"))
+	for(var/mob/living/victim in range(3, get_turf(connected_rift)))
+		if(isanimal(victim))
+			continue
+		connected_rift.attempt_teleport(victim)
+		victim.Knockdown(SPIT_OUT_STUN)
+		victim.Paralyze(SPIT_OUT_STUN)
+	connected_rift.connected_rift = null
+	qdel(src)
+
+#undef CUT_COOLDOWN
+#undef SPIT_OUT_TIME
+#undef SPIT_OUT_STUN

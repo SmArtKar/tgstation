@@ -591,6 +591,11 @@
 	},
 /turf/open/floor/iron,
 /area/centcom/admin/storage)
+"cC" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-38-d"
+	},
+/area/centcom/space_cutter)
 "cD" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-21"
@@ -1372,6 +1377,12 @@
 /obj/structure/chair/stool/directional/south,
 /turf/open/floor/wood/parquet,
 /area/centcom/holding)
+"fL" = (
+/obj/machinery/light/small/directional/south,
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "fM" = (
 /turf/closed/indestructible/fakedoor{
 	name = "Guest House Back Entrance"
@@ -1526,6 +1537,11 @@
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/iron,
 /area/centcom/briefing/storage)
+"gz" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-12"
+	},
+/area/centcom/space_cutter)
 "gH" = (
 /obj/effect/turf_decal/siding/wood,
 /obj/structure/chair/sofa/corp/right{
@@ -1542,6 +1558,11 @@
 	},
 /turf/open/floor/eighties/red,
 /area/centcom/holding)
+"gL" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-10-d"
+	},
+/area/centcom/space_cutter)
 "gM" = (
 /obj/machinery/status_display/ai/directional/north,
 /obj/item/kirbyplants{
@@ -5688,6 +5709,11 @@
 	},
 /turf/open/floor/iron/dark,
 /area/centcom/ferry)
+"rs" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-137"
+	},
+/area/centcom/space_cutter)
 "rz" = (
 /obj/structure/sign/warning/securearea,
 /turf/closed/indestructible/riveted,
@@ -6513,6 +6539,11 @@
 	},
 /turf/open/floor/plating/airless,
 /area/syndicate_mothership/control)
+"ub" = (
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "ud" = (
 /obj/machinery/door/poddoor/shutters{
 	id = "nukeop_ready";
@@ -6985,6 +7016,12 @@
 /obj/item/toy/nuke,
 /turf/open/floor/wood,
 /area/syndicate_mothership/control)
+"vy" = (
+/obj/machinery/light/small/directional/north,
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "vz" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 1
@@ -8410,6 +8447,11 @@
 /obj/structure/chair/stool/directional/south,
 /turf/open/floor/iron/dark,
 /area/syndicate_mothership/control)
+"yY" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-21"
+	},
+/area/centcom/space_cutter)
 "zk" = (
 /obj/machinery/door/airlock/medical/glass{
 	name = "Infirmary"
@@ -9186,6 +9228,11 @@
 	},
 /turf/open/floor/engine/cult,
 /area/wizard_station)
+"BT" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-3"
+	},
+/area/centcom/space_cutter)
 "BV" = (
 /obj/structure/table/wood,
 /obj/machinery/computer/security/wooden_tv,
@@ -9334,6 +9381,11 @@
 /obj/structure/statue/uranium/nuke,
 /turf/open/floor/plating/asteroid/snow/airless,
 /area/syndicate_mothership)
+"Cs" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-10"
+	},
+/area/centcom/space_cutter)
 "CH" = (
 /obj/structure/table/reinforced,
 /obj/item/book/manual/wiki/security_space_law,
@@ -12907,6 +12959,12 @@
 	},
 /turf/open/space/basic,
 /area/space)
+"Kl" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "Kn" = (
 /obj/structure/bookcase/random,
 /obj/effect/turf_decal/tile/neutral{
@@ -13818,6 +13876,12 @@
 	name = "Guest House Entrance"
 	},
 /area/centcom/holding)
+"MP" = (
+/obj/effect/turf_decal/stripes/line,
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "MU" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
 /turf/open/floor/wood,
@@ -13976,6 +14040,14 @@
 /obj/structure/cable,
 /turf/open/floor/iron/dark,
 /area/centcom/briefing)
+"ND" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "NE" = (
 /turf/open/floor/iron,
 /area/centcom/supplypod/pod_storage)
@@ -14033,6 +14105,12 @@
 	},
 /turf/open/floor/iron/cafeteria,
 /area/centcom/holding)
+"Oc" = (
+/obj/machinery/light/small/directional/west,
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "Od" = (
 /obj/structure/cable,
 /turf/open/floor/wood,
@@ -14348,6 +14426,19 @@
 /obj/machinery/status_display/evac/directional/south,
 /turf/open/floor/iron/dark,
 /area/centcom/supply)
+"Pr" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
+"Ps" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-137-d"
+	},
+/area/centcom/space_cutter)
 "Pt" = (
 /obj/structure/table/reinforced,
 /obj/item/storage/toolbox/mechanical,
@@ -14568,6 +14659,11 @@
 	},
 /turf/open/floor/sepia,
 /area/centcom/holding)
+"Qn" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-38"
+	},
+/area/centcom/space_cutter)
 "Qo" = (
 /obj/structure/chair/comfy/black{
 	dir = 8
@@ -14693,6 +14789,12 @@
 	},
 /turf/open/floor/iron,
 /area/centcom/admin/storage)
+"QZ" = (
+/obj/effect/landmark/space_cutter,
+/turf/open/indestructible{
+	icon_state = "podfloor_light"
+	},
+/area/centcom/space_cutter)
 "Ra" = (
 /obj/effect/turf_decal/tile/dark,
 /obj/effect/turf_decal/tile/dark{
@@ -14743,6 +14845,14 @@
 /obj/machinery/light/small/directional/south,
 /turf/open/floor/wood/parquet,
 /area/centcom/holding)
+"Rh" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "Ri" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-22"
@@ -15351,6 +15461,12 @@
 /obj/structure/flora/ausbushes/brflowers,
 /turf/open/floor/grass,
 /area/centcom/holding)
+"TH" = (
+/obj/machinery/light/small/directional/east,
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "TJ" = (
 /obj/effect/turf_decal/siding/wood,
 /obj/effect/turf_decal/siding/wood{
@@ -15841,6 +15957,14 @@
 /obj/structure/cable,
 /turf/open/floor/iron/grimy,
 /area/centcom/admin)
+"VD" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "VE" = (
 /obj/machinery/modular_computer/console/preset/command{
 	dir = 8
@@ -16169,6 +16293,14 @@
 /obj/machinery/light_switch/directional/west,
 /turf/open/floor/iron/grimy,
 /area/centcom/admin)
+"WZ" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "Xa" = (
 /obj/item/storage/briefcase{
 	pixel_x = -3;
@@ -16285,6 +16417,14 @@
 	},
 /turf/open/floor/iron,
 /area/centcom/supplypod/loading/one)
+"XE" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor_dark"
+	},
+/area/centcom/space_cutter)
 "XF" = (
 /obj/effect/turf_decal/tile/yellow/half{
 	dir = 4
@@ -16500,6 +16640,11 @@
 	},
 /turf/open/floor/iron/dark,
 /area/centcom/briefing)
+"Yl" = (
+/turf/closed/indestructible/survival{
+	icon_state = "survival_pod_walls-21-d"
+	},
+/area/centcom/space_cutter)
 "Yn" = (
 /turf/closed/indestructible/riveted,
 /area/centcom/supplypod)
@@ -17602,11 +17747,11 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
+cC
+BT
+BT
+BT
+Yl
 aa
 aa
 aa
@@ -17858,13 +18003,13 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
-aa
-aa
+cC
+rs
+ub
+Oc
+ub
+Cs
+Yl
 aa
 aa
 aa
@@ -18115,13 +18260,13 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
-aa
-aa
+gz
+ub
+Kl
+Pr
+VD
+ub
+gz
 aa
 aa
 aa
@@ -18372,13 +18517,13 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
-aa
-aa
+gz
+vy
+MP
+QZ
+WZ
+fL
+gz
 aa
 aa
 aa
@@ -18629,13 +18774,13 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
-aa
-aa
+gz
+ub
+ND
+Rh
+XE
+ub
+gz
 aa
 aa
 aa
@@ -18886,13 +19031,13 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
-aa
-aa
+gL
+yY
+ub
+TH
+ub
+Qn
+Ps
 aa
 aa
 aa
@@ -19144,11 +19289,11 @@ aa
 aa
 aa
 aa
-aa
-aa
-aa
-aa
-aa
+gL
+BT
+BT
+BT
+Ps
 aa
 aa
 aa

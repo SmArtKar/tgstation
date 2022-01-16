@@ -863,6 +863,10 @@
 	alert_type = /atom/movable/screen/alert/status_effect/vine_ring
 	var/mutable_appearance/ring_underlay
 	var/mutable_appearance/ring_overlay
+	var/brute_loss
+	var/fire_loss
+	var/tox_loss
+	var/oxy_loss
 
 /datum/status_effect/vine_ring/on_apply()
 	if(owner.stat != DEAD)
@@ -876,7 +880,11 @@
 		ring_overlay.pixel_y = owner.pixel_y
 		owner.overlays += ring_overlay
 
-		RegisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE, .proc/on_recieved_damage)
+		brute_loss = owner.getBruteLoss()
+		fire_loss = owner.getFireLoss()
+		tox_loss = owner.getToxLoss()
+		oxy_loss = owner.getOxyLoss()
+		RegisterSignal(owner, COMSIG_CARBON_HEALTH_UPDATE, .proc/update_health)
 		return TRUE
 	return FALSE
 
@@ -884,15 +892,24 @@
 	if(owner)
 		owner.underlays -= ring_underlay
 		owner.overlays -= ring_overlay
-		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE)
+		UnregisterSignal(owner, COMSIG_CARBON_HEALTH_UPDATE)
 	QDEL_NULL(ring_underlay)
 	QDEL_NULL(ring_overlay)
 	return ..()
 
-/datum/status_effect/vine_ring/proc/on_recieved_damage(attacker, damage, damagetype, def_zone)
+/datum/status_effect/vine_ring/proc/update_health(mob/living/source)
 	SIGNAL_HANDLER
 
-	to_chat(owner, span_danger("Your vine ring partially reflects the attack, but shatters in the process!"))
+	if(owner.getBruteLoss() > brute_loss)
+		owner.adjustBruteLoss((owner.getBruteLoss() - brute_loss) * -0.33)
+	if(owner.getFireLoss() > fire_loss)
+		owner.adjustFireLoss((owner.getFireLoss() - fire_loss) * -0.33)
+	if(owner.getToxLoss() > tox_loss)
+		owner.adjustToxLoss((owner.getToxLoss() - tox_loss) * -0.33)
+	if(owner.getOxyLoss() > oxy_loss)
+		owner.adjustOxyLoss((owner.getOxyLoss() - oxy_loss) * -0.33)
+
+	to_chat(owner, span_danger("Your vine ring partially reflects the attack, but breaks in the process!"))
 	owner.remove_status_effect(STATUS_EFFECT_VINE_RING)
 
 /datum/status_effect/vine_ring/be_replaced()
