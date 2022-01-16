@@ -526,9 +526,19 @@
 		if(!istype(reagent, /datum/reagent/medicine))
 			continue
 		owner.reagents.remove_reagent(reagent.type, reagent.metabolization_rate * delta_time / owner.metabolism_efficiency * 9) //Basically renders chems useless so you have to rely solely on seedling cores
+
+	if(get_area(owner).type in GLOB.the_station_areas)
+		active = FALSE
+		target.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+		target.remove_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
+	else
+		active = TRUE
+		target.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+		target.add_movespeed_modifier(/datum/movespeed_modifier/jungle_heart)
 	. = ..()
 
 /obj/item/organ/heart/jungle/proc/on_move(atom/movable/movable, atom/old_loc)
+
 	var/should_shoot = TRUE
 
 	if((LAZYLEN(vines) > VINE_MIN_DELETE && prob(VINE_DELETE_CHANCE)) || LAZYLEN(vines) > VINE_MAX)
@@ -545,6 +555,9 @@
 			vines.Remove(vine_target)
 			qdel(vine_to_delete)
 			vine_targets.Remove(vine_target)
+
+	if(!active)
+		return
 
 	var/target_angle = get_angle(old_loc, get_turf(movable))
 	if(target_angle < 0)

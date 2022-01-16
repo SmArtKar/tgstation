@@ -24,7 +24,7 @@
 		{
 			"Up": 1,
 			"Down": -1,
-			"Baseturf": "/turf/open/openspace/icemoon/jungle",
+			"Baseturf": "/turf/open/floor/plating/dirt/jungle",
             "Mining":true,
             "Station":false,
 			"Linkage": null,
@@ -33,7 +33,7 @@
 		},
 		{
 			"Down": -1,
-			"Baseturf": "/turf/open/openspace/icemoon/jungle",
+			"Baseturf": "/turf/open/floor/plating/dirt/jungle",
 			"Linkage": null,
             "Mining":true,
             "Station":true,

@@ -57,6 +57,7 @@
 
 
 	if(!attacker)
+		culmination_charge = clamp(culmination_charge - CHARGE_DRAINED_PER_SECOND * delta_time, 0, MAX_CULMINATION_CHARGE)
 		return
 
 	culmination_charge = clamp(culmination_charge + CHARGE_GAIN_PER_SECOND * delta_time, 0, MAX_CULMINATION_CHARGE)

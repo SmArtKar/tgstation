@@ -151,7 +151,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/violent_smash()
 
 	for(var/obj/machinery/giant_arm_holder/arm in range(12, src))
-		if(prob(70))
+		if(prob(60))
 			INVOKE_ASYNC(arm, /obj/machinery/giant_arm_holder/.proc/violent_smash)
 			continue
 		arm.violent_smash()
@@ -671,7 +671,7 @@
 
 /obj/item/bait_beacon/Initialize()
 	. = ..()
-	ADD_TRAIT(src, TRAIT_MOB_HATED, ROUNDSTART_TRAIT)
+	ADD_TRAIT(src, TRAIT_MOB_HATED, INNATE_TRAIT)
 
 /obj/item/bait_beacon/attack_self(mob/living/carbon/user, flag = 0, emp = 0)
 	if(!user)
@@ -818,10 +818,9 @@
 	if(owner.buckled)
 		owner.buckled.unbuckle_mob(owner, TRUE)
 	update_owner_overlays(overlay_modifier = "-ascend")
-	var/prev_pixel_z = owner.pixel_z
 
 	playsound(get_turf(owner), 'sound/vehicles/rocketlaunch.ogg', 100, TRUE)
-	animate(owner, pixel_z = prev_pixel_z + 96, time = 40, easing = ELASTIC_EASING)
+	animate(owner, pixel_z = 96, time = 40, easing = ELASTIC_EASING)
 	owner.spin(40, 4)
 	sleep(40)
 
@@ -834,13 +833,16 @@
 		flooring_near_beacon += floor
 	owner.forceMove(pick(flooring_near_beacon))
 
-	animate(owner, pixel_z = prev_pixel_z + 96, time = 15)
+	animate(owner, pixel_z = 192, time = 10)
+	sleep(10)
+
+	animate(owner, pixel_z = 96, time = 15, easing = ELASTIC_EASING)
 	owner.spin(15, 1)
 	sleep(15)
 
-	animate(src, pixel_z = prev_pixel_z, time = 20, flags = ANIMATION_END_NOW)
-	owner.spin(40, 4)
-	sleep(40)
+	animate(owner, pixel_z = 0, time = 20)
+	owner.spin(20, 4)
+	sleep(20)
 
 	REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)

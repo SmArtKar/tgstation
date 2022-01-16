@@ -535,10 +535,9 @@
 
 	var/mob/living/carbon/eater = user
 
-	eater.revive(full_heal = TRUE, admin_revive = TRUE)
 	eater.apply_status_effect(STATUS_EFFECT_CRYSTAL_HEART)
 	playsound(eater, 'sound/magic/staff_healing.ogg', 20, TRUE)
-	to_chat(eater, span_notice("You feel great!"))
+	to_chat(eater, span_notice("You feel much tougher!"))
 	qdel(src)
 
 /obj/effect/temp_visual/chronoexplosion
@@ -623,6 +622,16 @@
 		rewind()
 
 /obj/item/amber_hourglass/proc/rewind()
+
+	var/mob/living/simple_animal/hostile/megafauna/jungle/attacker
+	for(var/mob/living/simple_animal/hostile/megafauna/jungle/mega in GLOB.megafauna)
+		if(mega.target == user || ((user in mega.former_targets) && get_dist(user, mega) <= mega.aggro_vision_range))
+			attacker = mega
+			break
+
+	if(!attacker)
+		return
+
 	to_chat(owner, span_notice("You remember a time not so long ago..."))
 	sleep(3)
 	playsound(get_turf(owner), 'sound/effects/ethereal_revive_fail.ogg', 100)

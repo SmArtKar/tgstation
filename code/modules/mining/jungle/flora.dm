@@ -112,7 +112,7 @@
 	icon_dead = "berry-dead"
 	product = /obj/item/food/grown/jungle_flora/rapsberry
 	genes = list(/datum/plant_gene/trait/repeated_harvest, /datum/plant_gene/trait/maxchem, /datum/plant_gene/trait/injector)
-	reagents_add = list(/datum/reagent/consumable/sugar = 0.04, /datum/reagent/consumable/nutriment = 0.02, /datum/reagent/consumable/nutriment/vitamin = 0.06, /datum/reagent/consumable/vitfro = 0.08)
+	reagents_add = list(/datum/reagent/consumable/sugar = 0.04, /datum/reagent/consumable/nutriment = 0.04, /datum/reagent/consumable/vitfro = 0.08, /datum/reagent/consumable/capsaicin = 0.15)
 
 /// Beer Root
 
@@ -201,7 +201,7 @@
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "dirt" = 1)
 	foodtypes = VEGETABLES
-	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/flour/bagelshroom = 4)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/flour/bagelshroom = 4, /datum/reagent/drug/space_drugs = 4)
 
 /obj/item/food/cut_bagelshroom/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/fried_bagelshroom, rand(10 SECONDS, 20 SECONDS), TRUE)
@@ -213,7 +213,7 @@
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "bagels" = 3)
 	foodtypes = VEGETABLES | GRAIN
-	food_reagents = list(/datum/reagent/consumable/nutriment = 6)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 6, /datum/reagent/drug/space_drugs = 2)
 
 /obj/item/seeds/jungle/bagelshroom
 	name = "pack of bagelshroom mycelium"
@@ -229,4 +229,4 @@
 	genes = list(/datum/plant_gene/trait/repeated_harvest)
 	graft_gene = /datum/plant_gene/trait/repeated_harvest
 
-	reagents_add = list(/datum/reagent/consumable/nutriment = 0.1, /datum/reagent/consumable/flour/bagelshroom = 0.2)
+	reagents_add = list(/datum/reagent/consumable/nutriment = 0.1, /datum/reagent/consumable/flour/bagelshroom = 0.2, /datum/reagent/drug/space_drugs = 0.2)

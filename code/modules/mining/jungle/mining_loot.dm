@@ -42,6 +42,25 @@
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	transparent_protection = HIDEGLOVES|HIDESUITSTORAGE|HIDEJUMPSUIT|HIDESHOES
 
+/obj/item/clothing/suit/hooded/alloy_armor/Initialize(mapload)
+	. = ..()
+	START_PROCESSING(SSobj, src)
+
+/obj/item/clothing/suit/hooded/alloy_armor/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	. = ..()
+
+/obj/item/clothing/suit/hooded/alloy_armor/process(delta_time)
+	var/new_slowdown = 0
+	if(!lavaland_equipment_pressure_check(get_turf(user)))
+		new_slowdown = 1.5
+
+	if(slowdown != new_slowdown)
+		slowdown = new_slowdown
+		if(ismob(loc))
+			var/mob/owner = loc
+			owner.update_equipment_speed_mods()
+
 /obj/item/clothing/head/hooded/alloy_armor
 	name = "mechanical alloy helmet"
 	desc = "A helmet made out of mechanical alloy and bat sinew. \n Resonance effect can be also activated using resist hotkey instead of action button."

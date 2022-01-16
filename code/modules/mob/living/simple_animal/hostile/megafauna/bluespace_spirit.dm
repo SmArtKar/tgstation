@@ -850,6 +850,11 @@
 	if(!user.Adjacent(target))
 		return
 
+	if(target == rift)
+		user.visible_message(span_warning("[user] pierces [target] with [src] and it instantly folds onto itself!"))
+		rift.collapse_destroy()
+		return
+
 	if(cut_cooldown > world.time)
 		to_chat(user, span_warning("[src] hasn't cooled down it's bluespace circuitry yet. Wait [DisplayTimeText(cut_cooldown - world.time)] before using it again!"))
 		return
@@ -858,7 +863,7 @@
 		return
 
 	if(rift)
-		qdel(rift)
+		rift.collapse_destroy()
 
 	cut_cooldown = world.time + CUT_COOLDOWN
 	user.visible_message(span_warning("[user] swings [src] in the air and forms a bluespace rift!"))
@@ -948,7 +953,7 @@
 	addtimer(CALLBACK(src, .proc/collapse_destroy), SPIT_OUT_TIME)
 
 /obj/structure/pocket_rift/proc/collapse_destroy()
-	visible_message(span_danger("[src] fully collapses!"))
+	visible_message(span_danger("[src] collapses and spits everything inside of it out!"))
 	for(var/mob/living/victim in range(3, get_turf(connected_rift)))
 		if(isanimal(victim))
 			continue
