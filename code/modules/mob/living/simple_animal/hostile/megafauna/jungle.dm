@@ -5,8 +5,6 @@
  * Why? Because dying together is more fun than dying alone!
  */
 
-#define ARMOR_PER_ENEMY 0.15
-
 /mob/living/simple_animal/hostile/megafauna/jungle
 	faction = list("boss", "jungle")
 	weather_immunities = list(TRAIT_ACID_IMMUNE)
@@ -70,16 +68,16 @@
 		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
 			enemies += 1
 
-	enemies -= 1 //So we don't gain armor from a single guy
-
-	if(enemies <= 1)
+	if(enemies <= 0)
 		return
 
 	damage_coeff = initial_damage_coeff
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = max(damage_coeff[coeff] - ARMOR_PER_ENEMY * enemies, 0.2)
+		damage_coeff[coeff] = damage_coeff[coeff] / enemies
 
 /mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target) //Even if you hit once, you'll count
+	if(!new_target && LAZYLEN(former_targets))
+		return GiveTarget(pick(former_targets))
 	. = ..()
 	if(!(new_target in former_targets))
 		former_targets.Add(new_target)
@@ -121,5 +119,3 @@
 	. = ..()
 	initial_damage_coeff = damage_coeff.Copy()
 	ADD_TRAIT(src, TRAIT_NO_FLOATING_ANIM, INNATE_TRAIT)
-
-#undef ARMOR_PER_ENEMY

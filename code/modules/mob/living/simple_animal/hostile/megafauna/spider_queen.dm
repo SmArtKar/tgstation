@@ -32,7 +32,7 @@
 	ranged = TRUE
 	ranged_cooldown_time = 30
 	aggro_vision_range = 18
-	former_target_vision_range = 24
+	former_target_vision_range = 21
 	light_range = 0
 
 	achievement_type = /datum/award/achievement/boss/spider_queen_kill

@@ -6,8 +6,8 @@
 	icon_living = "snakeman"
 	icon_dead = "snakeman_dead"
 	mob_biotypes = MOB_ORGANIC | MOB_REPTILE | MOB_HUMANOID
-	speed = 4
-	move_to_delay = 4
+	speed = 6
+	move_to_delay = 6
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 2, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide = 1)
 	speak_emote = list("roars")
@@ -36,8 +36,8 @@
 
 	response_harm_continuous = "cleaves"
 	response_harm_simple = "cleaves"
-	speed = 5
-	move_to_delay = 5
+	speed = 8
+	move_to_delay = 8
 	ranged_cooldown_time = 3 SECONDS
 
 	maxHealth = 560 //280 in anger

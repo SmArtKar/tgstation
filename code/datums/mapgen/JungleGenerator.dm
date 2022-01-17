@@ -106,7 +106,7 @@
 	icon_state = "genturf"
 
 /area/mine/planetgeneration
-	name = "planet generation area"
+	name = "Planet Surface"
 
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 
@@ -116,19 +116,19 @@
 	outdoors = TRUE
 
 /area/mine/planetgeneration_caves
-	name = "planet caves generation area"
+	name = "Surface Caves"
 
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/cave_generator/jungle/surface
 	base_lighting_alpha = 0
 
 /area/mine/planetgeneration_caves/deep
-	name = "jungle caves generation area"
+	name = "Underground Caves"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep
 	base_lighting_alpha = 0
 
 /area/mine/planetgeneration_caves/deep/bottom
-	name = "deep jungle caves generation area"
+	name = "Deep Underground Caves"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep/bottom
 
 #undef PERLIN_NOISE_ZOOM

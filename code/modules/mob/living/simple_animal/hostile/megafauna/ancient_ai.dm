@@ -63,19 +63,17 @@
 		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
 			enemies += 1
 
-	enemies -= 1 //So we don't gain armor from a single guy
-
-	if(enemies <= 1)
+	if(enemies <= 0)
 		return
 
-	damage_coeff = initial(damage_coeff)
+	damage_coeff = initial_damage_coeff
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = clamp(damage_coeff[coeff] - 0.15 * enemies, 0.2, 1)
+		damage_coeff[coeff] = damage_coeff[coeff] / enemies
 
 	for(var/obj/machinery/ancient_server/server in server_list)
-		server.armor = initial(server.armor)
-		server.armor[MELEE] = min(server.armor[MELEE] + SERVER_ARMOR_PER_MINER, 80)
-		server.armor[BOMB] = min(server.armor[BOMB] + SERVER_ARMOR_PER_MINER, 95)
+		server.armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 65, BIO = 0, FIRE = 100, ACID = 100)
+		server.armor[MELEE] = 100 - ((100 - server.armor[MELEE]) / enemies)
+		server.armor[BOMB] = 100 - ((100 - server.armor[BOMB]) / enemies)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -151,7 +149,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/violent_smash()
 
 	for(var/obj/machinery/giant_arm_holder/arm in range(12, src))
-		if(prob(60))
+		if(prob(75))
 			INVOKE_ASYNC(arm, /obj/machinery/giant_arm_holder/.proc/violent_smash)
 			continue
 		arm.violent_smash()
@@ -412,15 +410,15 @@
 	. = ..()
 
 /obj/machinery/giant_arm_holder/proc/violent_smash()
-	var/speed = 5
+	var/speed = 2
 	while(angle_1 < default_angle + 90)
 		angle_1 = min(angle_1 + speed, default_angle + 90)
-		angle_2 = min(angle_2 + round(speed / 2), default_angle + 90)
-		angle_3 = min(angle_3 + round(speed / 2), default_angle + 90)
-		speed = min(15, speed * 2)
+		angle_2 = min(angle_2 + round(speed * 0.66), default_angle + 90)
+		angle_3 = min(angle_3 + round(speed * 0.66), default_angle + 90)
+		speed = min(10, speed + 2)
 		check_damage()
 		update_icon()
-		sleep(1)
+		sleep(0.10)
 
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 
@@ -429,17 +427,17 @@
 		angle_3 = min(angle_3 + speed, default_angle + 90)
 		check_damage()
 		update_icon()
-		sleep(1)
+		sleep(0.10)
 
 	speed = 2
 	while(angle_1 > default_angle - 90)
 		angle_1 = max(angle_1 - speed, default_angle - 90)
-		angle_2 = max(angle_2 - round(speed / 2), default_angle - 90)
-		angle_3 = max(angle_3 - round(speed / 2), default_angle - 90)
-		speed = min(15, speed * 2)
+		angle_2 = max(angle_2 - round(speed * 0.8), default_angle - 90)
+		angle_3 = max(angle_3 - round(speed * 0.8), default_angle - 90)
+		speed = min(10, speed + 2)
 		check_damage()
 		update_icon()
-		sleep(1)
+		sleep(0.10)
 
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 
@@ -448,14 +446,14 @@
 		angle_3 = max(angle_3 - speed, default_angle - 90)
 		check_damage()
 		update_icon()
-		sleep(1)
+		sleep(0.10)
 
 	while(angle_1 < default_angle)
 		angle_1 = min(angle_1 + 3, default_angle)
 		angle_2 = min(angle_2 + 3, default_angle)
 		angle_3 = min(angle_3 + 3, default_angle)
 		update_icon()
-		sleep(1)
+		sleep(0.10)
 
 
 /obj/machinery/giant_arm_holder/proc/check_damage()

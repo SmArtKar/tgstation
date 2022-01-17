@@ -22,13 +22,12 @@
 
 	area_type = /area
 	protect_indoors = TRUE
-	target_trait = ZTRAIT_ACIDRAIN
+	//target_trait = ZTRAIT_ACIDRAIN
 	weather_color = COLOR_GREEN_GRAY
 
 	immunity_type = TRAIT_ACID_IMMUNE
 
 	barometer_predictable = TRUE
-
 
 /datum/weather/acid_rain/weather_act(mob/living/L)
 	var/resist = L.getarmor(null, ACID)

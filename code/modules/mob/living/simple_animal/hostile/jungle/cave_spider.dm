@@ -10,7 +10,7 @@
 	mob_biotypes = MOB_ORGANIC | MOB_BUG
 	speak_emote = list("chitters")
 	emote_hear = list("chitters")
-	speed = 2
+	speed = 4
 	see_in_dark = 4
 	butcher_results = list(/obj/item/food/meat/slab/spider = 1, /obj/item/food/spiderleg = 8)
 	response_help_continuous = "pets"
@@ -27,7 +27,7 @@
 	melee_damage_upper = 15
 	faction = list("jungle", "spiders")
 	pass_flags = PASSTABLE
-	move_to_delay = 2
+	move_to_delay = 4
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	attack_sound = 'sound/weapons/bite.ogg'
