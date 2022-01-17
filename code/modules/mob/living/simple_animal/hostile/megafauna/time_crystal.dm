@@ -52,7 +52,7 @@
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/death(gibbed, list/force_grant)
-	for(var/obj/effect/temp_visual/crystal_killbeam/beam in killer_beams)
+	for(var/obj/effect/temp_visual/energy_killbeam/crystal/beam in killer_beams)
 		killer_beams -= beam
 		if(beam && !QDELETED(beam))
 			qdel(beam)
@@ -199,9 +199,8 @@
 	flick("crystal_beam_start", src)
 
 	for(var/mob/living/targeting in former_targets)
-		var/obj/effect/temp_visual/crystal_killbeam/beam = new(get_turf(targeting))
+		var/obj/effect/temp_visual/energy_killbeam/crystal/beam = new(get_turf(targeting), targeting)
 		killer_beams += beam
-		beam.target = targeting
 
 	addtimer(CALLBACK(src, .proc/stop_beaming), 10 SECONDS)
 
@@ -209,7 +208,7 @@
 	beaming = FALSE
 	update_icon()
 	flick("crystal_beam_stop", src)
-	for(var/obj/effect/temp_visual/crystal_killbeam/beam in killer_beams)
+	for(var/obj/effect/temp_visual/energy_killbeam/crystal/beam in killer_beams)
 		killer_beams -= beam
 		if(beam && !QDELETED(beam))
 			qdel(beam)
@@ -364,36 +363,6 @@
 	chronosphere.preparePixelProjectile(targeted_atom, src)
 	chronosphere.fire()
 	return chronosphere
-
-/obj/effect/temp_visual/crystal_killbeam
-	name = "energy beam"
-	icon_state = "crystal_ray"
-	icon = 'icons/mob/jungle/amber_crystal_big.dmi'
-	duration = 11 SECONDS
-	randomdir = FALSE
-	pass_flags = PASSCLOSEDTURF | PASSGLASS | PASSGRILLE | PASSMACHINE | PASSSTRUCTURE | PASSTABLE | PASSMOB | PASSDOORS | PASSVEHICLE
-	var/mob/living/target
-
-/obj/effect/temp_visual/crystal_killbeam/Initialize()
-	. = ..()
-	START_PROCESSING(SSfastprocess, src)
-
-/obj/effect/temp_visual/crystal_killbeam/Destroy()
-	STOP_PROCESSING(SSfastprocess, src)
-	. = ..()
-
-/obj/effect/temp_visual/crystal_killbeam/process()
-	if(!target || prob(20))
-		return
-
-	if(get_turf(src) == get_turf(target))
-		target.adjustFireLoss(10)
-		target.adjust_fire_stacks(0.2)
-		target.IgniteMob()
-		playsound(target, 'sound/weapons/sear.ogg', 50, TRUE)
-		to_chat(target, span_userdanger("[src] burns you!"))
-	else
-		Move(get_step(get_turf(src), get_dir(src, target)))
 
 /obj/item/crusher_trophy/crystal_shard
 	name = "crystal shard"
@@ -648,6 +617,9 @@
 	to_chat(owner, span_warning("[src] shatters as it fulfils it's purpose!"))
 	REMOVE_TRAIT(owner, TRAIT_AMBER_REWIND, TIME_CRYSTAL_TRAIT)
 	qdel(src)
+
+/obj/effect/temp_visual/energy_killbeam/crystal
+	duration = 11 SECONDS
 
 #undef AMBER_TIMESTOP_RANGE
 #undef AMBER_TIMESTOP_DURATION

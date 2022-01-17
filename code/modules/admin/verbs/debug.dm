@@ -669,13 +669,13 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 		names[name] = list(SSmapping.ice_ruins_underground_templates[name], ZTRAIT_ICE_RUINS_UNDERGROUND, list(/area/icemoon/underground/unexplored))
 	names += "---- Jungle Ruins ----"
 	for(var/name in SSmapping.jungle_ruins_templates)
-		names[name] = list(SSmapping.jungle_ruins_templates[name], ZTRAIT_JUNGLE_RUINS, list(/area/mine/planetgeneration))
+		names[name] = list(SSmapping.jungle_ruins_templates[name], ZTRAIT_JUNGLE_RUINS, list(/area/mine/unexplored/planetgeneration))
 	names += "---- Ice Ruins ----"
 	for(var/name in SSmapping.jungle_cave_ruins_templates)
-		names[name] = list(SSmapping.jungle_cave_ruins_templates[name], ZTRAIT_JUNGLE_RUINS, list(/area/mine/planetgeneration_caves))
+		names[name] = list(SSmapping.jungle_cave_ruins_templates[name], ZTRAIT_JUNGLE_RUINS, list(/area/mine/unexplored/planetgeneration_caves))
 	names += "---- Ice Ruins ----"
 	for(var/name in SSmapping.jungle_deep_cave_ruins_templates)
-		names[name] = list(SSmapping.jungle_deep_cave_ruins_templates[name], ZTRAIT_JUNGLE_CAVE_RUINS, list(/area/mine/planetgeneration_caves))
+		names[name] = list(SSmapping.jungle_deep_cave_ruins_templates[name], ZTRAIT_JUNGLE_CAVE_RUINS, list(/area/mine/unexplored/planetgeneration_caves))
 
 	var/ruinname = input("Select ruin", "Spawn Ruin") as null|anything in sort_list(names)
 	var/data = names[ruinname]

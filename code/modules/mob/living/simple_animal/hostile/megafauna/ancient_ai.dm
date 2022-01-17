@@ -63,17 +63,18 @@
 		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
 			enemies += 1
 
+	enemies -= 1
+
 	if(enemies <= 0)
 		return
 
 	damage_coeff = initial_damage_coeff
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = damage_coeff[coeff] / enemies
+		damage_coeff[coeff] = max(damage_coeff[coeff] - enemies * BOSS_ARMOR_PER_MINER * 0.01, 0.1)
 
 	for(var/obj/machinery/ancient_server/server in server_list)
-		server.armor = list(MELEE = 50, BULLET = 100, LASER = 100, ENERGY = 100, BOMB = 65, BIO = 0, FIRE = 100, ACID = 100)
-		server.armor[MELEE] = 100 - ((100 - server.armor[MELEE]) / enemies)
-		server.armor[BOMB] = 100 - ((100 - server.armor[BOMB]) / enemies)
+		server.setRating(melee = max(50 - enemies * BOSS_ARMOR_PER_MINER, 10))
+		server.setRating(bomb = max(65 - enemies * BOSS_ARMOR_PER_MINER, 10))
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -804,7 +805,7 @@
 
 	if(strike_successfull)
 		to_chat(owner, span_notice("Overlord Smartstrike activated. Targets acquired. Launching rockets."))
-		rocket_cooldown = world.time + 15 SECONDS
+		rocket_cooldown = world.time + 30 SECONDS
 	else
 		to_chat(owner, span_notice("Overlord Smartstrike activated. Failed to acquire targets. Aborting launch."))
 		rocket_cooldown = world.time + 5 SECONDS

@@ -231,7 +231,7 @@
 		qdel(src, force = TRUE)
 		return
 
-	if(!istype(bottom_turf.loc, /area/mine/planetgeneration_caves) || !istype(my_turf.loc, /area/mine/planetgeneration_caves))
+	if(!istype(bottom_turf.loc, /area/mine/unexplored/planetgeneration_caves) || !istype(my_turf.loc, /area/mine/unexplored/planetgeneration_caves))
 		qdel(src, force = TRUE)
 		return
 

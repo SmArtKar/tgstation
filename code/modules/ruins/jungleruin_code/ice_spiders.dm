@@ -3,7 +3,7 @@
 
 /obj/item/organ/heart/spider_mother
 	name = "spider heart"
-	desc = "A strange, black heart covered in something oily. It stinks with smell of venom."
+	desc = "A strange, black heart covered in something oily. It stinks of venom."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "heart-x-on"
 	base_icon_state = "heart-x"
@@ -23,14 +23,14 @@
 	if(!istype(target))
 		return
 
-	target.physiology.tox_mod *= 0.5 //This actually can save you in mortal combat against spiders
+	target.physiology.tox_mod *= 0.75
 
 /obj/item/organ/heart/spider_mother/Remove(mob/living/carbon/human/target, special = 0)
 	. = ..()
 	if(!istype(target))
 		return
 
-	target.physiology.tox_mod *= 2
+	target.physiology.tox_mod /= 0.75
 
 /obj/item/organ/heart/spider_mother/on_life(delta_time, times_fired)
 	. = ..()

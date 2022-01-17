@@ -2,7 +2,7 @@
 /datum/weather/acid_rain
 	name = "acid rain"
 	desc = "The planet's thunderstorms are by nature acidic, and will incinerate anyone standing beneath them without protection."
-	probability = 90
+	probability = 70
 
 	telegraph_duration = 400
 	telegraph_message = "<span class='boldwarning'>Thunder rumbles far above. You hear droplets drumming against the canopy. Seek shelter.</span>"
@@ -22,7 +22,7 @@
 
 	area_type = /area
 	protect_indoors = TRUE
-	//target_trait = ZTRAIT_ACIDRAIN
+	target_trait = ZTRAIT_ACIDRAIN
 	weather_color = COLOR_GREEN_GRAY
 
 	immunity_type = TRAIT_ACID_IMMUNE
@@ -30,6 +30,22 @@
 	barometer_predictable = TRUE
 
 /datum/weather/acid_rain/weather_act(mob/living/L)
-	var/resist = L.getarmor(null, ACID)
-	if(prob(max(0,100-resist)))
-		L.acid_act(20,20)
+	L.acid_act(20, 20)
+	L.adjustFireLoss(3)
+
+/datum/weather/acid_rain/can_weather_act(mob/living/mob_to_check)
+	. = ..()
+	if(!.)
+		return
+	if(mob_to_check.getarmor(null, ACID) >= 100)
+		return FALSE
+
+/datum/weather/acid_rain/light
+	name = "light acid rain"
+	weather_overlay = "rain_med"
+
+	probability = 30
+
+/datum/weather/acid_rain/light/weather_act(mob/living/L)
+	L.acid_act(10, 20)
+	L.adjustFireLoss(1)

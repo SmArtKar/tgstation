@@ -119,15 +119,15 @@ SUBSYSTEM_DEF(mapping)
 
 	var/list/jungle_deep_cave_ruins = levels_by_trait(ZTRAIT_JUNGLE_DEEP_CAVE_RUINS)
 	if (jungle_deep_cave_ruins.len)
-		seedRuins(jungle_deep_cave_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/planetgeneration_caves), jungle_deep_cave_ruins_templates)
+		seedRuins(jungle_deep_cave_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/unexplored/planetgeneration_caves), jungle_deep_cave_ruins_templates)
 
 	var/list/jungle_cave_ruins = levels_by_trait(ZTRAIT_JUNGLE_CAVE_RUINS)
 	if (jungle_cave_ruins.len)
-		seedRuins(jungle_cave_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/planetgeneration_caves), jungle_cave_ruins_templates)
+		seedRuins(jungle_cave_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/unexplored/planetgeneration_caves), jungle_cave_ruins_templates)
 
 	var/list/jungle_ruins = levels_by_trait(ZTRAIT_JUNGLE_RUINS)
 	if (jungle_ruins.len)
-		seedRuins(jungle_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/planetgeneration), jungle_ruins_templates)
+		seedRuins(jungle_ruins, CONFIG_GET(number/jungle_budget), list(/area/mine/unexplored/planetgeneration), jungle_ruins_templates)
 
 	// Generate deep space ruins
 	var/list/space_ruins = levels_by_trait(ZTRAIT_SPACE_RUINS)

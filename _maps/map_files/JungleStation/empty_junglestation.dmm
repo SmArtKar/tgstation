@@ -1,6 +1,6 @@
-"a" = (/turf/open/genturf,/area/mine/planetgeneration_caves/deep/bottom)
-"u" = (/turf/open/genturf,/area/mine/planetgeneration_caves/deep)
-"y" = (/turf/open/genturf,/area/mine/planetgeneration)
+"a" = (/turf/open/genturf,/area/mine/unexplored/planetgeneration_caves/deep/bottom)
+"u" = (/turf/open/genturf,/area/mine/unexplored/planetgeneration_caves/deep)
+"y" = (/turf/open/genturf,/area/mine/unexplored/planetgeneration)
 
 (1,1,1) = {"
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

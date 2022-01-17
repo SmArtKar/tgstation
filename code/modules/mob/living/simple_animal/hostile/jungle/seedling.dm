@@ -2,6 +2,7 @@
 #define SEEDLING_STATE_WARMUP 1
 #define SEEDLING_STATE_ACTIVE 2
 #define SEEDLING_STATE_RECOVERY 3
+#define SEEDLING_STATE_STUNNED 4
 
 //A plant rooted in the ground that forfeits its melee attack in favor of ranged barrages.
 //It will fire flurries of solar energy, and occasionally charge up a powerful blast that makes it vulnerable to attack.
@@ -14,8 +15,8 @@
 	icon_living = "seedling"
 	icon_dead = "seedling_dead"
 	mob_biotypes = MOB_ORGANIC | MOB_PLANT
-	maxHealth = 380
-	health = 380
+	maxHealth = 430
+	health = 430
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	pixel_x = -16
@@ -42,7 +43,7 @@
 /obj/projectile/seedling
 	name = "solar energy"
 	icon_state = "seedling"
-	damage = 10
+	damage = 15
 	damage_type = BURN
 	light_range = 2
 	flag = ENERGY
@@ -50,6 +51,7 @@
 	hitsound = 'sound/weapons/sear.ogg'
 	hitsound_wall = 'sound/weapons/effects/searwall.ogg'
 	nondirectional_sprite = TRUE
+	speed = 1
 
 /obj/projectile/seedling/Bump(atom/A)//Stops seedlings from destroying other jungle mobs through FF
 	if(isliving(A))
@@ -58,13 +60,9 @@
 			return FALSE
 	return ..()
 
-/obj/effect/temp_visual/solarbeam_killsat
-	name = "beam of solar energy"
-	icon_state = "solar_beam"
-	icon = 'icons/effects/beam.dmi'
-	plane = LIGHTING_PLANE
-	duration = 5
-	randomdir = FALSE
+/mob/living/simple_animal/hostile/jungle/seedling/death(gibbed)
+	. = ..()
+	move_resist = MOVE_FORCE_DEFAULT
 
 /datum/status_effect/seedling_beam_indicator
 	id = "seedling beam indicator"
@@ -123,9 +121,8 @@
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/WarmupAttack()
 	if(combatant_state == SEEDLING_STATE_NEUTRAL)
-		combatant_state = SEEDLING_STATE_WARMUP
+		set_state(SEEDLING_STATE_WARMUP)
 		walk(src,0)
-		update_icons()
 		var/target_dist = get_dist(src,target)
 		var/living_target_check = isliving(target)
 		if(living_target_check)
@@ -139,41 +136,27 @@
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/SolarBeamStartup(mob/living/living_target)//It's more like requiem than final spark
 	if(combatant_state == SEEDLING_STATE_WARMUP && target)
-		combatant_state = SEEDLING_STATE_ACTIVE
 		living_target.apply_status_effect(/datum/status_effect/seedling_beam_indicator, src)
 		beam_debuff_target = living_target
 		playsound(src,'sound/effects/seedling_chargeup.ogg', 100, FALSE)
 		if(get_dist(src,living_target) > 7)
 			playsound(living_target,'sound/effects/seedling_chargeup.ogg', 100, FALSE)
 		solar_beam_identifier = world.time
-		addtimer(CALLBACK(src, .proc/Beamu, living_target, solar_beam_identifier), 35)
+		addtimer(CALLBACK(src, .proc/Beamu, living_target, solar_beam_identifier), 20)
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/Beamu(mob/living/living_target, beam_id = 0)
-	if(combatant_state == SEEDLING_STATE_ACTIVE && living_target && beam_id == solar_beam_identifier)
+	if(combatant_state == SEEDLING_STATE_WARMUP && living_target && beam_id == solar_beam_identifier)
 		if(living_target.z == z || get_dist(src, living_target) <= aggro_vision_range)
-			update_icons()
-			var/obj/effect/temp_visual/solarbeam_killsat/S = new (get_turf(src))
-			var/matrix/starting = matrix()
-			starting.Scale(1,32)
-			starting.Translate(0,520)
-			S.transform = starting
-			var/obj/effect/temp_visual/solarbeam_killsat/K = new (get_turf(living_target))
-			var/matrix/final = matrix()
-			final.Scale(1,32)
-			final.Translate(0,512)
-			K.transform = final
-			living_target.adjustFireLoss(30)
-			living_target.adjust_fire_stacks(0.2)//Just here for the showmanship
-			living_target.IgniteMob()
+			set_state(SEEDLING_STATE_ACTIVE)
+			new /obj/effect/temp_visual/energy_killbeam(get_turf(living_target), living_target)
 			playsound(living_target,'sound/weapons/sear.ogg', 50, TRUE)
-			addtimer(CALLBACK(src, .proc/AttackRecovery), 5)
+			addtimer(CALLBACK(src, .proc/AttackRecovery), 10)
 			return
 	AttackRecovery()
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/Volley()
 	if(combatant_state == SEEDLING_STATE_WARMUP && target)
-		combatant_state = SEEDLING_STATE_ACTIVE
-		update_icons()
+		set_state(SEEDLING_STATE_ACTIVE)
 		var/datum/callback/cb = CALLBACK(src, .proc/InaccurateShot)
 		for(var/i in 1 to 7)
 			addtimer(cb, i)
@@ -192,17 +175,15 @@
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/AttackRecovery()
 	if(combatant_state == SEEDLING_STATE_ACTIVE)
-		combatant_state = SEEDLING_STATE_RECOVERY
-		update_icons()
+		set_state(SEEDLING_STATE_RECOVERY)
 		ranged_cooldown = world.time + ranged_cooldown_time
 		if(target)
 			face_atom(target)
 		addtimer(CALLBACK(src, .proc/ResetNeutral), 10)
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/ResetNeutral()
-	combatant_state = SEEDLING_STATE_NEUTRAL
+	set_state()
 	if(target && !stat)
-		update_icons()
 		Goto(target, move_to_delay, minimum_distance)
 
 /mob/living/simple_animal/hostile/jungle/seedling/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
@@ -212,6 +193,25 @@
 		beam_debuff_target = null
 		solar_beam_identifier = 0
 		AttackRecovery()
+
+/mob/living/simple_animal/hostile/jungle/seedling/proc/set_state(new_state = SEEDLING_STATE_NEUTRAL)
+	combatant_state = new_state
+	update_icons()
+
+	if(combatant_state == SEEDLING_STATE_STUNNED)
+		Paralyze(10)
+		ranged_cooldown = world.time + ranged_cooldown_time + 10
+		addtimer(CALLBACK(src, .proc/ResetNeutral), 10)
+
+/mob/living/simple_animal/hostile/jungle/seedling/bullet_act(obj/projectile/P)
+	. = ..()
+	if(combatant_state == SEEDLING_STATE_WARMUP && (!P.nodamage && P.damage_type != STAMINA && P.damage > 15))
+		set_state(SEEDLING_STATE_STUNNED)
+
+/mob/living/simple_animal/hostile/jungle/seedling/attacked_by(obj/item/I, mob/living/user)
+	. = ..()
+	if(combatant_state == SEEDLING_STATE_WARMUP && I.force > 15)
+		set_state(SEEDLING_STATE_STUNNED)
 
 /mob/living/simple_animal/hostile/jungle/seedling/update_icons()
 	. = ..()
@@ -225,6 +225,8 @@
 				icon_state = "seedling_fire"
 			if(SEEDLING_STATE_RECOVERY)
 				icon_state = "seedling"
+			if(SEEDLING_STATE_STUNNED)
+				icon_state = "seedling_wilting"
 
 /mob/living/simple_animal/hostile/jungle/seedling/GiveTarget()
 	if(target)
@@ -297,7 +299,41 @@
 	light_color = LIGHT_COLOR_FIRE
 	duration = 12
 
+/obj/effect/temp_visual/energy_killbeam
+	name = "energy beam"
+	icon_state = "crystal_ray"
+	icon = 'icons/mob/jungle/amber_crystal_big.dmi'
+	duration = 2 SECONDS
+	randomdir = FALSE
+	pass_flags = PASSCLOSEDTURF | PASSGLASS | PASSGRILLE | PASSMACHINE | PASSSTRUCTURE | PASSTABLE | PASSMOB | PASSDOORS | PASSVEHICLE
+	var/mob/living/target
+
+/obj/effect/temp_visual/energy_killbeam/Initialize(mapload, starting_target)
+	. = ..()
+	START_PROCESSING(SSfastprocess, src)
+	if(starting_target)
+		target = starting_target
+
+/obj/effect/temp_visual/energy_killbeam/Destroy()
+	STOP_PROCESSING(SSfastprocess, src)
+	. = ..()
+
+/obj/effect/temp_visual/energy_killbeam/process()
+	for(var/mob/living/victim in get_turf(src))
+		if("jungle" in victim.faction)
+			continue
+
+		victim.adjustFireLoss(15)
+		victim.adjust_fire_stacks(0.2)
+		victim.IgniteMob()
+		playsound(victim, 'sound/weapons/sear.ogg', 50, TRUE)
+		to_chat(victim, span_userdanger("[src] burns you!"))
+
+	if(target && prob(80))
+		Move(get_step(get_turf(src), get_dir(src, target)))
+
 #undef SEEDLING_STATE_NEUTRAL
 #undef SEEDLING_STATE_WARMUP
 #undef SEEDLING_STATE_ACTIVE
 #undef SEEDLING_STATE_RECOVERY
+#undef SEEDLING_STATE_STUNNED

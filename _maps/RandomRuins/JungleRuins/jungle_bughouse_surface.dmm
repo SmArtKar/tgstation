@@ -32,7 +32,7 @@
 "vw" = (/obj/machinery/space_heater,/turf/open/floor/plastic,/area/ruin/bughabitat)
 "wO" = (/obj/structure/window/reinforced/spawner/east,/turf/open/floor/grass/snow/basalt/safe,/area/ruin/bughabitat)
 "xv" = (/obj/machinery/space_heater,/turf/open/floor/carpet/neon/simple/lime,/area/ruin/bughabitat)
-"zG" = (/turf/open/floor/plating/dirt/jungle,/area/template_noop)
+"zG" = (/turf/open/floor/plating/dirt/jungle,/area/mine/unexplored/planetgeneration/nogen)
 "At" = (/obj/structure/window/reinforced/spawner/east,/mob/living/basic/cockroach,/turf/open/floor/grass/snow/basalt/safe,/area/ruin/bughabitat)
 "AP" = (/obj/item/reagent_containers/syringe/syriniver,/obj/effect/turf_decal/siding/wideplating/dark/corner,/obj/effect/turf_decal/tile/dark/anticorner,/turf/open/floor/iron,/area/ruin/bughabitat)
 "AR" = (/obj/machinery/door/airlock/public,/turf/open/floor/carpet/neon/simple/lime,/area/ruin/bughabitat)
@@ -84,5 +84,5 @@ VXpDMlGgFPJEpDeufvtgLQnDpDVX
 VXpDZecLFPeDpDcDUwpDpDpDpDzG
 VXpDSWGgxvFPpDvwlkVEePpDzGzG
 VXpDpDpDpDARpDpDpDpDpDpDzGzG
-VXzGzGVXVXVXzGzGzGzGVXzGzGVX
+VXzGzGVXVXzGzGzGzGzGVXzGzGVX
 "}

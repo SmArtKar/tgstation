@@ -5,6 +5,8 @@
  * Why? Because dying together is more fun than dying alone!
  */
 
+#define BOSS_ARMOR_PER_MINER 15
+
 /mob/living/simple_animal/hostile/megafauna/jungle
 	faction = list("boss", "jungle")
 	weather_immunities = list(TRAIT_ACID_IMMUNE)
@@ -35,6 +37,9 @@
 		if(get_dist(former_target, src) > former_target_vision_range)
 			former_targets.Remove(former_target)
 			update_armor()
+
+	if(!target && LAZYLEN(former_targets) > 0)
+		GiveTarget(pick(former_targets))
 
 /mob/living/simple_animal/hostile/megafauna/jungle/grant_achievement(medaltype, scoretype, crusher_kill, list/grant_achievement = list())
 	if(!achievement_type || (flags_1 & ADMIN_SPAWNED_1) || !SSachievements.achievements_enabled)
@@ -68,16 +73,16 @@
 		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
 			enemies += 1
 
+	enemies -= 1
+
 	if(enemies <= 0)
 		return
 
 	damage_coeff = initial_damage_coeff
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = damage_coeff[coeff] / enemies
+		damage_coeff[coeff] = max(damage_coeff[coeff] - enemies * BOSS_ARMOR_PER_MINER * 0.01, 0.1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/GiveTarget(new_target) //Even if you hit once, you'll count
-	if(!new_target && LAZYLEN(former_targets))
-		return GiveTarget(pick(former_targets))
 	. = ..()
 	if(!(new_target in former_targets))
 		former_targets.Add(new_target)

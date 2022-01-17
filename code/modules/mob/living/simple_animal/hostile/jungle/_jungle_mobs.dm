@@ -13,6 +13,7 @@
 	see_in_dark = 4
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	mob_size = MOB_SIZE_LARGE
+	weather_immunities = list(TRAIT_ACID_IMMUNE)
 
 	var/crusher_loot
 	var/crusher_drop_mod = 25
@@ -56,7 +57,7 @@
 
 /obj/effect/spawner/jungle/cave_mob_spawner
 	name = "cave mob spawner"
-	var/land_mobs = list(/obj/effect/spawner/jungle/cave_spider_nest = 300, /obj/effect/spawner/jungle/cave_bat_nest = 500, /mob/living/simple_animal/hostile/jungle/snakeman/random = 400, /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle = 200, /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle = 100, /mob/living/simple_animal/hostile/jungle/mega_arachnid = 100, \
+	var/land_mobs = list(/obj/effect/spawner/jungle/cave_spider_nest = 300, /obj/effect/spawner/jungle/cave_bat_nest = 500, /mob/living/simple_animal/hostile/jungle/snakeman/random = 400, /mob/living/simple_animal/hostile/giant_spider/hunter/scrawny/jungle = 100, /mob/living/simple_animal/hostile/giant_spider/tarantula/scrawny/jungle = 50, /mob/living/simple_animal/hostile/jungle/mega_arachnid = 100, \
 	/obj/structure/spawner/jungle = 10, /obj/structure/spawner/jungle/bat = 10, /obj/structure/spawner/jungle/mega_arachnid = 2, /obj/structure/spawner/jungle/snakeman = 8, /obj/structure/spawner/jungle/spider_big = 6, SPAWN_MEGAFAUNA = 22)
 	var/megafauna = list(/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal = 1, /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen = 2, /mob/living/simple_animal/hostile/megafauna/jungle/mud_worm = 2)
 	var/water_mobs = list(/mob/living/simple_animal/hostile/retaliate/snake/jungle = 3, /mob/living/simple_animal/hostile/retaliate/frog/jungle = 2)

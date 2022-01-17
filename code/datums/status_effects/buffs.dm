@@ -901,13 +901,16 @@
 	SIGNAL_HANDLER
 
 	if(owner.getBruteLoss() > brute_loss)
-		owner.adjustBruteLoss((owner.getBruteLoss() - brute_loss) * -0.33)
+		addtimer(CALLBACK(owner, /mob/living.proc/adjustBruteLoss, ((owner.getBruteLoss() - brute_loss) * -0.33)), 1)
+
 	if(owner.getFireLoss() > fire_loss)
-		owner.adjustFireLoss((owner.getFireLoss() - fire_loss) * -0.33)
+		addtimer(CALLBACK(owner, /mob/living.proc/adjustFireLoss, ((owner.getFireLoss() - fire_loss) * -0.33)), 1)
+
 	if(owner.getToxLoss() > tox_loss)
-		owner.adjustToxLoss((owner.getToxLoss() - tox_loss) * -0.33)
+		addtimer(CALLBACK(owner, /mob/living.proc/adjustToxLoss,((owner.getToxLoss() - tox_loss) * -0.33)), 1)
+
 	if(owner.getOxyLoss() > oxy_loss)
-		owner.adjustOxyLoss((owner.getOxyLoss() - oxy_loss) * -0.33)
+		addtimer(CALLBACK(owner, /mob/living.proc/adjustOxyLoss, ((owner.getOxyLoss() - oxy_loss) * -0.33)), 1)
 
 	to_chat(owner, span_danger("Your vine ring partially reflects the attack, but breaks in the process!"))
 	owner.remove_status_effect(STATUS_EFFECT_VINE_RING)

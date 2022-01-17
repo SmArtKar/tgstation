@@ -41,7 +41,7 @@
 	var/humidity_seed = rand(0, 50000)
 	var/heat_seed = rand(0, 50000)
 
-	var/area/mine/planetgeneration_caves/cave_area = new()
+	var/area/mine/unexplored/planetgeneration_caves/cave_area = new()
 
 	for(var/t in turfs) //Go through all the turfs and generate them
 		var/turf/gen_turf = t
@@ -97,7 +97,7 @@
 
 	cave_area.RunGeneration()
 
-	spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle, /area/mine/planetgeneration) ///Uncomment if you want to spawn rivers as well. Do not uncomment unless lighting shit is reworked.
+	//spawn_rivers(turfs[1].z, 4, /turf/open/water/jungle, /area/mine/unexplored/planetgeneration) ///Uncomment if you want to spawn rivers as well. Do not uncomment unless lighting shit is reworked.
 
 /turf/open/genturf
 	name = "ungenerated turf"
@@ -105,29 +105,30 @@
 	icon = 'icons/turf/debug.dmi'
 	icon_state = "genturf"
 
-/area/mine/planetgeneration
+/area/mine/unexplored/planetgeneration
 	name = "Planet Surface"
 
-	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
+	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 
 	map_generator = /datum/map_generator/jungle_generator
-	static_lighting = FALSE
-	base_lighting_alpha = 255
+	base_lighting_alpha = 0
 	outdoors = TRUE
 
-/area/mine/planetgeneration_caves
+/area/mine/unexplored/planetgeneration/nogen
+	map_generator = null
+
+/area/mine/unexplored/planetgeneration_caves
 	name = "Surface Caves"
 
-	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 	map_generator = /datum/map_generator/cave_generator/jungle/surface
 	base_lighting_alpha = 0
+	outdoors = FALSE
 
-/area/mine/planetgeneration_caves/deep
+/area/mine/unexplored/planetgeneration_caves/deep
 	name = "Underground Caves"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep
-	base_lighting_alpha = 0
 
-/area/mine/planetgeneration_caves/deep/bottom
+/area/mine/unexplored/planetgeneration_caves/deep/bottom
 	name = "Deep Underground Caves"
 	map_generator = /datum/map_generator/cave_generator/jungle/deep/bottom
 

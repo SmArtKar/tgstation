@@ -164,7 +164,7 @@ GLOBAL_LIST_INIT(xeno_recipes, list ( \
 	visible_message(span_notice("[src] burns up, leaving a sheet of leather behind!"))
 	new /obj/item/stack/sheet/leather(loc) // only one sheet remains to incentivise not burning your wethide to dry it
 	qdel(src)
-	
+
 
 /*
  * Leather SHeet
@@ -223,6 +223,7 @@ GLOBAL_LIST_INIT(leather_recipes, list ( \
 	name = "bat sinew"
 	desc = "Long stringy filaments which came from wings of some unfortunate cave bat."
 	singular_name = "bat sinew"
+	icon_state = "bat_sinew"
 	merge_type = /obj/item/stack/sheet/sinew/bat
 
 GLOBAL_LIST_INIT(sinew_recipes, list ( \

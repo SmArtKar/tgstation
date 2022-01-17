@@ -1187,13 +1187,13 @@
 /datum/status_effect/bluespace_instability/on_apply()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human_owner = owner
-		human_owner.physiology.damage_resistance -= 20
+		human_owner.physiology.damage_resistance -= 25
 	return ..()
 
 /datum/status_effect/bluespace_instability/on_remove()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human_owner = owner
-		human_owner.physiology.damage_resistance += 20
+		human_owner.physiology.damage_resistance += 25
 
 /datum/status_effect/bluespace_instability/tick()
 	. = ..()

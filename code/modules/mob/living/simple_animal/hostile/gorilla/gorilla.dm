@@ -69,18 +69,19 @@
 		return ..()
 	. = ..()
 	if(. && isliving(target))
-		var/mob/living/L = target
-		if(prob(80))
-			var/atom/throw_target = get_edge_target_turf(L, dir)
-			L.throw_at(throw_target, rand(1,2), 7, src)
-		else
-			L.Paralyze(20)
-			visible_message(span_danger("[src] knocks [L] down!"))
+		throw_target(target)
 
 /mob/living/simple_animal/hostile/gorilla/CanAttack(atom/the_target)
 	var/list/parts = target_bodyparts(target)
 	return ..() && !ismonkey(the_target) && (!parts  || parts.len > 3)
 
+/mob/living/simple_animal/hostile/gorilla/proc/throw_target(mob/living/targeting)
+	if(prob(80))
+		var/atom/throw_target = get_edge_target_turf(targeting, dir)
+		targeting.throw_at(throw_target, rand(1,2), 7, src)
+	else
+		targeting.Paralyze(20)
+		visible_message(span_danger("[src] knocks [targeting] down!"))
 
 /mob/living/simple_animal/hostile/gorilla/CanSmashTurfs(turf/T)
 	return iswallturf(T)
@@ -116,6 +117,13 @@
 	atmos_requirements = list("min_oxy" = 3, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("jungle")
 	weather_immunities = list(TRAIT_ACID_IMMUNE)
+	speed = 2
+
+/mob/living/simple_animal/hostile/gorilla/jungle/target_bodyparts(atom/the_target) //No dismember
+	return
+
+/mob/living/simple_animal/hostile/gorilla/jungle/throw_target(mob/living/target) //And no knockdowns
+	return
 
 /mob/living/simple_animal/hostile/gorilla/jungle/Initialize(mapload)
 	. = ..()

@@ -26,6 +26,8 @@
 	if(istype(local_turf))
 		if(islava(local_turf))
 			environment_temperature = 5000 //Yuck
+		else if(iswater(local_turf))
+			environment_temperature = T0C - 20 //Let's make it a bit chill so SM wouldn't die in jungle
 		else if(local_turf.blocks_air)
 			environment_temperature = local_turf.temperature
 		else

@@ -21,7 +21,7 @@
 	robust_searching = TRUE
 	stat_attack = HARD_CRIT
 	ranged = TRUE
-	ranged_cooldown_time = 6 SECONDS
+	ranged_cooldown_time = 8 SECONDS
 	turns_per_move = 3
 	footstep_type = FOOTSTEP_HARD_BAREFOOT
 	crusher_loot = /obj/item/crusher_trophy/goliath_tentacle/adrenaline_sacs
