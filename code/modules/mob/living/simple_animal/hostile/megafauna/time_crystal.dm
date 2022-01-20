@@ -16,7 +16,6 @@
 	speak_emote = list("vibrates")
 	mob_biotypes = MOB_MINERAL | MOB_BEAST | MOB_EPIC
 	speed = 14
-	move_to_delay = 14
 	ranged = TRUE
 	ranged_cooldown_time = 20
 	aggro_vision_range = 18

@@ -29,7 +29,6 @@
 
 	wander = FALSE
 	speed = 3
-	move_to_delay = 3
 	retreat_distance = 3
 	minimum_distance = 3
 	gps_name = "Quantum Signal"
@@ -345,13 +344,11 @@
 	mimicking = FALSE
 	enraged = TRUE
 	speed = 0
-	move_to_delay = 0 //Speedy
 	addtimer(CALLBACK(src, .proc/stop_rage), 15 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/stop_rage()
 	enraged = FALSE
 	speed = 3
-	move_to_delay = 3
 
 /mob/living/simple_animal/hostile/megafauna/jungle/bluespace_spirit/proc/real_was_hit()
 	retreat_distance = 3

@@ -42,7 +42,6 @@
 
 	wander = FALSE
 	speed = 3
-	move_to_delay = 3
 	gps_name = "Solar Signal"
 
 	loot = list(/obj/item/organ/heart/jungle, /obj/item/green_rose)

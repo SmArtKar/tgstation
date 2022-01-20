@@ -108,7 +108,7 @@
 	new /obj/item/boomerang(src)
 
 /obj/item/mod/control/pre_equipped/exotic/debug
-	cell = /obj/item/stock_parts/cell/infinite
+	applied_core = /obj/item/mod/core/infinite
 	initial_modules = list(/obj/item/mod/module/storage/bluespace, /obj/item/mod/module/welding, /obj/item/mod/module/visor/night, /obj/item/mod/module/mouthhole, /obj/item/mod/module/longfall, /obj/item/mod/module/orebag, /obj/item/mod/module/gps, /obj/item/mod/module/flashlight)
 
 /datum/outfit/debug_miner/ultra

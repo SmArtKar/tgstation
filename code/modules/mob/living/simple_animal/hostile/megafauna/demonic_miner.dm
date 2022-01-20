@@ -29,7 +29,6 @@
 	attack_verb_simple = "claw"
 
 	speed = 7
-	move_to_delay = 7
 	wander = FALSE
 	gps_name = "Posessed Signal"
 
@@ -128,7 +127,6 @@
 	melee_damage_lower = 30
 	melee_damage_upper = 30
 	speed = 5
-	move_to_delay = 5
 	update_icon()
 	status_flags &= ~GODMODE
 	noaction = FALSE
@@ -609,7 +607,6 @@
 	icon_state = "spirit"
 	icon_living = "spirit"
 	speed = 8
-	move_to_delay = 8
 	combat_mode = TRUE
 	attack_sound = 'sound/magic/demon_attack1.ogg'
 	attack_vis_effect = ATTACK_EFFECT_CLAW
@@ -773,7 +770,7 @@
 	var/blood = 0
 
 /obj/effect/temp_visual/dir_setting/firing_effect/cult
-	icon = 'icons/effects/cult_effects.dmi'
+	icon = 'icons/effects/cult/effects.dmi'
 	icon_state = "bloodsparkles"
 	duration = 3
 

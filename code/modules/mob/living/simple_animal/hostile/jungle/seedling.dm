@@ -24,7 +24,7 @@
 	pixel_y = -14
 	base_pixel_y = -14
 	minimum_distance = 3
-	move_to_delay = 20
+	speed = 20
 	vision_range = 5
 	aggro_vision_range = 15
 	ranged = TRUE
@@ -122,7 +122,7 @@
 /mob/living/simple_animal/hostile/jungle/seedling/proc/WarmupAttack()
 	if(combatant_state == SEEDLING_STATE_NEUTRAL)
 		set_state(SEEDLING_STATE_WARMUP)
-		walk(src,0)
+		SSmove_manager.stop_looping(src)
 		var/target_dist = get_dist(src,target)
 		var/living_target_check = isliving(target)
 		if(living_target_check)
