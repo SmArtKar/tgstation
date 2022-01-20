@@ -19,7 +19,7 @@
 /turf/open/water/jungle //Actually working water that wets stuff
 	baseturfs = /turf/open/floor/plating/dirt/jungle
 	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
-	slowdown = 4 //We're swimming, not walking
+	slowdown = 3 //We're swimming, not walking
 	layer = 1.98 //We need other turfs to be above it
 
 	var/flora_list = list(/obj/structure/flora/aquatic/rock = 1, /obj/structure/flora/aquatic/rock/pile = 1, /obj/structure/flora/aquatic/seaweed = 8)

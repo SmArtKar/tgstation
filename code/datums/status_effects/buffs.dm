@@ -372,6 +372,11 @@
 	desc = "Shining core allows you to move as fast as you possibly could!"
 	icon_state = "shining_core"
 
+/atom/movable/screen/alert/status_effect/weak_shining_core
+	name = "Weakened Shining Power"
+	desc = "High pressure has severely weakened shining core's effect."
+	icon_state = "weak_shining_core"
+
 /datum/status_effect/regenerative_core
 	id = "Regenerative Core"
 	duration = 1 MINUTES
@@ -392,10 +397,23 @@
 /datum/status_effect/regenerative_core/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, STATUS_EFFECT_TRAIT)
 
+/datum/status_effect/regenerative_core/weak_shining_core
+	id = "Weak Shining Core"
+	alert_type = /atom/movable/screen/alert/status_effect/weak_shining_core
+
+/datum/status_effect/regenerative_core/weak_shining_core/on_apply()
+	owner.adjustBruteLoss(-15)
+	owner.adjustFireLoss(-15)
+	if(istype(owner, /mob/living/carbon/human))
+		var/mob/living/carbon/human/humi = owner
+		humi.set_coretemperature(humi.get_body_temp_normal())
+
+/datum/status_effect/regenerative_core/weak_shining_core/on_remove()
+	return
+
 /datum/status_effect/regenerative_core/shining_core //Longer effect, more healing, prevents softcrit. But hey, killing seedlings is much harder than killing legions.
 	id = "Shining Core"
 	duration = 2 MINUTES
-	status_type = STATUS_EFFECT_REPLACE
 	alert_type = /atom/movable/screen/alert/status_effect/shining_core
 
 /datum/status_effect/regenerative_core/shining_core/on_apply()
@@ -404,7 +422,7 @@
 	owner.adjustBruteLoss(-25)
 	owner.adjustFireLoss(-25)
 
-/datum/status_effect/regenerative_core/on_remove()
+/datum/status_effect/regenerative_core/shining_core/on_remove()
 	. = ..()
 	REMOVE_TRAIT(owner, TRAIT_NOSOFTCRIT, STATUS_EFFECT_TRAIT)
 

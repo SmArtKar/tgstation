@@ -24,6 +24,7 @@
 	speed = 10
 	stat_attack = HARD_CRIT
 	robust_searching = 1
+	vision_range = 5
 	var/hopping = FALSE
 	var/hop_cooldown = 0 //Strictly for player controlled leapers
 	var/projectile_ready = FALSE //Stopping AI leapers from firing whenever they want, and only doing it after a hop has finished instead
@@ -132,7 +133,8 @@
 
 /datum/reagent/toxin/leaper_venom/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
 	if(volume >= 10)
-		M.adjustToxLoss(5 * REAGENTS_EFFECT_MULTIPLIER * delta_time, 0)
+		M.adjustToxLoss(2 * REAGENTS_EFFECT_MULTIPLIER * delta_time, 0)
+		M.adjustStaminaLoss(5 * REAGENTS_EFFECT_MULTIPLIER * delta_time, 0)
 	..()
 
 /obj/effect/temp_visual/leaper_crush

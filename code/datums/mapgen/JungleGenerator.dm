@@ -82,11 +82,6 @@
 
 		selected_biome = SSmapping.biomes[selected_biome] //Get the instance of this biome from SSmapping
 		selected_biome.generate_turf(gen_turf)
-		if(selected_biome.natural_light)
-			gen_turf.set_light_on(TRUE)
-			gen_turf.set_light_power(8)
-			gen_turf.set_light_range(3)
-			//gen_turf.AddComponent(/datum/component/sunlight)
 
 		if(selected_biome.generate_caves)
 			var/area/old_area = gen_turf.loc
@@ -111,8 +106,8 @@
 	area_flags = VALID_TERRITORY | UNIQUE_AREA | NO_ALERTS | CAVES_ALLOWED | FLORA_ALLOWED | MOB_SPAWN_ALLOWED
 
 	map_generator = /datum/map_generator/jungle_generator
-	base_lighting_alpha = 0
 	outdoors = TRUE
+	base_lighting_alpha = 255
 
 /area/mine/unexplored/planetgeneration/nogen
 	map_generator = null

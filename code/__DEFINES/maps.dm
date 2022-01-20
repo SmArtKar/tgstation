@@ -58,7 +58,8 @@ require only minor tweaks.
 #define ZTRAIT_SNOWSTORM "Weather_Snowstorm"
 #define ZTRAIT_ASHSTORM "Weather_Ashstorm"
 #define ZTRAIT_VOIDSTORM "Weather_Voidstorm"
-#define ZTRAIT_ACIDRAIN "Weather_Acidrain"
+#define ZTRAIT_JUNGLE_WEATHER "Weather_Jungle"
+#define ZTRAIT_JUNGLE_WEATHER_SURFACE "Weather_Jungle_Surface"
 
 /// boolean - does this z prevent ghosts from observing it
 #define ZTRAIT_SECRET "Secret"

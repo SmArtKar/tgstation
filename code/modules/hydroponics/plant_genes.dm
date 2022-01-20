@@ -863,8 +863,7 @@
 ///Unique to rapsberries, this trait allows you to inject all chemicals from the plant into yourself upon using it in-hand
 /datum/plant_gene/trait/injector
 	name = "Hollow spikes"
-	rate = 0.04
-	mutability_flags = PLANT_GENE_REMOVABLE | PLANT_GENE_GRAFTABLE
+	mutability_flags = PLANT_GENE_REMOVABLE
 
 /datum/plant_gene/trait/injector/on_new_plant(obj/item/our_plant, newloc)
 	. = ..()

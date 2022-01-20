@@ -561,12 +561,12 @@
 		return FALSE
 
 
-#define PARRY_ACTIVE_TIME 12
-#define PARRY_STAGGER_TIME 12
+#define PARRY_ACTIVE_TIME 10
+#define PARRY_STAGGER_TIME 20
 
-/obj/item/dual_sword //A neat yet hard to use sword. Deals 40 damage to animals and 10 to humans, attacks everything in front of player and allows you to parry for PARRY_ACTIVE_TIME, altrough failed parries stagger you for PARRY_STAGGER_TIME making you unable to act
+/obj/item/dual_sword //A neat yet hard to use sword. Deals 30 damage to animals and 10 to humans, attacks everything in front of player and allows you to parry for PARRY_ACTIVE_TIME, altrough failed parries stagger you for PARRY_STAGGER_TIME making you unable to act
 	name = "double-bladed sword"
-	desc = "No, it's not an energy sword. Yeah, sad, I know."
+	desc = "Sadly, it's not an energy one."
 	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "dual_blade0"
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
@@ -594,11 +594,11 @@
 	AddComponent(/datum/component/butchering, 50, 100)
 
 /obj/item/dual_sword/attack(mob/living/M, mob/living/user, params)
-	var/pre_force = force
 	if(isanimal(M))
 		force *= 3
 	. = ..()
-	force = pre_force
+	if(isanimal(M))
+		force /= 3
 
 /obj/item/dual_sword/pre_attack(atom/A, mob/living/user, params)
 	if(swiping || get_turf(A) == get_turf(user))
@@ -630,7 +630,7 @@
 	if(isanimal(hitby))
 		modifier = 3
 
-	final_block_chance += 20 * modifier
+	final_block_chance += 30 * modifier
 	if(attack_type == THROWN_PROJECTILE_ATTACK)
 		final_block_chance += 30
 	else if(attack_type == LEAP_ATTACK)
@@ -646,6 +646,7 @@
 /obj/item/dual_sword/proc/parry(mob/living/user)
 	to_chat(user, span_notice("You prepare to parry!"))
 	user.changeNext_move(PARRY_ACTIVE_TIME)
+	parrying = TRUE
 	addtimer(CALLBACK(src, .proc/check_parry_stagger, user), PARRY_ACTIVE_TIME)
 
 /obj/item/dual_sword/proc/check_parry_stagger(mob/living/user)

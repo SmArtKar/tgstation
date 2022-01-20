@@ -18,17 +18,19 @@
             "Mining":true,
             "Station":false,
             "Jungle Deep Cave Ruins":true,
-            "Gravity":true
+            "Gravity":true,
+            "Weather_Jungle":true
 		},
 		{
 			"Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/floor/plating/dirt/jungle",
             "Mining":true,
-            "Station":false,
+            "Station":true,
 			"Linkage": null,
             "Jungle Cave Ruins":true,
-            "Gravity":true
+            "Gravity":true,
+            "Weather_Jungle":true
 		},
 		{
 			"Down": -1,
@@ -38,7 +40,8 @@
             "Station":true,
             "Gravity":true,
             "Jungle Ruins":true,
-            "Weather_Acidrain":true
+            "Weather_Jungle":true,
+            "Weather_Jungle_Surface":true
 		}
 	]
 }

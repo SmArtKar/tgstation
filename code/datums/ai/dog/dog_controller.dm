@@ -286,3 +286,16 @@
 				queue_behavior(/datum/ai_behavior/harass/agressive)
 			else
 				queue_behavior(/datum/ai_behavior/harass)
+
+/datum/ai_controller/dog/agressive/hellhound/befriend(mob/living/new_friend)
+	var/list/friends = blackboard[BB_DOG_FRIENDS]
+	var/datum/weakref/friend_ref = WEAKREF(new_friend)
+	if(LAZYLEN(friends) > 0)
+		return
+	if(in_range(pawn, new_friend))
+		new_friend.visible_message("<b>[pawn]</b> licks at [new_friend] in a friendly manner!", span_notice("[pawn] licks at you in a friendly manner!"))
+	friends[friend_ref] = TRUE
+	var/obj/effect/proc_holder/spell/targeted/hellhound_recall/recall = new(src, pawn)
+	new_friend.AddSpell(recall)
+	RegisterSignal(new_friend, COMSIG_MOB_POINTED, .proc/check_point)
+	RegisterSignal(new_friend, COMSIG_MOB_SAY, .proc/check_verbal_command)

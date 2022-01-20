@@ -5,7 +5,6 @@
 /area/ruin/powered/ancient_ai
 	name = "Ancient AI Arena"
 	icon_state = "dk_yellow"
-	area_flags = NOTELEPORT //Don't want players causally teleporting in
 	ambientsounds = list('sound/ambience/ambitech.ogg', 'sound/ambience/ambitech2.ogg', 'sound/ambience/ambiatmos.ogg', 'sound/ambience/ambiatmos2.ogg', 'sound/ambience/ambimalf.ogg')
 
 /area/ruin/unpowered/demonic_miner_arena

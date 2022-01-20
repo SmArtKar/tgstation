@@ -10,7 +10,7 @@
 	mob_biotypes = MOB_ORGANIC | MOB_BUG
 	speak_emote = list("chitters")
 	emote_hear = list("chitters")
-	speed = 4
+	speed = 6
 	see_in_dark = 4
 	butcher_results = list(/obj/item/food/meat/slab/spider = 1, /obj/item/food/spiderleg = 8)
 	response_help_continuous = "pets"
@@ -27,7 +27,6 @@
 	melee_damage_upper = 15
 	faction = list("jungle", "spiders")
 	pass_flags = PASSTABLE
-	move_to_delay = 4
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	attack_sound = 'sound/weapons/bite.ogg'
@@ -37,6 +36,7 @@
 	obj_damage = 20
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	ranged = TRUE
+	ranged_cooldown_time = 30
 	projectiletype = /obj/projectile/cave_spider_web
 	crusher_drop_mod = 15 //They spawn in packs
 	crusher_loot = /obj/item/crusher_trophy/spider_webweaver
@@ -53,7 +53,7 @@
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/proc/tamed(mob/living/tamer)
 	can_buckle = TRUE
-	buckle_lying = 0
+	buckle_lying = FALSE
 	AddElement(/datum/element/ridable, /datum/component/riding/creature/cave_spider_mount/common)
 	AddElement(/datum/element/pet_bonus, "chitters happily!")
 	faction = list("neutral", "spiders")
@@ -116,18 +116,6 @@
 	if(!O.force)
 		return
 	to_chat(user, "<span class='warning'>You use [O] to tear [src] down</span>")
-	qdel(src)
-	qdel(owner)
-
-/obj/effect/ebeam/web/attack_hand(mob/user, list/modifiers)
-	.= ..()
-	if(!HAS_TRAIT(user,TRAIT_WEB_WEAVER))
-		return
-	user.visible_message("<span class='notice'>[user] begins weaving [src] into cloth.</span>", "<span class='notice'>You begin weaving [src] into cloth.</span>")
-	if(!do_after(user, 2 SECONDS))
-		return
-	var/obj/item/stack/sheet/cloth/woven_cloth = new /obj/item/stack/sheet/cloth
-	user.put_in_hands(woven_cloth)
 	qdel(src)
 	qdel(owner)
 

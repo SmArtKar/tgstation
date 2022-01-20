@@ -1197,5 +1197,35 @@
 
 /datum/status_effect/bluespace_instability/tick()
 	. = ..()
-	if(prob(5))
+	if(prob(10))
 		do_teleport(owner, get_turf(owner), 2, asoundin = 'sound/effects/phasein.ogg', channel = TELEPORT_CHANNEL_BLUESPACE)
+
+/atom/movable/screen/alert/status_effect/thick_fog
+	name = "Thick Fog"
+	desc = "Because of the thick fog you can't see long distances!"
+	icon_state = "stoned"
+
+/datum/status_effect/thick_fog
+	id = "thick_fog"
+	duration = 2 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/thick_fog
+	var/prev_vision_range = 0
+	var/prev_aggro_range = 0
+
+/datum/status_effect/thick_fog/on_apply()
+	owner.overlay_fullscreen("fog", /atom/movable/screen/fullscreen/fog, 1)
+	if(ishostile(owner))
+		var/mob/living/simple_animal/hostile/hostile_owner = owner
+		prev_vision_range = hostile_owner.vision_range
+		prev_aggro_range = hostile_owner.aggro_vision_range
+		hostile_owner.vision_range = min(hostile_owner.vision_range, 3)
+		hostile_owner.aggro_vision_range = min(hostile_owner.aggro_vision_range, 5)
+	return ..()
+
+/datum/status_effect/thick_fog/on_remove()
+	owner.clear_fullscreen("fog")
+	if(ishostile(owner))
+		var/mob/living/simple_animal/hostile/hostile_owner = owner
+		hostile_owner.vision_range = prev_vision_range
+		hostile_owner.aggro_vision_range = prev_aggro_range

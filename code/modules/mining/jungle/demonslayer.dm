@@ -285,11 +285,10 @@
 
 	var/counter = 0
 	for(var/turf/destination_holder in get_line(owner_loc, get_turf(target)))
-		if(istype(destination_holder, /turf/closed) || counter > DASH_RANGE)
+		if(destination_holder.is_blocked_turf() || counter > DASH_RANGE)
 			break
-		if(!destination_holder.is_blocked_turf())
-			destination = destination_holder
 
+		destination = destination_holder
 		counter += 1
 
 	if(!destination)

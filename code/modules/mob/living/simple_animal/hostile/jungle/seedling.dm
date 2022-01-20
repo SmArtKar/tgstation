@@ -268,10 +268,13 @@
 				H.visible_message("<span class='notice'>[user] applies [src] to [H]'s skin, smearing the oozing liquid into their skin.</span>")
 				SSblackbox.record_feedback("nested tally", "shining_core", 1, list("[type]", "used", "other"))
 			else
-				to_chat(user, "<span class='notice'>You start to smear liquid from [src]'s insides on yourself. Sudden feeling of power floods your mind, but gosh, it burns like hell!</span>")
+				to_chat(user, "<span class='notice'>You start to smear liquid from [src]'s insides on yourself. Sudden feeling of power floods your mind, but it burns like hell!</span>")
 				SSblackbox.record_feedback("nested tally", "shining_core", 1, list("[type]", "used", "self"))
 
-			H.apply_status_effect(STATUS_EFFECT_SUN_CORE)
+			if(lavaland_equipment_pressure_check(get_turf(target)))
+				H.apply_status_effect(STATUS_EFFECT_SUN_CORE)
+			else
+				H.apply_status_effect(STATUS_EFFECT_WEAK_SUN_CORE)
 			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "core", /datum/mood_event/healsbadman)
 			playsound(H, 'sound/magic/staff_healing.ogg', 20, TRUE)
 			new /obj/effect/temp_visual/seedling_sparks(get_turf(H))

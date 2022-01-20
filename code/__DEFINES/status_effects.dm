@@ -39,6 +39,8 @@
 
 #define STATUS_EFFECT_SUN_CORE /datum/status_effect/regenerative_core/shining_core //Seedlings are much harder to kill and they can't be farmed, so core effect is stronger as well.
 
+#define STATUS_EFFECT_WEAK_SUN_CORE /datum/status_effect/regenerative_core/weak_shining_core
+
 #define STATUS_EFFECT_ANTIMAGIC /datum/status_effect/antimagic //grants antimagic (and reapplies if lost) for the duration
 
 #define STATUS_EFFECT_DETERMINED /datum/status_effect/determined //currently in a combat high from being seriously wounded
@@ -139,6 +141,8 @@
 #define STATUS_EFFECT_STAGGER /datum/status_effect/stagger
 
 #define STATUS_EFFECT_BLUESPACE_INSTABILITY /datum/status_effect/bluespace_instability
+
+#define STATUS_EFFECT_FOG /datum/status_effect/thick_fog
 
 /////////////
 // NEUTRAL //

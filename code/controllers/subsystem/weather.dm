@@ -22,6 +22,7 @@ SUBSYSTEM_DEF(weather)
 		for(var/mob/act_on as anything in GLOB.mob_living_list)
 			if(our_event.can_weather_act(act_on))
 				our_event.weather_act(act_on)
+		our_event.event_tick()
 
 	// start random weather on relevant levels
 	for(var/z in eligible_zlevels)

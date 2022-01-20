@@ -73,8 +73,8 @@
 		damage_coeff[coeff] = max(damage_coeff[coeff] - enemies * BOSS_ARMOR_PER_MINER * 0.01, 0.1)
 
 	for(var/obj/machinery/ancient_server/server in server_list)
-		server.setRating(melee = max(50 - enemies * BOSS_ARMOR_PER_MINER, 10))
-		server.setRating(bomb = max(65 - enemies * BOSS_ARMOR_PER_MINER, 10))
+		server.armor.setRating(melee = min(50 + enemies * BOSS_ARMOR_PER_MINER, 90))
+		server.armor.setRating(bomb = min(65 + enemies * BOSS_ARMOR_PER_MINER, 90))
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return

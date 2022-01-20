@@ -41,6 +41,7 @@
 /turf/open/floor/plating/dirt/jungle
 	slowdown = 0.5
 	initial_gas_mix = JUNGLE_DEFAULT_ATMOS
+	slowdown_type = /datum/movespeed_modifier/turf_slowdown/jungle
 
 /turf/open/floor/plating/dirt/jungle/dark
 	icon_state = "greenerdirt"
@@ -109,6 +110,7 @@
 	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_FLOOR_GRASS_JUNGLE)
 
 	layer = 2.031
+	slowdown_type = /datum/movespeed_modifier/turf_slowdown/jungle
 
 /turf/open/floor/plating/grass/jungle/green
 	smooth_icon = 'icons/turf/floors/junglegrass_green.dmi'

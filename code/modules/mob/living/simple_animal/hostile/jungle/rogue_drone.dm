@@ -24,6 +24,8 @@
 	attack_sound = 'sound/weapons/drill.ogg'
 	attack_verb_continuous = "drills"
 	attack_verb_simple = "drills"
+	vision_range = 9
+	del_on_death = TRUE //or else there will be A LOT of corpses after and during the fight
 	var/nogib = FALSE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/master_ai
 
@@ -61,6 +63,7 @@
 	melee_damage_upper = 20
 	faction = list("neutral")
 	nogib = TRUE
+	del_on_death = FALSE
 	ai_controller = /datum/ai_controller/hostile_friend
 	var/steel_applied = FALSE
 

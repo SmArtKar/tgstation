@@ -244,3 +244,11 @@
 				N.layer = initial(N.layer)
 				N.plane = initial(N.plane)
 				N.set_opacity(FALSE)
+
+/**
+ * Used for thunderstorms and similar events that affect turfs and obj as well
+ *
+ */
+
+/datum/weather/proc/event_tick()
+	return

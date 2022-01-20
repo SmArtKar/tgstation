@@ -70,6 +70,8 @@
 	blacklisted_movetypes = (FLYING|FLOATING)
 	variable = TRUE
 
+/datum/movespeed_modifier/turf_slowdown/jungle //So heavy explorer boots can ignore it
+
 /datum/movespeed_modifier/bulky_drag
 	variable = TRUE
 

@@ -7,7 +7,7 @@
 	damage_coeff = list(BRUTE = 0.75, BURN = 0.75, TOX = 0.75, CLONE = 0.75, STAMINA = 0, OXY = 0.75)
 	ranged_cooldown_time = 20
 	ranged = 1
-	range = 13
+	range = 9
 	playstyle_string = "<span class='holoparasite'>As a <b>space-time</b> type, you have medium armor and are able to perform a variety of different attacks and abilities. Use toggle mode button to enter bluespace mode in which you can't attack, but also can't be attacked. You can still cast abilities in that form, but their damage is significantly lowered.</span>"
 	magic_fluff_string = "<span class='holoparasite'>..And draw the Chrono Legionnaire, the master of unknown.</span>"
 	tech_fluff_string = "<span class='holoparasite'>Boot sequence complete. Bluespace combat modules active. Holoparasite swarm online.</span>"
@@ -17,6 +17,15 @@
 	see_in_dark = 8
 	toggle_button_type = /atom/movable/screen/guardian/toggle_mode
 	var/toggle = FALSE
+
+/mob/living/simple_animal/hostile/guardian/spacetime/updatetheme(theme) //Spacetime holoparas have a unique, distinct look
+	name = "Experimental Holoparasite"
+	real_name = "Experimental Holoparasite"
+	bubble_icon = "guardian"
+	icon_state = "spacetimebase"
+	icon_living = "spacetimebase"
+	cooloverlay = mutable_appearance(icon, "spacetime")
+	add_overlay(cooloverlay)
 
 /mob/living/simple_animal/hostile/guardian/spacetime/ToggleLight()
 	var/msg
@@ -148,5 +157,5 @@
 		else
 			to_chat(victim, span_userdanger("The tremors from the bluespace collapse landing sends you flying!"))
 			var/fly_away_direction = get_dir(src, victim)
-			victim.throw_at(get_edge_target_turf(victim, fly_away_direction), 4, 2)
+			victim.throw_at(get_edge_target_turf(victim, fly_away_direction), 4 * damage_mod, min(2 * damage_mod, 1))
 			victim.adjustBruteLoss(30 * damage_mod)

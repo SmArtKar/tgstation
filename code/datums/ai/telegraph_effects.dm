@@ -10,5 +10,5 @@
 
 /obj/effect/temp_visual/telegraphing/thunderbolt
 	icon = 'icons/mob/telegraphing/telegraph.dmi'
-	icon_state = "target_circle"
+	icon_state = "target_circle_thunderbolt"
 	duration = 2 SECONDS

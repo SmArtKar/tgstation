@@ -18,6 +18,7 @@
 	armour_penetration = 60
 	melee_damage_lower = 20
 	melee_damage_upper = 20
+	obj_damage = 0 //So he doesn't break the walls on his arena as they are very important to dodge the beam and sprial attacks
 	ranged = TRUE
 	vision_range = 18
 	aggro_vision_range = 21
@@ -27,8 +28,8 @@
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
 
-	speed = 6
-	move_to_delay = 6
+	speed = 7
+	move_to_delay = 7
 	wander = FALSE
 	gps_name = "Posessed Signal"
 
@@ -126,8 +127,8 @@
 	armour_penetration = 100
 	melee_damage_lower = 30
 	melee_damage_upper = 30
-	speed = 4
-	move_to_delay = 4
+	speed = 5
+	move_to_delay = 5
 	update_icon()
 	status_flags &= ~GODMODE
 	noaction = FALSE
@@ -292,7 +293,7 @@
 		return
 
 	anger_modifier = 1 - (clamp(((maxHealth - health) / 100),0,20) * 0.01)
-	ranged_cooldown = world.time + (4 * anger_modifier SECONDS)
+	ranged_cooldown = world.time + (5 * anger_modifier SECONDS)
 
 	if(prob(25) && LAZYLEN(former_targets) > 1)
 		target = pick(former_targets - target)
@@ -306,7 +307,7 @@
 		ranged_cooldown = world.time + BLOOD_JAUNT_LENGTH + ((demon_form ? 1 : 3) * anger_modifier SECONDS)
 		SLEEP_CHECK_DEATH(BLOOD_JAUNT_LENGTH + ((demon_form ? 0 : 1) * anger_modifier SECONDS), src)
 		if(prob(35))
-			ranged_cooldown = ranged_cooldown + 2 SECONDS
+			ranged_cooldown = ranged_cooldown + 3 SECONDS
 			SLEEP_CHECK_DEATH((demon_form ? 0 : 1) * anger_modifier SECONDS, src)
 			spiral_shoot()
 		blast_line_directions()
@@ -368,7 +369,7 @@
 /obj/effect/temp_visual/demonic_blast_warning
 	name = "demonic blast warning"
 	icon_state = "demonic_blast_warning"
-	duration = 4
+	duration = 6
 	light_range = 1
 	light_power = 0.5
 	light_color = COLOR_RED_LIGHT
@@ -380,7 +381,7 @@
 
 /obj/effect/temp_visual/demonic_blast_warning/quick
 	icon_state = "demonic_blast_warning_quick"
-	duration = 2
+	duration = 4
 
 /obj/effect/temp_visual/demonic_blast_warning/quick/friendly_fire
 	blast_type = /obj/effect/temp_visual/demonic_blast/friendly_fire
@@ -761,6 +762,7 @@
 	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
 	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	sharpness = SHARP_EDGED
+	hitsound = 'sound/weapons/rapierhit.ogg'
 
 	force = 20
 	armour_penetration = 50
@@ -809,11 +811,15 @@
 		return
 
 	var/mob/living/victim = target
-	if(victim.has_status_effect(STATUS_EFFECT_DEMON_MARK) && victim.stat != DEAD) // Hitting mobs allows to recharge faster.
+	if(victim.has_status_effect(STATUS_EFFECT_DEMON_MARK) && victim.stat != DEAD && victim.remove_status_effect(STATUS_EFFECT_DEMON_MARK)) // Hitting mobs allows to recharge faster.
 		blood = clamp(blood + BLOOD_REGEN, 0, MAXIMUM_BLOOD)
 		victim.Beam(user, icon_state="blood_mid_light", time = 0.5 SECONDS)
 		playsound(get_turf(victim), 'sound/magic/exit_blood.ogg', 50, TRUE)
-		recharge_newshot()
+		charges += 2
+		for(var/i = 1 to 2)
+			recharge_newshot()
+		update_icon()
+		user.changeNext_move(CLICK_CD_RAPID)
 
 /obj/item/gun/magic/staff/blood_claymore/recharge_newshot()
 	. = ..()
@@ -837,7 +843,7 @@
 	var/turf/cur_turf = get_turf(user)
 
 	playsound(cur_turf, 'sound/magic/exit_blood.ogg', 100, TRUE)
-	playsound(cur_turf, 'sound/magic/curse.ogg', 100, TRUE)
+	playsound(cur_turf, 'sound/magic/mutate.ogg', 100, TRUE)
 	user.visible_message(span_danger("[user] lets out a horrible screech as [user.p_they()] begin swinging [src] in circles!"))
 
 	ADD_TRAIT(user, TRAIT_IMMOBILIZED, type)
@@ -845,14 +851,10 @@
 	var/current_angle = 0
 	var/turf/target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
 
-	var/obj/effect/temp_beam_target/temp_target = new(get_turf(target_turf))
 	var/obj/effect/abstract/demon_beam_splash/splash = new(cur_turf)
-	var/beam
 	var/list/already_hit = list()
 
-	user.spin(72, 1)
-
-	while(current_angle < 360)
+	for(var/i = 1 to 72)
 		for(var/turf/check_turf in get_line(cur_turf, target_turf))
 			if(isclosedturf(check_turf))
 				target_turf = check_turf
@@ -866,20 +868,17 @@
 					to_chat(victim, span_userdanger("You're hit by a demonic ray!"))
 					already_hit.Add(victim)
 
-		temp_target.forceMove(target_turf)
-		beam = Beam(temp_target, icon_state = "bsa_beam_red", beam_type = /obj/effect/ebeam/demonic, time = 1)
+		user.Beam(target_turf, icon_state = "bsa_beam_red", beam_type = /obj/effect/ebeam/demonic, time = 0.5)
 		var/matrix/splash_matrix = matrix()
 		splash_matrix.Turn(current_angle)
 		splash_matrix.Translate(cos(current_angle + 90) * 16, -sin(current_angle + 90) * 16)
 		splash.transform = splash_matrix
 
 		current_angle += 5
-		target_turf = get_turf_in_angle(current_angle, cur_turf, 15)
-		setDir(angle2dir(current_angle))
-		sleep(1)
+		target_turf = get_turf_in_angle(current_angle, cur_turf, 5)
+		user.setDir(angle2dir(current_angle))
+		sleep(0.5)
 
-	qdel(beam)
-	qdel(temp_target)
 	qdel(splash)
 
 	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, type)
@@ -891,25 +890,29 @@
 		to_chat(user, span_warning("[src] does not have enough blood stored inside to use it's blood jaunt!"))
 		return
 
-	new /obj/effect/temp_visual/guardian/phase/out(get_turf(user))
-	var/obj/effect/dummy/phased_mob/holder = new(get_turf(user))
-	user.forceMove(holder)
+	var/turf/user_loc = get_turf(user)
+	var/turf/destination
 
-	var/turf/teleturf
-	for(var/turf/check_turf in (get_line(get_turf(user), get_turf(target)) - get_turf(user)))
-		if(isclosedturf(check_turf) || check_turf.is_blocked_turf())
+	var/counter = 0
+	for(var/turf/destination_holder in get_line(user_loc, get_turf(target)))
+		if(destination_holder.is_blocked_turf(exclude_mobs = TRUE) || counter > 8)
 			break
-		if(teleturf)
-			new /obj/effect/temp_visual/demonic_blast_warning/quick/friendly_fire(teleturf)
-		teleturf = check_turf
-		sleep(1)
 
-	if(!teleturf)
+		destination = destination_holder
+		counter += 1
+
+	if(!destination || destination == user_loc)
 		return
 
-	do_teleport(user, teleturf, channel = TELEPORT_CHANNEL_MAGIC, forced = TRUE)
-	new /obj/effect/temp_visual/guardian/phase(get_turf(user))
-	qdel(holder)
+	playsound(user_loc, "sparks", 50, TRUE)
+
+	new /obj/effect/temp_visual/guardian/phase/out(get_turf(user))
+	if(do_teleport(user, destination, channel = TELEPORT_CHANNEL_CULT))
+		new /obj/effect/temp_visual/guardian/phase(destination)
+		user_loc.Beam(destination, "bsa_beam_red", time = 4)
+		playsound(destination, 'sound/effects/phasein.ogg', 25, TRUE)
+		playsound(destination, "sparks", 50, TRUE)
+
 	blood -= TELEPORT_BLOOD
 
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
@@ -990,7 +993,7 @@
 		return
 	user.changeNext_move(CLICK_CD_RAPID)
 
-obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/user)
+/obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/user)
 	qdel(src)
 
 /obj/item/book/granter/spell/throwing_knives
@@ -1015,7 +1018,7 @@ obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/use
 /mob/living/simple_animal/pet/dog/corgi/narsie/hellhound
 	name = "hellhound"
 	desc = "A pitch-black hound with glowing red eyes that came straight from hell."
-	ai_controller = /datum/ai_controller/dog/agressive
+	ai_controller = /datum/ai_controller/dog/agressive/hellhound
 
 	health = 300
 	maxHealth = 300
@@ -1051,3 +1054,51 @@ obj/item/gun/ballistic/rifle/enchanted/throwing_knife/discard_gun(mob/living/use
 		return TRUE
 	else if(istype(mover, /obj/projectile/magic/throwing_knife))
 		return TRUE
+
+/obj/effect/temp_visual/dir_setting/hellhound_recall
+	name = "hellhound_recall"
+	icon_state = "narsian_out"
+	duration = 8.4
+
+/obj/effect/temp_visual/dir_setting/hellhound_recall/out
+	icon_state = "narsian_in"
+
+/obj/effect/proc_holder/spell/targeted/hellhound_recall
+	name = "Hellhound Recall"
+	desc = "Recall or summon your demonic hound."
+	charge_max = 3 SECONDS
+	clothes_req = FALSE
+	invocation = ""
+	invocation_type = INVOCATION_WHISPER
+	school = SCHOOL_FORBIDDEN
+	range = -1
+	include_user = TRUE
+	selection_type = "range"
+	action_icon_state = "hellhound_recall"
+	action_background_icon_state = "bg_demon"
+	sound = 'sound/magic/ethereal_enter.ogg'
+	var/mob/living/simple_animal/pet/dog/corgi/narsie/hellhound/hound
+
+/obj/effect/proc_holder/spell/targeted/hellhound_recall/Initialize(mapload, new_hound)
+	. = ..()
+	hound = new_hound
+
+/obj/effect/proc_holder/spell/targeted/hellhound_recall/cast(list/targets, mob/user = usr)
+	if(hound.loc != user)
+		new /obj/effect/temp_visual/dir_setting/hellhound_recall(get_turf(hound), hound.dir)
+		hound.toggle_ai(AI_OFF)
+		hound.forceMove(user)
+		return
+
+	var/list/possible_spawns = list(get_turf(user))
+	for(var/direction in GLOB.alldirs)
+		var/turf/turf_to_add = get_step(get_turf(user), direction)
+		if(!turf_to_add || turf_to_add.is_blocked_turf())
+			continue
+		possible_spawns += turf_to_add
+
+	var/turf/picked_turf = pick(possible_spawns)
+	new /obj/effect/temp_visual/dir_setting/hellhound_recall/out(get_turf(picked_turf), hound.dir)
+	sleep(8.4)
+	hound.toggle_ai(AI_ON)
+	hound.forceMove(picked_turf)

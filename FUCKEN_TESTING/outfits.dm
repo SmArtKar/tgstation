@@ -3,7 +3,7 @@
 
 	belt = /obj/item/storage/belt/mining/healeys
 	ears = /obj/item/radio/headset/headset_cargo/mining
-	shoes = /obj/item/clothing/shoes/workboots/mining/explorer
+	shoes = /obj/item/clothing/shoes/workboots/mining
 	gloves = /obj/item/clothing/gloves/combat
 	uniform = /obj/item/clothing/under/syndicate
 	l_pocket = /obj/item/gps
@@ -105,6 +105,7 @@
 	new /obj/item/organ/cyberimp/chest/thrusters/wingpack(src)
 	new /obj/item/amber_hourglass(src)
 	new /obj/item/space_cutter(src)
+	new /obj/item/boomerang(src)
 
 /obj/item/mod/control/pre_equipped/exotic/debug
 	cell = /obj/item/stock_parts/cell/infinite
@@ -115,7 +116,7 @@
 
 	belt = /obj/item/storage/belt/mining/healeys
 	ears = /obj/item/radio/headset/headset_cargo/mining
-	shoes = /obj/item/clothing/shoes/workboots/mining/explorer
+	shoes = /obj/item/clothing/shoes/workboots/mining
 	gloves = /obj/item/clothing/gloves/crystal
 	uniform = /obj/item/clothing/under/syndicate
 	glasses = /obj/item/clothing/glasses/meson/night

@@ -84,18 +84,7 @@
 	desc = "Steel-toed mining boots for mining in hazardous environments. Very good at keeping toes uncrushed."
 	icon_state = "explorer"
 	resistance_flags = FIRE_PROOF
-/obj/item/clothing/shoes/workboots/mining/explorer
-	name = "explorer boots"
-	desc = "Explorer boots with advanced anti-mud nanocoating that allows you to be fast even on worst types of terrain. These do not work in water."
 
-/obj/item/clothing/shoes/workboots/mining/explorer/equipped(mob/living/user, slot)
-	. = ..()
-	if(slot == ITEM_SLOT_FEET)
-		user.add_movespeed_mod_immunities(/datum/movespeed_modifier/turf_slowdown)
-
-/obj/item/clothing/shoes/workboots/mining/explorer/dropped(mob/living/user)
-	. = ..()
-	user.remove_movespeed_mod_immunities(/datum/movespeed_modifier/turf_slowdown)
 /obj/item/clothing/shoes/russian
 	name = "russian boots"
 	desc = "Comfy shoes."

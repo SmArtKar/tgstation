@@ -94,6 +94,7 @@
 
 /area/centcom/space_cutter
 	name = "Subspace Pocket"
+	area_flags = UNIQUE_AREA | NOTELEPORT | NOXRAY
 
 //THUNDERDOME
 

@@ -579,8 +579,9 @@
 /mob/living/silicon/robot/update_sight()
 	if(!client)
 		return
+	var/area/current_area = get_area(src)
 	if(stat == DEAD)
-		if(SSmapping.level_trait(z, ZTRAIT_NOXRAY))
+		if(SSmapping.level_trait(z, ZTRAIT_NOXRAY) || current_area.area_flags & NOXRAY)
 			sight = null
 		else if(is_secret_level(z))
 			sight = initial(sight)
@@ -624,7 +625,7 @@
 	if(see_override)
 		see_invisible = see_override
 
-	if(SSmapping.level_trait(z, ZTRAIT_NOXRAY))
+	if(SSmapping.level_trait(z, ZTRAIT_NOXRAY) || current_area.area_flags & NOXRAY)
 		sight = null
 
 	sync_lighting_plane_alpha()

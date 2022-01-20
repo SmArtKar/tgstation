@@ -718,7 +718,7 @@
 		sleep(1)
 
 /obj/item/cursed_katana/spacetime_manipulator/proc/repulse(mob/living/target, mob/user)
-	visible_message(span_warning("[user] repulses everything around them!</span>"))
+	visible_message(span_warning("[user] repells everything around them!</span>"))
 	playsound(user, 'sound/weapons/sonic_jackhammer.ogg', 100, 1)
 	sleep(2)
 	for(var/turf/target_turf in view(1, user))
@@ -733,7 +733,7 @@
 				victim.adjustBruteLoss(15)
 
 /obj/item/cursed_katana/spacetime_manipulator/proc/collapse(mob/living/target, mob/user)
-	visible_message(span_warning("[user] activates local bluespace collapse!</span>"))
+	visible_message(span_warning("[user] starts local bluespace collapse!</span>"))
 	var/target_turf = get_turf(target)
 	new /obj/effect/temp_visual/bluespace_collapse/nodamage(target_turf)
 	sleep(7)
@@ -859,6 +859,8 @@
 		to_chat(user, span_warning("[src] hasn't cooled down it's bluespace circuitry yet. Wait [DisplayTimeText(cut_cooldown - world.time)] before using it again!"))
 		return
 
+	playsound(get_turf(user), 'sound/effects/butcher.ogg', 50, TRUE)
+
 	if(!do_after(user, 5 SECONDS, target = get_turf(target)))
 		return
 
@@ -920,6 +922,13 @@
 				possible_attacker.GiveTarget(src)
 
 	to_chat(mover, span_notice("You enter [src] and find yourself in [get_area_name(target_turf)]."))
+	if(ismob(mover))
+		var/mob/mob_mover = mover
+		mob_mover.update_sight()
+
+/obj/structure/pocket_rift/attack_ghost(mob/user)
+	. = ..()
+	user.forceMove(get_turf(connected_rift))
 
 /obj/structure/pocket_rift/attack_generic(mob/user, damage_amount, damage_type, damage_flag, sound_effect, armor_penetration)
 	if(!collapsing && !source_portal)

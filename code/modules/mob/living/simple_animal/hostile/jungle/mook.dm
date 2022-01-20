@@ -32,6 +32,7 @@
 	attack_vis_effect = ATTACK_EFFECT_SLASH
 	deathsound = 'sound/voice/mook_death.ogg'
 	aggro_vision_range = 15 //A little more aggressive once in combat to balance out their really low HP
+	vision_range = 5
 	var/attack_state = MOOK_ATTACK_NEUTRAL
 	var/struck_target_leap = FALSE
 
@@ -233,7 +234,7 @@
 	name = "axe head"
 	desc = "A shiny metal axe head. Suitable as a trophy for a kinetic crusher."
 	icon_state = "axe_head"
-	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack, /obj/item/crusher_trophy/crystal_shard)
+	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/crystal_shard)
 
 /obj/item/crusher_trophy/axe_head/effect_desc()
 	return "mark detonation to lower attack cooldown. Heavily impacts damage while also reducing recharge time"
@@ -245,7 +246,7 @@
 	. = ..()
 	if(.)
 		var/datum/component/two_handed/wielded = crusher.GetComponent(/datum/component/two_handed)
-		crusher.AddComponent(/datum/component/two_handed, force_wielded = wielded.force_wielded * 0.5) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
+		crusher.AddComponent(/datum/component/two_handed, force_wielded = wielded.force_wielded * 0.25) //Breaks when used with wendigo's horn, but this shouldn't happen normally.
 		crusher.charge_time -= 10
 		crusher.detonation_damage -= 35
 		crusher.backstab_bonus -= 20
@@ -254,9 +255,9 @@
 	. = ..()
 	if(.)
 		var/datum/component/two_handed/wielded = crusher.GetComponent(/datum/component/two_handed)
-		crusher.AddComponent(/datum/component/two_handed, force_wielded = wielded.force_wielded * 2)
+		crusher.AddComponent(/datum/component/two_handed, force_wielded = wielded.force_wielded * 4)
 		crusher.charge_time += 10
-		crusher.detonation_damage += 35
+		crusher.detonation_damage += 40
 		crusher.backstab_bonus += 20
 
 /obj/item/stack/sheet/mechanical_alloy

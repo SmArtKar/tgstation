@@ -78,7 +78,7 @@
 
 	if(health < maxHealth * 0.5)
 		for(var/mob/living/possible_target in former_targets)
-			if(get_dist(src, possible_target) < 4 && prob(80))
+			if(get_dist(src, possible_target) <= 3 && prob(70))
 				INVOKE_ASYNC(src, .proc/spiral_shoot, 0)
 				break
 		if(prob(65))
@@ -243,8 +243,10 @@
 		shoot_projectile(target_turf, target_angle + i, proj_type = /obj/projectile/solar)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/spiral_shoot(delay = 1, counter_start = 8, blasts_per_circle = 16, negative = pick(TRUE, FALSE), proj_type = /obj/projectile/solar_particle)
-	immobile = TRUE
+	if(delay)
+		immobile = TRUE
 	walk_to(src, 0)
+	already_moving = FALSE
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
 	var/prev_health = health
@@ -270,6 +272,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/vine_attack()
 	immobile = TRUE
 	walk_to(src, 0)
+	already_moving = FALSE
 	for(var/i = 1 to 3)
 		var/turf/start_turf = get_step(get_turf(src), pick(GLOB.alldirs))
 		shoot_projectile(start_turf, get_angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
@@ -280,6 +283,7 @@
 	if(immobilize)
 		immobile = TRUE
 		walk_to(src, 0)
+		already_moving = FALSE
 	for(var/turf/target_turf in orange(7, get_turf(src)))
 		if(isclosedturf(target_turf))
 			continue
@@ -287,11 +291,11 @@
 			continue
 		if((target_turf.x % 2 == target_turf.y % 2) != negative)
 			new /obj/effect/temp_visual/target/vine_tentacle(target_turf, src)
-	if(immobilize)
-		immobile = FALSE
+	immobile = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/triple_radius()
 	immobile = TRUE
+	already_moving = FALSE
 	walk_to(src, 0)
 	attack_in_radius(FALSE, FALSE)
 	SLEEP_CHECK_DEATH(20, src)
@@ -306,6 +310,8 @@
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/throwing_spree()
+	immobile = FALSE
+	already_moving = FALSE
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, transform = matrix() * 1.5, time = 4)
 	SLEEP_CHECK_DEATH(4, src)

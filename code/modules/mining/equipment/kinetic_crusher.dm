@@ -65,7 +65,7 @@
 	. += span_notice("Does <b>[force + detonation_damage + backstab_bonus]</b> damage if the target is backstabbed, instead of <b>[force + detonation_damage]</b>.")
 	for(var/t in trophies)
 		var/obj/item/crusher_trophy/T = t
-		. += span_notice("It has \a [T] attached, which causes [T.effect_desc()].")
+		. += span_notice("It has \a [icon2html(T, user)] [T] attached, which causes [T.effect_desc()].")
 
 /obj/item/kinetic_crusher/attackby(obj/item/I, mob/living/user)
 	if(I.tool_behaviour == TOOL_CROWBAR)
@@ -242,21 +242,23 @@
 	if(LAZYLEN(H.trophies) >= H.trophy_capacity)
 		to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
 		return FALSE
+
 	if(ispath(denied_type, /obj/item/crusher_trophy))
 		for(var/t in H.trophies)
 			var/obj/item/crusher_trophy/T = t
 			if(istype(T, denied_type) || istype(src, T.denied_type))
-				to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+				to_chat(user, span_warning("[icon2html(src, user)] [src] seems to conflict with [icon2html(T, user)] [T], maybe you should choose one of them?"))
 				return FALSE
+
 	else if(islist(denied_type))
 		for(var/t in H.trophies)
 			var/obj/item/crusher_trophy/T = t
 			if(istype(src, T.denied_type))
-				to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+				to_chat(user, span_warning("[icon2html(src, user)] [src] seems to conflict with [icon2html(T, user)] [T], maybe you should choose one of them?"))
 				return FALSE
 			for(var/denied_path in denied_type)
 				if(istype(T, denied_path))
-					to_chat(user, span_warning("You can't seem to attach [src] to [H]. Maybe remove a few trophies?"))
+					to_chat(user, span_warning("[icon2html(src, user)] [src] seems to conflict with [icon2html(T, user)] [T], maybe you should choose one of them?"))
 					return FALSE
 
 	if(!user.transferItemToLoc(src, H))

@@ -32,6 +32,14 @@
 
 	crusher_loot = /obj/item/crusher_trophy/acid_sack
 
+/mob/living/simple_animal/hostile/jungle/mega_arachnid/OpenFire(atom/targeting)
+	if(iscarbon(targeting))
+		var/mob/living/carbon/carbon_target = targeting
+		if(carbon_target.legcuffed)
+			ranged_cooldown = world.time + ranged_cooldown_time
+			return
+	. = ..()
+
 /mob/living/simple_animal/hostile/jungle/mega_arachnid/Life(delta_time = SSMOBS_DT, times_fired)
 	..()
 	if(target && ranged_cooldown > world.time && iscarbon(target))
@@ -84,12 +92,17 @@
 	flags_1 = NONE
 	icon_state = "flesh_snare"
 	armed = TRUE
+	trap_damage = 10
+	breakouttime = 10 SECONDS
+
+/obj/item/restraints/legcuffs/beartrap/mega_arachnid/attack_hand(mob/user, list/modifiers)
+	spring_trap(null, user, TRUE)
 
 /obj/item/crusher_trophy/acid_sack //Blood-drunk eye analogue. Works slightly different
 	name = "acid sack"
 	desc = "A still pulsing sack full of acidic blood. Suitable as a trophy for a kinetic crusher."
 	icon_state = "acid_sack"
-	denied_type = list(/obj/item/crusher_trophy/axe_head, /obj/item/crusher_trophy/acid_sack)
+	denied_type = list(/obj/item/crusher_trophy/acid_sack)
 
 /obj/item/crusher_trophy/acid_sack/effect_desc()
 	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer"

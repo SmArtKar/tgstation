@@ -193,3 +193,8 @@
 	plane = LIGHTING_PLANE
 	blend_mode = BLEND_ADD
 	show_when_dead = TRUE
+
+/atom/movable/screen/fullscreen/fog
+	icon_state = "fog"
+	layer = CURSE_LAYER
+	plane = FULLSCREEN_PLANE

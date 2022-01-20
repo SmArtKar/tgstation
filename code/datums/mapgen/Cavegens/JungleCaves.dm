@@ -135,7 +135,7 @@
 
 /datum/map_generator/cave_generator/jungle/deep
 	flora_spawn_list = list(/obj/structure/flora/rock = 2, /obj/structure/flora/rock/pile = 4, /obj/structure/flora/grass/jungle/b = 2, /obj/structure/flora/rock/jungle = 1, /obj/structure/flora/ash/jungle_plant/beerroot = 2, /obj/structure/flora/ash/jungle_plant/bagelshroom = 1)
-	mob_spawn_chance = 6
+	mob_spawn_chance = 5
 	feature_spawn_chance = 0.1
 	feature_spawn_list = list(/obj/structure/ladder/dirt_hole = 10, /obj/structure/geyser/jungle/wittel = 6, /obj/structure/geyser/jungle/random = 2, /obj/structure/geyser/jungle/plasma_oxide = 10, /obj/structure/geyser/jungle/protozine = 10, /obj/structure/geyser/jungle/hollowwater = 10)
 
