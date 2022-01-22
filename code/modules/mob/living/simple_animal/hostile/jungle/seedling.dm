@@ -24,7 +24,8 @@
 	pixel_y = -14
 	base_pixel_y = -14
 	minimum_distance = 3
-	speed = 20
+	move_to_delay = 10
+	speed = 10
 	vision_range = 5
 	aggro_vision_range = 15
 	ranged = TRUE

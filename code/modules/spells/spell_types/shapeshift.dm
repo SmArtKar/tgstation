@@ -132,6 +132,25 @@
 	human_req = initial(human_req)
 	return restored_player
 
+/obj/effect/proc_holder/spell/targeted/shapeshift/invocation(mob/user = usr)
+	var/obj/shapeshift_holder/shapeshift_ability = locate() in caster
+	if(shapeshift_ability && shapeshift_ability.stored && ismob(shapeshift_ability.stored))
+		user = shapeshift_ability.stored
+
+	switch(invocation_type)
+		if(INVOCATION_SHOUT)
+			if(prob(50))//Auto-mute? Fuck that noise
+				user.say(invocation, forced = "spell")
+			else
+				user.say(replacetext(invocation," ","`"), forced = "spell")
+		if(INVOCATION_WHISPER)
+			if(prob(50))
+				user.whisper(invocation)
+			else
+				user.whisper(replacetext(invocation," ","`"))
+		if(INVOCATION_EMOTE)
+			user.visible_message(invocation, invocation_emote_self) //same style as in mob/living/emote.dm
+
 /obj/effect/proc_holder/spell/targeted/shapeshift/dragon
 	name = "Dragon Form"
 	desc = "Take on the shape a lesser ash drake."

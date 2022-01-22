@@ -11,6 +11,7 @@
 	speak_emote = list("chitters")
 	emote_hear = list("chitters")
 	speed = 6
+	move_to_delay = 6
 	see_in_dark = 4
 	butcher_results = list(/obj/item/food/meat/slab/spider = 1, /obj/item/food/spiderleg = 8)
 	response_help_continuous = "pets"
@@ -39,7 +40,6 @@
 
 	ranged_cooldown_time = 30
 	projectiletype = /obj/projectile/cave_spider_spit
-	rapid = 3
 
 	retreat_distance = 1
 	minimum_distance = 3
@@ -54,11 +54,12 @@
 /obj/projectile/cave_spider_spit
 	name = "cave spider spit"
 	icon_state = "neurotoxin"
-	damage = 5
-	damage_type = TOX
+	damage = 15
+	damage_type = BURN
 	knockdown = 5
 	eyeblur = 5
-	flag = BULLET //Because explorer armor has 100 bio protection
+	speed = 1
+	flag = BULLE
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/neurotoxin
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/Initialize()
@@ -83,9 +84,13 @@
 	icon_dead = "cred_cave_spider_dead"
 
 	speed = 4
+	move_to_delay = 4
+
 	maxHealth = 240
 	health = 240
 	rapid_melee = 3
+	retreat_distance = 0
+	minimum_distance = 0
 
 	projectiletype = /obj/projectile/cave_spider_web
 	rapid = 0

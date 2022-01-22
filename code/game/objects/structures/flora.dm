@@ -15,20 +15,23 @@
 /obj/structure/flora/tree/attackby(obj/item/W, mob/user, params)
 	if(log_amount && (!(flags_1 & NODECONSTRUCT_1)))
 		if(W.get_sharpness() && W.force > 0)
-			if(W.hitsound)
-				playsound(get_turf(src), W.hitsound, 100, FALSE, FALSE)
-			user.visible_message(span_notice("[user] begins to cut down [src] with [W]."),span_notice("You begin to cut down [src] with [W]."), span_hear("You hear the sound of sawing."))
-			if(do_after(user, 1000/W.force, target = src)) //5 seconds with 20 force, 8 seconds with a hatchet, 20 seconds with a shard.
-				user.visible_message(span_notice("[user] fells [src] with the [W]."),span_notice("You fell [src] with the [W]."), span_hear("You hear the sound of a tree falling."))
-				playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 100 , FALSE, FALSE)
-				user.log_message("cut down [src] at [AREACOORD(src)]", LOG_ATTACK)
-				for(var/i=1 to log_amount)
-					new /obj/item/grown/log/tree(get_turf(src))
-				var/obj/structure/flora/stump/S = new(loc)
-				S.name = "[name] stump"
-				qdel(src)
+			cut_down(W, user)
 	else
 		return ..()
+
+/obj/structure/flora/tree/proc/cut_down(obj/item/W, mob/user)
+	if(W.hitsound)
+		playsound(get_turf(src), W.hitsound, 100, FALSE, FALSE)
+	user.visible_message(span_notice("[user] begins to cut down [src] with [W]."),span_notice("You begin to cut down [src] with [W]."), span_hear("You hear the sound of sawing."))
+	if(do_after(user, 1000/W.force, target = src)) //5 seconds with 20 force, 8 seconds with a hatchet, 20 seconds with a shard.
+		user.visible_message(span_notice("[user] fells [src] with the [W]."),span_notice("You fell [src] with the [W]."), span_hear("You hear the sound of a tree falling."))
+		playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 100 , FALSE, FALSE)
+		user.log_message("cut down [src] at [AREACOORD(src)]", LOG_ATTACK)
+		for(var/i=1 to log_amount)
+			new /obj/item/grown/log/tree(get_turf(src))
+		var/obj/structure/flora/stump/S = new(loc)
+		S.name = "[name] stump"
+		qdel(src)
 
 /obj/structure/flora/stump
 	name = "stump"
@@ -141,6 +144,20 @@
 	shadow.icon = icon
 	shadow.icon_state = "[icon_state]_shadow"
 	. = ..()
+
+/* /obj/structure/flora/tree/cut_down(obj/item/W, mob/user)
+	if(W.hitsound)
+		playsound(get_turf(src), W.hitsound, 100, FALSE, FALSE)
+	user.visible_message(span_notice("[user] begins to cut down [src] with [W]."),span_notice("You begin to cut down [src] with [W]."), span_hear("You hear the sound of sawing."))
+	if(do_after(user, 1000/W.force, target = src)) //5 seconds with 20 force, 8 seconds with a hatchet, 20 seconds with a shard.
+		user.visible_message(span_notice("[user] fells [src] with the [W]."),span_notice("You fell [src] with the [W]."), span_hear("You hear the sound of a tree falling."))
+		playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 100 , FALSE, FALSE)
+		user.log_message("cut down [src] at [AREACOORD(src)]", LOG_ATTACK)
+		for(var/i=1 to log_amount)
+			new /obj/item/grown/log/tree(get_turf(src))
+		var/obj/structure/flora/stump/S = new(loc)
+		S.name = "[name] stump"
+		qdel(src) */
 
 /obj/structure/flora/tree/jungle/Destroy()
 	qdel(shadow)

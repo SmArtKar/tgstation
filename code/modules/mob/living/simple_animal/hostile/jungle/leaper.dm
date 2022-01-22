@@ -22,6 +22,7 @@
 	base_pixel_x = -16
 	layer = LARGE_MOB_LAYER
 	speed = 10
+	move_to_delay = 10
 	stat_attack = HARD_CRIT
 	robust_searching = 1
 	vision_range = 5

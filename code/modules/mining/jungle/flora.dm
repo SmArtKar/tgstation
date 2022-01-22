@@ -145,7 +145,7 @@
 /obj/item/food/cut_beerroot
 	name = "beerroot slice"
 	desc = "Tasty slice of beerroot full of alcholol."
-	icon = 'icons/obj/flora/jungleflora.dmi'
+	icon = 'icons/obj/food/food.dmi'
 	icon_state = "beerroot_slices"
 	foodtypes = VEGETABLES | ALCOHOL
 	tastes = list("beer" = 1, "piss water" = 3, "parties" = 1)
@@ -197,7 +197,7 @@
 /obj/item/food/cut_bagelshroom
 	name = "cut bagelshroom"
 	desc = "Half of a bagelshroom. Where did the other one go?"
-	icon = 'icons/obj/flora/jungleflora.dmi'
+	icon = 'icons/obj/food/food.dmi'
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "dirt" = 1)
 	foodtypes = VEGETABLES
@@ -209,11 +209,11 @@
 /obj/item/food/fried_bagelshroom
 	name = "fried bagelshroom"
 	desc = "A tasty, griled bagelshroom."
-	icon = 'icons/obj/flora/jungleflora.dmi'
+	icon = 'icons/obj/food/food.dmi'
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "bagels" = 3)
 	foodtypes = VEGETABLES | GRAIN
-	food_reagents = list(/datum/reagent/consumable/nutriment = 6, /datum/reagent/drug/space_drugs = 2)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 6)
 
 /obj/item/seeds/jungle/bagelshroom
 	name = "pack of bagelshroom mycelium"

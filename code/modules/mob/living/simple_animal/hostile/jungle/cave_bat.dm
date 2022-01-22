@@ -6,6 +6,7 @@
 	icon_dead = "bat_dead"
 	icon_gib = "bat_dead"
 	speed = 4
+	move_to_delay = 4
 	response_help_continuous = "brushes aside"
 	response_help_simple = "brush aside"
 	response_disarm_continuous = "flails at"
