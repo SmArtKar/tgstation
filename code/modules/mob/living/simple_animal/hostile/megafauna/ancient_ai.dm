@@ -554,26 +554,37 @@
 	icon_state = "ai_core"
 	denied_type = list(/obj/item/crusher_trophy/ai_core, /obj/item/crusher_trophy/leaper_eye)
 	var/drone_cooldown = 0
+	var/drone_destroy_time = 0
+	var/mob/living/simple_animal/hostile/crusher_drone/drone
 
 /obj/item/crusher_trophy/ai_core/effect_desc()
 	return "ranged right click attacks to create a flying drone that attack your enemies with long-ranged destabilizing force"
 
 
 /obj/item/crusher_trophy/ai_core/on_right_click(atom/target, mob/living/user)
+	if(drone && !QDELETED(drone))
+		if(drone_destroy_time > world.time)
+			to_chat(user, span_notice("Drone successfully destroyed."))
+			drone.death()
+			return
+
+		to_chat(user, span_warning("Your previous drone is still alive! Use the trophy again to destroy it."))
+		drone_destroy_time = world.time + 3 SECONDS
+		return
+
 	if(drone_cooldown > world.time)
 		to_chat(user, span_warning("Wait [round((drone_cooldown - world.time) / 10)] more seconds before trying to create another drone!"))
 		return
 
-	if(isclosedturf(target) || isclosedturf(get_turf(target)))
+	if(isclosedturf(get_turf(target)))
 		return
 
 	drone_cooldown = world.time + 30 SECONDS
 
-	var/mob/living/simple_animal/hostile/crusher_drone/drone = new(get_turf(user))
-	drone.faction = list("[REF(user)]")
+	drone = new(get_turf(user))
+	drone.faction = list("neutral", "[REF(user)]")
 	drone.GiveTarget(target)
 	drone.crusher = loc
-	addtimer(CALLBACK(drone, /mob/living.proc/death), 25 SECONDS)
 
 /mob/living/simple_animal/hostile/crusher_drone
 	name = "V.0.R.T.X. drone"
@@ -583,7 +594,6 @@
 	icon_living = "crusher_drone"
 	mob_biotypes = MOB_ROBOTIC
 	combat_mode = FALSE
-	stop_automated_movement = TRUE
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_plas" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("neutral")
 	maxHealth = 200
@@ -592,6 +602,11 @@
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	del_on_death = TRUE
+
+	speed = 4
+	retreat_distance = 3
+	minimum_distance = 5
+
 	deathmessage = "slowly floats down to the ground as it shuts down."
 	deathsound = 'sound/voice/borg_deathsound.ogg'
 	ranged = 1
@@ -605,9 +620,6 @@
 	else if(istype(mover, /obj/projectile/destabilizer))
 		return TRUE
 
-/mob/living/simple_animal/hostile/crusher_drone/Move()
-	return
-
 /mob/living/simple_animal/hostile/crusher_drone/AttackingTarget(atom/attacked_target)
 	Shoot(attacked_target)
 
@@ -617,7 +629,7 @@
 
 	setDir(get_dir(src, targeted))
 
-	var/obj/projectile/destabilizer/proj = new /obj/projectile/destabilizer/long_range(get_turf(src))
+	var/obj/projectile/destabilizer/proj = new /obj/projectile/destabilizer/vortex_drone(get_turf(src))
 	for(var/obj/item/crusher_trophy/trophy in crusher.trophies)
 		trophy.on_projectile_fire(proj, src)
 	proj.preparePixelProjectile(get_turf(targeted), get_turf(src))
@@ -626,8 +638,13 @@
 	playsound(src, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
 	proj.fire()
 
-/obj/projectile/destabilizer/long_range
-	range = 9
+/obj/projectile/destabilizer/vortex_drone
+	range = 12
+
+/mob/living/carbon/human/CanAllowThrough(atom/movable/mover, border_dir)
+	. = ..()
+	if(istype(mover, /obj/projectile/destabilizer/vortex_drone))
+		return TRUE
 
 /**
  *
@@ -729,6 +746,10 @@
 	var/ascend_cooldown = 0
 	var/obj/structure/extraction_point/beacon
 
+/obj/item/organ/cyberimp/chest/thrusters/wingpack/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/empprotection, EMP_PROTECT_SELF)
+
 /obj/item/organ/cyberimp/chest/thrusters/wingpack/Insert(mob/living/carbon/thruster_owner, special = 0)
 	. = ..()
 	update_owner_overlays(thruster_owner)
@@ -822,6 +843,20 @@
 	animate(owner, pixel_z = 96, time = 40, easing = ELASTIC_EASING)
 	owner.spin(40, 4)
 	sleep(40)
+
+	var/area/owner_area = get_area(owner)
+	if(owner_area.type in GLOB.the_station_areas) //except when you're onboard
+		animate(owner, pixel_z = 128, time = 2)
+		sleep(2)
+		owner.visible_message(span_warning("[owner] hits their head on the celling!"), span_userdanger("You hit your head on the celling!"))
+		playsound(owner, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+		animate(owner, pixel_z = 0, time = 40)
+		sleep(40)
+		owner.Knockdown(2 SECONDS)
+		REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, ANCIENT_AI_TRAIT)
+		REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, ANCIENT_AI_TRAIT)
+		update_owner_overlays(overlay_modifier = "-on")
+		return
 
 	animate(owner, pixel_z = 512, time = 15)
 	owner.spin(15, 1)

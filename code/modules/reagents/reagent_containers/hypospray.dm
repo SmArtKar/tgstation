@@ -261,6 +261,16 @@
 	amount_per_transfer_from_this = 60
 	list_reagents = list(/datum/reagent/medicine/salbutamol = 10, /datum/reagent/medicine/c2/penthrite = 10, /datum/reagent/medicine/oxandrolone = 10, /datum/reagent/medicine/sal_acid = 10 ,/datum/reagent/medicine/omnizine = 10 ,/datum/reagent/medicine/leporazine = 10)
 
+/obj/item/reagent_containers/hypospray/medipen/survival/toxin
+	name = "anti-toxin medipen"
+	desc = "A medipen filled with chemicals for toxin treatment, capable of purging any poison."
+	icon_state = "toxpen"
+	inhand_icon_state = "atropen"
+	base_icon_state = "toxpen"
+	volume = 30
+	amount_per_transfer_from_this = 30
+	list_reagents = list(/datum/reagent/medicine/pen_acid = 20, /datum/reagent/medicine/antihol = 10)
+
 /obj/item/reagent_containers/hypospray/medipen/atropine
 	name = "atropine autoinjector"
 	desc = "A rapid way to save a person from a critical injury state!"

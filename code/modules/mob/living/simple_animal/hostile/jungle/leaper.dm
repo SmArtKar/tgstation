@@ -318,9 +318,9 @@
 /obj/item/crusher_trophy/leaper_eye/proc/jump(atom/target, mob/living/user)
 	var/old_density = user.density
 	user.density = FALSE
-	throw_at(user, get_dist(user, target), 3, user, FALSE, callback = CALLBACK(src, .proc/crush, target, user, old_density), gentle = TRUE)
+	user.throw_at(target, get_dist(user, target), 3, user, FALSE, callback = CALLBACK(src, .proc/crush, target, user, old_density), gentle = TRUE)
 
-/obj/item/crusher_trophy/leaper_eye/proc/crush(atom/target, mob/living/user, old_density) //More suitable for quick escapes/sudden attacks
+/obj/item/crusher_trophy/leaper_eye/proc/crush(atom/target, mob/living/user, old_density) //More suitable for quick escapes/sudden attacks/gimmick builds
 	playsound(user, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	user.density = old_density
 	var/new_turf = get_turf(user)

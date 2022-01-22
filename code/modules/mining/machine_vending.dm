@@ -29,6 +29,7 @@
 		new /datum/data/mining_equipment("Point Transfer Card", /obj/item/card/mining_point_card, 500),
 		new /datum/data/mining_equipment("Survival Medipen", /obj/item/reagent_containers/hypospray/medipen/survival, 500),
 		new /datum/data/mining_equipment("Mining MOD Plating", /obj/item/mod/construction/armor/mining, 500),
+		new /datum/data/mining_equipment("Anti-toxin Medipen", /obj/item/reagent_containers/hypospray/medipen/survival/toxin, 500),
 		new /datum/data/mining_equipment("Brute First-Aid Kit", /obj/item/storage/firstaid/brute, 600),
 		new /datum/data/mining_equipment("Toxin First-Aid Kit", /obj/item/storage/firstaid/toxin, 600),
 		new /datum/data/mining_equipment("Tracking Implant Kit", /obj/item/storage/box/minertracker, 600),

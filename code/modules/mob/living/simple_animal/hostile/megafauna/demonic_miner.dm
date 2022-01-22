@@ -7,7 +7,7 @@
 	maxHealth = 3500
 	icon_state = "demonic_miner"
 	icon_living = "demonic_miner"
-	icon = 'icons/mob/jungle/demonic_miner.dmi'
+	icon = 'icons/mob/jungle/jungle_monsters.dmi'
 
 	attack_sound = 'sound/weapons/slash.ogg'
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID|MOB_EPIC
@@ -32,8 +32,6 @@
 	wander = FALSE
 	gps_name = "Posessed Signal"
 
-	pixel_y = -1
-
 	achievement_type = /datum/award/achievement/boss/demonic_miner_kill
 	crusher_achievement_type = /datum/award/achievement/boss/demonic_miner_crusher
 	score_achievement_type = /datum/award/score/jungle_demonic_miner_score
@@ -56,14 +54,15 @@
 	. = ..()
 	status_flags |= GODMODE
 	pixel_y = -1
+	add_filter("demonic_miner_outline", 9, list("type" = "outline", "color" = rgb(209, 4, 4, 100), "size" = 1))
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/update_icon(updates)
 	if(demon_form)
-		icon_state = "demon_form"
-		icon_living = "demon_form"
+		icon_state = "demonic_miner_phase2"
+		icon_living = "demonic_miner_phase2"
 	else
-		icon_state = "demonic_miner"
-		icon_living = "demonic_miner"
+		icon_state = "demonic_miner_phase2"
+		icon_living = "demonic_miner_phase2"
 	. = ..()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/death()
@@ -89,7 +88,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/demonic_miner/proc/jaunt_at(atom/victim)
 	var/turf/target_turf = get_turf(victim)
 
-	flick("jaunt_[demon_form ? "demon_" : ""]start", src)
+	flick("[icon_state]_jaunt", src)
 	noaction = TRUE
 	status_flags |= GODMODE
 	set_density(FALSE)
@@ -104,7 +103,7 @@
 	playsound(target_turf, 'sound/magic/ethereal_exit.ogg', 50, TRUE, -1)
 	invisibility = initial(invisibility)
 	alpha = 255
-	flick("jaunt_[demon_form ? "demon_" : ""]end", src)
+	flick("[icon_state]_jaunt_out", src)
 	SLEEP_CHECK_DEATH(9, src)
 	noaction = FALSE
 	status_flags &= ~GODMODE
@@ -432,11 +431,11 @@
 		to_chat(target, span_userdanger("You're hit by a demonic blast!"))
 
 /obj/effect/temp_visual/dir_setting/miner_death/demonic
-	icon = 'icons/mob/jungle/demonic_miner.dmi'
-	icon_state = "demonic_miner_death"
+	icon = 'icons/mob/jungle/jungle_monsters.dmi'
+	icon_state = "demonic_miner"
 
 /obj/effect/temp_visual/dir_setting/miner_death/demonic/demon_form
-	icon_state = "demon_form_death"
+	icon_state = "demonic_miner_phase2"
 
 /obj/effect/abstract/demon_beam_splash
 	icon = 'icons/effects/64x64.dmi'
@@ -577,9 +576,14 @@
 	icon = 'icons/obj/lavaland/artefacts.dmi'
 	icon_state = "demon_stone"
 	w_class = WEIGHT_CLASS_SMALL
+	var/used = FALSE
 
 /obj/item/demon_stone/attack_self(mob/living/user)
 	if(!ishuman(user))
+		return
+
+	if(used)
+		to_chat(user, span_warning("[src] is already drained!"))
 		return
 
 	if(tgui_alert(user, "Are you sure to break [src]? Doing so will allow you to harvest souls of your fallen enemies, but they will haunt you forever...", "Demonic Stone", list("Yes", "No")) != "Yes")
@@ -587,10 +591,12 @@
 
 	user.emote("scream")
 	user.apply_status_effect(STATUS_EFFECT_DEMONSTONE)
-	user.visible_message(span_danger("[user] breaks [src] in their hand and thousands demonic voices flood your mind!"), span_userdanger("Thousads voices and demonic visions flood your mind as you break [src] in your hand. Oh fuck."))
+	user.visible_message(span_danger("[user] grips [src] in their hand and thousands demonic voices flood your mind!"), span_userdanger("Thousads voices and demonic visions flood your mind as you grip [src] in your hand!"))
 	playsound(user, 'sound/effects/glassbr3.ogg', 100)
-	playsound(user, 'sound/magic/curse.ogg', 100)
-	qdel(src)
+	playsound(user, 'sound/magic/teleport_app.ogg', 50)
+	icon_state = "demon_stone_drained"
+	update_icon()
+	used = TRUE
 
 #undef BLOOD_JAUNT_LENGTH
 

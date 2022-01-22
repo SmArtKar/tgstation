@@ -207,16 +207,16 @@
 	if(chasm_charge)
 		chasming = TRUE
 	pass_flags |= PASSGLASS | PASSGRILLE | PASSMACHINE | PASSSTRUCTURE | PASSTABLE | PASSMOB | PASSDOORS
-	walk(src, 0)
+	SSmove_manager.move_to(src, 0)
 	setDir(dir)
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = COLOR_BLUE, transform = matrix() * 2, time = 3)
 	SLEEP_CHECK_DEATH(delay, src)
 	var/movespeed = 1
-	walk_towards(src, T, movespeed)
+	SSmove_manager.move_to(src, T, 0, movespeed)
 	SLEEP_CHECK_DEATH(get_dist(src, T) * movespeed, src)
 	pass_flags &= ~(PASSGLASS | PASSGRILLE | PASSMACHINE | PASSSTRUCTURE | PASSTABLE | PASSMOB | PASSDOORS)
-	walk(src, 0)
+	SSmove_manager.move_to(src, 0)
 	if(chasm_charge)
 		chasming = FALSE
 	charging = FALSE

@@ -161,16 +161,16 @@
 
 	charging = TRUE
 	DestroySurroundings()
-	walk(src, 0)
+	SSmove_manager.move_to(src, 0)
 	setDir(dir)
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
 	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = delay)
 	SLEEP_CHECK_DEATH(delay, src)
 	qdel(D)
 	var/movespeed = 0.6
-	walk_towards(src, target_turf, movespeed)
+	SSmove_manager.move_to(src, target_turf, 0, movespeed)
 	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed, src)
-	walk(src, 0)
+	SSmove_manager.move_to(src, 0)
 	charging = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/proc/shoot_projectile(turf/marker, set_angle)
@@ -268,7 +268,6 @@
 	melee_damage_lower = 10
 	melee_damage_upper = 10
 	crusher_drop_mod = 0
-	jump_mod = 0.5
 	ranged_cooldown_time = 4 SECONDS
 	tameable = FALSE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/mommy

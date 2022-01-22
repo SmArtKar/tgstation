@@ -1,18 +1,19 @@
 /datum/weather/fog
 	name = "fog"
-	desc = "The planet's thunderstorms are by nature acidic, and will incinerate anyone standing beneath them without protection."
-	probability = 0
+	desc = "Due to the high humidity of the planet, lightly acidic fog isn't a rare guest in these lush jungles. Just remember that there's no fogbeast and all stories about half-eaten miner corpses are just myths."
+	probability = 20
 
-	telegraph_duration = 200
-	telegraph_message = "<span class='boldannounce'>The air is becoming humid and foggy.</span>"
+	telegraph_duration = 400
+	telegraph_message = "<span class='boldwarning'>The air is becoming humid and foggy.</span>"
 
-	weather_message = "<span class='boldwarning'><i>The fog is rising and it's becoming hard to see, you should probably go inside.</i></span>"
+	weather_message = "<span class='boldannounce'><i>The fog is rising and it's becoming hard to see, you should probably go inside.</i></span>"
 	weather_duration_lower = 1800
-	weather_duration_upper = 3000 //From 3 to 5 minutes
+	weather_duration_upper = 6000 //From 3 to 10 minutes
 	weather_overlay = "fog"
+	weather_sound = 'sound/misc/ghosty_wind.ogg'
 
 	end_duration = 200
-	end_message = "<span class='boldannounce'>The fog finally clears.</span>"
+	end_message = "<span class='boldnotice'>The fog finally clears.</span>"
 
 	weather_color = "#CDE6B3"
 

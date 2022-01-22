@@ -23,8 +23,8 @@
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 0.25, CLONE = 1.2, STAMINA = 0, OXY = 1)
 	unsuitable_cold_damage = 10
 	unsuitable_heat_damage = 10
-	melee_damage_lower = 15
-	melee_damage_upper = 15
+	melee_damage_lower = 10
+	melee_damage_upper = 10
 	faction = list("jungle", "spiders")
 	pass_flags = PASSTABLE
 	attack_verb_continuous = "bites"
@@ -36,15 +36,30 @@
 	obj_damage = 20
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	ranged = TRUE
+
 	ranged_cooldown_time = 30
-	projectiletype = /obj/projectile/cave_spider_web
+	projectiletype = /obj/projectile/cave_spider_spit
+	rapid = 3
+
+	retreat_distance = 1
+	minimum_distance = 3
+
 	crusher_drop_mod = 15 //They spawn in packs
 	crusher_loot = /obj/item/crusher_trophy/spider_webweaver
 	move_resist = MOVE_RESIST_DEFAULT
 	move_force = MOVE_FORCE_DEFAULT
 	pull_force = PULL_FORCE_DEFAULT
-	var/jump_mod = 1
 	var/tameable = TRUE
+
+/obj/projectile/cave_spider_spit
+	name = "cave spider spit"
+	icon_state = "neurotoxin"
+	damage = 5
+	damage_type = TOX
+	knockdown = 5
+	eyeblur = 5
+	flag = BULLET //Because explorer armor has 100 bio protection
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/neurotoxin
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/Initialize()
 	. = ..()
@@ -60,16 +75,36 @@
 	can_have_ai = FALSE
 	toggle_ai(AI_OFF)
 
-/mob/living/simple_animal/hostile/jungle/cave_spider/OpenFire(atom/targeting)
-	if(get_dist(src, targeting) > WEB_DISTANCE)
-		return
+/mob/living/simple_animal/hostile/jungle/cave_spider/red
+	name = "red cave spider"
+	desc = "A blood-red cave spider with pure white eyes. Scary."
+	icon_state = "red_cave_spider"
+	icon_living = "red_cave_spider"
+	icon_dead = "cred_cave_spider_dead"
 
-	if(prob((100 - health / maxHealth) * jump_mod))
-		throw_at(targeting, WEB_DISTANCE, 2, src, FALSE, TRUE)
+	speed = 4
+	maxHealth = 240
+	health = 240
+	rapid_melee = 3
+
+	projectiletype = /obj/projectile/cave_spider_web
+	rapid = 0
+	crusher_loot = /obj/item/crusher_trophy/red_spider_webweaver
+	crusher_drop_mod = 40
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/red/OpenFire(atom/targeting)
+	if(prob(40) || get_dist(src, targeting) > WEB_DISTANCE)
+		throw_at(targeting, WEB_DISTANCE, 1, src, FALSE, TRUE)
 		visible_message("<span class='danger'>[src] jumps at [targeting]!</span>")
 		return
 
 	. = ..()
+
+/mob/living/simple_animal/hostile/jungle/cave_spider/random/Initialize(mapload)
+	. = ..()
+	if(prob(10))
+		new /mob/living/simple_animal/hostile/jungle/cave_spider/red(loc)
+		return INITIALIZE_HINT_QDEL
 
 /obj/projectile/cave_spider_web
 	name = "spider web"
@@ -134,11 +169,11 @@
 
 /obj/effect/spawner/jungle/cave_spider_nest/Initialize()
 	. = ..()
-	new /mob/living/simple_animal/hostile/jungle/cave_spider(get_turf(src))
+	new /mob/living/simple_animal/hostile/jungle/cave_spider/random(get_turf(src))
 	for(var/turf/open/T in range(1, src))
 
 		if(prob(15) && T != src)
-			new /mob/living/simple_animal/hostile/jungle/cave_spider(T)
+			new /mob/living/simple_animal/hostile/jungle/cave_spider/random(T)
 
 	for(var/turf/open/T in range(3, src))
 		if(sqrt((T.x - x) ** 2 + (T.y - y) ** 2) > 3) //I want it to be a CIRCLE
@@ -157,36 +192,49 @@
 /obj/structure/spider/stickyweb/cave/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	return
 
-/obj/item/crusher_trophy/spider_webweaver //A bit weaker than normal cave spider attack
-	name = "cave spider's web weaver"
-	desc = "A ripped off web weaver. Suitable as a trophy for a kinetic crusher."
-	icon_state = "spider_webweaver"
-	denied_type = list(/obj/item/crusher_trophy/spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
+/obj/item/crusher_trophy/red_spider_webweaver
+	name = "red cave spider's web weaver"
+	desc = "A bloody red web weaver. Suitable as a trophy for a kinetic crusher."
+	icon_state = "red_spider_webweaver"
+	denied_type = list(/obj/item/crusher_trophy/red_spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
 	var/web_shot = FALSE
 
-/obj/item/crusher_trophy/spider_webweaver/effect_desc()
+/obj/item/crusher_trophy/red_spider_webweaver/effect_desc()
 	return "mark detonation to turn next shot into a ball of web that will stun enemies and pull them at you upon hit"
 
-/obj/item/crusher_trophy/spider_webweaver/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
+/obj/item/crusher_trophy/red_spider_webweaver/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
 	if(web_shot)
 		marker.name = "webbed [marker.name]"
 		marker.icon_state = "webball"
 		RegisterSignal(marker, COMSIG_PROJECTILE_ON_HIT, .proc/projectile_hit)
 		web_shot = FALSE
 
-/obj/item/crusher_trophy/spider_webweaver/on_mark_detonation(mob/living/target, mob/living/user)
+/obj/item/crusher_trophy/red_spider_webweaver/on_mark_detonation(mob/living/target, mob/living/user)
 	web_shot = TRUE
 	addtimer(CALLBACK(src, .proc/reset_web_shot), 300, TIMER_UNIQUE|TIMER_OVERRIDE)
 
-/obj/item/crusher_trophy/spider_webweaver/proc/reset_web_shot()
+/obj/item/crusher_trophy/red_spider_webweaver/proc/reset_web_shot()
 	web_shot = FALSE
 
-/obj/item/crusher_trophy/spider_webweaver/proc/projectile_hit(atom/fired_from, atom/movable/firer, atom/target, Angle)
+/obj/item/crusher_trophy/red_spider_webweaver/proc/projectile_hit(atom/fired_from, atom/movable/firer, atom/target, Angle)
 	SIGNAL_HANDLER
 	if(isliving(target))
 		var/mob/living/L = target
 		L.safe_throw_at(firer, WEB_DISTANCE, 1, firer, FALSE, TRUE, gentle = TRUE)
 		var/datum/beam/web = firer.Beam(target, icon_state = "web")
 		QDEL_IN(web, 3 SECONDS)
+
+/obj/item/crusher_trophy/spider_webweaver //Useful with ranged builds
+	name = "cave spider's web weaver"
+	desc = "A ripped off web weaver. Suitable as a trophy for a kinetic crusher."
+	icon_state = "spider_webweaver"
+	denied_type = /obj/item/crusher_trophy/spider_webweaver
+
+/obj/item/crusher_trophy/spider_webweaver/effect_desc()
+	return "mark detonation to throw you away from your enemy a few tiles"
+
+/obj/item/crusher_trophy/spider_webweaver/on_mark_detonation(mob/living/target, mob/living/user)
+	var/turf/target_turf = get_edge_target_turf(user, get_dir(target, user))
+	user.throw_at(target_turf, 2, 2, user, FALSE, TRUE, gentle = TRUE)
 
 #undef WEB_DISTANCE

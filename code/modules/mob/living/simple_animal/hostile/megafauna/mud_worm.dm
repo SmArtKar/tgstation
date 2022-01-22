@@ -271,14 +271,14 @@
 	already_hit = list()
 	charging = target_turf
 	DestroySurroundings()
-	walk(src, 0)
+	SSmove_manager.move_to(src, 0)
 	setDir(dir)
 	INVOKE_ASYNC(src, .proc/anim_decoy, delay, delay / get_length())
 	SLEEP_CHECK_DEATH(delay, src)
 	var/movespeed = 0.5
-	walk_towards(src, target_turf, movespeed)
+	SSmove_manager.move_to(src, target_turf, 0, movespeed)
 	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed, src)
-	walk(src, 0)
+	SSmove_manager.move_to(src, 0)
 	charging = FALSE
 	already_hit = list()
 
@@ -483,7 +483,7 @@
 	desc = "A giant tooth ripped out of a mud worm's mouth. Suitable as a trophy for a kinetic crusher."
 	icon_state = "giant_tooth"
 	bonus_value = 10
-	denied_type = list(/obj/item/crusher_trophy/spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
+	denied_type = list(/obj/item/crusher_trophy/red_spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
 
 /obj/item/crusher_trophy/blaster_tubes/giant_tooth/effect_desc()
 	return "mark detonation to make the next destabilizer shot deal <b>[bonus_value]</b> damage"
@@ -548,10 +548,10 @@
 		if(get_dir(user, victim) != user.dir && victim != user)
 			victims.Add(victim)
 
-	if (user.throw_at(target, 5, 2, spin = FALSE, diagonals_first = TRUE))
+	if (user.throw_at(target, 5, 2, spin = FALSE, diagonals_first = TRUE, gentle = TRUE))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(user))
 		for(var/mob/living/victim in victims)
-			victim.throw_at(antitarget, 3, 1, spin = TRUE, diagonals_first = TRUE)
+			victim.throw_at(antitarget, 3, 1, spin = TRUE, diagonals_first = TRUE, gentle = TRUE)
 			new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(victim))
 		user.add_movespeed_modifier(/datum/movespeed_modifier/power_dash)
 		addtimer(CALLBACK(user, /mob.proc/remove_movespeed_modifier, /datum/movespeed_modifier/power_dash), 5 SECONDS)

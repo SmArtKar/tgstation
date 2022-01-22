@@ -206,8 +206,8 @@
 	var/mob/living/victim = hit_atom
 	victim.visible_message(span_danger("[src] slams into [victim]!"), span_userdanger("[src] slams into you, sending you flying!"))
 	to_chat(src, span_warning("You slam into [victim]!"))
-	var/turf/throw_target = get_ranged_target_turf(victim, get_dir(src, hit_atom), 40)
-	victim.throw_at(throw_target, 40, 3) //YEEEEEEET
+	var/turf/throw_target = get_ranged_target_turf(victim, get_dir(src, hit_atom), 20)
+	victim.throw_at(throw_target, 20, 3) //YEEEEEEET
 	if(throw_spree)
 		SLEEP_CHECK_DEATH(5, src)
 		Goto(target, move_to_delay, 1)
@@ -228,7 +228,7 @@
 		throw_at(get_turf(targeting), 40, 1, spin = FALSE, diagonals_first = TRUE)
 		return
 
-	walk_to(src, get_turf(targeting), get_dist(get_turf(target), get_turf(targeting)), move_to_delay)
+	SSmove_manager.move_to(src, get_turf(targeting), get_dist(get_turf(target), get_turf(targeting)), move_to_delay)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/solar_barrage()
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
@@ -244,7 +244,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/spiral_shoot(delay = 1, counter_start = 8, blasts_per_circle = 16, negative = pick(TRUE, FALSE), proj_type = /obj/projectile/solar_particle)
 	if(delay)
 		immobile = TRUE
-	walk_to(src, 0)
+	SSmove_manager.move_to(src, 0)
 	already_moving = FALSE
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
@@ -270,7 +270,7 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/vine_attack()
 	immobile = TRUE
-	walk_to(src, 0)
+	SSmove_manager.move_to(src, 0)
 	already_moving = FALSE
 	for(var/i = 1 to 3)
 		var/turf/start_turf = get_step(get_turf(src), pick(GLOB.alldirs))
@@ -281,7 +281,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/attack_in_radius(negative = FALSE, immobilize = TRUE)
 	if(immobilize)
 		immobile = TRUE
-		walk_to(src, 0)
+		SSmove_manager.move_to(src, 0)
 		already_moving = FALSE
 	for(var/turf/target_turf in orange(7, get_turf(src)))
 		if(isclosedturf(target_turf))
@@ -295,7 +295,7 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/triple_radius()
 	immobile = TRUE
 	already_moving = FALSE
-	walk_to(src, 0)
+	SSmove_manager.move_to(src, 0)
 	attack_in_radius(FALSE, FALSE)
 	SLEEP_CHECK_DEATH(20, src)
 	attack_in_radius(TRUE, FALSE)

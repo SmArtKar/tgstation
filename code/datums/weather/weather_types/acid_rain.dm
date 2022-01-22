@@ -2,7 +2,7 @@
 /datum/weather/acid_rain
 	name = "acid rain"
 	desc = "The planet's thunderstorms are by nature acidic, and will incinerate anyone standing beneath them without protection."
-	probability = 0
+	probability = 50
 
 	telegraph_duration = 400
 	telegraph_message = "<span class='boldwarning'>You hear droplets drumming against the canopy. Seek shelter.</span>"
@@ -44,7 +44,7 @@
 	name = "light acid rain"
 	weather_overlay = "rain_med"
 
-	probability = 0
+	probability = 20
 
 /datum/weather/acid_rain/light/weather_act(mob/living/L)
 	L.acid_act(10, 20)
@@ -54,7 +54,7 @@
 	name = "acid storm"
 	weather_overlay = "rain_storming"
 
-	probability = 0
+	probability = 10
 
 	telegraph_message = "<span class='boldwarning'>You hear thunder rumbling not so far from you and air starts reeking of acid. Storm is coming, seek shelter!</span>"
 	telegraph_overlay = "rain_telegraph_med"

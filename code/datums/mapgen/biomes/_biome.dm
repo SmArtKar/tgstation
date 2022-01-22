@@ -57,20 +57,20 @@
 	flora_types = list(/obj/structure/flora/grass/jungle, /obj/structure/flora/grass/jungle/b, /obj/structure/flora/rock/jungle, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 3
 	fauna_types = list(/mob/living/simple_animal/hostile/retaliate/snake/jungle = 3, /mob/living/simple_animal/hostile/retaliate/frog/jungle = 2, /mob/living/simple_animal/hostile/lizard/jungle = 2, /mob/living/simple_animal/hostile/jungle/snakeman/random = 1)
-	fauna_density = 0.7
+	fauna_density = 1.5
 
 /datum/biome/plains
 	turf_type = /turf/open/floor/plating/grass/jungle/green
 	flora_types = list(/obj/structure/flora/ash/jungle_plant, /obj/structure/flora/grass/jungle, /obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 10
 	fauna_types = list(/mob/living/simple_animal/hostile/gorilla/jungle = 1, /mob/living/simple_animal/parrot/jungle = 3, /mob/living/simple_animal/hostile/retaliate/snake/jungle = 4, /mob/living/simple_animal/hostile/lizard/jungle = 4, /mob/living/simple_animal/hostile/jungle/leaper = 1, /mob/living/simple_animal/hostile/jungle/seedling = 3, /mob/living/simple_animal/hostile/jungle/snakeman/random = 2)
-	fauna_density = 1.5
+	fauna_density = 2
 
 /datum/biome/plains/cold
 	flora_types = list(/obj/structure/flora/ash/jungle_plant, /obj/structure/flora/grass/jungle, /obj/structure/flora/grass/jungle/b, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 1.5
 	fauna_types = list(/mob/living/simple_animal/parrot/jungle = 3, /mob/living/simple_animal/hostile/retaliate/snake/jungle = 4, /mob/living/simple_animal/hostile/lizard/jungle = 4, /mob/living/simple_animal/hostile/jungle/leaper = 1, /mob/living/simple_animal/hostile/jungle/mook = 1, /mob/living/simple_animal/hostile/jungle/seedling = 2, /mob/living/simple_animal/hostile/jungle/snakeman/random = 2)
-	fauna_density = 1
+	fauna_density = 1.75
 
 /datum/biome/jungle
 	turf_type = /turf/open/floor/plating/grass/jungle
@@ -78,7 +78,7 @@
 	flora_density = 40
 
 	fauna_types = list(/mob/living/simple_animal/hostile/gorilla/jungle = 3, /mob/living/simple_animal/parrot/jungle = 3, /mob/living/simple_animal/hostile/retaliate/snake/jungle = 4, /mob/living/simple_animal/hostile/lizard/jungle = 4, /mob/living/simple_animal/hostile/jungle/mook = 1, /mob/living/simple_animal/hostile/jungle/seedling = 3, /mob/living/simple_animal/hostile/jungle/mega_arachnid = 2, /mob/living/simple_animal/hostile/jungle/snakeman/random = 2)
-	fauna_density = 1.75
+	fauna_density = 2.25
 
 /datum/biome/jungle/deep
 	flora_density = 65

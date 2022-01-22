@@ -64,18 +64,21 @@
 		var/obj/item/organ/regenerative_core/legion/shining_core/core = new(src)
 		core.preserved()
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
+		new /obj/item/reagent_containers/hypospray/medipen/survival/toxin(src)
 
-	for(var/i = 1 to 6)
+	for(var/i = 1 to 3)
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
+		new /obj/item/reagent_containers/hypospray/medipen/survival/toxin(src)
 
 	new /obj/item/storage/pill_bottle/psicodine(src)
 	new /obj/item/storage/pill_bottle/stimulant(src)
 
 /obj/item/storage/belt/mining/healeys/PopulateContents()
-	for (var/i = 1 to 3)
+	for (var/i = 1 to 2)
 		var/obj/item/organ/regenerative_core/legion/shining_core/core = new(src)
 		core.preserved()
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
+		new /obj/item/reagent_containers/hypospray/medipen/survival/toxin(src)
 
 /obj/item/storage/box/kc_debug/PopulateContents()
 	for(var/T in subtypesof(/obj/item/crusher_trophy))
