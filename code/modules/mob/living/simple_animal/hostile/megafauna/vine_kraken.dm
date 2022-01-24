@@ -54,6 +54,7 @@
 	var/move_cooldown
 	var/immobile = FALSE
 	var/throw_spree = 0
+	var/hard_throw = FALSE
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/Destroy()
 	for(var/vine in vines)
@@ -129,6 +130,7 @@
 			throw_spree -= 1
 			move_cooldown = world.time + POWER_THROW_MOVE_COOLDOWN
 			already_moving = TRUE
+			hard_throw = TRUE
 			shoot_projectile(get_turf(target), mark_target = FALSE, proj_type = /obj/projectile/vine_tentacle/throwing)
 			return
 		move_cooldown = world.time + THROW_MOVE_COOLDOWN
@@ -166,7 +168,7 @@
 		shoot_projectile(get_turf(target), mark_target = FALSE)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+	already_moving = FALSE
 
 	if((LAZYLEN(vines) > VINE_MIN_DELETE && prob(VINE_DELETE_CHANCE)) || LAZYLEN(vines) > VINE_MAX)
 		var/to_delete = pick(vines)
@@ -174,8 +176,6 @@
 		vines.Remove(to_delete)
 		qdel(vine_to_delete)
 		vine_targets.Remove(to_delete)
-
-	already_moving = FALSE
 
 	var/view_objects = view(15, get_turf(src))
 	for(var/atom/vine_target in vine_targets)
@@ -185,32 +185,35 @@
 			qdel(vine_to_delete)
 			vine_targets.Remove(vine_target)
 
-	if(!isliving(hit_atom))
-		visible_message(span_danger("[src] slams into [hit_atom]!"), span_warning("You slam into [hit_atom]!"))
-		if(isobj(hit_atom))
-			var/obj/slammed = hit_atom
-			slammed.take_damage(obj_damage, BRUTE, MELEE)
-			if(ismovable(hit_atom))
-				var/atom/movable/dunked = hit_atom
-				if(!dunked.anchored)
-					var/turf/throw_target = get_ranged_target_turf(dunked, get_dir(src, hit_atom), 40)
-					dunked.throw_at(throw_target, 40, 4)
-		if(istype(hit_atom, /turf/closed/mineral))
-			var/turf/closed/mineral/rock = hit_atom
-			rock.gets_drilled(src)
+	if(hard_throw)
+		hard_throw = FALSE
+		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+		if(!isliving(hit_atom))
+			visible_message(span_danger("[src] slams into [hit_atom]!"), span_warning("You slam into [hit_atom]!"))
+			if(isobj(hit_atom))
+				var/obj/slammed = hit_atom
+				slammed.take_damage(obj_damage, BRUTE, MELEE)
+				if(ismovable(hit_atom))
+					var/atom/movable/dunked = hit_atom
+					if(!dunked.anchored)
+						var/turf/throw_target = get_ranged_target_turf(dunked, get_dir(src, hit_atom), 40)
+						dunked.throw_at(throw_target, 40, 4)
+			if(istype(hit_atom, /turf/closed/mineral))
+				var/turf/closed/mineral/rock = hit_atom
+				rock.gets_drilled(src)
+			if(throw_spree)
+				SLEEP_CHECK_DEATH(5, src)
+				Goto(target, move_to_delay, 1)
+			return
+
+		var/mob/living/victim = hit_atom
+		victim.visible_message(span_danger("[src] slams into [victim]!"), span_userdanger("[src] slams into you, sending you flying!"))
+		to_chat(src, span_warning("You slam into [victim]!"))
+		var/turf/throw_target = get_ranged_target_turf(victim, get_dir(src, hit_atom), 20)
+		victim.throw_at(throw_target, 20, 3) //YEEEEEEET
 		if(throw_spree)
 			SLEEP_CHECK_DEATH(5, src)
 			Goto(target, move_to_delay, 1)
-		return
-
-	var/mob/living/victim = hit_atom
-	victim.visible_message(span_danger("[src] slams into [victim]!"), span_userdanger("[src] slams into you, sending you flying!"))
-	to_chat(src, span_warning("You slam into [victim]!"))
-	var/turf/throw_target = get_ranged_target_turf(victim, get_dir(src, hit_atom), 20)
-	victim.throw_at(throw_target, 20, 3) //YEEEEEEET
-	if(throw_spree)
-		SLEEP_CHECK_DEATH(5, src)
-		Goto(target, move_to_delay, 1)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/shoot_projectile(turf/marker, set_angle, proj_type = /obj/projectile/vine_tentacle, mark_target = TRUE, turf/startloc = get_turf(src))
 	if(!isnum(set_angle) && (!marker || marker == loc))
@@ -224,11 +227,15 @@
 	return P
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/process_vine_move(atom/targeting, throw_type = FALSE)
+	if(already_moving)
+		return
+
 	if(throw_type)
+		hard_throw = TRUE
 		throw_at(get_turf(targeting), 40, 1, spin = FALSE, diagonals_first = TRUE)
 		return
 
-	SSmove_manager.move_to(src, get_turf(targeting), get_dist(get_turf(target), get_turf(targeting)), move_to_delay)
+	throw_at(get_turf(targeting), 40, 0.5, spin = FALSE, diagonals_first = TRUE, gentle = TRUE)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/solar_barrage()
 	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
@@ -244,7 +251,6 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/spiral_shoot(delay = 1, counter_start = 8, blasts_per_circle = 16, negative = pick(TRUE, FALSE), proj_type = /obj/projectile/solar_particle)
 	if(delay)
 		immobile = TRUE
-	SSmove_manager.move_to(src, 0)
 	already_moving = FALSE
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
@@ -270,18 +276,23 @@
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/vine_attack()
 	immobile = TRUE
-	SSmove_manager.move_to(src, 0)
 	already_moving = FALSE
 	for(var/i = 1 to 3)
-		var/turf/start_turf = get_step(get_turf(src), pick(GLOB.alldirs))
-		shoot_projectile(start_turf, get_angle(src, target) + rand(-15, 15), proj_type = /obj/projectile/vine_spawner)
+		INVOKE_ASYNC(src, .proc/spawn_vine_line)
 		SLEEP_CHECK_DEATH(1 SECONDS, src)
 	immobile = FALSE
+
+/mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/spawn_vine_line()
+	for(var/turf/spawn_turf in get_line(src, get_turf_in_angle(get_angle(src, target) + rand(-15, 15), get_turf(src), 15)))
+		if(spawn_turf.is_blocked_turf(TRUE))
+			return
+
+		new /obj/effect/temp_visual/goliath_tentacle/vine_kraken(spawn_turf, src)
+		sleep(2)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/attack_in_radius(negative = FALSE, immobilize = TRUE)
 	if(immobilize)
 		immobile = TRUE
-		SSmove_manager.move_to(src, 0)
 		already_moving = FALSE
 	for(var/turf/target_turf in orange(7, get_turf(src)))
 		if(isclosedturf(target_turf))
@@ -295,7 +306,6 @@
 /mob/living/simple_animal/hostile/megafauna/jungle/vine_kraken/proc/triple_radius()
 	immobile = TRUE
 	already_moving = FALSE
-	SSmove_manager.move_to(src, 0)
 	attack_in_radius(FALSE, FALSE)
 	SLEEP_CHECK_DEATH(20, src)
 	attack_in_radius(TRUE, FALSE)
@@ -429,28 +439,6 @@
 /obj/projectile/solar_particle/process_homing() //I guess I'll just use homing proc for modifying speed?
 	counter += 30
 	set_pixel_speed((sin(counter) + 1) * SSprojectiles.global_pixel_speed * 0.2) //Cool wave-like movement
-
-/obj/projectile/vine_spawner
-	nodamage = TRUE
-	range = 40
-	pass_flags = PASSTABLE | PASSMOB
-	nodamage = TRUE
-	invisibility = INVISIBILITY_MAXIMUM
-	speed = 4
-	suppressed = TRUE
-
-/obj/projectile/vine_spawner/on_hit(atom/target, blocked, pierce_hit)
-	qdel(src)
-
-/obj/projectile/vine_spawner/pixel_move(trajectory_multiplier, hitscanning = FALSE)
-	. = ..()
-	if(!loc)
-		return
-
-	if(locate(/obj/effect/temp_visual/goliath_tentacle/vine_kraken) in get_turf(src))
-		return
-
-	new /obj/effect/temp_visual/goliath_tentacle/vine_kraken(get_turf(src), firer)
 
 /obj/item/gun/magic/staff/vine
 	name = "staff of vines"

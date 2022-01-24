@@ -60,7 +60,7 @@
 	needs_sharp_harvest = FALSE
 
 	harvest = /obj/item/food/grown/jungle_flora/rapsberry
-	harvest_message_low = "You take a few berries from the bush but accidentally squish most of them."
+	harvest_message_low = "You take a few berries from the bush, but accidentally squish most of them."
 	harvest_message_med = "You carefully collect some berries from the bush."
 	harvest_message_high = "You collect all berries from the bush."
 	number_of_variants = 3
@@ -145,7 +145,7 @@
 /obj/item/food/cut_beerroot
 	name = "beerroot slice"
 	desc = "Tasty slice of beerroot full of alcholol."
-	icon = 'icons/obj/food/food.dmi'
+	icon = 'icons/obj/jungle/brewing.dmi'
 	icon_state = "beerroot_slices"
 	foodtypes = VEGETABLES | ALCOHOL
 	tastes = list("beer" = 1, "piss water" = 3, "parties" = 1)
@@ -197,7 +197,7 @@
 /obj/item/food/cut_bagelshroom
 	name = "cut bagelshroom"
 	desc = "Half of a bagelshroom. Where did the other one go?"
-	icon = 'icons/obj/food/food.dmi'
+	icon = 'icons/obj/jungle/brewing.dmi'
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "dirt" = 1)
 	foodtypes = VEGETABLES
@@ -209,14 +209,14 @@
 /obj/item/food/fried_bagelshroom
 	name = "fried bagelshroom"
 	desc = "A tasty, griled bagelshroom."
-	icon = 'icons/obj/food/food.dmi'
+	icon = 'icons/obj/jungle/brewing.dmi'
 	icon_state = "cut_bagelshroom"
 	tastes = list("bread" = 2, "mushrooms" = 1, "bagels" = 3)
 	foodtypes = VEGETABLES | GRAIN
 	food_reagents = list(/datum/reagent/consumable/nutriment = 6)
 
 /obj/item/seeds/jungle/bagelshroom
-	name = "pack of bagelshroom mycelium"
+	name = "bagelshroom mycelium"
 	desc = "This mycelium grows into bagelshrooms."
 	icon_state = "mycelium-bagelshroom"
 	species = "bagelshroom"
@@ -230,3 +230,85 @@
 	graft_gene = /datum/plant_gene/trait/repeated_harvest
 
 	reagents_add = list(/datum/reagent/consumable/nutriment = 0.1, /datum/reagent/consumable/flour/bagelshroom = 0.2, /datum/reagent/drug/space_drugs = 0.2)
+
+/// Wild Herbs
+
+/obj/structure/flora/ash/jungle_plant/wild_herbs
+	name = "wild herbs"
+	desc = "A patch of wild jungle herbs with healing properties."
+	icon_state = "herbs"
+
+	needs_sharp_harvest = TRUE
+
+	harvest = /obj/item/food/grown/jungle_flora/wild_herbs
+	harvest_message_low = "You pick up a few good herbs."
+	harvest_message_med = "You collect some of the herbs."
+	harvest_message_high = "You carefully collect all wild herbs from the patch."
+	number_of_variants = 5
+
+/obj/structure/flora/ash/jungle_plant/wild_herbs/harvest(user)
+	var/rand_harvested = rand(harvest_amount_low, harvest_amount_high)
+	if(rand_harvested)
+		if(user)
+			var/msg = harvest_message_med
+			if(rand_harvested == harvest_amount_low)
+				msg = harvest_message_low
+			else if(rand_harvested == harvest_amount_high)
+				msg = harvest_message_high
+			to_chat(user, span_notice("[msg]"))
+		for(var/i in 1 to rand_harvested)
+			new harvest(get_turf(src))
+
+	qdel(src) //These don't regrow
+	return TRUE
+
+/obj/item/food/grown/jungle_flora/wild_herbs
+	name = "wild herbs"
+	desc = "A pack of wild jungle herbs with healing properties."
+	icon_state = "jungle_herbs"
+	w_class = WEIGHT_CLASS_TINY
+	seed = /obj/item/seeds/jungle/wild_herbs
+	distill_reagent = /datum/reagent/consumable/ethanol/fernet
+
+/obj/item/seeds/jungle/wild_herbs
+	name = "pack of wild herb seeds"
+	desc = "These seeds grow into some jungle herbs."
+	icon_state = "seed-jungle_herbs"
+	species = "jungle_herbs"
+	plantname = "Beerroots"
+	icon_grow = "jungle_herbs"
+	icon_dead = "herbs-dead"
+	growthstages = 2
+	growing_icon = 'icons/obj/hydroponics/growing.dmi'
+	product = /obj/item/food/grown/jungle_flora/wild_herbs
+
+	reagents_add = list(/datum/reagent/medicine/salbutamol = 0.05, /datum/reagent/consumable/nutriment = 0.03, /datum/reagent/consumable/menthol = 0.02)
+
+/obj/item/stack/jungle_log
+	name = "jungle wood log"
+	desc = "A dark, sturdy log from a jungle tree."
+	icon = 'icons/obj/stack_objects.dmi'
+	icon_state = "logs_jungle"
+	force = 5
+	throwforce = 5
+	w_class = WEIGHT_CLASS_NORMAL
+	throw_speed = 2
+	throw_range = 3
+	attack_verb_continuous = list("bashes", "batters", "bludgeons", "whacks")
+	attack_verb_simple = list("bash", "batter", "bludgeon", "whack")
+
+	grind_results = list(/datum/reagent/cellulose = 5)
+
+/obj/item/stack/jungle_log/attackby(obj/item/W, mob/user, params)
+	if(W.get_sharpness())
+		user.show_message(span_notice("You make wooden planks out of \the [src]!"), MSG_VISUAL)
+		var/obj/item/stack/plank = new /obj/item/stack/sheet/mineral/wood(user.loc, 3, FALSE)
+		var/old_plank_amount = plank.amount
+		for (var/obj/item/stack/ST in user.loc)
+			if (ST != plank && istype(ST, /obj/item/stack/sheet/mineral/wood) && ST.amount < ST.max_amount)
+				ST.attackby(plank, user)
+		if (plank.amount > old_plank_amount)
+			to_chat(user, span_notice("You add the newly-formed wooden plank to the stack. It now contains [plank.amount] wooden planks."))
+		qdel(src)
+	else
+		return ..()

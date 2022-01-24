@@ -16,7 +16,7 @@
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	maxHealth = 270
 	health = 270
-	butcher_results = list(/obj/item/food/meat/slab/synthmeat = 2, /obj/item/stack/sheet/mechanical_alloy = 1)
+	butcher_results = list(/obj/item/food/meat/slab/mook = 2, /obj/item/stack/sheet/mechanical_alloy = 1)
 	pixel_x = -16
 	base_pixel_x = -16
 	pixel_y = -8

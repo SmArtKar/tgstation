@@ -34,10 +34,11 @@
 
 	del_on_death = TRUE
 	loot = list(/obj/item/worm_tongue)
-	common_loot = list(/obj/item/armor_scales)
-	common_crusher_loot = list(/obj/item/armor_scales, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
-	rare_loot = list(/obj/effect/spawner/random/boss/mud_worm)
-	rarity = 2
+	common_loot = list(/obj/item/armor_scales, /obj/effect/spawner/random/boss/mud_worm)
+	common_crusher_loot = list(/obj/item/armor_scales, /obj/effect/spawner/random/boss/mud_worm, /obj/item/crusher_trophy/blaster_tubes/giant_tooth)
+
+	speed = 2
+	move_to_delay = 2
 
 	gps_name = "Crushing Signal"
 	light_range = 1

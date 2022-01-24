@@ -63,7 +63,7 @@
 
 /obj/item/clothing/head/hooded/alloy_armor
 	name = "mechanical alloy helmet"
-	desc = "A helmet made out of mechanical alloy and bat sinew. \n Resonance effect can be also activated using resist hotkey instead of action button."
+	desc = "A helmet made out of mechanical alloy and bat sinew. \n Resonance effect can be also activated using middle click."
 	icon_state = "mechanical_alloy"
 	armor = list(MELEE = 45, BULLET = 20, LASER = 10, ENERGY = 10, BOMB = 50, BIO = 60, FIRE = 100, ACID = 100)
 	clothing_flags = SNUG_FIT
@@ -71,7 +71,7 @@
 	actions_types = list(/datum/action/item_action/alloy_resonance)
 	var/resonance_cooldown
 
-/obj/item/clothing/head/hooded/alloy_armor/proc/resonate(mob/user)
+/obj/item/clothing/head/hooded/alloy_armor/proc/resonate(mob/user, atom/targeting)
 	if(resonance_cooldown > world.time)
 		to_chat(span_warning("[src] is not ready to resonate yet!"))
 		return
@@ -99,10 +99,10 @@
 /obj/item/clothing/head/hooded/alloy_armor/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_HEAD)
-		RegisterSignal(user, COMSIG_KB_LIVING_RESIST_DOWN, .proc/resonate)
+		RegisterSignal(user, COMSIG_MOB_MIDDLECLICKON, .proc/resonate)
 
 /obj/item/clothing/head/hooded/alloy_armor/dropped(mob/user)
 	. = ..()
-	UnregisterSignal(user, COMSIG_KB_LIVING_RESIST_DOWN)
+	UnregisterSignal(user, COMSIG_MOB_MIDDLECLICKON)
 
 #undef RESONANCE_COOLDOWN

@@ -6,9 +6,9 @@
 	icon_living = "snakeman"
 	icon_dead = "snakeman_dead"
 	mob_biotypes = MOB_ORGANIC | MOB_REPTILE | MOB_HUMANOID
-	speed = 8
-	move_to_delay = 8
-	butcher_results = list(/obj/item/food/meat/slab/xeno = 2, /obj/item/stack/sheet/bone = 2)
+	speed = 4
+	move_to_delay = 4
+	butcher_results = list(/obj/item/food/meat/slab/snakeman = 2, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide = 1)
 	speak_emote = list("roars")
 	maxHealth = 480 //240 in anger
@@ -36,8 +36,8 @@
 
 	response_harm_continuous = "cleaves"
 	response_harm_simple = "cleaves"
-	speed = 10
-	move_to_delay = 10
+	speed = 6
+	move_to_delay = 6
 	ranged_cooldown_time = 3 SECONDS
 
 	maxHealth = 560 //280 in anger
@@ -81,12 +81,13 @@
 		return
 
 	enter_anger()
+	ranged_cooldown = world.time + ranged_cooldown_time
 
 /mob/living/simple_animal/hostile/jungle/snakeman/proc/enter_anger()
 	add_atom_colour("#FF0000", FIXED_COLOUR_PRIORITY)
 	visible_message("<span class='danger'>[src] roars, their skin turning red!</span>")
-	speed = 4
-	move_to_delay = 4
+	speed = 0.5
+	move_to_delay = 0.5
 	anger_state = TRUE
 	damage_coeff = list(BRUTE = 2, BURN = 2, TOX = 2, CLONE = 2, STAMINA = 0, OXY = 2)
 	addtimer(CALLBACK(src, .proc/exit_anger), 2 SECONDS)

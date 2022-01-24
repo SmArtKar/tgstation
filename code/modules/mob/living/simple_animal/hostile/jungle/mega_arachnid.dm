@@ -94,7 +94,7 @@
 	icon_state = "flesh_snare"
 	armed = TRUE
 	trap_damage = 10
-	breakouttime = 10 SECONDS
+	breakouttime = 5 SECONDS
 
 /obj/item/restraints/legcuffs/beartrap/mega_arachnid/attack_hand(mob/user, list/modifiers)
 	spring_trap(null, user, TRUE)
@@ -115,18 +115,6 @@
 	var/datum/status_effect/acid_sack/C = user.has_status_effect(STATUS_EFFECT_ACID_SACK)
 	if(C)
 		C.duration += 0.5 SECONDS //Not enough time to infinitely stack it.
-
-/obj/item/crusher_trophy/acid_sack/add_to(obj/item/kinetic_crusher/H, mob/living/user)
-	for(var/t in H.trophies)
-		var/obj/item/crusher_trophy/T = t
-		if(istype(T, denied_type) || istype(src, T.denied_type))	//Conflicts with Axe Head. I don't want them to stack sack effect infinitely
-			to_chat(user, "<span class='warning'>You can't seem to attach [src] to [H]. Maybe remove a few trophies?</span>")
-			return FALSE
-	if(!user.transferItemToLoc(src, H))
-		return
-	H.trophies += src
-	to_chat(user, "<span class='notice'>You attach [src] to [H].</span>")
-	return TRUE
 
 /obj/item/restraints/legcuffs/beartrap/mega_arachnid/Initialize(mapload)
 	. = ..()

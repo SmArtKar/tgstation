@@ -11,7 +11,7 @@
 	icon_living = "leaper"
 	icon_dead = "leaper_dead"
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
-	butcher_results = list(/obj/item/food/meat/slab/xeno = 4, /obj/item/stack/sheet/bone = 2)
+	butcher_results = list(/obj/item/food/meat/slab/leaper = 4, /obj/item/stack/sheet/bone = 2, /obj/item/food/leaper_toxin_sack = 4)
 	maxHealth = 680
 	health = 680
 	ranged = TRUE
@@ -42,6 +42,7 @@
 	nodamage = TRUE
 	speed = 2
 	range = 7
+	knockdown = 5
 	hitsound = 'sound/effects/snap.ogg'
 	nondirectional_sprite = TRUE
 	impact_effect_type = /obj/effect/temp_visual/leaper_projectile_impact
@@ -136,7 +137,19 @@
 	if(volume >= 10)
 		M.adjustToxLoss(2 * REAGENTS_EFFECT_MULTIPLIER * delta_time, 0)
 		M.adjustStaminaLoss(5 * REAGENTS_EFFECT_MULTIPLIER * delta_time, 0)
-	..()
+	. = ..()
+
+/datum/reagent/toxin/lesser_leaper_venom //Heals toxin damage in cost of stamina
+	name = "Lesser leaper venom"
+	description = "A weakened version of leaper venom that's created after leaper meat is cooked."
+	color = "#b63744" // rgb: 128, 30, 40
+	toxpwr = -1
+	taste_description = "baguettes"
+	taste_mult = 1.3
+
+/datum/reagent/toxin/lesser_leaper_venom/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
+	. = ..()
+	M.adjustStaminaLoss(2 * REAGENTS_EFFECT_MULTIPLIER * delta_time, 0)
 
 /obj/effect/temp_visual/leaper_crush
 	name = "grim tidings"

@@ -24,11 +24,35 @@
 
 	var/flora_list = list(/obj/structure/flora/aquatic/rock = 1, /obj/structure/flora/aquatic/rock/pile = 1, /obj/structure/flora/aquatic/seaweed = 8)
 	var/flora_prob = 8
+	var/reagent_type = /datum/reagent/water
+
+/turf/open/water/jungle/attackby(obj/item/possible_fill, mob/living/user, params)
+	if(istype(possible_fill, /obj/item/reagent_containers))
+		var/obj/item/reagent_containers/container = possible_fill
+		if(!reagent_type)
+			to_chat(user, span_notice("Something is wrong with [src], you probably should leave it alone."))
+			return FALSE
+
+		if(container.is_refillable())
+			if(!container.reagents.holder_full())
+				container.reagents.add_reagent(reagent_type, container.amount_per_transfer_from_this)
+				to_chat(user, span_notice("You fill [container] from [src]."))
+				return TRUE
+			to_chat(user, span_notice("\The [container] is full."))
+			return FALSE
+	. = ..()
+
+/turf/open/water/jungle/supermatter
+	flora_prob = 0
+	reagent_type = /datum/reagent/water/polluted
 
 /turf/open/water/jungle/corrupted
 	name = "corrupted water"
 	desc = "Is that... blood?!"
 	icon_state = "riverwater_motion_corrupted"
+
+	flora_prob = 0
+	reagent_type = /datum/reagent/blood
 
 /turf/open/water/jungle/ex_act(severity, target)
 	contents_explosion(severity, target)

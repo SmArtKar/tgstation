@@ -133,7 +133,7 @@
 	return restored_player
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/invocation(mob/user = usr)
-	var/obj/shapeshift_holder/shapeshift_ability = locate() in caster
+	var/obj/shapeshift_holder/shapeshift_ability = locate() in user
 	if(shapeshift_ability && shapeshift_ability.stored && ismob(shapeshift_ability.stored))
 		user = shapeshift_ability.stored
 

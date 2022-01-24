@@ -158,6 +158,22 @@
 	shot_glass_icon_state = "shotglassclear"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
+/datum/reagent/water/polluted
+	name = "Polluted Water"
+	description = "Extremely polluted and irradiated water. Probably not very refreshing."
+	reagent_state = LIQUID
+	taste_description = "liquid Chernobyl"
+	color = "#45644E"
+	metabolization_rate = 0.125 * REAGENTS_METABOLISM
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+
+/datum/reagent/water/polluted/on_mob_life(mob/living/carbon/target, delta_time, times_fired)
+	if (!HAS_TRAIT(target, TRAIT_IRRADIATED) && SSradiation.can_irradiate_basic(target) && prob(10))
+		target.AddComponent(/datum/component/irradiated)
+
+	target.adjustToxLoss(0.1 * REM * delta_time)
+	. = ..()
+
 /*
  * Water reaction to turf
  */

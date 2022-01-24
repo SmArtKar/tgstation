@@ -28,7 +28,8 @@
 	attack_verb_continuous = "claws"
 	attack_verb_simple = "claw"
 
-	speed = 7
+	speed = 4
+	move_to_delay = 4
 	wander = FALSE
 	gps_name = "Posessed Signal"
 
@@ -125,7 +126,8 @@
 	armour_penetration = 100
 	melee_damage_lower = 30
 	melee_damage_upper = 30
-	speed = 5
+	speed = 2
+	move_to_delay = 2
 	update_icon()
 	status_flags &= ~GODMODE
 	noaction = FALSE
@@ -612,7 +614,8 @@
 	icon = 'icons/mob/jungle/jungle_monsters.dmi'
 	icon_state = "spirit"
 	icon_living = "spirit"
-	speed = 8
+	speed = 4
+	move_to_delay = 4
 	combat_mode = TRUE
 	attack_sound = 'sound/magic/demon_attack1.ogg'
 	attack_vis_effect = ATTACK_EFFECT_CLAW

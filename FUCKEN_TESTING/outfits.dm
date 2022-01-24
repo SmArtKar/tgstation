@@ -60,13 +60,9 @@
 	scanner.toggle_on()
 
 /obj/item/storage/box/healeys/PopulateContents()
-	for (var/i = 1 to 3)
+	for (var/i = 1 to 6)
 		var/obj/item/organ/regenerative_core/legion/shining_core/core = new(src)
 		core.preserved()
-		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
-		new /obj/item/reagent_containers/hypospray/medipen/survival/toxin(src)
-
-	for(var/i = 1 to 3)
 		new /obj/item/reagent_containers/hypospray/medipen/survival/luxury(src)
 		new /obj/item/reagent_containers/hypospray/medipen/survival/toxin(src)
 

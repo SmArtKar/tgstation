@@ -942,6 +942,21 @@
 	result = /obj/structure/bonfire
 	category = CAT_PRIMAL
 
+/datum/crafting_recipe/bonfire_jungle
+	name = "Bonfire (Jungle Wood)"
+	time = 60
+	reqs = list(/obj/item/stack/jungle_log = 5)
+	parts = list(/obj/item/stack/jungle_log = 5)
+	result = /obj/structure/bonfire
+	category = CAT_PRIMAL
+
+/datum/crafting_recipe/jungle_bowl
+	name = "Wooden Bowl"
+	time = 30
+	reqs = list(/obj/item/reagent_containers/glass/jungle_bowl = 5)
+	result = /obj/item/reagent_containers/glass/jungle_bowl
+	category = CAT_PRIMAL
+
 /datum/crafting_recipe/skeleton_key
 	name = "Skeleton Key"
 	time = 30

@@ -5,8 +5,8 @@
 	icon_living = "bat"
 	icon_dead = "bat_dead"
 	icon_gib = "bat_dead"
-	speed = 4
-	move_to_delay = 4
+	speed = 1
+	move_to_delay = 1
 	response_help_continuous = "brushes aside"
 	response_help_simple = "brush aside"
 	response_disarm_continuous = "flails at"
@@ -81,7 +81,11 @@
 			friend.damage_coeff = list(BRUTE = 0.3, BURN = 0.3, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 			friend_beams[friend] = Beam(friend, icon_state = "blood_mid_light")
 
-/mob/living/simple_animal/hostile/jungle/bat/albino/
+/mob/living/simple_animal/hostile/jungle/bat/albino/death(gibbed)
+	for(var/mob/living/simple_animal/friend in friend_beams)
+		qdel(friend_beams[friend])
+		friend.damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
+	. = ..()
 
 /mob/living/simple_animal/hostile/jungle/bat/random/Initialize()
 	. = ..()

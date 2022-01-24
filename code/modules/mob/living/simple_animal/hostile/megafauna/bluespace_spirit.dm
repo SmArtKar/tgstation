@@ -29,6 +29,8 @@
 
 	wander = FALSE
 	speed = 3
+	move_to_delay = 3
+
 	retreat_distance = 3
 	minimum_distance = 3
 	gps_name = "Quantum Signal"

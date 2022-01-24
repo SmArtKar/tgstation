@@ -10,8 +10,8 @@
 	mob_biotypes = MOB_ORGANIC | MOB_BUG
 	speak_emote = list("chitters")
 	emote_hear = list("chitters")
-	speed = 6
-	move_to_delay = 6
+	speed = 2
+	move_to_delay = 2
 	see_in_dark = 4
 	butcher_results = list(/obj/item/food/meat/slab/spider = 1, /obj/item/food/spiderleg = 8)
 	response_help_continuous = "pets"
@@ -57,9 +57,9 @@
 	damage = 15
 	damage_type = BURN
 	knockdown = 5
-	eyeblur = 5
+	eyeblur = 1
 	speed = 1
-	flag = BULLE
+	flag = BULLET
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/neurotoxin
 
 /mob/living/simple_animal/hostile/jungle/cave_spider/Initialize()
@@ -83,8 +83,8 @@
 	icon_living = "red_cave_spider"
 	icon_dead = "cred_cave_spider_dead"
 
-	speed = 4
-	move_to_delay = 4
+	speed = 1
+	move_to_delay = 1
 
 	maxHealth = 240
 	health = 240

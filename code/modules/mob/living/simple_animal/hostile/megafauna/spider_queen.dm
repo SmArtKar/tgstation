@@ -19,7 +19,8 @@
 	combat_mode = TRUE
 
 	mob_biotypes = MOB_ORGANIC | MOB_BEAST | MOB_EPIC | MOB_BUG
-	speed = 4
+	speed = 3
+	move_to_delay = 3
 	footstep_type = FOOTSTEP_MOB_CLAW
 
 	melee_damage_lower = 35
