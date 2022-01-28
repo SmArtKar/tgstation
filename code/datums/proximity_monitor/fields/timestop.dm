@@ -20,6 +20,7 @@
 	var/chronofield_type = /datum/proximity_monitor/advanced/timestop
 	///if true, immune atoms moving ends the timestop instead of duration.
 	var/channelled = FALSE
+	var/sound_effect = TRUE
 
 /obj/effect/timestop/Initialize(mapload, radius, time, list/immune_atoms, start = TRUE) //Immune atoms assoc list atom = TRUE
 	. = ..()
@@ -40,12 +41,14 @@
 
 /obj/effect/timestop/Destroy()
 	QDEL_NULL(chronofield)
-	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, frequency = -1) //reverse!
+	if(sound_effect)
+		playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, frequency = -1) //reverse!
 	return ..()
 
 /obj/effect/timestop/proc/timestop()
 	target = get_turf(src)
-	playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, -1)
+	if(sound_effect)
+		playsound(src, 'sound/magic/timeparadox2.ogg', 75, TRUE, -1)
 	chronofield = new chronofield_type(src, freezerange, TRUE, immune, check_anti_magic, check_holy, channelled)
 	if(!channelled)
 		QDEL_IN(src, duration)

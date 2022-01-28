@@ -639,19 +639,6 @@
 	attack_verb_simple = list("flog", "whip", "lash")
 	hitsound = 'sound/weapons/whip.ogg'
 
-/obj/item/crusher_trophy/vine_tentacle
-	name = "vine tentacle"
-	desc = "A long, thorny vine, moving as it's alive. Suitable as a trophy for a kinetic crusher."
-	icon_state = "vine_tentacle"
-	denied_type = list(/obj/item/crusher_trophy/vine_tentacle, /obj/item/crusher_trophy/axe_head)
-	bonus_value = 5
-
-/obj/item/crusher_trophy/vine_tentacle/effect_desc()
-	return "mark detonation to spawn a ring of vines around you that will heal you for half of incoming damage"
-
-/obj/item/crusher_trophy/vine_tentacle/on_mark_detonation(mob/living/target, mob/living/user)
-	user.apply_status_effect(STATUS_EFFECT_VINE_RING)
-
 /obj/item/green_rose
 	name = "green rose"
 	desc = "A strange rose of odd green color. Weird."

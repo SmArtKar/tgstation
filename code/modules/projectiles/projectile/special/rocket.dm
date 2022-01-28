@@ -110,7 +110,7 @@
 
 /obj/projectile/bullet/a84mm/ancient
 	damage = 60
-	dismemberment = 20
+	dismemberment = 0
 	speed = 2
 
 /obj/projectile/bullet/a84mm/ancient/do_boom(atom/target)
@@ -118,7 +118,7 @@
 
 /obj/projectile/bullet/a84mm/he/ancient
 	damage = 45
-	dismemberment = 20
+	dismemberment = 0
 	speed = 2
 
 /obj/projectile/bullet/a84mm/he/ancient/do_boom(atom/target, blocked=0)
@@ -129,7 +129,7 @@
 	desc = "BIIIIG BOOM"
 	icon_state= "missile_heavy"
 	damage = 80
-	dismemberment = 40
+	dismemberment = 0
 	speed = 2
 
 /obj/projectile/bullet/a84mm/ancient/heavy/do_boom(atom/target)

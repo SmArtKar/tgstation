@@ -38,7 +38,7 @@
 	response_harm_simple = "cleaves"
 	speed = 6
 	move_to_delay = 6
-	ranged_cooldown_time = 3 SECONDS
+	ranged_cooldown_time = 2 SECONDS
 
 	maxHealth = 560 //280 in anger
 	health = 560
@@ -50,6 +50,8 @@
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide/snakeman_hide = 3)
 
 /mob/living/simple_animal/hostile/jungle/snakeman/alpha/OpenFire()
+	ranged_cooldown = world.time + ranged_cooldown_time
+
 	if(anger_state || prob(65))
 		axe_smack()
 		return
@@ -70,24 +72,25 @@
 		new /obj/effect/temp_visual/small_smoke/halfsecond(targeting_turf)
 		for(var/mob/living/victim in targeting_turf.contents)
 			if(victim != src && !(victim in hit_things) && !faction_check(victim.faction, faction))
-				var/throwtarget = get_edge_target_turf(targeting_turf, get_dir(targeting_turf, victim))
+				var/throwtarget = get_edge_target_turf(targeting_turf, get_dir(src, victim))
 				victim.throw_at(throwtarget, 4, 1, src)
 				victim.apply_damage_type(15, BRUTE)
 				hit_things += victim
 		SLEEP_CHECK_DEATH(1, src)
 
 /mob/living/simple_animal/hostile/jungle/snakeman/OpenFire()
+	ranged_cooldown = world.time + ranged_cooldown_time
+
 	if(anger_state) //Somehow
 		return
 
 	enter_anger()
-	ranged_cooldown = world.time + ranged_cooldown_time
 
 /mob/living/simple_animal/hostile/jungle/snakeman/proc/enter_anger()
 	add_atom_colour("#FF0000", FIXED_COLOUR_PRIORITY)
 	visible_message("<span class='danger'>[src] roars, their skin turning red!</span>")
-	speed = 0.5
-	move_to_delay = 0.5
+	speed = 1.75
+	move_to_delay = 1.75
 	anger_state = TRUE
 	damage_coeff = list(BRUTE = 2, BURN = 2, TOX = 2, CLONE = 2, STAMINA = 0, OXY = 2)
 	addtimer(CALLBACK(src, .proc/exit_anger), 2 SECONDS)
@@ -104,18 +107,6 @@
 	if(anger_state)
 		new /obj/effect/temp_visual/decoy/fading/halfsecond(get_turf(src), src)
 	. = ..()
-
-/obj/item/crusher_trophy/goliath_tentacle/adrenaline_sacs
-	name = "adrenaline sacs"
-	desc = "Sliced-off adrenaline sacs. Suitable as a trophy for a kinetic crusher."
-	icon_state = "adrenaline_sacs"
-	denied_type = /obj/item/crusher_trophy/goliath_tentacle/adrenaline_sacs
-
-/obj/item/crusher_trophy/goliath_tentacle/adrenaline_sacs/alpha
-	name = "purple adrenaline sacs"
-	desc = "Purple adrenaline sacs sliced off from an alpha snakeman. Suitable as a trophy for a kinetic crusher."
-	icon_state = "purple_adrenaline_sacs"
-	bonus_value = 4
 
 /mob/living/simple_animal/hostile/jungle/snakeman/random/Initialize()
 	. = ..()

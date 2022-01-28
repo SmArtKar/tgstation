@@ -10,8 +10,8 @@
 	mob_biotypes = MOB_ORGANIC | MOB_BUG
 	speak_emote = list("chitters")
 	emote_hear = list("chitters")
-	speed = 2
-	move_to_delay = 2
+	speed = 3
+	move_to_delay = 3
 	see_in_dark = 4
 	butcher_results = list(/obj/item/food/meat/slab/spider = 1, /obj/item/food/spiderleg = 8)
 	response_help_continuous = "pets"
@@ -41,7 +41,7 @@
 	ranged_cooldown_time = 30
 	projectiletype = /obj/projectile/cave_spider_spit
 
-	retreat_distance = 1
+	retreat_distance = 3
 	minimum_distance = 3
 
 	crusher_drop_mod = 15 //They spawn in packs
@@ -81,10 +81,7 @@
 	desc = "A blood-red cave spider with pure white eyes. Scary."
 	icon_state = "red_cave_spider"
 	icon_living = "red_cave_spider"
-	icon_dead = "cred_cave_spider_dead"
-
-	speed = 1
-	move_to_delay = 1
+	icon_dead = "red_cave_spider_dead"
 
 	maxHealth = 240
 	health = 240
@@ -93,7 +90,6 @@
 	minimum_distance = 0
 
 	projectiletype = /obj/projectile/cave_spider_web
-	rapid = 0
 	crusher_loot = /obj/item/crusher_trophy/red_spider_webweaver
 	crusher_drop_mod = 40
 
@@ -196,50 +192,5 @@
 
 /obj/structure/spider/stickyweb/cave/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	return
-
-/obj/item/crusher_trophy/red_spider_webweaver
-	name = "red cave spider's web weaver"
-	desc = "A bloody red web weaver. Suitable as a trophy for a kinetic crusher."
-	icon_state = "red_spider_webweaver"
-	denied_type = list(/obj/item/crusher_trophy/red_spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
-	var/web_shot = FALSE
-
-/obj/item/crusher_trophy/red_spider_webweaver/effect_desc()
-	return "mark detonation to turn next shot into a ball of web that will stun enemies and pull them at you upon hit"
-
-/obj/item/crusher_trophy/red_spider_webweaver/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
-	if(web_shot)
-		marker.name = "webbed [marker.name]"
-		marker.icon_state = "webball"
-		RegisterSignal(marker, COMSIG_PROJECTILE_ON_HIT, .proc/projectile_hit)
-		web_shot = FALSE
-
-/obj/item/crusher_trophy/red_spider_webweaver/on_mark_detonation(mob/living/target, mob/living/user)
-	web_shot = TRUE
-	addtimer(CALLBACK(src, .proc/reset_web_shot), 300, TIMER_UNIQUE|TIMER_OVERRIDE)
-
-/obj/item/crusher_trophy/red_spider_webweaver/proc/reset_web_shot()
-	web_shot = FALSE
-
-/obj/item/crusher_trophy/red_spider_webweaver/proc/projectile_hit(atom/fired_from, atom/movable/firer, atom/target, Angle)
-	SIGNAL_HANDLER
-	if(isliving(target))
-		var/mob/living/L = target
-		L.safe_throw_at(firer, WEB_DISTANCE, 1, firer, FALSE, TRUE, gentle = TRUE)
-		var/datum/beam/web = firer.Beam(target, icon_state = "web")
-		QDEL_IN(web, 3 SECONDS)
-
-/obj/item/crusher_trophy/spider_webweaver //Useful with ranged builds
-	name = "cave spider's web weaver"
-	desc = "A ripped off web weaver. Suitable as a trophy for a kinetic crusher."
-	icon_state = "spider_webweaver"
-	denied_type = /obj/item/crusher_trophy/spider_webweaver
-
-/obj/item/crusher_trophy/spider_webweaver/effect_desc()
-	return "mark detonation to throw you away from your enemy a few tiles"
-
-/obj/item/crusher_trophy/spider_webweaver/on_mark_detonation(mob/living/target, mob/living/user)
-	var/turf/target_turf = get_edge_target_turf(user, get_dir(target, user))
-	user.throw_at(target_turf, 2, 2, user, FALSE, TRUE, gentle = TRUE)
 
 #undef WEB_DISTANCE

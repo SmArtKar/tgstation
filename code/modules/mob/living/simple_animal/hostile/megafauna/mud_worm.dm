@@ -471,31 +471,13 @@
 	if(!istype(user))
 		return
 
-	to_chat(user, span_danger("Power courses through you! You can now shift your form at will."))
+	to_chat(user, span_danger("Power flows through you as you consume [src]! You can now shift your form at will."))
 	if(user.mind)
 		var/obj/effect/proc_holder/spell/targeted/shapeshift/mud_worm/worm = new
 		user.mind.AddSpell(worm)
 
 	playsound(user.loc, 'sound/items/eatfood.ogg', 50, TRUE)
 	qdel(src)
-
-/obj/item/crusher_trophy/blaster_tubes/giant_tooth
-	name = "giant tooth"
-	desc = "A giant tooth ripped out of a mud worm's mouth. Suitable as a trophy for a kinetic crusher."
-	icon_state = "giant_tooth"
-	bonus_value = 10
-	denied_type = list(/obj/item/crusher_trophy/red_spider_webweaver, /obj/item/crusher_trophy/blaster_tubes)
-
-/obj/item/crusher_trophy/blaster_tubes/giant_tooth/effect_desc()
-	return "mark detonation to make the next destabilizer shot deal <b>[bonus_value]</b> damage"
-
-/obj/item/crusher_trophy/blaster_tubes/giant_tooth/on_projectile_fire(obj/projectile/destabilizer/marker, mob/living/user)
-	if(deadly_shot)
-		marker.name = "giant tooth"
-		marker.icon_state = "tooth_spin"
-		marker.damage = bonus_value
-		marker.nodamage = FALSE
-		deadly_shot = FALSE
 
 /obj/item/armor_scales
 	name = "armor scales"
@@ -588,6 +570,7 @@
 	wound_bonus = -30
 	var/swiping = FALSE
 	var/parrying = FALSE
+	var/stagger_timer
 
 /obj/item/dual_sword/ComponentInitialize()
 	. = ..()
@@ -642,13 +625,18 @@
 	. = ..()
 	if(. && isliving(hitby))
 		attack(hitby, owner)
+
+	if(stagger_timer)
+		deltimer(stagger_timer)
+		stagger_timer = null
+
 	parrying = FALSE
 
 /obj/item/dual_sword/proc/parry(mob/living/user)
 	to_chat(user, span_notice("You prepare to parry!"))
 	user.changeNext_move(PARRY_ACTIVE_TIME)
 	parrying = TRUE
-	addtimer(CALLBACK(src, .proc/check_parry_stagger, user), PARRY_ACTIVE_TIME)
+	stagger_timer = addtimer(CALLBACK(src, .proc/check_parry_stagger, user), PARRY_ACTIVE_TIME, TIMER_STOPPABLE)
 
 /obj/item/dual_sword/proc/check_parry_stagger(mob/living/user)
 	if(!parrying)

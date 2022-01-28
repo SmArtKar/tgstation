@@ -96,19 +96,19 @@
 	var/cook_time = 0
 	var/required_cook_time = 0
 
-	var/static/list/meats = list(/obj/item/food/meat/slab/leaper =    list("leaper", "#FF0800"),
-								 /obj/item/food/meat/steak/leaper =   list("leaper_cooked", "#A5130F"),
-								 /obj/item/food/meat/slab/snakeman =  list("snakeman", "#9EFF00"),
-								 /obj/item/food/meat/steak/snakeman = list("snakeman_cooked", "#FFDA00"),
-								 /obj/item/food/meat/slab/mook =      list("mook", "#FFFFFF"),
+	var/static/list/meats = list(/obj/item/food/meat/slab/leaper =    list("leaper", "#FF0800", null),
+								 /obj/item/food/meat/steak/leaper =   list("leaper_cooked", "#A5130F", null),
+								 /obj/item/food/meat/slab/snakeman =  list("snakeman", "#9EFF00", null),
+								 /obj/item/food/meat/steak/snakeman = list("snakeman_cooked", "#FFDA00", null),
+								 /obj/item/food/meat/slab/mook =      list("mook", "#FFFFFF", null),
 								 )
 
-	var/static/list/toppings = list(/obj/item/food/grown/jungle_flora/rapsberry =  list("rapsberries", 3),
-									/obj/item/food/cut_beerroot =				   list("beerroot", 3),
-									/obj/item/food/cut_bagelshroom =  			   list("bagelshrooms", 2),
-									/obj/item/food/fried_bagelshroom = 			   list("bagelshrooms_cooked", 2),
-									/obj/item/food/grown/jungle_flora/wild_herbs = list("herbs", 3),
-									/obj/item/food/leaper_toxin_sack =			   list("leaper_bubbles", 3),
+	var/static/list/toppings = list(/obj/item/food/grown/jungle_flora/rapsberry =  list("rapsberries", 3, null),
+									/obj/item/food/cut_beerroot =				   list("beerroot", 3, null),
+									/obj/item/food/cut_bagelshroom =  			   list("bagelshrooms", 2, null),
+									/obj/item/food/fried_bagelshroom = 			   list("bagelshrooms_cooked", 2, null),
+									/obj/item/food/grown/jungle_flora/wild_herbs = list("herbs", 3, null),
+									/obj/item/food/leaper_toxin_sack =			   list("leaper_bubbles", 3, null),
 									)
 
 	var/static/list/special_combos = list()

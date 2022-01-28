@@ -1229,3 +1229,55 @@
 		var/mob/living/simple_animal/hostile/hostile_owner = owner
 		hostile_owner.vision_range = prev_vision_range
 		hostile_owner.aggro_vision_range = prev_aggro_range
+
+
+/datum/status_effect/crystal_weakness
+	id = "crystal_weakness"
+	duration = 3 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	var/prev_damage_coeffs
+
+/datum/status_effect/crystal_weakness/on_apply()
+	if(isanimal(owner))
+		var/mob/living/simple_animal/animal_owner = owner
+		prev_damage_coeffs = animal_owner.damage_coeff.Copy()
+		for(var/damage_coeff_type in animal_owner.damage_coeff)
+			animal_owner.damage_coeff[damage_coeff_type] *= 1.25
+
+/datum/status_effect/crystal_weakness/on_remove()
+	if(isanimal(owner))
+		var/mob/living/simple_animal/animal_owner = owner
+		animal_owner.damage_coeff = prev_damage_coeffs
+
+/atom/movable/screen/alert/status_effect/webbed
+	name = "Webbed"
+	desc = "You're entangled in a giant spiderweb!"
+	icon_state = "webbed"
+
+/datum/status_effect/webbed
+	id = "webbed"
+	duration = 3 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/webbed
+	var/mutable_appearance/web_overlay
+
+/datum/status_effect/webbed/on_apply()
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/webbed)
+	web_overlay = mutable_appearance('icons/effects/effects.dmi', "web_overlay")
+	web_overlay.pixel_x = owner.pixel_x
+	web_overlay.pixel_y = owner.pixel_y
+	owner.overlays += web_overlay
+	return TRUE
+
+/datum/status_effect/webbed/on_remove()
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/webbed)
+
+/datum/status_effect/webbed/Destroy()
+	if(owner)
+		owner.overlays -= web_overlay
+
+	QDEL_NULL(web_overlay)
+	return ..()
+
+/datum/status_effect/webbed/be_replaced()
+	owner.overlays -= web_overlay

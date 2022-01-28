@@ -519,7 +519,8 @@
 
 	var/mob/living/marked_mob = holder.marked_datum
 
-	var/ability_type = input("Choose an ability", "Ability")  as null|anything in sort_list(subtypesof(/datum/action/cooldown/mob_cooldown), /proc/cmp_typepaths_asc)
+
+	var/ability_type = tgui_input_list(src, "Choose an ability", "Ability", sort_list(subtypesof(/datum/action/cooldown/mob_cooldown), /proc/cmp_typepaths_asc))
 
 	if(!ability_type)
 		return

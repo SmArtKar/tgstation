@@ -99,23 +99,6 @@
 /obj/item/restraints/legcuffs/beartrap/mega_arachnid/attack_hand(mob/user, list/modifiers)
 	spring_trap(null, user, TRUE)
 
-/obj/item/crusher_trophy/acid_sack //Blood-drunk eye analogue. Works slightly different
-	name = "acid sack"
-	desc = "A still pulsing sack full of acidic blood. Suitable as a trophy for a kinetic crusher."
-	icon_state = "acid_sack"
-	denied_type = list(/obj/item/crusher_trophy/acid_sack)
-
-/obj/item/crusher_trophy/acid_sack/effect_desc()
-	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer"
-
-/obj/item/crusher_trophy/acid_sack/on_mark_detonation(mob/living/target, mob/living/user)
-	user.apply_status_effect(STATUS_EFFECT_ACID_SACK)
-
-/obj/item/crusher_trophy/acid_sack/on_melee_hit(mob/living/target, mob/living/user)
-	var/datum/status_effect/acid_sack/C = user.has_status_effect(STATUS_EFFECT_ACID_SACK)
-	if(C)
-		C.duration += 0.5 SECONDS //Not enough time to infinitely stack it.
-
 /obj/item/restraints/legcuffs/beartrap/mega_arachnid/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_MEGA_ARACHNID, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 5)

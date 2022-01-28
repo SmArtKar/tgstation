@@ -292,3 +292,47 @@
 	for(var/i in 0 to 4)
 		hallucination_charge(target_atom, 2, 8, 2, 2, FALSE)
 		do_charge(owner, target_atom, charge_delay, charge_past)
+
+/datum/action/cooldown/mob_cooldown/charge/spider_queen
+	name = "Spider Charge"
+
+	icon_icon = 'icons/mob/actions/actions_jungle.dmi'
+	button_icon_state = "spider_charge"
+
+/datum/action/cooldown/mob_cooldown/charge/spider_queen/do_charge_indicator(atom/charger, atom/charge_target)
+	var/turf/target_turf = get_turf(charge_target)
+	if(!target_turf)
+		return
+	new /obj/effect/temp_visual/dragon_swoop/bubblegum/spider_queen(target_turf)
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(charger.loc, charger)
+	animate(D, alpha = 0, color = "#FF0000", transform = matrix()*2, time = 3)
+
+/obj/effect/temp_visual/dragon_swoop/bubblegum/spider_queen
+	icon_state = "spiderweb"
+
+/datum/action/cooldown/mob_cooldown/charge/spider_queen/triple_charge
+	name = "Triple Spider Charge"
+	desc = "Allows you to charge three times at a chosen position."
+	charge_delay = 0.6 SECONDS
+
+/datum/action/cooldown/mob_cooldown/charge/spider_queen/triple_charge/charge_sequence(atom/movable/charger, atom/target_atom, delay, past)
+	for(var/i in 0 to 2)
+		do_charge(owner, target_atom, charge_delay - 2 * i, charge_past)
+
+/datum/action/cooldown/mob_cooldown/charge/spider_queen/target_charge
+	name = "Target Spider Charge"
+	desc = "Charge at every enemy of yours. If you're megafauna, of course."
+	charge_delay = 0.4 SECONDS
+
+/datum/action/cooldown/mob_cooldown/charge/spider_queen/target_charge/charge_sequence(atom/movable/charger, atom/target_atom, delay, past)
+	if(!istype(owner, /mob/living/simple_animal/hostile/megafauna/jungle))
+		return ..()
+
+	var/mob/living/simple_animal/hostile/megafauna/jungle/jungle_mega = owner
+	for(var/former_target in jungle_mega.former_targets)
+		if(get_dist(owner, former_target) > 13)
+			continue
+		do_charge(owner, former_target, charge_delay, charge_past)
+		if(former_target == target_atom)
+			for(var/i in 0 to 1)
+				do_charge(owner, former_target, charge_delay - 2 * i, charge_past)

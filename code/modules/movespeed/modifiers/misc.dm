@@ -10,3 +10,6 @@
 
 /datum/movespeed_modifier/jungle_heart
 	multiplicative_slowdown = -0.25
+
+/datum/movespeed_modifier/webbed
+	multiplicative_slowdown = 1.5

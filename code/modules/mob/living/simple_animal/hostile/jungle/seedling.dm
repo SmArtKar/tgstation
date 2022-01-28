@@ -133,7 +133,7 @@
 			if(get_dist(src,target) >= 4 && prob(40))
 				SolarBeamStartup(target)
 				return
-		addtimer(CALLBACK(src, .proc/Volley), 5)
+		addtimer(CALLBACK(src, .proc/Volley), 1 SECONDS)
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/SolarBeamStartup(mob/living/living_target)//It's more like requiem than final spark
 	if(combatant_state == SEEDLING_STATE_WARMUP && target)
@@ -143,7 +143,7 @@
 		if(get_dist(src,living_target) > 7)
 			playsound(living_target,'sound/effects/seedling_chargeup.ogg', 100, FALSE)
 		solar_beam_identifier = world.time
-		addtimer(CALLBACK(src, .proc/Beamu, living_target, solar_beam_identifier), 20)
+		addtimer(CALLBACK(src, .proc/Beamu, living_target, solar_beam_identifier), 2.5 SECONDS)
 
 /mob/living/simple_animal/hostile/jungle/seedling/proc/Beamu(mob/living/living_target, beam_id = 0)
 	if(combatant_state == SEEDLING_STATE_WARMUP && living_target && beam_id == solar_beam_identifier)
@@ -151,7 +151,7 @@
 			set_state(SEEDLING_STATE_ACTIVE)
 			new /obj/effect/temp_visual/energy_killbeam(get_turf(living_target), living_target)
 			playsound(living_target,'sound/weapons/sear.ogg', 50, TRUE)
-			addtimer(CALLBACK(src, .proc/AttackRecovery), 10)
+			addtimer(CALLBACK(src, .proc/AttackRecovery), 1 SECONDS)
 			return
 	AttackRecovery()
 
@@ -200,9 +200,9 @@
 	update_icons()
 
 	if(combatant_state == SEEDLING_STATE_STUNNED)
-		Paralyze(10)
-		ranged_cooldown = world.time + ranged_cooldown_time + 10
-		addtimer(CALLBACK(src, .proc/ResetNeutral), 10)
+		Paralyze(1 SECONDS)
+		ranged_cooldown = world.time + ranged_cooldown_time + 1 SECONDS
+		addtimer(CALLBACK(src, .proc/ResetNeutral), 1 SECONDS)
 
 /mob/living/simple_animal/hostile/jungle/seedling/bullet_act(obj/projectile/P)
 	. = ..()
@@ -280,21 +280,6 @@
 			playsound(H, 'sound/magic/staff_healing.ogg', 20, TRUE)
 			new /obj/effect/temp_visual/seedling_sparks(get_turf(H))
 			qdel(src)
-
-/obj/item/crusher_trophy/tail_spike/seedling_petal
-	name = "seedling petal"
-	desc = "A petal from a seedling. Suitable as a trophy for a kinetic crusher."
-	icon_state = "seedling_petal"
-	denied_type = /obj/item/crusher_trophy/tail_spike/seedling_petal
-
-/obj/item/crusher_trophy/tail_spike/seedling_petal/on_mark_detonation(mob/living/target, mob/living/user)
-	for(var/mob/living/L in oview(2, user))
-		if(L.stat == DEAD)
-			continue
-		playsound(L, 'sound/weapons/sear.ogg', 20, TRUE)
-		new /obj/effect/temp_visual/seedling_sparks(L.loc)
-		addtimer(CALLBACK(src, .proc/pushback, L, user), 1)
-		L.adjustFireLoss(bonus_value, forced = TRUE)
 
 /obj/effect/temp_visual/seedling_sparks
 	icon = 'icons/effects/effects.dmi'

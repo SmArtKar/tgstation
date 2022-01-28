@@ -26,18 +26,24 @@
 	crusher_achievement_type = /datum/award/achievement/boss/time_crystal_crusher
 	score_achievement_type = /datum/award/score/time_crystal_score
 
+	melee_damage_lower = 20
+	melee_damage_upper = 20
+	attack_verb_continuous = "crushes"
+	attack_verb_simple = "crush"
+
 	loot = list(/obj/item/amber_core)
 	common_loot = list(/obj/effect/spawner/random/boss/time_crystal)
 	common_crusher_loot = list(/obj/effect/spawner/random/boss/time_crystal, /obj/item/crusher_trophy/crystal_shard)
 
 	wander = FALSE
-	gps_name = "Vibrating Signal"
+	gps_name = "Reverberating Signal"
 	del_on_death = FALSE
 	light_color = LIGHT_COLOR_ORANGE
 
 	var/has_orbiting = TRUE
 	var/dropped = FALSE
 	var/beaming = FALSE
+	var/charging = FALSE
 
 	var/list/killer_beams = list()
 	var/list/crystal_turrets = list()
@@ -98,6 +104,7 @@
 		do_dash()
 		chronospheres()
 		return
+
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/counter = counter_start
 	playsound(get_turf(src), 'sound/effects/ethereal_revive_fail.ogg', 100)
@@ -115,9 +122,6 @@
 		shoot_projectile(start_turf, counter * 22.5, proj_type = /obj/projectile/colossus/crystal_shards/slow)
 		SLEEP_CHECK_DEATH(1, src)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/AttackingTarget(atom/attacked_target) //It just point-blanks you in melee
-	OpenFire()
-
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/chronospheres()
 	var/obj/effect/temp_visual/decoy/decoy = new /obj/effect/temp_visual/decoy(loc, src)
 	animate(decoy, alpha = 0, transform = matrix() * 2, time = 6)
@@ -128,9 +132,43 @@
 		shoot_projectile(start_turf, i * 72, proj_type = /obj/projectile/chronosphere, homing = TRUE)
 		SLEEP_CHECK_DEATH(3, src)
 
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Move()
+	if(charging)
+		new /obj/effect/temp_visual/decoy/fading(loc, src)
+		new /obj/effect/timestop/time_crystal(get_turf(src), 1, AMBER_TIMESTOP_DURATION, list(src))
+	. = ..()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/do_attack_animation(atom/A, visual_effect_icon, obj/item/used_item, no_effect)
+	if(charging)
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/AttackingTarget()
+	if(charging)
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/Goto(target, delay, minimum_distance)
+	if(charging)
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/MoveToTarget(list/possible_targets)
+	if(charging)
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/AttackingTarget(atom/attacked_target)
+	if(charging)
+		return
+	. = ..()
+
 /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/OpenFire()
-	anger_modifier =  (1 -(health / maxHealth)) * 100
-	ranged_cooldown = world.time + 2 SECONDS
+	if(charging)
+		return
+
+	anger_modifier =  (1 - (health / maxHealth)) * 100
+	ranged_cooldown = world.time + 3 SECONDS
 
 	if(beaming || dropped)
 		return
@@ -141,10 +179,11 @@
 
 	if(prob(min(30 + anger_modifier / 3, 50)) && get_dist(src, target) > 2)
 		chronospheres()
+		return
 	else
 		spawn_turrets()
 
-	if(prob(max(0, 25 - anger_modifier * 3)))
+	if(prob(sin(anger_modifier * 1.8) * 30)) //I want him to use it mainly in the middle of the fight
 		drop_n_beam()
 		return
 
@@ -219,21 +258,31 @@
 	update_icon()
 	flick("crystal_fly_up", src)
 
-/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/do_dash()
+/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/proc/do_dash(chargepast = 2, delay = 6)
 	if(dropped)
 		return
 
-	ranged_cooldown = world.time + 60 SECONDS //Just in case
-	add_atom_colour("#DE9E41", TEMPORARY_COLOUR_PRIORITY)
+	var/turf/chargeturf = get_turf(target)
+	var/dir = get_dir(src, chargeturf)
+	var/turf/target_turf = get_ranged_target_turf(chargeturf, dir, chargepast)
 
-	while(get_dist(src, target) > 1)
-		var/turf/next_turf = get_step(get_turf(src), get_dir(src, target))
-		new /obj/effect/timestop/time_crystal(get_turf(src), 1, AMBER_TIMESTOP_DURATION, list(src))
-		Move(next_turf)
-		SLEEP_CHECK_DEATH(1, src)
+	if(!target_turf)
+		return
 
-	ranged_cooldown = world.time + 2 SECONDS
-	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
+	charging = TRUE
+	DestroySurroundings()
+	SSmove_manager.move_to(src, 0)
+	setDir(dir)
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(loc,src)
+	animate(D, alpha = 0, color = "#DE9E41", transform = matrix()*2, time = delay)
+	SLEEP_CHECK_DEATH(delay, src)
+	qdel(D)
+	var/movespeed = 0.6
+	SSmove_manager.move_to(src, target_turf, 0, movespeed)
+	SLEEP_CHECK_DEATH(get_dist(src, target_turf) * movespeed, src)
+	SSmove_manager.move_to(src, 0)
+	charging = FALSE
+	ranged_cooldown = world.time + 4 SECONDS
 
 /obj/projectile/colossus/crystal_shards
 	name = "crystal shards"
@@ -247,7 +296,8 @@
 
 /obj/projectile/colossus/crystal_shards/on_hit(atom/target)
 	if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal) || istype(target, /mob/living/simple_animal/hostile/jungle/crystal_turret))
-		return BULLET_ACT_FORCE_PIERCE
+		damage = 0
+		nodamage = TRUE
 	. = ..()
 
 /obj/projectile/colossus/amber_crystal
@@ -262,7 +312,8 @@
 
 /obj/projectile/colossus/amber_crystal/on_hit(atom/target)
 	if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal) || istype(target, /mob/living/simple_animal/hostile/jungle/crystal_turret))
-		return BULLET_ACT_FORCE_PIERCE
+		damage = 0
+		nodamage = TRUE
 	. = ..()
 
 /obj/projectile/colossus/amber_crystal/second
@@ -288,9 +339,6 @@
 
 
 /obj/projectile/chronosphere/on_hit(atom/target)
-	if(istype(target, /mob/living/simple_animal/hostile/megafauna/jungle/time_crystal) || istype(target, /mob/living/simple_animal/hostile/jungle/crystal_turret))
-		return BULLET_ACT_FORCE_PIERCE
-
 	new /obj/effect/timestop/time_crystal(get_turf(target), AMBER_TIMESTOP_RANGE, AMBER_TIMESTOP_DURATION, (master_crystal.crystal_turrets + master_crystal))
 	. = ..()
 
@@ -307,8 +355,8 @@
 	projectiletype = /obj/projectile/colossus/amber_crystal
 	projectilesound = 'sound/effects/ethereal_revive_fail.ogg'
 	speak_emote = list("vibrates")
-	maxHealth = 600
-	health = 600
+	maxHealth = 400
+	health = 400
 	vision_range = 9
 	aggro_vision_range = 9
 	move_force = MOVE_FORCE_VERY_STRONG
@@ -316,6 +364,10 @@
 	pull_force = MOVE_FORCE_VERY_STRONG
 	del_on_death = TRUE
 	var/mob/living/simple_animal/hostile/megafauna/jungle/time_crystal/master_crystal
+
+/mob/living/simple_animal/hostile/jungle/crystal_turret/GiveTarget(new_target)
+	. = ..()
+	master_crystal.GiveTarget(new_target)
 
 /mob/living/simple_animal/hostile/jungle/crystal_turret/Life(delta_time, times_fired)
 	. = ..()
@@ -363,27 +415,6 @@
 	chronosphere.preparePixelProjectile(targeted_atom, src)
 	chronosphere.fire()
 	return chronosphere
-
-/obj/item/crusher_trophy/crystal_shard
-	name = "crystal shard"
-	desc = "A bright orange amber shard. Suitable as a trophy for a kinetic crusher."
-	icon_state = "crystal_shard"
-	denied_type = list(/obj/item/crusher_trophy/crystal_shard, /obj/item/crusher_trophy/axe_head)
-	bonus_value = 5
-
-/obj/item/crusher_trophy/crystal_shard/effect_desc()
-	return "mark detonation to stun creatures and make them more vunerable for a bit"
-
-/obj/item/crusher_trophy/crystal_shard/on_mark_detonation(mob/living/target, mob/living/user)
-	INVOKE_ASYNC(src, .proc/weaken_mob, target, user)
-
-/obj/item/crusher_trophy/crystal_shard/proc/weaken_mob(mob/living/target, mob/living/user)
-	if(isanimal(target))
-		var/mob/living/simple_animal/H = target
-		H.Stun(bonus_value)
-		var/damage_coeffs = H.damage_coeff
-		sleep(bonus_value * 6)
-		H.damage_coeff = damage_coeffs
 
 #define DEFENSIVE_STANCE_COOLDOWN 20 SECONDS
 #define SHIELD_MOVE_COOLDOWN 4
@@ -527,6 +558,7 @@
 
 /obj/effect/timestop/time_crystal
 	alpha = 0
+	sound_effect = FALSE
 	chronofield_type = /datum/proximity_monitor/advanced/timestop/time_crystal
 
 /datum/proximity_monitor/advanced/timestop/time_crystal/into_the_negative_zone(atom/A)

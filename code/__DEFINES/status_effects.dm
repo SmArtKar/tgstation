@@ -144,6 +144,10 @@
 
 #define STATUS_EFFECT_FOG /datum/status_effect/thick_fog
 
+#define STATUS_EFFECT_CRYSTAL_WEAKNESS /datum/status_effect/crystal_weakness
+
+#define STATUS_EFFECT_WEBBED /datum/status_effect/webbed
+
 /////////////
 // NEUTRAL //
 /////////////

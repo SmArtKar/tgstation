@@ -11,7 +11,6 @@
 	glasses = /obj/item/clothing/glasses/meson/night
 	suit = /obj/item/clothing/suit/hooded/explorer
 	mask = /obj/item/clothing/mask/gas/explorer
-	neck = /obj/item/clothing/neck/cloak/skill_reward/mining
 	backpack_contents = list(
 		/obj/item/storage/box/healeys = 1,\
 		/obj/item/flashlight/seclite=1,\

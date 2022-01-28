@@ -14,6 +14,15 @@
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
+"aR" = (
+/obj/effect/turf_decal/delivery,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/ancient_server,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "bb" = (
 /obj/effect/turf_decal/delivery,
 /obj/machinery/rogue_drone_spawner,
@@ -32,13 +41,21 @@
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
+"bq" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "bv" = (
 /obj/effect/turf_decal/stripes/line{
-	dir = 10
+	dir = 5
 	},
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -165,7 +182,7 @@
 	dir = 1
 	},
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -201,6 +218,15 @@
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
+"gM" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 4
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "ht" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -208,6 +234,22 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
 	icon_state = "darkfull";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
+"hv" = (
+/obj/effect/turf_decal/stripes/line,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
+"hx" = (
+/obj/machinery/ancient_server,
+/obj/effect/turf_decal/delivery,
+/turf/open/indestructible{
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -380,7 +422,7 @@
 	},
 /obj/structure/window/reinforced/survival_pod/indestructible,
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -414,7 +456,7 @@
 	dir = 8
 	},
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -481,6 +523,15 @@
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
+"qU" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "qV" = (
 /obj/effect/turf_decal/siding/red/corner{
 	dir = 8
@@ -498,6 +549,16 @@
 	dir = 5
 	},
 /turf/open/floor/plating/dirt/jungle,
+/area/ruin/powered/ancient_ai)
+"rh" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
 /area/ruin/powered/ancient_ai)
 "rl" = (
 /obj/effect/turf_decal/stripes/corner{
@@ -607,7 +668,7 @@
 	dir = 1
 	},
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -714,6 +775,15 @@
 	},
 /turf/closed/indestructible/syndicate,
 /area/ruin/powered/ancient_ai)
+"wI" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 6
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "wZ" = (
 /obj/machinery/light/broken{
 	dir = 4
@@ -774,7 +844,7 @@
 /obj/effect/turf_decal/delivery,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -921,6 +991,13 @@
 "Da" = (
 /turf/template_noop,
 /area/template_noop)
+"Du" = (
+/obj/effect/turf_decal/stripes/line,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "DA" = (
 /obj/effect/turf_decal/delivery,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -973,6 +1050,16 @@
 /mob/living/simple_animal/hostile/jungle/snakeman,
 /turf/open/floor/plating/dirt/jungle,
 /area/ruin/powered/ancient_ai)
+"FL" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "GT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/yellow{
@@ -1016,7 +1103,7 @@
 	dir = 4
 	},
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -1310,7 +1397,7 @@
 /obj/machinery/rogue_drone_spawner,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -1319,6 +1406,15 @@
 	dir = 10
 	},
 /obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
+"Ql" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 10
+	},
 /turf/open/indestructible{
 	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
@@ -1334,6 +1430,15 @@
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
+"QT" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 9
+	},
+/turf/open/indestructible{
+	icon_state = "podfloor";
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "QX" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -1342,7 +1447,7 @@
 	dir = 8
 	},
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -1570,7 +1675,7 @@
 /obj/effect/turf_decal/delivery,
 /obj/machinery/rogue_drone_spawner,
 /turf/open/indestructible{
-	icon_state = "darkfull";
+	icon_state = "podfloor";
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
@@ -2225,10 +2330,10 @@ tO
 ZG
 CP
 xh
-tO
+QT
 HL
 HL
-iO
+Ql
 xh
 PW
 yX
@@ -2271,10 +2376,10 @@ ZG
 xp
 CP
 xS
-PW
+qU
 PX
-nX
-ZU
+hx
+Du
 xS
 PW
 VI
@@ -2317,10 +2422,10 @@ xp
 xp
 CP
 xh
-xW
-RJ
-RJ
-Lo
+bv
+gM
+gM
+wI
 xS
 PW
 xp
@@ -2630,9 +2735,9 @@ xp
 Yd
 CP
 xh
-WB
-YV
-iO
+Ju
+bq
+Ql
 xS
 Pn
 jj
@@ -2649,9 +2754,9 @@ VI
 Tn
 ZU
 xh
-WB
-LA
-bv
+Ju
+FL
+Qj
 xh
 PW
 Yd
@@ -2677,8 +2782,8 @@ xp
 ZU
 xS
 nx
-nX
-ZU
+hx
+Du
 xS
 PW
 xp
@@ -2695,7 +2800,7 @@ VI
 VI
 ZU
 xS
-PW
+qU
 PX
 gk
 xS
@@ -2724,7 +2829,7 @@ CP
 xh
 nx
 WE
-CP
+hv
 xS
 PW
 VI
@@ -2741,8 +2846,8 @@ xp
 VI
 ZU
 xS
-Pn
-DA
+rh
+aR
 tU
 xS
 PW
@@ -2768,9 +2873,9 @@ VI
 Yd
 ZU
 xS
-xW
-RJ
-PV
+bv
+gM
+Qw
 xS
 PW
 Tn
@@ -2787,9 +2892,9 @@ VI
 jj
 ZU
 xh
-xW
-RJ
-Lo
+bv
+gM
+wI
 xS
 PW
 Yd
@@ -3099,10 +3204,10 @@ VI
 VI
 ZU
 xS
-WB
-LA
-YV
-iO
+Ju
+FL
+bq
+Ql
 xS
 PW
 VI
@@ -3145,10 +3250,10 @@ ci
 VI
 ZU
 xS
-Pn
+rh
 xL
 WE
-CP
+hv
 xh
 PW
 VI
@@ -3191,10 +3296,10 @@ xW
 ci
 ZU
 xS
-xW
+bv
 QX
 oB
-PV
+Qw
 xh
 PW
 hW

@@ -63,18 +63,16 @@
 		if((ishuman(possible_enemy) || possible_enemy.mind) && (possible_enemy in former_targets))
 			enemies += 1
 
-	enemies -= 1
-
 	if(enemies <= 0)
 		return
 
-	damage_coeff = initial_damage_coeff
+	damage_coeff = initial_damage_coeff.Copy()
 	for(var/coeff in damage_coeff)
-		damage_coeff[coeff] = max(damage_coeff[coeff] - enemies * BOSS_ARMOR_PER_MINER * 0.01, 0.1)
+		damage_coeff[coeff] /= enemies
 
 	for(var/obj/machinery/ancient_server/server in server_list)
-		server.armor.setRating(melee = min(50 + enemies * BOSS_ARMOR_PER_MINER, 90))
-		server.armor.setRating(bomb = min(65 + enemies * BOSS_ARMOR_PER_MINER, 90))
+		server.armor.setRating(melee = 100 - 50 / enemies)
+		server.armor.setRating(bomb = 100 - 45 / enemies)
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/SpinAnimation(speed = 10, loops = -1, clockwise = 1, segments = 3, parallel = TRUE) //No spins from rocket hits
 	return
@@ -145,7 +143,8 @@
 
 	for(var/i = 1 to max(3 + LAZYLEN(former_targets) * 3 - LAZYLEN(drones), rand(3, 2 + LAZYLEN(former_targets) * 3)))
 		var/obj/machinery/rogue_drone_spawner/spawner = pick_n_take(drone_spawners)
-		spawner.spawn_drone()
+		if(spawner)
+			spawner.spawn_drone()
 
 /mob/living/simple_animal/hostile/megafauna/jungle/ancient_ai/proc/violent_smash()
 
@@ -275,6 +274,7 @@
 	icon_state = "[initial(icon_state)]_empty"
 	update_icon()
 	flick("[initial(icon_state)]_activate", src)
+	sleep(13)
 	has_drone = FALSE
 	var/mob/living/simple_animal/hostile/jungle/rogue_drone/drone = new(get_turf(src))
 	drone.master_ai = master_ai
@@ -546,105 +546,6 @@
 	anchored = TRUE
 	deconstructible = FALSE
 	resistance_flags = INDESTRUCTIBLE
-
-
-/obj/item/crusher_trophy/ai_core
-	name = "AI core"
-	desc = "A potato with a lot of wires in it. Suitable as a trophy for a kinetic crusher."
-	icon_state = "ai_core"
-	denied_type = list(/obj/item/crusher_trophy/ai_core, /obj/item/crusher_trophy/leaper_eye)
-	var/drone_cooldown = 0
-	var/drone_destroy_time = 0
-	var/mob/living/simple_animal/hostile/crusher_drone/drone
-
-/obj/item/crusher_trophy/ai_core/effect_desc()
-	return "ranged right click attacks to create a flying drone that attack your enemies with long-ranged destabilizing force"
-
-
-/obj/item/crusher_trophy/ai_core/on_right_click(atom/target, mob/living/user)
-	if(drone && !QDELETED(drone))
-		if(drone_destroy_time > world.time)
-			to_chat(user, span_notice("Drone successfully destroyed."))
-			drone.death()
-			return
-
-		to_chat(user, span_warning("Your previous drone is still alive! Use the trophy again to destroy it."))
-		drone_destroy_time = world.time + 3 SECONDS
-		return
-
-	if(drone_cooldown > world.time)
-		to_chat(user, span_warning("Wait [round((drone_cooldown - world.time) / 10)] more seconds before trying to create another drone!"))
-		return
-
-	if(isclosedturf(get_turf(target)))
-		return
-
-	drone_cooldown = world.time + 30 SECONDS
-
-	drone = new(get_turf(user))
-	drone.faction = list("neutral", "[REF(user)]")
-	drone.GiveTarget(target)
-	drone.crusher = loc
-
-/mob/living/simple_animal/hostile/crusher_drone
-	name = "V.0.R.T.X. drone"
-	desc = "An outdated version of an automated defence drone that were made to help protect colonies from local fauna. This one is linked to a kinetic crusher and shares it's tropheys."
-	icon = 'icons/mob/jungle/jungle_monsters.dmi'
-	icon_state = "crusher_drone"
-	icon_living = "crusher_drone"
-	mob_biotypes = MOB_ROBOTIC
-	combat_mode = FALSE
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_plas" = 0, "max_plas" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	faction = list("neutral")
-	maxHealth = 200
-	health = 200
-	obj_damage = 0
-	melee_damage_lower = 0
-	melee_damage_upper = 0
-	del_on_death = TRUE
-
-	speed = 4
-	retreat_distance = 3
-	minimum_distance = 5
-
-	deathmessage = "slowly floats down to the ground as it shuts down."
-	deathsound = 'sound/voice/borg_deathsound.ogg'
-	ranged = 1
-	ranged_cooldown_time = 2 SECONDS
-	var/obj/item/kinetic_crusher/crusher
-
-/mob/living/simple_animal/hostile/crusher_drone/CanAllowThrough(atom/movable/mover, border_dir)
-	. = ..()
-	if(istype(mover, /obj/projectile/kinetic))
-		return TRUE
-	else if(istype(mover, /obj/projectile/destabilizer))
-		return TRUE
-
-/mob/living/simple_animal/hostile/crusher_drone/AttackingTarget(atom/attacked_target)
-	Shoot(attacked_target)
-
-/mob/living/simple_animal/hostile/crusher_drone/Shoot(mob/targeted)
-	if(!targeted)
-		return
-
-	setDir(get_dir(src, targeted))
-
-	var/obj/projectile/destabilizer/proj = new /obj/projectile/destabilizer/vortex_drone(get_turf(src))
-	for(var/obj/item/crusher_trophy/trophy in crusher.trophies)
-		trophy.on_projectile_fire(proj, src)
-	proj.preparePixelProjectile(get_turf(targeted), get_turf(src))
-	proj.firer = src
-	proj.hammer_synced = crusher
-	playsound(src, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
-	proj.fire()
-
-/obj/projectile/destabilizer/vortex_drone
-	range = 12
-
-/mob/living/carbon/human/CanAllowThrough(atom/movable/mover, border_dir)
-	. = ..()
-	if(istype(mover, /obj/projectile/destabilizer/vortex_drone))
-		return TRUE
 
 /**
  *

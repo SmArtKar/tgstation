@@ -441,10 +441,14 @@
 
 /obj/effect/abstract/demon_beam_splash
 	icon = 'icons/effects/64x64.dmi'
-	icon_state = "beam_splash_red_nodir"
+	icon_state = "beam_splash_red"
 	layer = RIPPLE_LAYER
 	pixel_x = -16
 	pixel_y = -16
+
+/obj/effect/abstract/demon_beam_splash/Initialize(mapload)
+	. = ..()
+	flick("beam_splash_red_starter", src)
 
 /obj/effect/temp_beam_target
 	name = "temporary beam target"
@@ -601,149 +605,6 @@
 	used = TRUE
 
 #undef BLOOD_JAUNT_LENGTH
-
-/mob/living/simple_animal/hostile/jungle/hellborn_shadow
-	name = "hellborn shadow"
-	desc = "A transparent, dark red spirit from the depths of hell, coming for your soul."
-	response_help_continuous = "thinks better of touching"
-	response_help_simple = "think better of touching"
-	response_disarm_continuous = "flails at"
-	response_disarm_simple = "flail at"
-	response_harm_continuous = "punches"
-	response_harm_simple = "punch"
-	icon = 'icons/mob/jungle/jungle_monsters.dmi'
-	icon_state = "spirit"
-	icon_living = "spirit"
-	speed = 4
-	move_to_delay = 4
-	combat_mode = TRUE
-	attack_sound = 'sound/magic/demon_attack1.ogg'
-	attack_vis_effect = ATTACK_EFFECT_CLAW
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
-	maxbodytemp = INFINITY
-	faction = list("jungle", "boss", "hell")
-	weather_immunities = list(TRAIT_ACID_IMMUNE, TRAIT_LAVA_IMMUNE)
-	attack_verb_continuous = "flails at"
-	attack_verb_simple = "flail at"
-	maxHealth = 40
-	health = 40
-	healable = 0
-	obj_damage = 10
-	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
-	melee_damage_lower = 5
-	melee_damage_upper = 5
-	vision_range = 2
-	aggro_vision_range = 4
-	see_in_dark = 8
-	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
-	del_on_death = TRUE
-	deathmessage = "screams in agony as it sublimates into a cloud of sulfurous smoke."
-	deathsound = 'sound/magic/demon_dies.ogg'
-	var/obj/item/crusher_trophy/demon_horn/horn
-
-/mob/living/simple_animal/hostile/jungle/hellborn_shadow/Initialize(mapload, creator)
-	. = ..()
-	horn = creator
-	horn.spirits.Add(src)
-	ADD_TRAIT(src, TRAIT_CRUSHER_VUNERABLE, INNATE_TRAIT)
-
-/mob/living/simple_animal/hostile/jungle/hellborn_shadow/death(gibbed)
-	horn.spirits.Remove(src)
-	. = ..()
-
-/obj/item/crusher_trophy/demon_horn //Glory kills!
-	name = "demon horn"
-	desc = "A big red horn. Suitable as a trophy for a kinetic crusher."
-	icon_state = "demon_horn"
-	denied_type = /obj/item/crusher_trophy/demon_horn
-	var/buffing = FALSE
-	var/stop_buff_timer
-	var/list/spirits = list()
-
-/obj/item/crusher_trophy/demon_horn/effect_desc()
-	return "kills with mark detonation to give you a temporary boost in speed and armor as well as light healing. While fighting megafauna, small low-health spirits will appear around the user"
-
-/obj/item/crusher_trophy/demon_horn/on_mark_detonation(mob/living/target, mob/living/user)
-	INVOKE_ASYNC(src, .proc/glory_kill_check, target, user)
-
-/obj/item/crusher_trophy/demon_horn/proc/glory_kill_check(mob/living/target, mob/living/user)
-	sleep(1) //Just enough time for target to process their health. Doesn't work without sleep cuz crusher code.
-
-	if(QDELETED(user) || user.stat == DEAD || !ishuman(user))
-		return
-
-	var/mob/living/carbon/human/human_user = user
-	human_user.heal_ordered_damage(15, list(BRUTE, BURN, TOX, OXY))
-
-	if(!buffing)
-		human_user.add_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
-		human_user.physiology.damage_resistance += 50
-		human_user.physiology.stun_mod *= 0.25
-		human_user.physiology.bleed_mod *= 0.25
-		buffing = TRUE
-
-	if(stop_buff_timer)
-		deltimer(stop_buff_timer)
-	stop_buff_timer = addtimer(CALLBACK(src, .proc/stop_buff, human_user), 5 SECONDS, TIMER_STOPPABLE)
-
-/obj/item/crusher_trophy/demon_horn/proc/stop_buff(mob/living/carbon/human/user)
-	user.remove_movespeed_modifier(/datum/movespeed_modifier/glory_kill)
-	user.physiology.damage_resistance -= 50
-	user.physiology.stun_mod /= 0.25
-	user.physiology.bleed_mod /= 0.25
-	buffing = FALSE
-
-/obj/item/crusher_trophy/demon_horn/add_to(obj/item/kinetic_crusher/H, mob/living/user)
-	. = ..()
-	if(.)
-		START_PROCESSING(SSfastprocess, src)
-
-/obj/item/crusher_trophy/demon_horn/remove_from(obj/item/kinetic_crusher/H, mob/living/user)
-	. = ..()
-	if(.)
-		STOP_PROCESSING(SSfastprocess, src)
-
-/obj/item/crusher_trophy/demon_horn/process(delta_time)
-	var/mob/living/carbon/human/user
-	var/atom/loc_iter = loc
-	while(!user)
-		if(isturf(loc_iter) || isarea(loc_iter))
-			return
-
-		if(ishuman(loc_iter))
-			user = loc_iter
-			break
-
-		loc_iter = loc_iter.loc
-
-	var/mob/living/simple_animal/hostile/megafauna/jungle/attacker
-	for(var/mob/living/simple_animal/hostile/megafauna/jungle/mega in GLOB.megafauna)
-		if(mega.spawns_minions)
-			continue
-
-		if(mega.target == user)
-			attacker = mega
-			break
-
-	if(!attacker)
-		return
-
-	var/list/possible_turfs = list()
-	for(var/turf/open/possible_spawn in view(7, user))
-		if(!possible_spawn.is_blocked_turf())
-			possible_turfs.Add(possible_spawn)
-
-	if(LAZYLEN(spirits) < 5 && DT_PROB(25, delta_time))
-		var/turf/spirit_spawn = pick_n_take(possible_turfs)
-		new /mob/living/simple_animal/hostile/jungle/hellborn_shadow(spirit_spawn, src)
-		new /obj/effect/temp_visual/guardian/phase(spirit_spawn)
-
-	for(var/mob/living/simple_animal/hostile/jungle/hellborn_shadow/shadow as anything in spirits)
-		if(get_dist(shadow, user) > 9)
-			new /obj/effect/temp_visual/guardian/phase/out(get_turf(shadow))
-			spirits.Remove(shadow)
-			qdel(shadow)
 
 /obj/effect/spawner/random/boss/demonic_miner
 	name = "demonic miner loot spawner"

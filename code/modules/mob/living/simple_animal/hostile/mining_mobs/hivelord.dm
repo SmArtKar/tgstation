@@ -8,7 +8,7 @@
 	icon_dead = "Hivelord_dead"
 	icon_gib = "syndicate_gib"
 	mob_biotypes = MOB_ORGANIC
-	move_to_delay = 7
+	move_to_delay = 14
 	ranged = 1
 	vision_range = 5
 	aggro_vision_range = 9

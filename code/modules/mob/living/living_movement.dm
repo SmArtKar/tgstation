@@ -31,8 +31,6 @@
 		add_or_update_variable_movespeed_modifier(T.slowdown_type, multiplicative_slowdown = T.slowdown)
 	else
 		remove_movespeed_modifier(/datum/movespeed_modifier/turf_slowdown)
-		for(var/slowdown_type in subtypesof(/datum/movespeed_modifier/turf_slowdown))
-			remove_movespeed_modifier(slowdown_type)
 
 /mob/living/proc/update_pull_movespeed()
 	SEND_SIGNAL(src, COMSIG_LIVING_UPDATING_PULL_MOVESPEED)

@@ -5,8 +5,8 @@
 	icon_living = "bat"
 	icon_dead = "bat_dead"
 	icon_gib = "bat_dead"
-	speed = 1
-	move_to_delay = 1
+	speed = 2
+	move_to_delay = 2
 	response_help_continuous = "brushes aside"
 	response_help_simple = "brush aside"
 	response_disarm_continuous = "flails at"
@@ -57,14 +57,7 @@
 	icon_gib = "bat_white_dead"
 	crusher_drop_mod = 30
 	crusher_loot = /obj/item/crusher_trophy/white_bat_wing
-	var/list/bat_friends = list()
 	var/list/friend_beams = list()
-
-/mob/living/simple_animal/hostile/jungle/bat/albino/Initialize()
-	. = ..()
-	for(var/mob/living/simple_animal/hostile/jungle/bat/friend in range(5, src))
-		if(friend != src)
-			bat_friends += friend
 
 /mob/living/simple_animal/hostile/jungle/bat/albino/Life(delta_time, times_fired)
 	. = ..()
@@ -74,11 +67,11 @@
 			friend.damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 			friend_beams -= friend
 		else
-			friend.adjustBruteLoss(-2) //Heals all other bats around it and gives them armor, forcing the player to kill it first
+			friend.adjustBruteLoss(-1) //Heals all other bats around it and gives them armor, forcing player to kill it first
 
-	for(var/mob/living/simple_animal/friend in bat_friends)
-		if(get_dist(src, friend) < 5 && !(friend in friend_beams))
-			friend.damage_coeff = list(BRUTE = 0.3, BURN = 0.3, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
+	for(var/mob/living/simple_animal/hostile/jungle/bat/friend in range(5, src))
+		if(!(friend in friend_beams) && friend != src)
+			friend.damage_coeff = list(BRUTE = 0.1, BURN = 0.1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1)
 			friend_beams[friend] = Beam(friend, icon_state = "blood_mid_light")
 
 /mob/living/simple_animal/hostile/jungle/bat/albino/death(gibbed)
@@ -139,51 +132,3 @@
 			new /mob/living/simple_animal/hostile/jungle/bat/random(T)
 
 	return INITIALIZE_HINT_QDEL
-
-/obj/item/crusher_trophy/bat_wing //Basically an alternative version of demon claws that requires you to detonate your mark first and doesn't give x5 effect on mark detonation, but you get more healing and also regenerate your blood.
-	name = "cave bat wing"
-	desc = "A wing of a cave bat. Suitable as a trophy for a kinetic crusher."
-	icon_state = "bat_wing"
-	denied_type = /obj/item/crusher_trophy/bat_wing
-
-/obj/item/crusher_trophy/bat_wing/effect_desc()
-	return "mark detonation to apply a bloody mark to the target. For each hit you land at the marked creature will regenerate some of your health and blood"
-
-/obj/item/crusher_trophy/bat_wing/on_mark_detonation(mob/living/target, mob/living/user)
-	target.apply_status_effect(STATUS_EFFECT_BLOODYMARK)
-
-/obj/item/crusher_trophy/bat_wing/on_melee_hit(mob/living/target, mob/living/user)
-	if(target.has_status_effect(STATUS_EFFECT_BLOODYMARK))
-		user.heal_ordered_damage(3, list(BRUTE, BURN, OXY))
-		if(iscarbon(user))
-			var/mob/living/carbon/carbie = user
-			carbie.blood_volume += carbie.blood_volume >= BLOOD_VOLUME_NORMAL ? 0 : 10
-
-/obj/effect/temp_visual/bat_wing_detonation
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "bat_wing_detonation"
-	duration = 4
-
-/obj/item/crusher_trophy/white_bat_wing // A nice but not too OP DPS and healing trophy. Does not work with axe head because we need at least SOME balance
-	name = "albino cave bat wing"
-	desc = "A pure white bat wing. Suitable as a trophy for a kinetic crusher."
-	icon_state = "white_bat_wing"
-	denied_type = list(/obj/item/crusher_trophy/white_bat_wing, /obj/item/crusher_trophy/axe_head)
-	var/charges = 0
-
-/obj/item/crusher_trophy/white_bat_wing/effect_desc()
-	return "each melee hit to add a blood charge. When three charges are collected, the next target you hit will recieve massive damage and you will steal some of their health. Current charges [charges] / 3"
-
-/obj/item/crusher_trophy/white_bat_wing/on_melee_hit(mob/living/target, mob/living/user)
-	charges += 1
-
-	if(charges >= 4)
-		charges = 0
-		new /obj/effect/temp_visual/bat_wing_detonation(get_turf(target))
-		if(isanimal(target))
-			target.adjustBruteLoss(75)
-
-		user.heal_ordered_damage(10, list(BRUTE, BURN, OXY))
-		if(iscarbon(user))
-			var/mob/living/carbon/carbie = user
-			carbie.blood_volume += carbie.blood_volume >= BLOOD_VOLUME_NORMAL ? 0 : 15

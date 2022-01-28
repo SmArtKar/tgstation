@@ -250,3 +250,17 @@
 	owner.visible_message(span_danger("[owner] fires the proto-kinetic accelerator!"))
 	owner.face_atom(target_atom)
 	new /obj/effect/temp_visual/dir_setting/firing_effect(owner.loc, owner.dir)
+
+/datum/action/cooldown/mob_cooldown/projectile_attack/rapid_fire/web_shot
+	name = "Web Shot"
+	desc = "Fire five web balls at your target to pull them closer."
+	icon_icon = 'icons/mob/actions/actions_jungle.dmi'
+	button_icon_state = "web_shot"
+	cooldown_time = 1.5 SECONDS
+	projectile_type = /obj/projectile/web_ball
+	default_projectile_spread = 30
+	shot_count = 5
+	shot_delay = 0.15 SECONDS
+
+/datum/action/cooldown/mob_cooldown/projectile_attack/rapid_fire/web_shot/no_cd
+	cooldown_time = 0
