@@ -354,11 +354,11 @@
 	category = list ("Misc. Machinery")
 
 
-/datum/design/board/monkey_recycler
+/datum/design/board/biomass_recycler
 	name = "Machine Design (Monkey Recycler Board)"
-	desc = "The circuit board for a monkey recycler."
-	id = "monkey_recycler"
-	build_path = /obj/item/circuitboard/machine/monkey_recycler
+	desc = "The circuit board for a biomass recycler."
+	id = "biomass_recycler"
+	build_path = /obj/item/circuitboard/machine/biomass_recycler
 	category = list ("Misc. Machinery")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE | DEPARTMENTAL_FLAG_SERVICE
 
@@ -458,6 +458,14 @@
 	build_path = /obj/item/circuitboard/machine/mining_equipment_vendor
 	category = list ("Misc. Machinery")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE | DEPARTMENTAL_FLAG_CARGO
+
+/datum/design/board/xenobio_equipment_vendor
+	name = "Machine Design (Xenobiology Equipment Vendor Board)"
+	desc = "The circuit board for a Xenobiology Equipment Vendor."
+	id = "xenobio_equipment_vendor"
+	build_path = /obj/item/circuitboard/machine/xenobio_equipment_vendor
+	category = list ("Misc. Machinery")
+	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
 
 /datum/design/board/tesla_coil
 	name = "Machine Design (Tesla Coil Board)"

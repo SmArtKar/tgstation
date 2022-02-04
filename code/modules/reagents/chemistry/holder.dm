@@ -897,7 +897,7 @@
 				else if(istype(cached_my_atom, /obj/item/slime_extract))
 					var/obj/item/slime_extract/extract = cached_my_atom
 
-					if(extract.Uses > 0) // added a limit to slime cores -- Muskets requested this
+					if(extract.uses > 0) // added a limit to slime cores -- Muskets requested this
 						matching_other = TRUE
 			else
 				if(!reaction.required_container)
@@ -1164,8 +1164,8 @@
 
 		if(istype(cached_my_atom, /obj/item/slime_extract))
 			var/obj/item/slime_extract/extract = my_atom
-			extract.Uses--
-			if(extract.Uses <= 0) // give the notification that the slime core is dead
+			extract.uses--
+			if(extract.uses <= 0) // give the notification that the slime core is dead
 				my_atom.visible_message(span_notice("[iconhtml] \The [my_atom]'s power is consumed in the reaction."))
 				extract.name = "used slime extract"
 				extract.desc = "This extract has been used up."

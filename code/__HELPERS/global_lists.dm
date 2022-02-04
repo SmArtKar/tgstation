@@ -126,7 +126,8 @@ GLOBAL_LIST_INIT(WALLITEMS_INTERIOR, typecacheof(list(
 	/obj/structure/noticeboard,
 	/obj/structure/reagent_dispensers/wall,
 	/obj/structure/sign,
-	/obj/structure/sign/picture_frame
+	/obj/structure/sign/picture_frame,
+	/obj/machinery/space_heater/wall_mount
 	)))
 
 // Wall mounted machinery which are visually coming out of the wall.

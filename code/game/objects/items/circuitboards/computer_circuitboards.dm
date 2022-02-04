@@ -389,11 +389,6 @@
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
 	build_path = /obj/machinery/computer/teleporter
 
-/obj/item/circuitboard/computer/xenobiology
-	name = "Xenobiology Console (Computer Board)"
-	greyscale_colors = CIRCUIT_COLOR_SCIENCE
-	build_path = /obj/machinery/computer/camera_advanced/xenobio
-
 /obj/item/circuitboard/computer/scan_consolenew
 	name = "DNA Console (Computer Board)"
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE

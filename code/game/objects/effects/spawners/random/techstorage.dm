@@ -57,6 +57,7 @@
 		/obj/item/circuitboard/computer/rdconsole,
 		/obj/item/circuitboard/computer/scan_consolenew,
 		/obj/item/circuitboard/machine/dnascanner,
+		/obj/item/circuitboard/machine/xenobio_equipment_vendor,
 	)
 
 /obj/effect/spawner/random/techstorage/security_all

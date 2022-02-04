@@ -358,7 +358,7 @@
 	ADD_STEAL_ITEM(src, /obj/item/slime_extract)
 
 /datum/objective_item/steal/slime/check_special_completion(obj/item/slime_extract/E)
-	if(E.Uses > 0)
+	if(E.uses > 0)
 		return 1
 	return 0
 

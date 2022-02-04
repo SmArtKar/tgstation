@@ -24,7 +24,7 @@
 
 /mob/living/simple_animal/slime/verb/Feed()
 	set category = "Slime"
-	set desc = "This will let you feed on any valid creature in the surrounding area. This should also be used to halt the feeding process."
+	set desc = "This will let you feed on any valid food in the surrounding area. This should also be used to halt the feeding process."
 
 	if(stat)
 		return FALSE
@@ -34,29 +34,59 @@
 		if(nearby_mob != src && Adjacent(nearby_mob))
 			choices += nearby_mob
 
+	for(var/obj/possible_food in view(1,src))
+		if(Adjacent(possible_food) && CanFeedon(possible_food, TRUE))
+			choices += possible_food
+
 	var/choice = tgui_input_list(src, "Who do you wish to feed on?", "Slime Feed", sort_names(choices))
 	if(isnull(choice))
 		return FALSE
-	var/mob/living/victim = choice
-	if(CanFeedon(victim))
-		Feedon(victim)
+
+	if(!CanFeedon(choice))
+		return FALSE
+
+	if(!isliving(choice))
+		gobble_up(choice)
 		return TRUE
-	return FALSE
+
+	var/mob/living/victim = choice
+	Feedon(victim)
+	return TRUE
+
+/mob/living/simple_animal/slime/proc/gobble_up(atom/movable/food)
+	if(!CanFeedon(food, TRUE))
+		return
+
+	var/matrix/animation_matrix = matrix()
+	animation_matrix.Scale(0.7)
+	animation_matrix.Translate((x - food.x) * 32, (y - food.y) * 32)
+	animate(food, alpha = 0, time = 6, easing = QUAD_EASING|EASE_IN, transform = animation_matrix, flags = ANIMATION_PARALLEL)
+	sleep(6)
+	food.forceMove(src)
+	Digesting = food
+	digestion_progress = 0
+
+	digestion_underlay = mutable_appearance(food.icon, food.icon_state)
+	digestion_underlay.pixel_x = pixel_x
+	digestion_underlay.pixel_y = pixel_y
+	digestion_underlay.transform = matrix().Scale(0.7)
+	digestion_underlay.color = food.color
+	underlays += digestion_underlay
+	next_underlay_scale = 0.6
 
 /datum/action/innate/slime/feed
 	name = "Feed"
 	button_icon_state = "slimeeat"
 
-
 /datum/action/innate/slime/feed/Activate()
 	var/mob/living/simple_animal/slime/S = owner
 	S.Feed()
 
-/mob/living/simple_animal/slime/proc/CanFeedon(mob/living/M, silent = FALSE)
+/mob/living/simple_animal/slime/proc/CanFeedon(atom/movable/M, silent = FALSE)
 	if(!Adjacent(M))
 		return FALSE
 
-	if(buckled)
+	if(buckled && !silent)
 		Feedstop()
 		return FALSE
 
@@ -86,23 +116,56 @@
 		to_chat(src, span_notice("<i>I'm not hungry anymore...</i>"))
 		return FALSE
 
+	if(Digesting)
+		if(silent)
+			return FALSE
+		to_chat(src, span_notice("<i>I'm already digesting something...</i>"))
+		return FALSE
+
 	if(stat)
 		if(silent)
 			return FALSE
 		to_chat(src, span_warning("<i>I must be conscious to do this...</i>"))
 		return FALSE
 
-	if(M.stat == DEAD)
-		if(silent)
+	if(isliving(M))
+		var/mob/living/victim = M
+		if(victim.stat == DEAD)
+			if(silent)
+				return FALSE
+			to_chat(src, span_warning("<i>This subject does not have a strong enough life energy...</i>"))
 			return FALSE
-		to_chat(src, span_warning("<i>This subject does not have a strong enough life energy...</i>"))
-		return FALSE
 
 	if(locate(/mob/living/simple_animal/slime) in M.buckled_mobs)
 		if(silent)
 			return FALSE
-		to_chat(src, span_warning("<i>Another slime is already feeding on this subject...</i>"))
+		to_chat(src, span_warning("<i>Another slime is already feeding on this food...</i>"))
 		return FALSE
+
+	var/is_food = FALSE
+	if(ishuman(M))
+		var/mob/living/carbon/human/victim = M
+		if(!ismonkey(victim) || (victim.dna.species.type in slime_color.food_types))
+			is_food = TRUE
+
+	if(!is_food)
+		for(var/food_type in slime_color.food_types)
+			if(istype(M, food_type))
+				is_food = TRUE
+				break
+
+	if(!is_food)
+		if(silent)
+			return FALSE
+		to_chat(src, span_warning("<i>I don't like this food....</i>"))
+		return FALSE
+
+	if(isitem(M) && M.anchored)
+		if(silent)
+			return FALSE
+		to_chat(src, span_warning("<i>It's stuck to the floor...</i>"))
+		return FALSE
+
 	return TRUE
 
 /mob/living/simple_animal/slime/proc/Feedon(mob/living/M)
@@ -121,6 +184,7 @@
 			"This subject does not have life energy", "This subject is empty", \
 			"I am not satisified", "I can not feed from this subject", \
 			"I do not feel nourished", "This subject is not food")]!</span>")
+			slime_color.finished_digesting_living(buckled)
 		if(!silent)
 			visible_message(span_warning("[src] lets go of [buckled]!"), \
 							span_notice("<i>I stopped feeding.</i>"))
@@ -179,15 +243,13 @@
 			var/turf/drop_loc = drop_location()
 
 			for(var/i in 1 to 4)
-				var/child_colour
-				if(mutation_chance >= 100)
-					child_colour = "rainbow"
-				else if(prob(mutation_chance))
-					child_colour = slime_mutation[rand(1,4)]
+				var/child_color
+				if(prob(mutation_chance))
+					child_color = slime_color.mutations[rand(1,4)]
 				else
-					child_colour = colour
+					child_color = slime_color.type
 				var/mob/living/simple_animal/slime/M
-				M = new(drop_loc, child_colour)
+				M = new(drop_loc, child_color)
 				if(ckey)
 					M.set_nutrition(new_nutrition) //Player slimes are more robust at spliting. Once an oversight of poor copypasta, now a feature!
 				M.powerlevel = new_powerlevel
@@ -196,7 +258,7 @@
 				M.set_friends(Friends)
 				babies += M
 				M.mutation_chance = clamp(mutation_chance+(rand(5,-5)),0,100)
-				SSblackbox.record_feedback("tally", "slime_babies_born", 1, M.colour)
+				SSblackbox.record_feedback("tally", "slime_babies_born", 1, M.slime_color.color)
 
 			var/mob/living/simple_animal/slime/new_slime = pick(babies)
 			new_slime.set_combat_mode(TRUE)

@@ -22,6 +22,8 @@
 		return
 	reagents.remove_all(0.5 * REAGENTS_METABOLISM * reagents.reagent_list.len * delta_time) //Slimes are such snowflakes
 	handle_targets(delta_time, times_fired)
+	handle_digestion(delta_time, times_fired)
+	slime_color.Life(delta_time, times_fired)
 	if(ckey)
 		return
 	handle_mood(delta_time, times_fired)
@@ -57,10 +59,12 @@
 		if(!Target || client)
 			break
 
-		if(Target.health <= -70 || Target.stat == DEAD)
-			set_target(null)
-			AIproc = 0
-			break
+		if(isliving(Target))
+			var/mob/living/victim = Target
+			if(victim.health <= -70 || victim.stat == DEAD)
+				set_target(null)
+				AIproc = 0
+				break
 
 		if(Target)
 			if(locate(/mob/living/simple_animal/slime) in Target.buckled_mobs)
@@ -79,23 +83,25 @@
 						if(Target.Adjacent(src))
 							Target.attack_slime(src)
 					break
-				if((Target.body_position == STANDING_UP) && prob(80))
+				if(isliving(Target))
+					var/mob/living/victim = Target
+					if((victim.body_position == STANDING_UP) && prob(80))
+						if(victim.client && victim.health >= 20)
+							if(!Atkcool)
+								Atkcool = TRUE
+								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
-					if(Target.client && Target.health >= 20)
-						if(!Atkcool)
-							Atkcool = TRUE
-							addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
+								if(victim.Adjacent(src))
+									victim.attack_slime(src)
 
-							if(Target.Adjacent(src))
-								Target.attack_slime(src)
-
+						else
+							if(!Atkcool && victim.Adjacent(src))
+								Feedon(victim)
 					else
-						if(!Atkcool && Target.Adjacent(src))
-							Feedon(Target)
-
+						if(!Atkcool && victim.Adjacent(src))
+							Feedon(victim)
 				else
-					if(!Atkcool && Target.Adjacent(src))
-						Feedon(Target)
+					gobble_up(Target)
 
 			else if(Target in view(7, src))
 				if(!Target.Adjacent(src))
@@ -175,6 +181,9 @@
 		return
 	var/mob/M = buckled
 
+	if(layer < M.layer) //Because mobs change their layers when standing up/lying down
+		layer = M.layer + 0.01 //appear above the target mob
+
 	if(stat)
 		Feedstop(silent = TRUE)
 
@@ -195,6 +204,8 @@
 		Feedstop()
 		return
 
+	var/food_multiplier = 1
+
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
 		C.adjustCloneLoss(rand(2, 4) * 0.5 * delta_time)
@@ -209,8 +220,32 @@
 			"You feel extremely weak!", \
 			"A sharp, deep pain bathes every inch of your body!")]</span>")
 
+		if(ishuman(C))
+			var/mob/living/carbon/human/human_victim = C
+			if(human_victim.dna)
+				var/food_type
+				for(var/food in slime_color.food_types)
+					if(istype(human_victim.dna.species, food))
+						food_type = food
+						break
+
+				if(food_type)
+					food_multiplier = slime_color.food_types[food_type]
+
 	else if(isanimal(M))
 		var/mob/living/simple_animal/SA = M
+
+		var/food_type
+		for(var/food in slime_color.food_types)
+			if(istype(M, food))
+				food_type = food
+				break
+
+		if(!food_type)
+			Feedstop(0, 0)
+			return
+
+		food_multiplier = slime_color.food_types[food_type]
 
 		var/totaldamage = 0 //total damage done to this unfortunate animal
 		totaldamage += SA.adjustCloneLoss(rand(2, 4) * 0.5 * delta_time)
@@ -224,7 +259,7 @@
 		Feedstop(0, 0)
 		return
 
-	add_nutrition((rand(7, 15) * 0.5 * delta_time * CONFIG_GET(number/damage_multiplier)))
+	add_nutrition(rand(7, 15) * 0.5 * delta_time * CONFIG_GET(number/damage_multiplier)* food_multiplier)
 
 	//Heal yourself.
 	adjustBruteLoss(-1.5 * delta_time)
@@ -336,17 +371,30 @@
 
 					if(issilicon(L) && (rabid || attacked)) // They can't eat silicons, but they can glomp them in defence
 						targets += L // Possible target found!
+						continue
 
 					if(locate(/mob/living/simple_animal/slime) in L.buckled_mobs) // Only one slime can latch on at a time.
 						continue
 
 					targets += L // Possible target found!
 
+				for(var/obj/possible_food in view(7,src))
+					if(CanFeedon(possible_food, TRUE))
+						targets += possible_food
+
 				if(targets.len > 0)
-					if(attacked || rabid || hungry == 2)
-						set_target(targets[1]) // I am attacked and am fighting back or so hungry I don't even care
+					if(attacked || rabid)
+						set_target(targets[1]) // I am attacked and am fighting back or so hungry
+					else if(hungry == 2)
+						for(var/possible_target in targets)
+							if(CanFeedon(possible_target, TRUE))
+								set_target(possible_target)
+								break
 					else
 						for(var/mob/living/carbon/C in targets)
+							if(!istype(C) || !CanFeedon(C, TRUE))
+								continue
+
 							if(!Discipline && DT_PROB(2.5, delta_time))
 								if(ishuman(C) || isalienadult(C))
 									set_target(C)
@@ -355,6 +403,17 @@
 							if(islarva(C) || ismonkey(C))
 								set_target(C)
 								break
+
+						if(!Target)
+							var/nearest_food
+							var/food_dist = -1
+							for(var/obj/possible_food in targets)
+								if(get_dist(src, possible_food) < food_dist || food_dist == -1)
+									food_dist = get_dist(src, possible_food)
+									nearest_food = possible_food
+
+							if(nearest_food)
+								set_target(nearest_food)
 
 			if (Target)
 				target_patience = rand(5, 7)
@@ -495,7 +554,10 @@
 							else if(!Friends[L] || Friends[L] < 1)
 								set_target(L)
 								AIprocess()//Wake up the slime's Target AI, needed otherwise this doesn't work
-								to_say = "Ok... I attack [Target]"
+								if(isliving(Target))
+									to_say = "Ok... I attack [Target]"
+								else
+									to_say = "Ok... I eat [Target]"
 							else
 								to_say = "No... like [L] ..."
 								add_friendship(who, -1) //Don't ask a slime to attack its friend
@@ -559,7 +621,7 @@
 			if (bodytemperature < T0C - 50)
 				phrases += "..."
 				phrases += "C... c..."
-			if (buckled)
+			if (buckled || Digesting)
 				phrases += "Nom..."
 				phrases += "Yummy..."
 			if (powerlevel > 3)
@@ -584,6 +646,33 @@
 					phrases += "[M]... feed me..."
 			if(!stat)
 				say (pick(phrases))
+
+/mob/living/simple_animal/slime/proc/handle_digestion(delta_time, times_fired)
+	if(!Digesting)
+		return
+
+	var/food
+	for(var/food_type in slime_color.food_types)
+		if(istype(Digesting, food_type))
+			food = food_type
+			break
+
+	digestion_progress += delta_time * SLIME_DIGESTION_SPEED * slime_color.food_types[food]
+	adjust_nutrition(SLIME_DIGESTION_NUTRITION * delta_time)
+
+	if(digestion_progress >= 100)
+		underlays -= digestion_underlay
+		to_chat(src, span_notice("<i>You finish digesting [Digesting].</i>"))
+		slime_color.finished_digesting(Digesting)
+		QDEL_NULL(digestion_underlay)
+		QDEL_NULL(Digesting)
+		return
+
+	if(0.7 * (100 - digestion_progress) / 100 < next_underlay_scale) //Not so smooth but it won't cause lag
+		underlays -= digestion_underlay
+		digestion_underlay.transform = matrix().Scale(0.7 * (100 - digestion_progress) / 100)
+		underlays += digestion_underlay
+		next_underlay_scale -= 0.1
 
 /mob/living/simple_animal/slime/proc/get_max_nutrition() // Can't go above it
 	if (is_adult)

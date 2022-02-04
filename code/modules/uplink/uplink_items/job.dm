@@ -144,6 +144,14 @@
 	cost = 6
 	restricted_roles = list(JOB_GENETICIST, JOB_RESEARCH_DIRECTOR)
 
+/datum/uplink_item/role_restricted/vacuum_pack
+	name = "Modified Vacuum Pack"
+	desc = "A modified vacuum pack painted in eerie colors that has expanded storage, range and power, it will make every slime you shoot rabid."
+	progression_minimum = 20 MINUTES
+	item = /obj/item/vacuum_pack/syndicate
+	cost = 14
+	restricted_roles = list(JOB_SCIENTIST, JOB_RESEARCH_DIRECTOR)
+
 // Medium progression cost
 
 /datum/uplink_item/role_restricted/brainwash_disk

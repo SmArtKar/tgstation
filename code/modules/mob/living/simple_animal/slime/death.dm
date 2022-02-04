@@ -3,7 +3,7 @@
 		return
 	if(!gibbed)
 		if(is_adult)
-			var/mob/living/simple_animal/slime/M = new(drop_location(), colour)
+			var/mob/living/simple_animal/slime/M = new(drop_location(), slime_color.type)
 			M.rabid = TRUE
 			M.regenerate_icons()
 

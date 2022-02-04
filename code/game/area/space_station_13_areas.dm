@@ -1374,6 +1374,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 /area/science/xenobiology
 	name = "\improper Xenobiology Lab"
 	icon_state = "xenobio"
+	area_flags = BLOBS_ALLOWED | CULT_PERMITTED | UNIQUE_AREA | VALID_TERRITORY | XENOBIOLOGY_COMPATIBLE
 
 /area/science/cytology
 	name = "\improper Cytology Lab"

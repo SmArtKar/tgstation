@@ -20,36 +20,40 @@ export const SpaceHeater = (props, context) => {
                   disabled={!data.beaker}
                   onClick={() => act('ejectBeaker')} />
               )}
-              <Button
-                icon="eject"
-                content="Eject Cell"
-                disabled={!data.hasPowercell || !data.open}
-                onClick={() => act('eject')} />
+              {!!data.use_cell && (
+                <Button
+                  icon="eject"
+                  content="Eject Cell"
+                  disabled={!data.hasPowercell || !data.open}
+                  onClick={() => act('eject')} />
+              )}
               <Button
                 icon={data.on ? 'power-off' : 'times'}
                 content={data.on ? 'On' : 'Off'}
                 selected={data.on}
-                disabled={!data.hasPowercell}
+                disabled={data.use_cell && !data.hasPowercell}
                 onClick={() => act('power')} />
             </>
           )}>
-          <LabeledList>
-            <LabeledList.Item
-              label="Cell"
-              color={!data.hasPowercell && 'bad'}>
-              {data.hasPowercell && (
-                <ProgressBar
-                  value={data.powerLevel / 100}
-                  ranges={{
-                    good: [0.6, Infinity],
-                    average: [0.3, 0.6],
-                    bad: [-Infinity, 0.3],
-                  }}>
-                  {data.powerLevel + '%'}
-                </ProgressBar>
-              ) || 'None'}
-            </LabeledList.Item>
-          </LabeledList>
+          {!!data.use_cell && (
+            <LabeledList>
+              <LabeledList.Item
+                label="Cell"
+                color={!data.hasPowercell && 'bad'}>
+                {data.hasPowercell && (
+                  <ProgressBar
+                    value={data.powerLevel / 100}
+                    ranges={{
+                      good: [0.6, Infinity],
+                      average: [0.3, 0.6],
+                      bad: [-Infinity, 0.3],
+                    }}>
+                    {data.powerLevel + '%'}
+                  </ProgressBar>
+                ) || 'None'}
+              </LabeledList.Item>
+            </LabeledList>
+          )}
         </Section>
         <Section title="Thermostat">
           <LabeledList>

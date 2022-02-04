@@ -230,9 +230,9 @@
 			S.visible_message(span_notice("[C] crawls free of the processor!"))
 			return
 		for(var/i in 1 to (C+rating_amount-1))
-			var/atom/movable/item = new S.coretype(drop_location())
+			var/atom/movable/item = new S.slime_color.coretype(drop_location())
 			adjust_item_drop_location(item)
-			SSblackbox.record_feedback("tally", "slime_core_harvested", 1, S.colour)
+			SSblackbox.record_feedback("tally", "slime_core_harvested", 1, S.slime_color.color)
 	..()
 
 #undef PROCESSOR_SELECT_RECIPE

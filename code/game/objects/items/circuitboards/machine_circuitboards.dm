@@ -881,10 +881,10 @@
 		/obj/item/stock_parts/micro_laser = 1,
 		/obj/item/stack/sheet/glass = 1)
 
-/obj/item/circuitboard/machine/monkey_recycler
+/obj/item/circuitboard/machine/biomass_recycler
 	name = "Monkey Recycler (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
-	build_path = /obj/machinery/monkey_recycler
+	build_path = /obj/machinery/biomass_recycler
 	req_components = list(
 		/obj/item/stock_parts/matter_bin = 1,
 		/obj/item/stock_parts/manipulator = 1)
@@ -1327,3 +1327,11 @@
 	build_path = /obj/machinery/ecto_sniffer
 	req_components = list(
 		/obj/item/stock_parts/scanning_module = 1)
+
+/obj/item/circuitboard/machine/xenobio_equipment_vendor
+	name = "Xenobiology Equipment Vendor (Machine Board)"
+	greyscale_colors = CIRCUIT_COLOR_SCIENCE
+	build_path = /obj/machinery/mineral/equipment_vendor/xenobiology
+	req_components = list(
+		/obj/item/stack/sheet/glass = 1,
+		/obj/item/stock_parts/matter_bin = 3)

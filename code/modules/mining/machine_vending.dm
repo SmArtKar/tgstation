@@ -63,6 +63,7 @@
 		new /datum/data/mining_equipment("KA Cooldown Decrease", /obj/item/borg/upgrade/modkit/cooldown, 1000),
 		new /datum/data/mining_equipment("KA AoE Damage", /obj/item/borg/upgrade/modkit/aoe/mobs, 2000)
 	)
+	var/voucher_type = /obj/item/mining_voucher
 
 /datum/data/mining_equipment
 	var/equipment_name = "generic"
@@ -133,40 +134,43 @@
 
 	switch(action)
 		if("purchase")
-			var/obj/item/card/id/I
-			if(isliving(usr))
-				var/mob/living/L = usr
-				I = L.get_idcard(TRUE)
-			if(!istype(I))
-				to_chat(usr, span_alert("Error: An ID is required!"))
-				flick(icon_deny, src)
-				return
-			var/datum/data/mining_equipment/prize = locate(params["ref"]) in prize_list
-			if(!prize || !(prize in prize_list))
-				to_chat(usr, span_alert("Error: Invalid choice!"))
-				flick(icon_deny, src)
-				return
-			if(prize.cost > I.mining_points)
-				to_chat(usr, span_alert("Error: Insufficient points for [prize.equipment_name] on [I]!"))
-				flick(icon_deny, src)
-				return
-			I.mining_points -= prize.cost
-			to_chat(usr, span_notice("[src] clanks to life briefly before vending [prize.equipment_name]!"))
-			new prize.equipment_path(loc)
-			SSblackbox.record_feedback("nested tally", "mining_equipment_bought", 1, list("[type]", "[prize.equipment_path]"))
-			. = TRUE
+			if(attempt_purchase(params))
+				. = TRUE
+
+/obj/machinery/mineral/equipment_vendor/proc/attempt_purchase(params)
+	var/obj/item/card/id/I
+	if(isliving(usr))
+		var/mob/living/L = usr
+		I = L.get_idcard(TRUE)
+	if(!istype(I))
+		to_chat(usr, span_alert("Error: An ID is required!"))
+		flick(icon_deny, src)
+		return FALSE
+	var/datum/data/mining_equipment/prize = locate(params["ref"]) in prize_list
+	if(!prize || !(prize in prize_list))
+		to_chat(usr, span_alert("Error: Invalid choice!"))
+		flick(icon_deny, src)
+		return FALSE
+	if(prize.cost > I.mining_points)
+		to_chat(usr, span_alert("Error: Insufficient points for [prize.equipment_name] on [I]!"))
+		flick(icon_deny, src)
+		return FALSE
+	I.mining_points -= prize.cost
+	to_chat(usr, span_notice("[src] clanks to life briefly before vending [prize.equipment_name]!"))
+	new prize.equipment_path(loc)
+	SSblackbox.record_feedback("nested tally", "mining_equipment_bought", 1, list("[type]", "[prize.equipment_path]"))
 
 /obj/machinery/mineral/equipment_vendor/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/mining_voucher))
+	if(istype(I, voucher_type))
 		RedeemVoucher(I, user)
 		return
-	if(default_deconstruction_screwdriver(user, "mining-open", "mining", I))
+	if(default_deconstruction_screwdriver(user, "[initial(icon_state)]-open", "[initial(icon_state)]", I))
 		return
 	if(default_deconstruction_crowbar(I))
 		return
 	return ..()
 
-/obj/machinery/mineral/equipment_vendor/proc/RedeemVoucher(obj/item/mining_voucher/voucher, mob/redeemer)
+/obj/machinery/mineral/equipment_vendor/proc/RedeemVoucher(obj/item/voucher, mob/redeemer)
 	var/items = list("Survival Capsule and Explorer's Webbing", "Resonator Kit", "Minebot Kit", "Extraction and Rescue Kit", "Crusher Kit", "Mining Conscription Kit")
 
 	var/selection = tgui_input_list(redeemer, "Pick your equipment", "Mining Voucher Redemption", sort_list(items))

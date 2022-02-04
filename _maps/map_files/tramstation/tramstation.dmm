@@ -17735,7 +17735,6 @@
 /turf/open/floor/plating,
 /area/command/teleporter)
 "eRA" = (
-/obj/machinery/computer/camera_advanced/xenobio,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -26181,7 +26180,7 @@
 /turf/open/floor/iron,
 /area/engineering/main)
 "hRg" = (
-/obj/machinery/monkey_recycler,
+/obj/machinery/biomass_recycler,
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 4
 	},
@@ -66804,7 +66803,6 @@
 /turf/open/floor/iron/white,
 /area/medical/medbay/lobby)
 "wLb" = (
-/obj/machinery/computer/camera_advanced/xenobio,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
 /obj/effect/turf_decal/stripes/line{
 	dir = 5

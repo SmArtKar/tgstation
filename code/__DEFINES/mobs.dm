@@ -223,8 +223,11 @@
 //Slime evolution threshold. Controls how fast slimes can split/grow
 #define SLIME_EVOLUTION_THRESHOLD 10
 
-//Slime extract crossing. Controls how many extracts is required to feed to a slime to core-cross.
-#define SLIME_EXTRACT_CROSSING_REQUIRED 10
+//Slime digestion speed, in percents per delta tick
+#define SLIME_DIGESTION_SPEED 2
+
+//How much nutrition slime gets from eating something each second
+#define SLIME_DIGESTION_NUTRITION 6
 
 //Slime commands defines
 #define SLIME_FRIENDSHIP_FOLLOW 3 //Min friendship to order it to follow
@@ -513,7 +516,7 @@
 /// Total number of layers for mob overlays
 #define TOTAL_LAYERS 31 //KEEP THIS UP-TO-DATE OR SHIT WILL BREAK ;_;
 /// Mutations layer - Tk headglows, cold resistance glow, etc
-#define MUTATIONS_LAYER 31 
+#define MUTATIONS_LAYER 31
 /// Mutantrace features (tail when looking south) that must appear behind the body parts
 #define BODY_BEHIND_LAYER 30
 /// Initially "AUGMENTS", this was repurposed to be a catch-all bodyparts flag
@@ -601,8 +604,8 @@
 
 //used by canUseTopic()
 /// If silicons need to be next to the atom to use this
-#define BE_CLOSE TRUE 
-/// If other mobs (monkeys, aliens, etc) can use this 
+#define BE_CLOSE TRUE
+/// If other mobs (monkeys, aliens, etc) can use this
 #define NO_DEXTERITY TRUE // I had to change 20+ files because some non-dnd-playing fuckchumbis can't spell "dexterity"
 // If telekinesis you can use it from a distance
 #define NO_TK TRUE

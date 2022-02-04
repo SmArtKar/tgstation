@@ -22,12 +22,9 @@ Slimecrossing Potions
 	if(!istype(target, /obj/item/slime_extract))
 		return
 	var/obj/item/slime_extract/S = target
-	if(S.recurring)
-		to_chat(user, span_warning("[target] is too complex for the potion to clone!"))
-		return
 	var/path = S.type
 	var/obj/item/slime_extract/C = new path(get_turf(target))
-	C.Uses = S.Uses
+	C.uses = S.uses
 	to_chat(user, span_notice("You pour the potion onto [target], and the fluid solidifies into a copy of it!"))
 	qdel(src)
 	return

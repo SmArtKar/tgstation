@@ -18839,7 +18839,7 @@
 /turf/closed/wall,
 /area/science/xenobiology)
 "cTQ" = (
-/obj/machinery/monkey_recycler,
+/obj/machinery/biomass_recycler,
 /obj/effect/turf_decal/bot,
 /obj/structure/extinguisher_cabinet/directional/north,
 /turf/open/floor/iron,
@@ -19756,9 +19756,6 @@
 /turf/open/floor/iron,
 /area/science/xenobiology)
 "cXm" = (
-/obj/machinery/computer/camera_advanced/xenobio{
-	dir = 8
-	},
 /obj/machinery/status_display/evac/directional/east,
 /turf/open/floor/circuit/green,
 /area/science/xenobiology)

@@ -34,10 +34,10 @@
 			span_notice("[user] successfully extracts a core from [target]!"),
 			span_notice("[user] successfully extracts a core from [target]!"))
 
-		new target_slime.coretype(target_slime.loc)
+		new target_slime.slime_color.coretype(target_slime.loc)
 
 		if(target_slime.cores <= 0)
-			target_slime.icon_state = "[target_slime.colour] baby slime dead-nocore"
+			target_slime.icon_state = "[target_slime.slime_color.color] baby slime dead-nocore"
 			return ..()
 		else
 			return FALSE

@@ -39,13 +39,16 @@
 	var/settable_temperature_range = 30
 	///Should we add an overlay for open spaceheaters
 	var/display_panel = TRUE
+	///If set to false, will use APC power instead.
+	var/use_cell = TRUE
 
 /obj/machinery/space_heater/get_cell()
-	return cell
+	if(use_cell)
+		return cell
 
 /obj/machinery/space_heater/Initialize(mapload)
 	. = ..()
-	if(ispath(cell))
+	if(ispath(cell) && use_cell)
 		cell = new cell(src)
 	update_appearance()
 	SSair.start_processing_machine(src)
@@ -55,7 +58,7 @@
 	return..()
 
 /obj/machinery/space_heater/on_deconstruction()
-	if(cell)
+	if(cell && use_cell)
 		LAZYADD(component_parts, cell)
 		cell = null
 	return ..()
@@ -63,10 +66,11 @@
 /obj/machinery/space_heater/examine(mob/user)
 	. = ..()
 	. += "\The [src] is [on ? "on" : "off"], and the hatch is [panel_open ? "open" : "closed"]."
-	if(cell)
-		. += "The charge meter reads [cell ? round(cell.percent(), 1) : 0]%."
-	else
-		. += "There is no power cell installed."
+	if(use_cell)
+		if(cell)
+			. += "The charge meter reads [cell ? round(cell.percent(), 1) : 0]%."
+		else
+			. += "There is no power cell installed."
 	if(in_range(user, src) || isobserver(user))
 		. += span_notice("The status display reads: Temperature range at <b>[settable_temperature_range]°C</b>.<br>Heating power at <b>[siunit(heating_power, "W", 1)]</b>.<br>Power consumption at <b>[(efficiency*-0.0025)+150]%</b>.") //100%, 75%, 50%, 25%
 		. += span_notice("<b>Right-click</b> to toggle [on ? "off" : "on"].")
@@ -86,7 +90,12 @@
 			on = FALSE
 		return PROCESS_KILL
 
-	if(!cell || cell.charge <= 1)
+	if(use_cell && (!cell || cell.charge <= 1))
+		on = FALSE
+		update_appearance()
+		return PROCESS_KILL
+
+	if(!use_cell && !powered())
 		on = FALSE
 		update_appearance()
 		return PROCESS_KILL
@@ -126,7 +135,10 @@
 	if(delta_temperature)
 		enviroment.temperature += delta_temperature
 		air_update_turf(FALSE, FALSE)
-	cell.use(required_energy / efficiency)
+	if(use_cell)
+		cell.use(required_energy / efficiency)
+	else
+		use_power(required_energy / efficiency)
 
 /obj/machinery/space_heater/RefreshParts()
 	var/laser = 0
@@ -166,7 +178,7 @@
 	if(default_deconstruction_crowbar(I))
 		return TRUE
 
-	if(istype(I, /obj/item/stock_parts/cell))
+	if(istype(I, /obj/item/stock_parts/cell) && use_cell)
 		if(!panel_open)
 			to_chat(user, span_warning("The hatch must be open to insert a power cell!"))
 			return
@@ -199,6 +211,7 @@
 	data["open"] = panel_open
 	data["on"] = on
 	data["mode"] = set_mode
+	data["use_cell"] = use_cell
 	data["hasPowercell"] = !!cell
 	data["chemHacked"] = FALSE
 	if(cell)

@@ -56,6 +56,7 @@
 		"sec_beanbag_slug",
 		"sec_dart",
 		"sec_rshot",
+		"slime_scanner",
 		"space_heater",
 		"tech_disk",
 		"titaniumglass",
@@ -374,7 +375,7 @@
 		"gibber",
 		"griddle",
 		"microwave",
-		"monkey_recycler",
+		"biomass_recycler",
 		"oven",
 		"processor",
 		"reagentgrinder",
@@ -583,8 +584,8 @@
 	design_ids = list(
 		"beacon",
 		"bluespace_crystal",
+		"slime_scanner_adv",
 		"telesci_gps",
-		"xenobioconsole",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 

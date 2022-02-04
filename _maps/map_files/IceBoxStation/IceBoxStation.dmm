@@ -2638,7 +2638,7 @@
 /area/maintenance/port/fore)
 "aoo" = (
 /obj/structure/rack,
-/obj/item/circuitboard/machine/monkey_recycler,
+/obj/item/circuitboard/machine/biomass_recycler,
 /turf/open/floor/plating,
 /area/maintenance/port/fore)
 "aoq" = (
@@ -17989,7 +17989,7 @@
 /turf/open/floor/iron/dark,
 /area/ai_monitored/command/nuke_storage)
 "fIU" = (
-/obj/machinery/monkey_recycler,
+/obj/machinery/biomass_recycler,
 /obj/structure/cable,
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
@@ -26944,7 +26944,6 @@
 /turf/open/floor/iron,
 /area/commons/locker)
 "kdZ" = (
-/obj/machinery/computer/camera_advanced/xenobio,
 /turf/open/floor/iron,
 /area/science/xenobiology)
 "kel" = (
@@ -42057,9 +42056,6 @@
 "rYJ" = (
 /obj/structure/window/reinforced,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/computer/camera_advanced/xenobio{
-	dir = 1
-	},
 /turf/open/floor/iron,
 /area/science/xenobiology)
 "rYP" = (
