@@ -6,7 +6,7 @@
 	icon_state = "hygienebot"
 	base_icon_state = "hygienebot"
 	pass_flags = PASSMOB | PASSFLAPS | PASSTABLE
-	layer = ABOVE_MOB_LAYER
+	layer = MOB_UPPER_LAYER
 	density = FALSE
 	anchored = FALSE
 	health = 100
@@ -22,7 +22,7 @@
 
 	///The human target the bot is trying to wash.
 	var/mob/living/carbon/human/target
-	///The mob's current speed, which varies based on how long the bot chases it's target. Measured in deciseconds
+	///The mob's current speed, which varies based on how long the bot chases it's target.
 	var/currentspeed = 5
 	///Is the bot currently washing it's target/everything else that crosses it?
 	var/washing = FALSE

@@ -129,3 +129,6 @@
 
 /datum/movespeed_modifier/glory_kill
 	multiplicative_slowdown = -0.3
+
+/datum/movespeed_modifier/auto_wash
+	multiplicative_slowdown = 3

@@ -184,6 +184,7 @@
 	icon_state = "Goliath_tentacle_spawn"
 	base_icon_state = "Goliath"
 	layer = BELOW_MOB_LAYER
+	plane = GAME_PLANE
 	var/mob/living/spawner
 	var/stun_length = 10 SECONDS
 	var/lower_damage = 10

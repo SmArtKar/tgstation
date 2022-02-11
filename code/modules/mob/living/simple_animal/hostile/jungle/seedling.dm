@@ -273,9 +273,9 @@
 				SSblackbox.record_feedback("nested tally", "shining_core", 1, list("[type]", "used", "self"))
 
 			if(lavaland_equipment_pressure_check(get_turf(target)))
-				H.apply_status_effect(STATUS_EFFECT_SUN_CORE)
+				H.apply_status_effect(/datum/status_effect/regenerative_core/shining_core)
 			else
-				H.apply_status_effect(STATUS_EFFECT_WEAK_SUN_CORE)
+				H.apply_status_effect(/datum/status_effect/regenerative_core/weak_shining_core)
 			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "core", /datum/mood_event/healsbadman)
 			playsound(H, 'sound/magic/staff_healing.ogg', 20, TRUE)
 			new /obj/effect/temp_visual/seedling_sparks(get_turf(H))

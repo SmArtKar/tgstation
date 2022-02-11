@@ -121,7 +121,7 @@
 		throw_message = "is avoided by the"
 		retreat_distance = 9
 		minimum_distance = 9
-		move_to_delay = 1
+		move_to_delay = 2
 		inflate_cooldown = 4
 		environment_smash = ENVIRONMENT_SMASH_NONE
 		mob_size = MOB_SIZE_SMALL

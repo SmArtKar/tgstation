@@ -535,7 +535,7 @@
 
 	var/mob/living/carbon/eater = user
 
-	eater.apply_status_effect(STATUS_EFFECT_CRYSTAL_HEART)
+	eater.apply_status_effect(/datum/status_effect/crystal_heart)
 	playsound(eater, 'sound/magic/staff_healing.ogg', 20, TRUE)
 	to_chat(eater, span_notice("You feel much tougher!"))
 	qdel(src)

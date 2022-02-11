@@ -596,7 +596,7 @@
 		return
 
 	user.emote("scream")
-	user.apply_status_effect(STATUS_EFFECT_DEMONSTONE)
+	user.apply_status_effect(/datum/status_effect/demonic_energy)
 	user.visible_message(span_danger("[user] grips [src] in their hand and thousands demonic voices flood your mind!"), span_userdanger("Thousads voices and demonic visions flood your mind as you grip [src] in your hand!"))
 	playsound(user, 'sound/effects/glassbr3.ogg', 100)
 	playsound(user, 'sound/magic/teleport_app.ogg', 50)

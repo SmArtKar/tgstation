@@ -214,4 +214,4 @@
 	if (. == BULLET_ACT_HIT)
 		if(isliving(targeted))
 			var/mob/living/victim = targeted
-			victim.apply_status_effect(STATUS_EFFECT_WEBBED)
+			victim.apply_status_effect(/datum/status_effect/webbed)

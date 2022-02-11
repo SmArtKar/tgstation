@@ -16,3 +16,6 @@
 
 /datum/movespeed_modifier/crystal_shield
 	multiplicative_slowdown = 12 //VERY slow
+
+/datum/movespeed_modifier/sphere
+	multiplicative_slowdown = -0.5

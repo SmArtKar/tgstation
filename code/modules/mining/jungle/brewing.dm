@@ -22,6 +22,28 @@
 	tastes = list("meat" = 1, "french cuisine" = 1, "surrender" = 1)
 	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 8, /datum/reagent/consumable/nutriment/vitamin = 1, /datum/reagent/toxin/lesser_leaper_venom = 4)
 
+/obj/item/food/meat/slab/arachnid
+	name = "leaper meat"
+	desc = "A slab of toxic purple meat with dark red skin."
+	icon = 'icons/obj/jungle/brewing.dmi'
+	icon_state = "arachnidmeat"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 8, /datum/reagent/toxin/leaper_venom = 5)
+	bite_consumption = 4
+	tastes = list("meat" = 1, "french cuisine" = 1, "surrender" = 1)
+
+/obj/item/food/meat/slab/arachnid/MakeProcessable()
+	return
+
+/obj/item/food/meat/slab/arachnid/MakeGrillable()
+	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/arachnid, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
+
+/obj/item/food/meat/steak/arachnid
+	name = "mega arachnid steak"
+	desc = "A piece of hot spicy giant spider meat."
+	icon = 'icons/obj/jungle/brewing.dmi'
+	icon_state = "arachnidsteak"
+	tastes = list("meat" = 1, "spiders" = 1)
+
 /obj/item/food/meat/slab/snakeman
 	name = "snakeman meat"
 	desc = "A few good pieces of snakeman meat. These are pretty tender but if cooked right can be pretty tasty."
@@ -98,6 +120,8 @@
 
 	var/static/list/meats = list(/obj/item/food/meat/slab/leaper =    list("leaper", "#FF0800", null),
 								 /obj/item/food/meat/steak/leaper =   list("leaper_cooked", "#A5130F", null),
+								 /obj/item/food/meat/slab/arachnid =    list("arachnid", "#882274", null),
+								 /obj/item/food/meat/steak/arachnid =   list("arachnid_cooked", "#D63EB8", null),
 								 /obj/item/food/meat/slab/snakeman =  list("snakeman", "#9EFF00", null),
 								 /obj/item/food/meat/steak/snakeman = list("snakeman_cooked", "#FFDA00", null),
 								 /obj/item/food/meat/slab/mook =      list("mook", "#FFFFFF", null),

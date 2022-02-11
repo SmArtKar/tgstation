@@ -88,7 +88,7 @@
 			else
 				to_chat(user, span_notice("You start to smear [src] on yourself. Disgusting tendrils hold you together and allow you to keep moving, but for how long?"))
 				SSblackbox.record_feedback("nested tally", "hivelord_core", 1, list("[type]", "used", "self"))
-			H.apply_status_effect(STATUS_EFFECT_REGENERATIVE_CORE)
+			H.apply_status_effect(/datum/status_effect/regenerative_core)
 			SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "core", /datum/mood_event/healsbadman) //Now THIS is a miner buff (fixed - nerf)
 			qdel(src)
 
@@ -123,13 +123,13 @@
 	update_appearance()
 
 /obj/item/organ/regenerative_core/update_icon_state()
-	icon_state = inert ? "[initial(icon_state)]_inert" : initial(icon_state)
+	if (inert)
+		icon_state = "[initial(icon_state)]_inert"
+	if (preserved)
+		icon_state = initial(icon_state)
+	if (!inert && !preserved)
+		icon_state = "[initial(icon_state)]_unstable"
 	return ..()
-
-/obj/item/organ/regenerative_core/update_overlays()
-	. = ..()
-	if(!inert && !preserved)
-		. += "[initial(icon_state)]_crackle"
 
 /obj/item/organ/regenerative_core/legion/go_inert()
 	. = ..()

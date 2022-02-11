@@ -561,7 +561,7 @@
 /obj/item/guardiancreator/tech/spacetime/spawn_guardian(mob/living/user, mob/dead/candidate)
 	. = ..()
 	if(.)
-		user.apply_status_effect(STATUS_EFFECT_BLUESPACE_INSTABILITY)
+		user.apply_status_effect(/datum/status_effect/bluespace_instability)
 
 /obj/item/organ/cyberimp/arm/spacetime_manipulator
 	name = "blue shard"
@@ -583,7 +583,7 @@
 	SetSlotFromZone()
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	Insert(user)
-	user.apply_status_effect(STATUS_EFFECT_BLUESPACE_INSTABILITY)
+	user.apply_status_effect(/datum/status_effect/bluespace_instability)
 
 /obj/item/organ/cyberimp/arm/spacetime_manipulator/screwdriver_act(mob/living/user, obj/item/screwtool)
 	return

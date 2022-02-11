@@ -176,6 +176,10 @@
 		to_chat(src,span_userdanger("ERROR: Model installer reply timeout. Please check internal connections."))
 		return
 
+	if(lockcharge == TRUE)
+		to_chat(src,span_userdanger("ERROR: Lockdown is engaged. Please disengage lockdown to pick module."))
+		return
+
 	var/list/model_list = list(
 		"Engineering" = /obj/item/robot_model/engineering,
 		"Medical" = /obj/item/robot_model/medical,
@@ -738,11 +742,6 @@
 	if(model.model_traits)
 		for(var/trait in model.model_traits)
 			ADD_TRAIT(src, trait, MODEL_TRAIT)
-
-	if(model.clean_on_move)
-		AddElement(/datum/element/cleaning)
-	else
-		RemoveElement(/datum/element/cleaning)
 
 	hat_offset = model.hat_offset
 

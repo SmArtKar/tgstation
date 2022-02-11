@@ -25,4 +25,4 @@
 /datum/weather/fog/weather_act(mob/living/target)
 	if(!istype(target))
 		return
-	target.apply_status_effect(STATUS_EFFECT_FOG)
+	target.apply_status_effect(/datum/status_effect/thick_fog)

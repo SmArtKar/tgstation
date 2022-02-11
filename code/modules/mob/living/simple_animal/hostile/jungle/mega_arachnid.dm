@@ -10,7 +10,7 @@
 	mob_biotypes = MOB_ORGANIC|MOB_BUG
 	melee_damage_lower = 30
 	melee_damage_upper = 30
-	butcher_results = list(/obj/item/food/meat/slab/xeno = 4, /obj/item/stack/sheet/bone = 4)
+	butcher_results = list(/obj/item/food/meat/slab/arachnid = 4, /obj/item/stack/sheet/bone = 4)
 	maxHealth = 500
 	health = 500
 	speed = 14
@@ -18,7 +18,7 @@
 	ranged = 1
 	pixel_x = -16
 	base_pixel_x = -16
-	move_to_delay = 5
+	move_to_delay = 10
 	aggro_vision_range = 9
 	speak_emote = list("chitters")
 	attack_sound = 'sound/weapons/bladeslice.ogg'
@@ -45,14 +45,19 @@
 	..()
 	if(target && ranged_cooldown > world.time && iscarbon(target))
 		var/mob/living/carbon/C = target
-		if(!C.legcuffed && C.health < 50)
-			retreat_distance = 9
-			minimum_distance = 9
+		if(!C.legcuffed)
+			retreat_distance = 7
+			minimum_distance = 7
 			alpha = 125
 			return
+		else
+			speed = 6
+			move_to_delay = 6
 	retreat_distance = 0
 	minimum_distance = 0
 	alpha = 255
+	speed = initial(speed)
+	move_to_delay = initial(move_to_delay)
 
 
 /mob/living/simple_animal/hostile/jungle/mega_arachnid/Aggro()
