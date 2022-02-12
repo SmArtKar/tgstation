@@ -100,7 +100,7 @@
 		if(former_target in range(aggro_vision_range, get_turf(src)))
 			killers += 1
 
-	var/datum/status_effect/crusher_damage/crusher_dmg = has_status_effect(STATUS_EFFECT_CRUSHERDAMAGETRACKING)
+	var/datum/status_effect/crusher_damage/crusher_dmg = has_status_effect(/datum/status_effect/crusher_damage)
 	var/crusher_kill = FALSE
 	if(crusher_dmg && crusher_loot && crusher_dmg.total_damage >= maxHealth * crusher_damage_required)
 		crusher_kill = TRUE

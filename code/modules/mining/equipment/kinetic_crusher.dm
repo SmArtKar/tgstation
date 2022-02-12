@@ -497,16 +497,18 @@
 	return "mark detonation to apply a bloody mark to the target. For each hit you land at the marked creature will regenerate some of your health and blood"
 
 /obj/item/crusher_trophy/bat_wing/on_mark_detonation(mob/living/target, mob/living/user)
-	target.apply_status_effect(STATUS_EFFECT_BLOODYMARK)
+	target.apply_status_effect(/datum/status_effect/bloody_mark)
 
 /obj/item/crusher_trophy/bat_wing/on_melee_hit(mob/living/target, mob/living/user)
-	if(target.has_status_effect(STATUS_EFFECT_BLOODYMARK))
+	if(target.has_status_effect(/datum/status_effect/bloody_mark))
 		user.heal_ordered_damage(3, list(BRUTE, BURN, OXY))
 		if(iscarbon(user))
 			var/mob/living/carbon/carbie = user
 			carbie.blood_volume += carbie.blood_volume >= BLOOD_VOLUME_NORMAL ? 0 : 10
 
 /obj/effect/temp_visual/bat_wing_detonation
+	plane = GAME_PLANE_UPPER_FOV_HIDDEN
+	layer = ABOVE_ALL_MOB_LAYER
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "bat_wing_detonation"
 	duration = 4
@@ -647,10 +649,10 @@
 	return "mark detonation to gain temporal stun and slowdown immunity. Each normal hit with crusher while it's active makes the effect last slightly longer"
 
 /obj/item/crusher_trophy/acid_sack/on_mark_detonation(mob/living/target, mob/living/user)
-	user.apply_status_effect(STATUS_EFFECT_ACID_SACK)
+	user.apply_status_effect(/datum/status_effect/acid_sack)
 
 /obj/item/crusher_trophy/acid_sack/on_melee_hit(mob/living/target, mob/living/user)
-	var/datum/status_effect/acid_sack/C = user.has_status_effect(STATUS_EFFECT_ACID_SACK)
+	var/datum/status_effect/acid_sack/C = user.has_status_effect(/datum/status_effect/acid_sack)
 	if(C)
 		C.duration += 0.5 SECONDS //Not enough time to infinitely stack it.
 

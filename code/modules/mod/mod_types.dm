@@ -330,7 +330,7 @@
 /obj/item/mod/control/pre_equipped/exotic
 	theme = /datum/mod_theme/exotic
 	applied_cell = /obj/item/stock_parts/cell/super
-	initial_modules = list(/obj/item/mod/module/storage/large_capacity, /obj/item/mod/module/welding, /obj/item/mod/module/visor/night, /obj/item/mod/module/mouthhole, /obj/item/mod/module/longfall, /obj/item/mod/module/orebag, /obj/item/mod/module/gps, /obj/item/mod/module/flashlight)
+	initial_modules = list(/obj/item/mod/module/storage/large_capacity, /obj/item/mod/module/welding, /obj/item/mod/module/visor/medhud, /obj/item/mod/module/mouthhole, /obj/item/mod/module/longfall, /obj/item/mod/module/orebag, /obj/item/mod/module/gps, /obj/item/mod/module/flashlight)
 
 //these exist for the prefs menu
 /obj/item/mod/control/pre_equipped/syndicate_empty

@@ -1305,3 +1305,82 @@
 
 /datum/status_effect/webbed/be_replaced()
 	owner.overlays -= web_underlay
+
+/atom/movable/screen/alert/status_effect/chainlock
+	name = "Chainlock Field"
+	desc = "You're bound by a chainlock field! When you come close to other creatures bound by it, you get slowed and become vurnerable the more chainlocked creatures are nearby."
+	icon_state = "chainlock"
+
+/datum/status_effect/chainlock
+	id = "chainlock"
+	duration = 30 SECONDS
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/chainlock
+	var/mutable_appearance/chainlock_effect
+	var/list/beams = list()
+
+/datum/status_effect/chainlock/on_apply()
+	chainlock_effect = mutable_appearance('icons/effects/effects.dmi', "chainlock_click")
+	chainlock_effect.pixel_x = owner.pixel_x
+	chainlock_effect.pixel_y = owner.pixel_y
+	owner.overlays += chainlock_effect
+	addtimer(CALLBACK(src, .proc/stop_click), 10)
+	return TRUE
+
+/datum/status_effect/chainlock/proc/stop_click()
+	owner.overlays -= chainlock_effect
+	qdel(chainlock_effect)
+	chainlock_effect = mutable_appearance('icons/effects/effects.dmi', "chainlock")
+	chainlock_effect.pixel_x = owner.pixel_x
+	chainlock_effect.pixel_y = owner.pixel_y
+	owner.overlays += chainlock_effect
+
+/datum/status_effect/chainlock/on_remove()
+	if(owner)
+		owner.overlays -= chainlock_effect
+		qdel(chainlock_effect)
+		chainlock_effect = mutable_appearance('icons/effects/effects.dmi', "chainlock_clack")
+		chainlock_effect.pixel_x = owner.pixel_x
+		chainlock_effect.pixel_y = owner.pixel_y
+		owner.overlays += chainlock_effect
+		sleep(10)
+		owner.overlays -= chainlock_effect
+
+	QDEL_NULL(chainlock_effect)
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/chainlock)
+
+	for(var/mob/living/unbeamed in beams)
+		var/datum/status_effect/chainlock/victim_chains = unbeamed.has_status_effect(/datum/status_effect/chainlock)
+		qdel(beams[unbeamed])
+		beams -= unbeamed
+		if(victim_chains)
+			victim_chains.beams -= owner
+
+	return ..()
+
+/datum/status_effect/chainlock/tick()
+	. = ..()
+	var/beamed_to = list()
+	for(var/mob/living/victim in view(5, get_turf(owner)))
+		if(victim == owner || !victim.has_status_effect(/datum/status_effect/chainlock))
+			continue
+
+		beamed_to += victim
+
+		if(!(victim in beams))
+			var/beam = owner.Beam(victim, "chainlock_chain") //Thick white chain
+			beams[victim] = beam
+			var/datum/status_effect/chainlock/victim_chains = victim.has_status_effect(/datum/status_effect/chainlock)
+			victim_chains.beams[owner] = beam
+
+	for(var/mob/living/maybe_unbeamed in beams)
+		if(maybe_unbeamed in beamed_to)
+			continue
+
+		var/datum/status_effect/chainlock/victim_chains = maybe_unbeamed.has_status_effect(/datum/status_effect/chainlock)
+		qdel(beams[maybe_unbeamed])
+		beams -= maybe_unbeamed
+		if(victim_chains)
+			victim_chains.beams -= owner
+
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/chainlock, min(3, LAZYLEN(beamed_to) * 0.25))

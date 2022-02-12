@@ -658,7 +658,7 @@
 /obj/projectile/magic/blood_wave/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target))
 		var/mob/living/victim = target
-		victim.apply_status_effect(STATUS_EFFECT_DEMON_MARK, fired_from)
+		victim.apply_status_effect(/datum/status_effect/demon_mark, fired_from)
 	if(!isanimal(target))
 		damage = 10
 	. = ..()
@@ -678,7 +678,7 @@
 		return
 
 	var/mob/living/victim = target
-	if(victim.has_status_effect(STATUS_EFFECT_DEMON_MARK) && victim.stat != DEAD && victim.remove_status_effect(STATUS_EFFECT_DEMON_MARK)) // Hitting mobs allows to recharge faster.
+	if(victim.has_status_effect(/datum/status_effect/demon_mark) && victim.stat != DEAD && victim.remove_status_effect(/datum/status_effect/demon_mark)) // Hitting mobs allows to recharge faster.
 		blood = clamp(blood + BLOOD_REGEN, 0, MAXIMUM_BLOOD)
 		victim.Beam(user, icon_state="blood_mid_light", time = 0.5 SECONDS)
 		playsound(get_turf(victim), 'sound/magic/exit_blood.ogg', 50, TRUE)

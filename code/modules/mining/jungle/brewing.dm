@@ -88,6 +88,10 @@
 	tastes = list("swamp" = 1, "french cuisine" = 1)
 	food_reagents = list(/datum/reagent/toxin/leaper_venom = 12) //Enough to poison you
 
+/obj/item/food/leaper_toxin_sack/attack_self(mob/user, modifiers)
+	. = ..()
+
+
 /*
  * Code below belongs to the brewing system, unique to Jungle
  * First you need to make a bowl and fill it with something, any chemical works but water is preferred. Just don't take it from the supermatter cooling lake.

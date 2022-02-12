@@ -120,3 +120,24 @@
 	desc = "It's coming closer..."
 	image_icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
 	image_state = "curseblob"
+
+/datum/brain_trauma/magic/fogbeast
+	name = "Curse Of The Fog"
+	desc = "Patient is stalked by a mysterious fog creature."
+	scan_desc = "homichlophobia"
+	gain_text = "<span class='warning'>You start hearing strange sounds coming from the fog...</span>"
+	lose_text = "<span class='notice'>You realise that the Fogbeast doesn't exist.</span>"
+	var/obj/effect/hallucination/simple/fogbeast/stalker
+	var/close_stalker = FALSE //For heartbeat
+
+/datum/brain_trauma/magic/stalker/on_gain()
+	create_stalker()
+	..()
+
+/datum/brain_trauma/magic/stalker/proc/create_stalker()
+	var/turf/stalker_source = locate(owner.x + pick(-12, 12), owner.y + pick(-12, 12), owner.z) //random corner
+	stalker = new(stalker_source, owner)
+
+/datum/brain_trauma/magic/stalker/on_lose()
+	QDEL_NULL(stalker)
+	..()

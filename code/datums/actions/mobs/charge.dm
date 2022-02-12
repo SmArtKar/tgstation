@@ -322,7 +322,7 @@
 /datum/action/cooldown/mob_cooldown/charge/spider_queen/target_charge
 	name = "Target Spider Charge"
 	desc = "Charge at every enemy of yours. If you're megafauna, of course."
-	charge_delay = 0.4 SECONDS
+	charge_delay = 0.6 SECONDS
 
 /datum/action/cooldown/mob_cooldown/charge/spider_queen/target_charge/charge_sequence(atom/movable/charger, atom/target_atom, delay, past)
 	if(!istype(owner, /mob/living/simple_animal/hostile/megafauna/jungle))

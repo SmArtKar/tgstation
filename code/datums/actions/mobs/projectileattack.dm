@@ -263,4 +263,5 @@
 	shot_delay = 0.15 SECONDS
 
 /datum/action/cooldown/mob_cooldown/projectile_attack/rapid_fire/web_shot/no_cd
+	name = "Web Shot (No Cooldown)"
 	cooldown_time = 0

@@ -92,7 +92,7 @@
 			target_turf = get_turf(borgo)
 			break
 
-	for(var/obj/machinery/power/energy_accumulator/rod in spiral_range(original_target, 5)) //Rods have more priority than silicons, silicons have more priority than humans
+	for(var/obj/machinery/power/energy_accumulator/rod in spiral_range(original_target, 9)) //Rods have more priority than silicons, silicons have more priority than humans
 		if(rod.anchored)
 			target_turf = get_turf(rod)
 			tesla_zap(target_turf, 1, 12000, ZAP_GENERATES_POWER) //You can harvest a lot of power if you collect the thunderbolts

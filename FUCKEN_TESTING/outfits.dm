@@ -107,7 +107,7 @@
 
 /obj/item/mod/control/pre_equipped/exotic/debug
 	applied_core = /obj/item/mod/core/infinite
-	initial_modules = list(/obj/item/mod/module/storage/bluespace, /obj/item/mod/module/welding, /obj/item/mod/module/visor/night, /obj/item/mod/module/mouthhole, /obj/item/mod/module/longfall, /obj/item/mod/module/orebag, /obj/item/mod/module/gps, /obj/item/mod/module/flashlight)
+	initial_modules = list(/obj/item/mod/module/storage/bluespace, /obj/item/mod/module/welding, /obj/item/mod/module/visor/medhud, /obj/item/mod/module/mouthhole, /obj/item/mod/module/longfall, /obj/item/mod/module/orebag, /obj/item/mod/module/gps, /obj/item/mod/module/flashlight)
 
 /datum/outfit/debug_miner/ultra
 	name = "Ultra Debug Miner"
@@ -149,3 +149,11 @@
 
 /obj/effect/mob_spawn/ghost_role/human/debug_miner/ultra
 	outfit = /datum/outfit/debug_miner/ultra
+
+/datum/map_template/ruin/jungle/cave/debug
+	name = "Debug Arena"
+	id = "debug_lol"
+	description = "lol."
+	suffix = "lol_fuck_arena.dmm"
+	cost = 0
+	always_place = TRUE

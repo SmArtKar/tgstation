@@ -12,4 +12,7 @@
 	multiplicative_slowdown = -0.25
 
 /datum/movespeed_modifier/webbed
-	multiplicative_slowdown = 1.5
+	multiplicative_slowdown = 1
+
+/datum/movespeed_modifier/chainlock
+	variable = TRUE

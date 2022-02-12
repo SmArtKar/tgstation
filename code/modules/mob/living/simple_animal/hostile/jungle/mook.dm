@@ -4,7 +4,7 @@
 #define MOOK_ATTACK_RECOVERY 3
 #define ATTACK_INTERMISSION_TIME 5
 
-//Fragile but highly aggressive wanderers that pose a large threat in numbers. //No longer fragile :)
+//Fragile but highly aggressive wanderers that pose a large threat in numbers. //No longer as fragile :)
 //They'll attempt to leap at their target from afar using their hatchets.
 /mob/living/simple_animal/hostile/jungle/mook
 	name = "wanderer"
@@ -244,6 +244,14 @@
 	item_flags = NOBLUDGEON
 	w_class = WEIGHT_CLASS_NORMAL
 	merge_type = /obj/item/stack/sheet/mechanical_alloy
+
+/obj/effect/mook_spawner/Initialize(mapload)
+	. = ..()
+	new /mob/living/simple_animal/hostile/jungle/mook(get_turf(src))
+	for(var/turf/turf in range(1, get_turf(src)))
+		if(prob(15) && turf != get_turf(src))
+			new /mob/living/simple_animal/hostile/jungle/mook(turf)
+	return INITIALIZE_HINT_QDEL
 
 #undef MOOK_ATTACK_NEUTRAL
 #undef MOOK_ATTACK_WARMUP

@@ -182,24 +182,23 @@
 	nodamage = TRUE
 	damage = 0
 	range = 10
-	speed = 2
+	speed = 1.2
 	var/web_beam
+	var/datum/action/cooldown/mob_cooldown/projectile_attack/rapid_fire/web_shot/ability
 
 /obj/projectile/web_ball/fire(set_angle)
 	. = ..()
-	web_beam = firer.Beam(src, icon_state = "web", beam_type=/obj/effect/ebeam/web)
+	web_beam = firer.Beam(src, icon_state = "web", beam_type=/obj/effect/ebeam/web, time = 2 SECONDS)
 
 /obj/projectile/web_ball/on_hit(atom/movable/targeted, blocked, pierce_hit)
 	qdel(web_beam)
 	. = ..()
 	if (. == BULLET_ACT_HIT)
-		if(isliving(targeted))
-			var/mob/living/victim = targeted
-			var/datum/beam/web = firer.Beam(victim, icon_state = "web", beam_type=/obj/effect/ebeam/web)
-			victim.throw_at(firer, get_dist(victim, firer), 2, firer, FALSE, TRUE, callback=CALLBACK(GLOBAL_PROC, .proc/qdel, web), gentle = TRUE)
-			if(istype(firer, /mob/living/simple_animal/hostile/megafauna/jungle/spider_queen))
-				var/mob/living/simple_animal/hostile/megafauna/jungle/spider_queen/queen = firer
-				addtimer(CALLBACK(queen.triple_charge, /datum/action/cooldown/mob_cooldown/charge.proc/Activate, victim), 5)
+		if(isliving(targeted) && isanimal(firer))
+			var/mob/living/simple_animal/beast = firer
+			sleep(3)
+			beast.AttackingTarget()
+
 
 /obj/projectile/web_ball_spiderling
 	name = "ball of web"
@@ -212,6 +211,6 @@
 /obj/projectile/web_ball_spiderling/on_hit(atom/movable/targeted, blocked, pierce_hit)
 	. = ..()
 	if (. == BULLET_ACT_HIT)
-		if(isliving(targeted))
+		if(isliving(targeted) && !isspider(targeted))
 			var/mob/living/victim = targeted
 			victim.apply_status_effect(/datum/status_effect/webbed)

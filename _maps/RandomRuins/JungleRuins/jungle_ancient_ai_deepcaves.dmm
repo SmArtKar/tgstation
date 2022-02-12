@@ -1484,6 +1484,20 @@
 	initial_gas_mix = "JUNGLE_ATMOS"
 	},
 /area/ruin/powered/ancient_ai)
+"Sc" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	color = "#383838";
+	dir = 8
+	},
+/obj/effect/mob_spawn/corpse/human/miner/explorer,
+/turf/open/floor/engine/ecute{
+	initial_gas_mix = "JUNGLE_ATMOS"
+	},
+/area/ruin/powered/ancient_ai)
 "Sf" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
@@ -2468,7 +2482,7 @@ VI
 xp
 CP
 sl
-Ih
+Sc
 Ih
 Ih
 Ih

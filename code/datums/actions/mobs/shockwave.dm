@@ -30,7 +30,7 @@
 		for(var/turf/target_turf in (view(i, start_turf) - view(i - 1, start_turf)))
 			if(!target_turf)
 				return
-			new /obj/effect/temp_visual/small_smoke/halfsecond(target_turf)
+			new /obj/effect/temp_visual/small_smoke/halfsecond/above_all(target_turf)
 			for(var/mob/living/victim in target_turf)
 				if(victim != owner && !(victim in hit_things) && !faction_check(victim.faction, owner.faction))
 					var/throwtarget = get_edge_target_turf(target_turf, get_dir(start_turf, victim))

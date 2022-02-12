@@ -48,6 +48,11 @@
 	ADD_TRAIT(src, TRAIT_SPACEWALK, INNATE_TRAIT)
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 
+/mob/living/simple_animal/hostile/jungle/bat/CanAllowThrough(atom/movable/mover, border_dir)
+	. = ..()
+	if(istype(mover, /obj/projectile)) //Else it's pixelhunting hell to fight them
+		return FALSE
+
 /mob/living/simple_animal/hostile/jungle/bat/albino
 	name = "albino cave bat"
 	desc = "A rare variant of cave bat that's colored pure white."

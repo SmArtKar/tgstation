@@ -165,7 +165,7 @@
 /turf/open/floor/plating/asteroid/snow/atmosphere,
 /area/ruin/unpowered/ice_spiders)
 "E" = (
-/obj/effect/mob_spawn/human/geneticist,
+/obj/effect/mob_spawn/corpse/human/geneticist,
 /obj/structure/bed/maint,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /turf/open/floor/plating/snowed/smoothed,

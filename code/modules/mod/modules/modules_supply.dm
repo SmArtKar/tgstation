@@ -352,6 +352,8 @@
 	var/list/armor_values = list(MELEE = 5.5, BULLET = 1.5, LASER = 2, ENERGY = 2.5, BOMB = 2.5)
 	/// Speed added when you're fully covered in ash.
 	var/speed_added = 0.5
+	/// Do we leave particles behind us?
+	var/leave_ash = TRUE
 	/// Turfs that let us accrete ash.
 	var/static/list/accretion_turfs
 	/// Turfs that let us keep ash.
@@ -408,7 +410,7 @@
 /obj/item/mod/module/ash_accretion/proc/on_move(atom/source, atom/oldloc, dir, forced)
 	if(!isturf(mod.wearer.loc)) //dont lose ash from going in a locker
 		return
-	if(traveled_tiles) //leave ash every tile
+	if(traveled_tiles && leave_ash) //leave ash every tile
 		new /obj/effect/temp_visual/light_ash(get_turf(src))
 	if(is_type_in_typecache(mod.wearer.loc, accretion_turfs))
 		if(traveled_tiles >= max_traveled_tiles)
@@ -455,6 +457,10 @@
 	cooldown_time = 1.25 SECONDS
 	/// Time it takes us to complete the animation.
 	var/animate_time = 0.25 SECONDS
+	/// What type of projectiles we launch
+	var/proj_type = /obj/projectile/bullet/reusable/mining_bomb
+	/// What sound we make upon launching a projectile
+	var/fire_sound = 'sound/weapons/gun/general/grenade_launch.ogg'
 
 /obj/item/mod/module/sphere_transform/on_activation()
 	. = ..()
@@ -506,10 +512,10 @@
 	. = ..()
 	if(!.)
 		return
-	var/obj/projectile/bomb = new /obj/projectile/bullet/reusable/mining_bomb(mod.wearer.loc)
+	var/obj/projectile/bomb = new proj_type(mod.wearer.loc)
 	bomb.preparePixelProjectile(target, mod.wearer)
 	bomb.firer = mod.wearer
-	playsound(src, 'sound/weapons/gun/general/grenade_launch.ogg', 75, TRUE)
+	playsound(src, fire_sound, 75, TRUE)
 	INVOKE_ASYNC(bomb, /obj/projectile.proc/fire)
 	drain_power(use_power_cost)
 
@@ -589,3 +595,47 @@
 	for(var/obj/object in range(1, src))
 		object.take_damage(damage * object_boost, BRUTE, BOMB)
 	qdel(src)
+
+/obj/item/mod/module/ash_accretion/exotic
+	name = "Advanced MOD ash accretion module"
+	desc = "An advanced version of the ash accretion module which collects ash much faster."
+	overlay_state_inactive = null
+	max_traveled_tiles = 5
+	armor_values = list(MELEE = 11, BULLET = 3, LASER = 4, ENERGY = 5, BOMB = 5)
+	leave_ash = FALSE
+
+/obj/item/mod/module/sphere_transform/exotic
+	name = "Chainlock MOD sphere transform module"
+	desc = "An advanced version of the sphere transform module with smaller energy drain, capable of firing chainlock blasts which link your enemies together and deal damage depending on the amount of enemies in one chainlock upon them recieving damage."
+	icon_state = "sphere_exotic"
+	active_power_cost = DEFAULT_CHARGE_DRAIN*0.25
+	proj_type = /obj/projectile/chainlock
+	fire_sound = 'sound/weapons/thermalpistol.ogg'
+	animate_time = 0.1 SECONDS //You're supposed to go into it, dodge/chainlock enemies and get out
+	cooldown_time = CLICK_CD_RAPID
+
+/obj/item/mod/module/sphere_transform/exotic/on_select_use(atom/target)
+	. = ..()
+	if(!.)
+		return
+	mod.wearer.changeNext_move(CLICK_CD_RAPID) //You shoot those extremely rapidly
+
+/obj/projectile/chainlock
+	name = "chainlock blast"
+	desc = "A high-tech bullet shielded by a plasma field."
+	icon_state = "chainlock"
+	damage = 0
+	nodamage = TRUE
+	range = 12
+	speed = 1.4
+	suppressed = SUPPRESSED_VERY
+	flag = ENERGY
+
+/obj/projectile/chainlock/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	if(isliving(target) && blocked < 100)
+		var/mob/living/victim = target
+		if(victim.has_status_effect(/datum/status_effect/chainlock))
+			return
+		to_chat(victim, span_userdanger("As you are hit by [src], you can feel your mind and body getting bound by a chainlock field!"))
+		victim.apply_status_effect(/datum/status_effect/chainlock)

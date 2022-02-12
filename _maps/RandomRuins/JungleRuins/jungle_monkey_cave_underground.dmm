@@ -5,19 +5,19 @@
 "y" = (/obj/structure/statue/bananium/clown,/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
 "C" = (/obj/structure/table/wood,/obj/item/reagent_containers/spray/waterflower/superlube,/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
 "I" = (/obj/structure/table/wood,/obj/item/grown/bananapeel/bluespace,/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
-"Q" = (/mob/living/carbon/human/species/monkey/jungle,/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
+"Q" = (/mob/living/carbon/human/species/monkey/angry,/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
 "T" = (/obj/structure/table/wood,/obj/item/clothing/shoes/clown_shoes/banana_shoes,/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
 "X" = (/turf/open/floor/plating/dirt/jungle,/area/ruin/jungle_monkey_altar)
 
 (1,1,1) = {"
 afffffffaa
-ffXQXXXfff
-fXXXXxXXof
+ffXQXXQfff
+foXXXxXXof
 fXQXIyCXXf
-fXXoXTXQXf
-ffXXXXXXXf
+fXXoXTXQof
+ffXXXXQXXf
 fffXQXXfff
 fffffXfffa
-afffXXffaa
+afffXoffaa
 aaffQffaaa
 "}

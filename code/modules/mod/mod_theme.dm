@@ -1138,15 +1138,15 @@
 
 /datum/mod_theme/exotic
 	name = "exotic"
-	desc = "A prototype suit with inbuilt armor and servos for extended mobility."
+	desc = "A prototype suit with inbuilt armor and servos for extended mobility, equipped with a chainlock combat module that's capable of slowing your enemies down."
 	default_skin = "exotic"
 	armor = list(MELEE = 30, BULLET = 15, LASER = 0, ENERGY = 30, BOMB = 55, BIO = 100, FIRE = 50, ACID = 100, WOUND = 15)
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	siemens_coefficient = 0
 	slowdown_inactive = 1
-	slowdown_active = 0
-	inbuilt_modules = list(/obj/item/mod/module/tether/advanced, /obj/item/mod/module/jumper, /obj/item/mod/module/ash_accretion, /obj/item/mod/module/sphere_transform)
+	slowdown_active = 0.5
+	inbuilt_modules = list(/obj/item/mod/module/tether/advanced, /obj/item/mod/module/jumper, /obj/item/mod/module/ash_accretion/exotic, /obj/item/mod/module/sphere_transform/exotic)
 	skins = list(
 		"exotic" = list(
 			HELMET_LAYER = null,

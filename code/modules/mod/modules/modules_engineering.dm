@@ -144,12 +144,14 @@
 	QDEL_NULL(line)
 	return ..()
 
-// Advanced tether
+// Advanced tether for ancient AI suit
 
 /obj/item/mod/module/tether/advanced
 	name = "MOD advanced tether module"
 	desc = "An advanced version of a normal tether module that offers users extreme mobility in low-pressurised enviroments."
 	complexity = 0
+	icon_state = "tether_grapple"
+	overlay_state_active = "module_exotic_grapple"
 	tether_type = /obj/projectile/tether/advanced
 
 /obj/item/mod/module/tether/advanced/gravity_check()
@@ -159,8 +161,15 @@
 		return FALSE
 	return TRUE
 
+/obj/item/mod/module/tether/advanced/on_use()
+	. = ..()
+	if(!.)
+		return
+	COOLDOWN_START(src, cooldown_timer, 1)
+
 /obj/projectile/tether/advanced
-	speed = 0.2
+	icon_state = "grapple_projectile"
+	speed = 0.4
 
 /obj/projectile/tether/advanced/fling(atom/target)
 	if(firer)

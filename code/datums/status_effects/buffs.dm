@@ -149,7 +149,7 @@
 
 /atom/movable/screen/alert/status_effect/acid_sack
 	name = "Acidic Blood"
-	desc = "A bunch of acidic blood was injected into your veins, making you stronger!"
+	desc = "Acidic blood was injected into your veins, making you stronger!"
 	icon_state = "acid_sack"
 
 /datum/status_effect/acid_sack/on_apply()

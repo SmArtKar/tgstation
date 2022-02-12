@@ -493,8 +493,15 @@
 	module_type = MODULE_ACTIVE
 	complexity = 0
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 0.5
-	incompatible_modules = list(/obj/item/mod/module/dispenser)
+	incompatible_modules = list(/obj/item/mod/module/jumper)
+	overlay_state_active = "module_exotic_jumper"
 	cooldown_time = 1 SECONDS
+
+/obj/item/mod/module/jumper/on_use()
+	. = ..()
+	if(!.)
+		return
+	COOLDOWN_START(src, cooldown_timer, 1)
 
 /obj/item/mod/module/jumper/on_select_use(atom/target)
 	. = ..()
