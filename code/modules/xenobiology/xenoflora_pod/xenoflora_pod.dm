@@ -1,6 +1,3 @@
-#define XENOFLORA_MAX_MOLES 3000
-#define XENOFLORA_MAX_CHEMS 500
-
 /obj/machinery/xenoflora_pod_part
 	name = "xenoflora pod shell"
 	desc = "A part of a xenoflora pod shell. Combine four of these and you'll get a full pod."
@@ -40,6 +37,7 @@
 	base_icon_state = "pod"
 	density = TRUE
 	layer = ABOVE_MOB_LAYER
+	plane = GAME_PLANE_UPPER_FOV_HIDDEN
 	bound_width = 64
 	bound_height = 64
 	initialize_directions = SOUTH|WEST
@@ -52,7 +50,7 @@
 	internal_gases = new
 	plant = new(src)
 	create_reagents(XENOFLORA_MAX_CHEMS, TRANSPARENT | REFILLABLE)
-	AddComponent(/datum/component/plumbing/xenoflora_pod, TRUE, THIRD_DUCT_LAYER)
+	AddComponent(/datum/component/plumbing/xenoflora_pod, TRUE, SECOND_DUCT_LAYER)
 	update_icon()
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/process_atmos()
@@ -61,6 +59,7 @@
 
 	inject_gases()
 	plant.Life()
+	update_icon()
 	if(!dome_extended)
 		spread_gases() //Don't forget to extend the dome when working with plants that require special atmos!
 	dump_gases()
@@ -82,7 +81,7 @@
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/proc/spread_gases()
 	var/datum/gas_mixture/expelled_gas = internal_gases.remove(internal_gases.total_moles())
 	var/turf/turf = get_turf(src)
-	turf.assume_air(internal_gases)
+	turf.assume_air(expelled_gas)
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/proc/dump_gases()
 	var/datum/gas_mixture/output_gases = airs[1]
@@ -119,7 +118,7 @@
 	cut_overlays()
 
 	var/mutable_appearance/dome_behind = mutable_appearance(icon, "glass_behind", layer = ABOVE_ALL_MOB_LAYER + 0.1)
-	var/mutable_appearance/dome_front = mutable_appearance(icon, "glass_front", layer = ABOVE_ALL_MOB_LAYER + 0.25)
+	var/mutable_appearance/dome_front = mutable_appearance(icon, "glass_front", layer = ABOVE_ALL_MOB_LAYER + 0.3)
 
 	var/mutable_appearance/pipe_appearance1 = mutable_appearance('icons/obj/atmospherics/pipes/pipe_underlays.dmi', "intact_2_[piping_layer]", layer = GAS_SCRUBBER_LAYER)
 	pipe_appearance1.color = COLOR_LIME
@@ -133,10 +132,29 @@
 	if(plant)
 		var/mutable_appearance/ground_overlay = mutable_appearance(plant.icon, "[plant.ground_icon_state]", layer = ABOVE_ALL_MOB_LAYER + 0.15)
 		var/mutable_appearance/plant_overlay = mutable_appearance(plant.icon, "[plant.icon_state]-[plant.stage]", layer = ABOVE_ALL_MOB_LAYER + 0.2)
-		var/mutable_appearance/screen_overlay = mutable_appearance(icon, "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.25)
 		. += ground_overlay
 		. += plant_overlay
-		. += screen_overlay
+		if(on)
+			var/mutable_appearance/screen_overlay = mutable_appearance(icon, (internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE) ? "pod-screen-fire" : "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.1)
+			. += screen_overlay
+	if(internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE)
+		var/mutable_appearance/fire_overlay = mutable_appearance(icon, "fire", layer = ABOVE_ALL_MOB_LAYER + 0.25)
+		. += fire_overlay
+
+	var/static/gas_alpha_filter
+	var/static/gas_positions
+	if(!gas_alpha_filter)
+		gas_alpha_filter = filter(type="alpha", icon=icon(icon, "gas_mask"))
+		gas_positions = list(list(0, 4), list(32, 4), list(0, 36), list(32, 36), list(0, 68), list(32, 68))
+
+	for(var/visual in internal_gases.return_visuals())
+		var/image/new_visual = image(visual, layer = ABOVE_ALL_MOB_LAYER + 0.25)
+		new_visual.filters = gas_alpha_filter
+		for(var/gas_pos in gas_positions)
+			new_visual.pixel_x = gas_pos[1]
+			new_visual.pixel_y = gas_pos[2]
+			. += new_visual
+
 	. += dome_front
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/set_init_directions()

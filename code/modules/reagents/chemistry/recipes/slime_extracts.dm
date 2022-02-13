@@ -52,7 +52,7 @@
 /datum/chemical_reaction/slime/orange_blood
 	required_container = /obj/item/slime_extract/orange
 	required_reagents = list(/datum/reagent/blood = 1)
-	results = list(/datum/reagent/consumable/capsaicin = 10)
+	results = list(/datum/reagent/phosphorus = 1, /datum/reagent/potassium = 1, /datum/reagent/consumable/sugar = 1, /datum/reagent/consumable/capsaicin = 2)
 
 /datum/chemical_reaction/slime/orange_plasma
 	required_reagents = list(/datum/reagent/toxin/plasma = 1)
@@ -73,8 +73,3 @@
 		var/turf/open/T = get_turf(holder.my_atom)
 		if(istype(T))
 			T.atmos_spawn_air("plasma=50;TEMP=1000")
-
-/datum/chemical_reaction/slime/orange_water
-	required_container = /obj/item/slime_extract/orange
-	required_reagents = list(/datum/reagent/water = 5)
-	results = list(/datum/reagent/phosphorus = 10, /datum/reagent/potassium = 10, /datum/reagent/consumable/sugar = 10)

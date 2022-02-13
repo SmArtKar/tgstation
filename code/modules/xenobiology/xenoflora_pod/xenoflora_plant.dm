@@ -8,12 +8,17 @@
 
 	var/list/required_gases = list()
 	var/list/produced_gases = list()
+	var/min_safe_temp = T0C
+	var/max_safe_temp = T0C + 100
 
 	var/list/required_chems = list()
 	var/list/produced_chems = list()
 
 	var/max_progress = 100
 	var/max_stage = 4
+
+	var/max_health = 300
+	var/hitpoints = 300
 
 	var/stage = 1
 	var/progress = 0
@@ -41,14 +46,22 @@
 				chems_satisfied = FALSE
 
 	if(!gases_satisfied)
+		health = max(0, health - 1)
 		return FALSE
 
 	if(!chems_satisfied)
+		health = max(0, health - 1)
 		return FALSE
 
+	if(parent_pod.internal_gases.return_temperature() >= max_safe_temp || parent_pod.internal_gases.return_temperature() <= min_safe_temp)
+		health = max(0, health - 3)
+		return FALSE
+
+	health = min(max_health, health + 1)
 	progress += 1
 
 	if(progress >= max_progress)
+		progress = 0
 		stage = min(max_stage, stage + 1)
 		parent_pod.update_icon()
 
