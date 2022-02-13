@@ -368,3 +368,18 @@
 	return (buffer.mode == READY) ? ..() : FALSE
 
 #undef READY
+
+/datum/component/plumbing/xenoflora_pod
+	demand_connects = SOUTH
+	supply_connects = WEST
+
+/datum/component/plumbing/xenoflora_pod/can_give(amount, reagent, datum/ductnet/net)
+	var/obj/machinery/atmospherics/components/binary/xenoflora_pod/pod = parent
+	if(!pod.plant)
+		return ..()
+
+	for(var/chem_type in pod.plant.required_chems)
+		if(reagent == chem_type)
+			return FALSE
+
+	return ..()

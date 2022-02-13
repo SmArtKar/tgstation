@@ -1,4 +1,5 @@
 #define XENOFLORA_MAX_MOLES 3000
+#define XENOFLORA_MAX_CHEMS 500
 
 /obj/machinery/xenoflora_pod_part
 	name = "xenoflora pod shell"
@@ -50,6 +51,8 @@
 	. = ..()
 	internal_gases = new
 	plant = new(src)
+	create_reagents(XENOFLORA_MAX_CHEMS, TRANSPARENT | REFILLABLE)
+	AddComponent(/datum/component/plumbing/xenoflora_pod, TRUE, THIRD_DUCT_LAYER)
 	update_icon()
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/process_atmos()
@@ -58,6 +61,8 @@
 
 	inject_gases()
 	plant.Life()
+	if(!dome_extended)
+		spread_gases() //Don't forget to extend the dome when working with plants that require special atmos!
 	dump_gases()
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/proc/inject_gases()
@@ -73,6 +78,11 @@
 			continue
 
 		internal_gases.merge(input_gases.remove_specific(gas_type, max(0, min(input_gases.gases[gas_type][MOLES], plant.required_gases[gas_type] - internal_gases.gases[gas_type][MOLES], XENOFLORA_MAX_MOLES - internal_gases.gases[gas_type][MOLES]))))
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/proc/spread_gases()
+	var/datum/gas_mixture/expelled_gas = internal_gases.remove(internal_gases.total_moles())
+	var/turf/turf = get_turf(src)
+	turf.assume_air(internal_gases)
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/proc/dump_gases()
 	var/datum/gas_mixture/output_gases = airs[1]
@@ -121,9 +131,10 @@
 	. += pipe_appearance2
 	. += dome_behind
 	if(plant)
-		var/mutable_appearance/plant_overlay = mutable_appearance(plant.icon, "[plant.icon_state]-[plant.stage]", layer = ABOVE_ALL_MOB_LAYER + 0.15)
+		var/mutable_appearance/ground_overlay = mutable_appearance(plant.icon, "[plant.ground_icon_state]", layer = ABOVE_ALL_MOB_LAYER + 0.15)
 		var/mutable_appearance/plant_overlay = mutable_appearance(plant.icon, "[plant.icon_state]-[plant.stage]", layer = ABOVE_ALL_MOB_LAYER + 0.2)
 		var/mutable_appearance/screen_overlay = mutable_appearance(icon, "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.25)
+		. += ground_overlay
 		. += plant_overlay
 		. += screen_overlay
 	. += dome_front
