@@ -1217,12 +1217,16 @@ GLOBAL_VAR_INIT(icon_holographic_window, init_holographic_window())
 	/obj/machinery/plumbing/input = 5,
 	/obj/machinery/plumbing/output = 5,
 	/obj/machinery/plumbing/tank = 20,
+	/obj/machinery/plumbing/synthesizer = 15,
+	/obj/machinery/plumbing/reaction_chamber = 15,
+	/obj/machinery/plumbing/buffer = 10,
+	/obj/machinery/plumbing/layer_manifold = 5,
 	/obj/machinery/plumbing/acclimator = 10,
+	/obj/machinery/plumbing/bottler = 50,
+	/obj/machinery/plumbing/disposer = 10,
 	/obj/machinery/plumbing/filter = 5,
 	/obj/machinery/plumbing/grinder_chemical = 30,
-	/obj/machinery/plumbing/reaction_chamber = 15,
 	/obj/machinery/plumbing/splitter = 5,
-	/obj/machinery/plumbing/disposer = 10,
 	/obj/machinery/plumbing/growing_vat = 20
 )
 

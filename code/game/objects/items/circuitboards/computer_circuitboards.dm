@@ -389,6 +389,11 @@
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
 	build_path = /obj/machinery/computer/teleporter
 
+/obj/item/circuitboard/computer/slime_market
+	name = "Slime Market (Computer Board)"
+	greyscale_colors = CIRCUIT_COLOR_SCIENCE
+	build_path = /obj/machinery/computer/slime_market
+
 /obj/item/circuitboard/computer/scan_consolenew
 	name = "DNA Console (Computer Board)"
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE

@@ -37,7 +37,7 @@
 		new target_slime.slime_color.coretype(target_slime.loc)
 
 		if(target_slime.cores <= 0)
-			target_slime.icon_state = "[target_slime.slime_color.color] baby slime dead-nocore"
+			target_slime.icon_state = "[target_slime.slime_color.color]-dead-nocore"
 			return ..()
 		else
 			return FALSE

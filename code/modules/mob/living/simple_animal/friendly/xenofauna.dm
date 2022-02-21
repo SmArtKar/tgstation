@@ -45,8 +45,8 @@
 	if(egg_layer)
 		AddComponent(/datum/component/egg_layer,\
 			/obj/item/food/wobble_egg,\
-			list(/obj/item/food/grown/wheat),\
-			feed_messages = list("She clucks happily."),\
+			list(/obj/item/food/xenoflora/broombush),\
+			feed_messages = list(span_notice("[src] clucks happily.")),\
 			lay_messages = EGG_LAYING_MESSAGES,\
 			eggs_left = 0,\
 			eggs_added_from_eating = rand(1, 4),\

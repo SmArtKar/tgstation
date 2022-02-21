@@ -106,7 +106,7 @@
 			else if(Target in view(7, src))
 				if(!Target.Adjacent(src))
 				// Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
-					step_to(src, Target)
+					slime_step(Target)
 			else
 				set_target(null)
 				AIproc = 0
@@ -119,6 +119,42 @@
 		sleep(sleeptime + 2) // this is about as fast as a player slime can go
 
 	AIproc = 0
+
+/mob/living/simple_animal/slime/proc/slime_step(step_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
+	var/obj/machinery/door/airlock/airlock = locate(/obj/machinery/door/airlock) in get_turf(step_target)
+	var/obj/machinery/door/firedoor/firedoor = locate(/obj/machinery/door/firedoor) in get_turf(step_target)
+	var/obj/machinery/door/window/windoor = locate(/obj/machinery/door/window) in get_turf(step_target)
+
+	var/can_squeese = TRUE
+	var/should_squeese = FALSE
+	var/squeese_target
+
+	if(windoor)
+		should_squeese = TRUE
+		squeese_target = windoor
+		if(windoor.powered())
+			can_squeese = FALSE
+
+	if(firedoor)
+		squeese_target = firedoor
+		should_squeese = TRUE
+
+	if(airlock)
+		should_squeese = TRUE
+		squeese_target = airlock
+		if(airlock.locked)
+			can_squeese = FALSE
+
+	var/turf/squeese_turf = get_step(get_turf(step_target), get_dir(src, step_target))
+	if(squeese_turf.is_blocked_turf_ignore_climbable())
+		can_squeese = FALSE
+
+	if(can_squeese && should_squeese)
+		visible_message(span_warning("[src] squeeses through [squeese_target]!"))
+		forceMove(squeese_turf)
+	else
+		step_to(src, step_target)
+
 
 /mob/living/simple_animal/slime/handle_environment(datum/gas_mixture/environment, delta_time, times_fired)
 	var/loc_temp = get_temperature(environment)
@@ -134,13 +170,13 @@
 	else // This is a hot place
 		adjust_bodytemperature(clamp((temp_delta / divisor) * delta_time, 0, temp_delta))
 
-	if(bodytemperature < (T0C + 5)) // start calculating temperature damage etc
-		if(bodytemperature <= (T0C - 40)) // stun temperature
+	if(bodytemperature < (slime_color.temperature_modifier + 5)) // start calculating temperature damage etc
+		if(bodytemperature <= (slime_color.temperature_modifier - 40)) // stun temperature
 			ADD_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
 		else
 			REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
 
-		if(bodytemperature <= (T0C - 50)) // hurt temperature
+		if(bodytemperature <= (slime_color.temperature_modifier - 50)) // hurt temperature
 			if(bodytemperature <= 50) // sqrting negative numbers is bad
 				adjustBruteLoss(100 * delta_time)
 			else
@@ -152,7 +188,7 @@
 		var/bz_percentage =0
 		if(environment.gases[/datum/gas/bz])
 			bz_percentage = environment.gases[/datum/gas/bz][MOLES] / environment.total_moles()
-		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (T0C + 100)) || force_stasis
+		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100)) || force_stasis
 
 		switch(stat)
 			if(CONSCIOUS)
@@ -425,13 +461,13 @@
 				if(holding_still)
 					holding_still = max(holding_still - (0.5 * delta_time), 0)
 				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc))
-					step_to(src, Leader)
+					slime_step(Leader)
 
 			else if(hungry)
 				if (holding_still)
 					holding_still = max(holding_still - (0.5 * hungry * delta_time), 0)
 				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && prob(50))
-					step(src, pick(GLOB.cardinals))
+					slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
 
 			else
 				if(holding_still)
@@ -439,7 +475,7 @@
 				else if (docile && pulledby)
 					holding_still = 10
 				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && prob(33))
-					step(src, pick(GLOB.cardinals))
+					slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
 		else if(!AIproc)
 			INVOKE_ASYNC(src, .proc/AIprocess)
 
@@ -613,12 +649,12 @@
 				phrases += "Purr..."
 			if (attacked)
 				phrases += "Grrr..."
-			if (bodytemperature < T0C)
+			if (bodytemperature < slime_color.temperature_modifier)
 				phrases += "Cold..."
-			if (bodytemperature < T0C - 30)
+			if (bodytemperature < slime_color.temperature_modifier - 30)
 				phrases += "So... cold..."
 				phrases += "Very... cold..."
-			if (bodytemperature < T0C - 50)
+			if (bodytemperature < slime_color.temperature_modifier - 50)
 				phrases += "..."
 				phrases += "C... c..."
 			if (buckled || Digesting)

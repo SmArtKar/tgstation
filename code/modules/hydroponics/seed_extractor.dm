@@ -50,6 +50,15 @@
 				t_amount++
 			qdel(O)
 		return 1
+	else if(istype(O, /obj/item/food/xenoflora))
+		var/obj/item/food/xenoflora/xenofood = O
+		if(xenofood.seed_type)
+			if(user && !user.temporarilyRemoveItemFromInventory(O))
+				return
+			for(var/i = 1 to t_max)
+				new xenofood.seed_type(seedloc)
+			qdel(xenofood)
+			return 1
 
 	return 0
 

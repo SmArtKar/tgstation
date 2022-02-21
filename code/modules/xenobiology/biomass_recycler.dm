@@ -50,7 +50,7 @@
 
 	if(istype(O, /obj/item/stack/biomass))
 		var/obj/item/stack/biomass/biomass = O
-		to_chat(user, span_notice("You insert [biomass.amount] cubes of biomass into [src]."))
+		to_chat(user, span_notice("You insert [biomass.amount] cube\s of biomass into [src]."))
 		stored_matter += biomass.amount
 		qdel(biomass)
 		return
@@ -163,3 +163,8 @@
 	name = "\"Wobble Chicken\" biomass recycler upgrade disk"
 	printable_types = list(/obj/item/food/wobble_egg = 0.75)
 	vacuum_printable_types = list(/obj/item/food/wobble_egg = 0.75)
+
+/obj/item/disk/biomass_upgrade/rockroach
+	name = "\"Rockroach\" biomass recycler upgrade disk"
+	printable_types = list(/mob/living/basic/cockroach/rockroach = 0.4)
+	vacuum_printable_types = list(/mob/living/basic/cockroach/rockroach = 0.4)

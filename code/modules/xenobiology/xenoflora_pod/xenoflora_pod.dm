@@ -3,6 +3,7 @@
 	desc = "A part of a xenoflora pod shell. Combine four of these and you'll get a full pod."
 	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "xenoflora_pod"
+	density = TRUE
 
 /obj/machinery/xenoflora_pod_part/Initialize(mapload)
 	. = ..()
@@ -36,30 +37,110 @@
 	icon_state = "pod"
 	base_icon_state = "pod"
 	density = TRUE
-	layer = ABOVE_MOB_LAYER
-	plane = GAME_PLANE_UPPER_FOV_HIDDEN
 	bound_width = 64
 	bound_height = 64
 	initialize_directions = SOUTH|WEST
+	pipe_flags = PIPING_ONE_PER_TURF | PIPING_DEFAULT_LAYER_ONLY
+	vent_movement = NONE
 	var/datum/gas_mixture/internal_gases
 	var/datum/xenoflora_plant/plant
 	var/dome_extended = TRUE
 
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/on_deconstruction()
+	. = ..()
+	var/turf/first_turf = locate(x + 1, y, z)
+	var/turf/second_turf = locate(x, y + 1, z)
+	var/turf/third_turf = locate(x + 1, y + 1, z)
+
+	new /obj/machinery/xenoflora_pod_part(first_turf)
+	new /obj/machinery/xenoflora_pod_part(second_turf)
+	new /obj/machinery/xenoflora_pod_part(third_turf)
+
+	name = initial(name)
+
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/Initialize(mapload)
 	. = ..()
 	internal_gases = new
-	plant = new(src)
 	create_reagents(XENOFLORA_MAX_CHEMS, TRANSPARENT | REFILLABLE)
 	AddComponent(/datum/component/plumbing/xenoflora_pod, TRUE, SECOND_DUCT_LAYER)
 	update_icon()
 
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/attackby(obj/item/I, mob/user, params)
+	if(!on)
+		if(default_deconstruction_screwdriver(user, "[base_icon_state]-open", "[base_icon_state]-unpowered", I))
+			return
+	if(default_change_direction_wrench(user, I)) //Updates connections, crucial for atmos shitcode to work
+		return
+	if(default_deconstruction_crowbar(I))
+		return
+	if(istype(I, /obj/item/xeno_seeds) && on && is_operational && !plant)
+		var/obj/item/xeno_seeds/seeds = I
+		plant = new seeds.plant_type(src)
+		to_chat(user, span_notice("You plant [seeds] into [src]."))
+		qdel(seeds)
+	return ..()
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/attack_hand(mob/living/user, list/modifiers)
+	. = ..()
+
+	if(!plant || plant.stage < plant.max_stage || !plant.produce_type)
+		return
+
+	to_chat(user, span_notice("You harvest [plant]."))
+	playsound(get_turf(src), plant.interaction_sound, 100, TRUE)
+	plant.harvested(user)
+	update_icon()
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/attack_hand_secondary(mob/user, list/modifiers)
+	. = ..()
+	if(. == SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN)
+		return
+
+	if(!plant)
+		return
+
+	to_chat(user, span_notice("You remove [plant] from [src]."))
+	playsound(get_turf(src), plant.interaction_sound, 100, TRUE)
+	qdel(plant)
+	update_icon()
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/default_change_direction_wrench(mob/user, obj/item/I) //Atmos shitcode be like
+	set_init_directions()
+	var/obj/machinery/atmospherics/node1 = nodes[1]
+	var/obj/machinery/atmospherics/node2 = nodes[2]
+	if(node1)
+		if(src in node1.nodes) //Only if it's actually connected. On-pipe version would is one-sided.
+			node1.disconnect(src)
+		nodes[1] = null
+	if(node2)
+		if(src in node2.nodes) //Only if it's actually connected. On-pipe version would is one-sided.
+			node2.disconnect(src)
+		nodes[2] = null
+
+	if(parents[1])
+		nullify_pipenet(parents[1])
+	if(parents[2])
+		nullify_pipenet(parents[2])
+
+	atmos_init()
+	node1 = nodes[1]
+	if(node1)
+		node1.atmos_init()
+		node1.add_member(src)
+	node2 = nodes[2]
+	if(node2)
+		node2.atmos_init()
+		node2.add_member(src)
+	SSair.add_to_rebuild_queue(src)
+
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/process_atmos()
+	update_icon()
 	if(!on || !is_operational || !plant)
 		return
 
 	inject_gases()
 	plant.Life()
-	update_icon()
 	if(!dome_extended)
 		spread_gases() //Don't forget to extend the dome when working with plants that require special atmos!
 	dump_gases()
@@ -73,10 +154,10 @@
 		if(!input_gases.gases[gas_type] || !input_gases.gases[gas_type][MOLES])
 			continue
 
-		if(!internal_gases.gases[gas_type] || !internal_gases.gases[gas_type][MOLES])
-			continue
-
-		internal_gases.merge(input_gases.remove_specific(gas_type, max(0, min(input_gases.gases[gas_type][MOLES], plant.required_gases[gas_type] - internal_gases.gases[gas_type][MOLES], XENOFLORA_MAX_MOLES - internal_gases.gases[gas_type][MOLES]))))
+		var/pump_amount = min(input_gases.gases[gas_type][MOLES], XENOFLORA_MAX_MOLES - internal_gases.return_volume())
+		if(internal_gases.gases[gas_type] && internal_gases.gases[gas_type][MOLES])
+			pump_amount = min(pump_amount, plant.required_gases[gas_type] * XENOFLORA_POD_INPUT_MULTIPLIER - internal_gases.gases[gas_type][MOLES])
+		internal_gases.merge(input_gases.remove_specific(gas_type, max(0, pump_amount)))
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/proc/spread_gases()
 	var/datum/gas_mixture/expelled_gas = internal_gases.remove(internal_gases.total_moles())
@@ -96,14 +177,6 @@
 
 	internal_gases.garbage_collect()
 
-/obj/machinery/atmospherics/components/binary/xenoflora_pod/attackby(obj/item/I, mob/user, params)
-	if(!on)
-		if(default_deconstruction_screwdriver(user, "[base_icon_state]-open", "[base_icon_state]-unpowered", I))
-			return
-	if(default_deconstruction_crowbar(I))
-		return
-	return ..()
-
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/update_icon_state()
 	. = ..()
 	if(panel_open)
@@ -117,8 +190,11 @@
 	. = ..()
 	cut_overlays()
 
-	var/mutable_appearance/dome_behind = mutable_appearance(icon, "glass_behind", layer = ABOVE_ALL_MOB_LAYER + 0.1)
-	var/mutable_appearance/dome_front = mutable_appearance(icon, "glass_front", layer = ABOVE_ALL_MOB_LAYER + 0.3)
+	if(dome_extended)
+		var/mutable_appearance/dome_behind = mutable_appearance(icon, "glass_behind", layer = ABOVE_ALL_MOB_LAYER + 0.1, plane = GAME_PLANE_UPPER)
+		var/mutable_appearance/dome_front = mutable_appearance(icon, "glass_front", layer = ABOVE_ALL_MOB_LAYER + 0.3, plane = GAME_PLANE_UPPER)
+		. += dome_front
+		. += dome_behind
 
 	var/mutable_appearance/pipe_appearance1 = mutable_appearance('icons/obj/atmospherics/pipes/pipe_underlays.dmi', "intact_2_[piping_layer]", layer = GAS_SCRUBBER_LAYER)
 	pipe_appearance1.color = COLOR_LIME
@@ -128,37 +204,163 @@
 
 	. += pipe_appearance1
 	. += pipe_appearance2
-	. += dome_behind
 	if(plant)
-		var/mutable_appearance/ground_overlay = mutable_appearance(plant.icon, "[plant.ground_icon_state]", layer = ABOVE_ALL_MOB_LAYER + 0.15)
-		var/mutable_appearance/plant_overlay = mutable_appearance(plant.icon, "[plant.icon_state]-[plant.stage]", layer = ABOVE_ALL_MOB_LAYER + 0.2)
+		var/mutable_appearance/ground_overlay = mutable_appearance(plant.icon, "[plant.ground_icon_state]", layer = ABOVE_ALL_MOB_LAYER + 0.15, plane = GAME_PLANE_UPPER)
+		var/mutable_appearance/plant_overlay = mutable_appearance(plant.icon, "[plant.icon_state]-[plant.stage]", layer = ABOVE_ALL_MOB_LAYER + 0.2, plane = GAME_PLANE_UPPER)
 		. += ground_overlay
 		. += plant_overlay
 		if(on)
-			var/mutable_appearance/screen_overlay = mutable_appearance(icon, (internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE) ? "pod-screen-fire" : "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.1)
+			var/mutable_appearance/screen_overlay = mutable_appearance(icon, (internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE) ? "pod-screen-fire" : "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.1, plane = GAME_PLANE_UPPER)
 			. += screen_overlay
-	if(internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE)
-		var/mutable_appearance/fire_overlay = mutable_appearance(icon, "fire", layer = ABOVE_ALL_MOB_LAYER + 0.25)
+
+	if(internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE && dome_extended)
+		var/mutable_appearance/fire_overlay = mutable_appearance(icon, "fire", layer = ABOVE_ALL_MOB_LAYER + 0.25, plane = GAME_PLANE_UPPER)
 		. += fire_overlay
 
-	var/static/gas_alpha_filter
-	var/static/gas_positions
-	if(!gas_alpha_filter)
-		gas_alpha_filter = filter(type="alpha", icon=icon(icon, "gas_mask"))
-		gas_positions = list(list(0, 4), list(32, 4), list(0, 36), list(32, 36), list(0, 68), list(32, 68))
-
-	for(var/visual in internal_gases.return_visuals())
-		var/image/new_visual = image(visual, layer = ABOVE_ALL_MOB_LAYER + 0.25)
-		new_visual.filters = gas_alpha_filter
-		for(var/gas_pos in gas_positions)
-			new_visual.pixel_x = gas_pos[1]
-			new_visual.pixel_y = gas_pos[2]
-			. += new_visual
-
-	. += dome_front
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/set_init_directions()
 	initialize_directions = SOUTH|WEST
 
 /obj/machinery/atmospherics/components/binary/xenoflora_pod/get_node_connects()
-	return list(SOUTH, WEST)
+	return list(WEST, SOUTH)
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/ui_act(action, params)
+	. = ..()
+	if(.)
+		return
+	switch(action)
+		if("power")
+			on = !on
+		if("dome")
+			if(on && is_operational)
+				dome_extended = !dome_extended
+				playsound(get_turf(src), 'sound/mecha/mechmove03.ogg', 100, TRUE)
+				update_icon()
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/ui_data()
+	var/data = list()
+	data["on"] = on
+	data["dome"] = dome_extended
+	data["plant_name"] = ""
+	data["plant_desc"] = ""
+
+	data["health"] = 0
+	data["progress"] = 0
+	data["total_progress"] = 0
+
+	var/list/required_gases = list()
+	var/list/required_chems = list()
+	var/total_required_gases = 0
+	var/total_required_chems = 0
+
+	var/list/produced_gases = list()
+	var/list/produced_chems = list()
+	var/total_produced_gases = 0
+	var/total_produced_chems = 0
+
+	var/additional_bars = 0
+
+	if(plant)
+		data["plant_name"] = plant.name
+		data["plant_desc"] = plant.desc
+
+		data["health"] = round(plant.health / plant.max_health * 100, 0.1)
+		data["progress"] = round(plant.progress / plant.max_progress * 100, 0.1)
+		data["total_progress"] = round((plant.progress / plant.max_progress + (plant.stage - 1)) * 100 / plant.max_stage, 0.1)
+
+		data["safe_temp"] = "Safe temperature: [plant.min_safe_temp] °C to [plant.max_safe_temp] °C"
+
+		if(LAZYLEN(plant.required_gases))
+			for(var/gas_type in plant.required_gases)
+				var/datum/gas/req_gas = gas_type
+				required_gases.Add(list(list(
+				"name"= initial(req_gas.name),
+				"amount" = plant.required_gases[gas_type] SECONDS,
+				)))
+				total_required_gases += required_gases[gas_type] SECONDS
+				additional_bars += 1
+
+		if(LAZYLEN(plant.required_chems))
+			for(var/chem_type in plant.required_chems)
+				var/datum/reagent/chem = chem_type
+				required_chems.Add(list(list(
+				"name"= initial(chem.name),
+				"amount" = plant.required_chems[chem_type] SECONDS,
+				"color" = chem.color,
+				)))
+				total_required_chems += required_chems[chem_type] SECONDS
+				additional_bars += 1
+
+		if(LAZYLEN(plant.produced_gases))
+			for(var/gas_type in plant.produced_gases)
+				var/datum/gas/prod_gas = gas_type
+				produced_gases.Add(list(list(
+				"name"= initial(prod_gas.name),
+				"amount" = plant.produced_gases[gas_type] SECONDS,
+				)))
+				total_produced_gases += required_gases[gas_type] SECONDS
+				additional_bars += 1
+
+		if(LAZYLEN(plant.produced_chems))
+			for(var/chem_type in plant.produced_chems)
+				var/datum/reagent/chem = chem_type
+				produced_chems.Add(list(list(
+				"name"= initial(chem.name),
+				"amount" = plant.produced_chems[chem_type] SECONDS,
+				"color" = chem.color,
+				)))
+				total_produced_chems += required_chems[chem_type] SECONDS
+				additional_bars += 1
+
+	data["required_gases"] = required_gases
+	data["required_chems"] = required_chems
+	data["total_required_gases"] = total_required_gases
+	data["total_required_chems"] = total_required_chems
+
+	data["produced_gases"] = produced_gases
+	data["produced_chems"] = produced_chems
+	data["total_produced_gases"] = total_produced_gases
+	data["total_produced_chems"] = total_produced_chems
+
+	var/list/internal_gas_data = list()
+	if(internal_gases.total_moles())
+		data["temperature"] = internal_gases.return_temperature()
+		for(var/gas_id in internal_gases.gases)
+			internal_gas_data.Add(list(list(
+			"name"= internal_gases.gases[gas_id][GAS_META][META_GAS_NAME],
+			"amount" = round(internal_gases.gases[gas_id][MOLES], 0.01),
+			)))
+			additional_bars += 1
+	else
+		data["temperature"] = 0
+
+	data["internal_gas_data"] = internal_gas_data
+
+	var/list/chemical_data = list()
+	if(reagents.total_volume)
+		data["chem_volume"] = reagents.total_volume
+		data["chem_temperature"] = reagents.chem_temp
+		var/list/cached_reagents = reagents.reagent_list
+		for(var/datum/reagent/cached_reagent as anything in cached_reagents)
+			chemical_data.Add(list(list(
+			"name"= cached_reagent.name,
+			"color"= cached_reagent.color,
+			"amount" = round(cached_reagent.volume, 0.01),
+			)))
+			additional_bars += 1
+	else
+		data["chem_volume"] = 0
+		data["chem_temperature"] = 0
+	data["chemical_data"] = chemical_data
+
+	data["total_gases"] = internal_gases.total_moles()
+	data["total_chems"] = reagents.total_volume
+	data["additional_bars"] = additional_bars
+
+	return data
+
+/obj/machinery/atmospherics/components/binary/xenoflora_pod/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "XenofloraPod", name)
+		ui.open()

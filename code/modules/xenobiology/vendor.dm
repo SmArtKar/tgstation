@@ -78,4 +78,3 @@
 	new /obj/item/food/wobble_egg(src)
 	new /obj/item/food/wobble_egg(src)
 	new /obj/item/food/wobble_egg(src)
-	new /obj/item/disk/biomass_upgrade/wobble(src)

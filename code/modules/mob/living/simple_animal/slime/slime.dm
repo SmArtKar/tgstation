@@ -132,6 +132,7 @@
 
 /mob/living/simple_animal/slime/proc/set_color(new_color)
 	if(slime_color)
+		slime_color.remove()
 		QDEL_NULL(slime_color)
 	slime_color = new new_color(src)
 	update_name()
@@ -149,8 +150,8 @@
 
 /mob/living/simple_animal/slime/regenerate_icons()
 	cut_overlays()
-	var/icon_text = "[slime_color.color] [is_adult ? "adult" : "baby"] slime"
-	icon_dead = "[icon_text] dead"
+	var/icon_text = "[slime_color.icon_color][is_adult ? "-adult" : ""]"
+	icon_dead = "[icon_text]-dead"
 	if(stat != DEAD)
 		icon_state = icon_text
 		if(mood && !stat)

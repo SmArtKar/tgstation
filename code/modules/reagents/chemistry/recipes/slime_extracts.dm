@@ -73,3 +73,64 @@
 		var/turf/open/T = get_turf(holder.my_atom)
 		if(istype(T))
 			T.atmos_spawn_air("plasma=50;TEMP=1000")
+
+// Purple Extract
+
+/datum/chemical_reaction/slime/purple_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	results = list(/datum/reagent/medicine/regen_jelly = 5)
+	required_container = /obj/item/slime_extract/purple
+
+/datum/chemical_reaction/slime/purple_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/purple
+
+/datum/chemical_reaction/slime/purple_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slimepotion/slime/steroid(get_turf(holder.my_atom))
+	return ..()
+
+// Blue Extract
+
+/datum/chemical_reaction/slime/blue_plasma
+	results = list(/datum/reagent/consumable/frostoil = 10)
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/blue
+
+/datum/chemical_reaction/slime/blue_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/blue
+
+/datum/chemical_reaction/slime/blue_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slimepotion/slime/stabilizer(get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/blue_water
+	required_reagents = list(/datum/reagent/water = 5)
+	required_container = /obj/item/slime_extract/blue
+
+/datum/chemical_reaction/slime/blue_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	holder.create_foam(/datum/effect_system/foam_spread, 80, span_danger("[src] spews out foam!"))
+
+// Metal Extract
+
+/datum/chemical_reaction/slime/metal_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/metal
+
+/datum/chemical_reaction/slime/metal_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/stack/sheet/plasteel(get_turf(holder.my_atom), 5)
+	new /obj/item/stack/sheet/iron(get_turf(holder.my_atom), 15)
+	return ..()
+
+/datum/chemical_reaction/slime/metal_water
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/metal
+
+/datum/chemical_reaction/slime/metal_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/stack/sheet/rglass(get_turf(holder.my_atom), 15)
+	new /obj/item/stack/sheet/glass(get_turf(holder.my_atom), 15)
+	..()
+
+// ************************************************
+// ****************** TIER THREE ******************
+// ************************************************
