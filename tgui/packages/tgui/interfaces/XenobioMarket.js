@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack, Table, Tabs } from '../components';
+import { Box, LabeledList, Section, Stack, Table, Tabs, Button } from '../components';
 import { Window } from '../layouts';
 import { classes } from 'common/react';
 
@@ -41,107 +41,46 @@ const SlimeMarket = (props, context) => {
 
 const IntergalacticBounties = (props, context) => {
   const { act, data } = useBackend(context);
-  const [galaxyTabIndex, setGalaxyTabIndex] = useLocalState(context, 'galaxyTabIndex', 1);
+  const [selectedCompany, setSelectedCompany] = useLocalState(context, 'selectedCompany', "Xynergy Solutions");
+  const { companies_by_name = [] } = data;
   return (
     <Stack grow>
       <Stack.Item>
         <Stack vertical>
           <Stack.Item>
             <Tabs vertical fill style={{ "border-radius": "5px" }}>
-              <Tabs.Tab
-                key={1}
-                selected={galaxyTabIndex === 1}
-                icon="flask"
-                onClick={() => setGalaxyTabIndex(1)}>
-                Slime Market
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={2}
-                selected={galaxyTabIndex === 2}
-                icon="globe"
-                onClick={() => setGalaxyTabIndex(2)}>
-                Intergalactic Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={3}
-                selected={galaxyTabIndex === 3}
-                icon="rocket"
-                onClick={() => setGalaxyTabIndex(3)}>
-                Station Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={1}
-                selected={galaxyTabIndex === 1}
-                icon="flask"
-                onClick={() => setGalaxyTabIndex(1)}>
-                Slime Market
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={2}
-                selected={galaxyTabIndex === 2}
-                icon="globe"
-                onClick={() => setGalaxyTabIndex(2)}>
-                Intergalactic Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={3}
-                selected={galaxyTabIndex === 3}
-                icon="rocket"
-                onClick={() => setGalaxyTabIndex(3)}>
-                Station Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={1}
-                selected={galaxyTabIndex === 1}
-                icon="flask"
-                onClick={() => setGalaxyTabIndex(1)}>
-                Slime Market
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={2}
-                selected={galaxyTabIndex === 2}
-                icon="globe"
-                onClick={() => setGalaxyTabIndex(2)}>
-                Intergalactic Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={3}
-                selected={galaxyTabIndex === 3}
-                icon="rocket"
-                onClick={() => setGalaxyTabIndex(3)}>
-                Station Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={1}
-                selected={galaxyTabIndex === 1}
-                icon="flask"
-                onClick={() => setGalaxyTabIndex(1)}>
-                Slime Market
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={2}
-                selected={galaxyTabIndex === 2}
-                icon="globe"
-                onClick={() => setGalaxyTabIndex(2)}>
-                Intergalactic Bounties
-              </Tabs.Tab>
-              <Tabs.Tab
-                key={3}
-                selected={galaxyTabIndex === 3}
-                icon="rocket"
-                onClick={() => setGalaxyTabIndex(3)}>
-                Station Bounties
-              </Tabs.Tab>
+              {data.companies.map(company => (
+                <Tabs.Tab
+                  key={company.name}
+                  selected={selectedCompany === company.name}
+                  icon={company.icon}
+                  onClick={() => setSelectedCompany(company.name)}>
+                  {company.name}
+                </Tabs.Tab>
+              ))}
             </Tabs>
           </Stack.Item>
           <Stack.Item>
-            <Section title="Current Contract" style={{ "border-radius": "5px" }} width="180px">
-              <Box>
-                3 red cores, 5 blue cores, 2 cubomelons, 6 green cocks, 8 socks.
-              </Box>
-              <Box>
-                Requested by: Wabbajack Industries
-              </Box>
+            <Section title="Current Bounty" style={{ "border-radius": "5px" }} width="100%">
+              <LabeledList vertical>
+                {!!data.current_bounty && (
+                  <>
+                    <LabeledList.Item label="Requirements">
+                      {data.current_bounty.text_requirements}
+                    </LabeledList.Item>
+                    <LabeledList.Item label="Rewards">
+                      {data.current_bounty.text_rewards}
+                    </LabeledList.Item>
+                    <LabeledList.Item label="Requested by">
+                      {data.current_bounty.author_name}
+                    </LabeledList.Item>
+                  </>
+                ) || (
+                  <Box fontSize="18px" ml="8px">
+                    No bounty selected.
+                  </Box>
+                )}
+              </LabeledList>
             </Section>
           </Stack.Item>
         </Stack>
@@ -149,58 +88,52 @@ const IntergalacticBounties = (props, context) => {
       <Stack.Item grow>
         <Stack vertical grow>
           <Stack.Item>
-            <Section title="Wabbajack Industries" grow>
-              A huge ass company, thats it.
+            <Section title={selectedCompany} grow>
+              <Box mb="6px">
+                {companies_by_name[selectedCompany].desc}
+              </Box>
+              <LabeledList vertical>
+                <LabeledList.Item label="Maximum Bounty Level">
+                  {companies_by_name[selectedCompany].relationship}
+                </LabeledList.Item>
+                <LabeledList.Item label="Finished Bounties">
+                  {companies_by_name[selectedCompany].bounties_finished}
+                </LabeledList.Item>
+              </LabeledList>
             </Section>
           </Stack.Item>
-          <Stack.Item grow>
-            <Table>
-              <Table.Row>
-                <Table.Cell>
-                  <Section title="Contract 1" mb="6px">
-                    <Box>
-                      Specialisation: Heavy Weaponery.
-                    </Box>
-                    <Button mt="7px" ml="40%" width="20%" textAlign="center">
-                      Reee
-                    </Button>
-                  </Section>
-                </Table.Cell>
-                <Table.Cell>
-                  <Section title="Contract 2" mb="6px">
-                    <Box>
-                      Specialisation: Heavy Weaponery.
-                    </Box>
-                    <Button mt="7px" ml="40%" width="20%" textAlign="center">
-                      Reee
-                    </Button>
-                  </Section>
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>
-                  <Section title="Contract 3" mb="6px">
-                    <Box>
-                      Specialisation: Heavy Weaponery.
-                    </Box>
-                    <Button mt="7px" ml="40%" width="20%" textAlign="center">
-                      Reee
-                    </Button>
-                  </Section>
-                </Table.Cell>
-                <Table.Cell>
-                  <Section title="Contract 4" mb="6px">
-                    <Box>
-                      Specialisation: Heavy Weaponery.
-                    </Box>
-                    <Button mt="7px" ml="40%" width="20%" textAlign="center">
-                      Reee
-                    </Button>
-                  </Section>
-                </Table.Cell>
-              </Table.Row>
-            </Table>
-          </Stack.Item>
+          {!!companies_by_name[selectedCompany] && (
+            <Stack.Item grow>
+              <Table>
+                {companies_by_name[selectedCompany].bounties.map(bounty_row => (
+                  <Table.Row key={bounty_row.iter}>
+                    {data.bounty_row.bounties.map(bounty => (
+                      <Table.Cell key={bounty.name}>
+                        <Section title={bounty.name} mb="6px">
+                          <LabeledList vertical>
+                            <LabeledList.Item label="Requirements">
+                              {bounty.text_requirements}
+                            </LabeledList.Item>
+                            <LabeledList.Item label="Rewards">
+                              {bounty.text_rewards}
+                            </LabeledList.Item>
+                          </LabeledList>
+                          <Button mt="6px" ml="40%"
+                            width="20%" textAlign="center"
+                            disabled={bounty.ref === current_bounty.ref}
+                            onClick={() => act('selected_bounty', {
+                              "ref": bounty.ref,
+                            })} >
+                            Take Bounty
+                          </Button>
+                        </Section>
+                      </Table.Cell>
+                    ))}
+                  </Table.Row>
+                ))}
+              </Table>
+            </Stack.Item>
+          )}
         </Stack>
       </Stack.Item>
     </Stack>

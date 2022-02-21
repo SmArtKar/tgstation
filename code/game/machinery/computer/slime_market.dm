@@ -6,6 +6,7 @@
 	light_color = LIGHT_COLOR_LAVENDER
 	circuit = /obj/item/circuitboard/computer/slime_market
 	var/obj/machinery/slime_market_pad/market_pad
+	var/datum/xenobio_bounty/current_bounty
 
 /obj/machinery/computer/slime_market/Initialize(mapload, obj/item/circuitboard/C)
 	. = ..()
@@ -80,6 +81,42 @@
 
 	data["prices"] = prices
 
+	var/list/companies = list()
+	var/list/companies_by_name = list()
+	for(var/datum/xenobio_company/company in SSresearch.xenobio_companies)
+		if(company.illegal && !(obj_flags & EMAGGED))
+			continue
 
+		var/list/company_data = list("name" = company.name,
+									 "desc" = company.desc,
+									 "icon" = company.icon,
+									 "relationship" = company.relationship_level,
+									 "bounties_finished" = company.bounties_finished,
+									 )
 
+		var/list/bounties = list()
+		for(var/bounty_level = 1 to company.relationship_level)
+			var/list/bounty_row = list("iter" = bounty_level, "bounties" = list())
+			for(var/datum/xenobio_bounty/bounty in company.get_bounties_by_level(bounty_level))
+				var/list/bounty_data = list("name" = bounty.name,
+									 		"text_requirements" = bounty.text_requirements,
+									 		"text_rewards" = bounty.text_rewards,
+									 		"author_name" = bounty.author.name,
+											 )
+				bounty_row["bounties"] += list(bounty_data)
+			bounties.Add(list(bounty_row))
+
+		company_data["bounties"] = bounties
+		companies.Add(list(company_data))
+		companies_by_name[company.name] = company_data
+
+	data["companies"] = companies
+	data["companies_by_name"] = companies_by_name
+
+	if(current_bounty)
+		data["current_bounty"] = list("name" = current_bounty.name,
+									  "text_requirements" = current_bounty.text_requirements,
+									  "text_rewards" = current_bounty.text_rewards,
+									  "author_name" = current_bounty.author.name,
+									  )
 	return data

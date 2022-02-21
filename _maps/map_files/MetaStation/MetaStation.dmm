@@ -12204,9 +12204,6 @@
 /obj/structure/window/reinforced{
 	dir = 4
 	},
-/obj/machinery/computer/camera_advanced/xenobio{
-	dir = 8
-	},
 /obj/effect/turf_decal/trimline/purple/filled/line,
 /obj/effect/turf_decal/bot,
 /obj/machinery/light/small/directional/south,
@@ -70006,7 +70003,7 @@
 /obj/effect/turf_decal/trimline/purple/filled/line,
 /obj/effect/turf_decal/bot_white,
 /obj/structure/cable,
-/obj/machinery/monkey_recycler,
+/obj/machinery/biomass_recycler,
 /turf/open/floor/iron,
 /area/science/xenobiology)
 "wzR" = (
@@ -70282,9 +70279,6 @@
 "wER" = (
 /obj/structure/window/reinforced{
 	dir = 4
-	},
-/obj/machinery/computer/camera_advanced/xenobio{
-	dir = 8
 	},
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 1
