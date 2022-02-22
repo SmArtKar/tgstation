@@ -32,7 +32,7 @@
 /datum/xenobio_company/nakamura //Engineering
 	name = "Nakamura Engineering"
 	desc = "Nakamura Engineering are well-known for their MODsuits and engineering tools. If your supermatter crystal explodes you can bet these guys can offer you a solution."
-	icon = "magnet"
+	icon = "cog"
 
 /datum/xenobio_company/deforest //Medical
 	name = "DeForest Medical Corporation"

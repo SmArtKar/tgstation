@@ -10,7 +10,6 @@
 	active_power_usage = 2000
 	circuit = /obj/item/circuitboard/machine/slime_market_pad
 	var/obj/machinery/computer/slime_market/console
-	var/max_contract_tier = 2
 
 /obj/machinery/slime_market_pad/attackby(obj/item/I, mob/user, params)
 	if(default_deconstruction_screwdriver(user, icon_state, icon_state, I))
@@ -30,13 +29,11 @@
 	. = ..()
 	if(!panel_open)
 		. += span_notice("The panel is <i>screwed</i> in.")
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: This IMP can handle contracts up to [max_contract_tier] level.")
 
 /obj/machinery/slime_market_pad/update_overlays()
 	. = ..()
 	if(panel_open)
-		. += "pad-panel"
+		. += "market_pad-panel"
 
 /obj/machinery/slime_market_pad/Initialize(mapload)
 	. = ..()
@@ -90,3 +87,64 @@
 			continue
 		SSresearch.slime_core_prices[core_type] = round(rand(SLIME_SELL_OTHER_MODIFIER_MIN * 100, SLIME_SELL_OTHER_MODIFIER_MAX * 100) / 100 * SSresearch.slime_core_prices[core_type])
 	qdel(extract)
+
+/obj/machinery/slime_bounty_pad
+	name = "intergalactic bounty pad"
+	desc = "A tall device with a hole for inserting slime extracts. IMPs are widely used for trading small items on large distances all over the galaxy."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "bounty_pad"
+	density = TRUE
+	anchored = TRUE
+	pass_flags_self = PASSTABLE | LETPASSTHROW
+	use_power = IDLE_POWER_USE
+	idle_power_usage = 10
+	active_power_usage = 2000
+	base_pixel_y = 2
+	circuit = /obj/item/circuitboard/machine/slime_bounty_pad
+	var/obj/machinery/computer/slime_market/console
+	var/max_contract_tier = 2
+
+/obj/machinery/slime_bounty_pad/examine(mob/user)
+	. = ..()
+	if(!panel_open)
+		. += span_notice("The panel is <i>screwed</i> in.")
+	if(in_range(user, src) || isobserver(user))
+		. += span_notice("The status display reads: This IBP can process contracts up to [max_contract_tier] level.")
+
+/obj/machinery/slime_bounty_pad/update_overlays()
+	. = ..()
+	if(panel_open)
+		. += "bounty_pad-panel"
+
+/obj/machinery/slime_bounty_pad/attackby(obj/item/I, mob/user, params)
+	if(default_deconstruction_screwdriver(user, icon_state, icon_state, I))
+		user.visible_message(span_notice("\The [user] [panel_open ? "opens" : "closes"] the hatch on \the [src]."), span_notice("You [panel_open ? "open" : "close"] the hatch on \the [src]."))
+		update_appearance()
+		return TRUE
+
+	if(default_unfasten_wrench(user, I))
+		return TRUE
+
+	if(default_deconstruction_crowbar(I))
+		return TRUE
+
+	. = ..()
+
+/obj/machinery/slime_bounty_pad/Initialize(mapload)
+	. = ..()
+	link_console()
+
+/obj/machinery/slime_bounty_pad/RefreshParts()
+	max_contract_tier = 0
+	for(var/obj/item/stock_parts/capacitor/capacitor in component_parts)
+		max_contract_tier += capacitor.rating
+
+/obj/machinery/slime_bounty_pad/proc/link_console()
+	if(console)
+		return
+
+	for(var/direction in GLOB.cardinals)
+		console = locate(/obj/machinery/computer/slime_market, get_step(src, direction))
+		if(console)
+			console.link_market_pad()
+			break

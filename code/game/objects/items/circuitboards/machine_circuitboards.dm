@@ -942,8 +942,17 @@
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
 	build_path = /obj/machinery/slime_market_pad
 	req_components = list(
-		/obj/item/stack/ore/bluespace_crystal = 2,
 		/obj/item/stock_parts/manipulator = 2,
+		/obj/item/stack/sheet/glass = 1)
+	def_components = list(/obj/item/stack/ore/bluespace_crystal = /obj/item/stack/ore/bluespace_crystal/artificial)
+
+/obj/item/circuitboard/machine/slime_bounty_pad
+	name = "Intergalactic Bounty Pad (Machine Board)"
+	greyscale_colors = CIRCUIT_COLOR_SCIENCE
+	build_path = /obj/machinery/slime_market_pad
+	req_components = list(
+		/obj/item/stack/ore/bluespace_crystal = 2,
+		/obj/item/stock_parts/capacitor = 2,
 		/obj/item/stack/sheet/glass = 1)
 	def_components = list(/obj/item/stack/ore/bluespace_crystal = /obj/item/stack/ore/bluespace_crystal/artificial)
 
