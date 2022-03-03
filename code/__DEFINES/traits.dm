@@ -396,8 +396,13 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// If something has been engraved/cannot be engraved
 #define TRAIT_NOT_ENGRAVABLE "not_engravable"
 
+<<<<<<< HEAD
 /// Slimes cannot feed on this
 #define TRAIT_NO_SLIME_FEED "no_slime_feed"
+=======
+/// Whether or not orbiting is blocked or not
+#define TRAIT_ORBITING_FORBIDDEN "orbiting_forbidden"
+>>>>>>> 07e7a21e6fffc8c10a83e81f834542cae50c0de2
 
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
@@ -778,10 +783,15 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define STABILIZED_LIGHT_PINK_TRAIT "stabilized_light_pink"
 /// Given by the multiple_lives component to the previous body of the mob upon death.
 #define EXPIRED_LIFE_TRAIT "expired_life"
+<<<<<<< HEAD
 /// Trait given to a ghost when they orbit something.
 #define GHOST_ORBITING_TRAIT "ghost_orbiting"
 /// Given by xenobio deployables
 #define XENOBIO_DEPLOYABLE_TRAIT "xenobio_deployable"
+=======
+/// Trait given to an atom/movable when they orbit something.
+#define ORBITING_TRAIT "orbiting"
+>>>>>>> 07e7a21e6fffc8c10a83e81f834542cae50c0de2
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and
