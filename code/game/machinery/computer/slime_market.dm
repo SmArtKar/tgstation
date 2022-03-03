@@ -48,17 +48,19 @@
 	for(var/atom/atom_on_pad in get_turf(bounty_pad))
 		for(var/required_type in required_items)
 			if(istype(atom_on_pad, required_type))
-				items_on_the_pad.Add(required_items)
+				items_on_the_pad.Add(atom_on_pad)
 				required_items[required_type] -= 1
 				if(required_items[required_type] <= 0)
 					required_items.Remove(required_type)
 				break
 
 	if(LAZYLEN(required_items))
+		playsound(get_turf(bounty_pad), 'sound/machines/buzz-sigh.ogg', 100, TRUE)
 		bounty_pad.say("Unable to send bounty: Missing required objects.")
 		return
 
-	bounty_pad.flick("[initial(bounty_pad.icon_state)]_activate")
+	playsound(get_turf(bounty_pad), 'sound/weapons/flash.ogg', 100, TRUE)
+	flick("[initial(bounty_pad.icon_state)]_activate", bounty_pad)
 	sleep(3.2)
 
 	for(var/atom/atom_on_pad in items_on_the_pad)
@@ -129,25 +131,23 @@
 
 	data["prices"] = prices
 
-	total_bounties = list()
-
-	var/list/companies = list()
-	var/list/companies_by_name = list()
-	for(var/datum/xenobio_company/company in SSresearch.xenobio_companies)
-		if(company.illegal && !(obj_flags & EMAGGED))
+	var/list/corporations = list()
+	var/list/corporations_by_name = list()
+	for(var/datum/xenobio_corporation/corporation in SSresearch.xenobio_corporations)
+		if(corporation.illegal && !(obj_flags & EMAGGED))
 			continue
 
-		var/list/company_data = list("name" = company.name,
-									 "desc" = company.desc,
-									 "icon" = company.icon,
-									 "relationship" = company.relationship_level,
-									 "bounties_finished" = company.bounties_finished,
-									 )
+		var/list/corporation_data = list("name" = corporation.name,
+									 	 "desc" = corporation.desc,
+									 	 "icon" = corporation.icon,
+									 	 "relationship" = round(corporation.relationship_level),
+									 	 "bounties_finished" = corporation.bounties_finished,
+									 	 )
 
 		var/list/bounties = list()
-		for(var/bounty_level = 1 to company.relationship_level)
+		for(var/bounty_level = 1 to corporation.relationship_level)
 			var/list/bounty_row = list("iter" = bounty_level, "bounties" = list())
-			for(var/datum/xenobio_bounty/bounty in company.get_bounties_by_level(bounty_level))
+			for(var/datum/xenobio_bounty/bounty in corporation.get_bounties_by_level(bounty_level))
 				var/list/bounty_data = list("name" = bounty.name,
 									 		"text_requirements" = bounty.text_requirements,
 									 		"text_rewards" = bounty.text_rewards,
@@ -155,15 +155,16 @@
 									  		"ref" = REF(bounty),
 											 )
 				bounty_row["bounties"] += list(bounty_data)
-				total_bounties.Add(bounty)
+				if(!(bounty in total_bounties))
+					total_bounties.Add(bounty)
 			bounties.Add(list(bounty_row))
 
-		company_data["bounties"] = bounties
-		companies.Add(list(company_data))
-		companies_by_name[company.name] = company_data
+		corporation_data["bounties"] = bounties
+		corporations.Add(list(corporation_data))
+		corporations_by_name[corporation.name] = corporation_data
 
-	data["companies"] = companies
-	data["companies_by_name"] = companies_by_name
+	data["corporations"] = corporations
+	data["corporations_by_name"] = corporations_by_name
 
 	if(current_bounty)
 		data["current_bounty"] = list("name" = current_bounty.name,

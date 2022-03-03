@@ -244,8 +244,10 @@
 
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
-		C.adjustCloneLoss(rand(2, 4) * 0.5 * delta_time)
-		C.adjustToxLoss(rand(1, 2) * 0.5 * delta_time)
+		var/damage_mod = 1 - max(C.getarmor(type = BIO) * 0.75 * 0.01, 0.25)
+		C.adjustCloneLoss(rand(2, 4) * damage_mod * 0.75 * delta_time) //Biosuits reduce damage
+		C.adjustToxLoss(rand(1, 2) * damage_mod * 0.75 * delta_time)
+		food_multiplier *= damage_mod
 
 		if(DT_PROB(5, delta_time) && C.client)
 			to_chat(C, "<span class='userdanger'>[pick("You can feel your body becoming weak!", \
@@ -266,10 +268,12 @@
 						break
 
 				if(food_type)
-					food_multiplier = slime_color.food_types[food_type]
+					food_multiplier *= slime_color.food_types[food_type]
 
 	else if(isanimal(M))
 		var/mob/living/simple_animal/SA = M
+		var/damage_mod = max(1 - SA.damage_coeff[CLONE] * 0.75, 0.25)
+		food_multiplier *= damage_mod
 
 		var/food_type
 		for(var/food in slime_color.food_types)
@@ -277,15 +281,12 @@
 				food_type = food
 				break
 
-		if(!food_type)
-			Feedstop(0, 0)
-			return
-
-		food_multiplier = slime_color.food_types[food_type]
+		if(food_type)
+			food_multiplier *= slime_color.food_types[food_type]
 
 		var/totaldamage = 0 //total damage done to this unfortunate animal
-		totaldamage += SA.adjustCloneLoss(rand(2, 4) * 0.5 * delta_time)
-		totaldamage += SA.adjustToxLoss(rand(1, 2) * 0.5 * delta_time)
+		totaldamage += SA.adjustCloneLoss(rand(2, 4) * damage_mod * 0.75 * delta_time)
+		totaldamage += SA.adjustToxLoss(rand(1, 2) * damage_mod * 0.75 * delta_time)
 
 		if(totaldamage <= 0) //if we did no(or negative!) damage to it, stop
 			Feedstop(0, 0)
@@ -724,9 +725,9 @@
 
 /mob/living/simple_animal/slime/proc/get_hunger_nutrition() // Below it we will always eat
 	if (is_adult)
-		return 600
+		return nutrition_control ? 600 : (get_max_nutrition() + 1)
 	else
-		return 500
+		return nutrition_control ? 500 : (get_max_nutrition() + 1)
 
 /mob/living/simple_animal/slime/proc/get_starve_nutrition() // Below it we will eat before everything else
 	if(is_adult)

@@ -66,6 +66,15 @@
 	hud_type = DATA_HUD_SECURITY_ADVANCED
 	visor_traits = list(TRAIT_SECURITY_HUD)
 
+//Nutrition Visor
+/obj/item/mod/module/visor/slimehud
+	name = "MOD security visor module"
+	desc = "A heads-up display installed into the visor of the suit. This module is a fitted with a powerful scanner \
+	and is able to show you nutrition of basic alien lifeforms. They say these also let you see behind you."
+	icon_state = "slimehud_visor"
+	hud_type = DATA_HUD_NUTRITION
+	visor_traits = list(TRAIT_NUTRITION_HUD)
+
 //Meson Visor
 /obj/item/mod/module/visor/meson
 	name = "MOD meson visor module"

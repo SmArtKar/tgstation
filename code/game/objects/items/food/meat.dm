@@ -486,7 +486,7 @@
 	icon_state = "sashimi"
 	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 10, /datum/reagent/consumable/capsaicin = 9, /datum/reagent/consumable/nutriment/vitamin = 4)
 	tastes = list("fish" = 1, "hot peppers" = 1)
-	foodtypes = SEAFOOD 
+	foodtypes = SEAFOOD
 	w_class = WEIGHT_CLASS_TINY
 	//total price of this dish is 20 and a small amount more for soy sauce, all of which are available at the orders console
 	venue_value = FOOD_PRICE_CHEAP
@@ -785,6 +785,9 @@
 /obj/item/food/meat/slab/corgi/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_CORGI, CELL_VIRUS_TABLE_GENERIC_MOB)
+
+/obj/item/food/meat/slab/corgi/sporgi
+	name = "sporgi meat"
 
 /obj/item/food/meat/slab/pug
 	name = "pug meat"
@@ -1299,3 +1302,13 @@
 	foodtypes = MEAT | VEGETABLES | GRAIN | BREAKFAST
 	w_class = WEIGHT_CLASS_SMALL
 	venue_value = FOOD_PRICE_EXOTIC
+
+/obj/item/food/fried_wings
+	name = "fried shrubberfly wings"
+	desc = "A pair of deep fried shrubberfly wings with a grassy aroma."
+	icon_state = "fried_wings"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 4, /datum/reagent/consumable/nutriment/vitamin = 2)
+	tastes = list("grass" = 3, "fried batter" = 1)
+	foodtypes = MEAT | FRIED
+	junkiness = 25
+	w_class = WEIGHT_CLASS_SMALL

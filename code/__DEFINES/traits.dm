@@ -275,6 +275,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SECURITY_HUD "sec_hud"
 /// for something granting you a diagnostic hud
 #define TRAIT_DIAGNOSTIC_HUD "diag_hud"
+#define TRAIT_NUTRITION_HUD "nutrition_hud"
 /// Is a medbot healing you
 #define TRAIT_MEDIBOTCOMINGTHROUGH "medbot"
 #define TRAIT_PASSTABLE "passtable"
@@ -394,6 +395,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 /// If something has been engraved/cannot be engraved
 #define TRAIT_NOT_ENGRAVABLE "not_engravable"
+
+/// Slimes cannot feed on this
+#define TRAIT_NO_SLIME_FEED "no_slime_feed"
 
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
@@ -598,6 +602,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// trait denoting someone will sometimes recover out of crit
 #define TRAIT_UNBREAKABLE "unbreakable"
 
+/// Slimes cannot teleport from turfs with this trait
+#define TRAIT_NO_SLIME_TELEPORTATION "no_slime_teleportation"
+
 //Medical Categories for quirks
 #define CAT_QUIRK_ALL 0
 #define CAT_QUIRK_NOTES 1
@@ -773,6 +780,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define EXPIRED_LIFE_TRAIT "expired_life"
 /// Trait given to a ghost when they orbit something.
 #define GHOST_ORBITING_TRAIT "ghost_orbiting"
+/// Given by xenobio deployables
+#define XENOBIO_DEPLOYABLE_TRAIT "xenobio_deployable"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and

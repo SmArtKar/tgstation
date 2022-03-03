@@ -46,7 +46,7 @@
 		to_chat(user, span_warning("[src] does not have a working pen manager linked to it!"))
 		return
 
-	var/list/turfs = detect_room(get_turf(src), list(/turf/open/space), 200)
+	var/list/turfs = detect_room(get_turf(src), list(/turf/open/space), 100)
 	var/list/pen_turfs = list()
 	for(var/turf/turf in turfs)
 		var/is_pen = TRUE
@@ -54,6 +54,10 @@
 			if(!(get_step(turf, direction) in turfs))
 				is_pen = FALSE
 				break
+
+		if(isclosedturf(turf))
+			is_pen = FALSE
+
 		if(is_pen)
 			pen_turfs += turf
 
@@ -61,7 +65,7 @@
 		to_chat(user, span_warning("The slime pen must be completely airtight."))
 		return
 
-	if(length(pen_turfs) > 100)
+	if(length(pen_turfs) > MAXIMUM_SLIME_PEN_SIZE)
 		to_chat(user, span_warning("The room you're attempting to destignate as a slime pen is too big!"))
 		return
 
@@ -94,6 +98,36 @@
 	var/obj/item/pen_destignator/pen_destignator
 	var/list/pen_turfs = list()
 	var/list/machinery = list()
+	var/slimes_rabid = FALSE
+	var/slimes_detected = FALSE
+	var/slimes_fine = TRUE
+
+/obj/machinery/pen_manager/update_overlays()
+	. = ..()
+	cut_overlays()
+	var/mutable_appearance/light1 = mutable_appearance(icon, "[icon_state]_light1")
+	light1.dir = dir
+	if(slimes_detected)
+		if(slimes_fine)
+			light1.color = "#40ff40"
+		else
+			light1.color = "#ff4040"
+	else
+		light1.color = "#ffe058"
+
+	var/mutable_appearance/light2 = mutable_appearance(icon, "[icon_state]_light2")
+	light2.dir = dir
+
+	if(slimes_detected)
+		if(slimes_rabid)
+			light2.color = "#ff4040"
+		else
+			light2.color = "#40ff40"
+	else
+		light2.color = "#ffe058"
+
+	. += light1
+	. += light2
 
 /obj/machinery/pen_manager/attackby(obj/item/I, mob/user, params)
 	. = ..()
@@ -140,6 +174,11 @@
 
 /obj/machinery/pen_manager/ui_data()
 	var/data = list()
+
+	slimes_fine = TRUE
+	slimes_detected = FALSE
+	slimes_rabid = FALSE
+
 	var/list/creature_data = list()
 	for(var/mob/living/creature in get_creatures())
 		var/list/creature_info = list("name" = creature.name,
@@ -150,6 +189,13 @@
 
 		if(isslime(creature))
 			var/mob/living/simple_animal/slime/slime = creature
+
+			slimes_detected = TRUE
+			if(slime.rabid)
+				slimes_rabid = TRUE
+			if(!slime.slime_color.fitting_environment)
+				slimes_fine = FALSE
+
 			creature_info["nutrition"] = slime.nutrition / slime.get_max_nutrition() * 100
 			creature_info["growth"] = slime.amount_grown / SLIME_EVOLUTION_THRESHOLD * 100
 			if(slime.cores > 1)
@@ -201,6 +247,17 @@
 			machinery.Add(discharger)
 	data["discharger_data"] = discharger_data
 
+	var/list/device_data = list() //For simple on-off only devices
+	for(var/turf/pen_turf in pen_turfs)
+		for(var/obj/machinery/vacuole_stabilizer/device in pen_turf)
+			var/list/device_info = list("ref" = REF(device),
+							   			"name" = device.name,
+							   			"on" = device.on,
+							   			)
+			device_data.Add(list(device_info))
+			machinery.Add(device)
+	data["device_data"] = device_data
+
 	return data
 
 /obj/machinery/pen_manager/ui_act(action, params)
@@ -214,11 +271,13 @@
 			if(!heater)
 				return
 			heater.toggle_power()
+
 		if("heater_mode")
 			var/obj/machinery/space_heater/wall_mount/heater = locate(params["ref"]) in machinery
 			if(!heater)
 				return
 			heater.set_mode = params["mode"]
+
 		if("heater_target")
 			var/obj/machinery/space_heater/wall_mount/heater = locate(params["ref"]) in machinery
 			if(!heater)
@@ -231,9 +290,20 @@
 				heater.target_temperature = clamp(round(target),
 					max(heater.settable_temperature_median - heater.settable_temperature_range, TCMB),
 					heater.settable_temperature_median + heater.settable_temperature_range)
+
 		if("discharger_power")
 			var/obj/machinery/power/energy_accumulator/slime_discharger/discharger = locate(params["ref"]) in machinery
 			if(!discharger)
 				return
 			discharger.on = !discharger.on
 			discharger.update_icon()
+
+		if("device_power")
+			var/atom/device = locate(params["ref"]) in machinery
+			if(!device)
+				return
+
+			if(istype(device, /obj/machinery/vacuole_stabilizer))
+				var/obj/machinery/vacuole_stabilizer/stabilizer = device
+				stabilizer.on = !stabilizer.on
+				stabilizer.update_icon()

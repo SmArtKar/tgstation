@@ -56,7 +56,7 @@ SUBSYSTEM_DEF(research)
 	)
 
 	var/list/slime_core_prices = list()
-	var/list/xenobio_companies = list()
+	var/list/xenobio_corporations = list()
 
 /datum/controller/subsystem/research/Initialize()
 	point_types = TECHWEB_POINT_TYPE_LIST_ASSOCIATIVE_NAMES
@@ -68,7 +68,7 @@ SUBSYSTEM_DEF(research)
 	error_design = new
 	error_node = new
 	initialize_slime_prices()
-	initialize_xenobio_companies()
+	initialize_xenobio_corporations()
 	return ..()
 
 /datum/controller/subsystem/research/fire()
@@ -94,10 +94,10 @@ SUBSYSTEM_DEF(research)
 		science_tech.add_point_list(bitcoins)
 	last_income = world.time
 
-/datum/controller/subsystem/research/proc/initialize_xenobio_companies()
-	for(var/company_type in subtypesof(/datum/xenobio_company))
-		var/datum/xenobio_company/company = new company_type()
-		xenobio_companies.Add(company)
+/datum/controller/subsystem/research/proc/initialize_xenobio_corporations()
+	for(var/corporation_type in subtypesof(/datum/xenobio_corporation))
+		var/datum/xenobio_corporation/corporation = new corporation_type()
+		xenobio_corporations.Add(corporation)
 
 /datum/controller/subsystem/research/proc/initialize_slime_prices()
 	var/static/list/core_prices = list(SLIME_VALUE_TIER_1,

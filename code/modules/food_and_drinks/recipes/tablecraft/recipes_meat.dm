@@ -273,3 +273,13 @@
 	)
 	result = /obj/item/food/canned/envirochow
 	subcategory = CAT_MEAT
+
+/datum/crafting_recipe/food/fried_wings
+	name = "Fried Shrubberfly Wings"
+	reqs = list(
+		/obj/item/trash/shrubberfly = 1,
+		/datum/reagent/consumable/flour = 5,
+		/datum/reagent/consumable/corn_starch = 5,
+	)
+	result = /obj/item/food/fried_wings
+	subcategory = CAT_MEAT

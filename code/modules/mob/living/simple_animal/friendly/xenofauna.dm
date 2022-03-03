@@ -20,7 +20,7 @@
 	density = FALSE
 	speak_chance = 2
 	turns_per_move = 3
-	butcher_results = list(/obj/item/food/meat/slab/chicken = 2)
+	butcher_results = list(/obj/item/food/meat/slab/chicken/wobble = 2)
 	response_help_continuous = "pets"
 	response_help_simple = "pet"
 	response_disarm_continuous = "gently pushes aside"
@@ -142,7 +142,7 @@
 
 	var/turf/hit_turf = get_turf(hit_atom)
 	new /obj/effect/decal/cleanable/food/egg_smudge(hit_turf)
-	if(prob(12.5 * (1 + (throwingdatum.speed <= 1))))
+	if(prob(12.5 * (1 + (throwingdatum.speed <= 1))) && !no_chick)
 		new /mob/living/simple_animal/xenofauna/wobble_chicken/chick(hit_turf)
 
 	reagents.expose(hit_atom, TOUCH)
@@ -182,3 +182,66 @@
 		if(amount_grown >= 100)
 			new /mob/living/simple_animal/xenofauna/wobble_chicken(src.loc)
 			qdel(src)
+
+/obj/item/food/meat/slab/chicken/wobble
+	name = "wobble chicken meat"
+	icon_state = "wobble_meat"
+	desc = "A slab of raw wobble chicken. Remember to wash your hands!"
+
+/mob/living/simple_animal/xenofauna/shrubberfly
+	name = "shrubberfly"
+	desc = "A giant fly with a trunk and a big glowing butt."
+	icon_state = "shubberfly"
+	icon_living = "shubberfly"
+	icon_dead = "shubberfly-dead"
+	speak_emote = list("buzzes")
+	emote_hear = list("buzzes")
+	turns_per_move = 2
+	response_help_continuous = "shoos"
+	response_help_simple = "shoo"
+	response_disarm_continuous = "swats away"
+	response_disarm_simple = "swat away"
+	response_harm_continuous = "squashes"
+	response_harm_simple = "squash"
+	maxHealth = 20
+	health = 20
+	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
+	density = FALSE
+	mob_size = MOB_SIZE_TINY
+	mob_biotypes = MOB_ORGANIC|MOB_BUG
+	can_be_held = TRUE
+	held_w_class = WEIGHT_CLASS_TINY
+	del_on_death = 1
+
+/mob/living/simple_animal/xenofauna/shrubberfly/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
+	AddElement(/datum/element/simple_flying)
+	AddComponent(/datum/component/clickbox, x_offset = -2, y_offset = -2)
+	AddComponent(/datum/component/swarming)
+
+/mob/living/simple_animal/xenofauna/shrubberfly/mob_pickup(mob/living/user)
+	if(flags_1 & HOLOGRAM_1)
+		return
+	var/obj/item/clothing/head/mob_holder/destructible/holder = new(get_turf(src), src, held_state, head_icon, held_lh, held_rh, worn_slot_flags)
+	holder.AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS, 10, 0, list("grass"), null, 10)
+	user.visible_message(span_warning("[user] scoops up [src]!"))
+	user.put_in_hands(holder)
+
+/mob/living/simple_animal/xenofauna/shrubberfly/death(gibbed)
+	if((flags_1 & HOLOGRAM_1))
+		return ..()
+	var/obj/item/trash/shrubberfly/snack = new(loc)
+	snack.pixel_x = pixel_x
+	snack.pixel_y = pixel_y
+	return ..()
+
+/obj/item/trash/shrubberfly
+	name = "shrubberfly"
+	desc = "Crunchy."
+	icon = 'icons/mob/animal.dmi'
+	icon_state = "shubberfly-dead"
+
+/obj/item/trash/shrubberfly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS, 10, 0, list("grass"), null, 10)

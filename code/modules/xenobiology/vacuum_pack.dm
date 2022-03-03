@@ -38,6 +38,7 @@
 	var/list/upgrades = list()
 	var/obj/machinery/biomass_recycler/linked
 	var/give_choice = TRUE //If set to true the pack will give the owner a radial selection to choose which object they want to shoot
+	var/check_backpack = TRUE //If it can only be used while worn on the back
 	var/static/list/storable_objects = list(/mob/living/simple_animal/slime, /mob/living/simple_animal/xenofauna)
 
 /obj/item/vacuum_pack/Initialize(mapload)
@@ -96,7 +97,7 @@
 	if(!istype(user))
 		return
 
-	if(user.get_item_by_slot(user.getBackSlot()) != src)
+	if(user.get_item_by_slot(user.getBackSlot()) != src && check_backpack)
 		to_chat(user, span_warning("[src] must be worn properly to use!"))
 		return
 
@@ -461,6 +462,23 @@
 	desc = "A large black and red nozzle attached to a vacuum pack."
 	icon_state = "vacuum_nozzle_syndicate"
 	inhand_icon_state = "vacuum_nozzle_syndicate"
+
+/obj/item/vacuum_pack/integrated
+	name = "integrated backpack xenofauna storage"
+	desc = "You shouldn't be seeing this!"
+	range = UPGRADED_VACUUM_PACK_RANGE
+	capacity = UPGRADED_VACUUM_PACK_CAPACITY
+	check_backpack = FALSE
+	nozzle_type = /obj/item/vacuum_nozzle/integrated
+	upgrades = list(VACUUM_PACK_UPGRADE_HEALING, VACUUM_PACK_UPGRADE_STASIS, VACUUM_PACK_UPGRADE_BIOMASS)
+
+/obj/item/vacuum_nozzle/integrated
+	name = "integrated vacuum pack nozzle"
+	desc = "A modified vacuum pack nozzle designed to work in combination with a MODsuit module."
+	icon = 'icons/obj/clothing/modsuit/mod_modules.dmi'
+	icon_state = "vacuum"
+	inhand_icon_state = "vacuum_nozzle_modsuit"
+	actions_types = list()
 
 #undef NORMAL_VACUUM_PACK_CAPACITY
 #undef UPGRADED_VACUUM_PACK_CAPACITY

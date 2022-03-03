@@ -80,11 +80,11 @@ const SlimeMarket = (_, context) => {
 
 const IntergalacticBounties = (_, context) => {
   const { act, data } = useBackend(context);
-  const { companies } = data;
-  const [selectedCompany, setSelectedCompany] = useLocalState(
+  const { corporations } = data;
+  const [selectedCorporation, setSelectedCorporation] = useLocalState(
     context,
-    'selectedCompany',
-    companies[0].name,
+    'selectedCorporation',
+    corporations[0].name,
   );
 
   return (
@@ -93,13 +93,13 @@ const IntergalacticBounties = (_, context) => {
         <Stack vertical>
           <Stack.Item>
             <Tabs vertical style={{ 'border-radius': '5px' }}>
-              {companies.map((company) => (
+              {corporations.map((corporation) => (
                 <Tabs.Tab
-                  key={company.name}
-                  selected={selectedCompany === company.name}
-                  icon={company.icon}
-                  onClick={() => setSelectedCompany(company.name)}>
-                  {company.name}
+                  key={corporation.name}
+                  selected={selectedCorporation === corporation.name}
+                  icon={corporation.icon}
+                  onClick={() => setSelectedCorporation(corporation.name)}>
+                  {corporation.name}
                 </Tabs.Tab>
               ))}
             </Tabs>
@@ -118,7 +118,7 @@ const IntergalacticBounties = (_, context) => {
         </Stack>
       </Stack.Item>
       <Stack.Item grow>
-        <BountyInfo selectedCompany={selectedCompany} />
+        <BountyInfo selectedCorporation={selectedCorporation} />
       </Stack.Item>
     </Stack>
   );
@@ -139,34 +139,40 @@ const CurrentBounty = (_, context) => {
           No bounty selected.
         </NoticeBox>
       ) : (
-        <LabeledList vertical>
-          <LabeledList.Item label="Requirements">
-            {current_bounty.text_requirements}
-          </LabeledList.Item>
-          <LabeledList.Item label="Rewards">
-            {current_bounty.text_rewards}
-          </LabeledList.Item>
-          <LabeledList.Item label="Requested by">
-            {current_bounty.author_name}
-          </LabeledList.Item>
-        </LabeledList>)}
+        <>
+          <Box>
+            {current_bounty.desc}
+          </Box>
+          <LabeledList vertical>
+            <LabeledList.Item label="Requirements">
+              {current_bounty.text_requirements}
+            </LabeledList.Item>
+            <LabeledList.Item label="Rewards">
+              {current_bounty.text_rewards}
+            </LabeledList.Item>
+            <LabeledList.Item label="Requested by">
+              {current_bounty.author_name}
+            </LabeledList.Item>
+          </LabeledList>
+        </>
+      )}
     </Section>
   );
 };
 
 const BountyInfo = (props, context) => {
   const { act, data } = useBackend(context);
-  const { companies_by_name } = data;
-  const { selectedCompany } = props;
-  const currentCompany = companies_by_name[selectedCompany];
+  const { corporations_by_name } = data;
+  const { selectedCorporation } = props;
+  const currentCompany = corporations_by_name[selectedCorporation];
   if (!currentCompany) {
-    return <NoticeBox>No company selected.</NoticeBox>;
+    return <NoticeBox>No corporation selected.</NoticeBox>;
   }
 
   return (
     <Stack fill vertical>
       <Stack.Item>
-        <Section title={selectedCompany} grow>
+        <Section title={selectedCorporation} grow>
           <Box mb="6px">{currentCompany.desc}</Box>
           <LabeledList vertical>
             <LabeledList.Item label="Maximum Bounty Level">
@@ -199,6 +205,9 @@ const BountyRow = (props, context) => {
       {bounty_row.bounties.map((bounty) => (
         <Table.Cell key={bounty.name}>
           <Section title={bounty.name} mb="6px">
+            <Box>
+              {bounty.desc}
+            </Box>
             <LabeledList vertical>
               <LabeledList.Item label="Requirements">
                 {bounty.text_requirements}
@@ -211,7 +220,7 @@ const BountyRow = (props, context) => {
               mt="9px"
               ml="33%"
               textAlign="center"
-              selected={!!current_bounty && bounty.ref === current_bounty.ref}
+              selected={!!current_bounty && bounty.name === current_bounty.name}
               onClick={() => act('selected_bounty', { ref: bounty.ref })}
             >
               Take Bounty

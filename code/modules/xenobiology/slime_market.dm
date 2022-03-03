@@ -39,11 +39,6 @@
 	. = ..()
 	link_console()
 
-/obj/machinery/slime_market_pad/RefreshParts()
-	max_contract_tier = 0
-	for(var/obj/item/stock_parts/manipulator/manip in component_parts)
-		max_contract_tier += manip.rating
-
 /obj/machinery/slime_market_pad/proc/link_console()
 	if(console)
 		return
@@ -99,7 +94,7 @@
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 10
 	active_power_usage = 2000
-	base_pixel_y = 2
+	pixel_y = 3
 	circuit = /obj/item/circuitboard/machine/slime_bounty_pad
 	var/obj/machinery/computer/slime_market/console
 	var/max_contract_tier = 2

@@ -383,7 +383,8 @@
 	icon = 'icons/mob/slimes.dmi'
 	icon_state = "yellow slime extract"
 	custom_materials = null
-	maxcharge = 5000
+	maxcharge = 10000
+	chargerate = 1500
 	charge_light_type = null
 	connector_type = "slimecore"
 	rating = 5

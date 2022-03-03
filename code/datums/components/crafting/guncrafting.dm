@@ -60,3 +60,7 @@
 /obj/item/weaponcrafting/gunkit/hellgun
 	name = "hellfire laser gun degradation kit"
 	desc = "Take a perfectly functioning laser gun. Butcher the inside of the gun so it runs hot and mean. You now have a hellfire laser. You monster."
+
+/obj/item/weaponcrafting/gunkit/quasar
+	name = "disabler sniper rifle part kit"
+	desc = "A suitcase contraining the necessary gun parts to transform a standard energy gun into a disabler sniper rifle."

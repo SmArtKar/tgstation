@@ -168,3 +168,8 @@
 	name = "\"Rockroach\" biomass recycler upgrade disk"
 	printable_types = list(/mob/living/basic/cockroach/rockroach = 0.4)
 	vacuum_printable_types = list(/mob/living/basic/cockroach/rockroach = 0.4)
+
+/obj/item/disk/biomass_upgrade/sporgi
+	name = "\"Sporgi\" biomass recycler upgrade disk"
+	printable_types = list(/mob/living/simple_animal/pet/dog/corgi/sporgi = 2.5, /obj/item/food/meat/slab/corgi/sporgi = 1)
+	vacuum_printable_types = list(/obj/item/food/meat/slab/corgi/sporgi = 1)

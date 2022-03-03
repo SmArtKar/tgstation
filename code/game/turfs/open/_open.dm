@@ -196,6 +196,9 @@
 	for(var/mob/living/simple_animal/slime/M in src)
 		M.apply_water()
 
+	for(var/mob/living/simple_animal/hostile/slime_blorbie/blorbie in src)
+		blorbie.apply_water()
+
 	wash(CLEAN_WASH)
 	for(var/am in src)
 		var/atom/movable/movable_content = am

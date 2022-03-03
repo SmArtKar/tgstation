@@ -206,6 +206,22 @@
 	..()
 	blacklist += subtypesof(/obj/item/gun/energy/e_gun)
 
+
+/datum/crafting_recipe/quasar
+	name = "Disabler Sniper Rifle Gun"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
+	result = /obj/item/gun/energy/e_gun/quasar
+	reqs = list(/obj/item/gun/energy/e_gun = 1,
+				/obj/item/stack/cable_coil = 5,
+				/obj/item/weaponcrafting/gunkit/quasar = 1)
+	time = 200
+	category = CAT_WEAPONRY
+	subcategory = CAT_WEAPON
+
+/datum/crafting_recipe/quasar/New()
+	..()
+	blacklist += subtypesof(/obj/item/gun/energy/e_gun)
+
 /datum/crafting_recipe/tempgun
 	name = "Temperature Gun"
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)

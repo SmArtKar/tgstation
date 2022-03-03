@@ -711,3 +711,15 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 /mob/living/simple_animal/pet/dog/corgi/lisa/Life(delta_time = SSMOBS_DT, times_fired)
 	. = ..()
 	make_babies()
+
+/mob/living/simple_animal/pet/dog/corgi/sporgi
+	name = "Sporgi"
+	desc = "A cursed abomination created as a result of an unethical genetic experiment."
+	icon_state = "sporgi"
+	icon_living = "sporgi"
+	icon_dead = "sporgi_dead"
+	faction = list("neutral", "spider")
+	gold_core_spawnable = NO_SPAWN
+	nofur = TRUE
+	held_state = "sporgi"
+	butcher_results = list(/obj/item/food/meat/slab/corgi/sporgi = 2, /obj/item/stack/sheet/animalhide/corgi = 1, /obj/item/food/sporgieggs = 1)

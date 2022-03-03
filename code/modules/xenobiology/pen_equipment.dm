@@ -1,3 +1,21 @@
+/obj/item/xenobio_deployable
+	var/deployable_type
+
+/obj/item/xenobio_deployable/attack_self(mob/user, modifiers)
+	. = ..()
+	if(loc == user)
+		if(!user.temporarilyRemoveItemFromInventory(src))
+			to_chat(user, span_warning("[src] is stuck to your hands!"))
+			return
+
+	deploy(user, modifiers)
+
+/obj/item/xenobio_deployable/proc/deploy(mob/user, modifiers)
+	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
+	to_chat(user, span_notice("You put [src] down and it attaches itself to [loc]."))
+	new deployable_type(get_turf(src))
+	qdel(src)
+
 #define DISCHARGE_PROB 30
 #define DISCHARGE_EFFECT_PROB 65
 
@@ -25,7 +43,7 @@
 	if(. != SUCCESSFUL_UNFASTEN)
 		return
 
-	new /obj/item/slime_discharger(get_turf(src))
+	new /obj/item/xenobio_deployable/slime_discharger(get_turf(src))
 	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
 	to_chat(user, span_notice("You undo the bolts on [src], detaching it from the floor."))
 	qdel(src)
@@ -58,7 +76,7 @@
 	else
 		. = ..()
 
-/obj/item/slime_discharger
+/obj/item/xenobio_deployable/slime_discharger
 	name = "slime discharger"
 	desc = "Prevents all living beings from being electrocuted by those nasty yellow slimes."
 	icon = 'icons/obj/xenobiology/machinery.dmi'
@@ -67,20 +85,12 @@
 	inhand_icon_state = "electronic"
 	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	deployable_type = /obj/machinery/vacuole_stabilizer
 
-/obj/item/slime_discharger/attack_self(mob/user, modifiers)
+/obj/item/xenobio_deployable/slime_discharger/deploy(mob/user, modifiers)
+	for(var/turf/discharger_turf in range(2, get_turf(src)))
+		new /obj/effect/temp_visual/xenobio_blast/discharger(discharger_turf)
 	. = ..()
-	if(loc == user)
-		if(!user.temporarilyRemoveItemFromInventory(src))
-			to_chat(user, span_warning("[src] is stuck to your hands!"))
-			return
-
-	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
-	to_chat(user, span_notice("You put [src] down and it attaches itself to [loc]."))
-	new /obj/machinery/power/energy_accumulator/slime_discharger(get_turf(src))
-	for(var/turf/discharge_turf in range(2, get_turf(src)))
-		new /obj/effect/temp_visual/xenobio_blast/discharger(discharge_turf)
-	qdel(src)
 
 /obj/effect/temp_visual/xenobio_blast/discharger
 	name = "discharger field"
@@ -88,6 +98,56 @@
 
 #undef DISCHARGE_PROB
 #undef DISCHARGE_EFFECT_PROB
+
+/obj/machinery/vacuole_stabilizer
+	name = "vacuole stabilizer"
+	desc = "This device prevents silver slimes from imploding and splitting into blorbies."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "stabilizer-off"
+	base_icon_state = "stabilizer"
+	anchored = TRUE
+	density = TRUE
+	var/on = FALSE
+
+/obj/machinery/vacuole_stabilizer/update_icon_state()
+	icon_state = "[base_icon_state][on ? "" : "-off"]"
+	return ..()
+
+/obj/machinery/vacuole_stabilizer/attackby(obj/item/W, mob/user, params)
+	if(default_unfasten_wrench(user, W))
+		return
+
+	return ..()
+
+/obj/machinery/vacuole_stabilizer/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
+	. = ..()
+	if(. != SUCCESSFUL_UNFASTEN)
+		return
+
+	new /obj/item/xenobio_deployable/vacuole_stabilizer(get_turf(src))
+	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
+	to_chat(user, span_notice("You undo the bolts on [src], detaching it from the floor."))
+	qdel(src)
+
+/obj/item/xenobio_deployable/vacuole_stabilizer
+	name = "vacuole stabilizer"
+	desc = "This device prevents silver slimes from imploding and splitting into blorbies."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "stabilizer-off"
+	w_class = WEIGHT_CLASS_NORMAL
+	inhand_icon_state = "electronic"
+	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	deployable_type = /obj/machinery/vacuole_stabilizer
+
+/obj/item/xenobio_deployable/vacuole_stabilizer/deploy(mob/user, modifiers)
+	for(var/turf/stabilizer_turf in range(3, get_turf(src)))
+		new /obj/effect/temp_visual/xenobio_blast/vacuole_stabilizer(stabilizer_turf)
+	. = ..()
+
+/obj/effect/temp_visual/xenobio_blast/vacuole_stabilizer
+	name = "vacuole stabilizer field"
+	color = COLOR_WHITE
 
 /obj/item/wallframe/space_heater
 	name = "\improper space heater frame"
@@ -111,4 +171,140 @@
 		return
 
 	new /obj/item/wallframe/space_heater(get_turf(src))
+	qdel(src)
+
+/obj/item/xenobio_deployable/bluespace_anchor
+	name = "bluespace anchor"
+	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "bluespace_anchor-off"
+	w_class = WEIGHT_CLASS_NORMAL
+	inhand_icon_state = "electronic"
+	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	deployable_type = /obj/machinery/bluespace_anchor
+
+/obj/effect/temp_visual/xenobio_blast/bluespace
+	name = "bluespace stabilizer field"
+	color = COLOR_CYAN
+
+/obj/machinery/bluespace_anchor
+	name = "bluespace anchor"
+	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "bluespace_anchor-off"
+	base_icon_state = "bluespace_anchor"
+	anchored = TRUE
+	density = FALSE
+	var/on = FALSE
+	var/list/affected_turfs = list()
+	var/list/visual_effects = list()
+
+/obj/machinery/bluespace_anchor/Destroy()
+	for(var/turf/turf in affected_turfs)
+		REMOVE_TRAIT(turf, TRAIT_NO_SLIME_TELEPORTATION, XENOBIO_DEPLOYABLE_TRAIT)
+
+	for(var/atom/effect in visual_effects)
+		qdel(effect)
+
+	. = ..()
+
+/obj/machinery/bluespace_anchor/Initialize(mapload)
+	. = ..()
+	var/list/turfs = detect_room(get_turf(src), list(/turf/open/space), 100)
+	var/list/pen_turfs = list()
+	for(var/turf/turf in turfs)
+		var/is_pen = TRUE
+		for(var/direction in GLOB.alldirs)
+			if(!(get_step(turf, direction) in turfs))
+				is_pen = FALSE
+				break
+
+		if(isclosedturf(turf))
+			is_pen = FALSE
+
+		if(is_pen)
+			pen_turfs += turf
+
+	if(!pen_turfs)
+		break_off()
+		return
+
+	if(length(pen_turfs) > MAXIMUM_SLIME_PEN_SIZE)
+		break_off()
+		return
+
+	for(var/turf/pen_turf in pen_turfs)
+		new /obj/effect/temp_visual/xenobio_blast/bluespace(pen_turf)
+		affected_turfs += pen_turf
+		ADD_TRAIT(pen_turf, TRAIT_NO_SLIME_TELEPORTATION, XENOBIO_DEPLOYABLE_TRAIT)
+
+	sleep(2)
+
+	for(var/turf/pen_turf in pen_turfs)
+		var/list/non_pen_dirs = list()
+		for(var/direction in GLOB.alldirs)
+			if(!(get_step(pen_turf, direction) in pen_turfs))
+				non_pen_dirs += direction
+
+		if(LAZYLEN(non_pen_dirs))
+			var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+			visual_effects += edge
+			if(LAZYLEN(non_pen_dirs) == 1)
+				edge.icon_state = "bluespace_field_corner"
+				edge.dir = non_pen_dirs[1]
+				edge.update_icon()
+				continue
+
+			for(var/diag in GLOB.diagonals)
+				if(diag in non_pen_dirs)
+					non_pen_dirs -= diag
+
+			switch(LAZYLEN(non_pen_dirs))
+				if(1)
+					edge.dir = non_pen_dirs[1]
+				if(2)
+					edge.dir = non_pen_dirs[1] | non_pen_dirs[2]
+				if(3)
+					if((NORTH in non_pen_dirs) && (SOUTH in non_pen_dirs))
+						non_pen_dirs -= NORTH
+						non_pen_dirs -= SOUTH
+					else
+						non_pen_dirs -= EAST
+						non_pen_dirs -= WEST
+
+					edge.icon_state = "bluespace_field_end"
+					edge.dir = non_pen_dirs[1]
+					edge.update_icon()
+				if(4)
+					edge.icon_state = "bluespace_field"
+					edge.update_icon()
+
+/obj/effect/bluespace_field_edge
+	icon_state = "bluespace_field_edge"
+
+/obj/machinery/bluespace_anchor/proc/break_off()
+	new /obj/item/xenobio_deployable/bluespace_anchor(get_turf(src))
+	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
+	visible_message(span_warning("[src] fails to boot up and detaches itself from the floor."))
+	qdel(src)
+
+/obj/machinery/bluespace_anchor/update_icon_state()
+	icon_state = "[base_icon_state][on ? "" : "-off"]"
+	return ..()
+
+/obj/machinery/bluespace_anchor/attackby(obj/item/W, mob/user, params)
+	if(default_unfasten_wrench(user, W))
+		return
+
+	return ..()
+
+/obj/machinery/bluespace_anchor/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
+	. = ..()
+	if(. != SUCCESSFUL_UNFASTEN)
+		return
+
+	new /obj/item/xenobio_deployable/bluespace_anchor(get_turf(src))
+	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
+	to_chat(user, span_notice("You undo the bolts on [src], detaching it from the floor."))
 	qdel(src)

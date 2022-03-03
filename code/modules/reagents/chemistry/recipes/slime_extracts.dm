@@ -134,3 +134,45 @@
 // ************************************************
 // ****************** TIER THREE ******************
 // ************************************************
+
+// Yellow Extract
+
+/datum/chemical_reaction/slime/yellow_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/yellow
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
+
+/datum/chemical_reaction/slime/yellow_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	empulse(get_turf(holder.my_atom), 3, 7)
+	return ..()
+
+/datum/chemical_reaction/slime/yellow_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/yellow
+
+/datum/chemical_reaction/slime/yellow_plasma/on_reaction(datum/reagents/holder, created_volume)
+	new /obj/item/stock_parts/cell/emproof/slime(get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/yellow_water //Weak, close-range flashbang
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/yellow
+
+/datum/chemical_reaction/slime/yellow_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/location = get_turf(holder.my_atom)
+	location.visible_message(span_danger("[src] starts shaking and explodes, emitting a bright flash of light and a loud bang!"))
+	playsound(location, 'sound/effects/bang.ogg', 25, TRUE)
+	do_sparks(2, TRUE, location)
+
+	if(isatom(holder.my_atom))
+		var/atom/A = holder.my_atom
+		A.flash_lighting_fx(_range = 5)
+
+	for(var/mob/living/victim in get_hearers_in_view(3, location))
+		victim.soundbang_act(1, 60, rand(0, 5))
+		if(victim.flash_act(affect_silicon = TRUE))
+			if(get_dist(victim, location) <= 1)
+				victim.Paralyze(40)
+			else
+				victim.Stun(80)
+	return ..()

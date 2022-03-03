@@ -104,6 +104,24 @@
 	reqs = list(/obj/item/clothing/glasses/hud/diagnostic/sunglasses = 1)
 	category = CAT_CLOTHING
 
+/datum/crafting_recipe/hudsunslime
+	name = "Slime nutrition HUDsunglasses"
+	result = /obj/item/clothing/glasses/hud/nutrition/sunglasses
+	time = 20
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
+	reqs = list(/obj/item/clothing/glasses/hud/nutrition = 1,
+				  /obj/item/clothing/glasses/sunglasses = 1,
+				  /obj/item/stack/cable_coil = 5)
+	category = CAT_CLOTHING
+
+/datum/crafting_recipe/hudsunslimeremoval
+	name = "Slime nutrition HUD removal"
+	result = /obj/item/clothing/glasses/sunglasses
+	time = 20
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
+	reqs = list(/obj/item/clothing/glasses/hud/nutrition/sunglasses = 1)
+	category = CAT_CLOTHING
+
 /datum/crafting_recipe/scienceglasses
 	name = "Science Glasses"
 	result = /obj/item/clothing/glasses/sunglasses/chemical

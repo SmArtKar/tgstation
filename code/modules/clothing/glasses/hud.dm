@@ -108,6 +108,32 @@
 	flash_protect = FLASH_PROTECTION_FLASH
 	tint = 1
 
+/obj/item/clothing/glasses/hud/nutrition
+	name = "slime nutrition HUD"
+	desc = "A heads-up display capable of analyzing slimes and displaying their nutrition."
+	icon_state = "slimehud"
+	hud_type = DATA_HUD_NUTRITION
+	hud_trait = TRAIT_NUTRITION_HUD
+	glass_colour_type = /datum/client_colour/glass_colour/purple
+
+/obj/item/clothing/glasses/hud/nutrition/night
+	name = "night vision slime nutrition HUD"
+	desc = "A xenobiology slime nutrition HUD fitted with a light amplifier."
+	icon_state = "slimehudnight"
+	inhand_icon_state = "glasses"
+	darkness_view = 8
+	flash_protect = FLASH_PROTECTION_SENSITIVE
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
+	glass_colour_type = /datum/client_colour/glass_colour/green
+
+/obj/item/clothing/glasses/hud/nutrition/sunglasses
+	name = "slime nutrition sunglasses"
+	desc = "Sunglasses with a slime nutrition HUD."
+	icon_state = "sunhudslime"
+	inhand_icon_state = "glasses"
+	flash_protect = FLASH_PROTECTION_FLASH
+	tint = 1
+
 /obj/item/clothing/glasses/hud/security
 	name = "security HUD"
 	desc = "A heads-up display that scans the humanoids in view and provides accurate data about their ID status and security records."

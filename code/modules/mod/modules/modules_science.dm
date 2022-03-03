@@ -128,3 +128,134 @@
 
 /obj/item/mod/module/anomaly_locked/teleporter/prebuilt
 	prebuilt = TRUE
+
+/obj/item/mod/module/repeller_field //This is supposed to be an upgrade for xenobio suit
+	name = "MOD repeller field generator module"
+	desc = "A complex module designed by \"Xynergy Solutions\", repeller field generator creates a field that protects the user from slimes."
+	icon_state = "repeller_field"
+	module_type = MODULE_TOGGLE
+	complexity = 2
+	use_power_cost = DEFAULT_CHARGE_DRAIN
+	incompatible_modules = list(/obj/item/mod/module/repeller_field)
+	cooldown_time = 0.5 SECONDS
+	var/mutable_appearance/worn_underlay
+
+/obj/item/mod/module/repeller_field/on_activation()
+	. = ..()
+	if(!.)
+		return
+
+	ADD_TRAIT(mod.wearer, TRAIT_NO_SLIME_FEED, MOD_TRAIT)
+	playsound(src, 'sound/effects/bamf.ogg', 50)
+
+	worn_underlay = mutable_appearance('icons/mob/clothing/mod.dmi', "repeller_field")
+	worn_underlay.pixel_x = mod.wearer.pixel_x
+	worn_underlay.pixel_y = mod.wearer.pixel_y
+	mod.wearer.underlays += worn_underlay
+
+/obj/item/mod/module/repeller_field/on_deactivation(display_message = TRUE)
+	. = ..()
+	if(!.)
+		return
+
+	REMOVE_TRAIT(mod.wearer, TRAIT_NO_SLIME_FEED, MOD_TRAIT)
+	playsound(src, 'sound/effects/bamf.ogg', 50)
+
+	if(mod.wearer)
+		mod.wearer.underlays -= worn_underlay
+		QDEL_NULL(worn_underlay)
+
+/obj/item/mod/module/vacuum_pack
+	name = "MOD vacuum xenofauna storage module"
+	desc = "A minified version of Xynergy's xenofauna vacuum storage backpack that's able to be stuffed into a MODsuit."
+	icon_state = "vacuum"
+	module_type = MODULE_TOGGLE
+	complexity = 2
+	use_power_cost = DEFAULT_CHARGE_DRAIN * 0.2
+	incompatible_modules = list(/obj/item/mod/module/vacuum_pack)
+	cooldown_time = 0.5 SECONDS
+	var/obj/item/vacuum_pack/integrated/pack
+
+/obj/item/mod/module/vacuum_pack/Initialize(mapload)
+	. = ..()
+	pack = new(src)
+
+/obj/item/mod/module/vacuum_pack/on_activation()
+	. = ..()
+	if(!.)
+		return
+
+	pack.toggle_nozzle(mod.wearer)
+
+/obj/item/mod/module/vacuum_pack/on_deactivation(display_message = TRUE)
+	. = ..()
+	if(!.)
+		return
+
+	pack.remove_nozzle()
+
+/obj/item/mod/module/slime_bracers
+	name = "MOD bracer overcharger module"
+	desc = "A bracer-mounted module that overcharges them, causing slimes to get violently repulsed on contact. Quite effective in case of a slime outbreak, especially in combination with a repeller field."
+	icon_state = "slime_bracers"
+	module_type = MODULE_TOGGLE
+	complexity = 2
+	use_power_cost = DEFAULT_CHARGE_DRAIN
+	incompatible_modules = list(/obj/item/mod/module/slime_bracers)
+	cooldown_time = 0.5 SECONDS
+	overlay_state_active = "module_slime_bracers"
+
+/obj/item/mod/module/slime_bracers/on_activation()
+	. = ..()
+	if(!.)
+		return
+
+	RegisterSignal(mod.wearer, COMSIG_HUMAN_MELEE_UNARMED_ATTACK, .proc/launch_slime)
+
+/obj/item/mod/module/slime_bracers/on_deactivation(display_message = TRUE)
+	. = ..()
+	if(!.)
+		return
+
+	UnregisterSignal(mod.wearer, COMSIG_HUMAN_MELEE_UNARMED_ATTACK)
+
+/obj/item/mod/module/slime_bracers/proc/launch_slime(mob/living/carbon/human/wearer, atom/target, proximity)
+	if(!isslime(target))
+		return
+
+	var/mob/living/simple_animal/slime/slime = target
+	slime.visible_message(span_warning("[slime] is violently launched into the air as soon as it comes in contact with [mod.wearer]'s overcharged bracers!"))
+	var/throwtarget = get_edge_target_turf(wearer, get_dir(wearer, slime))
+	slime.throw_at(throwtarget, 3, 2, wearer)
+	slime.Stun(50)
+	playsound(src, 'sound/effects/contractorbatonhit.ogg', 75)
+	drain_power(DEFAULT_CHARGE_DRAIN * 2)
+
+/obj/item/mod/module/emote_holoscreen
+	name = "MOD emote holoscreen module"
+	desc = "A holographic projector mounted into your helmet that allows you to show slimeys on it."
+	icon_state = "emote_holoscreen"
+	module_type = MODULE_TOGGLE
+	complexity = 0
+	use_power_cost = DEFAULT_CHARGE_DRAIN * 0.1
+	incompatible_modules = list(/obj/item/mod/module/emote_holoscreen)
+	cooldown_time = 0.5 SECONDS
+	overlay_state_active = "emote_uwu"
+
+/obj/item/mod/module/emote_holoscreen/on_activation()
+	. = ..()
+	if(!.)
+		return
+
+	var/list/emotions = list(
+		"emote_pout" = image(icon = 'icons/hud/radial.dmi', icon_state = "emote_pout"),
+		"emote_sad" = image(icon = 'icons/hud/radial.dmi', icon_state = "emote_sad"),
+		"emote_angry" = image(icon = 'icons/hud/radial.dmi', icon_state = "emote_angry"),
+		"emote_mischevous" = image(icon = 'icons/hud/radial.dmi', icon_state = "emote_mischevous"),
+		"emote_uwu" = image(icon = 'icons/hud/radial.dmi', icon_state = "emote_uwu"),
+		"emote_owo" = image(icon = 'icons/hud/radial.dmi', icon_state = "emote_owo"),
+		)
+
+	overlay_state_active = show_radial_menu(mod.wearer, mod, emotions, require_near = TRUE)
+	mod.helmet.update_icon()
+	mod.wearer.update_icon()

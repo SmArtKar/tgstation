@@ -1339,3 +1339,43 @@
 			),
 		),
 	)
+
+/datum/mod_theme/xenobio
+	name = "xenobio"
+	desc = "A light suit designed for xenobiologists that for some reason, resembles bikini."
+	extended_desc = "An extremely light suit that's missing a lot of plating and is instead completed with hard light fields, \
+					 this suit was initially designed by \"Xynergy Solutions\", but later the patent was bought by NanoTrasen.\
+					 This suit isn't spaceproof and it's main target is instead protecting user from slimes and assisting them in their reseach."
+	default_skin = "xenobio"
+	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 100, FIRE = 0, ACID = 100, WOUND = 15)
+	resistance_flags = FIRE_PROOF|ACID_PROOF
+	slowdown_inactive = 0.5
+	slowdown_active = 0
+	allowed_suit_storage = list(
+		/obj/item/tank/internals,
+		/obj/item/reagent_containers/dropper,
+		/obj/item/flashlight/pen,
+		/obj/item/reagent_containers/syringe,
+		/obj/item/reagent_containers/hypospray,
+		/obj/item/reagent_containers/glass/beaker,
+		/obj/item/gun/syringe)
+	skins = list(
+		"xenobio" = list(
+			HELMET_LAYER = null,
+			HELMET_FLAGS = list(
+				UNSEALED_CLOTHING = SNUG_FIT|THICKMATERIAL,
+				UNSEALED_INVISIBILITY = HIDEEARS|HIDESNOUT,
+				SEALED_INVISIBILITY = HIDEEARS|HIDESNOUT,
+				SEALED_COVER = HEADCOVERSMOUTH|HEADCOVERSEYES|PEPPERPROOF,
+			),
+			CHESTPLATE_FLAGS = list(
+				UNSEALED_CLOTHING = THICKMATERIAL,
+			),
+			GAUNTLETS_FLAGS = list(
+				UNSEALED_CLOTHING = THICKMATERIAL,
+			),
+			BOOTS_FLAGS = list(
+				UNSEALED_CLOTHING = THICKMATERIAL,
+			),
+		),
+	)

@@ -1084,6 +1084,7 @@
 		"health_hud",
 		"scigoggles",
 		"security_hud",
+		"nutrition_hud",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1500)
 
@@ -1098,6 +1099,7 @@
 		"night_visision_goggles",
 		"nvgmesons",
 		"security_hud_night",
+		"nutrition_hud_night",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 5000)
 
@@ -1451,6 +1453,7 @@
 	prereq_ids = list("robotics")
 	design_ids = list(
 		"mod_visor_diaghud",
+		"mod_visor_slimehud",
 		"mod_gps",
 		"mod_reagent_scanner",
 		"mod_clamp",

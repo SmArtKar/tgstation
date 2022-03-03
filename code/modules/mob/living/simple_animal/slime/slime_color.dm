@@ -10,6 +10,9 @@
 	var/environmental_req
 	var/slime_tags
 
+	var/fitting_environment = TRUE
+	var/core_generation = 0
+
 	var/mob/living/simple_animal/slime/slime
 
 /datum/slime_color/New(slime)
@@ -21,6 +24,12 @@
 		mutations = list(type, type, type, type)
 
 /datum/slime_color/proc/Life(delta_time, times_fired) //For handling special behavior
+	if(slime.cores < slime.max_cores && slime.stat != DEAD)
+		if((core_generation >= SLIME_MAX_CORE_GENERATION && fitting_environment) || slime.is_adult)
+			slime.cores += 1
+			core_generation = 0
+		else
+			core_generation += 1
 
 /datum/slime_color/proc/finished_digesting(food)
 

@@ -152,3 +152,24 @@
 			. += "[icon_state]_fail_1"
 		if(151 to INFINITY)
 			. += "[icon_state]_fail_2"
+
+/obj/item/gun/energy/e_gun/quasar
+	name = "sniper disable rifle \"Quasar\""
+	desc = "A large energy sniper rifle powered by a dark blue slime extract in the back of it."
+	icon = 'icons/obj/guns/wide_guns.dmi'
+	icon_state = "quasar"
+	worn_icon_state = "quasar"
+	inhand_icon_state = "quasar"
+	base_pixel_x = -16
+	pixel_x = -16
+	w_class = WEIGHT_CLASS_HUGE
+	shaded_charge = TRUE
+	modifystate = FALSE
+	can_flashlight = FALSE
+	fire_delay = 60
+	zoomable = TRUE
+	zoom_amt = 10
+	zoom_out_amt = 5
+	slot_flags = ITEM_SLOT_BACK
+	actions_types = list()
+	ammo_type = list(/obj/item/ammo_casing/energy/disabler/heavy)

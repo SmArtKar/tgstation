@@ -21,6 +21,9 @@
 /// How much gases our pod injects per tick(so if plant needs 3 moles of CO2 per tick, pod will inject CO2 until there's 3 * XENOFLORA_POD_INPUT_MULTIPLIER moles)
 #define XENOFLORA_POD_INPUT_MULTIPLIER 10
 
+/// How big can a slime pen be
+#define MAXIMUM_SLIME_PEN_SIZE 50
+
 /// Slime core prices
 
 #define SLIME_VALUE_TIER_1 200
@@ -38,6 +41,9 @@
 
 /// Slime requirements
 
+/// How much ticks it requires for slime to generate a core
+#define SLIME_MAX_CORE_GENERATION 20
+
 /// At what temperature orange slimes start losing nutrition
 #define ORANGE_SLIME_UNHAPPY_TEMP T0C+60
 /// At what temperature orange slimes start taking damage
@@ -49,13 +55,28 @@
 /// At what temperature blue slimes start taking damage
 #define BLUE_SLIME_DANGEROUS_TEMP T0C-10
 /// How much water vapor blue slimes create after finishing digesting
-#define BLUE_SLIME_PUFF_AMOUNT 15
+#define BLUE_SLIME_PUFF_AMOUNT 10
 
 /// How much CO2 metal slimes require
 #define METAL_SLIME_CO2_REQUIRED 3
 
 /// How likely it's for yellow slime to zap per second, multiplied by it's power level
 #define YELLOW_SLIME_ZAP_PROB 4
+
+/// How likely it is for silver slime to implode every second
+#define SILVER_SLIME_IMPLODE_PROB 15
+
+/// How much plasma does dark purple slime need
+#define DARK_PURPLE_SLIME_PLASMA_REQUIRED 15
+/// How likely it is for dark purple slimes to puff out flaming plasma when they're not satisfied
+#define DARK_PURPLE_SLIME_PUFF_PROBABILITY 25
+
+/// How cold it should be for dark blue slime
+#define DARK_BLUE_SLIME_DANGEROUS_TEMP T0C-40
+/// How much water vapor do dark blue slimes want
+#define DARK_BLUE_SLIME_VAPOR_REQUIRED 5
+/// How fast are we losing cores
+#define DARK_BLUE_SLIME_CORE_LOSE 10
 
 /// Tags for slime colors
 

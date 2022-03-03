@@ -63,6 +63,26 @@
 	category = list("Equipment")
 	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
 
+/datum/design/nutrition_hud
+	name = "Slime Nutrition HUD"
+	desc = "A heads-up display capable of analyzing slimes and displaying their nutrition."
+	id = "nutrition_hud"
+	build_type = PROTOLATHE | AWAY_LATHE
+	materials = list(/datum/material/iron = 500, /datum/material/glass = 500)
+	build_path = /obj/item/clothing/glasses/hud/nutrition
+	category = list("Equipment")
+	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
+
+/datum/design/nutrition_hud_night
+	name = "Night Vision Slime Nutrition HUD"
+	desc = "Upgraded version of the slime nutrition HUD designed to function during a power failure."
+	id = "nutrition_hud_night"
+	build_type = PROTOLATHE | AWAY_LATHE
+	materials = list(/datum/material/iron = 600, /datum/material/glass = 600, /datum/material/uranium = 1000, /datum/material/plasma = 300)
+	build_path = /obj/item/clothing/glasses/hud/nutrition/night
+	category = list("Equipment")
+	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
+
 /////////////////////////////////////////
 //////////////////Misc///////////////////
 /////////////////////////////////////////

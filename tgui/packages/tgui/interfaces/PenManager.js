@@ -90,12 +90,31 @@ const DischargerDevices = (props, context) => {
               icon={discharger.on ? 'power-off' : 'times'}
               content={discharger.on ? 'On' : 'Off'}
               selected={discharger.on}
-              onClick={() => act('discharger_power', { "ref": discharger.ref })} />
+              onClick={() => act('device_power', { "ref": discharger.ref })} />
           )}>
             <Box>
               Recently grounded {discharger.stored_power}.
             </Box>
           </Section>
+        </Collapsible>
+      ))}
+    </>
+  );
+};
+
+const SimpleDevices = (props, context) => {
+  const { act, data } = useBackend(context);
+  return (
+    <>
+      {data.device_data.map(device => (
+        <Collapsible key={device.ref} title={device.name}>
+          <Section title="Settings" buttons={(
+            <Button
+              icon={device.on ? 'power-off' : 'times'}
+              content={device.on ? 'On' : 'Off'}
+              selected={device.on}
+              onClick={() => act('device_power', { "ref": device.ref })} />
+          )} />
         </Collapsible>
       ))}
     </>
@@ -195,6 +214,9 @@ export const PenManager = (props, context) => {
           )}
           {!!data.discharger_data && (
             <DischargerDevices />
+          )}
+          {!!data.device_data && (
+            <SimpleDevices />
           )}
         </Section>
       </Window.Content>

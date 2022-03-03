@@ -286,7 +286,7 @@
 			if(species.glow_intensity != LUMINESCENT_DEFAULT_GLOW)
 				to_chat(user, span_warning("Your glow is already enhanced!"))
 				return
-			species.update_glow(user, 5)
+			species.update_glow(user, 7)
 			addtimer(CALLBACK(species, /datum/species/jelly/luminescent.proc/update_glow, user, LUMINESCENT_DEFAULT_GLOW), 600)
 			to_chat(user, span_notice("You start glowing brighter."))
 

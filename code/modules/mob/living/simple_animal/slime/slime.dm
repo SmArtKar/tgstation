@@ -8,6 +8,7 @@
 	var/is_adult = 0
 	var/docile = 0
 	faction = list("slime","neutral")
+	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,NUTRITION_HUD)
 
 	harm_intent_damage = 5
 	icon_living = "grey baby slime"
@@ -43,7 +44,8 @@
 
 	footstep_type = FOOTSTEP_MOB_SLIME
 
-	var/cores = 1 // the number of /obj/item/slime_extract's the slime has left inside
+	var/cores = 0 // the number of /obj/item/slime_extract's the slime has left inside
+	var/max_cores = 1 // how much cores can this slime generate
 	var/mutation_chance = 30 // Chance of mutating, should be between 25 and 35
 
 	var/powerlevel = 0 // 1-10 controls how much electricity they are generating
@@ -69,8 +71,10 @@
 	var/list/speech_buffer = list() // Last phrase said near it and person who said it
 
 	var/mood = "" // To show its face
-	var/mutator_used = FALSE //So you can't shove a dozen mutators into a single slime
+	var/mutator_used = FALSE // So you can't shove a dozen mutators into a single slime
 	var/force_stasis = FALSE
+
+	var/nutrition_control = TRUE // When set to FALSE slime will constantly be hungry regardless of it's nutrition.
 
 	var/static/regex/slime_name_regex = new("\\w+ (baby|adult) slime \\(\\d+\\)")
 	///////////TIME FOR SUBSPECIES

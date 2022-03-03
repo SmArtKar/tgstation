@@ -1135,6 +1135,13 @@
 	build_path = /obj/item/mod/module/visor/sechud
 	department_type = MODULE_SECURITY
 
+/datum/design/module/mod_visor_slimehud
+	name = "MOD Module: Slime Nutrition Visor"
+	id = "mod_visor_slimehud"
+	materials = list(/datum/material/gold = 500, /datum/material/glass = 1000)
+	build_path = /obj/item/mod/module/visor/slimehud
+	department_type = MODULE_SCIENCE
+
 /datum/design/module/mod_visor_meson
 	name = "MOD Module: Meson Visor"
 	id = "mod_visor_meson"

@@ -269,7 +269,7 @@
 	icon_state = "spidereggs"
 	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 4)
 	tastes = list("cobwebs" = 1)
-	foodtypes = MEAT 
+	foodtypes = MEAT
 	w_class = WEIGHT_CLASS_TINY
 
 /obj/item/food/spiderling
@@ -949,3 +949,16 @@
 	icon_state = "ready_donk_warm_mex"
 	tastes = list("enchiladas" = 2, "laziness" = 1)
 	foodtypes = GRAIN | DAIRY | MEAT | VEGETABLES | JUNKFOOD
+
+/obj/item/food/sporgieggs
+	name = "spogri eggs"
+	desc = "A cluster of orange eggs coated with white fur and sugar."
+	icon_state = "sporgieggs"
+	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 4, /datum/reagent/consumable/sugar = 2)
+	tastes = list("cobwebs" = 1)
+	foodtypes = MEAT | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/sporgieggs/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/swabable, CELL_LINE_TABLE_CORGI, CELL_VIRUS_TABLE_GENERIC_MOB)
