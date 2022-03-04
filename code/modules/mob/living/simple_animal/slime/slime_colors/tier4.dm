@@ -13,6 +13,7 @@
 	color = "pink"
 	coretype = /obj/item/slime_extract/pink
 	mutations = list(/datum/slime_color/pink, /datum/slime_color/pink, /datum/slime_color/light_pink, /datum/slime_color/light_pink)
+	food_types = list(/obj/item/food/xenoflora/broombush = 1)
 	slime_tags = DISCHARGER_WEAKENED
 
 /datum/slime_color/gold

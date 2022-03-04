@@ -69,7 +69,7 @@
 	color = "orange"
 	coretype = /obj/item/slime_extract/orange
 	mutations = list(/datum/slime_color/yellow, /datum/slime_color/dark_purple, /datum/slime_color/red, /datum/slime_color/red)
-	food_types = list(/mob/living/simple_animal/pet/dog/corgi/sporgi = 6, /obj/item/food/sporgieggs = 2, /obj/item/food/meat/slab/corgi/sporgi = 2) //Sporgis are huge and thus very nutritious
+	food_types = list()
 	environmental_req = "Subject requires temperatures higher than 60° Celsius."
 
 /datum/slime_color/orange/Life(delta_time, times_fired)

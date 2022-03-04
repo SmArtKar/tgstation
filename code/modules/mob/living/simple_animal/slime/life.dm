@@ -120,7 +120,13 @@
 
 	AIproc = 0
 
-/mob/living/simple_animal/slime/proc/slime_step(step_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
+/mob/living/simple_animal/slime/proc/slime_step(atom/step_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
+	if(!Adjacent(step_target))
+		step_target = get_step(get_turf(src), get_dir(src, step_target))
+
+	if(SEND_SIGNAL(src, COMSIG_SLIME_TAKE_STEP, step_target) & COLOR_SLIME_NO_STEP)
+		return
+
 	var/obj/machinery/door/airlock/airlock = locate(/obj/machinery/door/airlock) in get_turf(step_target)
 	var/obj/machinery/door/firedoor/firedoor = locate(/obj/machinery/door/firedoor) in get_turf(step_target)
 	var/obj/machinery/door/window/windoor = locate(/obj/machinery/door/window) in get_turf(step_target)
@@ -129,17 +135,17 @@
 	var/should_squeese = FALSE
 	var/squeese_target
 
-	if(windoor)
+	if(windoor && windoor.density)
 		should_squeese = TRUE
 		squeese_target = windoor
 		if(windoor.powered())
 			can_squeese = FALSE
 
-	if(firedoor)
+	if(firedoor && firedoor.density)
 		squeese_target = firedoor
 		should_squeese = TRUE
 
-	if(airlock)
+	if(airlock && airlock.density)
 		should_squeese = TRUE
 		squeese_target = airlock
 		if(airlock.locked)

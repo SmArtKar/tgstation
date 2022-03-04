@@ -201,16 +201,22 @@
 	var/list/visual_effects = list()
 
 /obj/machinery/bluespace_anchor/Destroy()
-	for(var/turf/turf in affected_turfs)
-		REMOVE_TRAIT(turf, TRAIT_NO_SLIME_TELEPORTATION, XENOBIO_DEPLOYABLE_TRAIT)
-
-	for(var/atom/effect in visual_effects)
-		qdel(effect)
-
+	toggle(FALSE)
 	. = ..()
 
-/obj/machinery/bluespace_anchor/Initialize(mapload)
-	. = ..()
+/obj/machinery/bluespace_anchor/proc/toggle(new_state = TRUE)
+	on = new_state
+	update_icon()
+
+	if(!on)
+		for(var/turf/turf in affected_turfs)
+			REMOVE_TRAIT(turf, TRAIT_NO_SLIME_TELEPORTATION, XENOBIO_DEPLOYABLE_TRAIT)
+
+		for(var/atom/effect in visual_effects)
+			qdel(effect)
+
+		return
+
 	var/list/turfs = detect_room(get_turf(src), list(/turf/open/space), 100)
 	var/list/pen_turfs = list()
 	for(var/turf/turf in turfs)
@@ -248,36 +254,76 @@
 				non_pen_dirs += direction
 
 		if(LAZYLEN(non_pen_dirs))
-			var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
-			visual_effects += edge
-			if(LAZYLEN(non_pen_dirs) == 1)
-				edge.icon_state = "bluespace_field_corner"
-				edge.dir = non_pen_dirs[1]
-				edge.update_icon()
-				continue
+			var/list/cardinal_dirs = list()
+			for(var/card in GLOB.cardinals)
+				if(card in non_pen_dirs)
+					cardinal_dirs += card
 
+
+			var/list/diagonal_dirs = list()
 			for(var/diag in GLOB.diagonals)
 				if(diag in non_pen_dirs)
-					non_pen_dirs -= diag
+					diagonal_dirs += diag
 
-			switch(LAZYLEN(non_pen_dirs))
-				if(1)
-					edge.dir = non_pen_dirs[1]
-				if(2)
-					edge.dir = non_pen_dirs[1] | non_pen_dirs[2]
-				if(3)
-					if((NORTH in non_pen_dirs) && (SOUTH in non_pen_dirs))
-						non_pen_dirs -= NORTH
-						non_pen_dirs -= SOUTH
-					else
-						non_pen_dirs -= EAST
-						non_pen_dirs -= WEST
+			if(LAZYLEN(cardinal_dirs))
+				switch(LAZYLEN(cardinal_dirs))
+					if(1)
+						var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+						visual_effects += edge
+						edge.dir = cardinal_dirs[1]
+						if(cardinal_dirs[1] in list(NORTH, SOUTH))
+							diagonal_dirs -= EAST | cardinal_dirs[1]
+							diagonal_dirs -= WEST | cardinal_dirs[1]
+						else
+							diagonal_dirs -= NORTH | cardinal_dirs[1]
+							diagonal_dirs -= SOUTH | cardinal_dirs[1]
+					if(2)
+						if(turn(cardinal_dirs[1], 180) == cardinal_dirs[2])
+							var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+							visual_effects += edge
+							edge.dir = cardinal_dirs[1]
 
-					edge.icon_state = "bluespace_field_end"
-					edge.dir = non_pen_dirs[1]
-					edge.update_icon()
-				if(4)
-					edge.icon_state = "bluespace_field"
+							edge = new(pen_turf)
+							visual_effects += edge
+							edge.dir = cardinal_dirs[2]
+
+							diagonal_dirs = list()
+						else
+							var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+							visual_effects += edge
+							edge.dir = cardinal_dirs[1] | cardinal_dirs[2]
+							if(turn(cardinal_dirs[1] | cardinal_dirs[2], 180) in diagonal_dirs)
+								diagonal_dirs = list(turn(cardinal_dirs[1] | cardinal_dirs[2], 180))
+							else
+								diagonal_dirs = list()
+					if(3)
+						if((NORTH in cardinal_dirs) && (SOUTH in cardinal_dirs))
+							cardinal_dirs -= NORTH
+							cardinal_dirs -= SOUTH
+						else
+							cardinal_dirs -= EAST
+							cardinal_dirs -= WEST
+
+
+						var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+						visual_effects += edge
+						edge.icon_state = "bluespace_field_end"
+						edge.dir = cardinal_dirs[1]
+						edge.update_icon()
+						diagonal_dirs = list()
+					if(4)
+						var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+						visual_effects += edge
+						edge.icon_state = "bluespace_field"
+						edge.update_icon()
+						diagonal_dirs = list()
+
+			if(LAZYLEN(diagonal_dirs))
+				for(var/diag_dir in diagonal_dirs)
+					var/obj/effect/bluespace_field_edge/edge = new(pen_turf)
+					visual_effects += edge
+					edge.dir = diag_dir
+					edge.icon_state = "bluespace_field_corner"
 					edge.update_icon()
 
 /obj/effect/bluespace_field_edge

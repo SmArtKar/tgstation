@@ -6,10 +6,15 @@
 #define UPGRADED_VACUUM_PACK_RANGE 3
 #define ILLEGAL_VACUUM_PACK_RANGE 4
 
+#define NORMAL_VACUUM_PACK_SPEED 12
+#define UPGRADED_VACUUM_PACK_SPEED 8
+#define ILLEGAL_VACUUM_PACK_SPEED 6
+
 #define VACUUM_PACK_UPGRADE_STASIS "stasis"
 #define VACUUM_PACK_UPGRADE_HEALING "healing"
 #define VACUUM_PACK_UPGRADE_CAPACITY "capacity"
 #define VACUUM_PACK_UPGRADE_RANGE "range"
+#define VACUUM_PACK_UPGRADE_SPEED "speed"
 #define VACUUM_PACK_UPGRADE_PACIFY "pacification"
 #define VACUUM_PACK_UPGRADE_BIOMASS "biomass printer"
 
@@ -34,6 +39,7 @@
 	var/list/stored = list()
 	var/capacity = NORMAL_VACUUM_PACK_CAPACITY
 	var/range = NORMAL_VACUUM_PACK_RANGE
+	var/speed = NORMAL_VACUUM_PACK_SPEED
 	var/illegal = FALSE
 	var/list/upgrades = list()
 	var/obj/machinery/biomass_recycler/linked
@@ -67,6 +73,10 @@
 			. += span_notice("It has [upgrade] upgrade installed.")
 
 /obj/item/vacuum_pack/attackby(obj/item/item, mob/living/user, params)
+	if(item == nozzle)
+		remove_nozzle()
+		return
+
 	if(user.combat_mode)
 		return ..()
 
@@ -145,13 +155,6 @@
 		var/atom/movable/screen/inventory/hand/hand = over_object
 		wearer.putItemFromInventoryInHandIfPossible(src, hand.held_index)
 	return ..()
-
-/obj/item/vacuum_pack/attackby(obj/item/W, mob/user, params)
-	if(W == nozzle)
-		remove_nozzle()
-		return 1
-	else
-		return ..()
 
 /obj/item/vacuum_pack/dropped(mob/user)
 	..()
@@ -273,7 +276,7 @@
 				to_chat(user, span_warning("[pack] is not linked to a biomass recycler!"))
 				return
 
-			if(!do_after(user, (pack.illegal ? 6 : 12), target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
+			if(!do_after(user, pack.speed, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
 				return
 
 			if(target_stat == CONSCIOUS)
@@ -322,7 +325,7 @@
 			to_chat(user, span_warning("[pack] is already filled to the brim!"))
 			return
 
-		if(!do_after(user, (pack.illegal ? 6 : 12), target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
+		if(!do_after(user, pack.speed, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
 			return
 
 		playsound(user, 'sound/effects/refill.ogg', 50, TRUE)
@@ -432,8 +435,16 @@
 	desc = "An upgrade disk for a backpack vacuum xenofauna storage that strengthens it's pump and allows it to reach further."
 	upgrade_type = VACUUM_PACK_UPGRADE_RANGE
 
-/obj/item/disk/vacuum_upgrade/capacity/on_upgrade(obj/item/vacuum_pack/pack)
+/obj/item/disk/vacuum_upgrade/range/on_upgrade(obj/item/vacuum_pack/pack)
 	pack.range = UPGRADED_VACUUM_PACK_RANGE
+
+/obj/item/disk/vacuum_upgrade/speed
+	name = "vacuum pack speed upgrade disk"
+	desc = "An upgrade disk for a backpack vacuum xenofauna storage that upgrades it's motor and allows it to suck slimes up faster."
+	upgrade_type = VACUUM_PACK_UPGRADE_SPEED
+
+/obj/item/disk/vacuum_upgrade/speed/on_upgrade(obj/item/vacuum_pack/pack)
+	pack.speed = UPGRADED_VACUUM_PACK_SPEED
 
 /obj/item/disk/vacuum_upgrade/pacification
 	name = "vacuum pack pacification upgrade disk"
@@ -452,9 +463,10 @@
 	inhand_icon_state = "vacuum_pack_syndicate"
 	range = ILLEGAL_VACUUM_PACK_RANGE
 	capacity = ILLEGAL_VACUUM_PACK_CAPACITY
+	speed = ILLEGAL_VACUUM_PACK_SPEED
 	illegal = TRUE
 	nozzle_type = /obj/item/vacuum_nozzle/syndicate
-	upgrades = list(VACUUM_PACK_UPGRADE_HEALING, VACUUM_PACK_UPGRADE_STASIS)
+	upgrades = list(VACUUM_PACK_UPGRADE_HEALING, VACUUM_PACK_UPGRADE_STASIS, VACUUM_PACK_UPGRADE_BIOMASS)
 	give_choice = FALSE
 
 /obj/item/vacuum_nozzle/syndicate
@@ -468,9 +480,10 @@
 	desc = "You shouldn't be seeing this!"
 	range = UPGRADED_VACUUM_PACK_RANGE
 	capacity = UPGRADED_VACUUM_PACK_CAPACITY
+	speed = UPGRADED_VACUUM_PACK_SPEED
 	check_backpack = FALSE
 	nozzle_type = /obj/item/vacuum_nozzle/integrated
-	upgrades = list(VACUUM_PACK_UPGRADE_HEALING, VACUUM_PACK_UPGRADE_STASIS, VACUUM_PACK_UPGRADE_BIOMASS)
+	upgrades = list(VACUUM_PACK_UPGRADE_PACIFY, VACUUM_PACK_UPGRADE_HEALING, VACUUM_PACK_UPGRADE_STASIS, VACUUM_PACK_UPGRADE_BIOMASS) //Fully upgraded so it's worth it's price
 
 /obj/item/vacuum_nozzle/integrated
 	name = "integrated vacuum pack nozzle"
@@ -488,8 +501,14 @@
 #undef UPGRADED_VACUUM_PACK_RANGE
 #undef ILLEGAL_VACUUM_PACK_RANGE
 
+#undef NORMAL_VACUUM_PACK_SPEED
+#undef UPGRADED_VACUUM_PACK_SPEED
+#undef ILLEGAL_VACUUM_PACK_SPEED
+
 #undef VACUUM_PACK_UPGRADE_STASIS
 #undef VACUUM_PACK_UPGRADE_HEALING
 #undef VACUUM_PACK_UPGRADE_CAPACITY
 #undef VACUUM_PACK_UPGRADE_RANGE
+#undef VACUUM_PACK_UPGRADE_SPEED
 #undef VACUUM_PACK_UPGRADE_PACIFY
+#undef VACUUM_PACK_UPGRADE_BIOMASS

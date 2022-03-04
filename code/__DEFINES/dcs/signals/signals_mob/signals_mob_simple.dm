@@ -13,3 +13,6 @@
 ///FROM mob/living/simple_animal/hostile/ooze/eat_atom(): (atom/target, edible_flags)
 #define COMSIG_OOZE_EAT_ATOM "ooze_eat_atom"
 	#define COMPONENT_ATOM_EATEN  (1<<0)
+///From mob/living/simple_animal/slime/slime_step(): (atom/target)
+#define COMSIG_SLIME_TAKE_STEP "slime_take_step"
+	#define COLOR_SLIME_NO_STEP  (1<<0) //Cancels the AI movement in case slime color has it's own ways of transportation(bluespace slimes for example)
