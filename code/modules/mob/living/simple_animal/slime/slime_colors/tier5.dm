@@ -26,7 +26,7 @@
 /datum/slime_color/bluespace/remove()
 	UnregisterSignal(slime, COMSIG_SLIME_TAKE_STEP)
 
-/datum/slime_color/bluespace/proc/teleport(atom/step_target)
+/datum/slime_color/bluespace/proc/teleport(datum/source, atom/step_target)
 	if(!prob(BLUESPACE_SLIME_TELEPORT_CHANCE))
 		return
 
@@ -34,14 +34,18 @@
 	if(HAS_TRAIT(slime_turf, TRAIT_NO_SLIME_TELEPORTATION))
 		return
 
-	var/turf/tele_turf = get_step(get_step(get_turf(slime), get_dir(slime, step_target)), get_dir(slime, step_target))
+	var/turf/possible_tele_turf = slime_turf
+	var/iter = 1
+	for(var/turf/tele_turf in get_line(slime_turf, get_turf(step_target)))
+		if(iter > BLUESPACE_SLIME_TELEPORT_DISTANCE)
+			break
 
-	if(HAS_TRAIT(tele_turf, TRAIT_NO_SLIME_TELEPORTATION))
-		return
+		tele_turf = get_step(tele_turf, get_dir(slime, step_target))
+		if(is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_NO_SLIME_TELEPORTATION))
+			possible_tele_turf = tele_turf
 
-	if(tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE))
-		return
+		iter += 1
 
-	tele_turf.Beam(get_turf(slime), "bluespace_phase", time = 12)
-	do_teleport(slime, tele_turf, channel = TELEPORT_CHANNEL_BLUESPACE)
+	slime_turf.Beam(possible_tele_turf, "bluespace_phase", time = 12)
+	do_teleport(slime, possible_tele_turf, channel = TELEPORT_CHANNEL_BLUESPACE)
 	return COLOR_SLIME_NO_STEP

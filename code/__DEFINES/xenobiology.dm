@@ -79,7 +79,7 @@
 #define DARK_BLUE_SLIME_CORE_LOSE 10
 
 /// How likely it is for a bluespace slime to teleport through something
-#define BLUESPACE_SLIME_TELEPORT_CHANCE 100 //5
+#define BLUESPACE_SLIME_TELEPORT_CHANCE 5
 /// How much can bluespace slime travel in one teleport
 #define BLUESPACE_SLIME_TELEPORT_DISTANCE 3
 
