@@ -16,6 +16,7 @@
 
 /datum/slime_color/light_pink
 	color = "light pink"
+	icon_color = "light_pink"
 	coretype = /obj/item/slime_extract/lightpink
 	mutations = null
 	slime_tags = DISCHARGER_WEAKENED
