@@ -103,7 +103,7 @@
 				return
 
 		fitting_environment = FALSE
-		tesla_zap(slime, slime.powerlevel * 2, 5000 * (slime.powerlevel - 2), ZAP_MOB_DAMAGE | ZAP_OBJ_DAMAGE)
+		tesla_zap(slime, slime.powerlevel * 2, YELLOW_SLIME_ZAP_POWER * (slime.powerlevel - 2), ZAP_MOB_DAMAGE | ZAP_OBJ_DAMAGE)
 		var/datum/effect_system/spark_spread/sparks = new /datum/effect_system/spark_spread
 		sparks.set_up(1, 1, src)
 		sparks.start()

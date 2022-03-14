@@ -62,6 +62,7 @@
 
 /// How likely it's for yellow slime to zap per second, multiplied by it's power level
 #define YELLOW_SLIME_ZAP_PROB 4
+#define YELLOW_SLIME_ZAP_POWER 3000
 
 /// How likely it is for silver slime to implode every second
 #define SILVER_SLIME_IMPLODE_PROB 15
