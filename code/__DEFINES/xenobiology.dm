@@ -24,6 +24,8 @@
 /// How big can a slime pen be
 #define MAXIMUM_SLIME_PEN_SIZE 50
 
+#define BLUESPACE_ANCHOR_RANGE 5
+
 /// Slime core prices
 
 #define SLIME_VALUE_TIER_1 200

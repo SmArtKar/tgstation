@@ -27,5 +27,12 @@
 	},
 	"[scss]": {
 		"editor.rulers": [80]
-	}
+	},
+	"rpc.appName": "Visual Studio Code",
+	"rpc.buttonEnabled": true,
+	"rpc.detailsViewing": "In {workspace} {problems}",
+	"rpc.detailsEditing": "Working on {file_name}, {workspace}",
+	"rpc.idleText": "z Z z",
+	"rpc.lowerDetailsViewing": "Viewing {file_name}, {workspace}",
+	"rpc.lowerDetailsDebugging": "Debugging: {file_name}, {workspace}"
 }

@@ -214,7 +214,6 @@
 
 		for(var/atom/effect in visual_effects)
 			qdel(effect)
-
 		return
 
 	var/list/turfs = detect_room(get_turf(src), list(/turf/open/space), 100)
@@ -227,6 +226,9 @@
 				break
 
 		if(isclosedturf(turf))
+			is_pen = FALSE
+
+		if(get_dist(turf, get_turf(src)) > BLUESPACE_ANCHOR_RANGE)
 			is_pen = FALSE
 
 		if(is_pen)
