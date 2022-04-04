@@ -85,7 +85,7 @@
 	inhand_icon_state = "electronic"
 	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
-	deployable_type = /obj/machinery/vacuole_stabilizer
+	deployable_type = /obj/machinery/xenobio_device/vacuole_stabilizer
 
 /obj/item/xenobio_deployable/slime_discharger/deploy(mob/user, modifiers)
 	for(var/turf/discharger_turf in range(2, get_turf(src)))
@@ -99,35 +99,60 @@
 #undef DISCHARGE_PROB
 #undef DISCHARGE_EFFECT_PROB
 
-/obj/machinery/vacuole_stabilizer
-	name = "vacuole stabilizer"
-	desc = "This device prevents silver slimes from imploding and splitting into blorbies."
-	icon = 'icons/obj/xenobiology/machinery.dmi'
-	icon_state = "stabilizer-off"
-	base_icon_state = "stabilizer"
+/obj/machinery/xenobio_device
 	anchored = TRUE
-	density = TRUE
+	icon = 'icons/obj/xenobiology/machinery.dmi'
 	var/on = FALSE
+	var/device_type
 
-/obj/machinery/vacuole_stabilizer/update_icon_state()
-	icon_state = "[base_icon_state][on ? "" : "-off"]"
-	return ..()
+/obj/machinery/xenobio_device/Destroy(force)
+	toggle(FALSE)
+	. = ..()
 
-/obj/machinery/vacuole_stabilizer/attackby(obj/item/W, mob/user, params)
+
+/obj/machinery/xenobio_device/attackby(obj/item/W, mob/user, params)
 	if(default_unfasten_wrench(user, W))
 		return
 
 	return ..()
 
-/obj/machinery/vacuole_stabilizer/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
+/obj/machinery/xenobio_device/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
 	. = ..()
 	if(. != SUCCESSFUL_UNFASTEN)
 		return
 
-	new /obj/item/xenobio_deployable/vacuole_stabilizer(get_turf(src))
+	if(device_type)
+		new device_type(get_turf(src))
 	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
 	to_chat(user, span_notice("You undo the bolts on [src], detaching it from the floor."))
 	qdel(src)
+
+/obj/machinery/xenobio_device/proc/toggle(new_state = FALSE)
+	on = new_state
+	update_icon()
+
+/obj/machinery/xenobio_device/update_icon_state()
+	icon_state = "[base_icon_state][on ? "" : "-off"]"
+	return ..()
+
+/obj/machinery/xenobio_device/vacuole_stabilizer
+	name = "vacuole stabilizer"
+	desc = "This device prevents silver slimes from imploding and splitting into blorbies."
+	icon_state = "stabilizer-off"
+	base_icon_state = "stabilizer"
+	density = TRUE
+	light_color = "#FEC429"
+	light_power = 2
+	light_range = 1
+	device_type = /obj/item/xenobio_deployable/vacuole_stabilizer
+
+/obj/machinery/xenobio_device/vacuole_stabilizer/Initialize(mapload)
+	. = ..()
+	set_light_on(on)
+
+/obj/machinery/xenobio_device/vacuole_stabilizer/update_icon_state()
+	set_light_on(on)
+	return ..()
 
 /obj/item/xenobio_deployable/vacuole_stabilizer
 	name = "vacuole stabilizer"
@@ -138,7 +163,7 @@
 	inhand_icon_state = "electronic"
 	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
-	deployable_type = /obj/machinery/vacuole_stabilizer
+	deployable_type = /obj/machinery/xenobio_device/vacuole_stabilizer
 
 /obj/item/xenobio_deployable/vacuole_stabilizer/deploy(mob/user, modifiers)
 	for(var/turf/stabilizer_turf in range(3, get_turf(src)))
@@ -182,31 +207,24 @@
 	inhand_icon_state = "electronic"
 	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
-	deployable_type = /obj/machinery/bluespace_anchor
+	deployable_type = /obj/machinery/xenobio_device/bluespace_anchor
 
 /obj/effect/temp_visual/xenobio_blast/bluespace
 	name = "bluespace stabilizer field"
 	color = COLOR_CYAN
 
-/obj/machinery/bluespace_anchor
+/obj/machinery/xenobio_device/bluespace_anchor
 	name = "bluespace anchor"
 	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells."
-	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "bluespace_anchor-off"
 	base_icon_state = "bluespace_anchor"
-	anchored = TRUE
 	density = FALSE
-	var/on = FALSE
+	device_type = /obj/item/xenobio_deployable/bluespace_anchor
 	var/list/affected_turfs = list()
 	var/list/visual_effects = list()
 
-/obj/machinery/bluespace_anchor/Destroy()
-	toggle(FALSE)
+/obj/machinery/xenobio_device/bluespace_anchor/toggle(new_state = TRUE)
 	. = ..()
-
-/obj/machinery/bluespace_anchor/proc/toggle(new_state = TRUE)
-	on = new_state
-	update_icon()
 
 	if(!on)
 		for(var/turf/turf in affected_turfs)
@@ -331,28 +349,58 @@
 /obj/effect/bluespace_field_edge
 	icon_state = "bluespace_field_edge"
 
-/obj/machinery/bluespace_anchor/proc/break_off()
-	new /obj/item/xenobio_deployable/bluespace_anchor(get_turf(src))
+/obj/machinery/xenobio_device/bluespace_anchor/proc/break_off()
+	new device_type(get_turf(src))
 	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
 	visible_message(span_warning("[src] fails to boot up and detaches itself from the floor."))
 	qdel(src)
 
-/obj/machinery/bluespace_anchor/update_icon_state()
-	icon_state = "[base_icon_state][on ? "" : "-off"]"
-	return ..()
+/obj/machinery/xenobio_device/pyrite_thrower
+	name = "pyrite thrower"
+	desc = "Pyrite throwers are small devices, holding a tiny piece of solidified pyrite slime and using it to create columns of flames to warm up hot-loving slimes."
+	icon_state = "pyrite_thrower-off"
+	base_icon_state = "pyrite_thrower"
+	density = FALSE
+	light_color = "#ED7B0E"
+	light_power = 2
+	light_range = 1
+	device_type = /obj/item/xenobio_deployable/pyrite_thrower
 
-/obj/machinery/bluespace_anchor/attackby(obj/item/W, mob/user, params)
-	if(default_unfasten_wrench(user, W))
-		return
-
-	return ..()
-
-/obj/machinery/bluespace_anchor/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
+/obj/machinery/xenobio_device/pyrite_thrower/Initialize(mapload)
 	. = ..()
-	if(. != SUCCESSFUL_UNFASTEN)
-		return
+	set_light_on(on)
 
-	new /obj/item/xenobio_deployable/bluespace_anchor(get_turf(src))
-	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
-	to_chat(user, span_notice("You undo the bolts on [src], detaching it from the floor."))
-	qdel(src)
+/obj/machinery/xenobio_device/pyrite_thrower/update_icon_state()
+	set_light_on(on)
+	return ..()
+
+/obj/machinery/xenobio_device/pyrite_thrower/toggle(new_state = FALSE)
+	if(on == new_state)
+		return ..()
+
+	. = ..()
+
+	if(on)
+		START_PROCESSING(SSfastprocess, src)
+	else
+		STOP_PROCESSING(SSfastprocess, src)
+
+/obj/item/xenobio_deployable/pyrite_thrower
+	name = "pyrite thrower"
+	desc = "Pyrite throwers are small devices, holding a tiny piece of solidified pyrite slime and using it to create columns of flames to warm up hot-loving slimes."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "pyrite_thrower-off"
+	w_class = WEIGHT_CLASS_NORMAL
+	inhand_icon_state = "electronic"
+	lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi'
+	deployable_type = /obj/machinery/xenobio_device/pyrite_thrower
+
+/obj/item/xenobio_deployable/pyrite_thrower/deploy(mob/user, modifiers)
+	for(var/turf/stabilizer_turf in range(1, get_turf(src)))
+		new /obj/effect/temp_visual/xenobio_blast/pyrite_thrower(stabilizer_turf)
+	. = ..()
+
+/obj/effect/temp_visual/xenobio_blast/pyrite_thrower
+	name = "vacuole stabilizer field"
+	color = "#ED7B0E"

@@ -719,6 +719,9 @@
 
 //Proc used to resuscitate a mob, for full_heal see fully_heal()
 /mob/living/proc/revive(full_heal = FALSE, admin_revive = FALSE, excess_healing = 0)
+	if(HAS_TRAIT(src, TRAIT_NO_REVIVE))
+		return
+
 	if(excess_healing)
 		if(iscarbon(src) && excess_healing)
 			var/mob/living/carbon/C = src
@@ -735,8 +738,10 @@
 		adjustToxLoss(-20, TRUE, TRUE) //slime friendly
 		updatehealth()
 		grab_ghost()
+
 	if(full_heal)
 		fully_heal(admin_revive = admin_revive)
+
 	if(stat == DEAD && can_be_revived()) //in some cases you can't revive (e.g. no brain)
 		set_suicide(FALSE)
 		set_stat(UNCONSCIOUS) //the mob starts unconscious,
@@ -757,6 +762,7 @@
 	else if(admin_revive)
 		updatehealth()
 		get_up(TRUE)
+
 	// The signal is called after everything else so components can properly check the updated values
 	SEND_SIGNAL(src, COMSIG_LIVING_REVIVE, full_heal, admin_revive)
 

@@ -612,6 +612,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Slimes cannot teleport from turfs with this trait
 #define TRAIT_NO_SLIME_TELEPORTATION "no_slime_teleportation"
 
+/// Atoms with this trait are immune to timestop
+#define TRAIT_TIMESTOP_IMMUNE "timestop_immune"
+
+/// Mobs with this trait can't be revived
+#define TRAIT_NO_REVIVE "no_revive"
+
 //Medical Categories for quirks
 #define CAT_QUIRK_ALL 0
 #define CAT_QUIRK_NOTES 1
@@ -793,6 +799,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define ORBITING_TRAIT "orbiting"
 /// From the item_scaling element
 #define ITEM_SCALING_TRAIT "item_scaling"
+/// Applied by xenobio items/slime cores
+#define XENOBIO_TRAIT "xenobio"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and

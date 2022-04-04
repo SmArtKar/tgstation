@@ -16,3 +16,6 @@
 ///From mob/living/simple_animal/slime/slime_step(): (atom/target)
 #define COMSIG_SLIME_TAKE_STEP "slime_take_step"
 	#define COLOR_SLIME_NO_STEP  (1<<0) //Cancels the AI movement in case slime color has it's own ways of transportation(bluespace slimes for example)
+///From mob/living/simple_animal/slime/attack_atom(): (atom/target)
+#define COMSIG_SLIME_ATTACK_ATOM "slime_attack_atom"
+	#define COLOR_SLIME_NO_ATTACK  (1<<0) //Cancels the attack

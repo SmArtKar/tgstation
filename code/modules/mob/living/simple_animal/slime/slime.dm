@@ -222,7 +222,7 @@
 			if(istype(O, /obj/structure/window) || istype(O, /obj/structure/grille))
 				if(nutrition <= get_hunger_nutrition() && !Atkcool)
 					if (is_adult || prob(5))
-						O.attack_slime(src)
+						attack_atom(O)
 						Atkcool = TRUE
 						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
@@ -397,6 +397,9 @@
 	. = ..()
 
 /mob/living/simple_animal/slime/proc/apply_water()
+	if(slime_color.slime_tags & WATER_IMMUNITY)
+		return
+
 	adjustBruteLoss(rand(15,20))
 	if(!client)
 		if(Target) // Like cats

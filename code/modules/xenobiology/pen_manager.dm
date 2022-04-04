@@ -249,7 +249,7 @@
 
 	var/list/device_data = list() //For simple on-off only devices
 	for(var/turf/pen_turf in pen_turfs)
-		for(var/obj/machinery/vacuole_stabilizer/device in pen_turf)
+		for(var/obj/machinery/xenobio_device/device in pen_turf)
 			var/list/device_info = list("ref" = REF(device),
 							   			"name" = device.name,
 							   			"on" = device.on,
@@ -299,11 +299,8 @@
 			discharger.update_icon()
 
 		if("device_power")
-			var/atom/device = locate(params["ref"]) in machinery
+			var/obj/machinery/xenobio_device/device = locate(params["ref"]) in machinery
 			if(!device)
 				return
 
-			if(istype(device, /obj/machinery/vacuole_stabilizer))
-				var/obj/machinery/vacuole_stabilizer/stabilizer = device
-				stabilizer.on = !stabilizer.on
-				stabilizer.update_icon()
+			device.toggle(!device.on)

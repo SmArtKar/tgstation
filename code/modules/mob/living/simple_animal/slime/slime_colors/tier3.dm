@@ -3,8 +3,9 @@
 	icon_color = "dark_blue"
 	coretype = /obj/item/slime_extract/darkblue
 	mutations = list(/datum/slime_color/blue, /datum/slime_color/purple, /datum/slime_color/cerulean, /datum/slime_color/cerulean)
-	temperature_modifier = 213.15
-	slime_tags = DISCHARGER_WEAKENED
+	temperature_modifier = 213.15 //You can put these together with blue slimes to skip water vapor transfer step
+	slime_tags = DISCHARGER_WEAKENED | WATER_IMMUNITY
+	environmental_req = "Subject requires water vapour to prevent damage and core loss."
 	var/core_lose = 0
 
 /datum/slime_color/dark_blue/Life(delta_time, times_fired)
@@ -30,11 +31,13 @@
 	mutations = list(/datum/slime_color/purple, /datum/slime_color/orange, /datum/slime_color/sepia, /datum/slime_color/sepia)
 	slime_tags = DISCHARGER_WEAKENED
 
+	environmental_req = "Subject requires plasma to function and will react violently if any oxygen is present in the air."
+
 /datum/slime_color/dark_purple/Life(delta_time, times_fired)
 	. = ..()
 	var/turf/our_turf = get_turf(slime)
 	var/datum/gas_mixture/our_mix = our_turf.return_air()
-	if(our_mix.gases[/datum/gas/plasma] && our_mix.gases[/datum/gas/plasma][MOLES] > DARK_PURPLE_SLIME_PLASMA_REQUIRED && !(our_mix.gases[/datum/gas/oxygen] && our_mix.gases[/datum/gas/oxygen][MOLES]))
+	if(our_mix.gases[/datum/gas/plasma] && our_mix.gases[/datum/gas/plasma][MOLES] > DARK_PURPLE_SLIME_PLASMA_REQUIRED && (!our_mix.gases[/datum/gas/oxygen] || our_mix.gases[/datum/gas/oxygen][MOLES] < DARK_PURPLE_SLIME_OXYGEN_MAXIMUM))
 		fitting_environment = TRUE
 		return
 
@@ -48,18 +51,18 @@
 	coretype = /obj/item/slime_extract/silver
 	mutations = list(/datum/slime_color/blue, /datum/slime_color/metal, /datum/slime_color/pyrite, /datum/slime_color/pyrite)
 
-	environmental_req = "Subject's vacuole is unstable and it will always seek for food regardless of it's size and nutrition. Vacuole stabilizators required to avoid implosion."
+	environmental_req = "Subject's vacuole is unstable, making it will always seek for food regardless of it's size and nutrition. Vacuole stabilizators required to avoid implosion."
 
-/datum/slime_color/silver/New(slime)
+/datum/slime_color/silver/New(mob/living/simple_animal/slime/slime)
 	. = ..()
-	src.slime.nutrition_control = FALSE
+	slime.nutrition_control = FALSE
 
 /datum/slime_color/silver/remove()
 	slime.nutrition_control = initial(slime.nutrition_control)
 
 /datum/slime_color/silver/Life(delta_time, times_fired)
 	. = ..()
-	for(var/obj/machinery/vacuole_stabilizer/stabilizer in range(3, get_turf(slime)))
+	for(var/obj/machinery/xenobio_device/vacuole_stabilizer/stabilizer in range(3, get_turf(slime)))
 		if(stabilizer.on)
 			fitting_environment = TRUE
 			return
@@ -81,10 +84,10 @@
 
 	environmental_req = "Subject will create beams of lightning once fully charged. To safely discharge it you'll need a slime discharger."
 
-/datum/slime_color/yellow/New(slime)
+/datum/slime_color/yellow/New(mob/living/simple_animal/slime/slime)
 	. = ..()
-	ADD_TRAIT(src.slime, TRAIT_SHOCKIMMUNE, ROUNDSTART_TRAIT)
-	ADD_TRAIT(src.slime, TRAIT_TESLA_SHOCKIMMUNE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(slime, TRAIT_SHOCKIMMUNE, ROUNDSTART_TRAIT)
+	ADD_TRAIT(slime, TRAIT_TESLA_SHOCKIMMUNE, ROUNDSTART_TRAIT)
 
 /datum/slime_color/yellow/remove()
 	REMOVE_TRAIT(slime, TRAIT_SHOCKIMMUNE, ROUNDSTART_TRAIT)

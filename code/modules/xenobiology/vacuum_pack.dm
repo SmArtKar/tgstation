@@ -315,6 +315,10 @@
 			to_chat(user, span_warning("You can't reach [target]!"))
 			return
 
+		if(target.anchored || target.move_resist > MOVE_FORCE_STRONG)
+			to_chat(user, span_warning("You can't manage to suck [target] in!"))
+			return
+
 		if(isslime(target))
 			var/mob/living/simple_animal/slime/slime = target
 			if(slime.rabid && !pack.illegal && !(VACUUM_PACK_UPGRADE_PACIFY in pack.upgrades))

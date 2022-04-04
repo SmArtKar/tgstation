@@ -19,3 +19,4 @@
 	color = "gold"
 	coretype = /obj/item/slime_extract/gold
 	mutations = list(/datum/slime_color/gold, /datum/slime_color/gold, /datum/slime_color/adamantine, /datum/slime_color/adamantine)
+	slime_tags = BLUESPACE_CONNECTION

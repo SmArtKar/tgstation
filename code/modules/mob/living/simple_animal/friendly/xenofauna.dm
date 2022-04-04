@@ -61,7 +61,7 @@
 /mob/living/simple_animal/xenofauna/wobble_chicken/proc/handle_slimes()
 	var/mob/living/simple_animal/slime/danger
 	for(var/mob/living/simple_animal/slime/slime in view(6, src))
-		if(slime.slime_color.color == "orange")
+		if(type in slime.slime_color.food_types)
 			danger = slime
 			break
 

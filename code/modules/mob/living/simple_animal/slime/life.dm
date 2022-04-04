@@ -81,7 +81,7 @@
 						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
 						if(Target.Adjacent(src))
-							Target.attack_slime(src)
+							attack_atom(Target)
 					break
 				if(isliving(Target))
 					var/mob/living/victim = Target
@@ -92,7 +92,7 @@
 								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
 								if(victim.Adjacent(src))
-									victim.attack_slime(src)
+									attack_atom(victim)
 
 						else
 							if(!Atkcool && victim.Adjacent(src))
@@ -119,6 +119,13 @@
 		sleep(sleeptime + 2) // this is about as fast as a player slime can go
 
 	AIproc = 0
+
+
+/mob/living/simple_animal/slime/proc/attack_atom(atom/attack_target)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_ATOM, attack_target) & COLOR_SLIME_NO_ATTACK)
+		return
+
+	attack_target.attack_slime(src)
 
 /mob/living/simple_animal/slime/proc/slime_step(atom/step_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
 	if(!Adjacent(step_target))

@@ -98,7 +98,6 @@
 		return
 	attack_generic(user, rand(10, 15), BRUTE, MELEE, 1)
 
-
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src
 	if(src && !QDELETED(src))

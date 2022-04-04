@@ -26,7 +26,7 @@
 	mutations = list(/datum/slime_color/dark_blue, /datum/slime_color/silver, /datum/slime_color/pink, /datum/slime_color/pink)
 	temperature_modifier = TCRYO
 	food_types = list(/obj/item/food/xenoflora/cubomelon = 4, /obj/item/food/xenoflora/cubomelon_slice = 1)
-	slime_tags = DISCHARGER_WEAKENED
+	slime_tags = DISCHARGER_WEAKENED | WATER_IMMUNITY
 
 	environmental_req = "Subject requires low temperatures ranging from -40° to -10° Celsius."
 
@@ -80,7 +80,11 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjust_nutrition(-10 * delta_time)
+	var/hotspot_modifier = 1
+	if(locate(/obj/effect/hotspot) in our_turf)
+		hotspot_modifier = HOT_SLIME_HOTSPOT_DAMAGE_MODIFIER
+
+	slime.adjust_nutrition(-10 * delta_time * hotspot_modifier)
 	fitting_environment = FALSE
 	if(slime.nutrition <= 0)
 		slime.set_nutrition(0)
@@ -88,4 +92,4 @@
 	if(our_mix?.temperature >= ORANGE_SLIME_DANGEROUS_TEMP)
 		return
 
-	slime.adjustBruteLoss(10)
+	slime.adjustBruteLoss(10 * hotspot_modifier)
