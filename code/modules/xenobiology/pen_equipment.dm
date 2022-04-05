@@ -389,7 +389,7 @@
 	if(locate(/obj/effect/hotspot) in get_turf(src))
 		return
 
-	for(var/mob/living/simple_animal/slime/slime in get_turf(src))
+	for(var/mob/living/simple_animal/slime/slime in range(1, get_turf(src)))
 		if(slime.slime_color.slime_tags & SLIME_HOT_LOVING)
 			new /obj/effect/hotspot(get_turf(src))
 			playsound(get_turf(src), SFX_SPARKS, 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
