@@ -4,7 +4,7 @@
 	coretype = /obj/item/slime_extract/darkblue
 	mutations = list(/datum/slime_color/blue, /datum/slime_color/purple, /datum/slime_color/cerulean, /datum/slime_color/cerulean)
 	temperature_modifier = 213.15 //You can put these together with blue slimes to skip water vapor transfer step
-	slime_tags = DISCHARGER_WEAKENED | WATER_IMMUNITY
+	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
 	environmental_req = "Subject requires water vapour to prevent damage and core loss."
 	var/core_lose = 0
 
@@ -29,7 +29,7 @@
 	icon_color = "dark_purple"
 	coretype = /obj/item/slime_extract/darkpurple
 	mutations = list(/datum/slime_color/purple, /datum/slime_color/orange, /datum/slime_color/sepia, /datum/slime_color/sepia)
-	slime_tags = DISCHARGER_WEAKENED
+	slime_tags = SLIME_DISCHARGER_WEAKENED
 
 	environmental_req = "Subject requires plasma to function and will react violently if any oxygen is present in the air."
 

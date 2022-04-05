@@ -7,7 +7,7 @@
 	color = "black"
 	coretype = /obj/item/slime_extract/black
 	mutations = null
-	slime_tags = DISCHARGER_WEAKENED
+	slime_tags = SLIME_DISCHARGER_WEAKENED
 
 /datum/slime_color/adamantine
 	color = "adamantine"
@@ -19,4 +19,4 @@
 	icon_color = "light_pink"
 	coretype = /obj/item/slime_extract/lightpink
 	mutations = null
-	slime_tags = DISCHARGER_WEAKENED
+	slime_tags = SLIME_DISCHARGER_WEAKENED

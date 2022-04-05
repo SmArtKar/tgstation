@@ -3,7 +3,7 @@
 	coretype = /obj/item/slime_extract/purple
 	mutations = list(/datum/slime_color/dark_blue, /datum/slime_color/dark_purple, /datum/slime_color/green, /datum/slime_color/green)
 	food_types = list(/obj/item/food/xenoflora/broombush = 1)
-	slime_tags = DISCHARGER_WEAKENED
+	slime_tags = SLIME_DISCHARGER_WEAKENED
 
 	environmental_req = "Subject requires N2O in the atmosphere."
 
@@ -26,7 +26,7 @@
 	mutations = list(/datum/slime_color/dark_blue, /datum/slime_color/silver, /datum/slime_color/pink, /datum/slime_color/pink)
 	temperature_modifier = TCRYO
 	food_types = list(/obj/item/food/xenoflora/cubomelon = 4, /obj/item/food/xenoflora/cubomelon_slice = 1)
-	slime_tags = DISCHARGER_WEAKENED | WATER_IMMUNITY
+	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
 
 	environmental_req = "Subject requires low temperatures ranging from -40° to -10° Celsius."
 
@@ -71,6 +71,7 @@
 	mutations = list(/datum/slime_color/yellow, /datum/slime_color/dark_purple, /datum/slime_color/red, /datum/slime_color/red)
 	food_types = list()
 	environmental_req = "Subject requires temperatures higher than 60° Celsius."
+	slime_tags = SLIME_HOT_LOVING
 
 /datum/slime_color/orange/Life(delta_time, times_fired)
 	. = ..()

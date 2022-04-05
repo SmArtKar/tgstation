@@ -47,4 +47,4 @@
 	color = "rainbow"
 	coretype = /obj/item/slime_extract/rainbow
 	mutations = null
-	slime_tags = BLUESPACE_CONNECTION
+	slime_tags = SLIME_BLUESPACE_CONNECTION

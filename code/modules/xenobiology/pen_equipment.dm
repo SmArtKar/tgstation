@@ -50,7 +50,7 @@
 
 /obj/machinery/power/energy_accumulator/slime_discharger/process()
 	for(var/mob/living/simple_animal/slime/slime in range(2, src))
-		if(slime.slime_color.slime_tags & DISCHARGER_WEAKENED)
+		if(slime.slime_color.slime_tags & SLIME_DISCHARGER_WEAKENED)
 			slime.adjust_nutrition(-1)
 
 		if(slime.powerlevel > 2 && prob(DISCHARGE_PROB))
@@ -357,7 +357,7 @@
 
 /obj/machinery/xenobio_device/pyrite_thrower
 	name = "pyrite thrower"
-	desc = "Pyrite throwers are small devices, holding a tiny piece of solidified pyrite slime and using it to create columns of flames to warm up hot-loving slimes."
+	desc = "Pyrite throwers are small devices that hold a tiny piece of solidified pyrite slime and use it to create columns of flames to warm up hot-loving slimes."
 	icon_state = "pyrite_thrower-off"
 	base_icon_state = "pyrite_thrower"
 	density = FALSE
@@ -384,6 +384,16 @@
 		START_PROCESSING(SSfastprocess, src)
 	else
 		STOP_PROCESSING(SSfastprocess, src)
+
+/obj/machinery/xenobio_device/pyrite_thrower/process()
+	if(locate(/obj/effect/hotspot) in get_turf(src))
+		return
+
+	for(var/mob/living/simple_animal/slime/slime in get_turf(src))
+		if(slime.slime_color.slime_tags & SLIME_HOT_LOVING)
+			new /obj/effect/hotspot(get_turf(src))
+			playsound(get_turf(src), SFX_SPARKS, 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
+			return
 
 /obj/item/xenobio_deployable/pyrite_thrower
 	name = "pyrite thrower"

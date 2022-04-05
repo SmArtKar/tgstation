@@ -2,7 +2,7 @@
 	color = "cerulean"
 	coretype = /obj/item/slime_extract/cerulean
 	mutations = null
-	slime_tags = DISCHARGER_WEAKENED | BLUESPACE_CONNECTION
+	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_BLUESPACE_CONNECTION
 	environmental_req = "Subject requires starlight to function and is able to use to it to manipulate matter."
 	var/blueprint_charge = 0
 
@@ -130,7 +130,7 @@
 	coretype = /obj/item/slime_extract/sepia
 	mutations = null
 	environmental_req = "Subject has time-manipulating capabilities that can be supressed by hydrogen."
-	slime_tags = BLUESPACE_CONNECTION
+	slime_tags = SLIME_BLUESPACE_CONNECTION
 	var/can_timestop = TRUE
 
 /datum/slime_color/sepia/New(mob/living/simple_animal/slime/slime)
@@ -176,11 +176,12 @@
 /datum/slime_color/sepia/proc/recover_from_timestop()
 	can_timestop = TRUE
 
-/datum/slime_color/pyrite /// I think you can handle these without pyrite launchers, but having a burn chamber in xenobio is not really a great idea
+/datum/slime_color/pyrite /// I think you can farm these without pyrite launchers, but having a burn chamber in xenobio is not really a great idea
 	color = "pyrite"
 	coretype = /obj/item/slime_extract/pyrite
 	mutations = null
 	environmental_req = "Subject requires high temperatures(above 480° Celsius) or active fires to survive. If subject dies in low temperatures it will freeze and become unrevivable."
+	slime_tags = SLIME_HOT_LOVING
 
 /datum/slime_color/pyrite/New(mob/living/simple_animal/slime/slime)
 	. = ..()

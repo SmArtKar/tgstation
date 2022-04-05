@@ -397,7 +397,7 @@
 	. = ..()
 
 /mob/living/simple_animal/slime/proc/apply_water()
-	if(slime_color.slime_tags & WATER_IMMUNITY)
+	if(slime_color.slime_tags & SLIME_WATER_IMMUNITY)
 		return
 
 	adjustBruteLoss(rand(15,20))

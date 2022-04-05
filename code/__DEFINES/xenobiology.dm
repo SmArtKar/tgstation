@@ -127,8 +127,10 @@
 /// Tags for slime colors
 
 /// These slimes lose nutrition while in range of a slime discharger.
-#define DISCHARGER_WEAKENED (1<<0)
+#define SLIME_DISCHARGER_WEAKENED (1<<0)
 /// These slimes get damaged when they're affected by a bluespace anchor
-#define BLUESPACE_CONNECTION (1<<1)
+#define SLIME_BLUESPACE_CONNECTION (1<<1)
 /// These slimes are immune to damage from water
-#define WATER_IMMUNITY (1<<2)
+#define SLIME_WATER_IMMUNITY (1<<2)
+/// These slimes will trigger pyrite thrower
+#define SLIME_HOT_LOVING (1<<3)
