@@ -609,8 +609,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// trait denoting someone will sometimes recover out of crit
 #define TRAIT_UNBREAKABLE "unbreakable"
 
-/// Slimes cannot teleport from turfs with this trait
-#define TRAIT_NO_SLIME_TELEPORTATION "no_slime_teleportation"
+/// Bluespace slimes cannot teleport from turfs with this trait
+#define TRAIT_BLUESPACE_SLIME_FIXATION "bluespace_slime_fixation"
 
 /// Atoms with this trait are immune to timestop
 #define TRAIT_TIMESTOP_IMMUNE "timestop_immune"

@@ -8,8 +8,8 @@
 	ground_icon_state = "grass_alien"
 	seeds_icon_state = "xenoseeds-broombush"
 
-	required_gases = list(/datum/gas/nitrogen = 0.3)
-	produced_gases = list(/datum/gas/nitrous_oxide = 0.1)
+	required_gases = list(/datum/gas/nitrogen = 0.1)
+	produced_gases = list(/datum/gas/nitrous_oxide = 0.05)
 	min_safe_temp = T0C
 	max_safe_temp = T0C + 60
 
@@ -38,8 +38,8 @@
 	ground_icon_state = "dirt"
 	seeds_icon_state = "xenoseeds-cubomelon"
 
-	required_chems = list(/datum/reagent/water = 5, /datum/reagent/bromine = 3)
-	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 1)
+	required_chems = list(/datum/reagent/water = 0.2, /datum/reagent/bromine = 0.1)
+	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 0.1)
 	min_safe_temp = TCRYO
 	max_safe_temp = T0C
 
@@ -59,7 +59,7 @@
 	desc = "A huge blue cubomelon with a greenish tint, indicating that it was grown artificially."
 	icon_state = "cubomelon"
 	tastes = list("cubomelon" = 3, "cold" = 1)
-	bite_consumption =6
+	bite_consumption = 6
 	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/consumable/frostoil = 12)
 	foodtypes = FRUIT
 	grind_results = list(/datum/reagent/consumable/frostoil = 18, /datum/reagent/consumable/nutriment = 5)

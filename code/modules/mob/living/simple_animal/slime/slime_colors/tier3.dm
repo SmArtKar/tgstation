@@ -17,7 +17,7 @@
 		core_lose = 0
 		return
 
-	slime.adjustBruteLoss(5)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
 	fitting_environment = FALSE
 	core_lose += 1
 	if(core_lose >= DARK_BLUE_SLIME_CORE_LOSE && slime.cores > 0)
@@ -41,7 +41,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(5)
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time)
 	fitting_environment = FALSE
 	if(DT_PROB(DARK_PURPLE_SLIME_PUFF_PROBABILITY, delta_time))
 		our_turf.atmos_spawn_air("plasma=10;TEMP=1000")
@@ -95,6 +95,13 @@
 
 /datum/slime_color/yellow/Life(delta_time, times_fired)
 	. = ..()
+	fitting_environment = FALSE
+
+	for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, src))
+		if(istype(discharger) && discharger.on)
+			fitting_environment = TRUE
+			break
+
 	if(slime.powerlevel >= 5 && DT_PROB(slime.powerlevel * YELLOW_SLIME_ZAP_PROB, delta_time))
 		slime.visible_message(span_danger("[slime] overcharges, sending out arcs of lightning!"))
 
@@ -102,12 +109,11 @@
 			if(istype(discharger) && discharger.on)
 				slime.powerlevel = round(slime.powerlevel / 2)
 				slime.Beam(discharger, icon_state="lightning[rand(1,12)]", time = 5)
-				fitting_environment = TRUE
 				return
 
-		fitting_environment = FALSE
 		tesla_zap(slime, slime.powerlevel * 2, YELLOW_SLIME_ZAP_POWER * (slime.powerlevel - 2), ZAP_MOB_DAMAGE | ZAP_OBJ_DAMAGE)
 		var/datum/effect_system/spark_spread/sparks = new /datum/effect_system/spark_spread
 		sparks.set_up(1, 1, src)
 		sparks.start()
 		slime.powerlevel -= 1
+		slime.adjustBruteLoss(YELLOW_SLIME_DISCHARGE_DAMAGE)

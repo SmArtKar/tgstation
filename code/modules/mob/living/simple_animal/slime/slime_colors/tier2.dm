@@ -16,7 +16,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(5)
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time)
 	slime.rabid = TRUE
 	fitting_environment = FALSE
 
@@ -38,7 +38,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(10)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time)
 	fitting_environment = FALSE
 
 /datum/slime_color/blue/finished_digesting(food)
@@ -62,7 +62,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(5)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time)
 	fitting_environment = FALSE
 
 /datum/slime_color/orange
@@ -85,12 +85,10 @@
 	if(locate(/obj/effect/hotspot) in our_turf)
 		hotspot_modifier = HOT_SLIME_HOTSPOT_DAMAGE_MODIFIER
 
-	slime.adjust_nutrition(-10 * delta_time * hotspot_modifier)
+	slime.adjust_nutrition(-2 * delta_time * hotspot_modifier)
 	fitting_environment = FALSE
-	if(slime.nutrition <= 0)
-		slime.set_nutrition(0)
 
 	if(our_mix?.temperature >= ORANGE_SLIME_DANGEROUS_TEMP)
 		return
 
-	slime.adjustBruteLoss(10 * hotspot_modifier)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * hotspot_modifier)

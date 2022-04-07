@@ -1,7 +1,7 @@
 //Basic slime color datum along with grey and rainbow slimes here, other colors are split into files by tiers
 
 /datum/slime_color
-	var/color = "error" //I hate british people, there was C O L O U R everywhere
+	var/color = "error" //I hate bri'ish people, there was C O L O U R everywhere
 	var/icon_color //In case we have two or three words as our color
 	var/coretype = /obj/item/slime_extract
 	var/list/mutations
@@ -12,6 +12,8 @@
 
 	var/fitting_environment = TRUE
 	var/core_generation = 0
+
+	var/warpchance = 0 //For bluespace connected slimes
 
 	var/mob/living/simple_animal/slime/slime
 
@@ -29,7 +31,17 @@
 			slime.cores += 1
 			core_generation = 0
 		else
-			core_generation += 1
+			core_generation += 1 * delta_time
+
+	var/turf/our_turf = get_turf(src)
+	if(HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION) && (slime_tags & SLIME_BLUESPACE_CONNECTION))
+		if(DT_PROB(warpchance, delta_time))
+			slime.visible_message(span_warning("[slime] suddenly starts vibrating and is sucked into bluespace!"), span_userdanger("Your severed connection to bluespace causes you to fall through reality!"))
+			do_teleport(slime, get_turf(slime), 5, channel = TELEPORT_CHANNEL_BLUESPACE)
+			slime.visible_message(span_danger("[slime] appears out of nowhere!"))
+			warpchance = 0
+		else
+			warpchance += SLIME_WARPCHANCE_INCREASE * delta_time
 
 /datum/slime_color/proc/finished_digesting(food)
 

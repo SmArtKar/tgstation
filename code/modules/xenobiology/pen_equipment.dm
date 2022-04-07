@@ -105,10 +105,9 @@
 	var/on = FALSE
 	var/device_type
 
-/obj/machinery/xenobio_device/Destroy(force)
+/obj/machinery/xenobio_device/Destroy()
 	toggle(FALSE)
-	. = ..()
-
+	return ..()
 
 /obj/machinery/xenobio_device/attackby(obj/item/W, mob/user, params)
 	if(default_unfasten_wrench(user, W))
@@ -128,8 +127,23 @@
 	qdel(src)
 
 /obj/machinery/xenobio_device/proc/toggle(new_state = FALSE)
+	if(on == new_state)
+		return
+
 	on = new_state
 	update_icon()
+
+	if(on)
+		START_PROCESSING(SSfastprocess, src)
+	else
+		STOP_PROCESSING(SSfastprocess, src)
+
+/obj/machinery/xenobio_device/process()
+	if(machine_stat & (BROKEN|NOPOWER))
+		toggle(FALSE)
+		return FALSE
+
+	return TRUE
 
 /obj/machinery/xenobio_device/update_icon_state()
 	icon_state = "[base_icon_state][on ? "" : "-off"]"
@@ -168,7 +182,7 @@
 /obj/item/xenobio_deployable/vacuole_stabilizer/deploy(mob/user, modifiers)
 	for(var/turf/stabilizer_turf in range(3, get_turf(src)))
 		new /obj/effect/temp_visual/xenobio_blast/vacuole_stabilizer(stabilizer_turf)
-	. = ..()
+	return ..()
 
 /obj/effect/temp_visual/xenobio_blast/vacuole_stabilizer
 	name = "vacuole stabilizer field"
@@ -228,7 +242,7 @@
 
 	if(!on)
 		for(var/turf/turf in affected_turfs)
-			REMOVE_TRAIT(turf, TRAIT_NO_SLIME_TELEPORTATION, XENOBIO_DEPLOYABLE_TRAIT)
+			REMOVE_TRAIT(turf, TRAIT_BLUESPACE_SLIME_FIXATION, XENOBIO_DEPLOYABLE_TRAIT)
 
 		for(var/atom/effect in visual_effects)
 			qdel(effect)
@@ -263,9 +277,7 @@
 	for(var/turf/pen_turf in pen_turfs)
 		new /obj/effect/temp_visual/xenobio_blast/bluespace(pen_turf)
 		affected_turfs += pen_turf
-		ADD_TRAIT(pen_turf, TRAIT_NO_SLIME_TELEPORTATION, XENOBIO_DEPLOYABLE_TRAIT)
-
-	sleep(2)
+		ADD_TRAIT(pen_turf, TRAIT_BLUESPACE_SLIME_FIXATION, XENOBIO_DEPLOYABLE_TRAIT)
 
 	for(var/turf/pen_turf in pen_turfs)
 		var/list/non_pen_dirs = list()
@@ -374,24 +386,17 @@
 	set_light_on(on)
 	return ..()
 
-/obj/machinery/xenobio_device/pyrite_thrower/toggle(new_state = FALSE)
-	if(on == new_state)
-		return ..()
-
-	. = ..()
-
-	if(on)
-		START_PROCESSING(SSfastprocess, src)
-	else
-		STOP_PROCESSING(SSfastprocess, src)
-
 /obj/machinery/xenobio_device/pyrite_thrower/process()
-	if(locate(/obj/effect/hotspot) in get_turf(src))
+	. = ..()
+	if(!.)
 		return
 
 	for(var/mob/living/simple_animal/slime/slime in range(1, get_turf(src)))
 		if(slime.slime_color.slime_tags & SLIME_HOT_LOVING)
-			new /obj/effect/hotspot(get_turf(src))
+			for(var/turf/target_turf in range(1, get_turf(src)))
+				if(locate(/obj/effect/hotspot) in target_turf)
+					continue
+				new /obj/effect/hotspot(target_turf)
 			playsound(get_turf(src), SFX_SPARKS, 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
 			return
 
@@ -409,7 +414,7 @@
 /obj/item/xenobio_deployable/pyrite_thrower/deploy(mob/user, modifiers)
 	for(var/turf/stabilizer_turf in range(1, get_turf(src)))
 		new /obj/effect/temp_visual/xenobio_blast/pyrite_thrower(stabilizer_turf)
-	. = ..()
+	return ..()
 
 /obj/effect/temp_visual/xenobio_blast/pyrite_thrower
 	name = "vacuole stabilizer field"

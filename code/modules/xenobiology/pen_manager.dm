@@ -43,7 +43,7 @@
 /obj/item/pen_destignator/attack_self(mob/user, modifiers)
 	. = ..()
 	if(!pen_manager)
-		to_chat(user, span_warning("[src] does not have a working pen manager linked to it!"))
+		to_chat(user, span_warning("[src] does not have a working pen manager linked to it!")) //Create a pen manager first and declare it's pen afterwards
 		return
 
 	var/list/turfs = detect_room(get_turf(src), list(/turf/open/space), 100)
@@ -102,29 +102,40 @@
 	var/slimes_detected = FALSE
 	var/slimes_fine = TRUE
 
+/obj/machinery/pen_manager/Initialize(mapload)
+	. = ..()
+	START_PROCESSING(SSobj, src)
+
+/obj/machinery/pen_manager/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
+
 /obj/machinery/pen_manager/update_overlays()
 	. = ..()
 	cut_overlays()
+	if(machine_stat & (BROKEN|NOPOWER))
+		return
+
 	var/mutable_appearance/light1 = mutable_appearance(icon, "[icon_state]_light1")
 	light1.dir = dir
 	if(slimes_detected)
 		if(slimes_fine)
-			light1.color = "#40ff40"
+			light1.color = "#83ff83"
 		else
-			light1.color = "#ff4040"
+			light1.color = "#ff7a7a"
 	else
-		light1.color = "#ffe058"
+		light1.color = "#ffe881"
 
 	var/mutable_appearance/light2 = mutable_appearance(icon, "[icon_state]_light2")
 	light2.dir = dir
 
 	if(slimes_detected)
 		if(slimes_rabid)
-			light2.color = "#ff4040"
+			light2.color = "#ff7a7a"
 		else
-			light2.color = "#40ff40"
+			light2.color = "#83ff83"
 	else
-		light2.color = "#ffe058"
+		light2.color = "#ffe881"
 
 	. += light1
 	. += light2
@@ -172,12 +183,32 @@
 		ui = new(user, src, "PenManager", name)
 		ui.open()
 
-/obj/machinery/pen_manager/ui_data()
-	var/data = list()
+/obj/machinery/pen_manager/process()
+	if(machine_stat & (BROKEN|NOPOWER))
+		return
+
+	var/prev_fine = slimes_fine
+	var/prev_detected = slimes_detected
+	var/prev_rabid = slimes_rabid
 
 	slimes_fine = TRUE
 	slimes_detected = FALSE
 	slimes_rabid = FALSE
+
+	for(var/mob/living/simple_animal/slime/slime in get_creatures(slime_only = TRUE))
+		slimes_detected = TRUE
+		if(slime.rabid)
+			slimes_rabid = TRUE
+		if(!slime.slime_color.fitting_environment)
+			slimes_fine = FALSE
+
+	if(prev_fine == slimes_fine && prev_detected == slimes_detected && prev_rabid == slimes_rabid)
+		return
+
+	update_icon()
+
+/obj/machinery/pen_manager/ui_data()
+	var/data = list()
 
 	var/list/creature_data = list()
 	for(var/mob/living/creature in get_creatures())
@@ -189,12 +220,6 @@
 
 		if(isslime(creature))
 			var/mob/living/simple_animal/slime/slime = creature
-
-			slimes_detected = TRUE
-			if(slime.rabid)
-				slimes_rabid = TRUE
-			if(!slime.slime_color.fitting_environment)
-				slimes_fine = FALSE
 
 			creature_info["nutrition"] = slime.nutrition / slime.get_max_nutrition() * 100
 			creature_info["growth"] = slime.amount_grown / SLIME_EVOLUTION_THRESHOLD * 100

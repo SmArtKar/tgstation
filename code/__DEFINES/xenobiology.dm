@@ -36,20 +36,29 @@
 #define SLIME_VALUE_TIER_6 6400
 #define SLIME_VALUE_TIER_7 12800
 
-#define SLIME_SELL_MODIFIER_MIN 0.94
-#define SLIME_SELL_MODIFIER_MAX 0.97
+#define SLIME_SELL_MODIFIER_MIN 	  0.94
+#define SLIME_SELL_MODIFIER_MAX 	  0.97
 #define SLIME_SELL_OTHER_MODIFIER_MIN 1.01
 #define SLIME_SELL_OTHER_MODIFIER_MAX 1.03
-#define SLIME_SELL_MAXIMUM_MODIFIER 2
-#define SLIME_SELL_MINIMUM_MODIFIER 0.25
+#define SLIME_SELL_MAXIMUM_MODIFIER   2
+#define SLIME_SELL_MINIMUM_MODIFIER   0.25
 
-/// Slime requirements
-
-/// How much ticks it requires for slime to generate a core
+/// How many seconds it takes for slime to generate a core
 #define SLIME_MAX_CORE_GENERATION 20
 
 /// If slime requires high temperatures and a hotspot is located, damage will be multiplied by this
 #define HOT_SLIME_HOTSPOT_DAMAGE_MODIFIER 0.35
+/// How much warp chance is added per second when a bluespace connected slime is being anchored
+#define SLIME_WARPCHANCE_INCREASE 1
+
+/// Damages per second when slimes' requirements are not satisfied
+#define SLIME_DAMAGE_LOW  (150 / 600)  //10 minutes to die
+#define SLIME_DAMAGE_MED  (150 / 420)  //7 minutes to die
+#define SLIME_DAMAGE_HIGH (150 / 300)   //5 minutes to die
+
+
+/// Slime requirements
+
 
 /// At what temperature orange slimes start losing nutrition
 #define ORANGE_SLIME_UNHAPPY_TEMP T0C+60
@@ -72,6 +81,8 @@
 /// How likely it's for yellow slime to zap per second, multiplied by it's power level
 #define YELLOW_SLIME_ZAP_PROB 4
 #define YELLOW_SLIME_ZAP_POWER 3000
+/// How much damage yellow slime takes as a result of uncontained discharge
+#define YELLOW_SLIME_DISCHARGE_DAMAGE 15 //10 discharges will kill the slime
 
 /// How likely it is for silver slime to implode every second
 #define SILVER_SLIME_IMPLODE_PROB 10
@@ -95,19 +106,22 @@
 /// How much can bluespace slime travel in one teleport
 #define BLUESPACE_SLIME_TELEPORT_DISTANCE 3
 
-/// How much hydrogen sepia slimes need
-#define SEPIA_SLIME_HYDROGEN_REQUIRED 15
+/// How much bz sepia slimes need
+#define SEPIA_SLIME_BZ_REQUIRED 10
 /// How likely it is for sepia slime to stop time when there's not enough hydrogen in the air
 #define SEPIA_SLIME_TIMESTOP_CHANCE 10
 /// How likely it is for sepia slime to stop time when it's attacking
 #define SEPIA_SLIME_ATTACK_TIMESTOP_CHANCE 15
 /// How long sepia timestop lasts
-#define SEPIA_SLIME_TIMESTOP_DURATION 5 SECONDS
+#define SEPIA_SLIME_TIMESTOP_DURATION 3 SECONDS
 /// How long sepia slimes recover from timestop
-#define SEPIA_SLIME_TIMESTOP_RECOVERY 15 SECONDS
+#define SEPIA_SLIME_TIMESTOP_RECOVERY 17 SECONDS
 
 /// Pyrite slimes will either need this temperature OR a hotspot ontop of them
 #define PYRITE_SLIME_COMFORTABLE_TEMPERATURE T0C + 480
+/// How long pyrite slimes can survive without fire before they get damaged, in seconds. While fiery charge is higher than zero their attacks also apply fire stacks and ignite
+/// This is required due to flame and hotspot inconsistency
+#define PYRITE_SLIME_MAX_FIERY_CHARGE 25
 
 /// Cerulean slimes will check for starlight in this range
 #define CERULEAN_SLIME_STARLIGHT_RANGE 2
@@ -124,7 +138,9 @@
 /// Probability of cerulean slime knockbacking their target and fabricating a wall
 #define CERULEAN_SLIME_WALL_PROBABILITY 30
 
+
 /// Tags for slime colors
+
 
 /// These slimes lose nutrition while in range of a slime discharger.
 #define SLIME_DISCHARGER_WEAKENED (1<<0)
@@ -134,3 +150,5 @@
 #define SLIME_WATER_IMMUNITY (1<<2)
 /// These slimes will trigger pyrite thrower
 #define SLIME_HOT_LOVING (1<<3)
+/// These slimes are immune to BZ stasis effect. Still affected by backpack stasis!
+#define SLIME_BZ_IMMUNE (1<<4)

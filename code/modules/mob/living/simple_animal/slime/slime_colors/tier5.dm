@@ -63,7 +63,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(1)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time)
 
 /datum/slime_color/cerulean/proc/slime_attack(datum/source, atom/movable/attack_target)
 	SIGNAL_HANDLER
@@ -92,7 +92,7 @@
 /obj/effect/cerulean_wall
 	name = "blueprint wall"
 	desc = "This wall looks like it's made out of blueprint paper."
-	icon_state = ""
+	icon_state = "cerulean_wall"
 	anchored = TRUE
 	density = TRUE
 	opacity = TRUE
@@ -102,16 +102,19 @@
 
 /obj/effect/cerulean_wall/Initialize(mapload)
 	. = ..()
+	icon_state = ""
+	update_icon()
 	new /obj/effect/temp_visual/cerulean_wall_construction(get_turf(src))
-	sleep(2.775)
+	addtimer(CALLBACK(src, .proc/create_wall), 2.775)
+
+/obj/effect/cerulean_wall/proc/create_wall()
 	icon_state = "cerulean_wall"
 	update_icon()
 	addtimer(CALLBACK(src, .proc/tear_apart), 10 SECONDS)
 
 /obj/effect/cerulean_wall/proc/tear_apart()
 	new /obj/effect/temp_visual/cerulean_wall_construction/reverse(get_turf(src))
-	sleep(2.4)
-	qdel(src)
+	QDEL_IN(src, 2.4)
 
 /obj/effect/temp_visual/cerulean_wall_construction
 	icon = 'icons/effects/effects_rcd.dmi'
@@ -129,16 +132,18 @@
 	color = "sepia"
 	coretype = /obj/item/slime_extract/sepia
 	mutations = null
-	environmental_req = "Subject has time-manipulating capabilities that can be supressed by hydrogen."
-	slime_tags = SLIME_BLUESPACE_CONNECTION
+	environmental_req = "Subject has time-manipulating capabilities that can be supressed by BZ."
+	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_BZ_IMMUNE
 	var/can_timestop = TRUE
 
 /datum/slime_color/sepia/New(mob/living/simple_animal/slime/slime)
 	. = ..()
 	RegisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM, .proc/timestop_attack)
+	ADD_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 
 /datum/slime_color/sepia/remove()
 	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM)
+	REMOVE_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 
 /datum/slime_color/sepia/proc/timestop_attack(datum/source, atom/attack_target)
 	SIGNAL_HANDLER
@@ -154,27 +159,26 @@
 	. = ..()
 	var/turf/our_turf = get_turf(slime)
 	var/datum/gas_mixture/our_mix = our_turf.return_air()
-	if(our_mix.gases[/datum/gas/hydrogen] && our_mix.gases[/datum/gas/hydrogen][MOLES] > SEPIA_SLIME_HYDROGEN_REQUIRED)
+	if(our_mix.gases[/datum/gas/bz] && our_mix.gases[/datum/gas/bz][MOLES] > SEPIA_SLIME_BZ_REQUIRED)
 		fitting_environment = TRUE
-		if(!HAS_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE))
-			ADD_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(3)
-	if(HAS_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE))
-		REMOVE_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time)
 
 	if(!can_timestop)
 		return
 
 	if(DT_PROB(SEPIA_SLIME_TIMESTOP_CHANCE, delta_time))
 		can_timestop = FALSE
+		REMOVE_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 		new /obj/effect/timestop/small_effect(get_turf(slime), 1, SEPIA_SLIME_TIMESTOP_DURATION, list()) //Freezes the slime as well
-		addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
+		addtimer(CALLBACK(src, .proc/recover_from_timestop, TRUE), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
 
-/datum/slime_color/sepia/proc/recover_from_timestop()
+/datum/slime_color/sepia/proc/recover_from_timestop(regain_immunity = FALSE)
 	can_timestop = TRUE
+	if(regain_immunity)
+		ADD_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 
 /datum/slime_color/pyrite /// I think you can farm these without pyrite launchers, but having a burn chamber in xenobio is not really a great idea
 	color = "pyrite"
@@ -182,13 +186,27 @@
 	mutations = null
 	environmental_req = "Subject requires high temperatures(above 480° Celsius) or active fires to survive. If subject dies in low temperatures it will freeze and become unrevivable."
 	slime_tags = SLIME_HOT_LOVING
+	var/fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE
 
 /datum/slime_color/pyrite/New(mob/living/simple_animal/slime/slime)
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/possible_freeze)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM, .proc/fiery_attack)
 
 /datum/slime_color/pyrite/remove()
-	UnregisterSignal(slime, COMSIG_LIVING_DEATH)
+	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_ATOM))
+
+/datum/slime_color/pyrite/proc/fiery_attack(datum/source, atom/attack_target)
+	SIGNAL_HANDLER
+
+	if(fiery_charge <= 0)
+		return
+
+	if(isliving(attack_target))
+		var/mob/living/victim = attack_target
+		if(victim.fire_stacks < 3)
+			victim.adjust_fire_stacks(3)
+			victim.IgniteMob()
 
 /datum/slime_color/pyrite/proc/possible_freeze(mob/living/simple_animal/slime/dead_body)
 	SIGNAL_HANDLER
@@ -209,12 +227,18 @@
 	var/datum/gas_mixture/our_mix = our_turf.return_air()
 	if(our_mix?.temperature >= PYRITE_SLIME_COMFORTABLE_TEMPERATURE || (locate(/obj/effect/hotspot) in our_turf))
 		fitting_environment = TRUE
+		fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE
+		return
+
+	if(fiery_charge > 0)
+		fiery_charge = max(0, fiery_charge - delta_time)
+		fitting_environment = TRUE
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(5)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
 
-/datum/slime_color/bluespace
+/datum/slime_color/bluespace //These will either kill themselves, get stuck and are generally just hard to contain but don't have any combat abilities so no damage for them.
 	color = "bluespace"
 	coretype = /obj/item/slime_extract/bluespace
 	mutations = null
@@ -234,7 +258,7 @@
 		return
 
 	var/turf/slime_turf = get_turf(slime)
-	if(HAS_TRAIT(slime_turf, TRAIT_NO_SLIME_TELEPORTATION))
+	if(HAS_TRAIT(slime_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 		return
 
 	var/turf/possible_tele_turf = slime_turf
@@ -244,7 +268,7 @@
 			break
 
 		tele_turf = get_step(tele_turf, get_dir(slime, step_target))
-		if(is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_NO_SLIME_TELEPORTATION))
+		if(is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 			possible_tele_turf = tele_turf
 
 		iter += 1

@@ -201,7 +201,7 @@
 		var/bz_percentage =0
 		if(environment.gases[/datum/gas/bz])
 			bz_percentage = environment.gases[/datum/gas/bz][MOLES] / environment.total_moles()
-		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100)) || force_stasis
+		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100) && !(slime_color.slime_tags & SLIME_BZ_IMMUNE)) || force_stasis
 
 		switch(stat)
 			if(CONSCIOUS)
@@ -320,8 +320,8 @@
 		set_nutrition(700) //fuck you for using the base nutrition var
 		return
 
-	if(DT_PROB(7.5, delta_time))
-		adjust_nutrition(-0.5 * (1 + is_adult) * delta_time)
+	if(DT_PROB(65, delta_time)) //So about 1.3 nutrition per second for a child and 2.6 for adult, that's around 12.8 minutes of nutrition for a child and around 7.7 + 12.8 = 20.5 minutes for an adult
+		adjust_nutrition(-2 * (1 + is_adult)) //Why the fuck was it multiplied by delta time second time, that's not how this shit is supposed to work
 
 	if(nutrition <= 0)
 		set_nutrition(0)

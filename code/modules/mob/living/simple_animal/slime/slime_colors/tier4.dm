@@ -3,6 +3,30 @@
 	coretype = /obj/item/slime_extract/red
 	mutations = list(/datum/slime_color/red, /datum/slime_color/red, /datum/slime_color/oil, /datum/slime_color/oil)
 
+	environmental_req = "Subject is quite violent and will become rabid when hungry, causing all red slimes around it to also go rabid."
+
+/datum/slime_color/red/Life(delta_time, times_fired)
+	. = ..()
+
+	if(DT_PROB(65, delta_time) && slime.nutrition > slime.get_starve_nutrition()) //Even snowflakier because of hunger, x1.5 speed with 8.5 minutes for child and 13.7 for adult
+		adjust_nutrition(-1 * (1 + is_adult))
+
+	for(var/mob/living/simple_animal/slime/friend in view(5, get_turf(slime)))
+		if(friend.slime_color.type != type)
+			continue
+
+		if(friend.nutrition <= friend.get_hunger_nutrition() - 100)
+			fitting_environment = FALSE
+			slime.rabid = TRUE
+			return
+
+	if(slime.nutrition > slime.get_hunger_nutrition() - 100) //Doesn't stop it's rabid rage when fed, you gotta do it using BZ or backpacks
+		fitting_environment = TRUE
+		return
+
+	fitting_environment = FALSE
+	slime.rabid = TRUE
+
 /datum/slime_color/green
 	color = "green"
 	coretype = /obj/item/slime_extract/green
