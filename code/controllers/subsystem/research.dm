@@ -57,6 +57,16 @@ SUBSYSTEM_DEF(research)
 
 	var/list/slime_core_prices = list()
 	var/list/xenobio_corporations = list()
+
+	var/static/list/default_core_prices = list(SLIME_VALUE_TIER_1,
+									   SLIME_VALUE_TIER_2,
+									   SLIME_VALUE_TIER_3,
+									   SLIME_VALUE_TIER_4,
+									   SLIME_VALUE_TIER_5,
+									   SLIME_VALUE_TIER_6,
+									   SLIME_VALUE_TIER_7,
+									   )
+
 	/// Lookup list for ordnance briefers.
 	var/list/ordnance_experiments
 	/// Lookup list for scipaper partners.
@@ -105,17 +115,9 @@ SUBSYSTEM_DEF(research)
 		xenobio_corporations.Add(corporation)
 
 /datum/controller/subsystem/research/proc/initialize_slime_prices()
-	var/static/list/core_prices = list(SLIME_VALUE_TIER_1,
-									   SLIME_VALUE_TIER_2,
-									   SLIME_VALUE_TIER_3,
-									   SLIME_VALUE_TIER_4,
-									   SLIME_VALUE_TIER_5,
-									   SLIME_VALUE_TIER_6,
-									   SLIME_VALUE_TIER_7)
-
 	for(var/core_type in subtypesof(/obj/item/slime_extract))
 		var/obj/item/slime_extract/core = core_type
-		slime_core_prices[core_type] = core_prices[initial(core.tier)]
+		slime_core_prices[core_type] = default_core_prices[initial(core.tier)]
 
 /datum/controller/subsystem/research/proc/calculate_server_coefficient() //Diminishing returns.
 	var/amt = servers.len

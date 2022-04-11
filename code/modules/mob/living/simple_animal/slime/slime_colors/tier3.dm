@@ -10,8 +10,7 @@
 
 /datum/slime_color/dark_blue/Life(delta_time, times_fired)
 	. = ..()
-	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix?.temperature <= DARK_BLUE_SLIME_DANGEROUS_TEMP && our_mix.gases[/datum/gas/water_vapor] && our_mix.gases[/datum/gas/water_vapor][MOLES] > DARK_BLUE_SLIME_VAPOR_REQUIRED)
 		fitting_environment = TRUE
 		core_lose = 0
@@ -36,7 +35,7 @@
 /datum/slime_color/dark_purple/Life(delta_time, times_fired)
 	. = ..()
 	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.gases[/datum/gas/plasma] && our_mix.gases[/datum/gas/plasma][MOLES] > DARK_PURPLE_SLIME_PLASMA_REQUIRED && (!our_mix.gases[/datum/gas/oxygen] || our_mix.gases[/datum/gas/oxygen][MOLES] < DARK_PURPLE_SLIME_OXYGEN_MAXIMUM))
 		fitting_environment = TRUE
 		return
@@ -97,7 +96,7 @@
 	. = ..()
 	fitting_environment = FALSE
 
-	for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, src))
+	for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, get_turf(slime)))
 		if(istype(discharger) && discharger.on)
 			fitting_environment = TRUE
 			break
@@ -105,7 +104,7 @@
 	if(slime.powerlevel >= 5 && DT_PROB(slime.powerlevel * YELLOW_SLIME_ZAP_PROB, delta_time))
 		slime.visible_message(span_danger("[slime] overcharges, sending out arcs of lightning!"))
 
-		for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, src))
+		for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, get_turf(slime)))
 			if(istype(discharger) && discharger.on)
 				slime.powerlevel = round(slime.powerlevel / 2)
 				slime.Beam(discharger, icon_state="lightning[rand(1,12)]", time = 5)

@@ -83,7 +83,7 @@
 		new /obj/effect/cerulean_wall(target_turf)
 		return COLOR_SLIME_NO_ATTACK
 
-	if(fitting_environment || slime.rabid) //When angry, celerulean slimes just straight up tear shit down, which can lead to horrible outbreaks if they're hungry/rabid
+	if(fitting_environment && !slime.rabid) //When angry, celerulean slimes just straight up tear shit down, which can lead to horrible outbreaks if they're hungry/rabid
 		return
 
 	attack_target.attack_generic(slime, CERULEAN_SLIME_UNHAPPY_OBJECT_DAMAGE, BRUTE, MELEE, 1)
@@ -151,14 +151,13 @@
 	if(!can_timestop || !prob(SEPIA_SLIME_ATTACK_TIMESTOP_CHANCE) || !isliving(attack_target) || !fitting_environment)
 		return
 
-	new /obj/effect/timestop/small_effect(get_turf(attack_target), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(src))
+	new /obj/effect/timestop/small_effect(get_turf(attack_target), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(slime))
 	can_timestop = FALSE
 	addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
 
 /datum/slime_color/sepia/Life(delta_time, times_fired)
 	. = ..()
-	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.gases[/datum/gas/bz] && our_mix.gases[/datum/gas/bz][MOLES] > SEPIA_SLIME_BZ_REQUIRED)
 		fitting_environment = TRUE
 		return
@@ -212,7 +211,7 @@
 	SIGNAL_HANDLER
 
 	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix?.temperature >= PYRITE_SLIME_COMFORTABLE_TEMPERATURE || (locate(/obj/effect/hotspot) in our_turf))
 		return
 
@@ -224,7 +223,7 @@
 /datum/slime_color/pyrite/Life(delta_time, times_fired)
 	. = ..()
 	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix?.temperature >= PYRITE_SLIME_COMFORTABLE_TEMPERATURE || (locate(/obj/effect/hotspot) in our_turf))
 		fitting_environment = TRUE
 		fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE

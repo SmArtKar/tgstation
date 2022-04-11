@@ -36,10 +36,10 @@
 #define SLIME_VALUE_TIER_6 6400
 #define SLIME_VALUE_TIER_7 12800
 
-#define SLIME_SELL_MODIFIER_MIN 	  0.94
-#define SLIME_SELL_MODIFIER_MAX 	  0.97
-#define SLIME_SELL_OTHER_MODIFIER_MIN 1.01
-#define SLIME_SELL_OTHER_MODIFIER_MAX 1.03
+#define SLIME_SELL_MODIFIER_MIN 	  -0.09
+#define SLIME_SELL_MODIFIER_MAX 	  -0.06
+#define SLIME_SELL_OTHER_MODIFIER_MIN 0.02
+#define SLIME_SELL_OTHER_MODIFIER_MAX 0.05
 #define SLIME_SELL_MAXIMUM_MODIFIER   2
 #define SLIME_SELL_MINIMUM_MODIFIER   0.25
 
@@ -137,6 +137,13 @@
 #define CERULEAN_SLIME_UNHAPPY_OBJECT_DAMAGE 25 /// Enough to break airlocks. GIVE THEM THE STARLIGHT THEY WANT
 /// Probability of cerulean slime knockbacking their target and fabricating a wall
 #define CERULEAN_SLIME_WALL_PROBABILITY 30
+
+/// Required pressure for oil slimes
+#define OIL_SLIME_REQUIRED_PRESSURE ONE_ATMOSPHERE * 6
+/// How likely is oil slime explosion when there's no vacuole stabilizer
+#define OIL_SLIME_EXPLOSION_CHANCE 45
+/// How likely it is for oil slime to use an explosive attack
+#define OIL_SLIME_EXPLOSIVE_ATTACK_CHANCE 25
 
 
 /// Tags for slime colors

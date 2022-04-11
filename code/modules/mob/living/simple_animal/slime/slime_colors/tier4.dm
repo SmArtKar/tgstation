@@ -8,8 +8,8 @@
 /datum/slime_color/red/Life(delta_time, times_fired)
 	. = ..()
 
-	if(DT_PROB(65, delta_time) && slime.nutrition > slime.get_starve_nutrition()) //Even snowflakier because of hunger, x1.5 speed with 8.5 minutes for child and 13.7 for adult
-		adjust_nutrition(-1 * (1 + is_adult))
+	if(DT_PROB(65, delta_time) && slime.nutrition > slime.get_hunger_nutrition() + 100) //Even snowflakier because of hunger
+		slime.adjust_nutrition(-1 * (1 + slime.is_adult))
 
 	for(var/mob/living/simple_animal/slime/friend in view(5, get_turf(slime)))
 		if(friend.slime_color.type != type)

@@ -33,7 +33,7 @@
 		else
 			core_generation += 1 * delta_time
 
-	var/turf/our_turf = get_turf(src)
+	var/turf/our_turf = get_turf(slime)
 	if(HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION) && (slime_tags & SLIME_BLUESPACE_CONNECTION))
 		if(DT_PROB(warpchance, delta_time))
 			slime.visible_message(span_warning("[slime] suddenly starts vibrating and is sucked into bluespace!"), span_userdanger("Your severed connection to bluespace causes you to fall through reality!"))

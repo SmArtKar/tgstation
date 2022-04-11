@@ -257,9 +257,9 @@
 
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
-		var/damage_mod = 1 - max(C.getarmor(type = BIO) * 0.75 * 0.01, 0.25)
-		C.adjustCloneLoss(rand(2, 4) * damage_mod * 0.75 * delta_time) //Biosuits reduce damage
-		C.adjustToxLoss(rand(1, 2) * damage_mod * 0.75 * delta_time)
+		var/damage_mod = max(1 - C.getarmor(type = BIO) * 0.75 * 0.01, 0.25)
+		C.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time) //Biosuits reduce damage
+		C.adjustToxLoss(rand(1, 2) * damage_mod * delta_time)
 		food_multiplier *= damage_mod
 
 		if(DT_PROB(5, delta_time) && C.client)

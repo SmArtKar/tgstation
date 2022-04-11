@@ -151,7 +151,7 @@
 
 /obj/machinery/xenobio_device/vacuole_stabilizer
 	name = "vacuole stabilizer"
-	desc = "This device prevents silver slimes from imploding and splitting into blorbies."
+	desc = "This device stabilizes vacuoles of silver and oil slimes."
 	icon_state = "stabilizer-off"
 	base_icon_state = "stabilizer"
 	density = TRUE
@@ -170,7 +170,7 @@
 
 /obj/item/xenobio_deployable/vacuole_stabilizer
 	name = "vacuole stabilizer"
-	desc = "This device prevents silver slimes from imploding and splitting into blorbies."
+	desc = "This device stabilizes vacuoles of silver and oil slimes."
 	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "stabilizer-off"
 	w_class = WEIGHT_CLASS_NORMAL
@@ -214,7 +214,8 @@
 
 /obj/item/xenobio_deployable/bluespace_anchor
 	name = "bluespace anchor"
-	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells."
+	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells. \
+			However, this may cause some other bluespace-connected slimes to become unstable and start chaotically teleporting around."
 	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "bluespace_anchor-off"
 	w_class = WEIGHT_CLASS_NORMAL
@@ -229,7 +230,8 @@
 
 /obj/machinery/xenobio_device/bluespace_anchor
 	name = "bluespace anchor"
-	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells."
+	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells. \
+			However, this may cause some other bluespace-connected slimes to become unstable and start chaotically teleporting around."
 	icon_state = "bluespace_anchor-off"
 	base_icon_state = "bluespace_anchor"
 	density = FALSE

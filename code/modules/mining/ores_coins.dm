@@ -110,7 +110,10 @@
 	merge_type = /obj/item/stack/ore/glass
 
 GLOBAL_LIST_INIT(sand_recipes, list(\
-		new /datum/stack_recipe("sandstone", /obj/item/stack/sheet/mineral/sandstone, 1, 1, 50),\
+		new /datum/stack_recipe("sandstone", /obj/item/stack/sheet/mineral/sandstone, 1, 1, 50)\
+))
+
+GLOBAL_LIST_INIT(basalt_recipes, list(\
 		new /datum/stack_recipe("aesthetic volcanic floor tile", /obj/item/stack/tile/basalt, 2, 1, 50)\
 ))
 
@@ -142,6 +145,10 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	singular_name = "volcanic ash pile"
 	mine_experience = 0
 	merge_type = /obj/item/stack/ore/glass/basalt
+
+/obj/item/stack/ore/glass/basalt/get_main_recipes()
+	. = ..()
+	. += GLOB.basalt_recipes
 
 /obj/item/stack/ore/plasma
 	name = "plasma ore"

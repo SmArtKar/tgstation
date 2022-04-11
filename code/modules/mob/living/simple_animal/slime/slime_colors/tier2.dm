@@ -9,8 +9,7 @@
 
 /datum/slime_color/purple/Life(delta_time, times_fired)
 	. = ..()
-	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.gases[/datum/gas/nitrous_oxide] && our_mix.gases[/datum/gas/nitrous_oxide][MOLES] > PURPLE_SLIME_N2O_REQUIRED)
 		slime.rabid = FALSE
 		fitting_environment = TRUE
@@ -32,8 +31,7 @@
 
 /datum/slime_color/blue/Life(delta_time, times_fired)
 	. = ..()
-	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix?.temperature <= BLUE_SLIME_DANGEROUS_TEMP)
 		fitting_environment = TRUE
 		return
@@ -42,8 +40,7 @@
 	fitting_environment = FALSE
 
 /datum/slime_color/blue/finished_digesting(food)
-	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	our_mix.assert_gas(/datum/gas/water_vapor)
 	our_mix.gases[/datum/gas/water_vapor][MOLES] += BLUE_SLIME_PUFF_AMOUNT
 
@@ -56,8 +53,7 @@
 
 /datum/slime_color/metal/Life(delta_time, times_fired)
 	. = ..()
-	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.gases[/datum/gas/carbon_dioxide] && our_mix.gases[/datum/gas/carbon_dioxide][MOLES] > METAL_SLIME_CO2_REQUIRED)
 		fitting_environment = TRUE
 		return
@@ -76,7 +72,7 @@
 /datum/slime_color/orange/Life(delta_time, times_fired)
 	. = ..()
 	var/turf/our_turf = get_turf(slime)
-	var/datum/gas_mixture/our_mix = our_turf.return_air()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix?.temperature >= ORANGE_SLIME_UNHAPPY_TEMP)
 		fitting_environment = TRUE
 		return
