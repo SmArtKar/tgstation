@@ -84,8 +84,11 @@
 	var/list/slime_colors = list()
 
 /mob/living/simple_animal/slime/proc/setup_colors()
-	for(var/slime_color in subtypesof(/datum/slime_color))
-		slime_colors += slime_color
+	for(var/possible_slime_color in subtypesof(/datum/slime_color))
+		var/datum/slime_color/possible_color = possible_slime_color
+		if(initial(possible_color.slime_tags) & SLIME_NO_RANDOM_SPAWN)
+			continue
+		slime_colors += possible_slime_color
 
 /mob/living/simple_animal/slime/Initialize(mapload, new_color=/datum/slime_color/grey, new_is_adult=FALSE)
 	if(!LAZYLEN(slime_colors))

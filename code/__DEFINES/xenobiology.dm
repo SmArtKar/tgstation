@@ -105,6 +105,8 @@
 #define BLUESPACE_SLIME_TELEPORT_CHANCE 5
 /// How much can bluespace slime travel in one teleport
 #define BLUESPACE_SLIME_TELEPORT_DISTANCE 3
+/// How many seconds it takes for a bluespace anchor to fully consume one charge
+#define BLUESPACE_ANCHOR_CHARGE_TIME 3 MINUTES
 
 /// How much bz sepia slimes need
 #define SEPIA_SLIME_BZ_REQUIRED 10
@@ -116,6 +118,8 @@
 #define SEPIA_SLIME_TIMESTOP_DURATION 3 SECONDS
 /// How long sepia slimes recover from timestop
 #define SEPIA_SLIME_TIMESTOP_RECOVERY 17 SECONDS
+/// How many moles of BZ does sepia slime consume per second
+#define SEPIA_SLIME_BZ_CONSUME 0.01
 
 /// Pyrite slimes will either need this temperature OR a hotspot ontop of them
 #define PYRITE_SLIME_COMFORTABLE_TEMPERATURE T0C + 480
@@ -145,6 +149,10 @@
 /// How likely it is for oil slime to use an explosive attack
 #define OIL_SLIME_EXPLOSIVE_ATTACK_CHANCE 25
 
+/// How likely it is for the black slime to change a random turf around him, per second
+#define BLACK_SLIME_CHANGE_TURF_CHANCE 15
+/// Range of black slime turf conversion(circular)
+#define BLACK_SLIME_TURF_CHANGE_RANGE 3
 
 /// Tags for slime colors
 
@@ -159,3 +167,7 @@
 #define SLIME_HOT_LOVING (1<<3)
 /// These slimes are immune to BZ stasis effect. Still affected by backpack stasis!
 #define SLIME_BZ_IMMUNE (1<<4)
+/// These slimes will attack other slimes
+#define SLIME_ATTACK_SLIMES (1<<5)
+/// These slimes can't be spawned randomly
+#define SLIME_NO_RANDOM_SPAWN (1<<6)

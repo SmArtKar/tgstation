@@ -82,7 +82,7 @@
 	var/mob/living/simple_animal/slime/S = owner
 	S.Feed()
 
-/mob/living/simple_animal/slime/proc/CanFeedon(atom/movable/M, silent = FALSE)
+/mob/living/simple_animal/slime/proc/CanFeedon(atom/movable/M, silent = FALSE, slimeignore = FALSE)
 	if(!Adjacent(M))
 		return FALSE
 
@@ -104,7 +104,7 @@
 			"I do not feel nourished", "This subject is not food")]!</span>")
 			return FALSE
 
-	if(isslime(M))
+	if(isslime(M) && !slimeignore)
 		if(silent)
 			return FALSE
 		to_chat(src, span_warning("<i>I can't latch onto another slime...</i>"))

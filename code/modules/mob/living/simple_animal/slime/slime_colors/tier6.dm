@@ -76,6 +76,33 @@
 		return
 
 	fitting_environment = FALSE
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED)
+
+	if(!DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time))
+		return
+
+	var/list/convertable_turfs = list()
+	for(var/turf/possible_target in circle_range_turfs(our_turf, BLACK_SLIME_TURF_CHANGE_RANGE))
+		if(istype(possible_target, /turf/open/misc/slime) || istype(possible_target, /turf/closed/wall/slime))
+			continue
+
+		if(isfloorturf(possible_target) || istype(possible_target, /turf/open/misc) || ismineralturf(possible_target))
+			convertable_turfs[possible_target] = BLACK_SLIME_TURF_CHANGE_RANGE + 3 - get_dist(slime, possible_target) //Floors have a bit higher chance to be converted
+		else if(iswallturf(possible_target))
+			var/turf/closed/wall/target_wall = possible_target
+			if(!prob(min(100, target_wall.hardness * 2)))
+				continue
+			convertable_turfs[possible_target] = BLACK_SLIME_TURF_CHANGE_RANGE + 1 - get_dist(slime, possible_target)
+
+	var/turf/target_turf = pick_weight(convertable_turfs)
+	if(isclosedturf(target_turf))
+		target_turf.ChangeTurf(/turf/closed/wall/slime, flags = CHANGETURF_INHERIT_AIR)
+	else if(locate(/obj/structure/window) in target_turf)
+		for(var/obj/structure/window/window in target_turf)
+			window.deconstruct(FALSE)
+		target_turf.ChangeTurf(/turf/closed/wall/slime, flags = CHANGETURF_INHERIT_AIR)
+	else
+		target_turf.ChangeTurf(/turf/closed/wall/slime, flags = CHANGETURF_INHERIT_AIR)
 
 /datum/slime_color/adamantine
 	color = "adamantine"

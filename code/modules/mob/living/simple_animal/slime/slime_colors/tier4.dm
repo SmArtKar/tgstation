@@ -2,11 +2,20 @@
 	color = "red"
 	coretype = /obj/item/slime_extract/red
 	mutations = list(/datum/slime_color/red, /datum/slime_color/red, /datum/slime_color/oil, /datum/slime_color/oil)
+	slime_tags = SLIME_BZ_IMMUNE
 
 	environmental_req = "Subject is quite violent and will become rabid when hungry, causing all red slimes around it to also go rabid."
 
 /datum/slime_color/red/Life(delta_time, times_fired)
 	. = ..()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	var/bz_percentage =0
+	if(our_mix.gases[/datum/gas/bz])
+		bz_percentage = our_mix.gases[/datum/gas/bz][MOLES] / our_mix.total_moles()
+	var/stasis = bz_percentage >= 0.05 && slime.bodytemperature < (temperature_modifier + 100)
+	if(stasis)
+		slime.powerlevel = 0
+		slime.rabid = FALSE //Can be calmed by BZ but not stasis-ed
 
 	if(DT_PROB(65, delta_time) && slime.nutrition > slime.get_hunger_nutrition() + 100) //Even snowflakier because of hunger
 		slime.adjust_nutrition(-1 * (1 + slime.is_adult))

@@ -160,6 +160,7 @@
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.gases[/datum/gas/bz] && our_mix.gases[/datum/gas/bz][MOLES] > SEPIA_SLIME_BZ_REQUIRED)
 		fitting_environment = TRUE
+		our_mix.remove_specific(/datum/gas/bz, SEPIA_SLIME_BZ_CONSUME * delta_time)
 		return
 
 	fitting_environment = FALSE

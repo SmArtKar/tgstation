@@ -402,8 +402,13 @@
 				var/list/targets = list()
 
 				for(var/mob/living/L in view(7,src))
+					if(L == src)
+						continue
 
-					if(isslime(L) || L.stat == DEAD) // Ignore other slimes and dead mobs
+					if(isslime(L) && !(slime_color.slime_tags & SLIME_ATTACK_SLIMES)) // Don't attack other slimes unless your color allows it
+						continue
+
+					if(L.stat == DEAD) // Ignore dead mobs
 						continue
 
 					if(L in Friends) // No eating friends!
@@ -412,6 +417,8 @@
 					var/ally = FALSE
 					for(var/F in faction)
 						if(F == "neutral") //slimes are neutral so other mobs not target them, but they can target neutral mobs
+							continue
+						if(F == "slime" && (slime_color.slime_tags & SLIME_ATTACK_SLIMES)) //Allows slimes with attack_slimes tag to attack other slimes
 							continue
 						if(F in L.faction)
 							ally = TRUE
@@ -437,7 +444,7 @@
 						set_target(targets[1]) // I am attacked and am fighting back or so hungry
 					else if(hungry == 2)
 						for(var/possible_target in targets)
-							if(CanFeedon(possible_target, TRUE))
+							if(CanFeedon(possible_target, TRUE, (slime_color.slime_tags & SLIME_ATTACK_SLIMES)))
 								set_target(possible_target)
 								break
 					else

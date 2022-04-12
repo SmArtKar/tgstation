@@ -39,10 +39,8 @@
 	return
 
 /turf/open/misc/slime/attack_hand(mob/user, list/modifiers)
-	. = ..()
-
 	if(user.zone_selected != BODY_ZONE_PRECISE_MOUTH || !iscarbon(user))
-		return
+		return ..()
 
 	var/mob/living/carbon/carbon_user = user
 
@@ -50,6 +48,7 @@
 		if(carbon_user.combat_mode)
 			carbon_user.visible_message(span_warning("[carbon_user] takes a bite out of [src]."), span_warning("You take a bite out of [src] and it tastes horribly."))
 			carbon_user.reagents.add_reagent(/datum/reagent/toxin/slimejelly, 5)
+			playsound(src, 'sound/weapons/bite.ogg', 50, TRUE, -1)
 			return
 
 		var/obj/item/organ/tongue/licking_tongue = carbon_user.getorganslot(ORGAN_SLOT_TONGUE)
@@ -69,21 +68,6 @@
 		ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 	else
 		to_chat(user, span_danger("You hit [src], to no effect!"))
-
-/turf/open/misc/slime/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
-	if(the_rcd.mode == RCD_FLOORWALL)
-		return list("mode" = RCD_FLOORWALL, "delay" = 0, "cost" = 1)
-
-/turf/open/misc/slime/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)
-	if(passed_mode == RCD_FLOORWALL)
-		to_chat(user, span_notice("You build a floor."))
-		ChangeTurf(/turf/open/floor/plating, flags = CHANGETURF_INHERIT_AIR)
-		return TRUE
-	return FALSE
-
-/turf/open/misc/slime/ex_act()
-	. = ..()
-	ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 
 /turf/open/misc/slime/tool_act(mob/living/user, obj/item/I, tool_type)
 	return
