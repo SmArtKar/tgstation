@@ -148,7 +148,7 @@
 	ADD_TRAIT(mod.wearer, TRAIT_NO_SLIME_FEED, MOD_TRAIT)
 	playsound(src, 'sound/effects/bamf.ogg', 50)
 
-	worn_underlay = mutable_appearance('icons/mob/clothing/mod.dmi', "repeller_field")
+	worn_underlay = mutable_appearance('icons/mob/clothing/modsuit/mod_modules.dmi', "repeller_field")
 	worn_underlay.pixel_x = mod.wearer.pixel_x
 	worn_underlay.pixel_y = mod.wearer.pixel_y
 	mod.wearer.underlays += worn_underlay
