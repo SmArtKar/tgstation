@@ -33,7 +33,7 @@
 		return
 
 	dead_body.visible_message(span_danger("[dead_body]'s unstable vacuole collapses, causing the oily slime biomass around it to explode!"))
-	explosion(get_turf(dead_body), devastation_range = -1, heavy_impact_range = 1, light_impact_range = 2, flame_range = 2, flash_range = 1)
+	explosion(get_turf(dead_body), devastation_range = -1, heavy_impact_range = 0, light_impact_range = 1, flame_range = 2, flash_range = 1)
 
 /datum/slime_color/oil/proc/boom_attack(datum/source, atom/attack_target)
 	SIGNAL_HANDLER

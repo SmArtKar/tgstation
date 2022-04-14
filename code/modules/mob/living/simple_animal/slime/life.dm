@@ -436,7 +436,7 @@
 					targets += L // Possible target found!
 
 				for(var/obj/possible_food in view(7,src))
-					if(CanFeedon(possible_food, TRUE))
+					if(CanFeedon(possible_food, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
 						targets += possible_food
 
 				if(targets.len > 0)
@@ -444,21 +444,21 @@
 						set_target(targets[1]) // I am attacked and am fighting back or so hungry
 					else if(hungry == 2)
 						for(var/possible_target in targets)
-							if(CanFeedon(possible_target, TRUE, (slime_color.slime_tags & SLIME_ATTACK_SLIMES)))
+							if(CanFeedon(possible_target, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
 								set_target(possible_target)
 								break
 					else
-						for(var/mob/living/carbon/C in targets)
-							if(!istype(C) || !CanFeedon(C, TRUE))
+						for(var/mob/living/possible_target in targets)
+							if(!istype(possible_target) || !CanFeedon(possible_target, TRUE, slimeignore = TRUE, distignore = TRUE))
 								continue
 
 							if(!Discipline && DT_PROB(2.5, delta_time))
-								if(ishuman(C) || isalienadult(C))
-									set_target(C)
+								if(ishuman(possible_target) || isalienadult(possible_target))
+									set_target(possible_target)
 									break
 
-							if(islarva(C) || ismonkey(C))
-								set_target(C)
+							if(islarva(possible_target) || ismonkey(possible_target) || (isslime(possible_target) && (slime_color.slime_tags & SLIME_ATTACK_SLIMES)))
+								set_target(possible_target)
 								break
 
 						if(!Target)

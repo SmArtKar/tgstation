@@ -19,3 +19,6 @@
 ///From mob/living/simple_animal/slime/attack_atom(): (atom/target)
 #define COMSIG_SLIME_ATTACK_ATOM "slime_attack_atom"
 	#define COLOR_SLIME_NO_ATTACK  (1<<0) //Cancels the attack
+///From mob/living/simple_animal/slime/CanFeedon(): (atom/target)
+#define COMSIG_SLIME_CAN_FEED "slime_can_feed"
+	#define COLOR_SLIME_NO_FEED  (1<<0) //Cancels the feeding

@@ -52,4 +52,23 @@
 	color = "gold"
 	coretype = /obj/item/slime_extract/gold
 	mutations = list(/datum/slime_color/gold, /datum/slime_color/gold, /datum/slime_color/adamantine, /datum/slime_color/adamantine)
-	slime_tags = SLIME_BLUESPACE_CONNECTION
+	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_ATTACK_SLIMES
+
+/datum/slime_color/gold/New(mob/living/simple_animal/slime/slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_CAN_FEED, .proc/can_feed)
+
+/datum/slime_color/gold/remove()
+	UnregisterSignal(slime, COMSIG_SLIME_CAN_FEED)
+
+/datum/slime_color/gold/proc/can_feed(datum/source, atom/feed_target)
+	SIGNAL_HANDLER
+
+	if(!isslime(feed_target))
+		return
+
+	var/mob/living/simple_animal/slime/feed_slime
+	if(!istype(feed_slime.slime_color, type))
+		return
+
+

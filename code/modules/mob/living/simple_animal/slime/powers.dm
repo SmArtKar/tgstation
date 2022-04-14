@@ -82,8 +82,8 @@
 	var/mob/living/simple_animal/slime/S = owner
 	S.Feed()
 
-/mob/living/simple_animal/slime/proc/CanFeedon(atom/movable/M, silent = FALSE, slimeignore = FALSE)
-	if(!Adjacent(M))
+/mob/living/simple_animal/slime/proc/CanFeedon(atom/movable/M, silent = FALSE, slimeignore = FALSE, distignore = FALSE)
+	if(!Adjacent(M) && !distignore)
 		return FALSE
 
 	if(buckled && !silent)
@@ -171,6 +171,9 @@
 			return FALSE
 		to_chat(src, span_warning("<i>It's too shiny to eat...</i>")) //Let's say slime repellers work using certain light frequencies
 		return FALSE
+
+	if(SEND_SIGNAL(src, COMSIG_SLIME_CAN_FEED, M) & COLOR_SLIME_NO_FEED)
+		return
 
 	return TRUE
 
