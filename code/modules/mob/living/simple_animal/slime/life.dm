@@ -512,6 +512,17 @@
 /mob/living/simple_animal/slime/handle_automated_speech()
 	return //slime random speech is currently handled in handle_speech()
 
+/mob/living/simple_animal/slime/proc/handle_boredom(delta_time, times_fired)
+	if(holding_still)
+		holding_still = max(holding_still - (0.5 * delta_time), 0)
+		return
+	else if (docile && pulledby)
+		holding_still = 10
+		return
+
+	if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && prob(33))
+		slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
+
 /mob/living/simple_animal/slime/proc/handle_mood(delta_time, times_fired)
 	if(mood_level < 0)
 		mood_level = 0
