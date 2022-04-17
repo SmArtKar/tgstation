@@ -227,7 +227,7 @@
 	slime.visible_message(span_warning("[slime] is violently launched into the air as soon as it comes in contact with [mod.wearer]'s overcharged bracers!"))
 	var/throwtarget = get_edge_target_turf(wearer, get_dir(wearer, slime))
 	slime.throw_at(throwtarget, 3, 2, wearer)
-	slime.Stun(50)
+	slime.SStun += rand(15, 30)
 	playsound(src, 'sound/effects/contractorbatonhit.ogg', 75)
 	drain_power(DEFAULT_CHARGE_DRAIN * 2)
 

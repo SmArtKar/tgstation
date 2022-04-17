@@ -1,4 +1,5 @@
 /obj/item/xenobio_deployable
+	icon = 'icons/obj/xenobiology/machinery.dmi'
 	var/deployable_type
 
 /obj/item/xenobio_deployable/attack_self(mob/user, modifiers)
@@ -54,6 +55,7 @@
 			slime.adjust_nutrition(-1)
 
 		if(slime.powerlevel > 2 && prob(DISCHARGE_PROB))
+			stored_energy += joules_to_energy((slime.powerlevel - round(slime.powerlevel / 2)) * SLIME_POWER_LEVEL_ENERGY)
 			slime.powerlevel = round(slime.powerlevel / 2)
 			if(prob(DISCHARGE_EFFECT_PROB))
 				Beam(slime, icon_state="lightning[rand(1,12)]", time = 5)
@@ -71,7 +73,7 @@
 /obj/machinery/power/energy_accumulator/slime_discharger/zap_act(power, zap_flags)
 	if(on)
 		flick("discharger-shock", src)
-		stored_energy += joules_to_energy((power) * 400)
+		stored_energy += joules_to_energy(power) * 400
 		return 0
 	else
 		. = ..()
@@ -79,7 +81,6 @@
 /obj/item/xenobio_deployable/slime_discharger
 	name = "slime discharger"
 	desc = "Prevents all living beings from being electrocuted by those nasty yellow slimes."
-	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "discharger-off"
 	w_class = WEIGHT_CLASS_NORMAL
 	inhand_icon_state = "electronic"
@@ -171,7 +172,6 @@
 /obj/item/xenobio_deployable/vacuole_stabilizer
 	name = "vacuole stabilizer"
 	desc = "This device stabilizes vacuoles of silver and oil slimes."
-	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "stabilizer-off"
 	w_class = WEIGHT_CLASS_NORMAL
 	inhand_icon_state = "electronic"
@@ -216,7 +216,6 @@
 	name = "bluespace anchor"
 	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells. \
 			However, this may cause some other bluespace-connected slimes to become unstable and start chaotically teleporting around."
-	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "bluespace_anchor-off"
 	w_class = WEIGHT_CLASS_NORMAL
 	inhand_icon_state = "electronic"
@@ -405,7 +404,6 @@
 /obj/item/xenobio_deployable/pyrite_thrower
 	name = "pyrite thrower"
 	desc = "Pyrite throwers are small devices, holding a tiny piece of solidified pyrite slime and using it to create columns of flames to warm up hot-loving slimes."
-	icon = 'icons/obj/xenobiology/machinery.dmi'
 	icon_state = "pyrite_thrower-off"
 	w_class = WEIGHT_CLASS_NORMAL
 	inhand_icon_state = "electronic"
@@ -421,3 +419,34 @@
 /obj/effect/temp_visual/xenobio_blast/pyrite_thrower
 	name = "vacuole stabilizer field"
 	color = "#ED7B0E"
+
+/obj/item/giant_slime_plushie
+	name = "giant slime plushie"
+	desc = "A huge purple slime plushie sewn of liquid-proof cloth. Slimes love these things."
+	icon = 'icons/obj/xenobiology/machinery.dmi'
+	icon_state = "slime_plushie"
+	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items_righthand.dmi'
+	force = 0
+	w_class = WEIGHT_CLASS_HUGE
+	throwforce = 0
+	throw_speed = 1
+	throw_range = 2
+	hitsound = 'sound/effects/blobattack.ogg'
+	item_flags = NO_PIXEL_RANDOM_DROP
+	density = TRUE
+
+/obj/item/giant_slime_plushie/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/two_handed, require_twohands=TRUE)
+
+/obj/item/giant_slime_plushie/attack_self(mob/user, modifiers)
+	. = ..()
+	playsound(get_turf(src), 'sound/effects/blobattack.ogg', 100, TRUE)
+	flick("slime_plushie-bopped", src)
+
+/obj/item/giant_slime_plushie/attack_slime(mob/living/simple_animal/slime/user)
+	playsound(get_turf(src), 'sound/effects/blobattack.ogg', 100, TRUE)
+	flick("slime_plushie-bopped", src)
+	if(!user.client)
+		user.mood_level += SLIME_MOOD_PLUSHIE_PLAY_GAIN

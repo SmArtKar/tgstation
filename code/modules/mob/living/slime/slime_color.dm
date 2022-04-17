@@ -11,7 +11,6 @@
 	var/slime_tags
 
 	var/fitting_environment = TRUE
-	var/core_generation = 0
 
 	var/warpchance = 0 //For bluespace connected slimes
 
@@ -26,13 +25,6 @@
 		mutations = list(type, type, type, type)
 
 /datum/slime_color/proc/Life(delta_time, times_fired) //For handling special behavior
-	if(slime.cores < slime.max_cores && slime.stat != DEAD)
-		if((core_generation >= SLIME_MAX_CORE_GENERATION && fitting_environment) || slime.is_adult)
-			slime.cores += 1
-			core_generation = 0
-		else
-			core_generation += 1 * delta_time
-
 	var/turf/our_turf = get_turf(slime)
 	if(HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION) && (slime_tags & SLIME_BLUESPACE_CONNECTION))
 		if(DT_PROB(warpchance, delta_time))

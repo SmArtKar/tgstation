@@ -63,7 +63,6 @@
 #define DATA_HUD_SENTIENT_DISEASE 8
 #define DATA_HUD_AI_DETECT 9
 #define DATA_HUD_FAN 10
-#define DATA_HUD_NUTRITION 11
 
 // Notification action types
 #define NOTIFY_JUMP "jump"

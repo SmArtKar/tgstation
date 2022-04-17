@@ -44,17 +44,79 @@
 #define SLIME_SELL_MINIMUM_MODIFIER   0.25
 
 /// How many seconds it takes for slime to generate a core
-#define SLIME_MAX_CORE_GENERATION 20
+#define SLIME_MAX_CORE_GENERATION 30
 
 /// If slime requires high temperatures and a hotspot is located, damage will be multiplied by this
 #define HOT_SLIME_HOTSPOT_DAMAGE_MODIFIER 0.35
 /// How much warp chance is added per second when a bluespace connected slime is being anchored
 #define SLIME_WARPCHANCE_INCREASE 1
 
+/// How much one energy one power level produces
+#define SLIME_POWER_LEVEL_ENERGY 2500000 //Around 10 slimes should be enough to power xenobio I think?
+
 /// Damages per second when slimes' requirements are not satisfied
-#define SLIME_DAMAGE_LOW  (150 / 600)  //10 minutes to die
-#define SLIME_DAMAGE_MED  (150 / 420)  //7 minutes to die
-#define SLIME_DAMAGE_HIGH (150 / 300)   //5 minutes to die
+#define SLIME_DAMAGE_LOW  (150 / 540)  //9 minutes to die
+#define SLIME_DAMAGE_MED  (150 / 300)  //6 minutes to die
+#define SLIME_DAMAGE_HIGH (150 / 180)  //3 minutes to die
+
+///Additional damage from slime being an adult
+#define SLIME_ADULT_DAMAGE_BOOST 10
+
+/// Maximum slime mood
+#define SLIME_MOOD_MAXIMUM 100
+/// How much mood is gained per second if slime is well fed and it's requirements are satisfied
+#define SLIME_MOOD_PASSIVE_GAIN 2
+/// How much mood per second is lost when mood is higher than happy threshold
+#define SLIME_MOOD_PASSIVE_LOSS 0.25
+/// How much mood is lost per second when slime is hungry
+#define SLIME_MOOD_HUNGRY_LOSS 1
+/// How much mood is lost per second when slime is starving
+#define SLIME_MOOD_STARVING_LOSS 3
+/// How much mood is lost when slime's requirements are not satisfied
+#define SLIME_MOOD_REQUIREMENTS_LOSS 5
+/// Maximum level that can be achieved by passive gain. It's calculated by passive level + random offset
+#define SLIME_MOOD_PASSIVE_LEVEL 45
+#define SLIME_MOOD_PASSIVE_LEVEL_OFFSET 15
+/// At what level do slimes become happy
+#define SLIME_MOOD_LEVEL_HAPPY 75
+/// At what level do slimes start pouting
+#define SLIME_MOOD_LEVEL_POUT 40
+/// At what level do slimes become sad
+#define SLIME_MOOD_LEVEL_SAD 25
+
+///How much mood is lost when slime is disciplined
+#define SLIME_MOOD_DISCIPLINE_LOSS 15
+/// How much mood is lost when slime is watered
+#define SLIME_MOOD_WATER_LOSS 30
+
+/// How much mood is gained by playing with a plushie
+#define SLIME_MOOD_PLUSHIE_PLAY_GAIN 30
+
+/// How likely it is for a slime to misbehave when it's pouting, per second
+#define SLIME_MISBEHAVE_CHANCE_POUTING 2
+/// How likely it is for a slime to misbehave when it's sad, per second
+#define SLIME_MISBEHAVE_CHANCE_SAD 5
+
+#define SLIME_SHOULD_MISBEHAVE(mood, delta_time) ((mood < SLIME_MOOD_LEVEL_POUT) && DT_PROB((mood < SLIME_MOOD_LEVEL_SAD) ? SLIME_MISBEHAVE_CHANCE_SAD : SLIME_MISBEHAVE_CHANCE_POUTING, delta_time))
+
+/// Tags for slime colors
+
+/// These slimes lose nutrition while in range of a slime discharger.
+#define SLIME_DISCHARGER_WEAKENED (1<<0)
+/// These slimes start teleporting uncontrollably when they're affected by a bluespace anchor
+#define SLIME_BLUESPACE_CONNECTION (1<<1)
+/// These slimes are immune to damage from water
+#define SLIME_WATER_IMMUNITY (1<<2)
+/// These slimes will trigger pyrite thrower
+#define SLIME_HOT_LOVING (1<<3)
+/// These slimes are immune to BZ stasis effect. Still affected by backpack stasis!
+#define SLIME_BZ_IMMUNE (1<<4)
+/// These slimes will attack other slimes
+#define SLIME_ATTACK_SLIMES (1<<5)
+/// These slimes can't be spawned randomly
+#define SLIME_NO_RANDOM_SPAWN (1<<6)
+/// These slimes don't lose mood when their requirement is not satisfied
+#define SLIME_NO_REQUIREMENT_MOOD_LOSS (1<<7)
 
 
 /// Slime requirements
@@ -154,21 +216,22 @@
 /// Range of black slime turf conversion(circular)
 #define BLACK_SLIME_TURF_CHANGE_RANGE 3
 
+/// How likely it is for a golden slime to recruit one creature
+#define GOLDEN_SLIME_RECRUIT_CREATURE_CHANCE 55
+/// How likely it is for a golden slime to recruit one slime
+#define GOLDEN_SLIME_RECRUIT_SLIME_CHANCE 35
+/// Range in which golden slimes recruit creatures
+#define GOLDEN_SLIME_RECRUIT_RANGE 5
+/// Range in which golden slimes recruit creatures if they have a slime crown
+#define GOLDEN_SLIME_KING_RECRUIT_RANGE 9
 
-/// Tags for slime colors
-
-
-/// These slimes lose nutrition while in range of a slime discharger.
-#define SLIME_DISCHARGER_WEAKENED (1<<0)
-/// These slimes get damaged when they're affected by a bluespace anchor
-#define SLIME_BLUESPACE_CONNECTION (1<<1)
-/// These slimes are immune to damage from water
-#define SLIME_WATER_IMMUNITY (1<<2)
-/// These slimes will trigger pyrite thrower
-#define SLIME_HOT_LOVING (1<<3)
-/// These slimes are immune to BZ stasis effect. Still affected by backpack stasis!
-#define SLIME_BZ_IMMUNE (1<<4)
-/// These slimes will attack other slimes
-#define SLIME_ATTACK_SLIMES (1<<5)
-/// These slimes can't be spawned randomly
-#define SLIME_NO_RANDOM_SPAWN (1<<6)
+/// How likely it is for a green slime to enter mimick mode if they aren't mimicking something already, per second
+#define GREEN_SLIME_MIMICK_CHANCE 7
+/// How likely it is for a green slime to revert from a mimick form per second
+#define GREEN_SLIME_UNMIMICK_CHANCE 5
+/// In what range can green slimes pick up objects to mimick
+#define GREEN_SLIME_MIMICK_RANGE 7
+/// Damage boost that green slimes get while mimicking
+#define GREEN_SLIME_MIMICK_DAMAGE_BOOST 15
+/// How more likely it is for a green slime to turn into a human rather than into an object
+#define GREEN_SLIME_HUMAN_MIMICK_WEIGHT 20

@@ -96,7 +96,7 @@
 /obj/attack_slime(mob/living/simple_animal/slime/user)
 	if(!user.is_adult)
 		return
-	attack_generic(user, rand(10, 15), BRUTE, MELEE, 1)
+	attack_generic(user, user.obj_damage, BRUTE, MELEE, 1)
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src

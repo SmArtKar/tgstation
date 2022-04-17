@@ -391,11 +391,10 @@
 		if(pack.illegal)
 			if(slime.docile)
 				slime.docile = FALSE
-				slime.update_name()
 			slime.rabid = TRUE
 			slime.set_friendship(user, 20)
 			slime.powerlevel = max(slime.powerlevel, 3)
-			user.changeNext_move(CLICK_CD_RANGE) //Like a machine gun
+			user.changeNext_move(CLICK_CD_RAPID) //Like a machine gun
 
 		else if(VACUUM_PACK_UPGRADE_PACIFY in pack.upgrades)
 			slime.rabid = FALSE

@@ -213,10 +213,9 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 
 	var/damage = rand(1, 3)
 
+	var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
 	if(M.is_adult)
-		damage = rand(20, 40)
-	else
-		damage = rand(5, 35)
+		damage += SLIME_ADULT_DAMAGE_BOOST
 	damage = round(damage / 2) // borgs receive half damage
 	adjustBruteLoss(damage)
 

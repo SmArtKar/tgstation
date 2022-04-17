@@ -182,7 +182,7 @@
 		return
 	if(isturf(attack_target))
 		return ..()
-	attack_atom(attack_target)
+	attack_target(attack_target)
 
 /atom/proc/attack_slime(mob/user)
 	return

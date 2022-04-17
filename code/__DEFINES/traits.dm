@@ -277,7 +277,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SECURITY_HUD "sec_hud"
 /// for something granting you a diagnostic hud
 #define TRAIT_DIAGNOSTIC_HUD "diag_hud"
-#define TRAIT_NUTRITION_HUD "nutrition_hud"
 /// Is a medbot healing you
 #define TRAIT_MEDIBOTCOMINGTHROUGH "medbot"
 #define TRAIT_PASSTABLE "passtable"
@@ -405,6 +404,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 /// Whether or not orbiting is blocked or not
 #define TRAIT_ORBITING_FORBIDDEN "orbiting_forbidden"
+
+/// Gives special effects to certain slimes and prevents the "king" slime from being attacked by other slimes
+#define TRAIT_SLIME_KING "slime_king"
 
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
@@ -808,6 +810,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define ITEM_SCALING_TRAIT "item_scaling"
 /// Applied by xenobio items/slime cores
 #define XENOBIO_TRAIT "xenobio"
+/// Applied by slime accessories
+#define SLIME_ACCESSORY_TRAIT "slime_accessory"
 
 /**
 * Trait granted by [/mob/living/carbon/Initialize] and

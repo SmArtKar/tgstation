@@ -9,10 +9,10 @@
 /datum/slime_color/cerulean/New(slime)
 	. = ..()
 	blueprint_charge = CERULEAN_SLIME_MAX_CHARGE / 2
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM, .proc/slime_attack)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/slime_attack)
 
 /datum/slime_color/cerulean/remove()
-	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM)
+	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET)
 
 /datum/slime_color/cerulean/proc/turf_starlight_check(turf/target, direction, iteration = 0)
 	if(iteration > CERULEAN_SLIME_STARLIGHT_RANGE)
@@ -138,11 +138,11 @@
 
 /datum/slime_color/sepia/New(mob/living/simple_animal/slime/slime)
 	. = ..()
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM, .proc/timestop_attack)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/timestop_attack)
 	ADD_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 
 /datum/slime_color/sepia/remove()
-	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM)
+	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET)
 	REMOVE_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
 
 /datum/slime_color/sepia/proc/timestop_attack(datum/source, atom/attack_target)
@@ -158,6 +158,12 @@
 /datum/slime_color/sepia/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time) && can_timestop)
+		new /obj/effect/timestop/small_effect(get_turf(slime), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(slime))
+		can_timestop = FALSE
+		addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
+
 	if(our_mix.gases[/datum/gas/bz] && our_mix.gases[/datum/gas/bz][MOLES] > SEPIA_SLIME_BZ_REQUIRED)
 		fitting_environment = TRUE
 		our_mix.remove_specific(/datum/gas/bz, SEPIA_SLIME_BZ_CONSUME * delta_time)
@@ -191,10 +197,10 @@
 /datum/slime_color/pyrite/New(mob/living/simple_animal/slime/slime)
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/possible_freeze)
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM, .proc/fiery_attack)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/fiery_attack)
 
 /datum/slime_color/pyrite/remove()
-	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_ATOM))
+	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET))
 
 /datum/slime_color/pyrite/proc/fiery_attack(datum/source, atom/attack_target)
 	SIGNAL_HANDLER

@@ -354,5 +354,5 @@ INITIALIZE_IMMEDIATE(/obj/item/mod/control/pre_equipped/syndicate_empty)
 	initial_modules = list(
 		/obj/item/mod/module/storage,
 		/obj/item/mod/module/vacuum_pack,
-		/obj/item/mod/module/visor/slimehud,
+		/obj/item/mod/module/visor/medhud,
 	)

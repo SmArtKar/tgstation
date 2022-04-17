@@ -60,8 +60,12 @@
 		return
 
 	if(istype(I, /obj/item/slime_extract))
+		var/obj/item/slime_extract/extract = I
+		if(extract.tier == 0)
+			to_chat(user, span_warning("[src] doesn't seem to accept this extract!"))
+			return
 		flick("[base_icon_state]_vend", src)
-		sell_extract(I, card)
+		sell_extract(extract, card)
 		return
 
 	else if(istype(I, /obj/item/storage/bag/bio))
@@ -70,6 +74,8 @@
 
 		flick("[base_icon_state]_vend", src)
 		for(var/obj/item/slime_extract/extract in I)
+			if(extract.tier == 0)
+				continue
 			sell_extract(extract, card)
 		return
 	. = ..()

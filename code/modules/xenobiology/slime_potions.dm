@@ -190,12 +190,12 @@
 	if(M.stat)
 		to_chat(user, span_warning("The slime is dead!"))
 		return
-	if(M.cores >= 5)
+	if(M.max_cores >= 5)
 		to_chat(user, span_warning("The slime already has the maximum amount of extract!"))
 		return
 
 	to_chat(user, span_notice("You feed the slime the steroid. It will now produce one more extract."))
-	M.cores++
+	M.max_cores++
 	qdel(src)
 
 /obj/item/slimepotion/enhancer

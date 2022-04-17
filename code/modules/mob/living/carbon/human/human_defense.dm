@@ -384,7 +384,7 @@
 		return
 	var/wound_mod = -45 // 25^1.4=90, 90-45=45
 	if(M.is_adult)
-		damage += rand(5, 10)
+		damage += SLIME_ADULT_DAMAGE_BOOST
 		wound_mod = -90 // 35^1.4=145, 145-90=55
 
 	if(check_shields(M, damage, "the [M.name]"))

@@ -199,3 +199,9 @@
 	desc = "Ignore the warning label on a springlock MODsuit."
 	database_id = MEDAL_SPRINGLOCK
 	icon = "springlock"
+
+/datum/award/achievement/misc/rainbow_king
+	name = "All hail The Rainbow King"
+	desc = "Bow before our slimy overlord!"
+	database_id = MEDAL_RAINBOW_KING
+	icon = "rainbow_king"

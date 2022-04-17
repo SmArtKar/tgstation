@@ -18,9 +18,12 @@
 
 	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
 	fitting_environment = FALSE
-	core_lose += 1
-	if(core_lose >= DARK_BLUE_SLIME_CORE_LOSE && slime.cores > 0)
-		slime.cores -= 1
+	if(slime.cores > 0)
+		core_lose += 1
+		if(core_lose >= DARK_BLUE_SLIME_CORE_LOSE)
+			slime.cores -= 1
+			core_lose = 0
+	else
 		core_lose = 0
 
 /datum/slime_color/dark_purple
@@ -36,6 +39,10 @@
 	. = ..()
 	var/turf/our_turf = get_turf(slime)
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time))
+		our_turf.atmos_spawn_air("plasma=10;TEMP=1000")
+
 	if(our_mix.gases[/datum/gas/plasma] && our_mix.gases[/datum/gas/plasma][MOLES] > DARK_PURPLE_SLIME_PLASMA_REQUIRED && (!our_mix.gases[/datum/gas/oxygen] || our_mix.gases[/datum/gas/oxygen][MOLES] < DARK_PURPLE_SLIME_OXYGEN_MAXIMUM))
 		fitting_environment = TRUE
 		return

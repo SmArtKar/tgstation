@@ -152,6 +152,14 @@
 	sheet_type = null
 	girder_type = null
 
+/turf/closed/wall/slime/Initialize(mapload)
+	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/turf/closed/wall/slime/LateInitialize()
+	. = ..()
+	AddElement(/datum/element/turf_z_transparency)
+
 /turf/closed/wall/slime/attackby(obj/item/W, mob/user, params)
 	playsound(src, 'sound/effects/blobattack.ogg', 100, TRUE)
 	user.changeNext_move(CLICK_CD_MELEE)

@@ -177,6 +177,19 @@ export const PenManager = (props, context) => {
                             </ProgressBar>
                           </LabeledList.Item>
                         )}
+                        {(!!creature.is_slime && !!creature.core_growth) && (
+                          <LabeledList.Item label="Core growth progress">
+                            <ProgressBar
+                              ranges={{
+                                good: [0, 100],
+                              }}
+                              value={creature.core_growth}
+                              minValue={0}
+                              maxValue={100}>
+                              {toFixed(creature.core_growth, 0.1) + ' %'}
+                            </ProgressBar>
+                          </LabeledList.Item>
+                        )}
                       </LabeledList>
                     </Stack.Item>
                     <Stack.Divider mr={1} />
@@ -196,7 +209,7 @@ export const PenManager = (props, context) => {
                           </LabeledList.Item>
                         )}
                         {!!creature.environmental && (
-                          <LabeledList.Item label="Environmental requirements">
+                          <LabeledList.Item label="Requirements">
                             {creature.environmental}
                           </LabeledList.Item>
                         )}

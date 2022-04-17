@@ -106,9 +106,9 @@
 
 /mob/living/simple_animal/attack_slime(mob/living/simple_animal/slime/M)
 	if(..()) //successful slime attack
-		var/damage = rand(15, 25)
+		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
 		if(M.is_adult)
-			damage = rand(20, 35)
+			damage += SLIME_ADULT_DAMAGE_BOOST
 		return attack_threshold_check(damage)
 
 /mob/living/simple_animal/attack_drone(mob/living/simple_animal/drone/M)

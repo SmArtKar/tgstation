@@ -6,11 +6,17 @@
 	var/icon = "bug"
 
 	var/relationship_level = 1 //Dating sims all over again
+	var/max_relationship_level = 1
 	var/bounties_finished = 0
 	var/illegal = FALSE //If this company only shows up on emag
 	var/bounty_type = /datum/xenobio_bounty
 
 	var/list/bounties_by_level = list()
+
+/datum/xenobio_corporation/New()
+	. = ..()
+	for(var/i = 1 to max_relationship_level)
+		bounties_by_level += list()
 
 /datum/xenobio_corporation/proc/get_bounties_by_level(bounty_level = 1)
 	if(bounty_level in bounties_by_level)

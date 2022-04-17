@@ -8,6 +8,7 @@
 	var/is_adult = 0
 	var/docile = 0
 	faction = list("slime","neutral")
+
 	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,NUTRITION_HUD)
 
 	harm_intent_damage = 5
@@ -47,6 +48,7 @@
 	var/cores = 0 // the number of /obj/item/slime_extract's the slime has left inside
 	var/max_cores = 1 // how much cores can this slime generate
 	var/mutation_chance = 30 // Chance of mutating, should be between 25 and 35
+	var/core_generation = 0 // Current progress on generating a new core
 
 	var/powerlevel = 0 // 1-10 controls how much electricity they are generating
 	var/amount_grown = 0 // controls how long the slime has been overfed, if 10, grows or reproduces
@@ -62,6 +64,7 @@
 	var/holding_still = 0 // AI variable, cooloff-ish for how long it's going to stay in one place
 	var/target_patience = 0 // AI variable, cooloff-ish for how long it's going to follow its target
 	var/digestion_progress = 0 //AI variable, starts at 0 and goes to 100
+	var/mood_level = 50 //AI variable, from 0 to 100, determines slime's mood and it's behaviour
 
 	var/mutable_appearance/digestion_underlay = null //Used for displaying what slime is digesting right now
 	var/next_underlay_scale = 0.6 //Used for optimisation of digestion animation
@@ -72,9 +75,10 @@
 
 	var/mood = "" // To show its face
 	var/mutator_used = FALSE // So you can't shove a dozen mutators into a single slime
-	var/force_stasis = FALSE
+	var/force_stasis = FALSE // When set to TRUE slime will be forcefully put into stasis regardless of BZ concentration
 
 	var/nutrition_control = TRUE // When set to FALSE slime will constantly be hungry regardless of it's nutrition.
+	var/obj/item/slime_accessory/accessory // Stores current slime accessory
 
 	var/static/regex/slime_name_regex = new("\\w+ (baby|adult) slime \\(\\d+\\)")
 	///////////TIME FOR SUBSPECIES
@@ -157,15 +161,21 @@
 	set_color(pick(slime_colors))
 
 /mob/living/simple_animal/slime/regenerate_icons()
+	if(SEND_SIGNAL(src, COMSIG_SLIME_REGENERATE_ICONS) & COLOR_SLIME_NO_ICON_REGENERATION)
+		return
+
 	cut_overlays()
 	var/icon_text = "[slime_color.icon_color][is_adult ? "-adult" : ""]"
-	icon_dead = "[icon_text]-dead"
+	icon_dead = "[icon_text]-dead[cores ? "" : "-nocore"]"
 	if(stat != DEAD)
 		icon_state = icon_text
 		if(mood && !stat)
 			add_overlay("aslime-[mood]")
 	else
 		icon_state = icon_dead
+	if(accessory)
+		var/mutable_appearance/accessory_overlay = mutable_appearance(icon, "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		add_overlay(accessory_overlay)
 	return ..()
 
 /**
@@ -208,27 +218,12 @@
 
 /mob/living/simple_animal/slime/ObjBump(obj/O)
 	if(!client && powerlevel > 0)
-		var/probab = 10
-		switch(powerlevel)
-			if(1 to 2)
-				probab = 20
-			if(3 to 4)
-				probab = 30
-			if(5 to 6)
-				probab = 40
-			if(7 to 8)
-				probab = 60
-			if(9)
-				probab = 70
-			if(10)
-				probab = 95
-		if(prob(probab))
+		if(prob(powerlevel * 5))
 			if(istype(O, /obj/structure/window) || istype(O, /obj/structure/grille))
-				if(nutrition <= get_hunger_nutrition() && !Atkcool)
-					if (is_adult || prob(5))
-						attack_atom(O)
-						Atkcool = TRUE
-						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
+				if(nutrition <= get_hunger_nutrition() && !Atkcool && is_adult)
+					attack_target(O)
+					Atkcool = TRUE
+					addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
 /mob/living/simple_animal/slime/Process_Spacemove(movement_dir = 0)
 	return 2
@@ -383,6 +378,17 @@
 		var/obj/item/stack/sheet/mineral/plasma/S = W
 		S.use(1)
 		return
+	if(istype(W, /obj/item/slime_accessory))
+		var/obj/item/slime_accessory/new_accessory = W
+		if(accessory)
+			to_chat(user, span_warning("[src] already has an accessory on!"))
+			return
+		if(!new_accessory.slime_equipped(src, user))
+			to_chat(user, span_warning("You can't put [new_accessory] onto [src]."))
+			return
+		new_accessory.forceMove(src)
+		to_chat(user, span_notice("You put [new_accessory] onto [src]."))
+		return
 	if(W.force > 0)
 		attacked += 10
 		if(prob(25))
@@ -400,6 +406,25 @@
 			discipline_slime(user)
 	. = ..()
 
+/mob/living/simple_animal/slime/AltClick(mob/user)
+	. = ..()
+	if(!Adjacent(user) || !isliving(user))
+		return
+
+	if(!accessory)
+		to_chat(user, span_warning("[src] doesn't have any accessory on!"))
+		return
+
+	if(!accessory.slime_unequipped(src, user))
+		to_chat(user, span_warning("You can't remove [accessory] from [src]."))
+		return
+
+	accessory.forceMove(get_turf(src))
+	user.put_in_hands(accessory)
+	to_chat(user, span_notice("You remove [accessory] from [src]."))
+	accessory = null
+	regenerate_icons()
+
 /mob/living/simple_animal/slime/proc/apply_water()
 	if(slime_color.slime_tags & SLIME_WATER_IMMUNITY)
 		return
@@ -409,6 +434,7 @@
 		if(Target) // Like cats
 			set_target(null)
 			++Discipline
+		mood_level -= SLIME_MOOD_WATER_LOSS
 	return
 
 /mob/living/simple_animal/slime/examine(mob/user)
@@ -447,6 +473,7 @@
 
 	if(prob(80) && !client)
 		Discipline++
+		mood_level -= SLIME_MOOD_DISCIPLINE_LOSS
 
 		if(!is_adult)
 			if(Discipline == 1)
@@ -534,5 +561,12 @@
 	if(source == Leader)
 		set_leader(null)
 	remove_friend(source)
+
+/mob/living/simple_animal/slime/Destroy()
+	if(accessory)
+		accessory.slime_unequipped(src)
+		accessory.forceMove(get_turf(src))
+		accessory = null
+	. = ..()
 
 #undef SLIME_CARES_ABOUT

@@ -110,6 +110,12 @@
 		to_chat(src, span_warning("<i>I can't latch onto another slime...</i>"))
 		return FALSE
 
+	if(HAS_TRAIT(M, TRAIT_SLIME_KING) && !HAS_TRAIT(src, TRAIT_SLIME_KING))
+		if(silent)
+			return FALSE
+		to_chat(src, span_warning("<i>I can't attack our king...</i>"))
+		return FALSE
+
 	if(docile)
 		if(silent)
 			return FALSE

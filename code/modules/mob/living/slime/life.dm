@@ -24,6 +24,8 @@
 	handle_targets(delta_time, times_fired)
 	handle_digestion(delta_time, times_fired)
 	slime_color.Life(delta_time, times_fired)
+	if(accessory)
+		accessory.on_life(delta_time, times_fired)
 	if(ckey)
 		return
 	handle_mood(delta_time, times_fired)
@@ -81,7 +83,7 @@
 						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
 						if(Target.Adjacent(src))
-							attack_atom(Target)
+							attack_target(Target)
 					break
 				if(isliving(Target))
 					var/mob/living/victim = Target
@@ -92,7 +94,7 @@
 								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
 
 								if(victim.Adjacent(src))
-									attack_atom(victim)
+									attack_target(victim)
 
 						else
 							if(!Atkcool && victim.Adjacent(src))
@@ -121,8 +123,8 @@
 	AIproc = 0
 
 
-/mob/living/simple_animal/slime/proc/attack_atom(atom/attack_target)
-	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_ATOM, attack_target) & COLOR_SLIME_NO_ATTACK)
+/mob/living/simple_animal/slime/proc/attack_target(atom/attack_target)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_TARGET, attack_target) & COLOR_SLIME_NO_ATTACK)
 		return
 
 	attack_target.attack_slime(src)
@@ -320,6 +322,20 @@
 		set_nutrition(700) //fuck you for using the base nutrition var
 		return
 
+	if(cores < max_cores && !stat && nutrition >= get_grow_nutrition() && slime_color.fitting_environment)
+		if(core_generation >= SLIME_MAX_CORE_GENERATION)
+			cores += 1
+			regenerate_icons()
+			core_generation = 0
+		else
+			var/coregen_speed = 1
+			if(mood_level > SLIME_MOOD_LEVEL_HAPPY)
+				coregen_speed = 1.5
+			else if(mood_level < SLIME_MOOD_LEVEL_POUT)
+				coregen_speed = 0.5
+			core_generation += coregen_speed * delta_time
+			adjust_nutrition(-1 * (1 + is_adult) * delta_time)
+
 	if(DT_PROB(65, delta_time)) //So about 1.3 nutrition per second for a child and 2.6 for adult, that's around 12.8 minutes of nutrition for a child and around 7.7 + 12.8 = 20.5 minutes for an adult
 		adjust_nutrition(-2 * (1 + is_adult)) //Why the fuck was it multiplied by delta time second time, that's not how this shit is supposed to work
 
@@ -328,12 +344,12 @@
 		if(DT_PROB(50, delta_time))
 			adjustBruteLoss(rand(0,5))
 
-	else if (nutrition >= get_grow_nutrition() && amount_grown < SLIME_EVOLUTION_THRESHOLD)
+	else if (nutrition >= get_grow_nutrition() && amount_grown < SLIME_EVOLUTION_THRESHOLD && cores >= max_cores)
 		adjust_nutrition(-10 * delta_time)
 		amount_grown++
 		update_action_buttons_icon()
 
-	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD && !buckled && !Target && !ckey)
+	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD && cores >= max_cores && !buckled && !Target && !ckey)
 		if(is_adult && loc.AllowDrop())
 			Reproduce()
 		else
@@ -389,13 +405,8 @@
 
 		if (nutrition < get_starve_nutrition())
 			hungry = 2
-		else if (nutrition < get_grow_nutrition() && DT_PROB(13, delta_time) || nutrition < get_hunger_nutrition())
+		else if (nutrition < get_grow_nutrition() && DT_PROB((mood_level < SLIME_MOOD_LEVEL_POUT ? 25 : 13), delta_time) || nutrition < get_hunger_nutrition())
 			hungry = 1
-
-		if(hungry == 2 && !client) // if a slime is starving, it starts losing its friends
-			if(Friends.len > 0 && DT_PROB(0.5, delta_time))
-				var/mob/nofriend = pick(Friends)
-				add_friendship(nofriend, -1)
 
 		if(!Target)
 			if(will_hunt() && hungry || attacked || rabid) // Only add to the list if we need to
@@ -452,7 +463,7 @@
 							if(!istype(possible_target) || !CanFeedon(possible_target, TRUE, slimeignore = TRUE, distignore = TRUE))
 								continue
 
-							if(!Discipline && DT_PROB(2.5, delta_time))
+							if(!Discipline && DT_PROB((mood_level < SLIME_MOOD_LEVEL_POUT ? 7.5 : 2.5), delta_time))
 								if(ishuman(possible_target) || isalienadult(possible_target))
 									set_target(possible_target)
 									break
@@ -491,12 +502,7 @@
 					slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
 
 			else
-				if(holding_still)
-					holding_still = max(holding_still - (0.5 * delta_time), 0)
-				else if (docile && pulledby)
-					holding_still = 10
-				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && prob(33))
-					slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
+				handle_boredom(delta_time, times_fired)
 		else if(!AIproc)
 			INVOKE_ASYNC(src, .proc/AIprocess)
 
@@ -507,11 +513,22 @@
 	return //slime random speech is currently handled in handle_speech()
 
 /mob/living/simple_animal/slime/proc/handle_mood(delta_time, times_fired)
+	if(mood_level < 0)
+		mood_level = 0
+	else if(mood_level > SLIME_MOOD_MAXIMUM)
+		mood_level = SLIME_MOOD_MAXIMUM
+
 	var/newmood = ""
 	if (rabid || attacked)
 		newmood = "angry"
+	else if(mood_level > SLIME_MOOD_LEVEL_HAPPY)
+		newmood = pick(":3", ":33")
+	else if(mood_level < SLIME_MOOD_LEVEL_POUT)
+		newmood = "pout"
+	else if(mood_level < SLIME_MOOD_LEVEL_SAD)
+		newmood = "sad"
 	else if (docile)
-		newmood = ":3"
+		newmood = pick(":3", ":33")
 	else if (Target)
 		newmood = "mischievous"
 
@@ -519,7 +536,7 @@
 		if (Discipline && DT_PROB(13, delta_time))
 			newmood = "pout"
 		else if (DT_PROB(0.5, delta_time))
-			newmood = pick("sad", ":3", "pout")
+			newmood = pick("sad", ":3", ":33", "pout")
 
 	if ((mood == "sad" || mood == ":3" || mood == "pout") && !newmood)
 		if(DT_PROB(50, delta_time))
@@ -528,6 +545,26 @@
 	if (newmood != mood) // This is so we don't redraw them every time
 		mood = newmood
 		regenerate_icons()
+
+	if(!slime_color.fitting_environment && !(slime_color.slime_tags))
+		mood_level -= SLIME_MOOD_REQUIREMENTS_LOSS * delta_time
+	else if(nutrition < get_starve_nutrition())
+		mood_level -= SLIME_MOOD_STARVING_LOSS * delta_time
+	else if(nutrition < get_hunger_nutrition())
+		mood_level -= SLIME_MOOD_HUNGRY_LOSS * delta_time
+	else if(mood_level < SLIME_MOOD_PASSIVE_LEVEL + rand(-SLIME_MOOD_PASSIVE_LEVEL_OFFSET, SLIME_MOOD_PASSIVE_LEVEL_OFFSET))
+		mood_level += SLIME_MOOD_PASSIVE_GAIN * delta_time
+
+	if(mood_level < SLIME_MOOD_LEVEL_POUT)
+		if(Discipline && DT_PROB(2, delta_time)) //Faster discipline loss
+			Discipline -= 1
+
+	if(mood_level < SLIME_MOOD_LEVEL_SAD)
+		if(Friends.len > 0 && DT_PROB(3, delta_time)) //Lose friends when sad
+			var/mob/nofriend = pick(Friends)
+			add_friendship(nofriend, -1)
+		if(!rabid && !docile && DT_PROB(0.05, delta_time)) //Very low chance to become rabid when sad
+			rabid = TRUE
 
 /mob/living/simple_animal/slime/proc/handle_speech(delta_time, times_fired)
 	//Speech understanding starts here

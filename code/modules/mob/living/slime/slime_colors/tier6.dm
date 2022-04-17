@@ -7,14 +7,19 @@
 /datum/slime_color/oil/New(mob/living/simple_animal/slime/slime)
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/boom)
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_ATOM, .proc/boom_attack)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/boom_attack)
+	ADD_TRAIT(slime, TRAIT_BOMBIMMUNE, ROUNDSTART_TRAIT)
 
 /datum/slime_color/oil/remove()
-	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_ATOM))
+	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET))
+	REMOVE_TRAIT(slime, TRAIT_BOMBIMMUNE, ROUNDSTART_TRAIT)
 
 /datum/slime_color/oil/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time))
+		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = -1, light_impact_range = 0, flame_range = 1, flash_range = 1)
+
 	if(our_mix.return_pressure() > OIL_SLIME_REQUIRED_PRESSURE)
 		fitting_environment = TRUE
 		return
@@ -78,7 +83,7 @@
 	fitting_environment = FALSE
 	slime.adjustBruteLoss(SLIME_DAMAGE_MED)
 
-	if(!DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time))
+	if(!DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time) && !SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time))
 		return
 
 	var/list/convertable_turfs = list()

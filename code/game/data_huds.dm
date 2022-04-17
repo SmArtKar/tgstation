@@ -18,7 +18,7 @@
 /datum/atom_hud/data
 
 /datum/atom_hud/data/human/medical
-	hud_icons = list(STATUS_HUD, HEALTH_HUD)
+	hud_icons = list(STATUS_HUD, HEALTH_HUD, NUTRITION_HUD)
 
 /datum/atom_hud/data/human/medical/basic
 
@@ -78,9 +78,6 @@
 		for(var/V in GLOB.aiEyes)
 			var/mob/camera/ai_eye/E = V
 			E.update_ai_detect_hud()
-
-/datum/atom_hud/data/human/slime
-	hud_icons = list(STATUS_HUD, NUTRITION_HUD)
 
 /* MED/SEC/DIAG HUD HOOKS */
 

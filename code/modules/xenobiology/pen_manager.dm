@@ -223,6 +223,8 @@
 
 			creature_info["nutrition"] = slime.nutrition / slime.get_max_nutrition() * 100
 			creature_info["growth"] = slime.amount_grown / SLIME_EVOLUTION_THRESHOLD * 100
+			if(slime.cores < slime.max_cores)
+				creature_info["core_growth"] = slime.core_generation / SLIME_MAX_CORE_GENERATION * 100
 			if(slime.cores > 1)
 				creature_info["cores"] = "[slime.cores - 1] additional cores detected."
 			creature_info["food_types"] = ""

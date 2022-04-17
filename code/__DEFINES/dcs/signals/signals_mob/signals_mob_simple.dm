@@ -16,9 +16,12 @@
 ///From mob/living/simple_animal/slime/slime_step(): (atom/target)
 #define COMSIG_SLIME_TAKE_STEP "slime_take_step"
 	#define COLOR_SLIME_NO_STEP  (1<<0) //Cancels the AI movement in case slime color has it's own ways of transportation(bluespace slimes for example)
-///From mob/living/simple_animal/slime/attack_atom(): (atom/target)
-#define COMSIG_SLIME_ATTACK_ATOM "slime_attack_atom"
+///From mob/living/simple_animal/slime/attack_target(): (atom/target)
+#define COMSIG_SLIME_ATTACK_TARGET "slime_attack_target"
 	#define COLOR_SLIME_NO_ATTACK  (1<<0) //Cancels the attack
 ///From mob/living/simple_animal/slime/CanFeedon(): (atom/target)
 #define COMSIG_SLIME_CAN_FEED "slime_can_feed"
 	#define COLOR_SLIME_NO_FEED  (1<<0) //Cancels the feeding
+///From mob/living/simple_animal/slime/regenerate_icons(): ()
+#define COMSIG_SLIME_REGENERATE_ICONS "slime_regenerate_icons"
+	#define COLOR_SLIME_NO_ICON_REGENERATION  (1<<0) //Cancels icon regeneration in case you, for some reason, want to keep the appearance
