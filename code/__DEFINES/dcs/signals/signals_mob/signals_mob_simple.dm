@@ -22,5 +22,3 @@
 ///From mob/living/simple_animal/slime/regenerate_icons(): ()
 #define COMSIG_SLIME_REGENERATE_ICONS "slime_regenerate_icons"
 	#define COLOR_SLIME_NO_ICON_REGENERATION  (1<<0) //Cancels icon regeneration in case you, for some reason, want to keep the appearance
-///From mob/living/simple_animal/slime/start_moveloop(): (atom/move_target, datum/move_loop/new_loop)
-#define COMSIG_SLIME_START_MOVELOOP "slime_start_moveloop"

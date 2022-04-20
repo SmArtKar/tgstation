@@ -34,7 +34,7 @@
 	melee_damage_upper = 25
 	obj_damage = 5
 	see_in_dark = 8
-	speed = 0.6 //+1.5 from run speed
+	speed = 0.2 //+1.5 from run speed
 
 	verb_say = "blorbles"
 	verb_ask = "inquisitively blorbles"
@@ -231,7 +231,7 @@
 
 /mob/living/simple_animal/slime/ObjBump(obj/O)
 	if(!client && powerlevel > 0)
-		if(prob(powerlevel * 5))
+		if(prob(powerlevel * 5 + max(SLIME_MOOD_LEVEL_HAPPY - mood_level, 0) / SLIME_MOOD_LEVEL_HAPPY * SLIME_MOOD_OBJ_ATTACK_CHANCE))
 			if(istype(O, /obj/structure/window) || istype(O, /obj/structure/grille))
 				if(nutrition <= get_hunger_nutrition() && !Atkcool && is_adult)
 					attack_target(O)

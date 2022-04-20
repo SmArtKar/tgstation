@@ -59,8 +59,10 @@
 #define SLIME_DAMAGE_MED  (150 / 450)  //7.5 minutes to die
 #define SLIME_DAMAGE_HIGH (150 / 300)  //5 minutes to die
 
-/// Additional damage from slime being an adult
+/// Additional damage for mobs from slime being an adult
 #define SLIME_ADULT_DAMAGE_BOOST 10
+/// Additional damage for objects from slime being an adult
+#define SLIME_ADULT_OBJ_DAMAGE_BOOST 15
 
 /// How likely it is for a slime to use a POI when it's bored, per second. Every POI is has it's own check that should average at 25%
 #define SLIME_POI_INTERACT_CHANCE 20
@@ -101,6 +103,8 @@
 #define SLIME_MISBEHAVE_CHANCE_POUTING 0.5
 /// How likely it is for a slime to misbehave when it's sad, per second
 #define SLIME_MISBEHAVE_CHANCE_SAD 2
+/// How likely it is for a slime to attack whatever it bumps into from bad mood
+#define SLIME_MOOD_OBJ_ATTACK_CHANCE 30 //12% chance on default mood
 
 #define SLIME_SHOULD_MISBEHAVE(mood, discipline, delta_time) (!discipline && (mood < SLIME_MOOD_LEVEL_POUT) && DT_PROB((mood < SLIME_MOOD_LEVEL_SAD) ? SLIME_MISBEHAVE_CHANCE_SAD : SLIME_MISBEHAVE_CHANCE_POUTING, delta_time))
 

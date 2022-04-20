@@ -110,7 +110,7 @@
 				else
 					gobble_up(Target)
 
-			else if(Target in view(7, src))
+			else if(get_dist(Target, src) <= 9) //Previously this used view which is extremely expensive. Also you can no longer make slimes forget about your existence by just hiding behind the corner
 				if(!Target.Adjacent(src)) // Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
 					start_moveloop(Target)
 			else
@@ -118,7 +118,11 @@
 				AIproc = 0
 				break
 
-		sleep(2)
+		var/sleeptime = cached_multiplicative_slowdown
+		if(sleeptime <= 1)
+			sleeptime = 1
+
+		sleep(sleeptime + 2)
 
 	AIproc = 0
 
@@ -134,9 +138,11 @@
 	if(sleeptime <= 0)
 		sleeptime = 0
 
-	var/datum/move_loop/new_loop = SSmove_manager.move_to(src, move_target, 1, sleeptime)
+	SSmove_manager.move_to(src, move_target, 1, sleeptime)
 
-	/*if(!Adjacent(step_target))
+	/*
+
+	if(!Adjacent(step_target))
 		step_target = get_step(get_turf(src), get_dir(src, step_target))
 
 	var/obj/machinery/door/airlock/airlock = locate(/obj/machinery/door/airlock) in get_turf(step_target)
@@ -171,7 +177,9 @@
 		visible_message(span_warning("[src] squeeses through [squeese_target]!"))
 		forceMove(squeese_turf)
 	else
-		step_to(src, step_target) */
+		step_to(src, step_target)
+
+	*/
 
 /mob/living/simple_animal/slime/handle_environment(datum/gas_mixture/environment, delta_time, times_fired)
 	var/loc_temp = get_temperature(environment)

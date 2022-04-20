@@ -94,7 +94,7 @@
 	take_damage(amt, BRUTE)
 
 /obj/attack_slime(mob/living/simple_animal/slime/user)
-	attack_generic(user, user.obj_damage + (user.is_adult ? SLIME_ADULT_DAMAGE_BOOST : 0), BRUTE, MELEE, 1)
+	attack_generic(user, user.obj_damage + (user.is_adult ? SLIME_ADULT_OBJ_DAMAGE_BOOST : 0), BRUTE, MELEE, 1)
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src
