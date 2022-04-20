@@ -204,9 +204,6 @@
 		if(M.powerlevel > 0)
 			var/stunprob = M.powerlevel * 7 + 10  // 17 at level 1, 80 at level 10
 			if(prob(stunprob))
-				M.powerlevel -= 3
-				if(M.powerlevel < 0)
-					M.powerlevel = 0
 
 				visible_message(span_danger("The [M.name] shocks [src]!"), \
 				span_userdanger("The [M.name] shocks you!"))
@@ -219,6 +216,9 @@
 				if (prob(stunprob) && M.powerlevel >= 8)
 					adjustFireLoss(M.powerlevel * rand(6,10))
 					updatehealth()
+				M.powerlevel -= 3
+				if(M.powerlevel < 0)
+					M.powerlevel = 0
 		return 1
 
 /mob/living/carbon/proc/dismembering_strike(mob/living/attacker, dam_zone)

@@ -13,9 +13,6 @@
 ///FROM mob/living/simple_animal/hostile/ooze/eat_atom(): (atom/target, edible_flags)
 #define COMSIG_OOZE_EAT_ATOM "ooze_eat_atom"
 	#define COMPONENT_ATOM_EATEN  (1<<0)
-///From mob/living/simple_animal/slime/slime_step(): (atom/target)
-#define COMSIG_SLIME_TAKE_STEP "slime_take_step"
-	#define COLOR_SLIME_NO_STEP  (1<<0) //Cancels the AI movement in case slime color has it's own ways of transportation(bluespace slimes for example)
 ///From mob/living/simple_animal/slime/attack_target(): (atom/target)
 #define COMSIG_SLIME_ATTACK_TARGET "slime_attack_target"
 	#define COLOR_SLIME_NO_ATTACK  (1<<0) //Cancels the attack
@@ -25,3 +22,5 @@
 ///From mob/living/simple_animal/slime/regenerate_icons(): ()
 #define COMSIG_SLIME_REGENERATE_ICONS "slime_regenerate_icons"
 	#define COLOR_SLIME_NO_ICON_REGENERATION  (1<<0) //Cancels icon regeneration in case you, for some reason, want to keep the appearance
+///From mob/living/simple_animal/slime/start_moveloop(): (atom/move_target, datum/move_loop/new_loop)
+#define COMSIG_SLIME_START_MOVELOOP "slime_start_moveloop"

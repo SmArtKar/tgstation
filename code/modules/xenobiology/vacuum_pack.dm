@@ -46,6 +46,10 @@
 	var/give_choice = TRUE //If set to true the pack will give the owner a radial selection to choose which object they want to shoot
 	var/check_backpack = TRUE //If it can only be used while worn on the back
 	var/static/list/storable_objects = list(/mob/living/simple_animal/slime, /mob/living/simple_animal/xenofauna)
+	var/modified = FALSE //If the gun is modified to fight with revenants
+	var/mob/living/simple_animal/revenant/ghost_busting //Stores the revenant we're currently sucking in
+	var/mob/living/ghost_buster //Stores the user
+	var/busting_beam //Stores visual effects
 
 /obj/item/vacuum_pack/Initialize(mapload)
 	. = ..()
@@ -56,6 +60,11 @@
 	if(VACUUM_PACK_UPGRADE_HEALING in upgrades)
 		STOP_PROCESSING(SSobj, src)
 	return ..()
+
+/obj/item/vacuum_pack/multitool_act(mob/living/user, obj/item/tool)
+	. = ..()
+	modified = !modified
+	to_chat(user, span_notice("You turn the safety switch on [src] [modified ? "off" : "on"]."))
 
 /obj/item/vacuum_pack/process(delta_time)
 	if(!(VACUUM_PACK_UPGRADE_HEALING in upgrades))
@@ -190,6 +199,10 @@
 /obj/item/vacuum_nozzle/afterattack_secondary(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
 
+	if(pack.modified && pack.ghost_busting && target != pack.ghost_busting)
+		pack.ghost_busting.throw_at(get_turf(target), get_dist(pack.ghost_busting, target), 3, user)
+		return
+
 	if(!(VACUUM_PACK_UPGRADE_BIOMASS in pack.upgrades))
 		to_chat(user, span_warning("[pack] does not posess a required upgrade!"))
 		return
@@ -239,6 +252,13 @@
 	if(LAZYACCESS(params2list(params), RIGHT_CLICK))
 		return
 
+	if(pack.ghost_busting)
+		return
+
+	if(pack.modified && !pack.ghost_busting && isrevenant(target) && get_dist(user, target) < 4)
+		start_busting(target, user)
+		return
+
 	if(istype(target, /obj/machinery/biomass_recycler) && target.Adjacent(user))
 		if(!(VACUUM_PACK_UPGRADE_BIOMASS in pack.upgrades))
 			to_chat(user, span_warning("[pack] does not posess a required upgrade!"))
@@ -276,15 +296,15 @@
 				to_chat(user, span_warning("[pack] is not linked to a biomass recycler!"))
 				return
 
-			if(!do_after(user, pack.speed, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
-				return
-
 			if(target_stat == CONSCIOUS)
 				to_chat(user, span_warning("[target] is struggling far too much for you to suck it in!"))
 				return
 
 			if(buckled_to || target.has_buckled_mobs())
 				to_chat(user, span_warning("[target] is attached to something!"))
+				return
+
+			if(!do_after(user, pack.speed, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
 				return
 
 			playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
@@ -403,6 +423,42 @@
 
 	pack.stored -= spewed
 	user.visible_message(span_warning("[user] shoots [spewed] out their [src]!"), span_notice("You shoot [spewed] out of your [src]."))
+
+/obj/item/vacuum_nozzle/proc/start_busting(mob/living/simple_animal/revenant/revenant, mob/living/user)
+	revenant.visible_message(span_warning("[user] starts sucking [revenant] into their [src]!"), span_userdanger("You are being sucked into [user]'s [src]!"))
+	pack.ghost_busting = revenant
+	pack.ghost_buster = user
+	pack.busting_beam = user.Beam(revenant, icon_state="drain_life")
+	bust_the_ghost()
+
+/obj/item/vacuum_nozzle/proc/bust_the_ghost()
+	while(check_busting())
+		if(!do_after(pack.ghost_buster, 0.5 SECONDS, target = pack.ghost_busting, extra_checks = CALLBACK(src, .proc/check_busting), timed_action_flags = IGNORE_TARGET_LOC_CHANGE|IGNORE_USER_LOC_CHANGE))
+			pack.ghost_busting = null
+			pack.ghost_buster = null
+			QDEL_NULL(pack.busting_beam)
+			return
+
+		pack.ghost_busting.adjustHealth(5)
+		pack.ghost_busting.reveal(0.5 SECONDS, TRUE)
+
+/obj/item/vacuum_nozzle/proc/check_busting()
+	if(!pack.ghost_busting || !pack.ghost_busting.loc || QDELETED(pack.ghost_busting))
+		return FALSE
+
+	if(!pack.ghost_buster || !pack.ghost_buster.loc || QDELETED(pack.ghost_buster))
+		return FALSE
+
+	if(loc != pack.ghost_buster)
+		return FALSE
+
+	if(get_dist(pack.ghost_buster, pack.ghost_busting) > 3)
+		return FALSE
+
+	if(pack.ghost_busting.essence <= 0) //Means that the revenant is dead
+		return FALSE
+
+	return TRUE
 
 /obj/item/disk/vacuum_upgrade
 	name = "vacuum pack upgrade disk"

@@ -211,8 +211,6 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 		if(prob(stunprob) && M.powerlevel >= 8)
 			adjustBruteLoss(M.powerlevel * rand(6,10))
 
-	var/damage = rand(1, 3)
-
 	var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
 	if(M.is_adult)
 		damage += SLIME_ADULT_DAMAGE_BOOST

@@ -121,7 +121,45 @@
 	mutations = list(/datum/slime_color/pink, /datum/slime_color/pink, /datum/slime_color/light_pink, /datum/slime_color/light_pink)
 	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_NO_REQUIREMENT_MOOD_LOSS
 
-/datum/slime_color/pink
+/datum/slime_color/pink/Life(delta_time, times_fired)
+	. = ..()
+
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
+		start_hallucinations()
+
+	var/slime_amount = 0
+	for(var/mob/living/simple_animal/slime/other_slime in view(3, get_turf(slime)))
+		if(other_slime != slime && istype(other_slime.slime_color, type))
+			slime_amount += 1
+
+	var/plushie_amount = 0
+	for(var/obj/item/giant_slime_plushie/plush in view(3, get_turf(slime)))
+		plushie_amount += 1
+		if(plushie_amount >= 1 + round(slime_amount / (2 + (slime.accessory && istype(slime.accessory, /obj/item/slime_accessory/friendship_necklace))))) //Friendship necklace lowers requirements
+			fitting_environment = TRUE
+			return
+
+	plushie_amount = 0
+	for(var/obj/item/toy/plush/plush in view(3, get_turf(slime)))
+		if(istype(plush, /obj/item/toy/plush/slimeplushie)) //Twice as fun
+			plushie_amount += 2
+		else
+			plushie_amount += 1
+
+		if(plushie_amount >= (PINK_SLIME_PLUSHIE_REQUIREMENT + slime_amount) / (1 + (slime.accessory && istype(slime.accessory, /obj/item/slime_accessory/friendship_necklace))))
+			fitting_environment = TRUE
+			return
+
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW)
+	if(DT_PROB(PINK_SLIME_HALLUCINATION_CHANCE, delta_time))
+		start_hallucinations()
+
+/datum/slime_color/pink/proc/start_hallucinations()
+	for(var/mob/living/carbon/possible_sentient in view(9, get_turf(slime)))
+		if(!possible_sentient.client)
+			continue
+
+		possible_sentient.apply_status_effect(/datum/status_effect/slime_hallucinations)
 
 /datum/slime_color/gold
 	color = "gold"

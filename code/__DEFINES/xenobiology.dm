@@ -55,17 +55,20 @@
 #define SLIME_POWER_LEVEL_ENERGY 2500000 //Around 10 slimes should be enough to power xenobio I think?
 
 /// Damages per second when slimes' requirements are not satisfied
-#define SLIME_DAMAGE_LOW  (150 / 540)  //9 minutes to die
-#define SLIME_DAMAGE_MED  (150 / 300)  //6 minutes to die
-#define SLIME_DAMAGE_HIGH (150 / 180)  //3 minutes to die
+#define SLIME_DAMAGE_LOW  (150 / 600)  //10 minutes to die
+#define SLIME_DAMAGE_MED  (150 / 450)  //7.5 minutes to die
+#define SLIME_DAMAGE_HIGH (150 / 300)  //5 minutes to die
 
-///Additional damage from slime being an adult
+/// Additional damage from slime being an adult
 #define SLIME_ADULT_DAMAGE_BOOST 10
+
+/// How likely it is for a slime to use a POI when it's bored, per second. Every POI is has it's own check that should average at 25%
+#define SLIME_POI_INTERACT_CHANCE 20
 
 /// Maximum slime mood
 #define SLIME_MOOD_MAXIMUM 100
 /// How much mood is gained per second if slime is well fed and it's requirements are satisfied
-#define SLIME_MOOD_PASSIVE_GAIN 2
+#define SLIME_MOOD_PASSIVE_GAIN 0.5
 /// How much mood per second is lost when mood is higher than happy threshold
 #define SLIME_MOOD_PASSIVE_LOSS 0.25
 /// How much mood is lost per second when slime is hungry
@@ -84,20 +87,22 @@
 /// At what level do slimes become sad
 #define SLIME_MOOD_LEVEL_SAD 25
 
-///How much mood is lost when slime is disciplined
+/// How much mood is lost when slime is disciplined
 #define SLIME_MOOD_DISCIPLINE_LOSS 15
 /// How much mood is lost when slime is watered
 #define SLIME_MOOD_WATER_LOSS 30
+/// How much mood is lost from seeing another slime die
+#define SLIME_MOOD_DEATH_LOSS 45
 
 /// How much mood is gained by playing with a plushie
 #define SLIME_MOOD_PLUSHIE_PLAY_GAIN 30
 
 /// How likely it is for a slime to misbehave when it's pouting, per second
-#define SLIME_MISBEHAVE_CHANCE_POUTING 2
+#define SLIME_MISBEHAVE_CHANCE_POUTING 0.5
 /// How likely it is for a slime to misbehave when it's sad, per second
-#define SLIME_MISBEHAVE_CHANCE_SAD 5
+#define SLIME_MISBEHAVE_CHANCE_SAD 2
 
-#define SLIME_SHOULD_MISBEHAVE(mood, delta_time) ((mood < SLIME_MOOD_LEVEL_POUT) && DT_PROB((mood < SLIME_MOOD_LEVEL_SAD) ? SLIME_MISBEHAVE_CHANCE_SAD : SLIME_MISBEHAVE_CHANCE_POUTING, delta_time))
+#define SLIME_SHOULD_MISBEHAVE(mood, discipline, delta_time) (!discipline && (mood < SLIME_MOOD_LEVEL_POUT) && DT_PROB((mood < SLIME_MOOD_LEVEL_SAD) ? SLIME_MISBEHAVE_CHANCE_SAD : SLIME_MISBEHAVE_CHANCE_POUTING, delta_time))
 
 /// Tags for slime colors
 
@@ -163,10 +168,8 @@
 /// How fast are we losing cores
 #define DARK_BLUE_SLIME_CORE_LOSE 10
 
-/// How likely it is for a bluespace slime to teleport through something
-#define BLUESPACE_SLIME_TELEPORT_CHANCE 5
 /// How much can bluespace slime travel in one teleport
-#define BLUESPACE_SLIME_TELEPORT_DISTANCE 3
+#define BLUESPACE_SLIME_TELEPORT_DISTANCE 4
 /// How many seconds it takes for a bluespace anchor to fully consume one charge
 #define BLUESPACE_ANCHOR_CHARGE_TIME 3 MINUTES
 
@@ -235,3 +238,8 @@
 #define GREEN_SLIME_MIMICK_DAMAGE_BOOST 15
 /// How more likely it is for a green slime to turn into a human rather than into an object
 #define GREEN_SLIME_HUMAN_MIMICK_WEIGHT 20
+
+/// How many plushies pink slimes want in their pen if they don't have a giant slime one. Slime plushies count for two! Requirement is also halved if the slime is wearing a friendship necklace
+#define PINK_SLIME_PLUSHIE_REQUIREMENT 5
+/// How likely it is for a for a pink slime to apply hallucinations to mobs viewing it when unhappy
+#define PINK_SLIME_HALLUCINATION_CHANCE 25

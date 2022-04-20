@@ -205,6 +205,12 @@
 	cooldown_time = 0.5 SECONDS
 	overlay_state_active = "module_slime_bracers"
 
+/obj/item/mod/module/slime_bracers/on_suit_activation()
+	ADD_TRAIT(mod.wearer, TRAIT_SLIME_RESISTANCE, MOD_TRAIT)
+
+/obj/item/mod/module/slime_bracers/on_suit_deactivation()
+	REMOVE_TRAIT(mod.wearer, TRAIT_SLIME_RESISTANCE, MOD_TRAIT)
+
 /obj/item/mod/module/slime_bracers/on_activation()
 	. = ..()
 	if(!.)
@@ -228,6 +234,7 @@
 	var/throwtarget = get_edge_target_turf(wearer, get_dir(wearer, slime))
 	slime.throw_at(throwtarget, 3, 2, wearer)
 	slime.SStun += rand(15, 30)
+	SSmove_manager.stop_looping(slime)
 	playsound(src, 'sound/effects/contractorbatonhit.ogg', 75)
 	drain_power(DEFAULT_CHARGE_DRAIN * 2)
 
@@ -240,6 +247,7 @@
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 0.1
 	incompatible_modules = list(/obj/item/mod/module/emote_holoscreen)
 	cooldown_time = 0.5 SECONDS
+	overlay_state_inactive = "module_emote"
 	overlay_state_active = "emote_uwu"
 
 /obj/item/mod/module/emote_holoscreen/on_activation()

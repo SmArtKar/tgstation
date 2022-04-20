@@ -1340,12 +1340,12 @@
 
 /datum/mod_theme/xenobio
 	name = "xenobio"
-	desc = "A light suit designed for xenobiologists that for some reason, resembles bikini."
-	extended_desc = "An extremely light suit that's missing a lot of plating and is instead completed with hard light fields, \
+	desc = "A light suit designed for xenobiologists that's supposed to protect you from slime outbreaks."
+	extended_desc = "A light MODsuit that offers advanced protection from both biological and physical hazards, \
 					 this suit was initially designed by \"Xynergy Solutions\", but later the patent was bought by NanoTrasen.\
-					 This suit isn't spaceproof and it's main target is instead protecting user from slimes and assisting them in their reseach."
+					 This suit's main purpose is protecting user from slimes and assisting them in their reseach."
 	default_skin = "xenobio"
-	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 100, FIRE = 0, ACID = 100, WOUND = 15)
+	armor = list(MELEE = 15, BULLET = 5, LASER = 0, ENERGY = 15, BOMB = 15, BIO = 100, FIRE = 50, ACID = 100, WOUND = 15)
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	slowdown_inactive = 0.5
 	slowdown_active = 0
@@ -1357,14 +1357,37 @@
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/glass/beaker,
 		/obj/item/gun/syringe)
-	inbuilt_modules = list(/obj/item/mod/module/slime_bracers, /obj/item/mod/module/emote_holoscreen)
+	inbuilt_modules = list(/obj/item/mod/module/slime_bracers)
 	skins = list(
 		"xenobio" = list(
 			HELMET_LAYER = null,
 			HELMET_FLAGS = list(
 				UNSEALED_CLOTHING = SNUG_FIT|THICKMATERIAL,
-				UNSEALED_INVISIBILITY = HIDEEARS|HIDESNOUT,
-				SEALED_INVISIBILITY = HIDEEARS|HIDESNOUT,
+				SEALED_CLOTHING = STOPSPRESSUREDAMAGE,
+				UNSEALED_INVISIBILITY = HIDEFACIALHAIR|HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDESNOUT,
+				UNSEALED_COVER = HEADCOVERSMOUTH|HEADCOVERSEYES|PEPPERPROOF,
+			),
+			CHESTPLATE_FLAGS = list(
+				UNSEALED_CLOTHING = THICKMATERIAL,
+				SEALED_CLOTHING = STOPSPRESSUREDAMAGE,
+				SEALED_INVISIBILITY = HIDEJUMPSUIT,
+			),
+			GAUNTLETS_FLAGS = list(
+				UNSEALED_CLOTHING = THICKMATERIAL,
+				SEALED_CLOTHING = STOPSPRESSUREDAMAGE,
+			),
+			BOOTS_FLAGS = list(
+				UNSEALED_CLOTHING = THICKMATERIAL,
+				SEALED_CLOTHING = STOPSPRESSUREDAMAGE,
+			),
+		),
+
+		"bikini" = list(
+			HELMET_LAYER = null,
+			HELMET_FLAGS = list(
+				UNSEALED_CLOTHING = SNUG_FIT|THICKMATERIAL,
+				UNSEALED_INVISIBILITY = HIDESNOUT,
+				SEALED_INVISIBILITY = HIDESNOUT,
 				SEALED_COVER = HEADCOVERSMOUTH|HEADCOVERSEYES|PEPPERPROOF,
 			),
 			CHESTPLATE_FLAGS = list(

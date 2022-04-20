@@ -408,6 +408,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Gives special effects to certain slimes and prevents the "king" slime from being attacked by other slimes
 #define TRAIT_SLIME_KING "slime_king"
 
+/// Lowers damage dealt by slime feeding by 25%
+#define TRAIT_SLIME_RESISTANCE "slime_resistance"
+
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic

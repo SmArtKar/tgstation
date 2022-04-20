@@ -450,3 +450,5 @@
 	flick("slime_plushie-bopped", src)
 	if(!user.client)
 		user.mood_level += SLIME_MOOD_PLUSHIE_PLAY_GAIN
+		if(user.Target == src)
+			user.set_target(null)

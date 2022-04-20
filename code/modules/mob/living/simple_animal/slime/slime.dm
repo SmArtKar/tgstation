@@ -32,7 +32,9 @@
 	healable = 0
 	melee_damage_lower = 5
 	melee_damage_upper = 25
+	obj_damage = 5
 	see_in_dark = 8
+	speed = 0.6 //+1.5 from run speed
 
 	verb_say = "blorbles"
 	verb_ask = "inquisitively blorbles"
@@ -66,8 +68,8 @@
 	var/digestion_progress = 0 //AI variable, starts at 0 and goes to 100
 	var/mood_level = 50 //AI variable, from 0 to 100, determines slime's mood and it's behaviour
 
-	var/mutable_appearance/digestion_underlay = null //Used for displaying what slime is digesting right now
-	var/next_underlay_scale = 0.6 //Used for optimisation of digestion animation
+	var/mutable_appearance/digestion_overlay = null //Used for displaying what slime is digesting right now
+	var/next_overlay_scale = 0.6 //Used for optimisation of digestion animation
 
 	var/list/Friends = list() // A list of friends; they are not considered targets for feeding; passed down after splitting
 
@@ -79,6 +81,7 @@
 
 	var/nutrition_control = TRUE // When set to FALSE slime will constantly be hungry regardless of it's nutrition.
 	var/obj/item/slime_accessory/accessory // Stores current slime accessory
+	var/glittered = FALSE // If slime is covered with G L I T T E R. Fancy!
 
 	var/static/regex/slime_name_regex = new("\\w+ (baby|adult) slime \\(\\d+\\)")
 	///////////TIME FOR SUBSPECIES
@@ -173,9 +176,17 @@
 			add_overlay("aslime-[mood]")
 	else
 		icon_state = icon_dead
+		if(!cores)
+			return ..()
+
+	if(Digesting)
+		add_overlay(digestion_overlay)
 	if(accessory)
 		var/mutable_appearance/accessory_overlay = mutable_appearance(icon, "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
 		add_overlay(accessory_overlay)
+	if(glittered)
+		var/mutable_appearance/glitter_overlay = mutable_appearance(icon, "glitter[is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		add_overlay(glitter_overlay)
 	return ..()
 
 /**
@@ -193,6 +204,8 @@
 		amount = 5
 	if(amount)
 		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/slime_reagentmod, multiplicative_slowdown = amount)
+	if(reagents.has_reagent(/datum/reagent/glitter))
+		glittered = TRUE
 	return NONE
 
 /mob/living/simple_animal/slime/updatehealth()
@@ -248,6 +261,7 @@
 /mob/living/simple_animal/slime/adjustFireLoss(amount, updating_health = TRUE, forced = FALSE)
 	if(!forced)
 		amount = -abs(amount)
+	adjust_bodytemperature(amount / 2)
 	return ..() //Heals them
 
 /mob/living/simple_animal/slime/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
@@ -484,6 +498,7 @@
 		Feedstop(silent = TRUE) //we unbuckle the slime from the mob it latched onto.
 
 	SStun = world.time + rand(20,60)
+	SSmove_manager.stop_looping(src)
 
 	Stun(3)
 	if(user)
@@ -515,6 +530,8 @@
 /mob/living/simple_animal/slime/proc/set_target(new_target)
 	var/old_target = Target
 	Target = new_target
+	if(!new_target)
+		SSmove_manager.stop_looping(src)
 	if(old_target && !SLIME_CARES_ABOUT(old_target))
 		UnregisterSignal(old_target, COMSIG_PARENT_QDELETING)
 	if(Target)
@@ -532,6 +549,9 @@
 	if(!Friends[new_friend])
 		Friends[new_friend] = 0
 	Friends[new_friend] += amount
+	if(Friends[new_friend] <= 0)
+		remove_friend(new_friend)
+		return
 	if(new_friend)
 		RegisterSignal(new_friend, COMSIG_PARENT_QDELETING, .proc/clear_memories_of, override = TRUE)
 

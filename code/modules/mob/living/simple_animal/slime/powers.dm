@@ -66,13 +66,14 @@
 	Digesting = food
 	digestion_progress = 0
 
-	digestion_underlay = mutable_appearance(food.icon, food.icon_state)
-	digestion_underlay.pixel_x = pixel_x
-	digestion_underlay.pixel_y = pixel_y
-	digestion_underlay.transform = matrix().Scale(0.7)
-	digestion_underlay.color = food.color
-	underlays += digestion_underlay
-	next_underlay_scale = 0.6
+	digestion_overlay = mutable_appearance(food.icon, food.icon_state)
+	digestion_overlay.pixel_x = pixel_x
+	digestion_overlay.pixel_y = pixel_y
+	digestion_overlay.transform = matrix().Scale(0.7)
+	digestion_overlay.color = food.color
+	digestion_overlay.alpha = 150
+	add_overlay(digestion_overlay)
+	next_overlay_scale = 0.6
 
 /datum/action/innate/slime/feed
 	name = "Feed"

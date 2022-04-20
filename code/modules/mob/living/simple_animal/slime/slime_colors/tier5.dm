@@ -159,7 +159,7 @@
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 
-	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time) && can_timestop)
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time) && can_timestop)
 		new /obj/effect/timestop/small_effect(get_turf(slime), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(slime))
 		can_timestop = FALSE
 		addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
@@ -252,15 +252,15 @@
 
 /datum/slime_color/bluespace/New(mob/living/simple_animal/slime/slime)
 	. = ..()
-	RegisterSignal(slime, COMSIG_SLIME_TAKE_STEP, .proc/teleport)
+	RegisterSignal(slime, COMSIG_MOVABLE_BUMP, .proc/teleport)
 
 /datum/slime_color/bluespace/remove()
-	UnregisterSignal(slime, COMSIG_SLIME_TAKE_STEP)
+	UnregisterSignal(slime, COMSIG_MOVABLE_BUMP)
 
 /datum/slime_color/bluespace/proc/teleport(datum/source, atom/step_target)
 	SIGNAL_HANDLER
 
-	if(!prob(BLUESPACE_SLIME_TELEPORT_CHANCE))
+	if(step_target == slime.Target)
 		return
 
 	var/turf/slime_turf = get_turf(slime)
@@ -269,16 +269,19 @@
 
 	var/turf/possible_tele_turf = slime_turf
 	var/iter = 1
-	for(var/turf/tele_turf in get_line(slime_turf, get_turf(step_target)))
+	var/turf/target_edge_turf = get_edge_target_turf(slime_turf, get_dir(slime_turf, get_turf(step_target)))
+	for(var/turf/tele_turf in get_line(slime_turf, target_edge_turf))
 		if(iter > BLUESPACE_SLIME_TELEPORT_DISTANCE)
 			break
 
 		tele_turf = get_step(tele_turf, get_dir(slime, step_target))
 		if(is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 			possible_tele_turf = tele_turf
+			break
 
 		iter += 1
 
+	if(possible_tele_turf == slime_turf)
+		return
 	slime_turf.Beam(possible_tele_turf, "bluespace_phase", time = 12)
 	do_teleport(slime, possible_tele_turf, channel = TELEPORT_CHANNEL_BLUESPACE)
-	return COLOR_SLIME_NO_STEP

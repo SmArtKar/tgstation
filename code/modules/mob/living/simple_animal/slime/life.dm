@@ -13,6 +13,9 @@
 	if(!.)
 		return
 
+	if(!slime_color) //If we SOMEHOW lost our color, be it BYOND wizardry, shitcode or adminbus, we become grey slimes because it's extremely important to have one
+		set_color(/datum/slime_color/grey)
+
 	if(buckled)
 		handle_feeding(delta_time, times_fired)
 	if(stat) // Slimes in stasis don't lose nutrition, don't change mood and don't respond to speech
@@ -47,18 +50,17 @@
 		return
 
 	var/hungry = 0
-	if (nutrition < get_starve_nutrition())
-		hungry = 2
-	else if (nutrition < get_grow_nutrition() && prob(25) || nutrition < get_hunger_nutrition())
-		hungry = 1
 
 	AIproc = 1
 
-	while(AIproc && stat != DEAD && (attacked || hungry || rabid || buckled))
+	while(AIproc && stat != DEAD && (attacked || hungry || rabid || buckled || Target))
+
 		if(!(mobility_flags & MOBILITY_MOVE)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
+			SSmove_manager.stop_looping(src)
 			break
 
 		if(!Target || client)
+			SSmove_manager.stop_looping(src)
 			break
 
 		if(isliving(Target))
@@ -68,24 +70,27 @@
 				AIproc = 0
 				break
 
+		if (nutrition < get_starve_nutrition())
+			hungry = 2
+		else if (nutrition < get_grow_nutrition() && prob(25) || nutrition < get_hunger_nutrition())
+			hungry = 1
+
 		if(Target)
 			if(locate(/mob/living/simple_animal/slime) in Target.buckled_mobs)
 				set_target(null)
 				AIproc = 0
 				break
 			if(!AIproc)
+				SSmove_manager.stop_looping(src)
 				break
-
 			if(Target in view(1,src))
 				if(!CanFeedon(Target)) //If they're not able to be fed upon, ignore them.
 					if(!Atkcool)
 						Atkcool = TRUE
 						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
-
 						if(Target.Adjacent(src))
 							attack_target(Target)
-					break
-				if(isliving(Target))
+				else if(isliving(Target))
 					var/mob/living/victim = Target
 					if((victim.body_position == STANDING_UP) && prob(80))
 						if(victim.client && victim.health >= 20)
@@ -106,19 +111,14 @@
 					gobble_up(Target)
 
 			else if(Target in view(7, src))
-				if(!Target.Adjacent(src))
-				// Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
-					slime_step(Target)
+				if(!Target.Adjacent(src)) // Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
+					start_moveloop(Target)
 			else
 				set_target(null)
 				AIproc = 0
 				break
 
-		var/sleeptime = cached_multiplicative_slowdown
-		if(sleeptime <= 0)
-			sleeptime = 1
-
-		sleep(sleeptime + 2) // this is about as fast as a player slime can go
+		sleep(2)
 
 	AIproc = 0
 
@@ -129,12 +129,15 @@
 
 	attack_target.attack_slime(src)
 
-/mob/living/simple_animal/slime/proc/slime_step(atom/step_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
-	if(!Adjacent(step_target))
-		step_target = get_step(get_turf(src), get_dir(src, step_target))
+/mob/living/simple_animal/slime/proc/start_moveloop(atom/move_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
+	var/sleeptime = cached_multiplicative_slowdown
+	if(sleeptime <= 0)
+		sleeptime = 0
 
-	if(SEND_SIGNAL(src, COMSIG_SLIME_TAKE_STEP, step_target) & COLOR_SLIME_NO_STEP)
-		return
+	var/datum/move_loop/new_loop = SSmove_manager.move_to(src, move_target, 1, sleeptime)
+
+	/*if(!Adjacent(step_target))
+		step_target = get_step(get_turf(src), get_dir(src, step_target))
 
 	var/obj/machinery/door/airlock/airlock = locate(/obj/machinery/door/airlock) in get_turf(step_target)
 	var/obj/machinery/door/firedoor/firedoor = locate(/obj/machinery/door/firedoor) in get_turf(step_target)
@@ -168,8 +171,7 @@
 		visible_message(span_warning("[src] squeeses through [squeese_target]!"))
 		forceMove(squeese_turf)
 	else
-		step_to(src, step_target)
-
+		step_to(src, step_target) */
 
 /mob/living/simple_animal/slime/handle_environment(datum/gas_mixture/environment, delta_time, times_fired)
 	var/loc_temp = get_temperature(environment)
@@ -212,6 +214,7 @@
 					set_stat(UNCONSCIOUS)
 					powerlevel = 0
 					rabid = FALSE
+					set_target(null)
 					regenerate_icons()
 			if(UNCONSCIOUS, HARD_CRIT)
 				if(!stasis)
@@ -259,7 +262,7 @@
 
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
-		var/damage_mod = max(1 - C.getarmor(type = BIO) * 0.75 * 0.01, 0.25)
+		var/damage_mod = max(1 - (C.getarmor(type = BIO) * 0.25 * 0.01 + HAS_TRAIT(C, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50)
 		C.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time) //Biosuits reduce damage
 		C.adjustToxLoss(rand(1, 2) * damage_mod * delta_time)
 		food_multiplier *= damage_mod
@@ -287,7 +290,7 @@
 
 	else if(isanimal(M))
 		var/mob/living/simple_animal/SA = M
-		var/damage_mod = max(1 - SA.damage_coeff[CLONE] * 0.75, 0.25)
+		var/damage_mod = max(1 - (SA.damage_coeff[CLONE] * 0.25 + HAS_TRAIT(SA, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50)
 		food_multiplier *= damage_mod
 
 		var/food_type
@@ -387,9 +390,11 @@
 
 	if(!client)
 		if(!(mobility_flags & MOBILITY_MOVE))
+			SSmove_manager.stop_looping(src)
 			return
 
 		if(buckled)
+			SSmove_manager.stop_looping(src)
 			return // if it's eating someone already, continue eating!
 
 		if(Target)
@@ -399,6 +404,7 @@
 				set_target(null)
 
 		if(AIproc && SStun > world.time)
+			SSmove_manager.stop_looping(src)
 			return
 
 		var/hungry = 0 // determines if the slime is hungry
@@ -493,18 +499,19 @@
 				if(holding_still)
 					holding_still = max(holding_still - (0.5 * delta_time), 0)
 				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc))
-					slime_step(Leader)
+					start_moveloop(Leader)
 
 			else if(hungry)
 				if (holding_still)
 					holding_still = max(holding_still - (0.5 * hungry * delta_time), 0)
-				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && prob(50))
-					slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
+				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && DT_PROB(50, delta_time))
+					start_moveloop(get_step(get_turf(src), pick(GLOB.cardinals)))
 
 			else
 				handle_boredom(delta_time, times_fired)
-		else if(!AIproc)
-			INVOKE_ASYNC(src, .proc/AIprocess)
+
+	if(Target && !AIproc)
+		INVOKE_ASYNC(src, .proc/AIprocess)
 
 /mob/living/simple_animal/slime/handle_automated_movement()
 	return //slime random movement is currently handled in handle_targets()
@@ -520,8 +527,24 @@
 		holding_still = 10
 		return
 
-	if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && prob(33))
-		slime_step(get_step(get_turf(src), pick(GLOB.cardinals)))
+	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED) || !isturf(loc))
+		return
+
+	if(!DT_PROB(SLIME_POI_INTERACT_CHANCE, delta_time))
+		if(DT_PROB(33, delta_time))
+			start_moveloop(get_step(get_turf(src), pick(GLOB.cardinals)))
+		return
+
+	var/list/points_of_interest = list()
+	for(var/obj/possible_interest in view(5, get_turf(src)))
+		if(istype(possible_interest, /obj/item/giant_slime_plushie))
+			if(mood_level < SLIME_MOOD_LEVEL_HAPPY && DT_PROB((SLIME_MOOD_LEVEL_HAPPY - mood_level) / 3.75 + 15, delta_time))
+				points_of_interest += possible_interest
+
+	if(!LAZYLEN(points_of_interest))
+		return
+
+	set_target(pick(points_of_interest))
 
 /mob/living/simple_animal/slime/proc/handle_mood(delta_time, times_fired)
 	if(mood_level < 0)
@@ -557,7 +580,7 @@
 		mood = newmood
 		regenerate_icons()
 
-	if(!slime_color.fitting_environment && !(slime_color.slime_tags))
+	if(!slime_color.fitting_environment && !(slime_color.slime_tags & SLIME_NO_REQUIREMENT_MOOD_LOSS))
 		mood_level -= SLIME_MOOD_REQUIREMENTS_LOSS * delta_time
 	else if(nutrition < get_starve_nutrition())
 		mood_level -= SLIME_MOOD_STARVING_LOSS * delta_time
@@ -766,18 +789,18 @@
 	adjust_nutrition(SLIME_DIGESTION_NUTRITION * delta_time)
 
 	if(digestion_progress >= 100)
-		underlays -= digestion_underlay
+		cut_overlay(digestion_overlay)
 		to_chat(src, span_notice("<i>You finish digesting [Digesting].</i>"))
 		slime_color.finished_digesting(Digesting)
-		QDEL_NULL(digestion_underlay)
+		QDEL_NULL(digestion_overlay)
 		QDEL_NULL(Digesting)
 		return
 
-	if(0.7 * (100 - digestion_progress) / 100 < next_underlay_scale) //Not so smooth but it won't cause lag
-		underlays -= digestion_underlay
-		digestion_underlay.transform = matrix().Scale(0.7 * (100 - digestion_progress) / 100)
-		underlays += digestion_underlay
-		next_underlay_scale -= 0.1
+	if(0.7 * (100 - digestion_progress) / 100 < next_overlay_scale) //Not so smooth but it won't cause lag
+		cut_overlay(digestion_overlay)
+		digestion_overlay.transform = matrix().Scale(0.7 * (100 - digestion_progress) / 100)
+		add_overlay(digestion_overlay)
+		next_overlay_scale -= 0.1
 
 /mob/living/simple_animal/slime/proc/get_max_nutrition() // Can't go above it
 	if (is_adult)

@@ -247,7 +247,7 @@
 
 
 //reveal, stun, icon updates, cast checks, and essence changing
-/mob/living/simple_animal/revenant/proc/reveal(time)
+/mob/living/simple_animal/revenant/proc/reveal(time, silent = FALSE)
 	if(!src)
 		return
 	if(time <= 0)
@@ -256,10 +256,12 @@
 	invisibility = 0
 	incorporeal_move = FALSE
 	if(!unreveal_time)
-		to_chat(src, span_revendanger("You have been revealed!"))
+		if(!silent)
+			to_chat(src, span_revendanger("You have been revealed!"))
 		unreveal_time = world.time + time
 	else
-		to_chat(src, span_revenwarning("You have been revealed!"))
+		if(!silent)
+			to_chat(src, span_revenwarning("You have been revealed!"))
 		unreveal_time = unreveal_time + time
 	update_spooky_icon()
 	orbiting?.end_orbit(src)

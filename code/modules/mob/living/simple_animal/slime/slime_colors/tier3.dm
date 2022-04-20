@@ -40,7 +40,7 @@
 	var/turf/our_turf = get_turf(slime)
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 
-	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time))
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
 		our_turf.atmos_spawn_air("plasma=10;TEMP=1000")
 
 	if(our_mix.gases[/datum/gas/plasma] && our_mix.gases[/datum/gas/plasma][MOLES] > DARK_PURPLE_SLIME_PLASMA_REQUIRED && (!our_mix.gases[/datum/gas/oxygen] || our_mix.gases[/datum/gas/oxygen][MOLES] < DARK_PURPLE_SLIME_OXYGEN_MAXIMUM))

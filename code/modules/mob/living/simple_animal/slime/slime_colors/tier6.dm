@@ -17,8 +17,8 @@
 /datum/slime_color/oil/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
-	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time))
-		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = -1, light_impact_range = 0, flame_range = 1, flash_range = 1)
+	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
+		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = pick(-1, -1, 0), light_impact_range = rand(0, 1), flame_range = rand(1, 2), flash_range = rand(1, 2))
 
 	if(our_mix.return_pressure() > OIL_SLIME_REQUIRED_PRESSURE)
 		fitting_environment = TRUE
@@ -83,7 +83,7 @@
 	fitting_environment = FALSE
 	slime.adjustBruteLoss(SLIME_DAMAGE_MED)
 
-	if(!DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time) && !SLIME_SHOULD_MISBEHAVE(slime.mood_level, delta_time))
+	if(!DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time) && !SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
 		return
 
 	var/list/convertable_turfs = list()
@@ -107,7 +107,11 @@
 			window.deconstruct(FALSE)
 		target_turf.ChangeTurf(/turf/closed/wall/slime, flags = CHANGETURF_INHERIT_AIR)
 	else
-		target_turf.ChangeTurf(/turf/closed/wall/slime, flags = CHANGETURF_INHERIT_AIR)
+		target_turf.ChangeTurf(/turf/open/misc/slime, flags = CHANGETURF_INHERIT_AIR)
+
+	var/obj/structure/grille/grille = locate() in target_turf
+	if(grille)
+		grille.deconstruct(FALSE)
 
 /datum/slime_color/adamantine
 	color = "adamantine"

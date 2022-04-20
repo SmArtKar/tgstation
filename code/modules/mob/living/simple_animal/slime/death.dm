@@ -22,8 +22,9 @@
 		Feedstop(silent = TRUE) //releases ourselves from the mob we fed on.
 
 	set_stat(DEAD)
-	cut_overlays()
-
+	regenerate_icons()
+	for(var/mob/living/simple_animal/slime/slime in view(7, get_turf(src)))
+		slime.mood_level -= SLIME_MOOD_DEATH_LOSS
 	return ..(gibbed)
 
 /mob/living/simple_animal/slime/gib()
