@@ -34,7 +34,7 @@
 	melee_damage_upper = 25
 	obj_damage = 5
 	see_in_dark = 8
-	speed = 0.2 //+1.5 from run speed
+	speed = 0.5 //+1.5 from run speed
 
 	verb_say = "blorbles"
 	verb_ask = "inquisitively blorbles"

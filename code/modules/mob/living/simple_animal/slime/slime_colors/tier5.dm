@@ -248,9 +248,6 @@
 	color = "bluespace"
 	coretype = /obj/item/slime_extract/bluespace
 	mutations = null
-
-	/* //Temporarely disabled until we find a way to get move_manager to bump
-
 	environmental_req = "Subject is spartially unstable and will phase through obstacles unless forcefully anchored in bluespace."
 
 /datum/slime_color/bluespace/New(mob/living/simple_animal/slime/slime)
@@ -288,5 +285,3 @@
 		return
 	slime_turf.Beam(possible_tele_turf, "bluespace_phase", time = 12)
 	do_teleport(slime, possible_tele_turf, channel = TELEPORT_CHANNEL_BLUESPACE)
-
-	*/

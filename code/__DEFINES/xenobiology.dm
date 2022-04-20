@@ -173,9 +173,11 @@
 #define DARK_BLUE_SLIME_CORE_LOSE 10
 
 /// How much can bluespace slime travel in one teleport
-#define BLUESPACE_SLIME_TELEPORT_DISTANCE 4
+#define BLUESPACE_SLIME_TELEPORT_DISTANCE 5
 /// How many seconds it takes for a bluespace anchor to fully consume one charge
-#define BLUESPACE_ANCHOR_CHARGE_TIME 3 MINUTES
+#define BLUESPACE_ANCHOR_CHARGE_TIME 5 MINUTES
+/// Amount of charges bluespace anchor can hold
+#define BLUESPACE_ANCHOR_CAPACITY 3
 
 /// How much bz sepia slimes need
 #define SEPIA_SLIME_BZ_REQUIRED 10

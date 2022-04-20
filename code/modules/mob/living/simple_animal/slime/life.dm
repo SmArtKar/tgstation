@@ -117,12 +117,7 @@
 				set_target(null)
 				AIproc = 0
 				break
-
-		var/sleeptime = cached_multiplicative_slowdown
-		if(sleeptime <= 1)
-			sleeptime = 1
-
-		sleep(sleeptime + 2)
+		sleep(3.5)
 
 	AIproc = 0
 
