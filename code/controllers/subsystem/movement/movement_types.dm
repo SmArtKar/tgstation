@@ -328,7 +328,7 @@
 	///A list for the path we're currently following
 	var/list/movement_path
 	///A list of additional checks for JPS
-	var/list/additional_checks = list()
+	var/list/additional_checks
 	///Cooldown for repathing, prevents spam
 	COOLDOWN_DECLARE(repath_cooldown)
 
@@ -343,8 +343,7 @@
 	src.simulated_only = simulated_only
 	src.avoid = avoid
 	src.skip_first = skip_first
-	if(additional_checks)
-		src.additional_checks = additional_checks
+	src.additional_checks = additional_checks
 	if(istype(id, /obj/item/card/id))
 		RegisterSignal(id, COMSIG_PARENT_QDELETING, .proc/handle_no_id) //I prefer erroring to harddels. If this breaks anything consider making id info into a datum or something
 

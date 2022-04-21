@@ -19,7 +19,7 @@
  * * skip_first: Whether or not to delete the first item in the path. This would be done because the first item is the starting tile, which can break movement for some creatures.
  * * diagonal_safety: ensures diagonal moves won't use invalid midstep turfs by splitting them into two orthogonal moves if necessary
  */
-/proc/get_path_to(caller, end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE, list/additional_checks=list())
+/proc/get_path_to(caller, end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE, additional_checks)
 	if(!caller || !get_turf(end))
 		return
 
@@ -46,9 +46,9 @@
  * If you really want to optimize things, optimize this, cuz this gets called a lot.
  * We do early next.density check despite it being already checked in LinkBlockedWithAccess for short-circuit performance
  */
-#define CAN_STEP(cur_turf, next) ((next && !next.density && !(simulated_only && SSpathfinder.space_type_cache[next.type]) && !cur_turf.LinkBlockedWithAccess(next,caller, id) && (next != avoid) && make_additional_checks(cur_turf, next)[JPS_CHECK_ADDITIONAL]) || make_additional_checks(cur_turf, next)[JPS_CHECK_OVERRIDE])
+#define CAN_STEP(cur_turf, next) ((next && !next.density && !(simulated_only && SSpathfinder.space_type_cache[next.type]) && !cur_turf.LinkBlockedWithAccess(next,caller, id) && (next != avoid) && (!additional_checks || make_additional_checks(cur_turf, next)[JPS_CHECK_ADDITIONAL])) || (additional_checks && make_additional_checks(cur_turf, next)[JPS_CHECK_OVERRIDE]))
 /// Another helper macro for JPS, for telling when a node has forced neighbors that need expanding
-#define STEP_NOT_HERE_BUT_THERE(cur_turf, dirA, dirB) (!CAN_STEP(cur_turf, get_step(cur_turf, dirA)) && CAN_STEP(cur_turf, get_step(cur_turf, dirB)))
+#define STEP_NOT_HERE_BUT_THERE(cur_turf, dirA, dirB) ((!CAN_STEP(cur_turf, get_step(cur_turf, dirA)) && CAN_STEP(cur_turf, get_step(cur_turf, dirB))))
 
 /// The JPS Node datum represents a turf that we find interesting enough to add to the open list and possibly search for new tiles from
 /datum/jps_node
@@ -143,6 +143,8 @@
 // This proc goes through all additional checks and composes a list of their returns
 
 /datum/pathfind/proc/make_additional_checks(cur_turf, next_turf)
+	if(!additional_checks)
+		return
 	var/list/results = list(JPS_CHECK_ADDITIONAL = TRUE, JPS_CHECK_OVERRIDE = FALSE)
 	for(var/proc_name in additional_checks)
 		var/proc_result = call(additional_checks[proc_name], proc_name)(cur_turf, next_turf)
