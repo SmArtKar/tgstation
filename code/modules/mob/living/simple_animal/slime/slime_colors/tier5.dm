@@ -159,7 +159,7 @@
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 
-	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time) && can_timestop)
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) && can_timestop)
 		new /obj/effect/timestop/small_effect(get_turf(slime), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(slime))
 		can_timestop = FALSE
 		addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
@@ -259,6 +259,8 @@
 
 /datum/slime_color/bluespace/proc/teleport(datum/source, atom/step_target)
 	SIGNAL_HANDLER
+
+	to_chat(world, "Bumped into [step_target]")
 
 	if(step_target == slime.Target)
 		return

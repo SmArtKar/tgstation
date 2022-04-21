@@ -94,6 +94,11 @@
 	if(issilicon(M))
 		return FALSE
 
+	if(isliving(M))
+		var/mob/living/living_target = M
+		if(living_target.mob_biotypes & MOB_ROBOTIC)
+			return FALSE
+
 	if(isanimal(M))
 		var/mob/living/simple_animal/S = M
 		if(S.damage_coeff[TOX] <= 0 && S.damage_coeff[CLONE] <= 0) //The creature wouldn't take any damage, it must be too weird even for us.

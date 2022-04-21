@@ -117,7 +117,7 @@
 				set_target(null)
 				AIproc = 0
 				break
-		sleep(3.5)
+		sleep(5)
 
 	AIproc = 0
 
@@ -507,8 +507,9 @@
 			else if(hungry)
 				if (holding_still)
 					holding_still = max(holding_still - (0.5 * hungry * delta_time), 0)
-				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && DT_PROB(50, delta_time))
-					start_moveloop(get_step(get_turf(src), pick(GLOB.cardinals)))
+				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && DT_PROB(75, delta_time))
+					var/picked_dir = GLOB.cardinals
+					Move(get_step(get_turf(src), picked_dir), picked_dir)
 
 			else
 				handle_boredom(delta_time, times_fired)
@@ -534,8 +535,9 @@
 		return
 
 	if(!DT_PROB(SLIME_POI_INTERACT_CHANCE, delta_time))
-		if(DT_PROB(33, delta_time))
-			start_moveloop(get_step(get_turf(src), pick(GLOB.cardinals)))
+		if(DT_PROB(50, delta_time))
+			var/picked_dir = GLOB.cardinals
+			Move(get_step(get_turf(src), picked_dir), picked_dir)
 		return
 
 	var/list/points_of_interest = list()

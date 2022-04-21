@@ -17,7 +17,7 @@
 /datum/slime_color/oil/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
-	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
 		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = pick(-1, -1, 0), light_impact_range = rand(0, 1), flame_range = rand(1, 2), flash_range = rand(1, 2))
 
 	if(our_mix.return_pressure() > OIL_SLIME_REQUIRED_PRESSURE)
@@ -75,6 +75,9 @@
 /datum/slime_color/black/Life(delta_time, times_fired)
 	. = ..()
 
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) && DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time))
+		convert_turf()
+
 	var/turf/our_turf = get_turf(slime)
 	if(is_type_in_typecache(our_turf, required_turfs))
 		fitting_environment = TRUE
@@ -83,11 +86,13 @@
 	fitting_environment = FALSE
 	slime.adjustBruteLoss(SLIME_DAMAGE_MED)
 
-	if(!DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time) && !SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
-		return
+	if(DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time))
+		convert_turf()
+
+/datum/slime_color/black/proc/convert_turf()
 
 	var/list/convertable_turfs = list()
-	for(var/turf/possible_target in circle_range_turfs(our_turf, BLACK_SLIME_TURF_CHANGE_RANGE))
+	for(var/turf/possible_target in circle_range_turfs(get_turf(slime), BLACK_SLIME_TURF_CHANGE_RANGE))
 		if(istype(possible_target, /turf/open/misc/slime) || istype(possible_target, /turf/closed/wall/slime))
 			continue
 

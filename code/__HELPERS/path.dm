@@ -19,7 +19,7 @@
  * * skip_first: Whether or not to delete the first item in the path. This would be done because the first item is the starting tile, which can break movement for some creatures.
  * * diagonal_safety: ensures diagonal moves won't use invalid midstep turfs by splitting them into two orthogonal moves if necessary
  */
-/proc/get_path_to(caller, end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE)
+/proc/get_path_to(caller, end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE, list/additional_checks=list())
 	if(!caller || !get_turf(end))
 		return
 
@@ -29,7 +29,7 @@
 		l = SSpathfinder.mobs.getfree(caller)
 
 	var/list/path
-	var/datum/pathfind/pathfind_datum = new(caller, end, id, max_distance, mintargetdist, simulated_only, exclude, diagonal_safety)
+	var/datum/pathfind/pathfind_datum = new(caller, end, id, max_distance, mintargetdist, simulated_only, exclude, diagonal_safety, additional_checks)
 	path = pathfind_datum.search()
 	qdel(pathfind_datum)
 
@@ -46,9 +46,9 @@
  * If you really want to optimize things, optimize this, cuz this gets called a lot.
  * We do early next.density check despite it being already checked in LinkBlockedWithAccess for short-circuit performance
  */
-#define CAN_STEP(cur_turf, next) (next && !next.density && !(simulated_only && SSpathfinder.space_type_cache[next.type]) && !cur_turf.LinkBlockedWithAccess(next,caller, id) && (next != avoid))
+#define CAN_STEP(cur_turf, next) ((next && !next.density && !(simulated_only && SSpathfinder.space_type_cache[next.type]) && !cur_turf.LinkBlockedWithAccess(next,caller, id) && (next != avoid) && make_additional_checks(cur_turf, next)[JPS_CHECK_ADDITIONAL]) || make_additional_checks(cur_turf, next)[JPS_CHECK_OVERRIDE])
 /// Another helper macro for JPS, for telling when a node has forced neighbors that need expanding
-#define STEP_NOT_HERE_BUT_THERE(cur_turf, dirA, dirB) ((!CAN_STEP(cur_turf, get_step(cur_turf, dirA)) && CAN_STEP(cur_turf, get_step(cur_turf, dirB))))
+#define STEP_NOT_HERE_BUT_THERE(cur_turf, dirA, dirB) (!CAN_STEP(cur_turf, get_step(cur_turf, dirA)) && CAN_STEP(cur_turf, get_step(cur_turf, dirB)))
 
 /// The JPS Node datum represents a turf that we find interesting enough to add to the open list and possibly search for new tiles from
 /datum/jps_node
@@ -124,8 +124,10 @@
 	var/turf/avoid
 	/// Ensures diagonal moves won't use invalid midstep turfs by splitting them into two orthogonal moves if necessary
 	var/diagonal_safety = TRUE
+	/// Lists all additional checks to be performed for each turf with references of the object to be called as an assigned value. These should return lists which contain result as the first element and type of the check as the second element.
+	var/list/additional_checks
 
-/datum/pathfind/New(atom/movable/caller, atom/goal, id, max_distance, mintargetdist, simulated_only, avoid, diagonal_safety)
+/datum/pathfind/New(atom/movable/caller, atom/goal, id, max_distance, mintargetdist, simulated_only, avoid, diagonal_safety, additional_checks)
 	src.caller = caller
 	end = get_turf(goal)
 	open = new /datum/heap(/proc/HeapPathWeightCompare)
@@ -136,6 +138,22 @@
 	src.simulated_only = simulated_only
 	src.avoid = avoid
 	src.diagonal_safety = diagonal_safety
+	src.additional_checks = additional_checks
+
+// This proc goes through all additional checks and composes a list of their returns
+
+/datum/pathfind/proc/make_additional_checks(cur_turf, next_turf)
+	var/list/results = list(JPS_CHECK_ADDITIONAL = TRUE, JPS_CHECK_OVERRIDE = FALSE)
+	for(var/proc_name in additional_checks)
+		var/proc_result = call(additional_checks[proc_name], proc_name)(cur_turf, next_turf)
+		if(LAZYLEN(proc_result) != 2) //Something has gone wrong
+			continue
+
+		if(proc_result[2] == JPS_CHECK_ADDITIONAL)
+			results[JPS_CHECK_ADDITIONAL] = results[JPS_CHECK_ADDITIONAL] && proc_result[1]
+		else if(proc_result[2] == JPS_CHECK_ADDITIONAL)
+			results[JPS_CHECK_OVERRIDE] = results[JPS_CHECK_OVERRIDE] || proc_result[1]
+	return results
 
 /**
  * search() is the proc you call to kick off and handle the actual pathfinding, and kills the pathfind datum instance when it's done.
@@ -143,6 +161,7 @@
  * If a valid path was found, it's returned as a list. If invalid or cross-z-level params are entered, or if there's no valid path found, we
  * return null, which [/proc/get_path_to] translates to an empty list (notable for simple bots, who need empty lists)
  */
+
 /datum/pathfind/proc/search()
 	start = get_turf(caller)
 	if(!start || !end)

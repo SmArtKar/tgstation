@@ -124,7 +124,7 @@
 /datum/slime_color/pink/Life(delta_time, times_fired)
 	. = ..()
 
-	if(SLIME_SHOULD_MISBEHAVE(slime.mood_level, slime.Discipline, delta_time))
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
 		start_hallucinations()
 
 	var/slime_amount = 0

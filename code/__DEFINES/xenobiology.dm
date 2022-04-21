@@ -106,7 +106,7 @@
 /// How likely it is for a slime to attack whatever it bumps into from bad mood
 #define SLIME_MOOD_OBJ_ATTACK_CHANCE 30 //12% chance on default mood
 
-#define SLIME_SHOULD_MISBEHAVE(mood, discipline, delta_time) (!discipline && (mood < SLIME_MOOD_LEVEL_POUT) && DT_PROB((mood < SLIME_MOOD_LEVEL_SAD) ? SLIME_MISBEHAVE_CHANCE_SAD : SLIME_MISBEHAVE_CHANCE_POUTING, delta_time))
+#define SLIME_SHOULD_MISBEHAVE(slime, delta_time) (!slime.Discipline && (slime.mood_level < SLIME_MOOD_LEVEL_POUT) && DT_PROB((slime.mood_level < SLIME_MOOD_LEVEL_SAD) ? SLIME_MISBEHAVE_CHANCE_SAD : SLIME_MISBEHAVE_CHANCE_POUTING, delta_time))
 
 /// Tags for slime colors
 
