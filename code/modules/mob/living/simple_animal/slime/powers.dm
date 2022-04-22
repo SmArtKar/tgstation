@@ -195,6 +195,7 @@
 		layer = M.layer+0.01 //appear above the target mob
 		M.visible_message(span_danger("[name] latches onto [M]!"), \
 						span_userdanger("[name] latches onto [M]!"))
+		stop_moveloop()
 	else
 		to_chat(src, span_warning("<i>I have failed to latch onto the subject!</i>"))
 

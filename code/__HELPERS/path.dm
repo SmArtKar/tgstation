@@ -399,6 +399,7 @@
  * * simulated_only: Do we only worry about turfs with simulated atmos, most notably things that aren't space?
 */
 /turf/proc/LinkBlockedWithAccess(turf/destination_turf, caller, ID)
+	var/list/blocker_objects = list()
 	if(destination_turf.x != x && destination_turf.y != y) //diagonal
 		var/in_dir = get_dir(destination_turf,src) // eg. northwest (1+8) = 9 (00001001)
 		var/first_step_direction_a = in_dir & 3 // eg. north   (1+8)&3 (0000 0011) = 1 (0000 0001)
@@ -406,8 +407,11 @@
 
 		for(var/first_step_direction in list(first_step_direction_a,first_step_direction_b))
 			var/turf/midstep_turf = get_step(destination_turf,first_step_direction)
-			var/way_blocked = midstep_turf.density || LinkBlockedWithAccess(midstep_turf,caller,ID) || midstep_turf.LinkBlockedWithAccess(destination_turf,caller,ID)
-			if(!way_blocked)
+			blocker_objects |= LinkBlockedWithAccess(midstep_turf,caller,ID)
+			blocker_objects |= midstep_turf.LinkBlockedWithAccess(destination_turf,caller,ID)
+			if(midstep_turf.density)
+				blocker_objects |= midstep_turf
+			if(!LAZYLEN(blocker_objects))
 				return FALSE
 		return TRUE
 
@@ -421,32 +425,35 @@
 		//		return TRUE
 		if(TURF_PATHING_PASS_PROC)
 			if(!destination_turf.CanAStarPass(ID, actual_dir , caller))
-				return TRUE
+				blocker_objects |= destination_turf
 		if(TURF_PATHING_PASS_NO)
-			return TRUE
+			blocker_objects |= destination_turf
 
 	// Source border object checks
 	for(var/obj/structure/window/iter_window in src)
 		if(!iter_window.CanAStarPass(ID, actual_dir))
-			return TRUE
+			blocker_objects |= iter_window
 
 	for(var/obj/machinery/door/window/iter_windoor in src)
 		if(!iter_windoor.CanAStarPass(ID, actual_dir))
-			return TRUE
+			blocker_objects |= iter_windoor
 
 	for(var/obj/structure/railing/iter_rail in src)
 		if(!iter_rail.CanAStarPass(ID, actual_dir))
-			return TRUE
+			blocker_objects |= iter_rail
 
 	for(var/obj/machinery/door/firedoor/border_only/firedoor in src)
 		if(!firedoor.CanAStarPass(ID, actual_dir))
-			return TRUE
+			blocker_objects |= firedoor
 
 	// Destination blockers check
 	var/reverse_dir = get_dir(destination_turf, src)
 	for(var/obj/iter_object in destination_turf)
 		if(!iter_object.CanAStarPass(ID, reverse_dir, caller))
-			return TRUE
+			blocker_objects |= iter_object
+
+	if(LAZYLEN(blocker_objects))
+		return blocker_objects
 
 	return FALSE
 

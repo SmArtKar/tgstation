@@ -3,7 +3,6 @@
 	var/AIproc = 0 // determines if the AI loop is activated
 	var/Atkcool = 0 // attack cooldown
 	var/Discipline = 0 // if a slime has been hit with a freeze gun, or wrestled/attacked off a human, they become disciplined and don't attack anymore for a while
-	var/SStun = 0 // stun variable
 
 
 /mob/living/simple_animal/slime/Life(delta_time = SSMOBS_DT, times_fired)
@@ -56,11 +55,11 @@
 	while(AIproc && stat != DEAD && (attacked || hungry || rabid || buckled || Target))
 
 		if(!(mobility_flags & MOBILITY_MOVE)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
-			SSmove_manager.stop_looping(src)
+			stop_moveloop()
 			break
 
 		if(!Target || client)
-			SSmove_manager.stop_looping(src)
+			stop_moveloop()
 			break
 
 		if(isliving(Target))
@@ -81,7 +80,7 @@
 				AIproc = 0
 				break
 			if(!AIproc)
-				SSmove_manager.stop_looping(src)
+				stop_moveloop()
 				break
 			if(Target in view(1,src))
 				if(!CanFeedon(Target)) //If they're not able to be fed upon, ignore them.
@@ -128,12 +127,62 @@
 
 	attack_target.attack_slime(src)
 
-/mob/living/simple_animal/slime/proc/start_moveloop(atom/move_target) //Slimes can pass through firelocks, unpowered windoors and unbolted airlocks
+/mob/living/simple_animal/slime/proc/start_moveloop(atom/move_target)
+	if(move_target == current_loop_target)
+		return
+
 	var/sleeptime = cached_multiplicative_slowdown
 	if(sleeptime <= 0)
 		sleeptime = 0
 
+	stop_moveloop()
+	current_loop_target = move_target
+
+	var/datum/move_loop/has_target/jps/move_loop = SSmove_manager.jps_move(moving = src,
+																		   chasing = move_target,
+																		   delay = sleeptime,
+																		   repath_delay = 2 SECONDS,
+																		   max_path_length = AI_MAX_PATH_LENGTH,
+																		   minimum_distance = 1,
+																		   simulated_only = TRUE,
+																		   additional_checks = list(.proc/jps_check = src)
+																		   )
+	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
+
 	SSmove_manager.move_to(src, move_target, 1, sleeptime)
+
+/mob/living/simple_animal/slime/proc/loop_ended()
+	current_loop_target = null
+
+/mob/living/simple_animal/slime/proc/stop_moveloop()
+	if(!current_loop_target)
+		return
+	SSmove_manager.stop_looping(src)
+	current_loop_target = null
+
+/mob/living/simple_animal/slime/proc/jps_check(turf/cur_turf, turf/next_turf) // !cur_turf.LinkBlockedWithAccess(next,caller, id)
+	if(!next_turf || next_turf.density || SSpathfinder.space_type_cache[next_turf.type]) //CAN_STEP will handle it
+		return
+
+	var/list/check_result = cur_turf.LinkBlockedWithAccess(next_turf, src, null)
+	if(!check_result || !LAZYLEN(check_result)) //We don't need to interfere if the path is already open
+		return
+
+	for(var/obj/machinery/door/window/windoor in check_result) //If we have airlock/windoor/whatever here it means that they're already closed, rotated towards us and non-public access so we don't need to check for that
+		if(!windoor.powered())
+			check_result -= windoor
+
+	for(var/obj/machinery/door/airlock/airlock in check_result)
+		if(!airlock.locked)
+			check_result -= airlock
+
+	for(var/obj/machinery/door/firedoor/firelock in check_result)
+		check_result -= firelock
+
+	if(LAZYLEN(check_result)) //There's something else blocking our way, aborting
+		return
+
+	return list(TRUE, JPS_CHECK_OVERRIDE)
 
 	/*
 
@@ -393,21 +442,21 @@
 
 	if(!client)
 		if(!(mobility_flags & MOBILITY_MOVE))
-			SSmove_manager.stop_looping(src)
+			stop_moveloop()
 			return
 
 		if(buckled)
-			SSmove_manager.stop_looping(src)
+			stop_moveloop()
 			return // if it's eating someone already, continue eating!
 
 		if(Target)
 			--target_patience
-			if (target_patience <= 0 || SStun > world.time || Discipline || attacked || docile) // Tired of chasing or something draws out attention
+			if (target_patience <= 0 || IsStun() || Discipline || attacked || docile) // Tired of chasing or something draws out attention
 				target_patience = 0
 				set_target(null)
 
-		if(AIproc && SStun > world.time)
-			SSmove_manager.stop_looping(src)
+		if(AIproc && IsStun())
+			stop_moveloop()
 			return
 
 		var/hungry = 0 // determines if the slime is hungry
@@ -507,9 +556,9 @@
 			else if(hungry)
 				if (holding_still)
 					holding_still = max(holding_still - (0.5 * hungry * delta_time), 0)
-				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && DT_PROB(75, delta_time))
-					var/picked_dir = GLOB.cardinals
-					Move(get_step(get_turf(src), picked_dir), picked_dir)
+				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && DT_PROB(50, delta_time))
+					var/picked_dir = pick(GLOB.alldirs)
+					Move(get_step(src, picked_dir), picked_dir)
 
 			else
 				handle_boredom(delta_time, times_fired)
@@ -535,9 +584,9 @@
 		return
 
 	if(!DT_PROB(SLIME_POI_INTERACT_CHANCE, delta_time))
-		if(DT_PROB(50, delta_time))
-			var/picked_dir = GLOB.cardinals
-			Move(get_step(get_turf(src), picked_dir), picked_dir)
+		if(DT_PROB(25, delta_time))
+			var/picked_dir = pick(GLOB.alldirs)
+			Move(get_step(src, picked_dir), picked_dir)
 		return
 
 	var/list/points_of_interest = list()

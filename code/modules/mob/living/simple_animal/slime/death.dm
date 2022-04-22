@@ -25,6 +25,7 @@
 	regenerate_icons()
 	for(var/mob/living/simple_animal/slime/slime in view(7, get_turf(src)))
 		slime.mood_level -= SLIME_MOOD_DEATH_LOSS
+	stop_moveloop()
 	return ..(gibbed)
 
 /mob/living/simple_animal/slime/gib()

@@ -18,7 +18,7 @@
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
-		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = pick(-1, -1, 0), light_impact_range = rand(0, 1), flame_range = rand(1, 2), flash_range = rand(1, 2))
+		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = -1, light_impact_range = rand(0, 1), flame_range = rand(1, 2), flash_range = rand(1, 2))
 
 	if(our_mix.return_pressure() > OIL_SLIME_REQUIRED_PRESSURE)
 		fitting_environment = TRUE
@@ -48,12 +48,13 @@
 
 	playsound(get_turf(attack_target), 'sound/effects/explosion2.ogg', 200, TRUE)
 	new /obj/effect/temp_visual/explosion(get_turf(attack_target))
-	EX_ACT(attack_target, EXPLODE_LIGHT)
 	for(var/atom/movable/throwback in range(1, get_turf(attack_target)))
-		if(throwback == slime)
+		if(throwback == slime || throwback.anchored)
 			continue
-		var/atom/throw_target = get_edge_target_turf(throwback, get_dir(attack_target, attack_target))
+		var/atom/throw_target = get_edge_target_turf(throwback, get_dir(attack_target, throwback))
 		throwback.throw_at(throw_target, 2, 2, slime)
+	var/atom/target_throw_target = get_edge_target_turf(attack_target, get_dir(slime, attack_target))
+	attack_target.throw_at(target_throw_target, 20, 3, slime)
 
 /datum/slime_color/black
 	color = "black"

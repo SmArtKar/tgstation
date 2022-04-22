@@ -274,6 +274,7 @@
  * subsystem - The movement subsystem to use. Defaults to SSmovement. Only one loop can exist for any one subsystem
  * priority - Defines how different move loops override each other. Lower numbers beat higher numbers, equal defaults to what currently exists. Defaults to MOVEMENT_DEFAULT_PRIORITY
  * flags - Set of bitflags that effect move loop behavior in some way. Check _DEFINES/movement.dm
+ * additional_checks - List of procs and objects that these procs belong to that contain additional/overriding checks for JPS
  *
 **/
 /datum/controller/subsystem/move_manager/proc/jps_move(moving,

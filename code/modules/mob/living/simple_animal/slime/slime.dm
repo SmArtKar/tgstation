@@ -60,6 +60,7 @@
 	var/atom/movable/Target = null // AI variable - tells the slime to hunt this down
 	var/atom/movable/Digesting = null // AI variable - stores the object that's currently being digested
 	var/mob/living/Leader = null // AI variable - tells the slime to follow this person
+	var/current_loop_target = null // Stores current moveloop target, exists to prevent pointless moveloop creations and deletions
 
 	var/attacked = 0 // Determines if it's been attacked recently. Can be any number, is a cooloff-ish variable
 	var/rabid = 0 // If set to 1, the slime will attack and eat anything it comes in contact with
@@ -497,20 +498,8 @@
 	if(buckled)
 		Feedstop(silent = TRUE) //we unbuckle the slime from the mob it latched onto.
 
-	SStun = world.time + rand(20,60)
-	SSmove_manager.stop_looping(src)
-
-	Stun(3)
-	if(user)
-		step_away(src,user,15)
-
-	addtimer(CALLBACK(src, .proc/slime_move, user), 0.3 SECONDS)
-
-
-/mob/living/simple_animal/slime/proc/slime_move(mob/user)
-	if(user)
-		step_away(src,user,15)
-
+	Stun(rand(20, 40))
+	stop_moveloop()
 
 /mob/living/simple_animal/slime/pet
 	docile = 1
@@ -531,7 +520,7 @@
 	var/old_target = Target
 	Target = new_target
 	if(!new_target)
-		SSmove_manager.stop_looping(src)
+		stop_moveloop()
 	if(old_target && !SLIME_CARES_ABOUT(old_target))
 		UnregisterSignal(old_target, COMSIG_PARENT_QDELETING)
 	if(Target)
