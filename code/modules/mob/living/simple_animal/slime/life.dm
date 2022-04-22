@@ -12,8 +12,8 @@
 	if(!.)
 		return
 
-	if(!slime_color) //If we SOMEHOW lost our color, be it BYOND wizardry, shitcode or adminbus, we become grey slimes because it's extremely important to have one
-		set_color(/datum/slime_color/grey)
+	if(!slime_color) //If we SOMEHOW lost our color, be it BYOND wizardry, shitcode or adminbus, we become error slimes because it's extremely important to have one
+		set_color(/datum/slime_color)
 
 	if(buckled)
 		handle_feeding(delta_time, times_fired)
@@ -145,11 +145,9 @@
 																		   max_path_length = AI_MAX_PATH_LENGTH,
 																		   minimum_distance = 1,
 																		   simulated_only = TRUE,
-																		   additional_checks = list(.proc/jps_check = src)
+																		   //additional_checks = list(.proc/jps_check = src)
 																		   )
 	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
-
-	SSmove_manager.move_to(src, move_target, 1, sleeptime)
 
 /mob/living/simple_animal/slime/proc/loop_ended()
 	current_loop_target = null

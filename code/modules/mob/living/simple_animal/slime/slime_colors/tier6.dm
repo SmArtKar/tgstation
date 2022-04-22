@@ -51,10 +51,12 @@
 	for(var/atom/movable/throwback in range(1, get_turf(attack_target)))
 		if(throwback == slime || throwback.anchored)
 			continue
-		var/atom/throw_target = get_edge_target_turf(throwback, get_dir(attack_target, throwback))
+		var/turf/throw_target = get_edge_target_turf(throwback, get_dir(attack_target, throwback))
 		throwback.throw_at(throw_target, 2, 2, slime)
-	var/atom/target_throw_target = get_edge_target_turf(attack_target, get_dir(slime, attack_target))
-	attack_target.throw_at(target_throw_target, 20, 3, slime)
+	if(ismovable(attack_target))
+		var/atom/movable/victim = attack_target
+		var/turf/throw_victim = get_edge_target_turf(victim, get_dir(slime, victim))
+		victim.throw_at(throw_victim, 20, 3, slime)
 
 /datum/slime_color/black
 	color = "black"
