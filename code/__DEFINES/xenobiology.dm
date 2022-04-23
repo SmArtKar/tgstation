@@ -55,9 +55,9 @@
 #define SLIME_POWER_LEVEL_ENERGY 2500000 //Around 10 slimes should be enough to power xenobio I think?
 
 /// Damages per second when slimes' requirements are not satisfied
-#define SLIME_DAMAGE_LOW  (150 / 600)  //10 minutes to die
-#define SLIME_DAMAGE_MED  (150 / 450)  //7.5 minutes to die
-#define SLIME_DAMAGE_HIGH (150 / 300)  //5 minutes to die
+#define SLIME_DAMAGE_LOW  (150 / 420)  //7 minutes to die
+#define SLIME_DAMAGE_MED  (150 / 300)  //5 minutes to die
+#define SLIME_DAMAGE_HIGH (150 / 180)  //3 minutes to die
 
 /// Additional damage for mobs from slime being an adult
 #define SLIME_ADULT_DAMAGE_BOOST 10

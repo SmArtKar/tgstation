@@ -19,7 +19,7 @@
  * * skip_first: Whether or not to delete the first item in the path. This would be done because the first item is the starting tile, which can break movement for some creatures.
  * * diagonal_safety: ensures diagonal moves won't use invalid midstep turfs by splitting them into two orthogonal moves if necessary
  */
-/proc/get_path_to(caller, end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE, additional_checks)
+/proc/get_path_to(caller, end, max_distance = 30, mintargetdist, id=null, simulated_only = TRUE, turf/exclude, skip_first=TRUE, diagonal_safety=TRUE)
 	if(!caller || !get_turf(end))
 		return
 
@@ -29,7 +29,7 @@
 		l = SSpathfinder.mobs.getfree(caller)
 
 	var/list/path
-	var/datum/pathfind/pathfind_datum = new(caller, end, id, max_distance, mintargetdist, simulated_only, exclude, diagonal_safety, additional_checks)
+	var/datum/pathfind/pathfind_datum = new(caller, end, id, max_distance, mintargetdist, simulated_only, exclude, diagonal_safety)
 	path = pathfind_datum.search()
 	qdel(pathfind_datum)
 
@@ -46,7 +46,7 @@
  * If you really want to optimize things, optimize this, cuz this gets called a lot.
  * We do early next.density check despite it being already checked in LinkBlockedWithAccess for short-circuit performance
  */
-#define CAN_STEP(cur_turf, next) ((next && !next.density && !(simulated_only && SSpathfinder.space_type_cache[next.type]) && !cur_turf.LinkBlockedWithAccess(next,caller, id) && (next != avoid) && (!additional_checks || make_additional_checks(cur_turf, next)[JPS_CHECK_ADDITIONAL])) || (additional_checks && make_additional_checks(cur_turf, next)[JPS_CHECK_OVERRIDE]))
+#define CAN_STEP(cur_turf, next) (next && !next.density && !(simulated_only && SSpathfinder.space_type_cache[next.type]) && !cur_turf.LinkBlockedWithAccess(next,caller, id) && (next != avoid))
 /// Another helper macro for JPS, for telling when a node has forced neighbors that need expanding
 #define STEP_NOT_HERE_BUT_THERE(cur_turf, dirA, dirB) ((!CAN_STEP(cur_turf, get_step(cur_turf, dirA)) && CAN_STEP(cur_turf, get_step(cur_turf, dirB))))
 
@@ -124,10 +124,8 @@
 	var/turf/avoid
 	/// Ensures diagonal moves won't use invalid midstep turfs by splitting them into two orthogonal moves if necessary
 	var/diagonal_safety = TRUE
-	/// Lists all additional checks to be performed for each turf with references of the object to be called as an assigned value. These should return lists which contain result as the first element and type of the check as the second element.
-	var/list/additional_checks
 
-/datum/pathfind/New(atom/movable/caller, atom/goal, id, max_distance, mintargetdist, simulated_only, avoid, diagonal_safety, additional_checks)
+/datum/pathfind/New(atom/movable/caller, atom/goal, id, max_distance, mintargetdist, simulated_only, avoid, diagonal_safety)
 	src.caller = caller
 	end = get_turf(goal)
 	open = new /datum/heap(/proc/HeapPathWeightCompare)
@@ -138,24 +136,6 @@
 	src.simulated_only = simulated_only
 	src.avoid = avoid
 	src.diagonal_safety = diagonal_safety
-	src.additional_checks = additional_checks
-
-// This proc goes through all additional checks and composes a list of their returns
-
-/datum/pathfind/proc/make_additional_checks(cur_turf, next_turf)
-	if(!additional_checks)
-		return
-	var/list/results = list(JPS_CHECK_ADDITIONAL = TRUE, JPS_CHECK_OVERRIDE = FALSE)
-	for(var/proc_name in additional_checks)
-		var/proc_result = call(additional_checks[proc_name], proc_name)(cur_turf, next_turf)
-		if(LAZYLEN(proc_result) != 2) //Something has gone wrong
-			continue
-
-		if(proc_result[2] == JPS_CHECK_ADDITIONAL)
-			results[JPS_CHECK_ADDITIONAL] = results[JPS_CHECK_ADDITIONAL] && proc_result[1]
-		else if(proc_result[2] == JPS_CHECK_ADDITIONAL)
-			results[JPS_CHECK_OVERRIDE] = results[JPS_CHECK_OVERRIDE] || proc_result[1]
-	return results
 
 /**
  * search() is the proc you call to kick off and handle the actual pathfinding, and kills the pathfind datum instance when it's done.
@@ -399,7 +379,6 @@
  * * simulated_only: Do we only worry about turfs with simulated atmos, most notably things that aren't space?
 */
 /turf/proc/LinkBlockedWithAccess(turf/destination_turf, caller, ID)
-	var/list/blocker_objects = list()
 	if(destination_turf.x != x && destination_turf.y != y) //diagonal
 		var/in_dir = get_dir(destination_turf,src) // eg. northwest (1+8) = 9 (00001001)
 		var/first_step_direction_a = in_dir & 3 // eg. north   (1+8)&3 (0000 0011) = 1 (0000 0001)
@@ -407,11 +386,8 @@
 
 		for(var/first_step_direction in list(first_step_direction_a,first_step_direction_b))
 			var/turf/midstep_turf = get_step(destination_turf,first_step_direction)
-			blocker_objects |= LinkBlockedWithAccess(midstep_turf,caller,ID)
-			blocker_objects |= midstep_turf.LinkBlockedWithAccess(destination_turf,caller,ID)
-			if(midstep_turf.density)
-				blocker_objects |= midstep_turf
-			if(!LAZYLEN(blocker_objects))
+			var/way_blocked = midstep_turf.density || LinkBlockedWithAccess(midstep_turf,caller,ID) || midstep_turf.LinkBlockedWithAccess(destination_turf,caller,ID)
+			if(!way_blocked)
 				return FALSE
 		return TRUE
 
@@ -424,36 +400,33 @@
 		//	if(destination_turf.density)
 		//		return TRUE
 		if(TURF_PATHING_PASS_PROC)
-			if(!destination_turf.CanAStarPass(ID, actual_dir , caller))
-				blocker_objects |= destination_turf
+			if(!destination_turf.CanAStarPass(ID, actual_dir, caller))
+				return TRUE
 		if(TURF_PATHING_PASS_NO)
-			blocker_objects |= destination_turf
+			return TRUE
 
 	// Source border object checks
 	for(var/obj/structure/window/iter_window in src)
-		if(!iter_window.CanAStarPass(ID, actual_dir))
-			blocker_objects |= iter_window
+		if(!iter_window.CanAStarPass(ID, actual_dir, caller))
+			return TRUE
 
 	for(var/obj/machinery/door/window/iter_windoor in src)
-		if(!iter_windoor.CanAStarPass(ID, actual_dir))
-			blocker_objects |= iter_windoor
+		if(!iter_windoor.CanAStarPass(ID, actual_dir, caller))
+			return TRUE
 
 	for(var/obj/structure/railing/iter_rail in src)
-		if(!iter_rail.CanAStarPass(ID, actual_dir))
-			blocker_objects |= iter_rail
+		if(!iter_rail.CanAStarPass(ID, actual_dir, caller))
+			return TRUE
 
 	for(var/obj/machinery/door/firedoor/border_only/firedoor in src)
-		if(!firedoor.CanAStarPass(ID, actual_dir))
-			blocker_objects |= firedoor
+		if(!firedoor.CanAStarPass(ID, actual_dir, caller))
+			return TRUE
 
 	// Destination blockers check
 	var/reverse_dir = get_dir(destination_turf, src)
 	for(var/obj/iter_object in destination_turf)
 		if(!iter_object.CanAStarPass(ID, reverse_dir, caller))
-			blocker_objects |= iter_object
-
-	if(LAZYLEN(blocker_objects))
-		return blocker_objects
+			return TRUE
 
 	return FALSE
 

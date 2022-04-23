@@ -116,7 +116,7 @@
 				set_target(null)
 				AIproc = 0
 				break
-		sleep(5)
+		sleep(3.5)
 
 	AIproc = 0
 
@@ -138,49 +138,33 @@
 	stop_moveloop()
 	current_loop_target = move_target
 
-	var/datum/move_loop/has_target/jps/move_loop = SSmove_manager.jps_move(moving = src,
-																		   chasing = move_target,
-																		   delay = sleeptime,
-																		   repath_delay = 2 SECONDS,
-																		   max_path_length = AI_MAX_PATH_LENGTH,
-																		   minimum_distance = 1,
-																		   simulated_only = TRUE,
-																		   //additional_checks = list(.proc/jps_check = src)
-																		   )
+	var/datum/move_loop/move_loop = SSmove_manager.move_to(src, move_target, 1, sleeptime)
 	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
+	//RegisterSignal(move_loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
 
 /mob/living/simple_animal/slime/proc/loop_ended()
 	current_loop_target = null
+
+/*
+/mob/living/simple_animal/slime/proc/post_move(datum/source, success, visual_delay) //This is shitcode but directional objects are fucking cursed
+	if(success)
+		return
+
+	var/turf/current_turf = get_turf(src)
+	for(var/possible_dir in GLOB.cardinals)
+		var/turf/possible_path = get_step(src, possible_dir)
+		if(current_turf.LinkBlockedWithAccess(possible_path, src, null))
+			continue
+		Move(possible_path)
+		if(get_step_to(src, current_loop_target) == current_turf)
+			Move(current_turf)
+*/
 
 /mob/living/simple_animal/slime/proc/stop_moveloop()
 	if(!current_loop_target)
 		return
 	SSmove_manager.stop_looping(src)
 	current_loop_target = null
-
-/mob/living/simple_animal/slime/proc/jps_check(turf/cur_turf, turf/next_turf) // !cur_turf.LinkBlockedWithAccess(next,caller, id)
-	if(!next_turf || next_turf.density || SSpathfinder.space_type_cache[next_turf.type]) //CAN_STEP will handle it
-		return
-
-	var/list/check_result = cur_turf.LinkBlockedWithAccess(next_turf, src, null)
-	if(!check_result || !LAZYLEN(check_result)) //We don't need to interfere if the path is already open
-		return
-
-	for(var/obj/machinery/door/window/windoor in check_result) //If we have airlock/windoor/whatever here it means that they're already closed, rotated towards us and non-public access so we don't need to check for that
-		if(!windoor.powered())
-			check_result -= windoor
-
-	for(var/obj/machinery/door/airlock/airlock in check_result)
-		if(!airlock.locked)
-			check_result -= airlock
-
-	for(var/obj/machinery/door/firedoor/firelock in check_result)
-		check_result -= firelock
-
-	if(LAZYLEN(check_result)) //There's something else blocking our way, aborting
-		return
-
-	return list(TRUE, JPS_CHECK_OVERRIDE)
 
 	/*
 

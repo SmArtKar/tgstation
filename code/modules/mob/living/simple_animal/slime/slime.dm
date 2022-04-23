@@ -86,6 +86,7 @@
 	///////////TIME FOR SUBSPECIES
 
 	var/datum/slime_color/slime_color
+	var/default_color
 
 	var/list/slime_colors = list()
 
@@ -114,7 +115,9 @@
 		var/datum/action/innate/slime/evolve/E = new
 		E.Grant(src)
 	create_reagents(100)
-	if(!new_color || !ispath(new_color, /datum/slime_color))
+	if(default_color)
+		new_color = default_color
+	else if(!new_color || !ispath(new_color, /datum/slime_color))
 		new_color = /datum/slime_color/grey
 	set_color(new_color)
 	. = ..()

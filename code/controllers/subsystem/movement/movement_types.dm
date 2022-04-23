@@ -274,7 +274,6 @@
  * subsystem - The movement subsystem to use. Defaults to SSmovement. Only one loop can exist for any one subsystem
  * priority - Defines how different move loops override each other. Lower numbers beat higher numbers, equal defaults to what currently exists. Defaults to MOVEMENT_DEFAULT_PRIORITY
  * flags - Set of bitflags that effect move loop behavior in some way. Check _DEFINES/movement.dm
- * additional_checks - List of procs and objects that these procs belong to that contain additional/overriding checks for JPS
  *
 **/
 /datum/controller/subsystem/move_manager/proc/jps_move(moving,
@@ -291,8 +290,7 @@
 	subsystem,
 	priority,
 	flags,
-	datum/extra_info,
-	additional_checks)
+	datum/extra_info)
 	return add_to_loop(moving,
 		subsystem,
 		/datum/move_loop/has_target/jps,
@@ -308,8 +306,7 @@
 		id,
 		simulated_only,
 		avoid,
-		skip_first,
-		additional_checks)
+		skip_first)
 
 /datum/move_loop/has_target/jps
 	///How often we're allowed to recalculate our path
@@ -328,12 +325,10 @@
 	var/skip_first
 	///A list for the path we're currently following
 	var/list/movement_path
-	///A list of additional checks for JPS
-	var/list/additional_checks
 	///Cooldown for repathing, prevents spam
 	COOLDOWN_DECLARE(repath_cooldown)
 
-/datum/move_loop/has_target/jps/setup(delay, timeout, atom/chasing, repath_delay, max_path_length, minimum_distance, obj/item/card/id/id, simulated_only, turf/avoid, skip_first, list/additional_checks)
+/datum/move_loop/has_target/jps/setup(delay, timeout, atom/chasing, repath_delay, max_path_length, minimum_distance, obj/item/card/id/id, simulated_only, turf/avoid, skip_first)
 	. = ..()
 	if(!.)
 		return
@@ -344,7 +339,6 @@
 	src.simulated_only = simulated_only
 	src.avoid = avoid
 	src.skip_first = skip_first
-	src.additional_checks = additional_checks
 	if(istype(id, /obj/item/card/id))
 		RegisterSignal(id, COMSIG_PARENT_QDELETING, .proc/handle_no_id) //I prefer erroring to harddels. If this breaks anything consider making id info into a datum or something
 
@@ -367,7 +361,7 @@
 		return
 	COOLDOWN_START(src, repath_cooldown, repath_delay)
 	SEND_SIGNAL(src, COMSIG_MOVELOOP_JPS_REPATH)
-	movement_path = get_path_to(moving, target, max_path_length, minimum_distance, id, simulated_only, avoid, skip_first, additional_checks)
+	movement_path = get_path_to(moving, target, max_path_length, minimum_distance, id, simulated_only, avoid, skip_first)
 
 /datum/move_loop/has_target/jps/move()
 	if(!length(movement_path))
