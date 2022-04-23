@@ -22,3 +22,5 @@
 ///From mob/living/simple_animal/slime/regenerate_icons(): ()
 #define COMSIG_SLIME_REGENERATE_ICONS "slime_regenerate_icons"
 	#define COLOR_SLIME_NO_ICON_REGENERATION  (1<<0) //Cancels icon regeneration in case you, for some reason, want to keep the appearance
+///From mob/living/simple_animal/slime/Feedstop() and mob/living/simple_animal/slime/handle_digestion(): (atom/target)
+#define COMSIG_SLIME_DIGESTED "slime_digested"

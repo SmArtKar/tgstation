@@ -170,6 +170,16 @@
 		return
 
 	cut_overlays()
+	if(slime_color.icon_file)
+		icon = slime_color.icon_file
+	else
+		icon = initial(icon)
+	if(slime_color.pixel_x)
+		base_pixel_x = slime_color.pixel_x
+		pixel_x = base_pixel_x
+	if(slime_color.pixel_y)
+		base_pixel_y = slime_color.pixel_y
+		pixel_y = base_pixel_y
 	var/icon_text = "[slime_color.icon_color][is_adult ? "-adult" : ""]"
 	icon_dead = "[icon_text]-dead[cores ? "" : "-nocore"]"
 	if(stat != DEAD)
@@ -184,10 +194,18 @@
 	if(Digesting)
 		add_overlay(digestion_overlay)
 	if(accessory)
-		var/mutable_appearance/accessory_overlay = mutable_appearance(icon, "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		var/mutable_appearance/accessory_overlay = mutable_appearance('icons/mob/slimes.dmi', "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		if(slime_color.pixel_x)
+			accessory_overlay.pixel_x = -slime_color.pixel_x
+		if(slime_color.pixel_y)
+			accessory_overlay.pixel_y = -slime_color.pixel_y
 		add_overlay(accessory_overlay)
 	if(glittered)
-		var/mutable_appearance/glitter_overlay = mutable_appearance(icon, "glitter[is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		var/mutable_appearance/glitter_overlay = mutable_appearance('icons/mob/slimes.dmi', "glitter[is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		if(slime_color.pixel_x)
+			glitter_overlay.pixel_x = -slime_color.pixel_x
+		if(slime_color.pixel_y)
+			glitter_overlay.pixel_y = -slime_color.pixel_y
 		add_overlay(glitter_overlay)
 	return ..()
 
@@ -450,7 +468,7 @@
 		if(Target) // Like cats
 			set_target(null)
 			++Discipline
-		mood_level -= SLIME_MOOD_WATER_LOSS
+		adjust_mood(SLIME_MOOD_WATER_LOSS)
 	return
 
 /mob/living/simple_animal/slime/examine(mob/user)
@@ -489,7 +507,7 @@
 
 	if(prob(80) && !client)
 		Discipline++
-		mood_level -= SLIME_MOOD_DISCIPLINE_LOSS
+		adjust_mood(SLIME_MOOD_DISCIPLINE_LOSS)
 
 		if(!is_adult)
 			if(Discipline == 1)
@@ -578,5 +596,8 @@
 		accessory.forceMove(get_turf(src))
 		accessory = null
 	. = ..()
+
+/mob/living/simple_animal/slime/proc/adjust_mood(mood_offset)
+	mood_level = min(SLIME_MOOD_MAXIMUM, max(0, mood_level + mood_offset))
 
 #undef SLIME_CARES_ABOUT

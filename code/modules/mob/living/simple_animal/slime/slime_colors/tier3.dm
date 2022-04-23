@@ -16,7 +16,7 @@
 		core_lose = 0
 		return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
 	if(slime.cores > 0)
 		core_lose += 1
@@ -47,7 +47,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
 	if(DT_PROB(DARK_PURPLE_SLIME_PUFF_PROBABILITY, delta_time))
 		our_turf.atmos_spawn_air("plasma=10;TEMP=1000")

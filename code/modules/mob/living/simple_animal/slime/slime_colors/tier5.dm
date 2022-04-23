@@ -63,7 +63,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
 
 /datum/slime_color/cerulean/proc/slime_attack(datum/source, atom/movable/attack_target)
 	SIGNAL_HANDLER
@@ -170,7 +170,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
 
 	if(!can_timestop)
 		return
@@ -242,7 +242,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 
 /datum/slime_color/bluespace //These will either kill themselves, get stuck and are generally just hard to contain but don't have any combat abilities so no damage for them.
 	color = "bluespace"

@@ -138,7 +138,14 @@
 	stop_moveloop()
 	current_loop_target = move_target
 
-	var/datum/move_loop/move_loop = SSmove_manager.move_to(src, move_target, 1, sleeptime)
+	var/datum/move_loop/move_loop = SSmove_manager.mixed_move(src,
+													   		  current_loop_target,
+													   		  sleeptime,
+													   		  repath_delay = 0.5 SECONDS,
+													   		  max_path_length = AI_MAX_PATH_LENGTH,
+													   		  minimum_distance = 1,
+													   		  simulated_only = TRUE,
+													   		  )
 	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
 	//RegisterSignal(move_loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
 
@@ -165,47 +172,6 @@
 		return
 	SSmove_manager.stop_looping(src)
 	current_loop_target = null
-
-	/*
-
-	if(!Adjacent(step_target))
-		step_target = get_step(get_turf(src), get_dir(src, step_target))
-
-	var/obj/machinery/door/airlock/airlock = locate(/obj/machinery/door/airlock) in get_turf(step_target)
-	var/obj/machinery/door/firedoor/firedoor = locate(/obj/machinery/door/firedoor) in get_turf(step_target)
-	var/obj/machinery/door/window/windoor = locate(/obj/machinery/door/window) in get_turf(step_target)
-
-	var/can_squeese = TRUE
-	var/should_squeese = FALSE
-	var/squeese_target
-
-	if(windoor && windoor.density)
-		should_squeese = TRUE
-		squeese_target = windoor
-		if(windoor.powered())
-			can_squeese = FALSE
-
-	if(firedoor && firedoor.density)
-		squeese_target = firedoor
-		should_squeese = TRUE
-
-	if(airlock && airlock.density)
-		should_squeese = TRUE
-		squeese_target = airlock
-		if(airlock.locked)
-			can_squeese = FALSE
-
-	var/turf/squeese_turf = get_step(get_turf(step_target), get_dir(src, step_target))
-	if(squeese_turf.is_blocked_turf_ignore_climbable())
-		can_squeese = FALSE
-
-	if(can_squeese && should_squeese)
-		visible_message(span_warning("[src] squeeses through [squeese_target]!"))
-		forceMove(squeese_turf)
-	else
-		step_to(src, step_target)
-
-	*/
 
 /mob/living/simple_animal/slime/handle_environment(datum/gas_mixture/environment, delta_time, times_fired)
 	var/loc_temp = get_temperature(environment)
@@ -617,13 +583,13 @@
 		regenerate_icons()
 
 	if(!slime_color.fitting_environment && !(slime_color.slime_tags & SLIME_NO_REQUIREMENT_MOOD_LOSS))
-		mood_level -= SLIME_MOOD_REQUIREMENTS_LOSS * delta_time
+		adjust_mood(SLIME_MOOD_REQUIREMENTS_LOSS * delta_time)
 	else if(nutrition < get_starve_nutrition())
-		mood_level -= SLIME_MOOD_STARVING_LOSS * delta_time
+		adjust_mood(SLIME_MOOD_STARVING_LOSS * delta_time)
 	else if(nutrition < get_hunger_nutrition())
-		mood_level -= SLIME_MOOD_HUNGRY_LOSS * delta_time
+		adjust_mood(SLIME_MOOD_HUNGRY_LOSS * delta_time)
 	else if(mood_level < SLIME_MOOD_PASSIVE_LEVEL + rand(-SLIME_MOOD_PASSIVE_LEVEL_OFFSET, SLIME_MOOD_PASSIVE_LEVEL_OFFSET))
-		mood_level += SLIME_MOOD_PASSIVE_GAIN * delta_time
+		adjust_mood(SLIME_MOOD_PASSIVE_GAIN * delta_time)
 
 	if(mood_level < SLIME_MOOD_LEVEL_POUT)
 		if(Discipline && DT_PROB(2, delta_time)) //Faster discipline loss
@@ -827,7 +793,7 @@
 	if(digestion_progress >= 100)
 		cut_overlay(digestion_overlay)
 		to_chat(src, span_notice("<i>You finish digesting [Digesting].</i>"))
-		slime_color.finished_digesting(Digesting)
+		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, Digesting)
 		QDEL_NULL(digestion_overlay)
 		QDEL_NULL(Digesting)
 		return

@@ -345,6 +345,7 @@
 /datum/move_loop/has_target/jps/start_loop()
 	. = ..()
 	INVOKE_ASYNC(src, .proc/recalculate_path)
+	RegisterSignal(target, COMSIG_MOVABLE_MOVED, .proc/movement_recalculate_path)
 
 /datum/move_loop/has_target/jps/Destroy()
 	id = null //Kill me
@@ -354,6 +355,11 @@
 /datum/move_loop/has_target/jps/proc/handle_no_id()
 	SIGNAL_HANDLER
 	id = null
+
+/datum/move_loop/has_target/jps/proc/movement_recalculate_path()
+	if(!COOLDOWN_FINISHED(src, repath_cooldown))
+		return
+	INVOKE_ASYNC(src, .proc/recalculate_path) //Because signals aren't async FOR SOME REASON
 
 //Returns FALSE if the recalculation failed, TRUE otherwise
 /datum/move_loop/has_target/jps/proc/recalculate_path()
@@ -382,8 +388,70 @@
 		INVOKE_ASYNC(src, .proc/recalculate_path)
 		return FALSE
 
+/**
+ * A moveloop that combines BYOND's A* for quick pathfinding and JPS whenever A* shits itself because of cursed directional objects(screw you windows)
+ *
+ * Returns TRUE if the loop sucessfully started, or FALSE if it failed
+ *
+**/
 
-///Base class of move_to and move_away, deals with the distance and target aspect of things
+/datum/controller/subsystem/move_manager/proc/mixed_move(moving,
+	chasing,
+	delay,
+	timeout,
+	repath_delay,
+	max_path_length,
+	minimum_distance,
+	obj/item/card/id/id,
+	simulated_only,
+	turf/avoid,
+	skip_first,
+	subsystem,
+	priority,
+	flags,
+	datum/extra_info)
+	return add_to_loop(moving,
+		subsystem,
+		/datum/move_loop/has_target/jps/mixed,
+		priority,
+		flags,
+		extra_info,
+		delay,
+		timeout,
+		chasing,
+		repath_delay,
+		max_path_length,
+		minimum_distance,
+		id,
+		simulated_only,
+		avoid,
+		skip_first)
+
+/datum/move_loop/has_target/jps/mixed
+	var/jps_active = FALSE
+
+/datum/move_loop/has_target/jps/mixed/movement_recalculate_path()
+	if(!jps_active)
+		return
+	return ..()
+
+/datum/move_loop/has_target/jps/mixed/move()
+	if(!get_step_to(moving, target))
+		jps_active = TRUE
+		return ..()
+
+	jps_active = FALSE
+	var/atom/old_loc = moving.loc
+	step_to(moving, target)
+	return old_loc != moving?.loc
+
+/**
+ *
+ * Base class of move_to and move_away, deals with the distance and target aspect of things
+ *
+ *
+ */
+
 /datum/move_loop/has_target/dist_bound
 	var/distance = 0
 

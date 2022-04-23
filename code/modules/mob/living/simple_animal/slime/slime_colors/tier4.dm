@@ -150,7 +150,7 @@
 			fitting_environment = TRUE
 			return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
 	if(DT_PROB(PINK_SLIME_HALLUCINATION_CHANCE, delta_time))
 		start_hallucinations()
 

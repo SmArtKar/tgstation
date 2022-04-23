@@ -23,8 +23,8 @@
 
 	set_stat(DEAD)
 	regenerate_icons()
-	for(var/mob/living/simple_animal/slime/slime in view(7, get_turf(src)))
-		slime.mood_level -= SLIME_MOOD_DEATH_LOSS
+	for(var/mob/living/simple_animal/slime/slime in view(5, get_turf(src)))
+		slime.adjust_mood(SLIME_MOOD_DEATH_LOSS)
 	stop_moveloop()
 	return ..(gibbed)
 

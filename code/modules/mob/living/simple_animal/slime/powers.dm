@@ -196,6 +196,8 @@
 		M.visible_message(span_danger("[name] latches onto [M]!"), \
 						span_userdanger("[name] latches onto [M]!"))
 		stop_moveloop()
+		pixel_x = base_pixel_x
+		pixel_y = base_pixel_y
 	else
 		to_chat(src, span_warning("<i>I have failed to latch onto the subject!</i>"))
 
@@ -206,12 +208,14 @@
 			"This subject does not have life energy", "This subject is empty", \
 			"I am not satisified", "I can not feed from this subject", \
 			"I do not feel nourished", "This subject is not food")]!</span>")
-			slime_color.finished_digesting_living(buckled)
+			SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, buckled)
 		if(!silent)
 			visible_message(span_warning("[src] lets go of [buckled]!"), \
 							span_notice("<i>I stopped feeding.</i>"))
 		layer = initial(layer)
 		buckled.unbuckle_mob(src,force=TRUE)
+		pixel_x = base_pixel_x
+		pixel_y = base_pixel_y
 
 /mob/living/simple_animal/slime/verb/Evolve()
 	set category = "Slime"

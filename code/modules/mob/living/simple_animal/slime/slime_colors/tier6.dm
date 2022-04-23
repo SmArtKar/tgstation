@@ -25,7 +25,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 
 /datum/slime_color/oil/proc/boom(mob/living/simple_animal/slime/dead_body)
 	SIGNAL_HANDLER
@@ -87,7 +87,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_MED)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 
 	if(DT_PROB(BLACK_SLIME_CHANGE_TURF_CHANCE, delta_time))
 		convert_turf()
@@ -124,6 +124,9 @@
 /datum/slime_color/adamantine
 	color = "adamantine"
 	coretype = /obj/item/slime_extract/adamantine
+	icon_file = 'icons/mob/big_slimes.dmi'
+	pixel_x = -16
+	pixel_y = -16
 	mutations = null
 
 /datum/slime_color/light_pink

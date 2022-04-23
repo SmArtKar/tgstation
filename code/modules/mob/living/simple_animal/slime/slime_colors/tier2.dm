@@ -15,7 +15,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
 	slime.rabid = TRUE
 	fitting_environment = FALSE
 
@@ -29,6 +29,13 @@
 
 	environmental_req = "Subject requires low temperatures ranging from -40° to -10° Celsius."
 
+/datum/slime_color/blue/New(mob/living/simple_animal/slime/slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_DIGESTED, .proc/finished_digesting)
+
+/datum/slime_color/blue/remove()
+	UnregisterSignal(slime, COMSIG_SLIME_DIGESTED)
+
 /datum/slime_color/blue/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
@@ -36,10 +43,10 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
 
-/datum/slime_color/blue/finished_digesting(food)
+/datum/slime_color/blue/proc/finished_digesting(atom/target)
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	our_mix.assert_gas(/datum/gas/water_vapor)
 	our_mix.gases[/datum/gas/water_vapor][MOLES] += BLUE_SLIME_PUFF_AMOUNT
@@ -58,7 +65,7 @@
 		fitting_environment = TRUE
 		return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
 
 /datum/slime_color/orange
@@ -81,10 +88,10 @@
 	if(locate(/obj/effect/hotspot) in our_turf)
 		hotspot_modifier = HOT_SLIME_HOTSPOT_DAMAGE_MODIFIER
 
-	slime.adjust_nutrition(-2 * delta_time * hotspot_modifier)
+	slime.adjust_nutrition(-2 * delta_time * hotspot_modifier * get_passive_damage_modifier())
 	fitting_environment = FALSE
 
 	if(our_mix?.temperature >= ORANGE_SLIME_DANGEROUS_TEMP)
 		return
 
-	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * hotspot_modifier)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * hotspot_modifier * get_passive_damage_modifier())

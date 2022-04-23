@@ -2,7 +2,10 @@
 
 /datum/slime_color
 	var/color = "error" //I hate bri'ish people, there was C O L O U R everywhere
+	var/icon_file //In case we need to use a different file(big slimes)
 	var/icon_color //In case we have two or three words as our color
+	var/pixel_x //For big slime icons
+	var/pixel_y //For big slime icons
 	var/coretype = /obj/item/slime_extract
 	var/list/mutations
 	var/list/food_types = list() //Mob nutrition value is based on their health, while items' is always the same and only depends on the coeff
@@ -35,11 +38,13 @@
 		else
 			warpchance += SLIME_WARPCHANCE_INCREASE * delta_time
 
-/datum/slime_color/proc/finished_digesting(food)
-
-/datum/slime_color/proc/finished_digesting_living(food)
-
 /datum/slime_color/proc/remove()
+
+/datum/slime_color/proc/get_passive_damage_modifier()
+	var/damage_mod = 1
+	if(slime.accessory)
+		damage_mod *= slime.accessory.get_damage_modificator()
+	return damage_mod
 
 /datum/slime_color/grey
 	color = "grey"

@@ -15,6 +15,9 @@
 	owner = null
 	return TRUE
 
+/obj/item/slime_accessory/proc/get_damage_modificator()
+	return 1
+
 /obj/item/slime_accessory/proc/on_life(delta_time, times_fired)
 
 /obj/item/slime_accessory/translator
@@ -52,7 +55,7 @@
 
 /obj/item/slime_accessory/crown/on_life(delta_time, times_fired) //Crown makes slimes wearing it happy
 	if(owner.mood_level < SLIME_MOOD_MAXIMUM)
-		owner.mood_level += 2 * delta_time
+		owner.adjust_mood(2 * delta_time)
 
 /obj/item/slime_accessory/friendship_necklace
 	name = "friendship necklace"
@@ -63,10 +66,10 @@
 	. = ..()
 	new_owner.add_friendship(equipper, 5)
 	new_owner.visible_message(span_notice("[new_owner] seems to like [src] and blorbles happily."))
-	new_owner.mood_level += 15
+	new_owner.adjust_mood(15)
 
 /obj/item/slime_accessory/friendship_necklace/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
 	. = ..()
 	former_owner.add_friendship(equipper, -5)
 	former_owner.visible_message(span_warning("[former_owner] tries to hold onto [former_owner.p_their()] [name] as it's being removed by [equipper]!"))
-	former_owner.mood_level -= 35
+	former_owner.adjust_mood(-35)
