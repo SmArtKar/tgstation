@@ -109,7 +109,7 @@
 				else
 					gobble_up(Target)
 
-			else if(get_dist(Target, src) <= 9) //Previously this used view which is extremely expensive. Also you can no longer make slimes forget about your existence by just hiding behind the corner
+			else if(get_dist(Target, src) <= 9 || target_patience > 0) //Previously this used view which is extremely expensive. Also you can no longer make slimes forget about your existence by just hiding behind the corner
 				if(!Target.Adjacent(src)) // Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
 					start_moveloop(Target)
 			else
@@ -122,7 +122,7 @@
 
 
 /mob/living/simple_animal/slime/proc/attack_target(atom/attack_target)
-	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_TARGET, attack_target) & COLOR_SLIME_NO_ATTACK)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_TARGET, attack_target) & COMPONENT_SLIME_NO_ATTACK)
 		return
 
 	attack_target.attack_slime(src)
@@ -138,7 +138,7 @@
 	stop_moveloop()
 	current_loop_target = move_target
 
-	var/datum/move_loop/move_loop = SSmove_manager.mixed_move(src,
+	move_loop = SSmove_manager.mixed_move(src,
 													   		  current_loop_target,
 													   		  sleeptime,
 													   		  repath_delay = 0.5 SECONDS,
@@ -147,25 +147,176 @@
 													   		  simulated_only = TRUE,
 													   		  )
 	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
-	//RegisterSignal(move_loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
+	RegisterSignal(move_loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
+	SEND_SIGNAL(src, COMSIG_SLIME_START_MOVE_LOOP, move_loop)
 
 /mob/living/simple_animal/slime/proc/loop_ended()
 	current_loop_target = null
+	move_loop = null
 
-/*
-/mob/living/simple_animal/slime/proc/post_move(datum/source, success, visual_delay) //This is shitcode but directional objects are fucking cursed
+/mob/living/simple_animal/slime/proc/post_move(datum/source, success, visual_delay)
 	if(success)
 		return
 
-	var/turf/current_turf = get_turf(src)
-	for(var/possible_dir in GLOB.cardinals)
-		var/turf/possible_path = get_step(src, possible_dir)
-		if(current_turf.LinkBlockedWithAccess(possible_path, src, null))
+	if(get_step_to(src, current_loop_target))
+		return
+
+	var/datum/move_loop/has_target/jps/mixed/mixed_loop = source
+	mixed_loop.recalculate_path()
+	if(LAZYLEN(mixed_loop.movement_path))
+		return
+
+	for(var/path_dir in GLOB.cardinals)
+		if(SEND_SIGNAL(src, COMSIG_SLIME_SQUEESING_ATTEMPT, path_dir, source, FALSE) & COMPONENT_SLIME_NO_SQUEESING)
+			return
+
+		if(try_squeesing(source, path_dir))
+			return
+
+/mob/living/simple_animal/slime/Bump(atom/A)
+	. = ..()
+	if(!move_loop)
+		return
+
+	if(SEND_SIGNAL(src, COMSIG_SLIME_SQUEESING_ATTEMPT, get_dir(src, A), move_loop, TRUE) & COMPONENT_SLIME_NO_SQUEESING)
+		return
+
+	if(try_squeesing(move_loop, get_dir(src, A)))
+		return
+
+/mob/living/simple_animal/slime/proc/try_squeesing(datum/source, squeese_dir)
+	var/our_turf = get_turf(src)
+	var/squeese_turf = get_step(our_turf, squeese_dir)
+
+	forceMove(squeese_turf)
+	if(!get_step_to(src, current_loop_target) || get_step_to(src, current_loop_target) == our_turf)
+		forceMove(our_turf)
+		return FALSE
+
+	var/datum/move_loop/has_target/jps/mixed/mixed_loop = source
+	mixed_loop.recalculate_path()
+	if(!LAZYLEN(mixed_loop.movement_path))
+		forceMove(our_turf)
+		return FALSE
+
+	forceMove(our_turf)
+
+	var/atom/squeese_through
+	var/atom/squeese_airlock
+
+	for(var/atom/possible_directional in our_turf)
+		if(possible_directional.dir != squeese_dir)
 			continue
-		Move(possible_path)
-		if(get_step_to(src, current_loop_target) == current_turf)
-			Move(current_turf)
-*/
+
+		if(istype(possible_directional, /obj/structure/window))
+			var/obj/structure/window/window = possible_directional
+			if(!window.fulltile && window.density)
+				return FALSE
+
+		else if(istype(possible_directional, /obj/structure/railing))
+			squeese_through = possible_directional
+
+		else if(istype(possible_directional, /obj/machinery/door/window))
+			var/obj/machinery/door/window/windoor = possible_directional
+			if(windoor.powered())
+				return FALSE
+			squeese_through = possible_directional
+
+		else if(istype(possible_directional, /obj/machinery/door/firedoor/border_only))
+			squeese_through = possible_directional
+
+	for(var/atom/squeesie in squeese_turf)
+		if(istype(squeesie, /obj/machinery/door/airlock))
+			var/obj/machinery/door/airlock/airlock = squeesie
+			if(airlock.locked)
+				return FALSE
+			squeese_airlock = airlock
+
+		else if(istype(squeesie, /obj/machinery/door/firedoor/border_only))
+			if(squeesie.dir == get_dir(squeese_turf, our_turf))
+				squeese_through = squeesie
+
+		else if(istype(squeesie, /obj/machinery/door/firedoor))
+			var/obj/machinery/door/firedoor/firelock = squeesie
+			squeese_airlock = firelock
+
+		else if(istype(squeesie, /obj/structure/railing))
+			if(squeesie.dir == get_dir(squeese_turf, our_turf))
+				squeese_through = squeesie
+
+		else if(istype(squeesie, /obj/machinery/door/window))
+			var/obj/machinery/door/window/windoor = squeesie
+			if(windoor.dir != get_dir(squeese_turf, our_turf))
+				continue
+
+			if(windoor.powered())
+				return FALSE
+
+			squeese_through = squeesie
+
+		else if(istype(squeesie, /obj/structure/window))
+			var/obj/structure/window/window = squeesie
+			if(!window.fulltile)
+				if(window.dir == get_dir(squeese_turf, our_turf) && window.density)
+					return FALSE
+			else if(window.density)
+				return FALSE
+
+		else if(!squeesie.CanPass(src, get_dir(squeese_turf, our_turf)))
+			return FALSE
+
+	if(squeese_airlock)
+		for(var/atom/squeesie in squeese_turf)
+			if(istype(squeesie, /obj/machinery/door/airlock) || istype(squeesie, /obj/machinery/door/firedoor) || istype(squeesie, /obj/structure/railing))
+				continue
+
+			if(istype(squeesie, /obj/machinery/door/window))
+				var/obj/machinery/door/window/windoor = squeesie
+				if(windoor.powered() && windoor.dir == squeese_dir)
+					return FALSE
+
+			else if(istype(squeesie, /obj/structure/window))
+				var/obj/structure/window/window = squeesie
+				if(!window.fulltile)
+					if(window.dir == squeese_dir && window.density)
+						return FALSE
+				else if(window.density)
+					return FALSE
+			else if(!squeesie.CanPass(src, get_dir(squeese_turf, our_turf)))
+				return FALSE
+
+		var/turf/squeese_to = get_step(squeese_turf, squeese_dir)
+
+		for(var/atom/squeesie in squeese_to)
+			if(istype(squeesie, /obj/machinery/door/firedoor/border_only) || istype(squeesie, /obj/structure/railing))
+				continue
+
+			if(istype(squeesie, /obj/machinery/door/window))
+				var/obj/machinery/door/window/windoor = squeesie
+				if(windoor.powered() && windoor.dir == get_dir(squeese_to, squeese_turf))
+					return FALSE
+
+			else if(istype(squeesie, /obj/structure/window))
+				var/obj/structure/window/window = squeesie
+				if(!window.fulltile)
+					if(window.dir == get_dir(squeese_to, squeese_turf) && window.density)
+						return FALSE
+				else if(window.density)
+					return FALSE
+
+			else if(!squeesie.CanPass(src, squeese_dir))
+				return FALSE
+
+		visible_message(span_warning("[src] squeeses through [squeese_airlock]!"), span_notice("You squeese through [squeese_airlock]."))
+		Move(squeese_to)
+		return TRUE
+
+	if(squeese_through)
+		visible_message(span_warning("[src] squeeses through [squeese_through]!"), span_notice("You squeese through [squeese_through]."))
+		Move(squeese_turf)
+		return TRUE
+
+	return FALSE
 
 /mob/living/simple_animal/slime/proc/stop_moveloop()
 	if(!current_loop_target)
@@ -492,6 +643,10 @@
 			if (Target)
 				target_patience = rand(5, 7)
 				if (is_adult)
+					target_patience += 3
+				if (hungry == 2)
+					target_patience += 3
+				if (rabid || attacked)
 					target_patience += 3
 
 		if(!Target) // If we have no target, we are wandering or following orders

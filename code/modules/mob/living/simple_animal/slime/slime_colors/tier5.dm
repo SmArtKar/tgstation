@@ -81,13 +81,13 @@
 		var/atom/throw_target = get_edge_target_turf(target_turf, get_dir(slime, victim))
 		victim.throw_at(throw_target, 1, 1, slime)
 		new /obj/effect/cerulean_wall(target_turf)
-		return COLOR_SLIME_NO_ATTACK
+		return COMPONENT_SLIME_NO_ATTACK
 
 	if(fitting_environment && !slime.rabid) //When angry, celerulean slimes just straight up tear shit down, which can lead to horrible outbreaks if they're hungry/rabid
 		return
 
 	attack_target.attack_generic(slime, CERULEAN_SLIME_UNHAPPY_OBJECT_DAMAGE, BRUTE, MELEE, 1)
-	return COLOR_SLIME_NO_ATTACK
+	return COMPONENT_SLIME_NO_ATTACK
 
 /obj/effect/cerulean_wall
 	name = "blueprint wall"
@@ -198,9 +198,14 @@
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/possible_freeze)
 	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/fiery_attack)
+	RegisterSignal(slime, COMSIG_SLIME_REGENERATE_ICONS, .proc/icon_regen)
 
 /datum/slime_color/pyrite/remove()
-	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET))
+	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET, COMSIG_SLIME_REGENERATE_ICONS))
+
+/datum/slime_color/pyrite/proc/icon_regen()
+	if(slime.stat != DEAD && fiery_charge >= 0)
+		slime.icon_state = "[slime.icon_state]-ignited"
 
 /datum/slime_color/pyrite/proc/fiery_attack(datum/source, atom/attack_target)
 	SIGNAL_HANDLER
@@ -229,6 +234,12 @@
 
 /datum/slime_color/pyrite/Life(delta_time, times_fired)
 	. = ..()
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) || DT_PROB(25, delta_time))
+		for(var/mob/living/victim in range(1, src))
+			if(victim.fire_stacks < 2)
+				victim.adjust_fire_stacks(2)
+				victim.IgniteMob()
+
 	var/turf/our_turf = get_turf(slime)
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix?.temperature >= PYRITE_SLIME_COMFORTABLE_TEMPERATURE || (locate(/obj/effect/hotspot) in our_turf))
@@ -252,38 +263,44 @@
 
 /datum/slime_color/bluespace/New(mob/living/simple_animal/slime/slime)
 	. = ..()
-	RegisterSignal(slime, COMSIG_MOVABLE_BUMP, .proc/teleport)
+	RegisterSignal(slime, COMSIG_SLIME_SQUEESING_ATTEMPT, .proc/handle_teleport)
 
 /datum/slime_color/bluespace/remove()
-	UnregisterSignal(slime, COMSIG_MOVABLE_BUMP)
+	UnregisterSignal(slime, COMSIG_SLIME_SQUEESING_ATTEMPT)
 
-/datum/slime_color/bluespace/proc/teleport(datum/source, atom/step_target)
+/datum/slime_color/bluespace/proc/handle_teleport(datum/source, squeese_direction, datum/move_loop/move_loop, bumped)
 	SIGNAL_HANDLER
 
-	to_chat(world, "Bumped into [step_target]")
-
-	if(step_target == slime.Target)
+	var/turf/our_turf = get_turf(slime)
+	if(HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 		return
 
-	var/turf/slime_turf = get_turf(slime)
-	if(HAS_TRAIT(slime_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
+	if(bumped && !((squeese_direction & get_dir(slime, slime.current_loop_target)) || (get_dir(slime, slime.current_loop_target) & squeese_direction)))
 		return
 
-	var/turf/possible_tele_turf = slime_turf
+	var/turf/possible_tele_turf = our_turf
 	var/iter = 1
-	var/turf/target_edge_turf = get_edge_target_turf(slime_turf, get_dir(slime_turf, get_turf(step_target)))
-	for(var/turf/tele_turf in get_line(slime_turf, target_edge_turf))
+	var/turf/target_edge_turf = get_edge_target_turf(our_turf, squeese_direction)
+	for(var/turf/tele_turf in get_line(our_turf, target_edge_turf))
 		if(iter > BLUESPACE_SLIME_TELEPORT_DISTANCE)
 			break
 
-		tele_turf = get_step(tele_turf, get_dir(slime, step_target))
-		if(is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
+		slime.forceMove(tele_turf)
+		if(!get_step_to(slime, slime.current_loop_target) || get_step_to(slime, slime.current_loop_target) == our_turf)
+			slime.forceMove(our_turf)
+			iter += 1
+			continue
+
+		slime.forceMove(our_turf)
+
+		if(tele_turf != our_turf && is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 			possible_tele_turf = tele_turf
-			break
 
 		iter += 1
 
-	if(possible_tele_turf == slime_turf)
+	if(possible_tele_turf == our_turf)
 		return
-	slime_turf.Beam(possible_tele_turf, "bluespace_phase", time = 12)
+
+	our_turf.Beam(possible_tele_turf, "bluespace_phase", time = 12)
 	do_teleport(slime, possible_tele_turf, channel = TELEPORT_CHANNEL_BLUESPACE)
+	return COMPONENT_SLIME_NO_SQUEESING

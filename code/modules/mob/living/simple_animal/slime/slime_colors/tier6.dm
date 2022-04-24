@@ -124,9 +124,6 @@
 /datum/slime_color/adamantine
 	color = "adamantine"
 	coretype = /obj/item/slime_extract/adamantine
-	icon_file = 'icons/mob/big_slimes.dmi'
-	pixel_x = -16
-	pixel_y = -16
 	mutations = null
 
 /datum/slime_color/light_pink

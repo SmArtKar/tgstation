@@ -184,7 +184,7 @@
 		to_chat(src, span_warning("<i>It's too shiny to eat...</i>")) //Let's say slime repellers work using certain light frequencies
 		return FALSE
 
-	if(SEND_SIGNAL(src, COMSIG_SLIME_CAN_FEED, M) & COLOR_SLIME_NO_FEED)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_CAN_FEED, M) & COMPONENT_SLIME_NO_FEED)
 		return
 
 	return TRUE
@@ -196,8 +196,6 @@
 		M.visible_message(span_danger("[name] latches onto [M]!"), \
 						span_userdanger("[name] latches onto [M]!"))
 		stop_moveloop()
-		pixel_x = base_pixel_x
-		pixel_y = base_pixel_y
 	else
 		to_chat(src, span_warning("<i>I have failed to latch onto the subject!</i>"))
 
@@ -214,8 +212,6 @@
 							span_notice("<i>I stopped feeding.</i>"))
 		layer = initial(layer)
 		buckled.unbuckle_mob(src,force=TRUE)
-		pixel_x = base_pixel_x
-		pixel_y = base_pixel_y
 
 /mob/living/simple_animal/slime/verb/Evolve()
 	set category = "Slime"

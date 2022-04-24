@@ -59,6 +59,7 @@
 	var/atom/movable/Digesting = null // AI variable - stores the object that's currently being digested
 	var/mob/living/Leader = null // AI variable - tells the slime to follow this person
 	var/current_loop_target = null // Stores current moveloop target, exists to prevent pointless moveloop creations and deletions
+	var/datum/move_loop/move_loop // Stores currently active moveloop
 
 	var/attacked = 0 // Determines if it's been attacked recently. Can be any number, is a cooloff-ish variable
 	var/rabid = 0 // If set to 1, the slime will attack and eat anything it comes in contact with
@@ -166,20 +167,10 @@
 	set_color(pick(slime_colors))
 
 /mob/living/simple_animal/slime/regenerate_icons()
-	if(SEND_SIGNAL(src, COMSIG_SLIME_REGENERATE_ICONS) & COLOR_SLIME_NO_ICON_REGENERATION)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_REGENERATE_ICONS) & COMPONENT_SLIME_NO_ICON_REGENERATION)
 		return
 
 	cut_overlays()
-	if(slime_color.icon_file)
-		icon = slime_color.icon_file
-	else
-		icon = initial(icon)
-	if(slime_color.pixel_x)
-		base_pixel_x = slime_color.pixel_x
-		pixel_x = base_pixel_x
-	if(slime_color.pixel_y)
-		base_pixel_y = slime_color.pixel_y
-		pixel_y = base_pixel_y
 	var/icon_text = "[slime_color.icon_color][is_adult ? "-adult" : ""]"
 	icon_dead = "[icon_text]-dead[cores ? "" : "-nocore"]"
 	if(stat != DEAD)
@@ -194,14 +185,16 @@
 	if(Digesting)
 		add_overlay(digestion_overlay)
 	if(accessory)
-		var/mutable_appearance/accessory_overlay = mutable_appearance('icons/mob/slimes.dmi', "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		var/mutable_appearance/accessory_overlay = mutable_appearance(icon, "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		accessory_overlay.layer = layer + 0.04
 		if(slime_color.pixel_x)
 			accessory_overlay.pixel_x = -slime_color.pixel_x
 		if(slime_color.pixel_y)
 			accessory_overlay.pixel_y = -slime_color.pixel_y
 		add_overlay(accessory_overlay)
 	if(glittered)
-		var/mutable_appearance/glitter_overlay = mutable_appearance('icons/mob/slimes.dmi', "glitter[is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		var/mutable_appearance/glitter_overlay = mutable_appearance(icon, "glitter[is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
+		glitter_overlay.layer = layer + 0.03
 		if(slime_color.pixel_x)
 			glitter_overlay.pixel_x = -slime_color.pixel_x
 		if(slime_color.pixel_y)

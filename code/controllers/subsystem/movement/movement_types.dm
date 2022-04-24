@@ -431,13 +431,12 @@
 	var/jps_active = FALSE
 
 /datum/move_loop/has_target/jps/mixed/movement_recalculate_path()
-	if(!jps_active)
-		return
 	return ..()
 
 /datum/move_loop/has_target/jps/mixed/move()
 	if(!get_step_to(moving, target))
 		jps_active = TRUE
+		recalculate_path() //Can't do async because it's hard-ass required or else slime will teleport around weirdly like rubberbanding
 		return ..()
 
 	jps_active = FALSE

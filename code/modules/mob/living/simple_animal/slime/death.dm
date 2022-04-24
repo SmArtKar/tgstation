@@ -25,6 +25,8 @@
 	regenerate_icons()
 	for(var/mob/living/simple_animal/slime/slime in view(5, get_turf(src)))
 		slime.adjust_mood(SLIME_MOOD_DEATH_LOSS)
+		if(Target) //Likely our killer
+			slime.add_friendship(Target, -1)
 	stop_moveloop()
 	return ..(gibbed)
 

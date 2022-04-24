@@ -113,7 +113,7 @@
 	SIGNAL_HANDLER
 
 	if(mimicking)
-		return COLOR_SLIME_NO_ICON_REGENERATION
+		return COMPONENT_SLIME_NO_ICON_REGENERATION
 
 /datum/slime_color/pink
 	color = "pink"
@@ -197,6 +197,7 @@
 
 		if((prob(GOLDEN_SLIME_RECRUIT_SLIME_CHANCE) || HAS_TRAIT(slime, TRAIT_SLIME_KING)) && !HAS_TRAIT(other_slime, TRAIT_SLIME_KING)) // And 0% if the other slime is a king
 			other_slime.set_target(attack_target)
+			other_slime.Leader = src
 
 /datum/slime_color/gold/proc/can_feed(datum/source, atom/feed_target)
 	SIGNAL_HANDLER
@@ -209,4 +210,4 @@
 		return
 
 	if(slime.nutrition > slime.get_hunger_nutrition() && slime.mood_level > SLIME_MOOD_LEVEL_POUT)
-		return COLOR_SLIME_NO_FEED
+		return COMPONENT_SLIME_NO_FEED
