@@ -67,6 +67,9 @@
 /// How likely it is for a slime to use a POI when it's bored, per second. Every POI is has it's own check that should average at 25%
 #define SLIME_POI_INTERACT_CHANCE 20
 
+/// How likely it is for a slime to vent when bored and there's a vent nearby
+#define SLIME_VENTCRAWL_CHANCE 5
+
 /// Maximum slime mood
 #define SLIME_MOOD_MAXIMUM 100
 /// How much mood is gained per second if slime is well fed and it's requirements are satisfied

@@ -3,16 +3,20 @@
 	coretype = /obj/item/slime_extract/oil
 	mutations = null
 	environmental_req = "Subject's vacuole is extremely weak and will destabilize under pressures lower than 608 kPa, empowering subject's attacks and making the subject potentially explode on death."
+	var/list/prev_damage_coeffs
 
 /datum/slime_color/oil/New(mob/living/simple_animal/slime/slime)
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/boom)
 	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/boom_attack)
 	ADD_TRAIT(slime, TRAIT_BOMBIMMUNE, ROUNDSTART_TRAIT)
+	prev_damage_coeffs = slime.damage_coeff.Copy()
+	slime.damage_coeff = list(BRUTE = 0.65, BURN = 1, TOX = 1, CLONE = 1, STAMINA = 0, OXY = 1) //They're resistant to brute
 
 /datum/slime_color/oil/remove()
 	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET))
 	REMOVE_TRAIT(slime, TRAIT_BOMBIMMUNE, ROUNDSTART_TRAIT)
+	slime.damage_coeff = prev_damage_coeffs.Copy()
 
 /datum/slime_color/oil/Life(delta_time, times_fired)
 	. = ..()

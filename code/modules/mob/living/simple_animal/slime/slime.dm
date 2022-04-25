@@ -235,10 +235,10 @@
 /mob/living/simple_animal/slime/adjust_bodytemperature()
 	. = ..()
 	var/mod = 0
-	if(bodytemperature >= 330.23) // 135 F or 57.08 C
+	if(bodytemperature >= slime_color.temperature_modifier + 60) // 135 F or 57.08 C
 		mod = -1 // slimes become supercharged at high temperatures
-	else if(bodytemperature < 283.222)
-		mod = ((283.222 - bodytemperature) / 10) * 1.75
+	else if(bodytemperature < slime_color.temperature_modifier + 10)
+		mod = ((slime_color.temperature_modifier + 10 - bodytemperature) / 10) * 1.75
 	if(mod)
 		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/slime_tempmod, multiplicative_slowdown = mod)
 

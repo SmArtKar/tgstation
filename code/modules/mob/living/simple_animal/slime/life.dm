@@ -125,7 +125,47 @@
 	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_TARGET, attack_target) & COMPONENT_SLIME_NO_ATTACK)
 		return
 
+	if(istype(attack_target, /obj/machinery/atmospherics/components/unary/vent_pump))
+		var/obj/machinery/atmospherics/components/unary/vent_pump/vent = attack_target
+		if(!vent.welded)
+			amogus_style(vent)
+			return
+
+	if(istype(attack_target, /obj/machinery/atmospherics/components/unary/vent_scrubber))
+		var/obj/machinery/atmospherics/components/unary/vent_scrubber/scrubber = attack_target
+		if(!scrubber.welded)
+			amogus_style(scrubber)
+			return
+
 	attack_target.attack_slime(src)
+
+/mob/living/simple_animal/slime/proc/amogus_style(obj/machinery/atmospherics/components/unary/enter_vent)
+	var/datum/pipeline/vent_pipeline = enter_vent.parents[1]
+	var/list/possible_exists = list()
+	for(var/obj/machinery/atmospherics/components/unary/vent_pump/vent in vent_pipeline.other_atmos_machines)
+		if(vent.welded)
+			continue
+
+		var/target_amount = 0
+		for(var/mob/living/possible_target in view(5, vent))
+			target_amount += (possible_target.client ? 3 : 1) //Three times as valuable if the mob has a client
+
+		possible_exists[vent] = target_amount
+
+	for(var/obj/machinery/atmospherics/components/unary/vent_scrubber/scrubber in vent_pipeline.other_atmos_machines)
+		if(scrubber.welded)
+			continue
+
+		var/target_amount = 0
+		for(var/mob/living/possible_target in view(5, scrubber))
+			target_amount += (possible_target.client ? 3 : 1)
+
+		possible_exists[scrubber] = target_amount
+
+	var/obj/machinery/atmospherics/components/unary/target_vent = pick_weight(possible_exists)
+	visible_message(span_warning("[src] slips into [enter_vent]!"), span_notice("You slip into [enter_vent] and start moving towards [get_area(target_vent)]."))
+	forceMove(get_turf(target_vent))
+	visible_message(span_warning("[src] emerges from [target_vent]!"))
 
 /mob/living/simple_animal/slime/proc/start_moveloop(atom/move_target)
 	if(move_target == current_loop_target)
@@ -338,12 +378,8 @@
 	else // This is a hot place
 		adjust_bodytemperature(clamp((temp_delta / divisor) * delta_time, 0, temp_delta))
 
-	if(bodytemperature < (slime_color.temperature_modifier + 5)) // start calculating temperature damage etc
-		if(bodytemperature <= (slime_color.temperature_modifier - 40)) // stun temperature
-			ADD_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
-		else
-			REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
-
+	if(bodytemperature <= (slime_color.temperature_modifier - 40)) // stun temperature
+		ADD_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
 		if(bodytemperature <= (slime_color.temperature_modifier - 50)) // hurt temperature
 			if(bodytemperature <= 50) // sqrting negative numbers is bad
 				adjustBruteLoss(100 * delta_time)
@@ -656,15 +692,8 @@
 				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc))
 					start_moveloop(Leader)
 
-			else if(hungry)
-				if (holding_still)
-					holding_still = max(holding_still - (0.5 * hungry * delta_time), 0)
-				else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc) && DT_PROB(50, delta_time))
-					var/picked_dir = pick(GLOB.alldirs)
-					Move(get_step(src, picked_dir), picked_dir)
-
 			else
-				handle_boredom(delta_time, times_fired)
+				handle_boredom(delta_time, times_fired, hungry)
 
 	if(Target && !AIproc)
 		INVOKE_ASYNC(src, .proc/AIprocess)
@@ -675,19 +704,23 @@
 /mob/living/simple_animal/slime/handle_automated_speech()
 	return //slime random speech is currently handled in handle_speech()
 
-/mob/living/simple_animal/slime/proc/handle_boredom(delta_time, times_fired)
+/mob/living/simple_animal/slime/proc/handle_boredom(delta_time, times_fired, hungry)
 	if(holding_still)
-		holding_still = max(holding_still - (0.5 * delta_time), 0)
+		holding_still = max(holding_still - (0.5 * max(hungry, 1) * delta_time), 0)
 		return
-	else if (docile && pulledby)
+	else if (docile && pulledby && !hungry)
 		holding_still = 10
 		return
 
 	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED) || !isturf(loc))
 		return
 
+	if(DT_PROB(SLIME_VENTCRAWL_CHANCE * (hungry + 1), delta_time))
+		if(attempt_ventcrawl())
+			return
+
 	if(!DT_PROB(SLIME_POI_INTERACT_CHANCE, delta_time))
-		if(DT_PROB(25, delta_time))
+		if(DT_PROB(25 + (25 * (hungry > 0)), delta_time))
 			var/picked_dir = pick(GLOB.alldirs)
 			Move(get_step(src, picked_dir), picked_dir)
 		return
@@ -702,6 +735,48 @@
 		return
 
 	set_target(pick(points_of_interest))
+
+/mob/living/simple_animal/slime/proc/attempt_ventcrawl()
+	var/list/vents_and_scrubbers = list()
+	for(var/obj/machinery/atmospherics/components/unary/vent_pump/vent in view(7, src))
+		if(vent.welded)
+			continue
+
+		var/datum/pipeline/vent_pipeline = vent.parents[1]
+		var/datum/gas_mixture/pipe_gas = vent_pipeline.air
+		if(pipe_gas.temperature < slime_color.temperature_modifier) //No vent suicides
+			continue
+
+		if(pipe_gas.gases[/datum/gas/bz] && pipe_gas.gases[/datum/gas/bz][MOLES]) //If you pump BZ into vents you can stop slimes from venting
+			continue
+
+		if(!get_path_to(src, vent)) //Not easily pathfindable to
+			continue
+
+		vents_and_scrubbers += vent
+
+	for(var/obj/machinery/atmospherics/components/unary/vent_scrubber/scrubber in view(7, src))
+		if(scrubber.welded)
+			continue
+
+		var/datum/pipeline/scrubber_pipeline = scrubber.parents[1]
+		var/datum/gas_mixture/pipe_gas = scrubber_pipeline.air
+		if(pipe_gas.temperature < slime_color.temperature_modifier)
+			continue
+
+		if(pipe_gas.gases[/datum/gas/bz] && pipe_gas.gases[/datum/gas/bz][MOLES])
+			continue
+
+		if(!get_path_to(src, scrubber)) //Not easily pathfindable to
+			continue
+
+		vents_and_scrubbers += scrubber
+
+	if(!LAZYLEN(vents_and_scrubbers))
+		return FALSE
+
+	set_target(pick(vents_and_scrubbers))
+	return TRUE
 
 /mob/living/simple_animal/slime/proc/handle_mood(delta_time, times_fired)
 	if(mood_level < 0)

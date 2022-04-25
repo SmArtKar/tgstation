@@ -294,6 +294,10 @@
 		slime.forceMove(our_turf)
 
 		if(tele_turf != our_turf && is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
+			var/datum/gas_mixture/air = tele_turf.return_air()
+			if(air.gases[/datum/gas/bz] && air.gases[/datum/gas/bz][MOLES])
+				iter += 1
+				continue
 			possible_tele_turf = tele_turf
 
 		iter += 1
