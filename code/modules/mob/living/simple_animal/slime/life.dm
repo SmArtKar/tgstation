@@ -1,10 +1,3 @@
-
-/mob/living/simple_animal/slime
-	var/AIproc = 0 // determines if the AI loop is activated
-	var/Atkcool = 0 // attack cooldown
-	var/Discipline = 0 // if a slime has been hit with a freeze gun, or wrestled/attacked off a human, they become disciplined and don't attack anymore for a while
-
-
 /mob/living/simple_animal/slime/Life(delta_time = SSMOBS_DT, times_fired)
 	if (notransform)
 		return

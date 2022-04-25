@@ -73,15 +73,15 @@
 /// Maximum slime mood
 #define SLIME_MOOD_MAXIMUM 100
 /// How much mood is gained per second if slime is well fed and it's requirements are satisfied
-#define SLIME_MOOD_PASSIVE_GAIN 0.5
+#define SLIME_MOOD_PASSIVE_GAIN 0.2
 /// How much mood per second is lost when mood is higher than happy threshold
-#define SLIME_MOOD_PASSIVE_LOSS -0.25
+#define SLIME_MOOD_PASSIVE_LOSS -0.1
 /// How much mood is lost per second when slime is hungry
-#define SLIME_MOOD_HUNGRY_LOSS -1
+#define SLIME_MOOD_HUNGRY_LOSS -0.2
 /// How much mood is lost per second when slime is starving
-#define SLIME_MOOD_STARVING_LOSS -3
+#define SLIME_MOOD_STARVING_LOSS -0.5
 /// How much mood is lost when slime's requirements are not satisfied
-#define SLIME_MOOD_REQUIREMENTS_LOSS -5
+#define SLIME_MOOD_REQUIREMENTS_LOSS -1
 /// Maximum level that can be achieved by passive gain. It's calculated by passive level + random offset
 #define SLIME_MOOD_PASSIVE_LEVEL 45
 #define SLIME_MOOD_PASSIVE_LEVEL_OFFSET 15
@@ -100,7 +100,7 @@
 #define SLIME_MOOD_DEATH_LOSS -45
 
 /// How much mood is gained by playing with a plushie
-#define SLIME_MOOD_PLUSHIE_PLAY_GAIN 30
+#define SLIME_MOOD_PLUSHIE_PLAY_GAIN 20
 
 /// How likely it is for a slime to misbehave when it's pouting, per second
 #define SLIME_MISBEHAVE_CHANCE_POUTING 0.5

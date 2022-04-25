@@ -68,6 +68,10 @@
 	var/digestion_progress = 0 //AI variable, starts at 0 and goes to 100
 	var/mood_level = 50 //AI variable, from 0 to 100, determines slime's mood and it's behaviour
 
+	var/AIproc = 0 // determines if the AI loop is activated
+	var/Atkcool = 0 // attack cooldown
+	var/Discipline = 0 // if a slime has been hit with a freeze gun, or wrestled/attacked off a human, they become disciplined and don't attack anymore for a while
+
 	var/mutable_appearance/digestion_overlay = null //Used for displaying what slime is digesting right now
 	var/next_overlay_scale = 0.6 //Used for optimisation of digestion animation
 
