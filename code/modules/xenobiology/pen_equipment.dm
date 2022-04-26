@@ -110,11 +110,10 @@
 	toggle(FALSE)
 	return ..()
 
-/obj/machinery/xenobio_device/attackby(obj/item/W, mob/user, params)
-	if(default_unfasten_wrench(user, W))
-		return
-
-	return ..()
+/obj/machinery/xenobio_device/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	default_unfasten_wrench(user, W)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /obj/machinery/xenobio_device/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
 	. = ..()
@@ -147,8 +146,11 @@
 	return TRUE
 
 /obj/machinery/xenobio_device/update_icon_state()
-	icon_state = "[base_icon_state][on ? "" : "-off"]"
+	set_icon_state()
 	return ..()
+
+/obj/machinery/xenobio_device/proc/set_icon_state()
+	icon_state = "[base_icon_state][on ? "" : "-off"]"
 
 /obj/machinery/xenobio_device/vacuole_stabilizer
 	name = "vacuole stabilizer"
@@ -237,11 +239,12 @@
 	device_type = /obj/item/xenobio_deployable/bluespace_anchor
 	var/list/affected_turfs = list()
 	var/list/visual_effects = list()
+	var/charges = 0
 
 /obj/machinery/xenobio_device/bluespace_anchor/toggle(new_state = TRUE)
 	. = ..()
 
-	if(!on)
+	if(!on || charges <= 0)
 		for(var/turf/turf in affected_turfs)
 			REMOVE_TRAIT(turf, TRAIT_BLUESPACE_SLIME_FIXATION, XENOBIO_DEPLOYABLE_TRAIT)
 
@@ -359,6 +362,19 @@
 					edge.icon_state = "bluespace_field_corner"
 					edge.update_icon()
 
+/obj/machinery/xenobio_device/bluespace_anchor/process(delta_time)
+	. = ..()
+	if(!.)
+		return
+
+	if(on)
+		charges = max(0, charges - delta_time / BLUESPACE_ANCHOR_CHARGE_TIME)
+		if(charges <= 0)
+			toggle(FALSE)
+
+/obj/machinery/xenobio_device/bluespace_anchor/set_icon_state()
+	icon_state = "[base_icon_state][on ? "" : (charges > 0 ? "-off" : "-empty")]"
+
 /obj/effect/bluespace_field_edge
 	icon_state = "bluespace_field_edge"
 
@@ -367,6 +383,16 @@
 	playsound(get_turf(src), 'sound/machines/click.ogg', 75, TRUE)
 	visible_message(span_warning("[src] fails to boot up and detaches itself from the floor."))
 	qdel(src)
+
+/obj/machinery/xenobio_device/bluespace_anchor/attackby(obj/item/tool, mob/user, params)
+	. = ..()
+	if(istype(tool, /obj/item/stack/ore/bluespace_crystal) || istype(tool, /obj/item/stack/sheet/bluespace_crystal))
+		var/obj/item/stack/bs_crystal = tool
+		var/charges_to_add = min(bs_crystal.get_amount(), BLUESPACE_ANCHOR_CAPACITY - round(charges))
+		bs_crystal.add(-charges_to_add)
+		charges += charges_to_add
+		update_icon()
+		to_chat(user, span_notice("You refill [src] with [bs_crystal]."))
 
 /obj/machinery/xenobio_device/pyrite_thrower
 	name = "pyrite thrower"
