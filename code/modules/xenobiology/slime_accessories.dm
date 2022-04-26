@@ -73,3 +73,23 @@
 	former_owner.add_friendship(equipper, -5)
 	former_owner.visible_message(span_warning("[former_owner] tries to hold onto [former_owner.p_their()] [name] as it's being removed by [equipper]!"))
 	former_owner.adjust_mood(-35)
+
+/obj/item/slime_accessory/demorpher
+	name = "AX-L demorphing module"
+	desc = "A small badge-like device that spreads it's nanites throughout the slime it's connected to to and prevents them from changing their form."
+	icon_state = "accessory_demorpher"
+
+/obj/item/slime_accessory/demorpher/slime_equipped(mob/living/simple_animal/slime/new_owner, mob/living/equipper = null)
+	RegisterSignal(new_owner, COMSIG_SLIME_POST_REGENERATE_ICONS, .proc/add_slime_overlay)
+	. = ..()
+
+/obj/item/slime_accessory/demorpher/proc/add_slime_overlay()
+	SIGNAL_HANDLER
+
+	var/mutable_appearance/nanite_overlay = mutable_appearance(owner.icon, "[icon_state][owner.is_adult ? "-adult" : ""][owner.stat == DEAD ? "-dead" : ""]-overlay")
+	nanite_overlay.layer = owner.layer + 0.03
+	owner.add_overlay(nanite_overlay)
+	owner.update_icon()
+
+/obj/item/slime_accessory/demorpher/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
+	return FALSE

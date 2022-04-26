@@ -172,13 +172,12 @@
 	current_loop_target = move_target
 
 	move_loop = SSmove_manager.mixed_move(src,
-													   		  current_loop_target,
-													   		  sleeptime,
-													   		  repath_delay = 0.5 SECONDS,
-													   		  max_path_length = AI_MAX_PATH_LENGTH,
-													   		  minimum_distance = 1,
-													   		  simulated_only = TRUE,
-													   		  )
+										  current_loop_target,
+										  sleeptime,
+										  repath_delay = 0.5 SECONDS,
+										  max_path_length = AI_MAX_PATH_LENGTH,
+										  minimum_distance = 1,
+										  )
 	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
 	RegisterSignal(move_loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
 	SEND_SIGNAL(src, COMSIG_SLIME_START_MOVE_LOOP, move_loop)
@@ -256,21 +255,29 @@
 			squeese_through = possible_directional
 
 		else if(istype(possible_directional, /obj/machinery/door/firedoor/border_only))
+			var/obj/machinery/door/firedoor/border_only/firelock = possible_directional
+			if(firelock.welded)
+				return FALSE
 			squeese_through = possible_directional
 
 	for(var/atom/squeesie in squeese_turf)
 		if(istype(squeesie, /obj/machinery/door/airlock))
 			var/obj/machinery/door/airlock/airlock = squeesie
-			if(airlock.locked)
+			if(airlock.locked || airlock.welded)
 				return FALSE
 			squeese_airlock = airlock
 
 		else if(istype(squeesie, /obj/machinery/door/firedoor/border_only))
+			var/obj/machinery/door/firedoor/border_only/firelock = squeesie
 			if(squeesie.dir == get_dir(squeese_turf, our_turf))
+				if(firelock.welded)
+					return FALSE
 				squeese_through = squeesie
 
 		else if(istype(squeesie, /obj/machinery/door/firedoor))
 			var/obj/machinery/door/firedoor/firelock = squeesie
+			if(firelock.welded)
+				return FALSE
 			squeese_airlock = firelock
 
 		else if(istype(squeesie, /obj/structure/railing))
@@ -321,10 +328,15 @@
 		var/turf/squeese_to = get_step(squeese_turf, squeese_dir)
 
 		for(var/atom/squeesie in squeese_to)
-			if(istype(squeesie, /obj/machinery/door/firedoor/border_only) || istype(squeesie, /obj/structure/railing))
+			if(istype(squeesie, /obj/machinery/door/firedoor/border_only))
+				var/obj/machinery/door/firedoor/border_only/firelock = squeesie
+				if(firelock.dir == get_dir(squeese_to, squeese_turf) && firelock.welded)
+					return FALSE
+
+			else if(istype(squeesie, /obj/structure/railing))
 				continue
 
-			if(istype(squeesie, /obj/machinery/door/window))
+			else if(istype(squeesie, /obj/machinery/door/window))
 				var/obj/machinery/door/window/windoor = squeesie
 				if(windoor.powered() && windoor.dir == get_dir(squeese_to, squeese_turf))
 					return FALSE

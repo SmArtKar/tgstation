@@ -36,12 +36,14 @@
 #define SLIME_VALUE_TIER_6 6400
 #define SLIME_VALUE_TIER_7 12800
 
-#define SLIME_SELL_MODIFIER_MIN 	  -0.09
-#define SLIME_SELL_MODIFIER_MAX 	  -0.06
-#define SLIME_SELL_OTHER_MODIFIER_MIN 0.02
-#define SLIME_SELL_OTHER_MODIFIER_MAX 0.05
+#define SLIME_SELL_MODIFIER_MIN 	  -0.03
+#define SLIME_SELL_MODIFIER_MAX 	  -0.01
+#define SLIME_SELL_OTHER_MODIFIER_MIN 0.002
+#define SLIME_SELL_OTHER_MODIFIER_MAX 0.005
 #define SLIME_SELL_MAXIMUM_MODIFIER   2
 #define SLIME_SELL_MINIMUM_MODIFIER   0.25
+#define SLIME_RANDOM_MODIFIER_MIN -0.0003
+#define SLIME_RANDOM_MODIFIER_MAX 0.0003
 
 /// How many seconds it takes for slime to generate a core
 #define SLIME_MAX_CORE_GENERATION 30
@@ -68,7 +70,7 @@
 #define SLIME_POI_INTERACT_CHANCE 20
 
 /// How likely it is for a slime to vent when bored and there's a vent nearby
-#define SLIME_VENTCRAWL_CHANCE 5
+#define SLIME_VENTCRAWL_CHANCE 2
 
 /// Maximum slime mood
 #define SLIME_MOOD_MAXIMUM 100
@@ -201,20 +203,16 @@
 /// This is required due to flame and hotspot inconsistency
 #define PYRITE_SLIME_MAX_FIERY_CHARGE 25
 
-/// Cerulean slimes will check for starlight in this range
-#define CERULEAN_SLIME_STARLIGHT_RANGE 2
-/// How much charge can cerulean slime hold
-#define CERULEAN_SLIME_MAX_CHARGE 100
-/// How much charged a slime needs to make a wall
-#define CERULEAN_SLIME_CHARGE_PER_WALL 20
-/// How much cerulean charge is gained per second
-#define CERULEAN_SLIME_CHARGE_PER_SECOND 1
-/// How much cerulean charge is gained additionnaly through starlight turfs
-#define CERULEAN_SLIME_CHARGE_PER_STARLIGHT 0.05
-/// How much damage cerulean slimes do
-#define CERULEAN_SLIME_UNHAPPY_OBJECT_DAMAGE 25 /// Enough to break airlocks. GIVE THEM THE STARLIGHT THEY WANT
-/// Probability of cerulean slime knockbacking their target and fabricating a wall
-#define CERULEAN_SLIME_WALL_PROBABILITY 30
+/// Maximum safe pressure for cerulean slimes
+#define CERULEAN_SLIME_MAX_SAFE_PRESSURE 15
+/// Cooldown between cerulean slime lunges
+#define CERULEAN_SLIME_LUNGE_COOLDOWN 16 SECONDS
+/// How likely it is for a cerulean slime to use TK when it's requirements are satisfied
+#define CERULEAN_SLIME_TELEKINESIS_CHANCE 1 //Painting the windows of the pen black is probably a good idea
+/// How likely it is for a cerulean slime to use TK when it's requirements are NOT satisfied
+#define CERULEAN_SLIME_AGRESSIVE_TELEKINESIS_CHANCE 10
+/// How much HP cerulean slimes regenerate per second in vacuum
+#define CERULEAN_SLIME_VACUUM_HEALING 5
 
 /// Required pressure for oil slimes
 #define OIL_SLIME_REQUIRED_PRESSURE ONE_ATMOSPHERE * 6

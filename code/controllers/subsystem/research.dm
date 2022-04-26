@@ -109,6 +109,12 @@ SUBSYSTEM_DEF(research)
 		science_tech.add_point_list(bitcoins)
 	last_income = world.time
 
+	for(var/core_type in slime_core_prices)
+		var/obj/item/slime_extract/core = core_type
+		var/price_mod = rand(SLIME_RANDOM_MODIFIER_MIN * 1000000, SLIME_RANDOM_MODIFIER_MAX * 1000000) / 1000000
+		var/price_limiter = 1 - ((default_core_prices[initial(core.tier)] * SLIME_SELL_MINIMUM_MODIFIER) / slime_core_prices[core_type])
+		slime_core_prices[core_type] = (1 + price_mod * price_limiter) * slime_core_prices[core_type]
+
 /datum/controller/subsystem/research/proc/initialize_xenobio_corporations()
 	for(var/corporation_type in subtypesof(/datum/xenobio_corporation))
 		var/datum/xenobio_corporation/corporation = new corporation_type()

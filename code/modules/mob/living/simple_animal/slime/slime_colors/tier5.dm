@@ -3,130 +3,119 @@
 	coretype = /obj/item/slime_extract/cerulean
 	mutations = null
 	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_BLUESPACE_CONNECTION
-	environmental_req = "Subject requires starlight to function and is able to use to it to manipulate matter."
-	var/blueprint_charge = 0
+	environmental_req = "Subject has telekinetic capabilities and requires vacuum to survive."
+	var/slime_flying = FALSE
+	COOLDOWN_DECLARE(lunge_cooldown)
 
 /datum/slime_color/cerulean/New(slime)
 	. = ..()
-	blueprint_charge = CERULEAN_SLIME_MAX_CHARGE / 2
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/slime_attack)
+	RegisterSignal(slime, COMSIG_MOVABLE_IMPACT, .proc/successful_lunge)
 
 /datum/slime_color/cerulean/remove()
-	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET)
-
-/datum/slime_color/cerulean/proc/turf_starlight_check(turf/target, direction, iteration = 0)
-	if(iteration > CERULEAN_SLIME_STARLIGHT_RANGE)
-		return FALSE
-
-	if(isspaceturf(target))
-		return TRUE
-
-	var/area/target_area = get_area(target)
-	if(target_area.outdoors)
-		return TRUE
-
-	if(direction == ZTRAIT_UP)
-		var/turf/second_target = target.above()
-
-		if(!second_target)
-			return FALSE
-
-		if(!istransparentturf(second_target) && !isopenturf(second_target))
-			return FALSE
-
-		return starlight_check(second_target, direction, iteration + 1)
-	else
-		if(!istransparentturf(target) && !isopenturf(target))
-			return FALSE
-
-		var/turf/second_target = target.below()
-
-		if(!second_target)
-			return TRUE
-		else
-			return starlight_check(second_target, direction, iteration + 1)
-
-/datum/slime_color/cerulean/proc/starlight_check() //Because range is 2, you want to put a glass tile in the center of the pen or something
-	var/starlight_turfs = 0
-	for(var/turf/target in view(CERULEAN_SLIME_STARLIGHT_RANGE, get_turf(slime)))
-		if(turf_starlight_check(target, ZTRAIT_UP) || turf_starlight_check(target, ZTRAIT_DOWN))
-			starlight_turfs += 1
-
-	return starlight_turfs
+	UnregisterSignal(slime, COMSIG_MOVABLE_IMPACT)
 
 /datum/slime_color/cerulean/Life(delta_time, times_fired)
 	. = ..()
-	var/starlight_turfs = starlight_check()
-	if(starlight_turfs)
-		blueprint_charge = min(delta_time * (CERULEAN_SLIME_CHARGE_PER_SECOND + (starlight_turfs - 1) * CERULEAN_SLIME_CHARGE_PER_STARLIGHT), CERULEAN_SLIME_MAX_CHARGE)
+
+	if(slime.Target && COOLDOWN_FINISHED(src, lunge_cooldown) && isliving(slime.Target))
+		attempt_lunge()
+
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	if(our_mix.return_pressure() < CERULEAN_SLIME_MAX_SAFE_PRESSURE)
+		ADD_TRAIT(slime, TRAIT_SPACEWALK, INNATE_TRAIT)
 		fitting_environment = TRUE
+		temperature_modifier = -10 //Space-roaming slimes! -10 because slimes get slowed down on temperature_modifier + 10
+		handle_telekinesis(delta_time, times_fired, FALSE)
+		slime.adjustBruteLoss(CERULEAN_SLIME_VACUUM_HEALING * delta_time) //Slow spess healing
 		return
 
-	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
+	REMOVE_TRAIT(slime, TRAIT_SPACEWALK, INNATE_TRAIT)
+	temperature_modifier = initial(temperature_modifier) //Or not so much
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
+	handle_telekinesis(delta_time, times_fired, TRUE)
 
-/datum/slime_color/cerulean/proc/slime_attack(datum/source, atom/movable/attack_target)
-	SIGNAL_HANDLER
+/datum/slime_color/cerulean/proc/attempt_lunge()
+	if(!(slime.Target in view(7, slime)))
+		return
 
-	if(isliving(attack_target))
-		var/mob/living/victim = attack_target
-		if(!prob(CERULEAN_SLIME_WALL_PROBABILITY) || !victim.client) //Don't spawn walls when feeding on clientless mobs
+	if(get_dist(slime, slime.Target) <= 1) //No bullshit melee knockdowns
+		return
+
+	for(var/turf/lunge_turf in get_line(slime, slime.Target))
+		if(lunge_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE))
 			return
 
-		for(var/obj/effect/cerulean_wall/wall in range(1, slime)) //No wall spam
-			if(istype(wall))
-				return
+	COOLDOWN_START(src, lunge_cooldown, CERULEAN_SLIME_LUNGE_COOLDOWN)
+	slime.visible_message(span_warning("[slime] lunges at [slime.Target]!"), span_notice("You lunge at [slime.Target]!"))
+	slime.throw_at(slime.Target, 7, 1, src, FALSE)
 
-		var/turf/target_turf = get_turf(victim)
-		var/atom/throw_target = get_edge_target_turf(target_turf, get_dir(slime, victim))
-		victim.throw_at(throw_target, 1, 1, slime)
-		new /obj/effect/cerulean_wall(target_turf)
-		return COMPONENT_SLIME_NO_ATTACK
+/datum/slime_color/cerulean/proc/successful_lunge(datum/source, atom/hit_atom, datum/thrownthing/throwingdatum)
+	SIGNAL_HANDLER
 
-	if(fitting_environment && !slime.rabid) //When angry, celerulean slimes just straight up tear shit down, which can lead to horrible outbreaks if they're hungry/rabid
+	if(!isliving(hit_atom))
 		return
 
-	attack_target.attack_generic(slime, CERULEAN_SLIME_UNHAPPY_OBJECT_DAMAGE, BRUTE, MELEE, 1)
-	return COMPONENT_SLIME_NO_ATTACK
+	var/mob/living/victim = hit_atom
+	to_chat(victim, span_userdanger("You are knocked down by [src]'s lunge!"))
+	victim.Knockdown(8 SECONDS)
+	victim.Paralyze(4 SECONDS)
 
-/obj/effect/cerulean_wall
-	name = "blueprint wall"
-	desc = "This wall looks like it's made out of blueprint paper."
-	icon_state = "cerulean_wall"
-	anchored = TRUE
-	density = TRUE
-	opacity = TRUE
-	pass_flags_self = PASSCLOSEDTURF
-	layer = ABOVE_ALL_MOB_LAYER
-	plane = ABOVE_GAME_PLANE
+/datum/slime_color/cerulean/proc/handle_telekinesis(delta_time, times_fired, agressive)
+	if(!DT_PROB(agressive ? CERULEAN_SLIME_AGRESSIVE_TELEKINESIS_CHANCE : CERULEAN_SLIME_TELEKINESIS_CHANCE, delta_time))
+		return
 
-/obj/effect/cerulean_wall/Initialize(mapload)
-	. = ..()
-	icon_state = ""
-	update_icon()
-	new /obj/effect/temp_visual/cerulean_wall_construction(get_turf(src))
-	addtimer(CALLBACK(src, .proc/create_wall), 2.775)
+	var/list/openable_airlocks = list()
+	for(var/obj/machinery/door/firedoor/firelock in view(9, slime))
+		if(!firelock.powered() && !firelock.welded && firelock.density)
+			openable_airlocks += firelock
 
-/obj/effect/cerulean_wall/proc/create_wall()
-	icon_state = "cerulean_wall"
-	update_icon()
-	addtimer(CALLBACK(src, .proc/tear_apart), 10 SECONDS)
+	for(var/obj/machinery/door/window/windoor in view(9, slime))
+		if(!windoor.powered() && windoor.density)
+			openable_airlocks += windoor
 
-/obj/effect/cerulean_wall/proc/tear_apart()
-	new /obj/effect/temp_visual/cerulean_wall_construction/reverse(get_turf(src))
-	QDEL_IN(src, 2.4)
+	for(var/obj/machinery/door/airlock/airlock in view(9, slime))
+		if(!airlock.powered() && !airlock.welded && !airlock.locked && airlock.density)
+			openable_airlocks += airlock
 
-/obj/effect/temp_visual/cerulean_wall_construction
-	icon = 'icons/effects/effects_rcd.dmi'
-	icon_state = "rcd_cerulean"
-	layer = FLY_LAYER
-	plane = ABOVE_GAME_PLANE
-	anchored = TRUE
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	duration = 6
+	if(LAZYLEN(openable_airlocks)) //Allows for much more agressive AI targeting and pathfinding
+		var/obj/machinery/door/door_to_open = pick(openable_airlocks)
+		door_to_open.visible_message(span_warning("[door_to_open] is pried open by an invisible force!"))
+		door_to_open.open(2)
+		for(var/turf/open/open_turf in range(2, door_to_open))
+			if(prob(20))
+				new /obj/effect/temp_visual/cerulean_sparkles(open_turf)
+		return
 
-/obj/effect/temp_visual/cerulean_wall_construction/reverse
-	icon_state = "rcd_cerulean_reverse"
+	var/list/throwable_objects = list()
+	var/list/throwable_weights = list()
+	for(var/obj/possible_throw in view(9, get_turf(slime)))
+		if(possible_throw.anchored)
+			continue
+
+		var/list/possible_targets = list()
+		var/target_weight = 0
+		for(var/mob/living/possible_target in view(5, get_turf(possible_throw)))
+			if(isslime(possible_target))
+				continue
+
+			for(var/turf/turf_in_line in get_line(get_turf(possible_throw), get_turf(possible_target)))
+				if(turf_in_line.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE))
+					continue
+				possible_targets[possible_target] = (6 - get_dist(possible_throw, possible_target)) * (2 - !(possible_target.client))
+				target_weight += (6 - get_dist(possible_throw, possible_target)) * (2 - !(possible_target.client))
+
+		if(!target_weight)
+			continue
+
+		throwable_objects[possible_throw] = possible_targets
+		throwable_weights[possible_throw] = target_weight * possible_throw.throwforce
+
+	if(!LAZYLEN(throwable_weights))
+		return
+
+	var/obj/throwable = pick_weight(throwable_weights)
+	new /obj/effect/temp_visual/cerulean_sparkles(get_turf(throwable))
+	throwable.throw_at(pick_weight(throwable_objects[throwable]), 9, 1, slime)
 
 /datum/slime_color/sepia
 	color = "sepia"
@@ -198,12 +187,14 @@
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/possible_freeze)
 	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/fiery_attack)
-	RegisterSignal(slime, COMSIG_SLIME_REGENERATE_ICONS, .proc/icon_regen)
+	RegisterSignal(slime, COMSIG_SLIME_POST_REGENERATE_ICONS, .proc/icon_regen)
 
 /datum/slime_color/pyrite/remove()
 	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET, COMSIG_SLIME_REGENERATE_ICONS))
 
 /datum/slime_color/pyrite/proc/icon_regen()
+	SIGNAL_HANDLER
+
 	if(slime.stat != DEAD && fiery_charge >= 0)
 		slime.icon_state = "[slime.icon_state]-ignited"
 

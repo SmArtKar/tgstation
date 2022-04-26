@@ -18,15 +18,9 @@
 	for(var/i = 1 to max_relationship_level)
 		bounties_by_level += list()
 
-/datum/xenobio_corporation/proc/get_bounties_by_level(bounty_level = 1)
-	if(bounty_level in bounties_by_level)
-		return bounties_by_level[bounty_level]
-
-	var/list/bounties_to_return = list()
 	for(var/bounty_subtype in subtypesof(bounty_type))
-		var/datum/xenobio_bounty/bounty = bounty_subtype
-		if(initial(bounty.bounty_level) != bounty_level)
-			continue
-		bounties_to_return.Add(new bounty_subtype(src))
-	bounties_by_level[bounty_level] = bounties_to_return
-	return bounties_to_return
+		var/datum/xenobio_bounty/bounty = new bounty_subtype(src)
+		bounties_by_level[bounty.bounty_level] += bounty
+
+/datum/xenobio_corporation/proc/get_bounties_by_level(bounty_level = 1)
+	return bounties_by_level[bounty_level]

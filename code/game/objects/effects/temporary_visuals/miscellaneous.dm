@@ -266,6 +266,10 @@
 	icon_state = "empdisable"
 	duration = 5
 
+/obj/effect/temp_visual/cerulean_sparkles
+	icon_state = "cerulean_sparkles"
+	duration = 6
+
 /obj/effect/temp_visual/emp
 	name = "emp sparks"
 	icon_state = "empdisable"
@@ -420,6 +424,9 @@
 	pixel_x = rand(-4,0)
 	pixel_y = rand(8,12)
 	animate(src, pixel_y = pixel_y + 16, alpha = 0, time = duration)
+
+/obj/effect/temp_visual/annoyed/slime
+	icon_state = "slime_annoyed"
 
 /obj/effect/temp_visual/bleed
 	name = "bleed"

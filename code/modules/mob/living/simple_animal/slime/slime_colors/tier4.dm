@@ -53,6 +53,15 @@
 
 /datum/slime_color/green/Life(delta_time, times_fired)
 	. = ..()
+	if(slime.accessory && istype(slime.accessory, /obj/item/slime_accessory/demorpher))
+		fitting_environment = TRUE
+		if(mimicking)
+			exit_stealth()
+		return
+
+	fitting_environment = FALSE
+	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
+
 	if(mimicking)
 		if(DT_PROB(GREEN_SLIME_UNMIMICK_CHANCE, delta_time))
 			exit_stealth()
@@ -125,6 +134,7 @@
 	. = ..()
 
 	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
+		new /obj/effect/temp_visual/annoyed/slime(get_turf(slime))
 		start_hallucinations()
 
 	var/slime_amount = 0
@@ -151,6 +161,7 @@
 			return
 
 	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
+	new /obj/effect/temp_visual/annoyed/slime(get_turf(slime))
 	if(DT_PROB(PINK_SLIME_HALLUCINATION_CHANCE, delta_time))
 		start_hallucinations()
 

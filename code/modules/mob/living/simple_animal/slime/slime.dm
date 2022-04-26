@@ -190,20 +190,13 @@
 		add_overlay(digestion_overlay)
 	if(accessory)
 		var/mutable_appearance/accessory_overlay = mutable_appearance(icon, "[accessory.icon_state][is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
-		accessory_overlay.layer = layer + 0.04
-		if(slime_color.pixel_x)
-			accessory_overlay.pixel_x = -slime_color.pixel_x
-		if(slime_color.pixel_y)
-			accessory_overlay.pixel_y = -slime_color.pixel_y
+		accessory_overlay.layer = layer + 0.05
 		add_overlay(accessory_overlay)
 	if(glittered)
 		var/mutable_appearance/glitter_overlay = mutable_appearance(icon, "glitter[is_adult ? "-adult" : ""][stat == DEAD ? "-dead" : ""]")
-		glitter_overlay.layer = layer + 0.03
-		if(slime_color.pixel_x)
-			glitter_overlay.pixel_x = -slime_color.pixel_x
-		if(slime_color.pixel_y)
-			glitter_overlay.pixel_y = -slime_color.pixel_y
+		glitter_overlay.layer = layer + 0.04
 		add_overlay(glitter_overlay)
+	SEND_SIGNAL(src, COMSIG_SLIME_POST_REGENERATE_ICONS)
 	return ..()
 
 /**

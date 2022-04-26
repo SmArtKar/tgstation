@@ -81,21 +81,21 @@
 	. = ..()
 
 /obj/machinery/slime_market_pad/proc/sell_extract(obj/item/slime_extract/extract, obj/item/card/id/card)
-	card.xenobio_points += SSresearch.slime_core_prices[extract.type]
+	card.xenobio_points += round(SSresearch.slime_core_prices[extract.type])
 
-	var/price_mod = rand(SLIME_SELL_MODIFIER_MIN * 1000, SLIME_SELL_MODIFIER_MAX * 1000) / 1000
+	var/price_mod = rand(SLIME_SELL_MODIFIER_MIN * 10000, SLIME_SELL_MODIFIER_MAX * 10000) / 10000
 	var/price_limiter = 1 - ((SSresearch.default_core_prices[extract.tier] * SLIME_SELL_MINIMUM_MODIFIER) / SSresearch.slime_core_prices[extract.type])
-	SSresearch.slime_core_prices[extract.type] = round((1 + price_mod * price_limiter) * SSresearch.slime_core_prices[extract.type])
+	SSresearch.slime_core_prices[extract.type] = (1 + price_mod * price_limiter) * SSresearch.slime_core_prices[extract.type]
 
 	for(var/core_type in SSresearch.slime_core_prices)
 		if(core_type == extract.type)
 			continue
 
 		var/obj/item/slime_extract/core = core_type
-		price_mod = rand(SLIME_SELL_OTHER_MODIFIER_MIN * 1000, SLIME_SELL_OTHER_MODIFIER_MAX * 1000) / 1000
+		price_mod = rand(SLIME_SELL_OTHER_MODIFIER_MIN * 100000, SLIME_SELL_OTHER_MODIFIER_MAX * 100000) / 100000
 		price_limiter = 1 - (SSresearch.slime_core_prices[core_type] / (SSresearch.default_core_prices[initial(core.tier)] * SLIME_SELL_MAXIMUM_MODIFIER))
 
-		SSresearch.slime_core_prices[core_type] = round((1 + price_mod * price_limiter) * SSresearch.slime_core_prices[core_type])
+		SSresearch.slime_core_prices[core_type] = (1 + price_mod * price_limiter) * SSresearch.slime_core_prices[core_type]
 	qdel(extract)
 
 /obj/machinery/slime_bounty_pad

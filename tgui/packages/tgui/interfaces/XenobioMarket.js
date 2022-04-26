@@ -2,6 +2,7 @@ import { useBackend, useLocalState } from '../backend';
 import { Box, Button, LabeledList, NoticeBox, Section, Stack, Table, Tabs } from '../components';
 import { Window } from '../layouts';
 import { classes } from 'common/react';
+import { toFixed } from 'common/math';
 
 export const XenobioMarket = (_, context) => {
   const [tabIndex, setTabIndex] = useLocalState(context, 'tabIndex', 1);
@@ -65,7 +66,7 @@ const SlimeMarket = (_, context) => {
                       />
                     </Stack.Item>
                     <Stack.Item mt="10px">
-                      Currect price: {slime_price.price} points.
+                      Currect price: {toFixed(slime_price.price, 0)} points.
                     </Stack.Item>
                   </Stack>
                 </Section>
