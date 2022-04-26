@@ -98,12 +98,6 @@
 	muzzle_type = /obj/effect/projectile/muzzle/disabler
 	impact_type = /obj/effect/projectile/impact/disabler
 
-/obj/projectile/beam/disabler/heavy //Two shots are enough to put someone down, just like with batons
-	name = "heavy disabler beam"
-	icon_state = "heavyomnilaser"
-	damage = 85
-	range = 25 //Sniper
-
 /obj/projectile/beam/pulse
 	name = "pulse"
 	icon_state = "u_laser"

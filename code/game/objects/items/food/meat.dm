@@ -68,7 +68,6 @@
 /obj/item/food/fishmeat/donkfish
 	name = "donkfillet"
 	desc = "The dreaded donkfish fillet. No sane spaceman would eat this, and it does not get better when cooked."
-	icon = 'icons/obj/food/lizard.dmi'
 	icon_state = "donkfillet"
 	food_reagents = list(/datum/reagent/yuck = 3)
 
@@ -165,7 +164,8 @@
 	AddComponent(/datum/component/grillable, meatball_type, rand(30 SECONDS, 40 SECONDS), TRUE)
 
 /obj/item/food/raw_meatball/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_ROLLINGPIN, patty_type, 1, 20)
+	AddElement(/datum/element/processable, TOOL_ROLLINGPIN, patty_type, 1, 20, table_required = TRUE)
+
 /obj/item/food/raw_meatball/human
 	name = "strange raw meatball"
 	meatball_type = /obj/item/food/meatball/human
@@ -317,8 +317,8 @@
 	venue_value = FOOD_PRICE_CHEAP
 
 /obj/item/food/sausage/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/salami, 6, 30)
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/sausage/american, 1, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/salami, 6, 30, table_required = TRUE)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/sausage/american, 1, 30, table_required = TRUE)
 
 /obj/item/food/sausage/american
 	name = "american sausage"
@@ -638,7 +638,7 @@
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/plain, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/slab/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE,  /obj/item/food/meat/rawcutlet/plain, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE,  /obj/item/food/meat/rawcutlet/plain, 3, 30, table_required = TRUE)
 
 ///////////////////////////////////// HUMAN MEATS //////////////////////////////////////////////////////
 
@@ -652,7 +652,7 @@
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/plain/human, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
 /obj/item/food/meat/slab/human/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE,  /obj/item/food/meat/rawcutlet/plain/human, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE,  /obj/item/food/meat/rawcutlet/plain/human, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/human/mutant/slime
 	icon_state = "slimemeat"
@@ -810,7 +810,7 @@
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/killertomato, rand(70 SECONDS, 85 SECONDS), TRUE, TRUE)
 
 /obj/item/food/meat/slab/killertomato/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/killertomato, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/killertomato, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/bear
 	name = "bear meat"
@@ -821,7 +821,7 @@
 	foodtypes = RAW | MEAT
 
 /obj/item/food/meat/slab/bear/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/bear, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/bear, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/bear/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/bear, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
@@ -840,7 +840,7 @@
 	foodtypes = RAW | MEAT
 
 /obj/item/food/meat/slab/xeno/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/xeno, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/xeno, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/xeno/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/xeno, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
@@ -854,7 +854,7 @@
 	foodtypes = RAW | MEAT | TOXIC
 
 /obj/item/food/meat/slab/spider/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/spider, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/spider, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/spider/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/spider, rand(40 SECONDS, 70 SECONDS), TRUE, TRUE)
@@ -915,7 +915,7 @@
 	foodtypes = RAW | MEAT
 
 /obj/item/food/meat/slab/gondola/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/gondola, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/gondola, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/gondola/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/gondola, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
@@ -930,12 +930,12 @@
 
 /obj/item/food/meat/slab/penguin/MakeProcessable()
 	. = ..()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/penguin, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/penguin, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/penguin/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/penguin, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe?
 
-/obj/item/food/meat/rawcrab
+/obj/item/food/meat/slab/rawcrab
 	name = "raw crab meat"
 	desc = "A pile of raw crab meat."
 	icon_state = "crabmeatraw"
@@ -964,7 +964,7 @@
 	tastes = list("chicken" = 1)
 
 /obj/item/food/meat/slab/chicken/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/chicken, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/meat/rawcutlet/chicken, 3, 30, table_required = TRUE)
 
 /obj/item/food/meat/slab/chicken/MakeGrillable()
 	AddComponent(/datum/component/grillable, /obj/item/food/meat/steak/chicken, rand(30 SECONDS, 90 SECONDS), TRUE, TRUE) //Add medium rare later maybe? (no this is chicken)
@@ -1281,7 +1281,7 @@
 	venue_value = FOOD_PRICE_EXOTIC
 
 /obj/item/food/beef_wellington/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE,  /obj/item/food/beef_wellington_slice, 3, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE,  /obj/item/food/beef_wellington_slice, 3, 30, table_required = TRUE)
 
 /obj/item/food/beef_wellington_slice
 	name = "beef wellington slice"

@@ -24,8 +24,3 @@
 
 /obj/item/ammo_casing/energy/disabler/hos
 	e_cost = 60
-
-/obj/item/ammo_casing/energy/disabler/heavy
-	projectile_type = /obj/projectile/beam/disabler/heavy
-	e_cost = 300
-	fire_sound = 'sound/weapons/blaster.ogg'

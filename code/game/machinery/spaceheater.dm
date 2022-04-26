@@ -141,6 +141,7 @@
 		use_power(required_energy / efficiency)
 
 /obj/machinery/space_heater/RefreshParts()
+	. = ..()
 	var/laser = 0
 	var/cap = 0
 	for(var/obj/item/stock_parts/micro_laser/M in component_parts)
@@ -373,7 +374,7 @@
 			return
 		replace_beaker(user, container)
 		to_chat(user, span_notice("You add [container] to [src]'s water bath."))
-		updateUsrDialog()
+		ui_interact(user)
 		return
 	//Dropper tools
 	if(beaker)
@@ -428,6 +429,7 @@
 	icon_state = "sheater-off"
 
 /obj/machinery/space_heater/improvised_chem_heater/RefreshParts()
+	. = ..()
 	var/lasers_rating = 0
 	var/capacitors_rating = 0
 	for(var/obj/item/stock_parts/micro_laser/laser in component_parts)

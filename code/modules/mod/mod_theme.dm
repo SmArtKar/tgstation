@@ -832,6 +832,7 @@
 			CHESTPLATE_FLAGS = list(
 				UNSEALED_CLOTHING = THICKMATERIAL,
 				SEALED_CLOTHING = STOPSPRESSUREDAMAGE,
+				SEALED_INVISIBILITY = HIDEJUMPSUIT,
 			),
 			GAUNTLETS_FLAGS = list(
 				UNSEALED_CLOTHING = THICKMATERIAL,
@@ -854,6 +855,7 @@
 			CHESTPLATE_FLAGS = list(
 				UNSEALED_CLOTHING = THICKMATERIAL,
 				SEALED_CLOTHING = STOPSPRESSUREDAMAGE,
+				SEALED_INVISIBILITY = HIDEJUMPSUIT,
 			),
 			GAUNTLETS_FLAGS = list(
 				UNSEALED_CLOTHING = THICKMATERIAL,
@@ -947,6 +949,7 @@
 		/obj/item/tank/internals,
 		/obj/item/teleportation_scroll,
 		/obj/item/highfrequencyblade/wizard,
+		/obj/item/gun/magic,
 	)
 	skins = list(
 		"enchanted" = list(

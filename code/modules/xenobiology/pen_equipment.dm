@@ -112,7 +112,7 @@
 
 /obj/machinery/xenobio_device/wrench_act(mob/living/user, obj/item/tool)
 	. = ..()
-	default_unfasten_wrench(user, W)
+	default_unfasten_wrench(user, tool)
 	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /obj/machinery/xenobio_device/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
@@ -386,6 +386,9 @@
 
 /obj/machinery/xenobio_device/bluespace_anchor/attackby(obj/item/tool, mob/user, params)
 	. = ..()
+	if(charges > BLUESPACE_ANCHOR_CAPACITY - 1)
+		return
+
 	if(istype(tool, /obj/item/stack/ore/bluespace_crystal) || istype(tool, /obj/item/stack/sheet/bluespace_crystal))
 		var/obj/item/stack/bs_crystal = tool
 		var/charges_to_add = min(bs_crystal.get_amount(), BLUESPACE_ANCHOR_CAPACITY - round(charges))
