@@ -17,9 +17,6 @@
 	new deployable_type(get_turf(src))
 	qdel(src)
 
-#define DISCHARGE_PROB 30
-#define DISCHARGE_EFFECT_PROB 65
-
 /obj/machinery/power/energy_accumulator/slime_discharger
 	name = "slime discharger"
 	desc = "Prevents all living beings from being electrocuted by those nasty yellow slimes."
@@ -49,15 +46,17 @@
 	to_chat(user, span_notice("You undo the bolts on [src], detaching it from the floor."))
 	qdel(src)
 
-/obj/machinery/power/energy_accumulator/slime_discharger/process()
+/obj/machinery/power/energy_accumulator/slime_discharger/process(delta_time)
 	for(var/mob/living/simple_animal/slime/slime in range(2, src))
 		if(slime.slime_color.slime_tags & SLIME_DISCHARGER_WEAKENED)
-			slime.adjust_nutrition(-1)
+			slime.adjust_nutrition(SLIME_DISCHARGER_NUTRIMENT_DRAIN * delta_time)
+			if(!slime.Target && DT_PROB(SLIME_DISCHARGER_AGGRESSIVE_EFFECT, delta_time))
+				slime.set_target(src)
 
-		if(slime.powerlevel > 2 && prob(DISCHARGE_PROB))
+		if(slime.powerlevel > 2 && DT_PROB(SLIME_DISCHARGE_PROB, delta_time))
 			stored_energy += joules_to_energy((slime.powerlevel - round(slime.powerlevel / 2)) * SLIME_POWER_LEVEL_ENERGY)
 			slime.powerlevel = round(slime.powerlevel / 2)
-			if(prob(DISCHARGE_EFFECT_PROB))
+			if(prob(SLIME_DISCHARGE_EFFECT_PROB))
 				Beam(slime, icon_state="lightning[rand(1,12)]", time = 5)
 
 /obj/machinery/power/energy_accumulator/slime_discharger/update_icon_state()
@@ -96,9 +95,6 @@
 /obj/effect/temp_visual/xenobio_blast/discharger
 	name = "discharger field"
 	color = COLOR_YELLOW
-
-#undef DISCHARGE_PROB
-#undef DISCHARGE_EFFECT_PROB
 
 /obj/machinery/xenobio_device
 	anchored = TRUE
@@ -386,16 +382,40 @@
 
 /obj/machinery/xenobio_device/bluespace_anchor/attackby(obj/item/tool, mob/user, params)
 	. = ..()
-	if(charges > BLUESPACE_ANCHOR_CAPACITY - 1)
-		return
-
 	if(istype(tool, /obj/item/stack/ore/bluespace_crystal) || istype(tool, /obj/item/stack/sheet/bluespace_crystal))
 		var/obj/item/stack/bs_crystal = tool
 		var/charges_to_add = min(bs_crystal.get_amount(), BLUESPACE_ANCHOR_CAPACITY - round(charges))
+		if(!charges_to_add)
+			to_chat(user, span_warning("[src] is already full!"))
+			return
+		to_chat(user, span_notice("You refill [src] with [bs_crystal]."))
 		bs_crystal.add(-charges_to_add)
 		charges += charges_to_add
 		update_icon()
-		to_chat(user, span_notice("You refill [src] with [bs_crystal]."))
+
+	else if(istype(tool, /obj/item/bluespace_anchor_refill))
+		var/obj/item/bluespace_anchor_refill/refill = tool
+		if(refill.spent)
+			to_chat(user, span_warning("[refill] is already spent!"))
+			return
+		charges = BLUESPACE_ANCHOR_CAPACITY
+		update_icon()
+		to_chat(user, span_notice("You refill [src] with [tool]."))
+		refill.spend()
+
+/obj/item/bluespace_anchor_refill
+	name = "bluespace anchor refill"
+	desc = "A small sealed capsule containing enriched bluespace dust, meant to recharge bluespace anchors."
+	icon = 'icons/obj/xenobiology/equipment.dmi'
+	icon_state = "anchor_recharge"
+	var/spent = FALSE
+
+/obj/item/bluespace_anchor_refill/proc/spend()
+	name = "spent bluespace anchor refill"
+	desc = "An open capsule that once contained enriched bluespace dust for a bluespace anchor. Looks like it's been spent."
+	icon_state = "anchor_recharge_empty"
+	update_icon()
+	spent = TRUE
 
 /obj/machinery/xenobio_device/pyrite_thrower
 	name = "pyrite thrower"

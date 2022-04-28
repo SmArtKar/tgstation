@@ -419,9 +419,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Lowers damage dealt by slime feeding by 25%
 #define TRAIT_SLIME_RESISTANCE "slime_resistance"
 
-/// Mobs with this trait can't be moved by their client
-#define TRAIT_NO_CLIENT_MOVE "no_client_move"
-
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic

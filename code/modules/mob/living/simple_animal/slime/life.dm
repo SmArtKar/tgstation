@@ -47,7 +47,7 @@
 
 	while(AIproc && stat != DEAD && (attacked || hungry || rabid || buckled || Target))
 
-		if(!(mobility_flags & MOBILITY_MOVE)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
+		if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
 			stop_moveloop()
 			break
 
@@ -79,16 +79,16 @@
 				if(!CanFeedon(Target)) //If they're not able to be fed upon, ignore them.
 					if(!Atkcool)
 						Atkcool = TRUE
-						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
+						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(Target))
 						if(Target.Adjacent(src))
 							attack_target(Target)
 				else if(isliving(Target))
 					var/mob/living/victim = Target
 					if((victim.body_position == STANDING_UP) && prob(80))
-						if(victim.client && victim.health >= 20)
+						if(victim.client && victim.health >= 0)
 							if(!Atkcool)
 								Atkcool = TRUE
-								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), 4.5 SECONDS)
+								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(victim))
 
 								if(victim.Adjacent(src))
 									attack_target(victim)
@@ -96,9 +96,13 @@
 						else
 							if(!Atkcool && victim.Adjacent(src))
 								Feedon(victim)
+								Atkcool = TRUE
+								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(victim))
 					else
 						if(!Atkcool && victim.Adjacent(src))
 							Feedon(victim)
+							Atkcool = TRUE
+							addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(victim))
 				else
 					gobble_up(Target)
 
@@ -118,17 +122,18 @@
 	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_TARGET, attack_target) & COMPONENT_SLIME_NO_ATTACK)
 		return
 
-	if(istype(attack_target, /obj/machinery/atmospherics/components/unary/vent_pump))
-		var/obj/machinery/atmospherics/components/unary/vent_pump/vent = attack_target
-		if(!vent.welded)
-			amogus_style(vent)
-			return
+	if(!client)
+		if(istype(attack_target, /obj/machinery/atmospherics/components/unary/vent_pump))
+			var/obj/machinery/atmospherics/components/unary/vent_pump/vent = attack_target
+			if(!vent.welded)
+				amogus_style(vent)
+				return
 
-	if(istype(attack_target, /obj/machinery/atmospherics/components/unary/vent_scrubber))
-		var/obj/machinery/atmospherics/components/unary/vent_scrubber/scrubber = attack_target
-		if(!scrubber.welded)
-			amogus_style(scrubber)
-			return
+		if(istype(attack_target, /obj/machinery/atmospherics/components/unary/vent_scrubber))
+			var/obj/machinery/atmospherics/components/unary/vent_scrubber/scrubber = attack_target
+			if(!scrubber.welded)
+				amogus_style(scrubber)
+				return
 
 	attack_target.attack_slime(src)
 
@@ -161,6 +166,9 @@
 	visible_message(span_warning("[src] emerges from [target_vent]!"))
 
 /mob/living/simple_animal/slime/proc/start_moveloop(atom/move_target)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_START_MOVE_LOOP, move_target) & COMPONENT_SLIME_NO_MOVE_LOOP_START)
+		return
+
 	if(move_target == current_loop_target)
 		return
 
@@ -180,7 +188,6 @@
 										  )
 	RegisterSignal(move_loop, COMSIG_PARENT_QDELETING, .proc/loop_ended)
 	RegisterSignal(move_loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
-	SEND_SIGNAL(src, COMSIG_SLIME_START_MOVE_LOOP, move_loop)
 
 /mob/living/simple_animal/slime/proc/loop_ended()
 	current_loop_target = null
@@ -366,6 +373,8 @@
 /mob/living/simple_animal/slime/proc/stop_moveloop()
 	if(!current_loop_target)
 		return
+	if(SEND_SIGNAL(src, COMSIG_SLIME_STOP_MOVE_LOOP) & COMPONENT_SLIME_NO_MOVE_LOOP_STOP)
+		return
 	SSmove_manager.stop_looping(src)
 	current_loop_target = null
 
@@ -394,10 +403,18 @@
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
 
 	if(stat != DEAD)
+		var/turf/current_turf = get_turf(src)
+		var/slime_turf = FALSE
+		if(istype(current_turf, /turf/closed/wall/slime) || istype(current_turf, /turf/open/misc/slime))
+			adjustBruteLoss(SLIME_TURF_HEALING * delta_time)
+			slime_turf = TRUE
+			if(!docile)
+				attacked = min(attacked + 2, 10) //Not rabid because I want it to decay
+
 		var/bz_percentage =0
 		if(environment.gases[/datum/gas/bz])
 			bz_percentage = environment.gases[/datum/gas/bz][MOLES] / environment.total_moles()
-		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100) && !(slime_color.slime_tags & SLIME_BZ_IMMUNE)) || force_stasis
+		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100) && !(slime_color.slime_tags & SLIME_BZ_IMMUNE) && !slime_turf) || force_stasis
 
 		switch(stat)
 			if(CONSCIOUS)
@@ -408,6 +425,9 @@
 					rabid = FALSE
 					set_target(null)
 					regenerate_icons()
+					if(buckled)
+						Feedstop(silent = TRUE)
+
 			if(UNCONSCIOUS, HARD_CRIT)
 				if(!stasis)
 					to_chat(src, span_notice("You wake up from the stasis."))
@@ -454,12 +474,12 @@
 
 	if(iscarbon(M))
 		var/mob/living/carbon/C = M
-		var/damage_mod = max(1 - (C.getarmor(type = BIO) * 0.25 * 0.01 + HAS_TRAIT(C, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50)
+		var/damage_mod = max(1 - (C.getarmor(type = BIO) * 0.25 * 0.01 + HAS_TRAIT(C, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
 		C.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time) //Biosuits reduce damage
 		C.adjustToxLoss(rand(1, 2) * damage_mod * delta_time)
 		food_multiplier *= damage_mod
 
-		if(DT_PROB(5, delta_time) && C.client)
+		if(DT_PROB(5, delta_time) && C.client && damage_mod > 0)
 			to_chat(C, "<span class='userdanger'>[pick("You can feel your body becoming weak!", \
 			"You feel like you're about to die!", \
 			"You feel every part of your body screaming in agony!", \
@@ -482,7 +502,7 @@
 
 	else if(isanimal(M))
 		var/mob/living/simple_animal/SA = M
-		var/damage_mod = max(1 - (SA.damage_coeff[CLONE] * 0.25 + HAS_TRAIT(SA, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50)
+		var/damage_mod = max(1 - (SA.damage_coeff[CLONE] * 0.25 + HAS_TRAIT(SA, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
 		food_multiplier *= damage_mod
 
 		var/food_type
@@ -495,10 +515,10 @@
 			food_multiplier *= slime_color.food_types[food_type]
 
 		var/totaldamage = 0 //total damage done to this unfortunate animal
-		totaldamage += SA.adjustCloneLoss(rand(2, 4) * damage_mod * 0.75 * delta_time)
-		totaldamage += SA.adjustToxLoss(rand(1, 2) * damage_mod * 0.75 * delta_time)
+		totaldamage += SA.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time)
+		totaldamage += SA.adjustToxLoss(rand(1, 2) * damage_mod * delta_time)
 
-		if(totaldamage <= 0) //if we did no(or negative!) damage to it, stop
+		if(totaldamage <= 0 && slime_color.get_feed_damage_modifier() > 0) //if we did no(or negative!) damage to it, stop
 			Feedstop(0, 0)
 			return
 
@@ -581,16 +601,17 @@
 			Discipline--
 
 	if(!client)
-		if(!(mobility_flags & MOBILITY_MOVE))
+		if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI))
 			stop_moveloop()
 			return
 
-		if(buckled)
+		if(buckled && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI) )
 			stop_moveloop()
 			return // if it's eating someone already, continue eating!
 
 		if(Target)
-			--target_patience
+			if(get_dist(src, Target) > 1)
+				target_patience -= 1
 			if (target_patience <= 0 || IsStun() || Discipline || attacked || docile) // Tired of chasing or something draws out attention
 				target_patience = 0
 				set_target(null)
@@ -607,7 +628,7 @@
 			hungry = 1
 
 		if(!Target)
-			if(will_hunt() && hungry || attacked || rabid) // Only add to the list if we need to
+			if(will_hunt(hungry) && hungry || attacked || rabid) // Only add to the list if we need to
 				var/list/targets = list()
 
 				for(var/mob/living/L in view(7,src))
@@ -724,22 +745,45 @@
 		if(attempt_ventcrawl())
 			return
 
-	if(!DT_PROB(SLIME_POI_INTERACT_CHANCE, delta_time))
-		if(DT_PROB(25 + (25 * (hungry > 0)), delta_time))
-			var/picked_dir = pick(GLOB.alldirs)
-			Move(get_step(src, picked_dir), picked_dir)
-		return
+	if(DT_PROB(SLIME_POI_INTERACT_CHANCE, delta_time))
+		var/list/points_of_interest = list()
+		for(var/obj/possible_interest in view(5, get_turf(src)))
+			if(istype(possible_interest, /obj/item/giant_slime_plushie))
+				if(mood_level < SLIME_MOOD_LEVEL_HAPPY && DT_PROB((SLIME_MOOD_LEVEL_HAPPY - mood_level) / 3.75 + 15, delta_time))
+					points_of_interest += possible_interest
 
-	var/list/points_of_interest = list()
-	for(var/obj/possible_interest in view(5, get_turf(src)))
-		if(istype(possible_interest, /obj/item/giant_slime_plushie))
-			if(mood_level < SLIME_MOOD_LEVEL_HAPPY && DT_PROB((SLIME_MOOD_LEVEL_HAPPY - mood_level) / 3.75 + 15, delta_time))
-				points_of_interest += possible_interest
+		if(LAZYLEN(points_of_interest))
+			set_target(pick(points_of_interest))
+			return
 
-	if(!LAZYLEN(points_of_interest))
-		return
+	if(DT_PROB(25 + (25 * (hungry > 0)), delta_time))
+		var/picked_dir = pick(GLOB.alldirs)
+		Move(get_step(src, picked_dir), picked_dir)
 
-	set_target(pick(points_of_interest))
+	if(mood_level < SLIME_MOOD_LEVEL_POUT)
+		if(DT_PROB((SLIME_MOOD_LEVEL_POUT - mood_level) / 5, delta_time))
+			var/list/grief_targets = list()
+			for(var/obj/machinery/light/light in view(9, get_turf(src)))
+				if(light.status || light.machine_stat & BROKEN)
+					continue
+
+				if(!get_step_to(src, light))
+					continue
+
+				grief_targets[light] = 1
+
+			for(var/obj/machinery/power/apc/apc in view(9, get_turf(src)))
+				if(apc.machine_stat & BROKEN)
+					continue
+
+				if(!get_step_to(src, apc))
+					continue
+
+				grief_targets[apc] = 5
+
+			if(LAZYLEN(grief_targets))
+				set_target(pick_weight(grief_targets))
+				target_patience = 10
 
 /mob/living/simple_animal/slime/proc/attempt_ventcrawl()
 	var/list/vents_and_scrubbers = list()
@@ -934,7 +978,9 @@
 
 	//Speech starts here
 	if (to_say)
-		say (to_say)
+		if(SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_SAY, to_say) & COMPONENT_SLIME_NO_SAY)
+			return
+		say(to_say)
 	else if(DT_PROB(0.5, delta_time))
 		emote(pick("bounce","sway","light","vibrate","jiggle"))
 	else
@@ -1010,7 +1056,10 @@
 				if (nutrition < get_hunger_nutrition())
 					phrases += "[M]... feed me..."
 			if(!stat)
-				say (pick(phrases))
+				to_say = pick(phrases)
+				if(SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_SAY, to_say) & COMPONENT_SLIME_NO_SAY)
+					return
+				say(to_say)
 
 /mob/living/simple_animal/slime/proc/handle_digestion(delta_time, times_fired)
 	if(!Digesting)
@@ -1047,9 +1096,9 @@
 
 /mob/living/simple_animal/slime/proc/get_grow_nutrition() // Above it we grow, below it we can eat
 	if (is_adult)
-		return 1000
+		return nutrition_control ? 1000 : (get_max_nutrition() + 1)
 	else
-		return 800
+		return nutrition_control ? 800 : (get_max_nutrition() + 1)
 
 /mob/living/simple_animal/slime/proc/get_hunger_nutrition() // Below it we will always eat
 	if (is_adult)

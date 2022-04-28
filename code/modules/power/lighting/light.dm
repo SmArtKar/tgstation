@@ -361,6 +361,10 @@
 		if(BURN)
 			playsound(loc, 'sound/items/welder.ogg', 100, TRUE)
 
+/obj/machinery/light/attack_slime(mob/living/simple_animal/slime/user)
+	. = ..()
+	break_light_tube()
+
 // returns if the light has power /but/ is manually turned off
 // if a light is turned off, it won't activate emergency power
 /obj/machinery/light/proc/turned_off()

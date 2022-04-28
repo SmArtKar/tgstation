@@ -2,7 +2,7 @@
 	color = "cerulean"
 	coretype = /obj/item/slime_extract/cerulean
 	mutations = null
-	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_BLUESPACE_CONNECTION
+	slime_tags = SLIME_BLUESPACE_CONNECTION
 	environmental_req = "Subject has telekinetic capabilities and requires vacuum to survive."
 	var/slime_flying = FALSE
 	COOLDOWN_DECLARE(lunge_cooldown)
@@ -230,6 +230,7 @@
 			if(victim.fire_stacks < 2)
 				victim.adjust_fire_stacks(2)
 				victim.IgniteMob()
+				to_chat(victim, span_userdanger("You are set ablaze by [slime]'s heat!"))
 
 	var/turf/our_turf = get_turf(slime)
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()

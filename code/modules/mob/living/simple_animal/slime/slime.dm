@@ -346,7 +346,7 @@
 		discipline_slime(user)
 
 /mob/living/simple_animal/slime/attack_hand(mob/living/carbon/human/user, list/modifiers)
-	if(buckled)
+	if(buckled && LAZYACCESS(modifiers, RIGHT_CLICK))
 		user.do_attack_animation(src, ATTACK_EFFECT_DISARM)
 		if(buckled == user)
 			if(prob(60))
@@ -527,6 +527,8 @@
 	AddElement(/datum/element/swabable, CELL_LINE_TABLE_SLIME, CELL_VIRUS_TABLE_GENERIC_MOB, 1, 5)
 
 /mob/living/simple_animal/slime/proc/set_target(new_target)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_SET_TARGET, Target, new_target) & COMPONENT_SLIME_NO_SET_TARGET)
+		return
 	var/old_target = Target
 	Target = new_target
 	if(!new_target)

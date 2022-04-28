@@ -275,6 +275,13 @@
 	if(.)
 		set_broken()
 
+/obj/machinery/power/apc/attack_slime(mob/living/simple_animal/slime/user)
+	. = ..()
+	if(prob(user.powerlevel * 5))
+		do_sparks(5, TRUE, src)
+		visible_message(span_warning("[src] erupts with sparks as it's covered with thick slime!"))
+		set_broken()
+
 /obj/machinery/power/apc/proc/can_use(mob/user, loud = 0) //used by attack_hand() and Topic()
 	if(isAdminGhostAI(user))
 		return TRUE

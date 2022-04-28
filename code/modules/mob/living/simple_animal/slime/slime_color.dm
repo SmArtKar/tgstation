@@ -28,7 +28,7 @@
 	var/turf/our_turf = get_turf(slime)
 	if(HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION) && (slime_tags & SLIME_BLUESPACE_CONNECTION))
 		if(DT_PROB(warpchance, delta_time))
-			slime.visible_message(span_warning("[slime] suddenly starts vibrating and is sucked into bluespace!"), span_userdanger("Your severed connection to bluespace causes you to fall through reality!"))
+			slime.visible_message(span_warning("[slime] suddenly starts vibrating as it's being sucked into bluespace!"), span_userdanger("Your severed connection to bluespace causes you to fall through reality!"))
 			do_teleport(slime, get_turf(slime), 5, channel = TELEPORT_CHANNEL_BLUESPACE)
 			slime.visible_message(span_danger("[slime] appears out of nowhere!"))
 			warpchance = 0
@@ -42,6 +42,12 @@
 	if(slime.accessory)
 		damage_mod *= slime.accessory.get_damage_modificator()
 	return damage_mod
+
+/datum/slime_color/proc/get_feed_damage_modifier()
+	return 1
+
+/datum/slime_color/proc/get_attack_cd(atom/attack_target)
+	return 4.5 SECONDS
 
 /datum/slime_color/grey
 	color = "grey"

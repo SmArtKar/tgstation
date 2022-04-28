@@ -201,3 +201,6 @@
 	plane = LIGHTING_PLANE
 	blend_mode = BLEND_ADD
 	show_when_dead = TRUE
+
+/atom/movable/screen/fullscreen/slime_control
+	icon_state = "slime_control"

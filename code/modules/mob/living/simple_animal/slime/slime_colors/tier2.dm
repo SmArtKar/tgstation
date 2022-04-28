@@ -3,9 +3,9 @@
 	coretype = /obj/item/slime_extract/purple
 	mutations = list(/datum/slime_color/dark_blue, /datum/slime_color/dark_purple, /datum/slime_color/green, /datum/slime_color/green)
 	food_types = list(/obj/item/food/xenoflora/broombush = 1)
-	slime_tags = SLIME_DISCHARGER_WEAKENED
+	slime_tags = SLIME_ATTACK_SLIMES
 
-	environmental_req = "Subject requires N2O in the atmosphere."
+	environmental_req = "Subject requires N2O in the atmosphere and is capable of slowly healing other slimes."
 
 /datum/slime_color/purple/Life(delta_time, times_fired)
 	. = ..()

@@ -212,11 +212,6 @@
 		to_chat(M, "You cannot attack people before the game has started.")
 		return
 
-	if(M.buckled)
-		if(M in buckled_mobs)
-			M.Feedstop()
-		return // can't attack while eating!
-
 	if(HAS_TRAIT(M, TRAIT_PACIFISM))
 		to_chat(M, span_warning("You don't want to hurt anyone!"))
 		return FALSE

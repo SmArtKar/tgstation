@@ -45,6 +45,11 @@
 #define SLIME_RANDOM_MODIFIER_MIN -0.0003
 #define SLIME_RANDOM_MODIFIER_MAX 0.0003
 
+#define SLIME_DISCHARGE_PROB 30
+#define SLIME_DISCHARGE_EFFECT_PROB 65
+#define SLIME_DISCHARGER_NUTRIMENT_DRAIN 3
+#define SLIME_DISCHARGER_AGGRESSIVE_EFFECT 5
+
 /// How many seconds it takes for slime to generate a core
 #define SLIME_MAX_CORE_GENERATION 30
 
@@ -67,7 +72,7 @@
 #define SLIME_ADULT_OBJ_DAMAGE_BOOST 15
 
 /// How likely it is for a slime to use a POI when it's bored, per second. Every POI is has it's own check that should average at 25%
-#define SLIME_POI_INTERACT_CHANCE 20
+#define SLIME_POI_INTERACT_CHANCE 15
 
 /// How likely it is for a slime to vent when bored and there's a vent nearby
 #define SLIME_VENTCRAWL_CHANCE 2
@@ -225,6 +230,8 @@
 #define BLACK_SLIME_CHANGE_TURF_CHANCE 15
 /// Range of black slime turf conversion(circular)
 #define BLACK_SLIME_TURF_CHANGE_RANGE 3
+/// Healing provided by terraformed turfs, per second.
+#define SLIME_TURF_HEALING 1
 
 /// How likely it is for a golden slime to recruit one creature
 #define GOLDEN_SLIME_RECRUIT_CREATURE_CHANCE 55
@@ -250,3 +257,8 @@
 #define PINK_SLIME_PLUSHIE_REQUIREMENT 5
 /// How likely it is for a for a pink slime to apply hallucinations to mobs viewing it when unhappy
 #define PINK_SLIME_HALLUCINATION_CHANCE 25
+
+/// How long it takes for a light pink slime to take control over a body
+#define LIGHT_PINK_SLIME_MIND_CONTROL_TIMER 10 SECONDS
+/// How long it takes to resist out of light pink slime control
+#define LIGHT_PINK_SLIME_RESIST_TIME 2 MINUTES //Like bucklecuffed
