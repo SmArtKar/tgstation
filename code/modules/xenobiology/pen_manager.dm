@@ -120,22 +120,22 @@
 	light1.dir = dir
 	if(slimes_detected)
 		if(slimes_fine)
-			light1.color = "#83ff83"
+			light1.color = "#42ff3c"
 		else
-			light1.color = "#ff7a7a"
+			light1.color = "#ff3c3c"
 	else
-		light1.color = "#ffe881"
+		light1.color = "#ffdb3c"
 
 	var/mutable_appearance/light2 = mutable_appearance(icon, "[icon_state]_light2")
 	light2.dir = dir
 
 	if(slimes_detected)
 		if(slimes_rabid)
-			light2.color = "#ff7a7a"
+			light2.color = "#ff3c3c"
 		else
-			light2.color = "#83ff83"
+			light2.color = "#42ff3c"
 	else
-		light2.color = "#ffe881"
+		light2.color = "#ffdb3c"
 
 	. += light1
 	. += light2

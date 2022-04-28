@@ -210,6 +210,11 @@
 	new /obj/item/wallframe/space_heater(get_turf(src))
 	qdel(src)
 
+/obj/machinery/space_heater/wall_mount/RefreshParts() //Less power more range
+	. = ..()
+	heating_power = laser * 35000
+	settable_temperature_range = cap * 50
+
 /obj/item/xenobio_deployable/bluespace_anchor
 	name = "bluespace anchor"
 	desc = "This device blocks low-power bluespace teleportation used by bluespace slimes, preventing them from escaping from their cells. \
