@@ -373,7 +373,7 @@ Difficulty: Extremely Hard
 /obj/structure/frost_miner_prism
 	name = "frost miner light prism"
 	desc = "A magical crystal enhanced by a demonic presence."
-	icon = 'icons/obj/slimecrossing.dmi'
+	icon = 'icons/effects/effects.dmi'
 	icon_state = "lightprism"
 	density = FALSE
 	anchored = TRUE

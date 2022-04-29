@@ -273,6 +273,9 @@
 		if(shove_turf.is_blocked_turf() && !victim.IsKnockdown())
 			puppet.UnarmedAttack(attack_target, TRUE, list(RIGHT_CLICK = "1"))
 			return COMPONENT_SLIME_NO_ATTACK
+		if(victim.IsKnockdown() && !victim.IsParalyzed() && prob(75)) //Don't want horrible stunlocks
+			puppet.UnarmedAttack(attack_target, TRUE, list(RIGHT_CLICK = "1"))
+			return COMPONENT_SLIME_NO_ATTACK
 
 	if(puppet.get_active_held_item())
 		var/obj/item/weapon = puppet.get_active_held_item()

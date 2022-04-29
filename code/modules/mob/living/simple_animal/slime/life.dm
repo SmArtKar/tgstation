@@ -458,15 +458,16 @@
 			if(!rabid && !attacked)
 				var/mob/last_to_hurt = M.LAssailant?.resolve()
 				if(last_to_hurt && last_to_hurt != M)
-					if(DT_PROB(30, delta_time))
+					if(prob(30))
 						add_friendship(last_to_hurt, 1)
 		else
 			to_chat(src, "<i>This subject does not have a strong enough life energy anymore...</i>")
 
 		if(M.client && ishuman(M))
-			if(DT_PROB(61, delta_time))
+			if(prob(60))
 				rabid = 1 //we go rabid after finishing to feed on a human with a client.
 
+		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, M)
 		Feedstop()
 		return
 
@@ -476,7 +477,7 @@
 		var/mob/living/carbon/C = M
 		var/damage_mod = max(1 - (C.getarmor(type = BIO) * 0.25 * 0.01 + HAS_TRAIT(C, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
 		C.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time) //Biosuits reduce damage
-		C.adjustToxLoss(rand(1, 2) * damage_mod * delta_time)
+		C.adjustToxLoss(rand(1, 2) * damage_mod * delta_time, forced = TRUE)
 		food_multiplier *= damage_mod
 
 		if(DT_PROB(5, delta_time) && C.client && damage_mod > 0)
@@ -516,7 +517,7 @@
 
 		var/totaldamage = 0 //total damage done to this unfortunate animal
 		totaldamage += SA.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time)
-		totaldamage += SA.adjustToxLoss(rand(1, 2) * damage_mod * delta_time)
+		totaldamage += SA.adjustToxLoss(rand(1, 2) * damage_mod * delta_time, forced = TRUE)
 
 		if(totaldamage <= 0 && slime_color.get_feed_damage_modifier() > 0) //if we did no(or negative!) damage to it, stop
 			Feedstop(0, 0)

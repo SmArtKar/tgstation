@@ -297,6 +297,14 @@
 			Feedon(Food)
 	return ..()
 
+/mob/living/simple_animal/slime/Moved(atom/old_loc, new_dir)
+	. = ..()
+	if(QDELETED(src))
+		return
+
+	if(buckled && get_turf(src) != get_turf(buckled))
+		Feedstop(TRUE)
+
 /mob/living/simple_animal/slime/doUnEquip(obj/item/I, force, newloc, no_move, invdrop = TRUE, silent = FALSE)
 	return
 
@@ -592,5 +600,10 @@
 
 /mob/living/simple_animal/slime/proc/adjust_mood(mood_offset)
 	mood_level = min(SLIME_MOOD_MAXIMUM, max(0, mood_level + mood_offset))
+
+/mob/living/simple_animal/slime/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(CanFeedon(hit_atom, silent = TRUE))
+		Feedon(hit_atom)
 
 #undef SLIME_CARES_ABOUT

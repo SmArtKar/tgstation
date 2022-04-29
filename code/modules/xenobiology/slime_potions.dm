@@ -204,6 +204,12 @@
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "potpurple"
 
+/obj/item/slimepotion/enhancer/max
+	name = "extract maximizer"
+	desc = "An extremely potent chemical mix that will maximize a slime extract's uses."
+	icon = 'icons/obj/chemical.dmi'
+	icon_state = "potpurple"
+
 /obj/item/slimepotion/slime/stabilizer
 	name = "slime stabilizer"
 	desc = "A potent chemical mix that will reduce the chance of a slime mutating."

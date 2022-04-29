@@ -14,8 +14,6 @@
 	var/uses = 1 ///uses before it goes inert
 	var/tier = 1
 	var/qdel_timer = null ///deletion timer, for delayed reactions
-	var/extract_color = COLOR_WHITE
-	var/list/activate_reagents = list() ///Reagents required for activation
 
 /obj/item/slime_extract/examine(mob/user)
 	. = ..()
@@ -68,8 +66,6 @@
 /obj/item/slime_extract/grey
 	name = "grey slime extract"
 	icon_state = "grey"
-	activate_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
-	extract_color = COLOR_GRAY
 	tier = 1
 
 /obj/item/slime_extract/grey/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -100,8 +96,6 @@
 /obj/item/slime_extract/orange
 	name = "orange slime extract"
 	icon_state = "orange"
-	activate_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
-	extract_color = COLOR_ORANGE
 	tier = 2
 
 /obj/item/slime_extract/orange/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -123,8 +117,6 @@
 /obj/item/slime_extract/blue
 	name = "blue slime extract"
 	icon_state = "blue"
-	activate_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
-	extract_color = COLOR_BLUE
 	tier = 2
 
 /obj/item/slime_extract/blue/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -146,8 +138,6 @@
 /obj/item/slime_extract/purple
 	name = "purple slime extract"
 	icon_state = "purple"
-	activate_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
-	extract_color = COLOR_PURPLE
 	tier = 2
 
 /obj/item/slime_extract/purple/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -168,8 +158,6 @@
 /obj/item/slime_extract/metal
 	name = "metal slime extract"
 	icon_state = "metal"
-	activate_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
-	extract_color = COLOR_DARK
 	tier = 2
 
 /obj/item/slime_extract/metal/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -199,7 +187,6 @@
 /obj/item/slime_extract/darkpurple
 	name = "dark purple slime extract"
 	icon_state = "dark_purple"
-	activate_reagents = list(/datum/reagent/toxin/plasma)
 	tier = 3
 
 /obj/item/slime_extract/darkpurple/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -224,7 +211,6 @@
 /obj/item/slime_extract/darkblue
 	name = "dark blue slime extract"
 	icon_state = "dark_blue"
-	activate_reagents = list(/datum/reagent/toxin/plasma,/datum/reagent/water)
 	tier = 3
 
 /obj/item/slime_extract/darkblue/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -249,7 +235,6 @@
 /obj/item/slime_extract/silver
 	name = "silver slime extract"
 	icon_state = "silver"
-	activate_reagents = list(/datum/reagent/toxin/plasma,/datum/reagent/water)
 	tier = 3
 
 /obj/item/slime_extract/silver/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -277,7 +262,6 @@
 /obj/item/slime_extract/yellow
 	name = "yellow slime extract"
 	icon_state = "yellow"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma,/datum/reagent/water)
 	tier = 3
 
 /obj/item/slime_extract/yellow/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -306,7 +290,6 @@
 /obj/item/slime_extract/red
 	name = "red slime extract"
 	icon_state = "red"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma,/datum/reagent/water)
 	tier = 4
 
 /obj/item/slime_extract/red/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -328,7 +311,6 @@
 /obj/item/slime_extract/green
 	name = "green slime extract"
 	icon_state = "green"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma,/datum/reagent/uranium/radium)
 	tier = 4
 
 /obj/item/slime_extract/green/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -354,7 +336,6 @@
 /obj/item/slime_extract/pink
 	name = "pink slime extract"
 	icon_state = "pink"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma)
 	tier = 4
 
 /obj/item/slime_extract/pink/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -384,7 +365,6 @@
 /obj/item/slime_extract/gold
 	name = "gold slime extract"
 	icon_state = "gold"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma,/datum/reagent/water)
 	tier = 4
 
 /obj/item/slime_extract/gold/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -420,7 +400,6 @@
 /obj/item/slime_extract/cerulean
 	name = "cerulean slime extract"
 	icon_state = "cerulean"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma)
 	tier = 5
 
 /obj/item/slime_extract/cerulean/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -442,7 +421,6 @@
 /obj/item/slime_extract/sepia
 	name = "sepia slime extract"
 	icon_state = "sepia"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma,/datum/reagent/water)
 	tier = 5
 
 /obj/item/slime_extract/sepia/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -466,7 +444,6 @@
 /obj/item/slime_extract/pyrite
 	name = "pyrite slime extract"
 	icon_state = "pyrite"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma)
 	tier = 5
 
 /obj/item/slime_extract/pyrite/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -495,7 +472,6 @@
 /obj/item/slime_extract/bluespace
 	name = "bluespace slime extract"
 	icon_state = "bluespace"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma)
 	tier = 5
 	var/teleport_ready = FALSE
 	var/teleport_x = 0
@@ -540,7 +516,6 @@
 /obj/item/slime_extract/oil
 	name = "oil slime extract"
 	icon_state = "oil"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma)
 	tier = 6
 
 /obj/item/slime_extract/oil/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -565,7 +540,6 @@
 /obj/item/slime_extract/black
 	name = "black slime extract"
 	icon_state = "black"
-	activate_reagents = list(/datum/reagent/toxin/plasma)
 	tier = 6
 
 /obj/item/slime_extract/black/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -588,7 +562,6 @@
 /obj/item/slime_extract/adamantine
 	name = "adamantine slime extract"
 	icon_state = "adamantine"
-	activate_reagents = list(/datum/reagent/toxin/plasma)
 	tier = 6
 
 /obj/item/slime_extract/adamantine/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -619,7 +592,6 @@
 /obj/item/slime_extract/lightpink
 	name = "light pink slime extract"
 	icon_state = "light_pink"
-	activate_reagents = list(/datum/reagent/toxin/plasma)
 	tier = 6
 
 /obj/item/slime_extract/lightpink/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)
@@ -642,7 +614,7 @@
 
 
 // ************************************************
-// ****************** TIER SEVEN ******************
+// ******************* SPECIALS *******************
 // ************************************************
 
 // Rainbow Extract
@@ -650,7 +622,6 @@
 /obj/item/slime_extract/rainbow
 	name = "rainbow slime extract"
 	icon_state = "rainbow"
-	activate_reagents = list(/datum/reagent/blood,/datum/reagent/toxin/plasma,"lesser plasma",/datum/reagent/toxin/slimejelly,"holy water and uranium") //Curse this snowflake reagent list.
 	tier = 7
 
 /obj/item/slime_extract/rainbow/activate(mob/living/carbon/human/user, datum/species/jelly/luminescent/species, activation_type)

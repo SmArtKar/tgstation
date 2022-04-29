@@ -108,6 +108,25 @@
 	cryostylane_alert.attached_effect = src //so the alert can reference us, if it needs to
 	..()
 
+/obj/structure/ice_stasis
+	name = "ice block"
+	desc = "A massive block of ice. You can see something vaguely humanoid inside."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "frozen"
+	density = TRUE
+	max_integrity = 100
+	armor = list(MELEE = 30, BULLET = 50, LASER = -50, ENERGY = -50, BOMB = 0, BIO = 100, FIRE = -80, ACID = 30)
+
+/obj/structure/ice_stasis/Initialize(mapload)
+	. = ..()
+	playsound(src, 'sound/magic/ethereal_exit.ogg', 50, TRUE)
+
+/obj/structure/ice_stasis/Destroy()
+	for(var/atom/movable/M in contents)
+		M.forceMove(loc)
+	playsound(src, 'sound/effects/glassbr3.ogg', 50, TRUE)
+	return ..()
+
 /datum/reagent/inverse/cryostylane/on_mob_life(mob/living/carbon/owner, delta_time, times_fired)
 	if(!cube || owner.loc != cube)
 		owner.reagents.remove_reagent(type, volume) //remove it all if we're past 60s

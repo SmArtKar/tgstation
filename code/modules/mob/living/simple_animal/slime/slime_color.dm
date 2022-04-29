@@ -54,9 +54,3 @@
 	coretype = /obj/item/slime_extract/grey
 	mutations = list(/datum/slime_color/orange, /datum/slime_color/metal, /datum/slime_color/blue, /datum/slime_color/purple)
 	food_types = list(/datum/species/monkey = 1)
-
-/datum/slime_color/rainbow
-	color = "rainbow"
-	coretype = /obj/item/slime_extract/rainbow
-	mutations = null
-	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_NO_RANDOM_SPAWN

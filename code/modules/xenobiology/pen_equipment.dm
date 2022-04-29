@@ -212,6 +212,14 @@
 
 /obj/machinery/space_heater/wall_mount/RefreshParts() //Less power more range
 	. = ..()
+
+	var/laser = 0
+	var/cap = 0
+	for(var/obj/item/stock_parts/micro_laser/M in component_parts)
+		laser += M.rating
+	for(var/obj/item/stock_parts/capacitor/M in component_parts)
+		cap += M.rating
+
 	heating_power = laser * 35000
 	settable_temperature_range = cap * 50
 

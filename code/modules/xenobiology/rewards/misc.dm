@@ -1,9 +1,3 @@
-////Slime-derived potions///
-
-
-
-///Definitions for slime products that don't have anywhere else to go (Floor tiles, blueprints).
-
 /obj/item/stack/tile/bluespace
 	name = "bluespace floor tile"
 	singular_name = "floor tile"

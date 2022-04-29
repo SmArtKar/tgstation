@@ -25,11 +25,6 @@
 	unit_name = "\improper EMP-proof slime core"
 	export_types = list(/obj/item/stock_parts/cell/emproof/slime)
 
-/datum/export/slime/hypercharged
-	cost = CARGO_CRATE_VALUE * 1.2
-	unit_name = "hypercharged slime core"
-	export_types = list(/obj/item/stock_parts/cell/high/slime_hypercharged)
-
 /datum/export/slime/epic //EPIIIIIIC
 	cost = CARGO_CRATE_VALUE * 0.44
 	unit_name = "epic slime core"
