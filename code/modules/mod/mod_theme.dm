@@ -1360,7 +1360,7 @@
 		/obj/item/reagent_containers/hypospray,
 		/obj/item/reagent_containers/glass/beaker,
 		/obj/item/gun/syringe)
-	inbuilt_modules = list(/obj/item/mod/module/slime_bracers)
+	inbuilt_modules = list(/obj/item/mod/module/slime_bracers, /obj/item/mod/module/reagent_scanner/advanced)
 	skins = list(
 		"xenobio" = list(
 			HELMET_LAYER = null,

@@ -14406,8 +14406,8 @@
 /obj/item/book/manual/wiki/grenades,
 /obj/item/stack/cable_coil,
 /obj/item/stack/cable_coil,
-/obj/item/clothing/glasses/science,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/item/book/manual/wiki/plumbing{
 	pixel_x = 4;
 	pixel_y = -4
@@ -18974,8 +18974,8 @@
 /obj/item/clothing/mask/gas,
 /obj/item/clothing/mask/gas,
 /obj/item/clothing/mask/gas,
-/obj/item/clothing/glasses/science,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
+/obj/item/clothing/glasses/hud/science,
 /turf/open/floor/iron,
 /area/science/xenobiology)
 "fEC" = (
@@ -33606,7 +33606,7 @@
 /obj/item/clothing/gloves/color/latex,
 /obj/item/healthanalyzer,
 /obj/item/clothing/glasses/hud/health,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/effect/turf_decal/tile/green/half/contrasted{
 	dir = 8
 	},
@@ -66313,8 +66313,8 @@
 /obj/machinery/airalarm/directional/south,
 /obj/structure/cable,
 /obj/structure/table/glass,
-/obj/item/clothing/glasses/science,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/machinery/power/apc/auto_name/directional/west,
 /turf/open/floor/iron/white,
 /area/medical/pharmacy)

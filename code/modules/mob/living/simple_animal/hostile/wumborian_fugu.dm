@@ -43,7 +43,7 @@
 	aggro_vision_range = 9
 	mob_size = MOB_SIZE_SMALL
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	gold_core_spawnable = HOSTILE_SPAWN
+	mob_spawnable_type = HOSTILE_SPAWN
 	var/wumbo = 0
 	var/inflate_cooldown = 0
 	var/datum/action/innate/fugu/expand/E

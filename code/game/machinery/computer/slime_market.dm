@@ -98,7 +98,7 @@
 	var/list/prices = list()
 	var/list/price_row = list()
 	var/iter = 1
-	for(var/core_type in (subtypesof(/obj/item/slime_extract) - /obj/item/slime_extract/rainbow))
+	for(var/core_type in (subtypesof(/obj/item/slime_extract) - subtypesof(/obj/item/slime_extract/special)))
 		if(iter % 4 == 1)
 			prices.Add(list(list("key" = LAZYLEN(prices), "prices" = price_row.Copy())))
 			price_row = list()
@@ -116,9 +116,9 @@
 		iter += 1
 
 		if(core_type == /obj/item/slime_extract/grey)
-			core = /obj/item/slime_extract/rainbow
+			core = /obj/item/slime_extract/special/rainbow
 			var/list/rainbow_core_data = list("icon" = "[initial(core.icon_state)]-dead",
-									"price" = SSresearch.slime_core_prices[/obj/item/slime_extract/rainbow],
+									"price" = SSresearch.slime_core_prices[/obj/item/slime_extract/special/rainbow],
 									"key" = iter % 4,
 									)
 			price_row.Add(list(rainbow_core_data))

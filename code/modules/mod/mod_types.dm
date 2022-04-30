@@ -369,7 +369,6 @@ INITIALIZE_IMMEDIATE(/obj/item/mod/control/pre_equipped/syndicate_empty)
 /obj/item/mod/control/pre_equipped/xenobio
 	theme = /datum/mod_theme/xenobio
 	initial_modules = list(
-		/obj/item/mod/module/storage,
-		/obj/item/mod/module/vacuum_pack,
-		/obj/item/mod/module/visor/medhud,
+		/obj/item/mod/module/storage/large_capacity,
+		/obj/item/mod/module/vacuum_pack
 	)

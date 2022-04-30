@@ -99,7 +99,7 @@
 	health = 120
 	maxHealth = 120
 	armored = TRUE
-	gold_core_spawnable = HOSTILE_SPAWN
+	mob_spawnable_type = HOSTILE_SPAWN
 
 /obj/item/bear_armor
 	name = "pile of bear armor"

@@ -66,6 +66,7 @@
 	color = "black"
 	coretype = /obj/item/slime_extract/black
 	mutations = null
+	environmental_req = "Subject has an ability to terraform it's surroundings into slime-like turfs. This ability can be neutered by making the pen look like a natural habitat."
 	var/list/required_turfs
 
 /datum/slime_color/black/New(slime)
@@ -135,6 +136,7 @@
 	coretype = /obj/item/slime_extract/lightpink
 	mutations = null
 	slime_tags = SLIME_DISCHARGER_WEAKENED
+	environmental_req = "Subject can mind-control whoever it latches onto and requires a host to survive."
 	var/mind_control_timer
 	var/mob/living/carbon/human/puppet
 	var/mutable_appearance/goop_overlay

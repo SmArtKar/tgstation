@@ -106,10 +106,10 @@
 
 /datum/crafting_recipe/scienceglasses
 	name = "Science Glasses"
-	result = /obj/item/clothing/glasses/sunglasses/chemical
+	result = /obj/item/clothing/glasses/hud/science/sunglasses
 	time = 20
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
-	reqs = list(/obj/item/clothing/glasses/science = 1,
+	reqs = list(/obj/item/clothing/glasses/hud/science = 1,
 				  /obj/item/clothing/glasses/sunglasses = 1,
 				  /obj/item/stack/cable_coil = 5)
 	category = CAT_CLOTHING
@@ -119,7 +119,7 @@
 	result = /obj/item/clothing/glasses/sunglasses
 	time = 20
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
-	reqs = list(/obj/item/clothing/glasses/sunglasses/chemical = 1)
+	reqs = list(/obj/item/clothing/glasses/hud/science/sunglasses = 1)
 	category = CAT_CLOTHING
 
 /datum/crafting_recipe/ghostsheet

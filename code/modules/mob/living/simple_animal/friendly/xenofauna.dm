@@ -33,7 +33,7 @@
 	maxHealth = 25
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	footstep_type = FOOTSTEP_MOB_CLAW
 	minbodytemp = T0C + 20
 	maxbodytemp = T0C + 160

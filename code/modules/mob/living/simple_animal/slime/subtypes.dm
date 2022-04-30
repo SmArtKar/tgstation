@@ -63,3 +63,9 @@
 
 /mob/living/simple_animal/slime/color/rainbow
 	default_color = /datum/slime_color/rainbow
+
+/mob/living/simple_animal/slime/color/fiery
+	default_color = /datum/slime_color/fiery
+
+/mob/living/simple_animal/slime/color/biohazard
+	default_color = /datum/slime_color/biohazard

@@ -582,8 +582,9 @@
 			if(prob(25-powerlevel*5))
 				powerlevel++
 
-
-
+/mob/living/simple_animal/slime/adjust_nutrition(change)
+	. = ..()
+	nutrition_hud_set_nutr()
 
 /mob/living/simple_animal/slime/proc/handle_targets(delta_time, times_fired)
 	if(attacked > 50)

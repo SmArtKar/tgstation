@@ -30,7 +30,7 @@
 	response_harm_simple = "kick"
 	mobility_flags = MOBILITY_FLAGS_REST_CAPABLE_DEFAULT
 	var/mob/living/simple_animal/mouse/movement_target
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	collar_type = "cat"
 	can_be_held = TRUE
 	held_state = "cat2"
@@ -109,7 +109,7 @@
 	icon_living = "cat"
 	icon_dead = "cat_dead"
 	gender = FEMALE
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	unique_pet = TRUE
 	var/list/family = list()//var restored from savefile, has count of each child type
 	var/list/children = list()//Actual mob instances of children
@@ -187,7 +187,7 @@
 /mob/living/simple_animal/pet/cat/_proc
 	name = "Proc"
 	gender = MALE
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	unique_pet = TRUE
 
 

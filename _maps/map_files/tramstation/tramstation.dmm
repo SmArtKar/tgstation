@@ -29345,7 +29345,7 @@
 	pixel_x = 8;
 	pixel_y = 2
 	},
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/machinery/requests_console/directional/west{
 	department = "Pharmacy";
 	departmentType = 2;
@@ -30786,7 +30786,7 @@
 /obj/structure/table/glass,
 /obj/item/clothing/gloves/color/latex,
 /obj/item/healthanalyzer,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/item/clothing/glasses/hud/health,
 /turf/open/floor/iron/white,
 /area/medical/virology)
@@ -37086,7 +37086,7 @@
 	dir = 4
 	},
 /obj/item/clothing/gloves/color/latex,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /turf/open/floor/iron/white,
 /area/science/lobby)
 "lSh" = (

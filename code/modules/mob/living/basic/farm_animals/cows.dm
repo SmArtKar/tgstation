@@ -25,7 +25,7 @@
 	attack_vis_effect = ATTACK_EFFECT_KICK
 	health = 50
 	maxHealth = 50
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	blood_volume = BLOOD_VOLUME_NORMAL
 	ai_controller = /datum/ai_controller/basic_controller/cow
 
@@ -92,7 +92,7 @@
 /mob/living/basic/cow/wisdom
 	name = "wisdom cow"
 	desc = "Known for its wisdom, shares it with all."
-	gold_core_spawnable = FALSE
+	mob_spawnable_type = FALSE
 	ai_controller = /datum/ai_controller/basic_controller/cow/wisdom
 
 /mob/living/basic/cow/wisdom/make_tameable()
@@ -129,7 +129,7 @@
 	obj_damage = 35
 	attack_verb_continuous = "telekinetically rams its moonihorn into"
 	attack_verb_simple = "telekinetically ram your moonihorn into"
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	attack_sound = 'sound/weapons/bladeslice.ogg'
 	attack_vis_effect = ATTACK_EFFECT_SLASH
 	ai_controller = /datum/ai_controller/basic_controller/cow/moonicorn

@@ -39,7 +39,7 @@
 	required_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 /datum/chemical_reaction/slime/grey_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/mob/living/simple_animal/slime/slime = new(get_turf(holder.my_atom), /datum/slime_color/grey)
+	var/mob/living/simple_animal/slime/color/grey/slime = new(get_turf(holder.my_atom))
 	slime.visible_message(span_danger("[holder.my_atom] begins to grow as it is injected with plasma and turns into a small grey slime!"))
 	. = ..()
 

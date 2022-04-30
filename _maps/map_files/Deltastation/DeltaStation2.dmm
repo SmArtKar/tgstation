@@ -111,8 +111,8 @@
 /obj/item/book/manual/wiki/grenades,
 /obj/item/stack/cable_coil,
 /obj/item/stack/cable_coil,
-/obj/item/clothing/glasses/science,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/item/book/manual/wiki/plumbing{
 	pixel_x = 4;
 	pixel_y = -4
@@ -6058,7 +6058,7 @@
 "bzQ" = (
 /obj/structure/table,
 /obj/item/clothing/gloves/color/latex,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
@@ -14531,11 +14531,11 @@
 /area/science/lab)
 "del" = (
 /obj/structure/table/glass,
-/obj/item/clothing/glasses/science{
+/obj/item/clothing/glasses/hud/science{
 	pixel_x = 3;
 	pixel_y = 3
 	},
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/item/stack/cable_coil{
 	pixel_x = 3;
 	pixel_y = 3
@@ -19921,7 +19921,7 @@
 /obj/item/healthanalyzer,
 /obj/item/clothing/glasses/hud/health,
 /obj/structure/cable,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/effect/turf_decal/stripes/corner,
 /turf/open/floor/iron,
 /area/medical/virology)

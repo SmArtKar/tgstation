@@ -219,7 +219,7 @@
 	desc += "\nIt seems a few selections have been added."
 	prize_list += list(
 		new /datum/data/mining_equipment("Extra Id", /obj/item/card/id/advanced/mining, 250),
-		new /datum/data/mining_equipment("Science Goggles", /obj/item/clothing/glasses/science, 250),
+		new /datum/data/mining_equipment("Science Goggles", /obj/item/clothing/glasses/hud/science, 250),
 		new /datum/data/mining_equipment("Monkey Cube", /obj/item/food/monkeycube, 300),
 		new /datum/data/mining_equipment("Toolbelt", /obj/item/storage/belt/utility, 350),
 		new /datum/data/mining_equipment("Royal Cape of the Liberator", /obj/item/bedsheet/rd/royal_cape, 500),

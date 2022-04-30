@@ -40,7 +40,7 @@
 	maxbodytemp = 1500
 	faction = list("carp")
 	pressure_resistance = 200
-	gold_core_spawnable = HOSTILE_SPAWN
+	mob_spawnable_type = HOSTILE_SPAWN
 	/// If the carp uses random coloring
 	var/random_color = TRUE
 	/// The chance for a rare color variant
@@ -140,7 +140,7 @@
 	icon_living = "holocarp"
 	maxbodytemp = INFINITY
 	ai_controller = null
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	del_on_death = 1
 	random_color = FALSE
 
@@ -209,7 +209,7 @@
 	gender = FEMALE
 	speak_emote = list("squeaks")
 	ai_controller = null
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	faction = list("neutral")
 	health = 200
 	icon_dead = "magicarp_dead"
@@ -231,7 +231,7 @@
 	gender = FEMALE
 	speak_emote = list("squeaks")
 	ai_controller = null
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	faction = list(ROLE_SYNDICATE)
 	rarechance = 10
 	/// Keeping track of the nuke disk for the functionality of storing it.

@@ -1195,7 +1195,7 @@
 					/obj/item/reagent_containers/glass/bottle/ethanol,
 					/obj/item/reagent_containers/glass/bottle/potassium,
 					/obj/item/reagent_containers/glass/bottle/sugar,
-					/obj/item/clothing/glasses/science,
+					/obj/item/clothing/glasses/hud/science,
 					/obj/item/reagent_containers/dropper,
 					/obj/item/storage/box/beakers)
 	crate_name = "chemical crate"

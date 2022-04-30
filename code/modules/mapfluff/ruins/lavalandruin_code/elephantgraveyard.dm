@@ -152,7 +152,7 @@
 
 		if(6)
 			new /obj/item/reagent_containers/glass/beaker(src)
-			new /obj/item/clothing/glasses/science(src)
+			new /obj/item/clothing/glasses/hud/science(src)
 		if(7)
 			new /obj/item/clothing/glasses/sunglasses(src)
 			new /obj/item/clothing/mask/cigarette/rollie(src)

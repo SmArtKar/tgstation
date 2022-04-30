@@ -33,6 +33,6 @@
 /datum/export/slime/rainbow
 	cost = CARGO_CRATE_VALUE
 	unit_name = "rainbow slime core"
-	export_types = list(/obj/item/slime_extract/rainbow)
+	export_types = list(/obj/item/slime_extract/special/rainbow)
 
 

@@ -22990,9 +22990,6 @@
 	dir = 1
 	},
 /area/security/lockers)
-"kdZ" = (
-/turf/open/floor/iron,
-/area/science/xenobiology)
 "keL" = (
 /obj/machinery/light/directional/south,
 /obj/structure/closet/firecloset,
@@ -28446,11 +28443,11 @@
 "ncC" = (
 /obj/structure/table/glass,
 /obj/item/storage/box/syringes,
-/obj/item/clothing/glasses/science{
+/obj/item/clothing/glasses/hud/science{
 	pixel_x = 2;
 	pixel_y = 4
 	},
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
@@ -43693,7 +43690,7 @@
 /obj/structure/rack,
 /obj/item/clothing/mask/gas,
 /obj/machinery/airalarm/directional/north,
-/obj/item/clothing/glasses/science{
+/obj/item/clothing/glasses/hud/science{
 	pixel_x = 4;
 	pixel_y = -4
 	},
@@ -94816,7 +94813,7 @@ lDz
 dFp
 dFp
 ksk
-kdZ
+dFp
 iFN
 nIQ
 fRg

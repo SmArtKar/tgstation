@@ -79,7 +79,7 @@
 	var/flip_on_death = FALSE
 
 	///If the mob can be spawned with a gold slime core. HOSTILE_SPAWN are spawned with plasma, FRIENDLY_SPAWN are spawned with blood.
-	var/gold_core_spawnable = NO_SPAWN
+	var/mob_spawnable_type = NO_SPAWN
 	///Sentience type, for slime potions. SHOULD BE AN ELEMENT BUT I DONT CARE ABOUT IT FOR NOW
 	var/sentience_type = SENTIENCE_ORGANIC
 

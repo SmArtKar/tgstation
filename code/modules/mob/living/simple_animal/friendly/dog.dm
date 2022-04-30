@@ -45,7 +45,7 @@
 	butcher_results = list(/obj/item/food/meat/slab/corgi = 3, /obj/item/stack/sheet/animalhide/corgi = 1)
 	childtype = list(/mob/living/simple_animal/pet/dog/corgi/puppy = 95, /mob/living/simple_animal/pet/dog/corgi/puppy/void = 5)
 	animal_species = /mob/living/simple_animal/pet/dog
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	collar_type = "corgi"
 	var/obj/item/inventory_head
 	var/obj/item/inventory_back
@@ -131,7 +131,7 @@
 	icon_living = "pug"
 	icon_dead = "pug_dead"
 	butcher_results = list(/obj/item/food/meat/slab/pug = 3)
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	collar_type = "pug"
 	held_state = "pug"
 
@@ -141,7 +141,7 @@
 /mob/living/simple_animal/pet/dog/pug/mcgriff
 	name = "McGriff"
 	desc = "This dog can tell something smells around here, and that something is CRIME!"
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	unique_pet = TRUE
 
 /mob/living/simple_animal/pet/dog/bullterrier
@@ -153,7 +153,7 @@
 	icon_living = "bullterrier"
 	icon_dead = "bullterrier_dead"
 	butcher_results = list(/obj/item/food/meat/slab/corgi = 3) // Would feel redundant to add more new dog meats.
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	collar_type = "bullterrier"
 	held_state = "bullterrier"
 
@@ -466,7 +466,7 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 	response_disarm_simple = "bop"
 	response_harm_continuous = "kicks"
 	response_harm_simple = "kick"
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	unique_pet = TRUE
 	var/age = 0
 	var/record_age = 1
@@ -561,7 +561,7 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 	icon_living = "narsian"
 	icon_dead = "narsian_dead"
 	faction = list("neutral", "cult")
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	nofur = TRUE
 	unique_pet = TRUE
 	held_state = "narsian"
@@ -687,7 +687,7 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 	real_name = "Lisa"
 	gender = FEMALE
 	desc = "She's tearing you apart."
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	unique_pet = TRUE
 	icon_state = "lisa"
 	icon_living = "lisa"
@@ -720,7 +720,7 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 	icon_living = "slime_puppy"
 	icon_dead = "slime_puppy_dead"
 	nofur = TRUE
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	speak_emote = list("blorbles", "bubbles", "borks")
 	emote_hear = list("bubbles!", "splorts.", "splops!")
 	emote_see = list("gets goop everywhere.", "flops.", "jiggles!")
@@ -732,7 +732,7 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 	icon_living = "sporgi"
 	icon_dead = "sporgi_dead"
 	faction = list("neutral", "spider")
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	nofur = TRUE
 	held_state = "sporgi"
 	butcher_results = list(/obj/item/food/meat/slab/corgi/sporgi = 2, /obj/item/stack/sheet/animalhide/corgi = 1, /obj/item/food/sporgieggs = 1)

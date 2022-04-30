@@ -18,7 +18,7 @@
 /datum/atom_hud/data
 
 /datum/atom_hud/data/human/medical
-	hud_icons = list(STATUS_HUD, HEALTH_HUD, NUTRITION_HUD)
+	hud_icons = list(STATUS_HUD, HEALTH_HUD)
 
 /datum/atom_hud/data/human/medical/basic
 
@@ -40,6 +40,14 @@
 	check_sensors(H) ? add_to_hud(H) : remove_from_hud(H)
 
 /datum/atom_hud/data/human/medical/advanced
+
+/datum/atom_hud/data/human/medical/advanced/slime
+	hud_icons = list(STATUS_HUD, HEALTH_HUD, NUTRITION_HUD)
+
+/datum/atom_hud/data/human/medical/advanced/slime/add_to_hud(atom/possible_slime)
+	if(!isslime(possible_slime))
+		return FALSE
+	return ..()
 
 /datum/atom_hud/data/human/security
 
@@ -220,9 +228,7 @@ Medical HUD! Basic mode needs suit sensors on.
 			if(null)
 				holder.icon_state = "hudhealthy"
 
-/mob/living/proc/nutrition_hud_set_nutr()
-
-/mob/living/simple_animal/slime/nutrition_hud_set_nutr()
+/mob/living/simple_animal/slime/proc/nutrition_hud_set_nutr()
 	var/image/holder = hud_list[NUTRITION_HUD]
 	holder.icon_state = "hudnutrition[RoundValue(nutrition / get_max_nutrition() * 100)]"
 	var/icon/I = icon(icon, icon_state, dir)

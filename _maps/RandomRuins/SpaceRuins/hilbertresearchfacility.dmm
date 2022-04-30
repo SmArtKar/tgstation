@@ -194,7 +194,7 @@
 "ex" = (
 /obj/structure/table/reinforced/rglass,
 /obj/item/clothing/gloves/color/latex/nitrile,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /turf/open/floor/mineral/titanium/tiled/blue,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "eB" = (
@@ -2140,7 +2140,7 @@
 	},
 /obj/item/clothing/suit/toggle/labcoat,
 /obj/item/clothing/gloves/color/latex,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "TE" = (

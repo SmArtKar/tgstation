@@ -4,5 +4,5 @@
 /datum/unit_test/spawn_mobs/Run()
 	for(var/_animal in typesof(/mob/living/simple_animal))
 		var/mob/living/simple_animal/animal = _animal
-		if (initial(animal.gold_core_spawnable) == HOSTILE_SPAWN || initial(animal.gold_core_spawnable) == FRIENDLY_SPAWN)
+		if (initial(animal.mob_spawnable_type) == HOSTILE_SPAWN || initial(animal.mob_spawnable_type) == FRIENDLY_SPAWN)
 			allocate(_animal)

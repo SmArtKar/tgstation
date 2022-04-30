@@ -123,6 +123,8 @@ SUBSYSTEM_DEF(research)
 /datum/controller/subsystem/research/proc/initialize_slime_prices()
 	for(var/core_type in subtypesof(/obj/item/slime_extract))
 		var/obj/item/slime_extract/core = core_type
+		if(!initial(core.tier))
+			continue
 		slime_core_prices[core_type] = default_core_prices[initial(core.tier)]
 
 /datum/controller/subsystem/research/proc/calculate_server_coefficient() //Diminishing returns.

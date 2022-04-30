@@ -108,6 +108,41 @@
 	flash_protect = FLASH_PROTECTION_FLASH
 	tint = 1
 
+/obj/item/clothing/glasses/hud/science
+	name = "science goggles"
+	desc = "A pair of snazzy goggles used to protect against chemical spills. Fitted with an analyzer for scanning items and reagents."
+	icon_state = "purple"
+	inhand_icon_state = "glasses"
+	glass_colour_type = /datum/client_colour/glass_colour/purple
+	resistance_flags = ACID_PROOF
+	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, FIRE = 80, ACID = 100)
+	clothing_traits = list(TRAIT_REAGENT_SCANNER, TRAIT_RESEARCH_SCANNER)
+	hud_type = DATA_HUD_MEDICAL_SLIME
+
+/obj/item/clothing/glasses/hud/science/item_action_slot_check(slot)
+	if(slot == ITEM_SLOT_EYES)
+		return 1
+
+/obj/item/clothing/glasses/hud/science/suicide_act(mob/living/carbon/user)
+	user.visible_message(span_suicide("[user] is tightening \the [src]'s straps around [user.p_their()] neck! It looks like [user.p_theyre()] trying to commit suicide!"))
+	return OXYLOSS
+
+/obj/item/clothing/glasses/hud/science/night
+	name = "night vision science goggles"
+	desc = "Lets the user see in the dark and recognize chemical compounds at a glance."
+	icon_state = "scihudnight"
+	darkness_view = 8
+	flash_protect = FLASH_PROTECTION_SENSITIVE
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+	glass_colour_type = /datum/client_colour/glass_colour/green
+
+/obj/item/clothing/glasses/hud/science/sunglasses
+	name = "science sunglasses"
+	icon_state = "sunhudsci"
+	desc = "A pair of tacky purple sunglasses that allow the wearer to recognize various chemical compounds with only a glance."
+	flash_protect = FLASH_PROTECTION_FLASH
+	tint = 1
+
 /obj/item/clothing/glasses/hud/security
 	name = "security HUD"
 	desc = "A heads-up display that scans the humanoids in view and provides accurate data about their ID status and security records."

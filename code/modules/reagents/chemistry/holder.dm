@@ -1169,8 +1169,8 @@
 			extract.uses--
 			if(extract.uses <= 0) // give the notification that the slime core is dead
 				my_atom.visible_message(span_notice("[iconhtml] \The [my_atom]'s power is consumed in the reaction."))
-				extract.name = "used slime extract"
-				extract.desc = "This extract has been used up."
+				extract.name = "used [extract.name]"
+				extract.desc += "This extract has been used up."
 
 	selected_reaction.on_reaction(src, null, multiplier)
 

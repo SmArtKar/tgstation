@@ -25,7 +25,7 @@
 	mob_size = MOB_SIZE_TINY
 	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	var/body_color //brown, gray and white, leave blank for random
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	var/chew_probability = 1
 	can_be_held = TRUE
 	held_w_class = WEIGHT_CLASS_TINY
@@ -184,7 +184,7 @@
 	response_disarm_simple = "gently push aside"
 	response_harm_continuous = "splats"
 	response_harm_simple = "splat"
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 
 /mob/living/simple_animal/mouse/brown/tom/Initialize(mapload)
 	. = ..()

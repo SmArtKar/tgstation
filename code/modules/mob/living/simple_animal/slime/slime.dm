@@ -132,6 +132,12 @@
 
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	AddElement(/datum/element/soft_landing)
+	var/datum/atom_hud/data/human/medical/advanced/slime/slimehud = GLOB.huds[DATA_HUD_MEDICAL_SLIME]
+	slimehud.add_to_hud(src)
+
+/mob/living/simple_animal/slime/prepare_data_huds()
+	. = ..()
+	nutrition_hud_set_nutr()
 
 /mob/living/simple_animal/slime/Destroy()
 	for (var/A in actions)
@@ -471,34 +477,52 @@
 	return
 
 /mob/living/simple_animal/slime/examine(mob/user)
-	. = list("<span class='info'>*---------*\nThis is [icon2html(src, user)] \a <EM>[src]</EM>!")
-	if (stat == DEAD)
-		. += span_deadsay("It is limp and unresponsive.")
-	else
-		if (stat == UNCONSCIOUS || stat == HARD_CRIT) // Slime stasis
-			. += span_deadsay("It appears to be alive but unresponsive.")
-		if (getBruteLoss())
-			. += "<span class='warning'>"
-			if (getBruteLoss() < 40)
-				. += "It has some punctures in its flesh!"
-			else
-				. += "<B>It has severe punctures and tears in its flesh!</B>"
-			. += "</span>\n"
+	var/examine_text = list()
+	examine_text += span_info("*---------*")
+	examine_text += span_info("This is [icon2html(src, user)] \a <EM>[src]</EM>!")
+	if(stat == DEAD)
+		examine_text += span_deadsay("It is limp and unresponsive.")
+		examine_text += span_info("*---------*")
+		SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, examine_text)
+		return examine_text
 
-		switch(powerlevel)
-			if(2 to 3)
-				. += "It is flickering gently with a little electrical activity."
+	if(stat)
+		examine_text += span_deadsay("It appears to be alive, but unresponsive.")
 
-			if(4 to 5)
-				. += "It is glowing gently with moderate levels of electrical activity."
+	if(HAS_TRAIT(user, TRAIT_RESEARCH_SCANNER))
+		examine_text += span_info("*---------*")
+		examine_text += span_notice("Nutrition: [nutrition]/[get_max_nutrition()]")
+		if (nutrition < get_starve_nutrition())
+			examine_text += span_warning("Warning: slime is starving!")
+		else if (nutrition < get_hunger_nutrition())
+			examine_text += span_warning("Warning: slime is hungry")
 
-			if(6 to 9)
-				. += span_warning("It is glowing brightly with high levels of electrical activity.")
+		examine_text += span_notice("Electric change strength: [powerlevel]")
+		examine_text += span_notice("Health: [round(health / maxHealth, 0.01) * 100]%")
+		examine_text += span_notice("Growth progress: [amount_grown]/[SLIME_EVOLUTION_THRESHOLD]")
 
-			if(10)
-				. += span_warning("<B>It is radiating with massive levels of electrical activity!</B>")
+		SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, examine_text)
+		return examine_text
 
-	. += "*---------*</span>"
+	if(getBruteLoss() >= 40)
+		examine_text += span_boldwarning("It has severe punctures and tears in its flesh!")
+	else if(getBruteLoss())
+		examine_text += span_warning("It has some punctures in its flesh!")
+
+	switch(powerlevel)
+		if(2 to 3)
+			examine_text += "It is flickering gently with a little electrical activity."
+		if(4 to 5)
+			examine_text += "It is glowing gently with moderate levels of electrical activity."
+		if(6 to 9)
+			examine_text += span_warning("It is glowing brightly with high levels of electrical activity.")
+		if(10)
+			examine_text += span_warning("<B>It is radiating with massive levels of electrical activity!</B>")
+
+	examine_text += span_info("*---------*")
+
+	SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, examine_text)
+	return examine_text
 
 /mob/living/simple_animal/slime/proc/discipline_slime(mob/user)
 	if(stat)
@@ -605,5 +629,41 @@
 	. = ..()
 	if(CanFeedon(hit_atom, silent = TRUE))
 		Feedon(hit_atom)
+
+/mob/living/simple_animal/slime/death(gibbed)
+	if(stat == DEAD)
+		return
+	if(!gibbed)
+		if(is_adult)
+			var/mob/living/simple_animal/slime/M = new(drop_location(), slime_color.type)
+			M.rabid = TRUE
+			M.regenerate_icons()
+
+			is_adult = FALSE
+			maxHealth = 150
+			for(var/datum/action/innate/slime/reproduce/R in actions)
+				R.Remove(src)
+			var/datum/action/innate/slime/evolve/E = new
+			E.Grant(src)
+			revive(full_heal = TRUE, admin_revive = FALSE)
+			regenerate_icons()
+			update_name()
+			return
+
+	if(buckled)
+		Feedstop(silent = TRUE) //releases ourselves from the mob we fed on.
+
+	set_stat(DEAD)
+	regenerate_icons()
+	for(var/mob/living/simple_animal/slime/slime in view(5, get_turf(src)))
+		slime.adjust_mood(SLIME_MOOD_DEATH_LOSS)
+		if(Target) //Likely our killer
+			slime.add_friendship(Target, -1)
+	stop_moveloop()
+	return ..(gibbed)
+
+/mob/living/simple_animal/slime/gib()
+	death(TRUE)
+	qdel(src)
 
 #undef SLIME_CARES_ABOUT

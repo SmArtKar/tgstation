@@ -35,7 +35,7 @@
 	attack_verb_simple = "kick"
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_SMALL
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	//passed to animal_varity as the prefix icon.
 	var/icon_prefix = "rabbit"
 

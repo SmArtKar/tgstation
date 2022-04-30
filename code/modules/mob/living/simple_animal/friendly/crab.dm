@@ -22,7 +22,7 @@
 	friendly_verb_simple = "pinch"
 	var/obj/item/inventory_head
 	var/obj/item/inventory_mask
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 	///In the case 'melee_damage_upper' is somehow raised above 0
 	attack_verb_continuous = "snips"
 	attack_verb_simple = "snip"
@@ -52,7 +52,7 @@
 	real_name = "Coffee"
 	desc = "It's Coffee, the other pet!"
 	gender = FEMALE
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 
 /mob/living/simple_animal/crab/evil
 	name = "Evil Crab"
@@ -61,7 +61,7 @@
 	icon_state = "evilcrab"
 	icon_living = "evilcrab"
 	icon_dead = "evilcrab_dead"
-	gold_core_spawnable = FRIENDLY_SPAWN
+	mob_spawnable_type = FRIENDLY_SPAWN
 
 /mob/living/simple_animal/crab/kreb
 	name = "Kreb"
@@ -70,7 +70,7 @@
 	icon_state = "kreb"
 	icon_living = "kreb"
 	icon_dead = "kreb_dead"
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 
 /mob/living/simple_animal/crab/evil/kreb
 	name = "Evil Kreb"
@@ -78,4 +78,4 @@
 	icon_state = "evilkreb"
 	icon_living = "evilkreb"
 	icon_dead = "evilkreb_dead"
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN

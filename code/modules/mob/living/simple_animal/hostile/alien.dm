@@ -31,7 +31,7 @@
 	see_in_dark = NIGHTVISION_FOV_RANGE
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	unique_name = 1
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 	deathsound = 'sound/voice/hiss6.ogg'
 	deathmessage = "lets out a waning guttural screech, green blood bubbling from its maw..."
 	footstep_type = FOOTSTEP_MOB_CLAW
@@ -138,7 +138,7 @@
 	butcher_results = list(/obj/item/food/meat/slab/xeno = 10,
 							/obj/item/stack/sheet/animalhide/xeno = 2)
 	mob_size = MOB_SIZE_LARGE
-	gold_core_spawnable = NO_SPAWN
+	mob_spawnable_type = NO_SPAWN
 
 /obj/projectile/neurotox
 	name = "neurotoxin"
@@ -154,7 +154,7 @@
 	friendly_verb_simple = "caress"
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	gold_core_spawnable = HOSTILE_SPAWN
+	mob_spawnable_type = HOSTILE_SPAWN
 	icon_state = "maid"
 	icon_living = "maid"
 	icon_dead = "maid_dead"

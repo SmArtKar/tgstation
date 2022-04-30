@@ -2083,8 +2083,8 @@
 	pixel_x = -4;
 	pixel_y = 4
 	},
-/obj/item/clothing/glasses/science,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
@@ -16567,7 +16567,7 @@
 /obj/item/clothing/gloves/color/latex,
 /obj/item/healthanalyzer,
 /obj/item/clothing/glasses/hud/health,
-/obj/item/clothing/glasses/science,
+/obj/item/clothing/glasses/hud/science,
 /obj/effect/turf_decal/trimline/green/filled/line{
 	dir = 4
 	},
@@ -17981,11 +17981,11 @@
 "YE" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/structure/table/reinforced,
-/obj/item/clothing/glasses/science{
+/obj/item/clothing/glasses/hud/science{
 	pixel_x = -4;
 	pixel_y = 4
 	},
-/obj/item/clothing/glasses/science{
+/obj/item/clothing/glasses/hud/science{
 	pixel_x = 4;
 	pixel_y = -4
 	},
