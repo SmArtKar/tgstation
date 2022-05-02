@@ -18,7 +18,7 @@
 /datum/export/slime/rare
 	cost = CARGO_CRATE_VALUE * 0.28
 	unit_name = "rare slime core"
-	export_types = list(/obj/item/slime_extract/silver,/obj/item/slime_extract/darkblue,/obj/item/slime_extract/darkpurple,/obj/item/slime_extract/yellow)
+	export_types = list(/obj/item/slime_extract/silver,/obj/item/slime_extract/dark_blue,/obj/item/slime_extract/dark_purple,/obj/item/slime_extract/yellow)
 
 /datum/export/slime/charged
 	cost = CARGO_CRATE_VALUE

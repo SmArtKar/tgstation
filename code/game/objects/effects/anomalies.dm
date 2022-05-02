@@ -336,7 +336,7 @@
 	if(istype(T))
 		T.atmos_spawn_air("o2=500;plasma=500;TEMP=1000") //Make it hot and burny for the new slime
 	var/mob/living/simple_animal/slime/color/fiery/S = new(T)
-	S.rabid = TRUE
+	ADD_TRAIT(S, TRAIT_SLIME_RABID, type)
 	S.amount_grown = SLIME_EVOLUTION_THRESHOLD
 	S.Evolve()
 	var/datum/action/innate/slime/reproduce/A = new

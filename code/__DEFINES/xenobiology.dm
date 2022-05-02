@@ -131,7 +131,10 @@
 #define SLIME_NO_RANDOM_SPAWN (1<<6)
 /// These slimes don't lose mood when their requirement is not satisfied
 #define SLIME_NO_REQUIREMENT_MOOD_LOSS (1<<7)
-
+/// These slimes take x0.5 damage from water
+#define SLIME_WATER_RESISTANCE (1<<8)
+/// These slimes take x1.5 damage from water
+#define SLIME_WATER_WEAKNESS (1<<8)
 
 /// Slime requirements
 
@@ -143,6 +146,10 @@
 
 /// At what concentration purple slimes become rabid and start taking damage
 #define PURPLE_SLIME_N2O_REQUIRED 35
+/// How much damage do purple slimes heal per 4.5 seconds
+#define PURPLE_SLIME_HEALING 10
+/// How likely it is for a purple slime to make a slime that they heal rabid to prevent abusing them in pens
+#define PURPLE_SLIME_RABID_INFLICTION 15
 
 /// At what temperature blue slimes start taking damage
 #define BLUE_SLIME_DANGEROUS_TEMP T0C-10
@@ -257,3 +264,5 @@
 #define LIGHT_PINK_SLIME_MIND_CONTROL_TIMER 10 SECONDS
 /// How long it takes to resist out of light pink slime control
 #define LIGHT_PINK_SLIME_RESIST_TIME 2 MINUTES //Like bucklecuffed
+/// How much nutrition do light pinks get when finishing a critted target
+#define LIGHT_PINK_SLIME_FINISHER_NUTRITION 75

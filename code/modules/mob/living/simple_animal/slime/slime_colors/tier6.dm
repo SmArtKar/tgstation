@@ -2,6 +2,7 @@
 	color = "oil"
 	coretype = /obj/item/slime_extract/oil
 	mutations = null
+	slime_tags = SLIME_WATER_WEAKNESS
 	environmental_req = "Subject's vacuole is extremely weak and will destabilize under pressures lower than 608 kPa, empowering subject's attacks and making the subject potentially explode on death."
 	var/list/prev_damage_coeffs
 
@@ -67,6 +68,7 @@
 	coretype = /obj/item/slime_extract/black
 	mutations = null
 	environmental_req = "Subject has an ability to terraform it's surroundings into slime-like turfs. This ability can be neutered by making the pen look like a natural habitat."
+	slime_tags = SLIME_WATER_RESISTANCE
 	var/list/required_turfs
 
 /datum/slime_color/black/New(slime)
@@ -266,17 +268,17 @@
 		return COMPONENT_SLIME_NO_ATTACK
 
 	if(isliving(attack_target) && HAS_TRAIT(attack_target, TRAIT_CRITICAL_CONDITION)) //If target is critted, the slime itself finishes itself and yoinks some nutrition.
-		slime.adjust_nutrition(75)
+		slime.adjust_nutrition(LIGHT_PINK_SLIME_FINISHER_NUTRITION)
 		return
 
 	if(isliving(attack_target))
 		var/mob/living/victim = attack_target
 		var/turf/shove_turf = get_step(attack_target, get_dir(slime, attack_target))
 		if(shove_turf.is_blocked_turf() && !victim.IsKnockdown())
-			puppet.UnarmedAttack(attack_target, TRUE, list(RIGHT_CLICK = "1"))
+			INVOKE_ASYNC(puppet, /mob.proc/UnarmedAttack, attack_target, TRUE, list(RIGHT_CLICK = "1"))
 			return COMPONENT_SLIME_NO_ATTACK
-		if(victim.IsKnockdown() && !victim.IsParalyzed() && prob(75)) //Don't want horrible stunlocks
-			puppet.UnarmedAttack(attack_target, TRUE, list(RIGHT_CLICK = "1"))
+		if(victim.IsKnockdown() && !victim.IsParalyzed() && prob(65) && !victim.stat) //Don't want horrible stunlocks
+			INVOKE_ASYNC(puppet, /mob.proc/UnarmedAttack, attack_target, TRUE, list(RIGHT_CLICK = "1"))
 			return COMPONENT_SLIME_NO_ATTACK
 
 	if(puppet.get_active_held_item())
@@ -290,7 +292,7 @@
 		INVOKE_ASYNC(weapon, /obj/item.proc/melee_attack_chain, puppet, attack_target)
 		return COMPONENT_SLIME_NO_ATTACK
 
-	puppet.UnarmedAttack(attack_target, TRUE)
+	INVOKE_ASYNC(puppet, /mob.proc/UnarmedAttack, attack_target, TRUE)
 	return COMPONENT_SLIME_NO_ATTACK
 
 /datum/slime_color/light_pink/proc/set_target(datum/source, atom/old_target, atom/new_target)
@@ -310,7 +312,7 @@
 	SIGNAL_HANDLER
 
 	if(puppet)
-		if(isliving(feed_target) && HAS_TRAIT(feed_target, TRAIT_CRITICAL_CONDITION))
+		if(isliving(feed_target) && HAS_TRAIT(feed_target, TRAIT_CRITICAL_CONDITION) && !slime.Atkcool)
 			slime.attack_target(feed_target)
 		return COMPONENT_SLIME_NO_FEEDON
 
@@ -318,6 +320,8 @@
 	SIGNAL_HANDLER
 
 	if(puppet)
+		if(isliving(target) && !slime.Atkcool)
+			slime.attack_target(target)
 		return COMPONENT_SLIME_NO_FEEDON
 
 	if(!ishuman(target) || HAS_TRAIT(target, TRAIT_SLIME_RESISTANCE))
@@ -327,7 +331,7 @@
 
 /datum/slime_color/light_pink/proc/start_puppeteering(mob/living/carbon/human/new_puppet)
 	puppet = new_puppet
-	goop_overlay = mutable_appearance('icons/effects/effects.dmi', "slime_goop")
+	goop_overlay = mutable_appearance('icons/effects/effects.dmi', "light_pink_slime_goop")
 	puppet.add_overlay(goop_overlay)
 	slime.alpha = 1
 	to_chat(puppet, span_userdanger("You feel [slime]'s tendrils entering thgough your mouth and ears and start connecting to your brain!"))

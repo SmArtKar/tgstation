@@ -42,6 +42,8 @@
 	var/connector_type = "standard"
 	///Does the cell start without any charge?
 	var/empty = FALSE
+	///What overlay we use in an inducer
+	var/inducer_overlay = "bat"
 
 /obj/item/stock_parts/cell/get_cell()
 	return src
@@ -366,13 +368,33 @@
 /obj/item/stock_parts/cell/emproof/slime
 	name = "EMP-proof slime core"
 	desc = "A yellow slime core infused with plasma. Its organic nature makes it immune to EMPs."
-	icon = 'icons/mob/slimes.dmi'
-	icon_state = "yellow slime extract"
+	icon_state = "slimecell"
 	custom_materials = null
 	maxcharge = 10000
 	chargerate = 1500
 	charge_light_type = null
 	connector_type = "slimecore"
+
+/obj/item/stock_parts/cell/slime_inducer
+	name = "overcharged slime cell"
+	desc = "A squishy semi-transparent power cell made when a yellow slime core comes in contact with radium. It doesn't fit anywhere aside from inducers."
+	icon_state = "slime_inducer_cell"
+	custom_materials = null
+	maxcharge = 10000
+	chargerate = 50
+	inducer_overlay = "slimebat"
+
+/obj/item/stock_parts/cell/slime_inducer/Initialize(mapload, override_maxcharge)
+	. = ..()
+	START_PROCESSING(SSfastprocess, src)
+
+/obj/item/stock_parts/cell/slime_inducer/Destroy(force)
+	STOP_PROCESSING(SSfastprocess, src)
+	. = ..()
+
+/obj/item/stock_parts/cell/slime_inducer/process(delta_time)
+	if(charge < maxcharge)
+		give(chargerate * 0.2 SECONDS)
 
 /obj/item/stock_parts/cell/beam_rifle
 	name = "beam rifle capacitor"

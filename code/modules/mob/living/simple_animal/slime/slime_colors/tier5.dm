@@ -2,7 +2,7 @@
 	color = "cerulean"
 	coretype = /obj/item/slime_extract/cerulean
 	mutations = null
-	slime_tags = SLIME_BLUESPACE_CONNECTION
+	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_WATER_RESISTANCE
 	environmental_req = "Subject has telekinetic capabilities and requires vacuum to survive."
 	var/slime_flying = FALSE
 	COOLDOWN_DECLARE(lunge_cooldown)
@@ -180,7 +180,7 @@
 	coretype = /obj/item/slime_extract/pyrite
 	mutations = null
 	environmental_req = "Subject requires high temperatures(above 480° Celsius) or active fires to survive. If subject dies in low temperatures it will freeze and become unrevivable."
-	slime_tags = SLIME_HOT_LOVING
+	slime_tags = SLIME_HOT_LOVING | SLIME_WATER_WEAKNESS
 	var/fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE
 
 /datum/slime_color/pyrite/New(mob/living/simple_animal/slime/slime)
@@ -251,6 +251,7 @@
 	color = "bluespace"
 	coretype = /obj/item/slime_extract/bluespace
 	mutations = null
+	slime_tags = SLIME_WATER_RESISTANCE
 	environmental_req = "Subject is spartially unstable and will phase through obstacles unless forcefully anchored in bluespace."
 
 /datum/slime_color/bluespace/New(mob/living/simple_animal/slime/slime)

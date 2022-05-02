@@ -45,7 +45,7 @@
 
 	AIproc = 1
 
-	while(AIproc && stat != DEAD && (attacked || hungry || rabid || buckled || Target))
+	while(AIproc && stat != DEAD && (attacked || hungry || HAS_TRAIT(src, TRAIT_SLIME_RABID) || buckled || Target))
 
 		if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
 			stop_moveloop()
@@ -414,22 +414,24 @@
 		var/bz_percentage =0
 		if(environment.gases[/datum/gas/bz])
 			bz_percentage = environment.gases[/datum/gas/bz][MOLES] / environment.total_moles()
-		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100) && !(slime_color.slime_tags & SLIME_BZ_IMMUNE) && !slime_turf) || force_stasis
+		var/stasis = (bz_percentage >= 0.05 && bodytemperature < (slime_color.temperature_modifier + 100) && !(slime_color.slime_tags & SLIME_BZ_IMMUNE) && !slime_turf)
+		if(stasis)
+			ADD_TRAIT(src, TRAIT_SLIME_STASIS, "stasis_bz")
 
 		switch(stat)
 			if(CONSCIOUS)
-				if(stasis)
+				if(HAS_TRAIT(src, TRAIT_SLIME_STASIS))
 					to_chat(src, span_danger("Nerve gas in the air has put you in stasis!"))
 					set_stat(UNCONSCIOUS)
 					powerlevel = 0
-					rabid = FALSE
+					REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 					set_target(null)
 					regenerate_icons()
 					if(buckled)
 						Feedstop(silent = TRUE)
 
 			if(UNCONSCIOUS, HARD_CRIT)
-				if(!stasis)
+				if(!HAS_TRAIT(src, TRAIT_SLIME_STASIS))
 					to_chat(src, span_notice("You wake up from the stasis."))
 					set_stat(CONSCIOUS)
 					regenerate_icons()
@@ -455,7 +457,7 @@
 
 	if(M.stat == DEAD) // our victim died
 		if(!client)
-			if(!rabid && !attacked)
+			if(!HAS_TRAIT(src, TRAIT_SLIME_RABID) && !attacked)
 				var/mob/last_to_hurt = M.LAssailant?.resolve()
 				if(last_to_hurt && last_to_hurt != M)
 					if(prob(30))
@@ -465,7 +467,7 @@
 
 		if(M.client && ishuman(M))
 			if(prob(60))
-				rabid = 1 //we go rabid after finishing to feed on a human with a client.
+				ADD_TRAIT(src, TRAIT_SLIME_RABID, "feasted_on_player") //we go rabid after finishing to feed on a human with a client.
 
 		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, M)
 		Feedstop()
@@ -595,9 +597,9 @@
 
 	if(Discipline > 0)
 
-		if(Discipline >= 5 && rabid)
+		if(Discipline >= 5 && HAS_TRAIT(src, TRAIT_SLIME_RABID))
 			if(DT_PROB(37, delta_time))
-				rabid = 0
+				REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 
 		if(DT_PROB(5, delta_time))
 			Discipline--
@@ -630,15 +632,18 @@
 			hungry = 1
 
 		if(!Target)
-			if(will_hunt(hungry) && hungry || attacked || rabid) // Only add to the list if we need to
+			if(will_hunt(hungry) && hungry || attacked || HAS_TRAIT(src, TRAIT_SLIME_RABID)) // Only add to the list if we need to
 				var/list/targets = list()
 
 				for(var/mob/living/L in view(7,src))
 					if(L == src)
 						continue
 
-					if(isslime(L) && !(slime_color.slime_tags & SLIME_ATTACK_SLIMES)) // Don't attack other slimes unless your color allows it
-						continue
+					if(isslime(L)) // Don't attack other slimes unless your color allows it
+						if(!(slime_color.slime_tags & SLIME_ATTACK_SLIMES))
+							continue
+						else if(!CanFeedon(L))
+							continue
 
 					if(L.stat == DEAD) // Ignore dead mobs
 						continue
@@ -658,7 +663,7 @@
 					if(ally)
 						continue
 
-					if(issilicon(L) && (rabid || attacked)) // They can't eat silicons, but they can glomp them in defence
+					if(issilicon(L) && (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)) // They can't eat silicons, but they can glomp them in defence
 						targets += L // Possible target found!
 						continue
 
@@ -672,7 +677,7 @@
 						targets += possible_food
 
 				if(targets.len > 0)
-					if(attacked || rabid)
+					if(attacked || HAS_TRAIT(src, TRAIT_SLIME_RABID))
 						set_target(targets[1]) // I am attacked and am fighting back or so hungry
 					else if(hungry == 2)
 						for(var/possible_target in targets)
@@ -710,7 +715,7 @@
 					target_patience += 3
 				if (hungry == 2)
 					target_patience += 3
-				if (rabid || attacked)
+				if (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
 					target_patience += 3
 
 		if(!Target) // If we have no target, we are wandering or following orders
@@ -836,7 +841,7 @@
 		mood_level = SLIME_MOOD_MAXIMUM
 
 	var/newmood = ""
-	if (rabid || attacked)
+	if (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
 		newmood = "angry"
 	else if(mood_level > SLIME_MOOD_LEVEL_HAPPY)
 		newmood = pick(":3", ":33")
@@ -880,8 +885,11 @@
 		if(Friends.len > 0 && DT_PROB(3, delta_time)) //Lose friends when sad
 			var/mob/nofriend = pick(Friends)
 			add_friendship(nofriend, -1)
-		if(!rabid && !docile && DT_PROB(0.05, delta_time)) //Very low chance to become rabid when sad
-			rabid = TRUE
+		if(!HAS_TRAIT(src, TRAIT_SLIME_RABID) && !docile && DT_PROB(0.05, delta_time)) //Very low chance to become rabid when sad
+			ADD_TRAIT(src, TRAIT_SLIME_RABID, "bad_slime_mood")
+
+	if(mood_level > SLIME_MOOD_LEVEL_HAPPY)
+		REMOVE_TRAIT(src, TRAIT_SLIME_RABID, "bad_slime_mood")
 
 /mob/living/simple_animal/slime/proc/handle_speech(delta_time, times_fired)
 	//Speech understanding starts here
@@ -952,7 +960,7 @@
 					else
 						to_say = "No... won't stay..."
 			else if (findtext(phrase, "attack"))
-				if (rabid && prob(20))
+				if (HAS_TRAIT(src, TRAIT_SLIME_RABID) && prob(20))
 					set_target(who)
 					AIprocess() //Wake up the slime's Target AI, needed otherwise this doesn't work
 					to_say = "ATTACK!?!?"
@@ -1018,7 +1026,7 @@
 			phrases += "Rawr..."
 			phrases += "Blop..."
 			phrases += "Blorble..."
-			if (rabid || attacked)
+			if (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
 				phrases += "Hrr..."
 				phrases += "Nhuu..."
 				phrases += "Unn..."
@@ -1117,7 +1125,7 @@
 /mob/living/simple_animal/slime/proc/will_hunt(hunger = -1) // Check for being stopped from feeding and chasing
 	if (docile)
 		return FALSE
-	if (hunger == 2 || rabid || attacked)
+	if (hunger == 2 || HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
 		return TRUE
 	if (Leader)
 		return FALSE

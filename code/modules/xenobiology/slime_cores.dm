@@ -21,20 +21,6 @@
 	if(uses > 1)
 		. += "It has [uses] uses remaining."
 
-/obj/item/slime_extract/attackby(obj/item/O, mob/user)
-	if(istype(O, /obj/item/slimepotion/enhancer))
-		if(uses >= 5)
-			to_chat(user, span_warning("You cannot enhance this extract further!"))
-			return ..()
-		if(istype(O, /obj/item/slimepotion/enhancer/max))
-			to_chat(user, span_notice("You dump the maximizer on the slime extract. It can now be used a total of 5 times!"))
-			uses = 5
-		else
-			to_chat(user, span_notice("You apply the enhancer to the slime extract. It may now be reused one more time."))
-			uses++
-		qdel(O)
-	..()
-
 /obj/item/slime_extract/Initialize(mapload)
 	. = ..()
 	create_reagents(100, INJECTABLE | DRAWABLE)
@@ -43,6 +29,20 @@
 	. = ..()
 	if(uses)
 		grind_results[/datum/reagent/toxin/slimejelly] = 20
+
+/obj/item/slime_extract/afterattack(atom/target, mob/living/user, proximity_flag)
+	if(!proximity_flag || !target.is_open_container())
+		return ..()
+
+	var/datum/reagents/target_reagents = target.reagents
+	if(target_reagents.trans_to(src, reagents.maximum_volume - reagents.total_volume))
+		to_chat(user, span_notice("You dip [src] into [target]."))
+		return
+
+	if(!target_reagents.total_volume)
+		to_chat(user, span_warning("[target] is empty!"))
+	else
+		to_chat(user, span_warning("[src] is full!"))
 
 // ************************************************
 // ******************* TIER ONE *******************
@@ -66,6 +66,7 @@
 	name = "orange slime extract"
 	icon_state = "orange"
 	tier = 2
+	react_reagents = list(/datum/reagent/blood = 21, /datum/reagent/toxin/plasma = 5)
 
 // Blue Extract
 
@@ -73,6 +74,7 @@
 	name = "blue slime extract"
 	icon_state = "blue"
 	tier = 2
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
 
 // Purple Extract
 
@@ -80,6 +82,7 @@
 	name = "purple slime extract"
 	icon_state = "purple"
 	tier = 2
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
 
 // Metal Extract
 
@@ -94,14 +97,40 @@
 
 // Dark Purple Extract
 
-/obj/item/slime_extract/darkpurple
+/obj/item/slime_extract/dark_purple
 	name = "dark purple slime extract"
 	icon_state = "dark_purple"
 	tier = 3
+	react_reagents = list(/datum/reagent/water = 5, /datum/reagent/toxin/plasma = 5)
+	var/drained_amount = 0
+
+/obj/item/slime_extract/dark_purple/proc/plasma_drain()
+	var/turf/our_turf = get_turf(src)
+	our_turf.visible_message(span_notice("[src] starts to glow and hiss as it begins absorbing plasma in the air!"))
+	START_PROCESSING(SSfastprocess, src)
+	icon_state = "[initial(icon_state)]_pulsating"
+	update_icon()
+	addtimer(CALLBACK(src, .proc/stop_draining), 15 SECONDS)
+
+/obj/item/slime_extract/dark_purple/proc/stop_draining() //Converts around 50% of the plasma in the air into sheets, 200 moles per sheet
+	STOP_PROCESSING(SSfastprocess, src)
+	icon_state = initial(icon_state)
+	update_icon()
+	if(drained_amount >= 200)
+		new /obj/item/stack/sheet/mineral/plasma(get_turf(src), round(drained_amount / 200))
+
+/obj/item/slime_extract/dark_purple/process()
+	for(var/turf/drain_turf in range(1, get_turf(src))) //High efficiency draining!
+		var/datum/gas_mixture/drain_mix = drain_turf.return_air()
+		if(!drain_mix.gases[/datum/gas/plasma] || !drain_mix.gases[/datum/gas/plasma][MOLES])
+			return
+
+		drained_amount += drain_mix.gases[/datum/gas/plasma][MOLES]
+		drain_mix.remove_specific(/datum/gas/plasma, drain_mix.gases[/datum/gas/plasma][MOLES])
 
 // Dark Blue Extract
 
-/obj/item/slime_extract/darkblue
+/obj/item/slime_extract/dark_blue
 	name = "dark blue slime extract"
 	icon_state = "dark_blue"
 	tier = 3
@@ -119,6 +148,7 @@
 	name = "yellow slime extract"
 	icon_state = "yellow"
 	tier = 3
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/uranium/radium = 5)
 
 // ************************************************
 // ****************** TIER FOUR *******************

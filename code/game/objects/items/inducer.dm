@@ -87,6 +87,20 @@
 				to_chat(user, span_warning("[src] already has \a [cell] installed!"))
 				return
 
+	if(istype(W, /obj/item/slime_inducer_cell))
+		if(opened)
+			if(!cell)
+				if(!user.transferItemToLoc(W, src))
+					return
+				to_chat(user, span_notice("You insert [W] into [src]."))
+				qdel(W)
+				cell = new /obj/item/stock_parts/cell/slime_inducer(src)
+				update_appearance()
+				return
+			else
+				to_chat(user, span_warning("[src] already has \a [cell] installed!"))
+				return
+
 	if(cantbeused(user))
 		return
 
@@ -150,6 +164,9 @@
 
 /obj/item/inducer/attack_self(mob/user)
 	if(opened && cell)
+		if(istype(cell, /obj/item/stock_parts/cell/slime_inducer))
+			to_chat(user, span_warning("[cell] is stuck in [src]!"))
+			return
 		user.visible_message(span_notice("[user] removes [cell] from [src]!"), span_notice("You remove [cell]."))
 		cell.update_appearance()
 		user.put_in_hands(cell)
@@ -170,7 +187,7 @@
 	. = ..()
 	if(!opened)
 		return
-	. += "inducer-[cell ? "bat" : "nobat"]"
+	. += "inducer-[cell ? cell.inducer_overlay : "nobat"]"
 
 /obj/item/inducer/sci
 	icon_state = "inducer-sci"

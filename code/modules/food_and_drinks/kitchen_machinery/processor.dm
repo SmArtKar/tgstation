@@ -185,6 +185,7 @@
 	name = "slime processor"
 	desc = "An industrial grinder with a sticker saying appropriated for science department. Keep hands clear of intake area while operating."
 	circuit = /obj/item/circuitboard/machine/processor/slime
+	var/leftover_cores = list()
 
 /obj/machinery/processor/slime/adjust_item_drop_location(atom/movable/AM)
 	var/static/list/slimecores = subtypesof(/obj/item/slime_extract)
@@ -230,7 +231,16 @@
 			S.forceMove(drop_location())
 			S.visible_message(span_notice("[C] crawls free of the processor!"))
 			return
-		for(var/i in 1 to (C+rating_amount-1))
+		var/core_amount = C + (rating_amount - 1) / 2
+		if(core_amount % 1 > 0)
+			if(S.slime_color.coretype in leftover_cores)
+				core_amount += 0.5
+				leftover_cores -= S.slime_color.coretype
+			else
+				core_amount -= 0.5
+				leftover_cores += S.slime_color.coretype
+
+		for(var/i in 1 to core_amount)
 			var/atom/movable/item = new S.slime_color.coretype(drop_location())
 			adjust_item_drop_location(item)
 			SSblackbox.record_feedback("tally", "slime_core_harvested", 1, S.slime_color.color)

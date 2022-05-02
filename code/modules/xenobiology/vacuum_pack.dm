@@ -341,7 +341,7 @@
 
 		if(isslime(target))
 			var/mob/living/simple_animal/slime/slime = target
-			if(slime.rabid && !pack.illegal && !(VACUUM_PACK_UPGRADE_PACIFY in pack.upgrades))
+			if(HAS_TRAIT(slime, TRAIT_SLIME_RABID) && !pack.illegal && !(VACUUM_PACK_UPGRADE_PACIFY in pack.upgrades))
 				to_chat(user, span_warning("[slime] is wiggling far too much for you to suck it in!"))
 				return
 
@@ -362,7 +362,7 @@
 		pack.stored += target
 		if((VACUUM_PACK_UPGRADE_STASIS in pack.upgrades) && isslime(target))
 			var/mob/living/simple_animal/slime/slime = target
-			slime.force_stasis = TRUE
+			ADD_TRAIT(slime, TRAIT_SLIME_STASIS, "vacuum_pack_stasis")
 		user.visible_message(span_warning("[user] sucks [target] into their [pack]!"), span_notice("You successfully suck [target] into your [src]."))
 		return
 
@@ -406,18 +406,18 @@
 	if(isslime(spewed))
 		var/mob/living/simple_animal/slime/slime = spewed
 		if(VACUUM_PACK_UPGRADE_STASIS in pack.upgrades)
-			slime.force_stasis = FALSE
+			REMOVE_TRAIT(slime, TRAIT_SLIME_STASIS, "vacuum_pack_stasis")
 
 		if(pack.illegal)
 			if(slime.docile)
 				slime.docile = FALSE
-			slime.rabid = TRUE
+			ADD_TRAIT(slime, TRAIT_SLIME_RABID, "syndicate_slimepack")
 			slime.set_friendship(user, 20)
 			slime.powerlevel = max(slime.powerlevel, 3)
 			user.changeNext_move(CLICK_CD_RAPID) //Like a machine gun
 
 		else if(VACUUM_PACK_UPGRADE_PACIFY in pack.upgrades)
-			slime.rabid = FALSE
+			REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, null)
 			slime.powerlevel = 0
 			slime.attacked = 0 //Completely pacifies and discharges slimes. Useful when there's another tot xenobiologist
 

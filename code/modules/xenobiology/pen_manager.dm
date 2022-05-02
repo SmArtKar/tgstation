@@ -197,7 +197,7 @@
 
 	for(var/mob/living/simple_animal/slime/slime in get_creatures(slime_only = TRUE))
 		slimes_detected = TRUE
-		if(slime.rabid)
+		if(HAS_TRAIT(slime, TRAIT_SLIME_RABID))
 			slimes_rabid = TRUE
 		if(!slime.slime_color.fitting_environment)
 			slimes_fine = FALSE

@@ -7,16 +7,53 @@
 
 	environmental_req = "Subject requires N2O in the atmosphere and is capable of slowly healing other slimes."
 
+/datum/slime_color/purple/New(mob/living/simple_animal/slime/slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_CAN_FEED, .proc/can_feed)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/attempt_heal)
+
+/datum/slime_color/purple/remove()
+	UnregisterSignal(slime, list(COMSIG_SLIME_CAN_FEED, COMSIG_SLIME_ATTACK_TARGET))
+
+/datum/slime_color/purple/proc/can_feed(datum/source, atom/feed_target)
+	SIGNAL_HANDLER
+
+	if(!isslime(feed_target))
+		return
+
+	var/mob/living/simple_animal/slime/heal_slime
+	if(heal_slime.health >= heal_slime.maxHealth)
+		return COMPONENT_SLIME_NO_FEED
+
+	if(heal_slime == src)
+		return COMPONENT_SLIME_NO_FEED
+
+/datum/slime_color/purple/proc/attempt_heal(datum/source, atom/attack_target)
+	SIGNAL_HANDLER
+
+	if(!isslime(attack_target))
+		return
+
+	var/mob/living/simple_animal/slime/heal_slime = attack_target
+
+	if(heal_slime.health >= heal_slime.maxHealth)
+		return COMPONENT_SLIME_NO_ATTACK
+
+	new /obj/effect/temp_visual/heal(get_turf(heal_slime), "#d737ff")
+	heal_slime.adjustBruteLoss(PURPLE_SLIME_HEALING)
+	if(prob(PURPLE_SLIME_RABID_INFLICTION))
+		ADD_TRAIT(heal_slime, TRAIT_SLIME_RABID, "purple_slime_healing")
+
 /datum/slime_color/purple/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.gases[/datum/gas/nitrous_oxide] && our_mix.gases[/datum/gas/nitrous_oxide][MOLES] > PURPLE_SLIME_N2O_REQUIRED)
-		slime.rabid = FALSE
+		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, "purple_slime_environmental")
 		fitting_environment = TRUE
 		return
 
 	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
-	slime.rabid = TRUE
+	ADD_TRAIT(slime, TRAIT_SLIME_RABID, "purple_slime_environmental")
 	fitting_environment = FALSE
 
 /datum/slime_color/blue

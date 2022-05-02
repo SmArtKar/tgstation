@@ -2,7 +2,7 @@
 	color = "red"
 	coretype = /obj/item/slime_extract/red
 	mutations = list(/datum/slime_color/red, /datum/slime_color/red, /datum/slime_color/oil, /datum/slime_color/oil)
-	slime_tags = SLIME_BZ_IMMUNE
+	slime_tags = SLIME_BZ_IMMUNE | SLIME_WATER_RESISTANCE
 
 	environmental_req = "Subject is quite violent and will become rabid when hungry, causing all red slimes around it to also go rabid."
 
@@ -12,10 +12,16 @@
 	var/bz_percentage =0
 	if(our_mix.gases[/datum/gas/bz])
 		bz_percentage = our_mix.gases[/datum/gas/bz][MOLES] / our_mix.total_moles()
-	var/stasis = bz_percentage >= 0.05 && slime.bodytemperature < (temperature_modifier + 100)
+
+	var/turf/current_turf = get_turf(slime)
+	var/slime_turf = FALSE
+	if(istype(current_turf, /turf/closed/wall/slime) || istype(current_turf, /turf/open/misc/slime))
+		slime_turf = TRUE
+
+	var/stasis = (bz_percentage >= 0.05 && slime.bodytemperature < (temperature_modifier + 100) && !(slime_tags & SLIME_BZ_IMMUNE) && !slime_turf)
 	if(stasis)
 		slime.powerlevel = 0
-		slime.rabid = FALSE //Can be calmed by BZ but not stasis-ed
+		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, null) //Can be calmed by BZ but not stasis-ed
 
 	if(DT_PROB(65, delta_time) && slime.nutrition > slime.get_hunger_nutrition() + 100) //Even snowflakier because of hunger
 		slime.adjust_nutrition(-1 * (1 + slime.is_adult))
@@ -26,15 +32,16 @@
 
 		if(friend.nutrition <= friend.get_hunger_nutrition() - 100)
 			fitting_environment = FALSE
-			slime.rabid = TRUE
+			ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 			return
 
-	if(slime.nutrition > slime.get_hunger_nutrition() - 100) //Doesn't stop it's rabid rage when fed, you gotta do it using BZ or backpacks
+	if(slime.nutrition > slime.get_hunger_nutrition() - 100) //Both we and our friends are happy
 		fitting_environment = TRUE
+		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 		return
 
 	fitting_environment = FALSE
-	slime.rabid = TRUE
+	ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 
 /datum/slime_color/green
 	color = "green"
@@ -176,7 +183,7 @@
 	color = "gold"
 	coretype = /obj/item/slime_extract/gold
 	mutations = list(/datum/slime_color/gold, /datum/slime_color/gold, /datum/slime_color/adamantine, /datum/slime_color/adamantine)
-	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_ATTACK_SLIMES
+	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_ATTACK_SLIMES | SLIME_WATER_RESISTANCE
 
 	environmental_req = "Subject is extremely territorial and will attack other slimes at will or when hungry. Their psychic abilities also allow them to force other creatures to attack their targets along with them."
 
@@ -216,7 +223,7 @@
 	if(!isslime(feed_target))
 		return
 
-	var/mob/living/simple_animal/slime/feed_slime
+	var/mob/living/simple_animal/slime/feed_slime = feed_target
 	if(!istype(feed_slime.slime_color, type))
 		return
 

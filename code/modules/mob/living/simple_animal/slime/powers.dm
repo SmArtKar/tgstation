@@ -281,7 +281,7 @@
 				M.set_friends(Friends)
 				babies += M
 				M.mutation_chance = clamp(mutation_chance+(rand(5,-5)),0,100)
-				M.max_cores = max(1, round(cores / 2))
+				M.max_cores = max(1, round(max_cores / 2))
 				SSblackbox.record_feedback("tally", "slime_babies_born", 1, M.slime_color.color)
 
 			var/mob/living/simple_animal/slime/new_slime = pick(babies)

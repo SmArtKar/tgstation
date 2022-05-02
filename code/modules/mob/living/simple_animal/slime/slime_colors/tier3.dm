@@ -1,7 +1,7 @@
 /datum/slime_color/dark_blue
 	color = "dark blue"
 	icon_color = "dark_blue"
-	coretype = /obj/item/slime_extract/darkblue
+	coretype = /obj/item/slime_extract/dark_blue
 	mutations = list(/datum/slime_color/blue, /datum/slime_color/purple, /datum/slime_color/cerulean, /datum/slime_color/cerulean)
 	temperature_modifier = 213.15 //You can put these together with blue slimes to skip water vapor transfer step
 	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
@@ -29,7 +29,7 @@
 /datum/slime_color/dark_purple
 	color = "dark purple"
 	icon_color = "dark_purple"
-	coretype = /obj/item/slime_extract/darkpurple
+	coretype = /obj/item/slime_extract/dark_purple
 	mutations = list(/datum/slime_color/purple, /datum/slime_color/orange, /datum/slime_color/sepia, /datum/slime_color/sepia)
 	slime_tags = SLIME_DISCHARGER_WEAKENED
 

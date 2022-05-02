@@ -210,7 +210,7 @@
 /obj/item/mod/module/slime_bracers/on_suit_activation()
 	ADD_TRAIT(mod.wearer, TRAIT_SLIME_RESISTANCE, MOD_TRAIT)
 
-/obj/item/mod/module/slime_bracers/on_suit_deactivation()
+/obj/item/mod/module/slime_bracers/on_suit_deactivation(deleting = FALSE)
 	REMOVE_TRAIT(mod.wearer, TRAIT_SLIME_RESISTANCE, MOD_TRAIT)
 
 /obj/item/mod/module/slime_bracers/on_activation()
@@ -220,7 +220,7 @@
 
 	RegisterSignal(mod.wearer, COMSIG_HUMAN_MELEE_UNARMED_ATTACK, .proc/launch_slime)
 
-/obj/item/mod/module/slime_bracers/on_deactivation(display_message = TRUE)
+/obj/item/mod/module/slime_bracers/on_deactivation(display_message = TRUE, deleting = FALSE)
 	. = ..()
 	if(!.)
 		return

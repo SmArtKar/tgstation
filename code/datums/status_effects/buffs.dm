@@ -694,3 +694,39 @@
 /datum/status_effect/limited_buff/health_buff/maxed_out()
 	. = ..()
 	to_chat(owner, span_warning("You don't feel any healthier."))
+
+/atom/movable/screen/alert/status_effect/orange_slime
+	name = "Orange Goo"
+	desc = "You are enveloped in a protective layer of orange goo!"
+	icon_state = "orange_goop"
+
+/datum/status_effect/orange_slime
+	id = "orange_slime"
+	duration = 1 MINUTES
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/orange_slime
+	var/mutable_appearance/goo_overlay
+
+/datum/status_effect/orange_slime/on_apply()
+	. = ..()
+	to_chat(owner, span_notice("You are covered in a fine layer of protective orange goo!"))
+	ADD_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
+	RegisterSignal(owner, COMSIG_COMPONENT_CLEAN_ACT, .proc/slime_washed)
+
+	goo_overlay = mutable_appearance('icons/effects/64x64.dmi', "orange_slime_goop")
+	goo_overlay.pixel_x = -16
+	goo_overlay.pixel_y = -16
+	owner.add_overlay(goo_overlay)
+
+/datum/status_effect/orange_slime/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
+	owner.cut_overlay(goo_overlay)
+	UnregisterSignal(owner, COMSIG_COMPONENT_CLEAN_ACT)
+
+/datum/status_effect/orange_slime/proc/slime_washed()
+	SIGNAL_HANDLER
+	owner.remove_status_effect(type)
+	return COMPONENT_CLEANED

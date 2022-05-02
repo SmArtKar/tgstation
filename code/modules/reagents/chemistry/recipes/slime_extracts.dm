@@ -30,8 +30,7 @@
 	required_reagents = list(/datum/reagent/blood = 5)
 
 /datum/chemical_reaction/slime/grey_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	for(var/i in 1 to 3)
-		new /obj/item/stack/biomass(get_turf(holder.my_atom)) //You can insert these into the biomass recycler and get 3 monkey cubes
+	new /obj/item/stack/biomass(get_turf(holder.my_atom), 3) //You can insert these into the biomass recycler and get 3 monkey cubes
 	. = ..()
 
 /datum/chemical_reaction/slime/grey_plasma
@@ -51,85 +50,67 @@
 
 /datum/chemical_reaction/slime/orange_blood
 	required_container = /obj/item/slime_extract/orange
-	required_reagents = list(/datum/reagent/blood = 1)
+	required_reagents = list(/datum/reagent/blood = 3)
 	results = list(/datum/reagent/phosphorus = 1, /datum/reagent/potassium = 1, /datum/reagent/consumable/sugar = 1, /datum/reagent/consumable/capsaicin = 2)
 
 /datum/chemical_reaction/slime/orange_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_reagents = list(/datum/reagent/toxin/plasma = 5)
 	required_container = /obj/item/slime_extract/orange
-	deletes_extract = FALSE
 
 /datum/chemical_reaction/slime/orange_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/turf/T = get_turf(holder.my_atom)
-	T.visible_message(span_danger("[holder.my_atom] begins to bubble and vibrate!"))
-	addtimer(CALLBACK(src, .proc/slime_burn, holder), 50)
-	var/obj/item/slime_extract/M = holder.my_atom
-	deltimer(M.qdel_timer)
-	. = ..()
-	M.qdel_timer = addtimer(CALLBACK(src, .proc/delete_extract, holder), 55, TIMER_STOPPABLE)
+	var/atom/cycle_loc = holder.my_atom
+	while(!isturf(cycle_loc) && !ishuman(cycle_loc))
+		cycle_loc = cycle_loc.loc
 
-/datum/chemical_reaction/slime/orange_plasma/proc/slime_burn(datum/reagents/holder)
-	if(holder?.my_atom)
-		var/turf/open/T = get_turf(holder.my_atom)
-		if(istype(T))
-			T.atmos_spawn_air("plasma=50;TEMP=1000")
+	if(!ishuman(cycle_loc))
+		cycle_loc.visible_message(span_warning("[holder.my_atom] starts to expand, but fails to find something to latch onto and deflates!"))
+		deletes_extract = FALSE
+		return ..()
+
+	var/mob/living/carbon/human/owner = cycle_loc
+	owner.apply_status_effect(/datum/status_effect/orange_slime)
+	return ..()
+
 
 // Purple Extract
 
 /datum/chemical_reaction/slime/purple_blood
+	required_container = /obj/item/slime_extract/purple
 	required_reagents = list(/datum/reagent/blood = 1)
 	results = list(/datum/reagent/medicine/regen_jelly = 5)
-	required_container = /obj/item/slime_extract/purple
 
 /datum/chemical_reaction/slime/purple_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/purple
+	required_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 /datum/chemical_reaction/slime/purple_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	new /obj/item/slimepotion/slime/steroid(get_turf(holder.my_atom))
+	new /obj/item/slime_potion/slime_steroid(get_turf(holder.my_atom))
 	return ..()
 
 // Blue Extract
 
 /datum/chemical_reaction/slime/blue_plasma
-	results = list(/datum/reagent/consumable/frostoil = 10)
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/blue
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	results = list(/datum/reagent/consumable/frostoil = 10)
 
 /datum/chemical_reaction/slime/blue_blood
-	required_reagents = list(/datum/reagent/blood = 1)
 	required_container = /obj/item/slime_extract/blue
+	required_reagents = list(/datum/reagent/blood = 5)
 
 /datum/chemical_reaction/slime/blue_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	new /obj/item/slimepotion/slime/stabilizer(get_turf(holder.my_atom))
+	new /obj/item/slime_potion/slime_stabilizer(get_turf(holder.my_atom))
 	return ..()
 
 /datum/chemical_reaction/slime/blue_water
-	required_reagents = list(/datum/reagent/water = 5)
 	required_container = /obj/item/slime_extract/blue
+	required_reagents = list(/datum/reagent/water = 5)
 
 /datum/chemical_reaction/slime/blue_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	holder.create_foam(/datum/effect_system/foam_spread, 80, span_danger("[src] spews out foam!"))
-
-// Metal Extract
-
-/datum/chemical_reaction/slime/metal_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
-	required_container = /obj/item/slime_extract/metal
-
-/datum/chemical_reaction/slime/metal_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	new /obj/item/stack/sheet/plasteel(get_turf(holder.my_atom), 5)
-	new /obj/item/stack/sheet/iron(get_turf(holder.my_atom), 15)
+	new /obj/item/grenade/frost_core(get_turf(holder.my_atom))
 	return ..()
 
-/datum/chemical_reaction/slime/metal_water
-	required_reagents = list(/datum/reagent/water = 1)
-	required_container = /obj/item/slime_extract/metal
-
-/datum/chemical_reaction/slime/metal_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	new /obj/item/stack/sheet/rglass(get_turf(holder.my_atom), 15)
-	new /obj/item/stack/sheet/glass(get_turf(holder.my_atom), 15)
-	..()
+// Metal Extract
 
 // ************************************************
 // ****************** TIER THREE ******************
@@ -138,41 +119,49 @@
 // Yellow Extract
 
 /datum/chemical_reaction/slime/yellow_blood
-	required_reagents = list(/datum/reagent/blood = 1)
+	required_reagents = list(/datum/reagent/blood = 5)
 	required_container = /obj/item/slime_extract/yellow
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
+	deletes_extract = FALSE
 
 /datum/chemical_reaction/slime/yellow_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	empulse(get_turf(holder.my_atom), 3, 7)
 	return ..()
 
 /datum/chemical_reaction/slime/yellow_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_reagents = list(/datum/reagent/toxin/plasma = 5)
 	required_container = /obj/item/slime_extract/yellow
 
 /datum/chemical_reaction/slime/yellow_plasma/on_reaction(datum/reagents/holder, created_volume)
 	new /obj/item/stock_parts/cell/emproof/slime(get_turf(holder.my_atom))
 	return ..()
 
-/datum/chemical_reaction/slime/yellow_water //Weak, close-range flashbang
-	required_reagents = list(/datum/reagent/water = 1)
+/datum/chemical_reaction/slime/yellow_radium
+	required_reagents = list(/datum/reagent/uranium/radium = 5)
 	required_container = /obj/item/slime_extract/yellow
 
-/datum/chemical_reaction/slime/yellow_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/turf/location = get_turf(holder.my_atom)
-	location.visible_message(span_danger("[src] starts shaking and explodes, emitting a bright flash of light and a loud bang!"))
-	playsound(location, 'sound/effects/bang.ogg', 25, TRUE)
-	do_sparks(2, TRUE, location)
+/datum/chemical_reaction/slime/yellow_plasma/on_reaction(datum/reagents/holder, created_volume)
+	new /obj/item/slime_inducer_cell(get_turf(holder.my_atom))
+	return ..()
 
-	if(isatom(holder.my_atom))
-		var/atom/A = holder.my_atom
-		A.flash_lighting_fx(_range = 5)
+// Dark Purple
 
-	for(var/mob/living/victim in get_hearers_in_view(3, location))
-		victim.soundbang_act(1, 60, rand(0, 5))
-		if(victim.flash_act(affect_silicon = TRUE))
-			if(get_dist(victim, location) <= 1)
-				victim.Paralyze(40)
-			else
-				victim.Stun(80)
+/datum/chemical_reaction/slime/dark_purple_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 5)
+	required_container = /obj/item/slime_extract/dark_purple
+
+/datum/chemical_reaction/slime/dark_purple_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/stack/sheet/mineral/plasma(get_turf(holder.my_atom), 5)
+	return ..()
+
+/datum/chemical_reaction/slime/dark_purple_water
+	required_reagents = list(/datum/reagent/water = 5)
+	required_container = /obj/item/slime_extract/dark_purple
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/dark_purple_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/dark_purple/extract = holder.my_atom
+	if(!istype(extract))
+		return
+	extract.plasma_drain()
 	return ..()

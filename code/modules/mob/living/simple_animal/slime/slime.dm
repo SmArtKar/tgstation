@@ -63,7 +63,6 @@
 	var/datum/move_loop/move_loop // Stores currently active moveloop
 
 	var/attacked = 0 // Determines if it's been attacked recently. Can be any number, is a cooloff-ish variable
-	var/rabid = 0 // If set to 1, the slime will attack and eat anything it comes in contact with
 	var/holding_still = 0 // AI variable, cooloff-ish for how long it's going to stay in one place
 	var/target_patience = 0 // AI variable, cooloff-ish for how long it's going to follow its target
 	var/digestion_progress = 0 //AI variable, starts at 0 and goes to 100
@@ -82,7 +81,6 @@
 
 	var/mood = "" // To show its face
 	var/mutator_used = FALSE // So you can't shove a dozen mutators into a single slime
-	var/force_stasis = FALSE // When set to TRUE slime will be forcefully put into stasis regardless of BZ concentration
 
 	var/nutrition_control = TRUE // When set to FALSE slime will constantly be hungry regardless of it's nutrition.
 	var/obj/item/slime_accessory/accessory // Stores current slime accessory
@@ -468,11 +466,20 @@
 	if(slime_color.slime_tags & SLIME_WATER_IMMUNITY)
 		return
 
-	adjustBruteLoss(rand(15,20))
+	var/damage_modifier = 1
+	if(slime_color.slime_tags & SLIME_WATER_WEAKNESS)
+		damage_modifier *= 1.5
+	if(slime_color.slime_tags & SLIME_WATER_RESISTANCE)
+		damage_modifier *= 0.5
+
+	adjustBruteLoss(rand(15, 20) * damage_modifier)
 	if(!client)
-		if(Target) // Like cats
+		if(Target && !HAS_TRAIT(src, TRAIT_SLIME_RABID)) // Like cats
 			set_target(null)
-			++Discipline
+			if(slime_color.slime_tags & SLIME_WATER_WEAKNESS) //If slime hates water than it would become even more agressive
+				attacked += 10
+			else
+				Discipline += 1
 		adjust_mood(SLIME_MOOD_WATER_LOSS)
 	return
 
@@ -636,11 +643,13 @@
 	if(!gibbed)
 		if(is_adult)
 			var/mob/living/simple_animal/slime/M = new(drop_location(), slime_color.type)
-			M.rabid = TRUE
+			ADD_TRAIT(M, TRAIT_SLIME_RABID, "slime_death")
 			M.regenerate_icons()
 
 			is_adult = FALSE
 			maxHealth = 150
+			max_cores = max(1, round(max_cores / 2))
+			M.max_cores = max_cores
 			for(var/datum/action/innate/slime/reproduce/R in actions)
 				R.Remove(src)
 			var/datum/action/innate/slime/evolve/E = new

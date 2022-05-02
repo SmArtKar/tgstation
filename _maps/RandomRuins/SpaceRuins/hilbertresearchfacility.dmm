@@ -411,8 +411,7 @@
 /area/ruin/unpowered/no_grav)
 "jC" = (
 /mob/living/simple_animal/slime{
-	colour = "bluespace";
-	rabid = 1
+	colour = "bluespace"
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/titanium/tiled/purple,
@@ -986,8 +985,7 @@
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "wY" = (
 /mob/living/simple_animal/slime{
-	colour = "bluespace";
-	rabid = 1
+	colour = "bluespace"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
@@ -2271,8 +2269,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /mob/living/simple_animal/slime{
-	colour = "bluespace";
-	rabid = 1
+	colour = "bluespace"
 	},
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
@@ -2410,8 +2407,7 @@
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "Ze" = (
 /mob/living/simple_animal/slime{
-	colour = "bluespace";
-	rabid = 1
+	colour = "bluespace"
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/plastitanium,

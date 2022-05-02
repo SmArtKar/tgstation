@@ -9,7 +9,7 @@
 	color = "fiery"
 	coretype = /obj/item/slime_extract/special/fiery
 	mutations = null
-	slime_tags = SLIME_HOT_LOVING | SLIME_NO_RANDOM_SPAWN | SLIME_ATTACK_SLIMES
+	slime_tags = SLIME_HOT_LOVING | SLIME_NO_RANDOM_SPAWN | SLIME_ATTACK_SLIMES | SLIME_WATER_WEAKNESS
 	environmental_req = "Non-standard slime located. Subject can manipulate flames and ignite it's targets on attack."
 
 /datum/slime_color/biohazard
