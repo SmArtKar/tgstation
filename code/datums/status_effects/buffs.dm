@@ -695,38 +695,76 @@
 	. = ..()
 	to_chat(owner, span_warning("You don't feel any healthier."))
 
-/atom/movable/screen/alert/status_effect/orange_slime
-	name = "Orange Goo"
-	desc = "You are enveloped in a protective layer of orange goo!"
-	icon_state = "orange_goop"
-
-/datum/status_effect/orange_slime
-	id = "orange_slime"
-	duration = 1 MINUTES
-	status_type = STATUS_EFFECT_REFRESH
-	alert_type = /atom/movable/screen/alert/status_effect/orange_slime
+/datum/status_effect/slime
 	var/mutable_appearance/goo_overlay
+	var/effect_icon_state
 
-/datum/status_effect/orange_slime/on_apply()
+/datum/status_effect/slime/on_apply()
 	. = ..()
-	to_chat(owner, span_notice("You are covered in a fine layer of protective orange goo!"))
-	ADD_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
-	ADD_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
 	RegisterSignal(owner, COMSIG_COMPONENT_CLEAN_ACT, .proc/slime_washed)
 
-	goo_overlay = mutable_appearance('icons/effects/64x64.dmi', "orange_slime_goop")
+	goo_overlay = mutable_appearance('icons/effects/64x64.dmi', effect_icon_state")
 	goo_overlay.pixel_x = -16
 	goo_overlay.pixel_y = -16
 	owner.add_overlay(goo_overlay)
 
-/datum/status_effect/orange_slime/on_remove()
+/datum/status_effect/slime/on_remove()
 	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
-	REMOVE_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
 	owner.cut_overlay(goo_overlay)
 	UnregisterSignal(owner, COMSIG_COMPONENT_CLEAN_ACT)
 
-/datum/status_effect/orange_slime/proc/slime_washed()
+/datum/status_effect/slime/proc/slime_washed()
 	SIGNAL_HANDLER
-	owner.remove_status_effect(type)
+	addtimer(CALLBACK(owner, /mob/living.proc/remove_status_effect, type), 1)
 	return COMPONENT_CLEANED
+
+/atom/movable/screen/alert/status_effect/orange_slime
+	name = "Orange Slime"
+	desc = "You are enveloped in a layer of protective orange slime!"
+	icon_state = "orange_slime"
+
+/datum/status_effect/slime/orange
+	id = "orange_slime"
+	duration = 1 MINUTES
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/orange_slime
+	effect_icon_state = "orange_slime"
+
+/datum/status_effect/slime/orange/on_apply()
+	. = ..()
+	to_chat(owner, span_notice("You are covered in a fine layer of fireproof orange goo!"))
+	ADD_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
+
+/datum/status_effect/slime/orange/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
+
+/atom/movable/screen/alert/status_effect/dark_blue_slime
+	name = "Dark Blue Slime"
+	desc = "You are enveloped in a layer of stasis-inducing dark blue slime!"
+	icon_state = "dark_blue_slime"
+
+/datum/status_effect/slime/dark_blue
+	id = "dark_blue_slime"
+	duration = 1 MINUTES
+	status_type = STATUS_EFFECT_REFRESH
+	alert_type = /atom/movable/screen/alert/status_effect/dark_blue_slime
+	effect_icon_state = "dark_blue_slime"
+
+/datum/status_effect/slime/dark_blue/on_apply()
+	. = ..()
+	to_chat(owner, span_notice("You are covered in a fine layer of stasis-inducing dark blue slime!"))
+	owner.apply_status_effect(/datum/status_effect/grouped/stasis, STASIS_SLIME_EFFECT)
+	ADD_TRAIT(owner, TRAIT_TUMOR_SUPPRESSED, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_RESISTLOWPRESSURE, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_NOBREATH, XENOBIO_TRAIT)
+	owner.extinguish_mob()
+
+/datum/status_effect/slime/dark_blue/on_remove()
+	. = ..()
+	owner.remove_status_effect(/datum/status_effect/grouped/stasis, STASIS_SLIME_EFFECT)
+	REMOVE_TRAIT(owner, TRAIT_TUMOR_SUPPRESSED, XENOBIO_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_RESISTLOWPRESSURE, XENOBIO_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_NOBREATH, XENOBIO_TRAIT)

@@ -27,7 +27,7 @@
 
 /datum/chemical_reaction/slime/grey_blood
 	required_container = /obj/item/slime_extract/grey
-	required_reagents = list(/datum/reagent/blood = 5)
+	required_reagents = list(/datum/reagent/blood = 1)
 
 /datum/chemical_reaction/slime/grey_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/stack/biomass(get_turf(holder.my_atom), 3) //You can insert these into the biomass recycler and get 3 monkey cubes
@@ -35,7 +35,7 @@
 
 /datum/chemical_reaction/slime/grey_plasma
 	required_container = /obj/item/slime_extract/grey
-	required_reagents = list(/datum/reagent/toxin/plasma = 5)
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 
 /datum/chemical_reaction/slime/grey_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/mob/living/simple_animal/slime/color/grey/slime = new(get_turf(holder.my_atom))
@@ -54,7 +54,7 @@
 	results = list(/datum/reagent/phosphorus = 1, /datum/reagent/potassium = 1, /datum/reagent/consumable/sugar = 1, /datum/reagent/consumable/capsaicin = 2)
 
 /datum/chemical_reaction/slime/orange_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 5)
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/orange
 
 /datum/chemical_reaction/slime/orange_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
@@ -68,7 +68,7 @@
 		return ..()
 
 	var/mob/living/carbon/human/owner = cycle_loc
-	owner.apply_status_effect(/datum/status_effect/orange_slime)
+	owner.apply_status_effect(/datum/status_effect/slime/orange)
 	return ..()
 
 
@@ -81,7 +81,7 @@
 
 /datum/chemical_reaction/slime/purple_plasma
 	required_container = /obj/item/slime_extract/purple
-	required_reagents = list(/datum/reagent/toxin/plasma = 5)
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 
 /datum/chemical_reaction/slime/purple_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/slime_potion/slime_steroid(get_turf(holder.my_atom))
@@ -96,7 +96,7 @@
 
 /datum/chemical_reaction/slime/blue_blood
 	required_container = /obj/item/slime_extract/blue
-	required_reagents = list(/datum/reagent/blood = 5)
+	required_reagents = list(/datum/reagent/blood = 1)
 
 /datum/chemical_reaction/slime/blue_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/slime_potion/slime_stabilizer(get_turf(holder.my_atom))
@@ -104,13 +104,33 @@
 
 /datum/chemical_reaction/slime/blue_water
 	required_container = /obj/item/slime_extract/blue
-	required_reagents = list(/datum/reagent/water = 5)
+	required_reagents = list(/datum/reagent/water = 1)
 
 /datum/chemical_reaction/slime/blue_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/grenade/frost_core(get_turf(holder.my_atom))
 	return ..()
 
 // Metal Extract
+
+/datum/chemical_reaction/slime/metal_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/metal
+
+/datum/chemical_reaction/slime/metal_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/location = get_turf(holder.my_atom)
+	new /obj/item/stack/sheet/plasteel(location, 5)
+	new /obj/item/stack/sheet/iron(location, 15)
+	return ..()
+
+/datum/chemical_reaction/slime/metal_water
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/metal
+
+/datum/chemical_reaction/slime/metal_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/location = get_turf(holder.my_atom)
+	new /obj/item/stack/sheet/rglass(location, 5)
+	new /obj/item/stack/sheet/glass(location, 15)
+	return ..()
 
 // ************************************************
 // ****************** TIER THREE ******************
@@ -119,7 +139,7 @@
 // Yellow Extract
 
 /datum/chemical_reaction/slime/yellow_blood
-	required_reagents = list(/datum/reagent/blood = 5)
+	required_reagents = list(/datum/reagent/blood = 1)
 	required_container = /obj/item/slime_extract/yellow
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
 	deletes_extract = FALSE
@@ -129,7 +149,7 @@
 	return ..()
 
 /datum/chemical_reaction/slime/yellow_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 5)
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/yellow
 
 /datum/chemical_reaction/slime/yellow_plasma/on_reaction(datum/reagents/holder, created_volume)
@@ -137,7 +157,7 @@
 	return ..()
 
 /datum/chemical_reaction/slime/yellow_radium
-	required_reagents = list(/datum/reagent/uranium/radium = 5)
+	required_reagents = list(/datum/reagent/uranium/radium = 1)
 	required_container = /obj/item/slime_extract/yellow
 
 /datum/chemical_reaction/slime/yellow_plasma/on_reaction(datum/reagents/holder, created_volume)
@@ -147,7 +167,7 @@
 // Dark Purple
 
 /datum/chemical_reaction/slime/dark_purple_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 5)
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/dark_purple
 
 /datum/chemical_reaction/slime/dark_purple_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
@@ -155,7 +175,7 @@
 	return ..()
 
 /datum/chemical_reaction/slime/dark_purple_water
-	required_reagents = list(/datum/reagent/water = 5)
+	required_reagents = list(/datum/reagent/water = 1)
 	required_container = /obj/item/slime_extract/dark_purple
 	deletes_extract = FALSE
 
@@ -164,4 +184,17 @@
 	if(!istype(extract))
 		return
 	extract.plasma_drain()
+	return ..()
+
+// Dark Blue
+
+/datum/chemical_reaction/slime/dark_blue_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/dark_blue
+
+/datum/chemical_reaction/slime/dark_blue_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/dark_blue/extract = holder.my_atom
+	if(!istype(extract))
+		return
+	extract.stasis_ready = TRUE
 	return ..()

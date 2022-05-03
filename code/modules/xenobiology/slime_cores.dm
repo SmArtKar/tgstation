@@ -134,6 +134,19 @@
 	name = "dark blue slime extract"
 	icon_state = "dark_blue"
 	tier = 3
+	var/stasis_ready = FALSE
+
+/obj/item/slime_extract/dark_blue/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!ishuman(target) || !stasis_ready)
+		return
+
+	var/mob/living/carbon/human/victim = target
+	if(victim != user && !victim.stat)
+		return
+
+	victim.visible_message(span_warning("[src] starts to inflate and envelops [victim] in a layer stasis-inducing slime!"), span_userdanger("[src] starts to inflate and envelops you in a layer stasis-inducing slime!"))
+	victim.apply_status_effect(/datum/status_effect/slime/dark_blue)
 
 // Silver Extract
 
