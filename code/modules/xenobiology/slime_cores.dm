@@ -112,7 +112,7 @@
 	update_icon()
 	addtimer(CALLBACK(src, .proc/stop_draining), 15 SECONDS)
 
-/obj/item/slime_extract/dark_purple/proc/stop_draining() //Converts around 50% of the plasma in the air into sheets, 200 moles per sheet
+/obj/item/slime_extract/dark_purple/proc/stop_draining() //Converts 50% of the plasma in the air into sheets, 200 moles per sheet
 	STOP_PROCESSING(SSfastprocess, src)
 	icon_state = initial(icon_state)
 	update_icon()

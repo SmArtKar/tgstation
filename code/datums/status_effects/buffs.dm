@@ -758,7 +758,7 @@
 	to_chat(owner, span_notice("You are covered in a fine layer of stasis-inducing dark blue slime!"))
 	owner.apply_status_effect(/datum/status_effect/grouped/stasis, STASIS_SLIME_EFFECT)
 	ADD_TRAIT(owner, TRAIT_TUMOR_SUPPRESSED, XENOBIO_TRAIT)
-	ADD_TRAIT(owner, TRAIT_RESISTLOWPRESSURE, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_RESISTLOWPRESSURE, XENOBIO_TRAIT) //Good way to survive if you/your friend get stuck in space without a way to get back in and have to wait for help
 	ADD_TRAIT(owner, TRAIT_NOBREATH, XENOBIO_TRAIT)
 	owner.extinguish_mob()
 
