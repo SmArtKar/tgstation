@@ -26,8 +26,3 @@
 	wound_bonus = -100
 	armor_flag = BULLET
 
-/obj/item/slime_inducer_cell
-	name = "overcharged slime cell"
-	desc = "A squishy semi-transparent power cell made when a yellow slime core comes in contact with radium. It doesn't fit anywhere aside from inducers."
-	icon = 'icons/obj/power.dmi'
-	icon_state = "slime_inducer_cell"

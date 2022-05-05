@@ -133,8 +133,11 @@
 		inject(user, user)
 
 /obj/item/reagent_containers/hypospray/medipen/update_icon_state()
-	icon_state = "[base_icon_state][(reagents.total_volume > 0) ? null : 0]"
+	update_filled_icon()
 	return ..()
+
+/obj/item/reagent_containers/hypospray/medipen/proc/update_filled_icon()
+	icon_state = "[base_icon_state][(reagents.total_volume > 0) ? null : 0]"
 
 /obj/item/reagent_containers/hypospray/medipen/examine()
 	. = ..()
@@ -316,13 +319,16 @@
 	list_reagents = list(/datum/reagent/medicine/epinephrine = 5, /datum/reagent/medicine/coagulant = 2.5, /datum/reagent/iron = 3.5, /datum/reagent/medicine/salglu_solution = 4)
 
 /obj/item/reagent_containers/hypospray/medipen/slimepen
+	base_icon_state = "slimepen"
 	reagent_flags = null
+
+/obj/item/reagent_containers/hypospray/medipen/proc/update_filled_icon()
+	icon_state = "[(reagents.total_volume > 0) ? initial(icon_state) : base_icon_state]"
 
 /obj/item/reagent_containers/hypospray/medipen/slimepen/dark_blue
 	name = "dark blue slime autoinjector"
 	desc = "A blud slimy autoinjector filled with extract of a dark blue slime. It should mimick effects of cryo without immobilizing or putting the user to sleep."
 	icon_state = "slimepen_blue"
-	base_icon_state = "slimepen_blue"
 	volume = 30
 	amount_per_transfer_from_this = 30
 	list_reagents = list(/datum/reagent/medicine/triclouri_polymers = 15, /datum/reagent/consumable/frostoil = 15)

@@ -156,12 +156,18 @@
 	new /obj/item/stock_parts/cell/emproof/slime(get_turf(holder.my_atom))
 	return ..()
 
-/datum/chemical_reaction/slime/yellow_radium
-	required_reagents = list(/datum/reagent/uranium/radium = 1)
+/datum/chemical_reaction/slime/yellow_water
+	required_reagents = list(/datum/reagent/water = 1)
 	required_container = /obj/item/slime_extract/yellow
 
-/datum/chemical_reaction/slime/yellow_plasma/on_reaction(datum/reagents/holder, created_volume)
-	new /obj/item/slime_inducer_cell(get_turf(holder.my_atom))
+/datum/chemical_reaction/slime/yellow_water/on_reaction(datum/reagents/holder, created_volume)
+	var/turf/location = get_turf(holder.my_atom)
+	location.visible_message(span_danger("[holder.my_atom] explodes into an electrical field!"))
+	playsound(get_turf(src), 'sound/weapons/zapbang.ogg', 50, TRUE)
+	for(var/mob/living/victim in view(4, location))
+		victim.Beam(location, "lightning[rand(1, 12)]", time = 8)
+		victim.electrocute_act(25, src)
+		to_chat(victim, span_userdanger("You feel a sharp electrical pulse!"))
 	return ..()
 
 // Dark Purple
