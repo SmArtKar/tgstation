@@ -14,6 +14,7 @@
 	var/list/vacuum_printable_types = list(/mob/living/carbon/human/species/monkey = 1)
 
 /obj/machinery/biomass_recycler/RefreshParts() //Ranges from 0.2 to 0.8 per monkey recycled
+	. = ..()
 	cube_production = 0
 	for(var/obj/item/stock_parts/manipulator/B in component_parts)
 		cube_production += B.rating * 0.1

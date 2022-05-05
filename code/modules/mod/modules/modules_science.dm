@@ -155,7 +155,7 @@
 	worn_underlay.pixel_y = mod.wearer.pixel_y
 	mod.wearer.underlays += worn_underlay
 
-/obj/item/mod/module/repeller_field/on_deactivation(display_message = TRUE)
+/obj/item/mod/module/repeller_field/on_deactivation(display_message = TRUE, deleting = FALSE)
 	. = ..()
 	if(!.)
 		return
@@ -189,7 +189,7 @@
 
 	pack.toggle_nozzle(mod.wearer)
 
-/obj/item/mod/module/vacuum_pack/on_deactivation(display_message = TRUE)
+/obj/item/mod/module/vacuum_pack/on_deactivation(display_message = TRUE, deleting = FALSE)
 	. = ..()
 	if(!.)
 		return
@@ -228,14 +228,17 @@
 	UnregisterSignal(mod.wearer, COMSIG_HUMAN_MELEE_UNARMED_ATTACK)
 
 /obj/item/mod/module/slime_bracers/proc/launch_slime(mob/living/carbon/human/wearer, atom/target, proximity)
-	if(!isslime(target))
+	if(!isslime(target) && !isjellyperson(target))
 		return
 
-	var/mob/living/simple_animal/slime/slime = target
-	slime.visible_message(span_warning("[slime] is violently launched into the air as soon as it comes in contact with [mod.wearer]'s overcharged bracers!"))
+	var/mob/living/slime = target
+	slime.visible_message(span_warning("[slime] is violently launched into the air as soon as [slime.p_they()] come in contact with [mod.wearer]'s overcharged bracers!"))
 	var/throwtarget = get_edge_target_turf(wearer, get_dir(wearer, slime))
 	slime.throw_at(throwtarget, 3, 2, wearer)
-	slime.Stun(rand(10, 20))
+	if(ishuman(slime))
+		slime.Knockdown(rand(10, 20))
+	else
+		slime.Stun(rand(10, 20))
 	SSmove_manager.stop_looping(slime)
 	playsound(src, 'sound/effects/contractorbatonhit.ogg', 75)
 	drain_power(DEFAULT_CHARGE_DRAIN * 2)

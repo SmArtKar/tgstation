@@ -131,7 +131,7 @@
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	AddElement(/datum/element/soft_landing)
 	var/datum/atom_hud/data/human/medical/advanced/slime/slimehud = GLOB.huds[DATA_HUD_MEDICAL_SLIME]
-	slimehud.add_to_hud(src)
+	slimehud.add_atom_to_hud(src)
 
 /mob/living/simple_animal/slime/prepare_data_huds()
 	. = ..()

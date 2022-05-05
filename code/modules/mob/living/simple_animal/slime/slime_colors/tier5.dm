@@ -208,7 +208,7 @@
 		var/mob/living/victim = attack_target
 		if(victim.fire_stacks < 3)
 			victim.adjust_fire_stacks(3)
-			victim.IgniteMob()
+			victim.ignite_mob()
 
 /datum/slime_color/pyrite/proc/possible_freeze(mob/living/simple_animal/slime/dead_body)
 	SIGNAL_HANDLER
@@ -229,7 +229,7 @@
 		for(var/mob/living/victim in range(1, src))
 			if(victim.fire_stacks < 2)
 				victim.adjust_fire_stacks(2)
-				victim.IgniteMob()
+				victim.ignite_mob()
 				to_chat(victim, span_userdanger("You are set ablaze by [slime]'s heat!"))
 
 	var/turf/our_turf = get_turf(slime)

@@ -145,6 +145,7 @@
 	link_console()
 
 /obj/machinery/slime_bounty_pad/RefreshParts()
+	. = ..()
 	max_contract_tier = 0
 	for(var/obj/item/stock_parts/capacitor/capacitor in component_parts)
 		max_contract_tier += capacitor.rating

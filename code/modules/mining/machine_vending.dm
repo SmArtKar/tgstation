@@ -1,6 +1,6 @@
 /**********************Mining Equipment Vendor**************************/
 
-/obj/machinery/mineral/equipment_vendor
+/obj/machinery/mining_equipment_vendor
 	name = "mining equipment vendor"
 	desc = "An equipment vendor for miners, points collected at an ore redemption machine can be spent here."
 	icon = 'icons/obj/machines/mining_machines.dmi'
@@ -65,6 +65,7 @@
 		new /datum/data/mining_equipment("KA AoE Damage", /obj/item/borg/upgrade/modkit/aoe/mobs, 2000)
 	)
 	var/voucher_type = /obj/item/mining_voucher
+	var/voucher_set_type = /datum/voucher_set/mining
 
 /datum/data/mining_equipment
 	var/equipment_name = "generic"
@@ -76,31 +77,31 @@
 	src.equipment_path = path
 	src.cost = cost
 
-/obj/machinery/mineral/equipment_vendor/Initialize(mapload)
+/obj/machinery/mining_equipment_vendor/Initialize(mapload)
 	. = ..()
 	build_inventory()
 
-/obj/machinery/mineral/equipment_vendor/proc/build_inventory()
+/obj/machinery/mining_equipment_vendor/proc/build_inventory()
 	for(var/p in prize_list)
 		var/datum/data/mining_equipment/M = p
 		GLOB.vending_products[M.equipment_path] = 1
 
-/obj/machinery/mineral/equipment_vendor/update_icon_state()
+/obj/machinery/mining_equipment_vendor/update_icon_state()
 	icon_state = "[initial(icon_state)][powered() ? null : "-off"]"
 	return ..()
 
-/obj/machinery/mineral/equipment_vendor/ui_assets(mob/user)
+/obj/machinery/mining_equipment_vendor/ui_assets(mob/user)
 	return list(
 		get_asset_datum(/datum/asset/spritesheet/vending),
 	)
 
-/obj/machinery/mineral/equipment_vendor/ui_interact(mob/user, datum/tgui/ui)
+/obj/machinery/mining_equipment_vendor/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "MiningVendor", name)
 		ui.open()
 
-/obj/machinery/mineral/equipment_vendor/ui_static_data(mob/user)
+/obj/machinery/mining_equipment_vendor/ui_static_data(mob/user)
 	. = list()
 	.["product_records"] = list()
 	for(var/datum/data/mining_equipment/prize in prize_list)
@@ -112,7 +113,7 @@
 		)
 		.["product_records"] += list(product_data)
 
-/obj/machinery/mineral/equipment_vendor/ui_data(mob/user)
+/obj/machinery/mining_equipment_vendor/ui_data(mob/user)
 	. = list()
 	var/obj/item/card/id/C
 	if(isliving(user))
@@ -128,7 +129,7 @@
 			else
 				.["user"]["job"] = "No Job"
 
-/obj/machinery/mineral/equipment_vendor/ui_act(action, params)
+/obj/machinery/mining_equipment_vendor/ui_act(action, params)
 	. = ..()
 	if(.)
 		return
@@ -138,7 +139,7 @@
 			if(attempt_purchase(params))
 				. = TRUE
 
-/obj/machinery/mineral/equipment_vendor/proc/attempt_purchase(params)
+/obj/machinery/mining_equipment_vendor/proc/attempt_purchase(params)
 	var/obj/item/card/id/I
 	if(isliving(usr))
 		var/mob/living/L = usr
@@ -161,9 +162,9 @@
 	new prize.equipment_path(loc)
 	SSblackbox.record_feedback("nested tally", "mining_equipment_bought", 1, list("[type]", "[prize.equipment_path]"))
 
-/obj/machinery/mineral/equipment_vendor/attackby(obj/item/I, mob/user, params)
+/obj/machinery/mining_equipment_vendor/attackby(obj/item/I, mob/user, params)
 	if(istype(I, voucher_type))
-		RedeemVoucher(I, user)
+		redeem_voucher(I, user)
 		return
 	if(default_deconstruction_screwdriver(user, "[initial(icon_state)]-open", "[initial(icon_state)]", I))
 		return
@@ -171,51 +172,69 @@
 		return
 	return ..()
 
-/obj/machinery/mineral/equipment_vendor/proc/RedeemVoucher(obj/item/voucher, mob/redeemer)
-	var/items = list("Survival Capsule and Explorer's Webbing", "Resonator Kit", "Minebot Kit", "Extraction and Rescue Kit", "Crusher Kit", "Mining Conscription Kit")
+/**
+ * Allows user to redeem a mining voucher for one set of a mining equipment
+ *
+ * * Arguments:
+ * * voucher The mining voucher that is being used to redeem the mining equipment
+ * * redeemer The mob that is redeeming the mining equipment
+ */
+/obj/machinery/mining_equipment_vendor/proc/redeem_voucher(obj/item/mining_voucher/voucher, mob/redeemer)
+	var/static/list/set_types
+	if(!set_types)
+		set_types = list()
+		for(var/datum/voucher_set/static_set as anything in subtypesof(voucher_set_type))
+			set_types[initial(static_set.name)] = new static_set
 
-	var/selection = tgui_input_list(redeemer, "Pick your equipment", "Mining Voucher Redemption", sort_list(items))
-	if(isnull(selection))
+	var/list/items = list()
+	for(var/set_name in set_types)
+		var/datum/voucher_set/current_set = set_types[set_name]
+		var/datum/radial_menu_choice/option = new
+		option.image = image(icon = current_set.icon, icon_state = current_set.icon_state)
+		option.info = span_boldnotice(current_set.description)
+		items[set_name] = option
+
+	var/selection = show_radial_menu(redeemer, src, items, custom_check = CALLBACK(src, .proc/check_menu, voucher, redeemer), radius = 38, require_near = TRUE, tooltips = TRUE)
+	if(!selection)
 		return
-	if(!Adjacent(redeemer) || QDELETED(voucher) || voucher.loc != redeemer)
-		return
-	var/drop_location = drop_location()
-	switch(selection)
-		if("Survival Capsule and Explorer's Webbing")
-			new /obj/item/storage/belt/mining/vendor(drop_location)
-		if("Resonator Kit")
-			new /obj/item/extinguisher/mini(drop_location)
-			new /obj/item/resonator(drop_location)
-		if("Minebot Kit")
-			new /mob/living/simple_animal/hostile/mining_drone(drop_location)
-			new /obj/item/weldingtool/hugetank(drop_location)
-			new /obj/item/clothing/head/welding(drop_location)
-			new /obj/item/borg/upgrade/modkit/minebot_passthrough(drop_location)
-		if("Extraction and Rescue Kit")
-			new /obj/item/extraction_pack(drop_location)
-			new /obj/item/fulton_core(drop_location)
-			new /obj/item/stack/marker_beacon/thirty(drop_location)
-		if("Crusher Kit")
-			new /obj/item/extinguisher/mini(drop_location)
-			new /obj/item/kinetic_crusher(drop_location)
-		if("Mining Conscription Kit")
-			new /obj/item/storage/backpack/duffelbag/mining_conscript(drop_location)
+
+	var/datum/voucher_set/chosen_set = set_types[selection]
+	for(var/item in chosen_set.set_items)
+		new item(drop_location())
 
 	SSblackbox.record_feedback("tally", "mining_voucher_redeemed", 1, selection)
 	qdel(voucher)
 
-/obj/machinery/mineral/equipment_vendor/ex_act(severity, target)
+/**
+ * Checks if we are allowed to interact with a radial menu
+ *
+ * * Arguments:
+ * * voucher The mining voucher that is being used to redeem a mining equipment
+ * * redeemer The living mob interacting with the menu
+ */
+/obj/machinery/mining_equipment_vendor/proc/check_menu(obj/item/mining_voucher/voucher, mob/living/redeemer)
+	if(!istype(redeemer))
+		return FALSE
+	if(redeemer.incapacitated())
+		return FALSE
+	if(QDELETED(voucher))
+		return FALSE
+	if(!redeemer.is_holding(voucher))
+		return FALSE
+	return TRUE
+
+/obj/machinery/mining_equipment_vendor/ex_act(severity, target)
 	do_sparks(5, TRUE, src)
 	if(severity > EXPLODE_LIGHT && prob(17 * severity))
 		qdel(src)
 
 /****************Golem Point Vendor**************************/
 
-/obj/machinery/mineral/equipment_vendor/golem
+/obj/machinery/mining_equipment_vendor/golem
 	name = "golem ship equipment vendor"
 	circuit = /obj/item/circuitboard/machine/mining_equipment_vendor/golem
 
-/obj/machinery/mineral/equipment_vendor/golem/Initialize(mapload)
+/obj/machinery/mining_equipment_vendor/golem/Initialize(mapload)
 	desc += "\nIt seems a few selections have been added."
 	prize_list += list(
 		new /datum/data/mining_equipment("Extra Id", /obj/item/card/id/advanced/mining, 250),

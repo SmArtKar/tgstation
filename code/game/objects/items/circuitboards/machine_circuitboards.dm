@@ -508,7 +508,7 @@
 /obj/item/circuitboard/machine/vendor
 	name = "Custom Vendor (Machine Board)"
 	desc = "You can turn the \"brand selection\" dial using a screwdriver."
-	custom_premium_price = PAYCHECK_ASSISTANT * 1.5
+	custom_premium_price = PAYCHECK_CREW * 1.5
 	build_path = /obj/machinery/vending/custom
 	req_components = list(/obj/item/vending_refill/custom = 1)
 
@@ -1176,14 +1176,14 @@
 /obj/item/circuitboard/machine/mining_equipment_vendor
 	name = "Mining Equipment Vendor (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_SUPPLY
-	build_path = /obj/machinery/mineral/equipment_vendor
+	build_path = /obj/machinery/mining_equipment_vendor
 	req_components = list(
 		/obj/item/stack/sheet/glass = 1,
 		/obj/item/stock_parts/matter_bin = 3)
 
 /obj/item/circuitboard/machine/mining_equipment_vendor/golem
 	name = "Golem Ship Equipment Vendor (Machine Board)"
-	build_path = /obj/machinery/mineral/equipment_vendor/golem
+	build_path = /obj/machinery/mining_equipment_vendor/golem
 
 /obj/item/circuitboard/machine/ore_redemption
 	name = "Ore Redemption (Machine Board)"
@@ -1343,7 +1343,7 @@
 /obj/item/circuitboard/machine/xenobio_equipment_vendor
 	name = "Xenobiology Equipment Vendor (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_SCIENCE
-	build_path = /obj/machinery/mineral/equipment_vendor/xenobiology
+	build_path = /obj/machinery/mining_equipment_vendor/xenobiology
 	req_components = list(
 		/obj/item/stack/sheet/glass = 1,
 		/obj/item/stock_parts/matter_bin = 3)
