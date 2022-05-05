@@ -1620,6 +1620,6 @@
 	metabolization_rate = REAGENTS_METABOLISM * (0.00001 * (user.bodytemperature ** 2) + 0.5)
 	return ..()
 
-/datum/reagent/medicine/triclouri_polymers/overdose_process(mob/living/M, delta_time, times_fired)
+/datum/reagent/medicine/triclouri_polymers/overdose_process(mob/living/user, delta_time, times_fired)
 	. = ..()
 	user.adjustToxLoss(3 * REM * delta_time, FALSE, TRUE)
