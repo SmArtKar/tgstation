@@ -703,7 +703,7 @@
 	. = ..()
 	RegisterSignal(owner, COMSIG_COMPONENT_CLEAN_ACT, .proc/slime_washed)
 
-	goo_overlay = mutable_appearance('icons/effects/64x64.dmi', effect_icon_state")
+	goo_overlay = mutable_appearance('icons/effects/64x64.dmi', effect_icon_state)
 	goo_overlay.pixel_x = -16
 	goo_overlay.pixel_y = -16
 	owner.add_overlay(goo_overlay)
