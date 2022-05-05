@@ -1592,3 +1592,34 @@
 	clot_rate = 0.4 //slightly better than regular coagulant
 	passive_bleed_modifier = 0.5
 	overdose_threshold = 10 //but easier to overdose on
+
+/datum/reagent/medicine/triclouri_polymers
+	name = "Tri-Clouri Polymers"
+	description = "An extremely complex and rare reagent that can sometimes be found in dark blue slime extracts, Tri-Cloury Polymers mimick effects of cryo without immobilizing or putting the user to sleep."
+	color = "#33A0FF"
+	taste_description = "frozen gelatine"
+	ph = 2
+	burning_temperature = 20 //cold burning
+	burning_volume = 0.1
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	overdose_threshold = 16 //No more than 1 pen!
+
+/datum/reagent/medicine/triclouri_polymers/on_mob_life(mob/living/carbon/user, delta_time, times_fired)
+	var/power = -0.00005 * (user.bodytemperature ** 2) + 3
+	if(user.bodytemperature < T0C)
+		user.adjustOxyLoss(-3 * power * REM * delta_time, 0)
+		user.adjustBruteLoss(-power * REM * delta_time, 0)
+		user.adjustFireLoss(-power * REM * delta_time, 0)
+		user.adjustToxLoss(-power * REM * delta_time, 0, TRUE) //heals TOXINLOVERs
+		user.adjustCloneLoss(-power * REM * delta_time, 0)
+		for(var/i in user.all_wounds)
+			var/datum/wound/iter_wound = i
+			iter_wound.on_xadone(power * REAGENTS_EFFECT_MULTIPLIER * delta_time)
+		REMOVE_TRAIT(user, TRAIT_DISFIGURED, TRAIT_GENERIC) //fixes common causes for disfiguration
+		. = TRUE
+	metabolization_rate = REAGENTS_METABOLISM * (0.00001 * (user.bodytemperature ** 2) + 0.5)
+	return ..()
+
+/datum/reagent/medicine/triclouri_polymers/overdose_process(mob/living/M, delta_time, times_fired)
+	. = ..()
+	user.adjustToxLoss(3 * REM * delta_time, FALSE, TRUE)

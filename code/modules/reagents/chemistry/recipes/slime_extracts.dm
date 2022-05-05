@@ -198,3 +198,11 @@
 		return
 	extract.stasis_ready = TRUE
 	return ..()
+
+/datum/chemical_reaction/slime/dark_blue_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/dark_blue
+
+/datum/chemical_reaction/slime/dark_blue_blood/on_reaction(datum/reagents/holder, created_volume)
+	new /obj/item/reagent_containers/hypospray/medipen/slimepen/dark_blue(get_turf(holder.my_atom))
+	return ..()

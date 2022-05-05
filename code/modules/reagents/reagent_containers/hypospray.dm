@@ -323,6 +323,6 @@
 	desc = "A blud slimy autoinjector filled with extract of a dark blue slime. It should mimick effects of cryo without immobilizing or putting the user to sleep."
 	icon_state = "slimepen_blue"
 	base_icon_state = "slimepen_blue"
-	volume = 15
-	amount_per_transfer_from_this = 15
-	list_reagents = list()
+	volume = 30
+	amount_per_transfer_from_this = 30
+	list_reagents = list(/datum/reagent/medicine/triclouri_polymers = 15, /datum/reagent/consumable/frostoil = 15)
