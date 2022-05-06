@@ -331,4 +331,4 @@
 	icon_state = "slimepen_blue"
 	volume = 30
 	amount_per_transfer_from_this = 30
-	list_reagents = list(/datum/reagent/medicine/triclouri_polymers = 15, /datum/reagent/consumable/frostoil = 15)
+	list_reagents = list(/datum/reagent/medicine/trixadone_polymers = 15, /datum/reagent/consumable/frostoil = 15)

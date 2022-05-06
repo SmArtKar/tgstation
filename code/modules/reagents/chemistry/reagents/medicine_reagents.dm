@@ -1591,9 +1591,9 @@
 	passive_bleed_modifier = 0.5
 	overdose_threshold = 10 //but easier to overdose on
 
-/datum/reagent/medicine/triclouri_polymers
-	name = "Tri-Clouri Polymers"
-	description = "An extremely complex and rare reagent that can sometimes be found in dark blue slime extracts, Tri-Cloury Polymers mimick effects of cryo without immobilizing or putting the user to sleep."
+/datum/reagent/medicine/trixadone_polymers
+	name = "Trixadone Polymers"
+	description = "An extremely complex and rare reagent that can sometimes be found in dark blue slime extracts, Trixadone Polymers mimick effects of cryo without immobilizing or putting the user to sleep."
 	color = "#33A0FF"
 	taste_description = "frozen gelatine"
 	ph = 2
@@ -1602,7 +1602,7 @@
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	overdose_threshold = 16 //No more than 1 pen!
 
-/datum/reagent/medicine/triclouri_polymers/on_mob_life(mob/living/carbon/user, delta_time, times_fired)
+/datum/reagent/medicine/trixadone_polymers/on_mob_life(mob/living/carbon/user, delta_time, times_fired)
 	var/power = -0.00005 * (user.bodytemperature ** 2) + 3
 	if(user.bodytemperature < T0C)
 		user.adjustOxyLoss(-3 * power * REM * delta_time, 0)
@@ -1618,6 +1618,6 @@
 	metabolization_rate = REAGENTS_METABOLISM * (0.00001 * (user.bodytemperature ** 2) + 0.5)
 	return ..()
 
-/datum/reagent/medicine/triclouri_polymers/overdose_process(mob/living/user, delta_time, times_fired)
+/datum/reagent/medicine/trixadone_polymers/overdose_process(mob/living/user, delta_time, times_fired)
 	. = ..()
 	user.adjustToxLoss(3 * REM * delta_time, FALSE, TRUE)
