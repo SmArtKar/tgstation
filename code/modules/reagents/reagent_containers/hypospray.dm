@@ -327,8 +327,16 @@
 
 /obj/item/reagent_containers/hypospray/medipen/slimepen/dark_blue
 	name = "dark blue slime autoinjector"
-	desc = "A blud slimy autoinjector filled with extract of a dark blue slime. It should mimick effects of cryo without immobilizing or putting the user to sleep."
+	desc = "A blue slimy autoinjector filled with extract of a dark blue slime. It should mimick effects of cryo without immobilizing or putting the user to sleep."
 	icon_state = "slimepen_blue"
 	volume = 30
 	amount_per_transfer_from_this = 30
 	list_reagents = list(/datum/reagent/medicine/trixadone_polymers = 15, /datum/reagent/consumable/frostoil = 15)
+
+/obj/item/reagent_containers/hypospray/medipen/slimepen/silver
+	name = "silver slime autoinjector"
+	desc = "A silver slimy autoinjector filled with extract of a silver slime. It increases your metabolism, granting you speed in cost of rapid nutrition drain."
+	icon_state = "slimepen_silver"
+	volume = 15
+	amount_per_transfer_from_this = 15
+	list_reagents = list(/datum/reagent/silver_slime_extract = 15)

@@ -422,6 +422,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_SLIME_STASIS "slime_stasis"
 #define TRAIT_SLIME_RABID "slime_rabid"
 
+/// You can't gain nutrition with this trait
+#define TRAIT_NO_NUTRITION_GAIN "no_nutrition_gain"
+
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic

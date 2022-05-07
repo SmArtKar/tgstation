@@ -2900,3 +2900,29 @@
 		mytray.adjust_plant_health(round(chems.get_reagent_amount(src.type) * 1))
 		if(myseed)
 			myseed.adjust_potency(round(chems.get_reagent_amount(src.type) * 0.5))
+
+/datum/reagent/silver_slime_extract
+	name = "Silver Slime Extract"
+	description = "An unknown solution found in silver slime cores that speeds up metabolism to insane levels, rapidly draining nutrition in exchange for speed."
+	taste_description = "acidic goo"
+	color = "#BCBCBC"
+	chemical_flags = REAGENT_DEAD_PROCESS | REAGENT_IGNORE_STASIS | REAGENT_DONOTSPLIT
+
+/datum/reagent/silver_slime_extract/on_mob_add(mob/living/owner, amount)
+	. = ..()
+	var/datum/status_effect/no_nutrition_gain/status_effect = owner.apply_status_effect(/datum/status_effect/no_nutrition_gain)
+	status_effect.duration = INFINITY
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/silver_slime_extract)
+
+/datum/reagent/silver_slime_extract/on_mob_life(mob/living/owner, delta_time, times_fired)
+	. = ..()
+	if(HAS_TRAIT(owner, TRAIT_NOHUNGER))
+		return
+	owner.adjust_nutrition(-5 * REM * delta_time)
+	if(owner.nutrition == 0)
+		owner.adjustBruteLoss(2 * REM * delta_time)
+
+/datum/reagent/silver_slime_extract/on_mob_delete(mob/living/owner)
+	. = ..()
+	owner.apply_status_effect(/datum/status_effect/no_nutrition_gain) //To refresh duration
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/silver_slime_extract)

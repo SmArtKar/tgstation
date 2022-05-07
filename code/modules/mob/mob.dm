@@ -1290,6 +1290,8 @@
 
 ///Adjust the nutrition of a mob
 /mob/proc/adjust_nutrition(change) //Honestly FUCK the oldcoders for putting nutrition on /mob someone else can move it up because holy hell I'd have to fix SO many typechecks
+	if(change > 0 && HAS_TRAIT(src, TRAIT_NO_NUTRITION_GAIN))
+		return
 	nutrition = max(0, nutrition + change)
 
 ///Force set the mob nutrition

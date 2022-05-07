@@ -1426,3 +1426,20 @@
 
 /datum/status_effect/bonechill/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/bonechill)
+
+/atom/movable/screen/alert/status_effect/no_nutrition_gain
+	name = "Stomach Cramps"
+	desc = "Your stomach refuses to process any nutrition whatsoever!"
+	icon_state = "no_nutrition"
+
+/datum/status_effect/no_nutrition_gain
+	id = "no_nutrition_gain"
+	duration = 1 MINUTES
+	alert_type = /atom/movable/screen/alert/status_effect/no_nutrition_gain
+
+/datum/status_effect/no_nutrition_gain/on_apply()
+	ADD_TRAIT(owner, TRAIT_NO_NUTRITION_GAIN, STATUS_EFFECT_TRAIT)
+	return ..()
+
+/datum/status_effect/no_nutrition_gain/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_NO_NUTRITION_GAIN, STATUS_EFFECT_TRAIT)

@@ -212,3 +212,13 @@
 /datum/chemical_reaction/slime/dark_blue_blood/on_reaction(datum/reagents/holder, created_volume)
 	new /obj/item/reagent_containers/hypospray/medipen/slimepen/dark_blue(get_turf(holder.my_atom))
 	return ..()
+
+// Silver
+
+/datum/chemical_reaction/slime/silver_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/silver
+
+/datum/chemical_reaction/slime/dark_blue_blood/on_reaction(datum/reagents/holder, created_volume)
+	new /obj/item/reagent_containers/hypospray/medipen/slimepen/silver(get_turf(holder.my_atom))
+	return ..()
