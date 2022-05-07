@@ -74,6 +74,7 @@
 	)
 
 /obj/machinery/computer/slime_market/ui_interact(mob/user, datum/tgui/ui)
+	. = ..()
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "XenobioMarket", name)
@@ -126,9 +127,6 @@
 			price_row.Add(list(list("key" = iter % 4)))
 			iter += 1
 
-	if(LAZYLEN(price_row))
-		prices.Add(list(list("key" = LAZYLEN(prices), "prices" = price_row.Copy())))
-
 	data["prices"] = prices
 
 	var/list/corporations = list()
@@ -141,6 +139,7 @@
 									 	 "desc" = corporation.desc,
 									 	 "icon" = corporation.icon,
 									 	 "relationship" = round(corporation.relationship_level),
+									 	 "maximum_relationship" = round(corporation.max_relationship_level),
 									 	 "bounties_finished" = corporation.bounties_finished,
 									 	 )
 

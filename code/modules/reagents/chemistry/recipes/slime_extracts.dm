@@ -262,3 +262,46 @@
 
 /datum/chemical_reaction/slime/silver_plasma/water/get_food()
 	return get_random_drink()
+
+// ************************************************
+// ******************* TIER FOUR ******************
+// ************************************************
+
+
+// ************************************************
+// ******************* TIER FIVE ******************
+// ************************************************
+
+/datum/chemical_reaction/slime/red_plasma
+	required_container = /obj/item/slime_extract/red
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/red_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/slime_destabilizer(get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/red_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/red
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
+
+/datum/chemical_reaction/slime/slimebloodlust/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	for(var/mob/living/simple_animal/slime/slime in viewers(get_turf(holder.my_atom), null))
+		if(slime.docile) //Undoes docility, but doesn't make rabid.
+			slime.visible_message(span_danger("[slime] forgets its training, becoming wild once again!"))
+			slime.docile = FALSE
+			slime.update_name()
+			new /obj/effect/temp_visual/annoyed/slime(get_turf(slime))
+			continue
+		ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_bloodlust")
+		slime.visible_message(span_danger("The [slime] is driven into a frenzy!"))
+		new /obj/effect/temp_visual/annoyed(get_turf(slime))
+	return ..()
+
+// ************************************************
+// ******************* TIER SIX *******************
+// ************************************************
+
+// ************************************************
+// ***************** TIER SPECIAL *****************
+// ************************************************

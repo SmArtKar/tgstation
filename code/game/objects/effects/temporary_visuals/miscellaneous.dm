@@ -550,3 +550,22 @@
 	icon_state = "light_ash"
 	icon = 'icons/effects/weather_effects.dmi'
 	duration = 3.2 SECONDS
+
+/obj/effect/temp_visual/arrow_up
+	icon_state = "arrow_up"
+	duration = 12
+	layer = BELOW_MOB_LAYER
+
+/obj/effect/temp_visual/arrow_up/Initialize(mapload)
+	. = ..()
+	animate(src, pixel_y = 24, alpha = 0, time = duration)
+
+/obj/effect/temp_visual/arrow_down
+	icon_state = "arrow_down"
+	duration = 12
+	layer = BELOW_MOB_LAYER
+
+/obj/effect/temp_visual/arrow_down/Initialize(mapload)
+	. = ..()
+	pixel_y = 24
+	animate(src, pixel_y = 0, alpha = 0, time = duration)

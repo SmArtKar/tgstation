@@ -322,7 +322,7 @@
 	base_icon_state = "slimepen"
 	reagent_flags = null
 
-/obj/item/reagent_containers/hypospray/medipen/proc/update_filled_icon()
+/obj/item/reagent_containers/hypospray/medipen/slimepen/update_filled_icon()
 	icon_state = "[(reagents.total_volume > 0) ? initial(icon_state) : base_icon_state]"
 
 /obj/item/reagent_containers/hypospray/medipen/slimepen/dark_blue

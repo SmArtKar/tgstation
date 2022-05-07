@@ -167,39 +167,6 @@
 // ****************** TIER FOUR *******************
 // ************************************************
 
-// Red Extract
-
-/obj/item/slime_extract/red
-	name = "red slime extract"
-	icon_state = "red"
-	tier = 4
-
-// Green Extract
-
-/obj/item/slime_extract/green
-	name = "green slime extract"
-	icon_state = "green"
-	tier = 4
-
-// Pink Extract
-
-/obj/item/slime_extract/pink
-	name = "pink slime extract"
-	icon_state = "pink"
-	tier = 4
-
-// Gold Extract
-
-/obj/item/slime_extract/gold
-	name = "gold slime extract"
-	icon_state = "gold"
-	tier = 4
-
-
-// ************************************************
-// ****************** TIER FIVE *******************
-// ************************************************
-
 // Cerulean Extract
 
 /obj/item/slime_extract/cerulean
@@ -228,6 +195,37 @@
 	icon_state = "bluespace"
 	tier = 5
 
+// ************************************************
+// ****************** TIER FIVE *******************
+// ************************************************
+
+// Red Extract
+
+/obj/item/slime_extract/red
+	name = "red slime extract"
+	icon_state = "red"
+	tier = 4
+
+// Green Extract
+
+/obj/item/slime_extract/green
+	name = "green slime extract"
+	icon_state = "green"
+	tier = 4
+
+// Pink Extract
+
+/obj/item/slime_extract/pink
+	name = "pink slime extract"
+	icon_state = "pink"
+	tier = 4
+
+// Gold Extract
+
+/obj/item/slime_extract/gold
+	name = "gold slime extract"
+	icon_state = "gold"
+	tier = 4
 
 // ************************************************
 // ******************* TIER SIX *******************

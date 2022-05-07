@@ -4445,7 +4445,6 @@
 #include "code\modules\xenobiology\bounties\corporations\nakamura.dm"
 #include "code\modules\xenobiology\bounties\corporations\xynergy.dm"
 #include "code\modules\xenobiology\rewards\core_results.dm"
-#include "code\modules\xenobiology\rewards\misc.dm"
 #include "code\modules\xenobiology\rewards\slime_potions.dm"
 #include "code\modules\xenobiology\xenoflora_pod\xenoflora_plant.dm"
 #include "code\modules\xenobiology\xenoflora_pod\xenoflora_pod.dm"

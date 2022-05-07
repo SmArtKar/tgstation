@@ -11,12 +11,13 @@
 	var/illegal = FALSE //If this company only shows up on emag
 	var/bounty_type = /datum/xenobio_bounty
 
-	var/list/bounties_by_level = list()
+	var/list/bounties_by_level
 
 /datum/xenobio_corporation/New()
 	. = ..()
+	bounties_by_level = list()
 	for(var/i = 1 to max_relationship_level)
-		bounties_by_level += list()
+		bounties_by_level.Add(list())
 
 	for(var/bounty_subtype in subtypesof(bounty_type))
 		var/datum/xenobio_bounty/bounty = new bounty_subtype(src)

@@ -214,6 +214,21 @@
 	icon_state = "blueprints"
 	fluffnotice = "Intellectual Property of Nanotrasen. For use in engineering cyborgs only. Wipe from memory upon departure from the station."
 
+/obj/item/areaeditor/blueprints/slime
+	name = "cerulean prints"
+	desc = "A one use yet of blueprints made of jelly like organic material. Extends the reach of the management console."
+	color = "#2956B2"
+	fluffnotice = "Blorble. Blorble Blorble. Blorble Blorble Blorble Blorble. Blorble."
+
+/obj/item/areaeditor/blueprints/slime/edit_area()
+	..()
+	var/area/A = get_area(src)
+	for(var/turf/T in A)
+		T.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
+		T.add_atom_colour("#2956B2", FIXED_COLOUR_PRIORITY)
+	A.area_flags |= XENOBIOLOGY_COMPATIBLE
+	qdel(src)
+
 /proc/rename_area(a, new_name)
 	var/area/A = get_area(a)
 	var/prevname = "[A.name]"

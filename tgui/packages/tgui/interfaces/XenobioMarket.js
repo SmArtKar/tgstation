@@ -9,8 +9,8 @@ export const XenobioMarket = (_, context) => {
 
   return (
     <Window
-      width={(tabIndex === 1 && 900) || 680}
-      height={(tabIndex === 1 && 412) || 500}>
+      width={900}
+      height={(tabIndex === 1 && 412) || 600}>
       <Window.Content>
         <Tabs style={{ 'border-radius': '5px' }}>
           <Tabs.Tab
@@ -89,37 +89,33 @@ const IntergalacticBounties = (_, context) => {
   );
 
   return (
-    <Stack>
-      <Stack.Item width="220px">
-        <Stack vertical>
-          <Stack.Item>
-            <Tabs vertical style={{ 'border-radius': '5px' }}>
-              {corporations.map((corporation) => (
-                <Tabs.Tab
-                  key={corporation.name}
-                  selected={selectedCorporation === corporation.name}
-                  icon={corporation.icon}
-                  onClick={() => setSelectedCorporation(corporation.name)}>
-                  {corporation.name}
-                </Tabs.Tab>
-              ))}
-            </Tabs>
+    <Stack vertical>
+      <Stack.Item>
+        <Stack>
+          <Stack.Item width="220px">
+            <Stack vertical>
+              <Stack.Item>
+                <Tabs vertical style={{ 'border-radius': '5px' }}>
+                  {corporations.map((corporation) => (
+                    <Tabs.Tab
+                      key={corporation.name}
+                      selected={selectedCorporation === corporation.name}
+                      icon={corporation.icon}
+                      onClick={() => setSelectedCorporation(corporation.name)}>
+                      {corporation.name}
+                    </Tabs.Tab>
+                  ))}
+                </Tabs>
+              </Stack.Item>
+            </Stack>
           </Stack.Item>
-          <Stack.Item>
-            <CurrentBounty />
-          </Stack.Item>
-          <Stack.Item>
-            <Button width="100%"
-              textAlign="center"
-              onClick={() => act('send_bounty')}
-            >
-              Send Bounty
-            </Button>
+          <Stack.Item grow>
+            <BountyInfo selectedCorporation={selectedCorporation} />
           </Stack.Item>
         </Stack>
       </Stack.Item>
-      <Stack.Item grow>
-        <BountyInfo selectedCorporation={selectedCorporation} />
+      <Stack.Item>
+        <CurrentBounty />
       </Stack.Item>
     </Stack>
   );
@@ -155,6 +151,12 @@ const CurrentBounty = (_, context) => {
               {current_bounty.author_name}
             </LabeledList.Item>
           </LabeledList>
+          <Button width="100%"
+            textAlign="center"
+            onClick={() => act('send_bounty')}
+          >
+            Send Bounty
+          </Button>
         </>
       )}
     </Section>
@@ -176,8 +178,11 @@ const BountyInfo = (props, context) => {
         <Section title={selectedCorporation} grow>
           <Box mb="6px">{currentCompany.desc}</Box>
           <LabeledList vertical>
-            <LabeledList.Item label="Maximum Bounty Level">
+            <LabeledList.Item label="Relationship Level">
               {currentCompany.relationship}
+            </LabeledList.Item>
+            <LabeledList.Item label="Maximum Relationship Level">
+              {currentCompany.maximum_relationship}
             </LabeledList.Item>
             <LabeledList.Item label="Finished Bounties">
               {currentCompany.bounties_finished}

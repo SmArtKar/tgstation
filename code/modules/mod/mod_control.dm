@@ -140,7 +140,6 @@
 		module = new module(src)
 		install(module)
 	RegisterSignal(src, COMSIG_ATOM_EXITED, .proc/on_exit)
-	RegisterSignal(src, COMSIG_SPEED_POTION_APPLIED, .proc/on_potion)
 	movedelay = CONFIG_GET(number/movedelay/run_delay)
 
 /obj/item/mod/control/Destroy()
@@ -702,20 +701,3 @@
 	if(overslot != overslotting_parts[source])
 		return
 	overslotting_parts[source] = null
-
-/obj/item/mod/control/proc/on_potion(atom/movable/source, obj/item/slimepotion/speed/speed_potion, mob/living/user)
-	SIGNAL_HANDLER
-
-	if(slowdown_inactive <= 0)
-		to_chat(user, span_warning("[src] has already been coated with red, that's as fast as it'll go!"))
-		return SPEED_POTION_STOP
-	if(active)
-		to_chat(user, span_warning("It's too dangerous to smear [speed_potion] on [src] while it's active!"))
-		return SPEED_POTION_STOP
-	to_chat(user, span_notice("You slather the red gunk over [src], making it faster."))
-	set_mod_color("#FF0000")
-	slowdown_inactive = 0
-	slowdown_active = 0
-	update_speed()
-	qdel(speed_potion)
-	return SPEED_POTION_STOP
