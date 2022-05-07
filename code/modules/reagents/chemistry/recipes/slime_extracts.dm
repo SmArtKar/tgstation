@@ -219,6 +219,46 @@
 	required_reagents = list(/datum/reagent/blood = 1)
 	required_container = /obj/item/slime_extract/silver
 
-/datum/chemical_reaction/slime/dark_blue_blood/on_reaction(datum/reagents/holder, created_volume)
+/datum/chemical_reaction/slime/silver_blood/on_reaction(datum/reagents/holder, created_volume)
 	new /obj/item/reagent_containers/hypospray/medipen/slimepen/silver(get_turf(holder.my_atom))
 	return ..()
+
+/datum/chemical_reaction/slime/silver_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/silver
+
+/datum/chemical_reaction/slime/silver_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/holder_turf = get_turf(holder.my_atom)
+
+	playsound(holder_turf, 'sound/effects/phasein.ogg', 100, TRUE)
+
+	for(var/mob/living/carbon/victim in viewers(holder_turf, null))
+		victim.flash_act()
+
+	for(var/i in 1 to 4 + rand(1,2))
+		var/chosen = get_food()
+		var/obj/item/food_item = new chosen(holder_turf)
+
+		if(istype(food_item, /obj/item/food))
+			var/obj/item/food/foody = food_item
+			foody.food_flags |= FOOD_SILVER_SPAWNED
+			foody.desc += "\n [span_notice("It vaguely smells like acid")]"
+
+		if(prob(5))//Fry it!
+			var/obj/item/food/deepfryholder/fried
+			fried = new(holder_turf, food_item)
+			fried.fry() // actually set the name and colour it
+
+		if(prob(50))
+			for(var/j in 1 to rand(1, 3))
+				step(food_item, pick(NORTH,SOUTH,EAST,WEST))
+	..()
+
+/datum/chemical_reaction/slime/silver_plasma/proc/get_food()
+	return get_random_food()
+
+/datum/chemical_reaction/slime/silver_plasma/water
+	required_reagents = list(/datum/reagent/water = 1)
+
+/datum/chemical_reaction/slime/silver_plasma/water/get_food()
+	return get_random_drink()

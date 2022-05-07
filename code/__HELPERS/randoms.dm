@@ -20,7 +20,10 @@
 		/obj/item/food/meat/slab/human/mutant,
 		/obj/item/food/grown/ash_flora,
 		/obj/item/food/grown/nettle,
-		/obj/item/food/grown/shell
+		/obj/item/food/grown/shell,
+		/obj/item/food/grown/shell/gatfruit, //No busted shit for silvers
+		/obj/item/food/grown/cherry_bomb,
+		/obj/item/food/powercrepe,
 		)
 
 	return pick(subtypesof(/obj/item/food) - blocked)
