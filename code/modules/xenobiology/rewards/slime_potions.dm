@@ -43,9 +43,14 @@
 		to_chat(user, span_warning("[slime] already has no chance of mutating!"))
 		return
 
+	if(slime.mutator_used)
+		to_chat(user, span_warning("[slime] has already been fed a mutator potion, it's core is too unstable for another one!"))
+		return
+
 	to_chat(user, span_notice("You feed [slime] [src]]. It is now less likely to mutate."))
 	slime.mutation_chance = clamp(slime.mutation_chance - 15, 0, 100)
 	new /obj/effect/temp_visual/arrow_down(get_turf(slime))
+	slime.mutator_used = TRUE
 	qdel(src)
 
 /obj/item/slime_potion/slime_destabilizer
@@ -66,9 +71,14 @@
 		to_chat(user, span_warning("[slime] already has maximum chance of mutating!"))
 		return
 
+	if(slime.mutator_used)
+		to_chat(user, span_warning("[slime] has already been fed a mutator potion, it's core is too unstable for another one!"))
+		return
+
 	to_chat(user, span_notice("You feed [slime] [src]]. It is now more likely to mutate."))
 	slime.mutation_chance = clamp(slime.mutation_chance + 15, 0, 100)
 	new /obj/effect/temp_visual/arrow_up(get_turf(slime))
+	slime.mutator_used = TRUE
 	qdel(src)
 
 /obj/item/slimepotion/transference

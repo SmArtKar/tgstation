@@ -272,11 +272,11 @@
 // ******************* TIER FIVE ******************
 // ************************************************
 
-/datum/chemical_reaction/slime/red_plasma
+/datum/chemical_reaction/slime/red_water
 	required_container = /obj/item/slime_extract/red
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_reagents = list(/datum/reagent/water = 1)
 
-/datum/chemical_reaction/slime/red_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+/datum/chemical_reaction/slime/red_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/slime_potion/slime_destabilizer(get_turf(holder.my_atom))
 	return ..()
 
@@ -285,8 +285,8 @@
 	required_container = /obj/item/slime_extract/red
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
 
-/datum/chemical_reaction/slime/slimebloodlust/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	for(var/mob/living/simple_animal/slime/slime in viewers(get_turf(holder.my_atom), null))
+/datum/chemical_reaction/slime/red_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	for(var/mob/living/simple_animal/slime/slime in viewers(10, get_turf(holder.my_atom)))
 		if(slime.docile) //Undoes docility, but doesn't make rabid.
 			slime.visible_message(span_danger("[slime] forgets its training, becoming wild once again!"))
 			slime.docile = FALSE
@@ -296,6 +296,24 @@
 		ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_bloodlust")
 		slime.visible_message(span_danger("The [slime] is driven into a frenzy!"))
 		new /obj/effect/temp_visual/annoyed(get_turf(slime))
+	return ..()
+
+/datum/chemical_reaction/slime/red_plasma
+	required_container = /obj/item/slime_extract/red
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/red_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/atom/cycle_loc = holder.my_atom
+	while(!isturf(cycle_loc) && !ishuman(cycle_loc))
+		cycle_loc = cycle_loc.loc
+
+	if(!ishuman(cycle_loc))
+		cycle_loc.visible_message(span_warning("[holder.my_atom] starts to expand, but fails to find something to latch onto and deflates!"))
+		deletes_extract = FALSE
+		return ..()
+
+	var/mob/living/carbon/human/owner = cycle_loc
+	owner.apply_status_effect(/datum/status_effect/slime/red)
 	return ..()
 
 // ************************************************

@@ -674,6 +674,8 @@
 	to_chat(owner, span_warning("You don't feel any healthier."))
 
 /datum/status_effect/slime
+	status_type = STATUS_EFFECT_REFRESH
+	duration = 1 MINUTES
 	var/mutable_appearance/goo_overlay
 	var/effect_icon_state
 
@@ -703,8 +705,6 @@
 
 /datum/status_effect/slime/orange
 	id = "orange_slime"
-	duration = 1 MINUTES
-	status_type = STATUS_EFFECT_REFRESH
 	alert_type = /atom/movable/screen/alert/status_effect/orange_slime
 	effect_icon_state = "orange_slime"
 
@@ -726,8 +726,6 @@
 
 /datum/status_effect/slime/dark_blue
 	id = "dark_blue_slime"
-	duration = 1 MINUTES
-	status_type = STATUS_EFFECT_REFRESH
 	alert_type = /atom/movable/screen/alert/status_effect/dark_blue_slime
 	effect_icon_state = "dark_blue_slime"
 
@@ -746,3 +744,23 @@
 	REMOVE_TRAIT(owner, TRAIT_TUMOR_SUPPRESSED, XENOBIO_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_RESISTLOWPRESSURE, XENOBIO_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NOBREATH, XENOBIO_TRAIT)
+
+/atom/movable/screen/alert/status_effect/red_slime
+	name = "Red Slime"
+	desc = "You are enveloped in a layer of red slime!"
+	icon_state = "red_slime"
+
+/datum/status_effect/slime/red
+	id = "red_slime"
+	alert_type = /atom/movable/screen/alert/status_effect/red_slime
+	effect_icon_state = "red_slime"
+	duration = 3 MINUTES
+
+/datum/status_effect/slime/red/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, XENOBIO_TRAIT)
+	owner.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+
+/datum/status_effect/slime/red/on_remove()
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, XENOBIO_TRAIT)
+	owner.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
