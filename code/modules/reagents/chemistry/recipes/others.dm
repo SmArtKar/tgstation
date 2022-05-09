@@ -166,7 +166,7 @@
 //Technically a mutation toxin
 /datum/chemical_reaction/mulligan
 	results = list(/datum/reagent/mulligan = 1)
-	required_reagents = list(/datum/reagent/mutationtoxin/jelly = 1, /datum/reagent/toxin/mutagen = 1)
+	required_reagents = list(/datum/reagent/jelly_toxin = 1, /datum/reagent/toxin/mutagen = 1)
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_UNIQUE
 
 

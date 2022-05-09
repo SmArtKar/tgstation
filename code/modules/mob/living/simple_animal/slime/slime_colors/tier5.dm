@@ -32,7 +32,8 @@
 
 		if(friend.nutrition <= friend.get_hunger_nutrition() - 100)
 			fitting_environment = FALSE
-			ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
+			if(!slime.docile)
+				ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 			return
 
 	if(slime.nutrition > slime.get_hunger_nutrition() - 100) //Both we and our friends are happy
@@ -41,7 +42,8 @@
 		return
 
 	fitting_environment = FALSE
-	ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
+	if(!slime.docile)
+		ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 
 /datum/slime_color/green
 	color = "green"

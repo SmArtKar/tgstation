@@ -91,7 +91,7 @@
 ///LUMINESCENTS
 /obj/item/bodypart/head/luminescent
 	limb_id = SPECIES_LUMINESCENT
-	is_dimorphic = TRUE
+	is_dimorphic = FALSE
 
 /obj/item/bodypart/chest/luminescent
 	limb_id = SPECIES_LUMINESCENT

@@ -152,15 +152,15 @@
 	cost = 6
 	restricted_roles = list(JOB_GENETICIST, JOB_RESEARCH_DIRECTOR)
 
+// Medium progression cost
+
 /datum/uplink_item/role_restricted/vacuum_pack
 	name = "Modified Vacuum Pack"
 	desc = "A modified vacuum pack painted in eerie colors that has expanded storage, range and power, it will make every slime you shoot rabid."
-	progression_minimum = 20 MINUTES
+	progression_minimum = 25 MINUTES
 	item = /obj/item/vacuum_pack/syndicate
 	cost = 14
 	restricted_roles = list(JOB_SCIENTIST, JOB_RESEARCH_DIRECTOR)
-
-// Medium progression cost
 
 /datum/uplink_item/role_restricted/brainwash_disk
 	name = "Brainwashing Surgery Program"
@@ -276,17 +276,6 @@
 
 
 // High progression cost
-
-/datum/uplink_item/role_restricted/spider_injector
-	name = "Australicus Slime Mutator"
-	desc = "Crikey mate, it's been a wild travel from the Australicus sector but we've managed to get \
-			some special spider extract from the giant spiders down there. Use this injector on a gold slime core \
-			to create a few of the same type of spiders we found on the planets over there. They're a bit tame until you \
-			also give them a bit of sentience though."
-	progression_minimum = 40 MINUTES
-	item = /obj/item/reagent_containers/syringe/spider_extract
-	cost = 10
-	restricted_roles = list(JOB_RESEARCH_DIRECTOR, JOB_SCIENTIST, JOB_ROBOTICIST)
 
 /datum/uplink_item/role_restricted/blastcannon
 	name = "Blast Cannon"

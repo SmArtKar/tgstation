@@ -45,7 +45,7 @@
 
 	AIproc = 1
 
-	while(AIproc && stat != DEAD && (attacked || hungry || HAS_TRAIT(src, TRAIT_SLIME_RABID) || buckled || Target))
+	while(AIproc && stat != DEAD && (attacked || hungry || HAS_TRAIT(src, TRAIT_SLIME_RABID) || buckled || Target) && !docile)
 
 		if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
 			stop_moveloop()
@@ -617,6 +617,7 @@
 			if(get_dist(src, Target) > 1)
 				target_patience -= 1
 			if (target_patience <= 0 || IsStun() || Discipline || attacked || docile) // Tired of chasing or something draws out attention
+				REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 				target_patience = 0
 				set_target(null)
 

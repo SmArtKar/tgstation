@@ -239,11 +239,6 @@
 	possible_transfer_amounts = list(1,5)
 	volume = 5
 
-/obj/item/reagent_containers/syringe/spider_extract
-	name = "spider extract syringe"
-	desc = "Contains crikey juice - makes any gold core create the most deadly companions in the world."
-	list_reagents = list(/datum/reagent/spider_extract = 1)
-
 /obj/item/reagent_containers/syringe/oxandrolone
 	name = "syringe (oxandrolone)"
 	desc = "Contains oxandrolone, used to treat severe burns."

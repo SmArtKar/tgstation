@@ -41,7 +41,7 @@
 
 	new /obj/effect/temp_visual/heal(get_turf(heal_slime), "#d737ff")
 	heal_slime.adjustBruteLoss(PURPLE_SLIME_HEALING)
-	if(prob(PURPLE_SLIME_RABID_INFLICTION))
+	if(prob(PURPLE_SLIME_RABID_INFLICTION) && !heal_slime.docile)
 		ADD_TRAIT(heal_slime, TRAIT_SLIME_RABID, "purple_slime_healing")
 
 /datum/slime_color/purple/Life(delta_time, times_fired)
@@ -53,7 +53,8 @@
 		return
 
 	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
-	ADD_TRAIT(slime, TRAIT_SLIME_RABID, "purple_slime_environmental")
+	if(!slime.docile)
+		ADD_TRAIT(slime, TRAIT_SLIME_RABID, "purple_slime_environmental")
 	fitting_environment = FALSE
 
 /datum/slime_color/blue

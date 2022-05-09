@@ -48,43 +48,43 @@
 		regenerate_limbs.Grant(new_jellyperson)
 	new_jellyperson.AddElement(/datum/element/soft_landing)
 
-/datum/species/jelly/spec_life(mob/living/carbon/human/H, delta_time, times_fired)
-	if(H.stat == DEAD) //can't farm slime jelly from a dead slime/jelly person indefinitely
+/datum/species/jelly/spec_life(mob/living/carbon/human/human_owner, delta_time, times_fired)
+	if(human_owner.stat == DEAD) //can't farm slime jelly from a dead slime/jelly person indefinitely
 		return
 
-	if(!H.blood_volume)
-		H.blood_volume += 2.5 * delta_time
-		H.adjustBruteLoss(2.5 * delta_time)
-		to_chat(H, span_danger("You feel empty!"))
+	if(!human_owner.blood_volume)
+		human_owner.blood_volume += 2.5 * delta_time
+		human_owner.adjustBruteLoss(2.5 * delta_time)
+		to_chat(human_owner, span_danger("You feel empty!"))
 
-	if(H.blood_volume < BLOOD_VOLUME_NORMAL)
-		if(H.nutrition >= NUTRITION_LEVEL_STARVING)
-			H.blood_volume += 1.5 * delta_time
-			H.adjust_nutrition(-1.25 * delta_time)
+	if(human_owner.blood_volume < BLOOD_VOLUME_NORMAL)
+		if(human_owner.nutrition >= NUTRITION_LEVEL_STARVING)
+			human_owner.blood_volume += 1.5 * delta_time
+			human_owner.adjust_nutrition(-1.25 * delta_time)
 
-	if(H.blood_volume < BLOOD_VOLUME_OKAY)
+	if(human_owner.blood_volume < BLOOD_VOLUME_OKAY)
 		if(DT_PROB(2.5, delta_time))
-			to_chat(H, span_danger("You feel drained!"))
+			to_chat(human_owner, span_danger("You feel drained!"))
 
-	if(H.blood_volume < BLOOD_VOLUME_BAD)
-		Cannibalize_Body(H)
+	if(human_owner.blood_volume < BLOOD_VOLUME_BAD)
+		Cannibalize_Body(human_owner)
 
 	if(regenerate_limbs)
 		regenerate_limbs.UpdateButtons()
 
-/datum/species/jelly/proc/Cannibalize_Body(mob/living/carbon/human/H)
-	var/list/limbs_to_consume = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG) - H.get_missing_limbs()
+/datum/species/jelly/proc/Cannibalize_Body(mob/living/carbon/human/human_owner)
+	var/list/limbs_to_consume = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG) - human_owner.get_missing_limbs()
 	var/obj/item/bodypart/consumed_limb
 	if(!length(limbs_to_consume))
-		H.losebreath++
+		human_owner.losebreath++
 		return
-	if(H.num_legs) //Legs go before arms
+	if(human_owner.num_legs) //Legs go before arms
 		limbs_to_consume -= list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM)
-	consumed_limb = H.get_bodypart(pick(limbs_to_consume))
+	consumed_limb = human_owner.get_bodypart(pick(limbs_to_consume))
 	consumed_limb.drop_limb()
-	to_chat(H, span_userdanger("Your [consumed_limb] is drawn back into your body, unable to maintain its shape!"))
+	to_chat(human_owner, span_userdanger("Your [consumed_limb] is drawn back into your body, unable to maintain its shape!"))
 	qdel(consumed_limb)
-	H.blood_volume += 20
+	human_owner.blood_volume += 20
 
 // Slimes have both NOBLOOD and an exotic bloodtype set, so they need to be handled uniquely here.
 // They may not be roundstart but in the unlikely event they become one might as well not leave a glaring issue open.
@@ -112,31 +112,31 @@
 	. = ..()
 	if(!.)
 		return
-	var/mob/living/carbon/human/H = owner
-	var/list/limbs_to_heal = H.get_missing_limbs()
+	var/mob/living/carbon/human/human_owner = owner
+	var/list/limbs_to_heal = human_owner.get_missing_limbs()
 	if(!length(limbs_to_heal))
 		return FALSE
-	if(H.blood_volume >= BLOOD_VOLUME_OKAY+40)
+	if(human_owner.blood_volume >= BLOOD_VOLUME_OKAY+40)
 		return TRUE
 
 /datum/action/innate/regenerate_limbs/Activate()
-	var/mob/living/carbon/human/H = owner
-	var/list/limbs_to_heal = H.get_missing_limbs()
+	var/mob/living/carbon/human/human_owner = owner
+	var/list/limbs_to_heal = human_owner.get_missing_limbs()
 	if(!length(limbs_to_heal))
-		to_chat(H, span_notice("You feel intact enough as it is."))
+		to_chat(human_owner, span_notice("You feel intact enough as it is."))
 		return
-	to_chat(H, span_notice("You focus intently on your missing [length(limbs_to_heal) >= 2 ? "limbs" : "limb"]..."))
-	if(H.blood_volume >= 40*length(limbs_to_heal)+BLOOD_VOLUME_OKAY)
-		H.regenerate_limbs()
-		H.blood_volume -= 40*length(limbs_to_heal)
-		to_chat(H, span_notice("...and after a moment you finish reforming!"))
+	to_chat(human_owner, span_notice("You focus intently on your missing [length(limbs_to_heal) >= 2 ? "limbs" : "limb"]..."))
+	if(human_owner.blood_volume >= 40 * length(limbs_to_heal) + BLOOD_VOLUME_OKAY)
+		human_owner.regenerate_limbs()
+		human_owner.blood_volume -= 40 * length(limbs_to_heal)
+		to_chat(human_owner, span_notice("...and after a moment you finish reforming!"))
 		return
-	else if(H.blood_volume >= 40)//We can partially heal some limbs
-		while(H.blood_volume >= BLOOD_VOLUME_OKAY+40)
+	else if(human_owner.blood_volume >= 40)//We can partially heal some limbs
+		while(human_owner.blood_volume >= BLOOD_VOLUME_OKAY+40)
 			var/healed_limb = pick(limbs_to_heal)
-			H.regenerate_limb(healed_limb)
+			human_owner.regenerate_limb(healed_limb)
 			limbs_to_heal -= healed_limb
-			H.blood_volume -= 40
-		to_chat(H, span_warning("...but there is not enough of you to fix everything! You must attain more mass to heal completely!"))
+			human_owner.blood_volume -= 40
+		to_chat(human_owner, span_warning("...but there is not enough of you to fix everything! You must attain more mass to heal completely!"))
 		return
-	to_chat(H, span_warning("...but there is not enough of you to go around! You must attain more mass to heal!"))
+	to_chat(human_owner, span_warning("...but there is not enough of you to go around! You must attain more mass to heal!"))

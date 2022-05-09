@@ -139,6 +139,11 @@
 /code/modules/atmospherics/ @Pickle-Coding
 /code/modules/power/ @Pickle-Coding
 
+# SmArtKar
+
+/code/modules/xenobiology/ @SmArtKar
+/code/modules/reagents/chemistry/recipes/slime_extracts.dm @SmArtKar
+
 # MULTIPLE OWNERS
 
 /icons/ @Imaginos16 @Krysonism @Twaticus

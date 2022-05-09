@@ -47,7 +47,7 @@
 		to_chat(user, span_warning("[slime] has already been fed a mutator potion, it's core is too unstable for another one!"))
 		return
 
-	to_chat(user, span_notice("You feed [slime] [src]]. It is now less likely to mutate."))
+	to_chat(user, span_notice("You feed [slime] [src]. It is now less likely to mutate."))
 	slime.mutation_chance = clamp(slime.mutation_chance - 15, 0, 100)
 	new /obj/effect/temp_visual/arrow_down(get_turf(slime))
 	slime.mutator_used = TRUE
@@ -58,7 +58,7 @@
 	desc = "A gelatinous flask with filled with a slime destabilizer that will increase slime's mutation chance."
 	icon_state = "potion_destabilizer"
 
-/obj/item/slime_potion/slime_stabilizer/attack(mob/living/simple_animal/slime/slime, mob/user)
+/obj/item/slime_potion/slime_destabilizer/attack(mob/living/simple_animal/slime/slime, mob/user)
 	if(!isslime(slime))
 		to_chat(user, span_warning("[src] only works on slimes!"))
 		return ..()
@@ -81,7 +81,60 @@
 	slime.mutator_used = TRUE
 	qdel(src)
 
-/obj/item/slimepotion/transference
+/obj/item/slime_potion/enhancer
+	name = "extract enhancer"
+	desc = "A potent chemical mix that will give a slime extract an additional use."
+	icon_state = "potion_enhancer"
+
+/obj/item/slime_potion/enhancer/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(!istype(target, /obj/item/slime_extract))
+		return
+
+	var/obj/item/slime_extract/extract = target
+
+	if(extract.uses >= 5)
+		to_chat(user, span_warning("You cannot enhance [extract] further!"))
+		return
+
+	to_chat(user, span_notice("You apply [src] to [extract], allowing it to be reused one more time."))
+	extract.uses += 1
+	qdel(src)
+
+/obj/item/slime_potion/docility
+	name = "docility potion"
+	desc = "A potent chemical mix that nullifies a slime's hunger, causing it to become docile and tame."
+	icon_state = "potion_docility"
+
+/obj/item/slime_potion/docility/attack(mob/living/simple_animal/slime/slime, mob/user)
+	if(!isslime(slime))
+		to_chat(user, span_warning("The potion only works on slimes!"))
+		return ..()
+
+	if(slime.stat == DEAD)
+		to_chat(user, span_warning("The slime is dead!"))
+		return
+
+	if(HAS_TRAIT(slime, TRAIT_SLIME_RABID)) //Stops being rabid, but doesn't become truly docile.
+		to_chat(slime, span_warning("You absorb the potion, and your rabid hunger finally settles to a normal desire to feed."))
+		to_chat(user, span_notice("You feed the slime the potion, calming its rabid rage."))
+		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, null)
+		qdel(src)
+		return
+
+	slime.docile = TRUE
+	slime.set_nutrition(700)
+	to_chat(slime, span_warning("You absorb the potion and feel your intense desire to feed melt away."))
+	to_chat(user, span_notice("You feed the slime the potion, removing its hunger and calming it."))
+	var/newname = sanitize_name(tgui_input_text(user, "Would you like to give the slime a name?", "Name your new pet", "Pet Slime", MAX_NAME_LEN))
+	if (!newname)
+		newname = "Pet Slime"
+
+	slime.name = newname
+	slime.real_name = newname
+	qdel(src)
+
+/obj/item/slime_potion/transference
 	name = "consciousness transference potion"
 	desc = "A strange slime-based chemical that, when used, allows the user to transfer their consciousness to a lesser being."
 	icon = 'icons/obj/chemical.dmi'
@@ -89,7 +142,7 @@
 	var/prompted = 0
 	var/animal_type = SENTIENCE_ORGANIC
 
-/obj/item/slimepotion/transference/afterattack(mob/living/switchy_mob, mob/living/user, proximity)
+/obj/item/slime_potion/transference/afterattack(mob/living/switchy_mob, mob/living/user, proximity)
 	if(!proximity)
 		return
 
@@ -142,7 +195,7 @@
 		var/mob/living/simple_animal/switchy_animal = switchy_mob
 		switchy_animal.sentience_act()
 
-/obj/item/slimepotion/slime/sentience
+/obj/item/slime_potion/slime/sentience
 	name = "intelligence potion"
 	desc = "A miraculous chemical mix that grants human like intelligence to living beings."
 	icon = 'icons/obj/chemical.dmi'
@@ -151,7 +204,7 @@
 	var/being_used = FALSE
 	var/sentience_type = SENTIENCE_ORGANIC
 
-/obj/item/slimepotion/slime/sentience/attack(mob/living/dumb_mob, mob/user)
+/obj/item/slime_potion/slime/sentience/attack(mob/living/dumb_mob, mob/user)
 	if(being_used || !ismob(dumb_mob))
 		return
 
@@ -200,14 +253,14 @@
 		being_used = FALSE
 		return ..()
 
-/obj/item/slimepotion/slime/sentience/proc/after_success(mob/living/user, mob/living/smart_mob)
+/obj/item/slime_potion/slime/sentience/proc/after_success(mob/living/user, mob/living/smart_mob)
 	return
 
-/obj/item/slimepotion/slime/sentience/nuclear
+/obj/item/slime_potion/slime/sentience/nuclear
 	name = "syndicate intelligence potion"
 	desc = "A miraculous chemical mix that grants human like intelligence to living beings. It has been modified with Syndicate technology to also grant an internal radio implant to the target and authenticate with identification systems."
 
-/obj/item/slimepotion/slime/sentience/nuclear/after_success(mob/living/user, mob/living/smart_mob)
+/obj/item/slime_potion/slime/sentience/nuclear/after_success(mob/living/user, mob/living/smart_mob)
 	var/obj/item/implant/radio/syndicate/imp = new(src)
 	imp.implant(smart_mob, user)
 	smart_mob.AddComponent(/datum/component/simple_access, list(ACCESS_SYNDICATE, ACCESS_MAINT_TUNNELS))

@@ -252,7 +252,7 @@
 		if(prob(50))
 			for(var/j in 1 to rand(1, 3))
 				step(food_item, pick(NORTH,SOUTH,EAST,WEST))
-	..()
+	return ..()
 
 /datum/chemical_reaction/slime/silver_plasma/proc/get_food()
 	return get_random_food()
@@ -267,10 +267,48 @@
 // ******************* TIER FOUR ******************
 // ************************************************
 
+// Bluespace
+
+/datum/chemical_reaction/slime/bluespace_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/bluespace
+
+/datum/chemical_reaction/slime/bluespace_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/holder_turf = get_turf(holder.my_atom)
+	var/obj/item/stack/sheet/bluespace_crystal/crystals = new (holder_turf, 3)
+	crystals.visible_message(span_notice("[crystals] appear out of thin air!"))
+	playsound(holder_turf, 'sound/effects/phasein.ogg', 100, TRUE)
+	return ..()
+
+// Sepia
+
+/datum/chemical_reaction/slime/sepia_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/sepia
+
+/datum/chemical_reaction/slime/sepia_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/sepia/extract = holder.my_atom
+	extract.icon_state = "[initial(extract.icon_state)]_pulsating"
+	addtimer(CALLBACK(src, .proc/slime_stop, holder), 5 SECONDS)
+	playsound(get_turf(extract), 'sound/magic/mandswap.ogg', 100, TRUE)
+
+
+/datum/chemical_reaction/slime/sepia_plasma/proc/slime_stop(datum/reagents/holder)
+	var/obj/item/slime_extract/sepia/extract = holder.my_atom
+	new /obj/effect/timestop/small_effect(get_turf(extract), 1)
+	if(istype(extract))
+		if(extract.uses > 0)
+			extract.icon_state = initial(extract.icon_state)
+			var/mob/lastheld = get_mob_by_key(extract.fingerprintslast)
+			if(lastheld && !lastheld.equip_to_slot_if_possible(extract, ITEM_SLOT_HANDS, disable_warning = TRUE))
+				extract.forceMove(get_turf(lastheld))
+	use_slime_core(holder)
 
 // ************************************************
 // ******************* TIER FIVE ******************
 // ************************************************
+
+// Red
 
 /datum/chemical_reaction/slime/red_water
 	required_container = /obj/item/slime_extract/red
@@ -315,6 +353,28 @@
 	var/mob/living/carbon/human/owner = cycle_loc
 	owner.apply_status_effect(/datum/status_effect/slime/red)
 	return ..()
+
+// Pink
+
+/datum/chemical_reaction/slime/pink_plasma
+	required_container = /obj/item/slime_extract/pink
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/pink_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/docility(get_turf(holder.my_atom))
+	return ..()
+
+// Green
+
+/datum/chemical_reaction/slime/green_plasma
+	required_container = /obj/item/slime_extract/green
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	results = list(/datum/reagent/jelly_toxin = 1)
+
+/datum/chemical_reaction/slime/green_blood
+	required_container = /obj/item/slime_extract/green
+	required_reagents = list(/datum/reagent/blood = 1)
+	results = list(/datum/reagent/jelly_toxin/human = 1)
 
 // ************************************************
 // ******************* TIER SIX *******************

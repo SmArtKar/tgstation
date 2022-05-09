@@ -231,10 +231,14 @@
 		SEND_SIGNAL(exposed_mob, COMSIG_ADD_MOOD_EVENT, "watersprayed", /datum/mood_event/watersprayed)
 
 
-/datum/reagent/water/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
+/datum/reagent/water/on_mob_life(mob/living/carbon/exposed_mob, delta_time, times_fired)
 	. = ..()
-	if(M.blood_volume)
-		M.blood_volume += 0.1 * REM * delta_time // water is good for you!
+	if(!isjellyperson(exposed_mob) && exposed_mob.blood_volume)
+		exposed_mob.blood_volume += 0.1 * REM * delta_time // water is good for you!
+		return
+
+	exposed_mob.adjustBruteLoss(2 * REM * delta_time) //But not if you're a jellyperson!
+	exposed_mob.blood_volume = max(0, exposed_mob.blood_volume - 0.2 * REM * delta_time)
 
 ///For weird backwards situations where water manages to get added to trays nutrients, as opposed to being snowflaked away like usual.
 /datum/reagent/water/on_hydroponics_apply(obj/item/seeds/myseed, datum/reagents/chems, obj/machinery/hydroponics/mytray)
@@ -627,29 +631,6 @@
 	taste_description = "flowers"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED|REAGENT_NO_RANDOM_RECIPE
 
-/datum/reagent/mutationtoxin/jelly
-	name = "Imperfect Mutation Toxin"
-	description = "A jellyfying toxin."
-	color = "#5EFF3B" //RGB: 94, 255, 59
-	race = /datum/species/jelly
-	taste_description = "grandma's gelatin"
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-
-/datum/reagent/mutationtoxin/jelly/on_mob_life(mob/living/carbon/human/H, delta_time, times_fired)
-	if(isjellyperson(H))
-		to_chat(H, span_warning("Your jelly shifts and morphs, turning you into another subspecies!"))
-		var/species_type = pick(subtypesof(/datum/species/jelly))
-		H.set_species(species_type)
-		holder.del_reagent(type)
-		return TRUE
-	if(current_cycle >= cycles_to_turn) //overwrite since we want subtypes of jelly
-		var/datum/species/species_type = pick(subtypesof(race))
-		H.set_species(species_type)
-		holder.del_reagent(type)
-		to_chat(H, span_warning("You've become \a [initial(species_type.name)]!"))
-		return TRUE
-	return ..()
-
 /datum/reagent/mutationtoxin/golem
 	name = "Golem Mutation Toxin"
 	description = "A crystal toxin."
@@ -729,6 +710,82 @@
 #undef MUT_MSG_IMMEDIATE
 #undef MUT_MSG_EXTENDED
 #undef MUT_MSG_ABOUT2TURN
+
+/datum/reagent/jelly_toxin
+	name = "Imperfect Mutation Toxin"
+	description = "A dangerous and experimental toxin with highly corruptive properties."
+	color = "#15E06A" //RGB: 21, 224, 106
+	taste_description = "grandma's gelatin"
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	var/list/limb_transform_types = list(
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/slime,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/slime,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/slime,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/slime,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/slime,
+	)
+
+	var/target_species = /datum/species/jelly/slime
+
+/datum/reagent/jelly_toxin/on_mob_add(mob/living/owner, amount)
+	if(isjellyperson(owner))
+		holder.del_reagent(type)
+		return
+	return ..()
+
+/datum/reagent/jelly_toxin/on_mob_life(mob/living/carbon/human/owner, delta_time, times_fired)
+	. = ..()
+
+	if(!istype(owner))
+		return
+
+	if(!(owner.dna?.species) || !(owner.mob_biotypes & MOB_ORGANIC) || istype(owner.dna?.species, target_species))
+		return
+
+	if(!DT_PROB(10, delta_time))
+		return
+
+	var/list/meatchunks = list()
+	for(var/zone in limb_transform_types)
+		var/obj/item/bodypart/bodypart = owner.get_bodypart(zone)
+		if(bodypart && (bodypart.bodytype & BODYTYPE_ORGANIC) && !istype(bodypart, limb_transform_types[zone]))
+			meatchunks += bodypart
+
+	if(!LAZYLEN(meatchunks))
+		playsound(owner, 'sound/effects/splat.ogg', 100, TRUE)
+		owner.set_species(target_species)
+		holder.del_reagent(type)
+		to_chat(owner, span_warning("You've become \a [lowertext(owner.dna.species.name)]!"))
+		return
+
+	var/obj/item/bodypart/target_part = pick(meatchunks)
+	var/limb_type = limb_transform_types[target_part.body_zone]
+	var/obj/item/bodypart/new_part = new limb_type() //Spawning in nullspace to avoid any possible issues
+	if(istype(new_part, /obj/item/bodypart/head))
+		var/obj/item/bodypart/head/target_head_part = target_part
+		var/obj/item/bodypart/head/head_part = new_part
+		head_part.hair_style = target_head_part.hair_style
+		head_part.hair_color = target_head_part.hair_color
+		head_part.facial_hairstyle = target_head_part.facial_hairstyle
+		head_part.facial_hair_color = target_head_part.facial_hair_color
+	new_part.replace_limb(owner, TRUE)
+	playsound(owner, 'sound/effects/splat.ogg', 100, TRUE)
+	playsound(owner, SFX_DESECRATION, 100, TRUE)
+	owner.visible_message(span_warning("[target_part] pops off just as [new_part] grows out from [owner]'s body!"), span_userdanger("Your [target_part] pops off just as [new_part] grows out from your body!"))
+
+/datum/reagent/jelly_toxin/human
+	name = "Stabilized Mutation Toxin"
+	description = "A stable version of slime mutation toxin which turns you human."
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	limb_transform_types = list(
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg,
+	)
+
+	target_species = /datum/species/human
 
 /datum/reagent/mulligan
 	name = "Mulligan Toxin"
@@ -2533,13 +2590,6 @@
 	. = ..()
 	if((methods & (PATCH|INGEST|INJECT)) || ((methods & VAPOR) && prob(min(reac_volume,100)*(1 - touch_protection))))
 		exposed_mob.ForceContractDisease(new /datum/disease/transformation/gondola(), FALSE, TRUE)
-
-
-/datum/reagent/spider_extract
-	name = "Spider Extract"
-	description = "A highly specialized extract coming from the Australicus sector, used to create broodmother spiders."
-	color = "#ED2939"
-	taste_description = "upside down"
 
 /// Improvised reagent that induces vomiting. Created by dipping a dead mouse in welder fluid.
 /datum/reagent/yuck
