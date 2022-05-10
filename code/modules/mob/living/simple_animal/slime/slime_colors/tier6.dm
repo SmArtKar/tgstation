@@ -29,7 +29,7 @@
 	qdel(src)
 
 /obj/effect/decal/cleanable/oil_pool/proc/ignite_others()
-	for(var/obj/effect/decal/cleanable/oil/oil in range(1, get_turf(src)))
+	for(var/obj/effect/decal/cleanable/oil_pool/oil in range(1, get_turf(src)))
 		oil.ignite()
 
 /datum/slime_color/black
