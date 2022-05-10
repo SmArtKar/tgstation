@@ -440,10 +440,25 @@
 	light_power = 2
 	light_range = 1
 	device_type = /obj/item/xenobio_deployable/pyrite_thrower
+	COOLDOWN_DECLARE(activation_cooldown)
 
 /obj/machinery/xenobio_device/pyrite_thrower/Initialize(mapload)
 	. = ..()
 	set_light_on(on)
+	wires = new /datum/wires/pyrite_thrower(src)
+
+/obj/machinery/xenobio_device/pyrite_thrower/Destroy()
+	for(var/atom/movable/something in contents)
+		something.forceMove(get_turf(src))
+	if(wires)
+		QDEL_NULL(wires)
+	return ..()
+
+/obj/machinery/xenobio_device/pyrite_thrower/attackby(obj/item/weapon, mob/user, params)
+	if(is_wire_tool(weapon))
+		wires.interact(user)
+		return TRUE
+	return ..()
 
 /obj/machinery/xenobio_device/pyrite_thrower/update_icon_state()
 	set_light_on(on)
@@ -456,12 +471,18 @@
 
 	for(var/mob/living/simple_animal/slime/slime in range(1, get_turf(src)))
 		if(slime.slime_color.slime_tags & SLIME_HOT_LOVING)
-			for(var/turf/target_turf in range(1, get_turf(src)))
-				if(locate(/obj/effect/hotspot) in target_turf)
-					continue
-				new /obj/effect/hotspot(target_turf)
-			playsound(get_turf(src), SFX_SPARKS, 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
+			trigger()
 			return
+
+/obj/machinery/xenobio_device/pyrite_thrower/proc/trigger()
+	if(!COOLDOWN_FINISHED(src, activation_cooldown))
+		return
+	COOLDOWN_START(src, activation_cooldown, PYRITE_THROWER_COOLDOWN)
+	for(var/turf/open/target_turf in range(1, get_turf(src)))
+		if(locate(/obj/effect/hotspot) in target_turf)
+			continue
+		new /obj/effect/hotspot(target_turf)
+		playsound(get_turf(src), SFX_SPARKS, 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
 
 /obj/item/xenobio_deployable/pyrite_thrower
 	name = "pyrite thrower"

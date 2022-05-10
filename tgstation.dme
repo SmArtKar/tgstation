@@ -1157,6 +1157,7 @@
 #include "code\datums\wires\microwave.dm"
 #include "code\datums\wires\mod.dm"
 #include "code\datums\wires\mulebot.dm"
+#include "code\datums\wires\pyrite_thrower.dm"
 #include "code\datums\wires\r_n_d.dm"
 #include "code\datums\wires\radio.dm"
 #include "code\datums\wires\robot.dm"

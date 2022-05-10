@@ -35,3 +35,5 @@
 /// From mob/living/simple_animal/slime/set_target(atom/new_target): (atom/old_target, atom/new_target)
 #define COMSIG_SLIME_SET_TARGET "slime_set_target"
 	#define COMPONENT_SLIME_NO_SET_TARGET  (1<<0)
+/// From mob/living/simple_animal/slime/AIprocess(): (atom/target)
+#define COMSIG_SLIME_ATTEMPT_RANGED_ATTACK "slime_attempt_ranged_attack"

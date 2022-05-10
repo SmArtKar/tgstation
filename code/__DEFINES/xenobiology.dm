@@ -19,6 +19,7 @@
 #define MAXIMUM_SLIME_PEN_SIZE 50
 
 #define BLUESPACE_ANCHOR_RANGE 5
+#define PYRITE_THROWER_COOLDOWN 5 SECONDS
 
 /// Slime core prices
 
@@ -221,12 +222,12 @@
 /// How much HP cerulean slimes regenerate per second in vacuum
 #define CERULEAN_SLIME_VACUUM_HEALING 5
 
-/// Required pressure for oil slimes
+/// How much oil is applied per attack/projectile
+#define OIL_SLIME_STACKS_PER_ATTACK 3
+/// Whats the limit for oil from attacks
+#define OIL_SLIME_OIL_LIMIT 10
+/// What pressure oil slimes want
 #define OIL_SLIME_REQUIRED_PRESSURE ONE_ATMOSPHERE * 6
-/// How likely is oil slime explosion when there's no vacuole stabilizer
-#define OIL_SLIME_EXPLOSION_CHANCE 45
-/// How likely it is for oil slime to use an explosive attack
-#define OIL_SLIME_EXPLOSIVE_ATTACK_CHANCE 25
 
 /// How likely it is for the black slime to change a random turf around him, per second
 #define BLACK_SLIME_CHANGE_TURF_CHANCE 15

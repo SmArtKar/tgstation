@@ -1163,15 +1163,6 @@
 				playsound(get_turf(cached_my_atom), selected_reaction.mix_sound, 80, TRUE)
 
 			my_atom.audible_message(span_notice("[iconhtml] [selected_reaction.mix_message]"))
-
-		if(istype(cached_my_atom, /obj/item/slime_extract))
-			var/obj/item/slime_extract/extract = my_atom
-			extract.uses--
-			if(extract.uses <= 0) // give the notification that the slime core is dead
-				my_atom.visible_message(span_notice("[iconhtml] \The [my_atom]'s power is consumed in the reaction."))
-				extract.name = "used [extract.name]"
-				extract.desc += "This extract has been used up."
-
 	selected_reaction.on_reaction(src, null, multiplier)
 
 ///Possibly remove - see if multiple instant reactions is okay (Though, this "sorts" reactions by temp decending)

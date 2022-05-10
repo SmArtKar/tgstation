@@ -633,7 +633,7 @@
 
 	if(!dropping_limb && owner.dna?.check_mutation(/datum/mutation/human/hulk))
 		mutation_color = "#00aa00"
-	else
+	else if(mutation_color == "#00aa00")
 		mutation_color = null
 
 	if(mutation_color)

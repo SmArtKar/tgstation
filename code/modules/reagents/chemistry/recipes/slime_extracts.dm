@@ -11,12 +11,23 @@
 
 /datum/chemical_reaction/slime/proc/use_slime_core(datum/reagents/holder)
 	SSblackbox.record_feedback("tally", "slime_cores_used", 1, "type")
+	if(!istype(holder.my_atom, /obj/item/slime_extract))
+		return
+
+	var/obj/item/slime_extract/extract = holder.my_atom
+	extract.uses--
+	if(extract.uses > 0)
+		return
+
+	var/list/seen = viewers(4, get_turf(extract))
+	extract.visible_message(span_notice("[icon2html(extract, seen)] [extract]'s power is consumed in the reaction."))
+	extract.use_up()
 	if(deletes_extract)
 		delete_extract(holder)
 
 /datum/chemical_reaction/slime/proc/delete_extract(datum/reagents/holder)
 	var/obj/item/slime_extract/M = holder.my_atom
-	if(M.uses <= 0 && !results.len) //if the slime doesn't output chemicals
+	if(!results.len) //if the slime doesn't output chemicals
 		qdel(M)
 
 // ************************************************
@@ -188,7 +199,7 @@
 /datum/chemical_reaction/slime/dark_purple_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/dark_purple/extract = holder.my_atom
 	if(!istype(extract))
-		return
+		return ..()
 	extract.plasma_drain()
 	return ..()
 
@@ -197,12 +208,13 @@
 /datum/chemical_reaction/slime/dark_blue_plasma
 	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/dark_blue
+	deletes_extract = FALSE
 
 /datum/chemical_reaction/slime/dark_blue_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/dark_blue/extract = holder.my_atom
 	if(!istype(extract))
-		return
-	extract.stasis_ready = TRUE
+		return ..()
+	extract.activate()
 	return ..()
 
 /datum/chemical_reaction/slime/dark_blue_blood
@@ -285,24 +297,14 @@
 /datum/chemical_reaction/slime/sepia_plasma
 	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/sepia
+	deletes_extract = FALSE
 
 /datum/chemical_reaction/slime/sepia_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/sepia/extract = holder.my_atom
-	extract.icon_state = "[initial(extract.icon_state)]_pulsating"
-	addtimer(CALLBACK(src, .proc/slime_stop, holder), 5 SECONDS)
-	playsound(get_turf(extract), 'sound/magic/mandswap.ogg', 100, TRUE)
-
-
-/datum/chemical_reaction/slime/sepia_plasma/proc/slime_stop(datum/reagents/holder)
-	var/obj/item/slime_extract/sepia/extract = holder.my_atom
-	new /obj/effect/timestop/small_effect(get_turf(extract), 1)
-	if(istype(extract))
-		if(extract.uses > 0)
-			extract.icon_state = initial(extract.icon_state)
-			var/mob/lastheld = get_mob_by_key(extract.fingerprintslast)
-			if(lastheld && !lastheld.equip_to_slot_if_possible(extract, ITEM_SLOT_HANDS, disable_warning = TRUE))
-				extract.forceMove(get_turf(lastheld))
-	use_slime_core(holder)
+	if(!istype(extract))
+		return ..()
+	extract.activate()
+	return ..()
 
 // ************************************************
 // ******************* TIER FIVE ******************
@@ -384,6 +386,20 @@
 // ************************************************
 // ******************* TIER SIX *******************
 // ************************************************
+
+// Black
+
+/datum/chemical_reaction/slime/black_blood
+	required_container = /obj/item/slime_extract/black
+	required_reagents = list(/datum/reagent/blood = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/black_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/black/extract = holder.my_atom
+	if(!istype(extract))
+		return ..()
+	extract.activate()
+	return ..()
 
 // ************************************************
 // ***************** TIER SPECIAL *****************

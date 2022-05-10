@@ -1397,11 +1397,11 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 	if(fire_stacks <= 0)
 		return FALSE
 
-	var/datum/status_effect/fire_handler/fire_stacks/fire_status = has_status_effect(/datum/status_effect/fire_handler/fire_stacks)
-	if(!fire_status || fire_status.on_fire)
-		return FALSE
+	for(var/datum/status_effect/fire_handler/fire_stacks/fire_status in status_effects)
+		if(!fire_status.on_fire)
+			fire_status.ignite()
 
-	return fire_status.ignite()
+	return TRUE
 
 /mob/living/proc/update_fire()
 	var/datum/status_effect/fire_handler/fire_handler = has_status_effect(/datum/status_effect/fire_handler)

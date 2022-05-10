@@ -3,9 +3,76 @@
 	coretype = /obj/item/slime_extract/oil
 	mutations = null
 	slime_tags = SLIME_WATER_RESISTANCE
-	environmental_req = ""
+	environmental_req = "Subject's slime is highly flammable and will leave a trail of oil behind it. You can stabilize the subject using high pressure. Fireproof equipment recommended."
+	COOLDOWN_DECLARE(oil_throw_cooldown)
 
+/datum/slime_color/oil/New(mob/living/simple_animal/slime/slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_MOVABLE_MOVED, .proc/on_moved)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/drench_in_oil)
+	RegisterSignal(slime, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, .proc/throw_oil)
+	ADD_TRAIT(slime, TRAIT_BOMBIMMUNE, ROUNDSTART_TRAIT) //Kinda their whole deal
 
+/datum/slime_color/oil/remove()
+	UnregisterSignal(slime, list(COMSIG_MOVABLE_MOVED, COMSIG_SLIME_ATTACK_TARGET, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK))
+	REMOVE_TRAIT(slime, TRAIT_BOMBIMMUNE, ROUNDSTART_TRAIT)
+
+/datum/slime_color/oil/Life(delta_time, times_fired)
+	. = ..()
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
+		explosion(get_turf(slime), devastation_range = -1, heavy_impact_range = -1, light_impact_range = rand(0, 1), flame_range = rand(1, 2), flash_range = rand(1, 2)) //Ignites the oil and possibly damages the pen windows.
+
+	if(our_mix.return_pressure() > OIL_SLIME_REQUIRED_PRESSURE)
+		fitting_environment = TRUE
+		return
+
+	fitting_environment = FALSE
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
+
+/datum/slime_color/oil/proc/on_moved(datum/source, old_loc)
+	SIGNAL_HANDLER
+	if(!isturf(slime.loc)) //No locker abuse
+		return
+
+	new /obj/effect/decal/cleanable/oil_pool(slime.loc)
+
+/datum/slime_color/oil/proc/drench_in_oil(datum/source, atom/attack_target)
+	SIGNAL_HANDLER
+	if(!isliving(attack_target))
+		return
+	var/mob/living/victim = attack_target
+	if(victim.fire_stacks < OIL_SLIME_OIL_LIMIT)
+		victim.adjust_fire_stacks(OIL_SLIME_STACKS_PER_ATTACK, /datum/status_effect/fire_handler/fire_stacks/oil)
+
+/datum/slime_color/oil/proc/throw_oil(datum/source, atom/target)
+	SIGNAL_HANDLER
+
+	if(!COOLDOWN_FINISHED(src, oil_throw_cooldown) || !isliving(target))
+		return
+
+	if(get_dist(slime, target) <= 1)
+		return
+
+	var/obj/projectile/our_projectile = new /obj/projectile/oil(get_turf(slime))
+	our_projectile.firer = slime
+	our_projectile.original = target
+	our_projectile.fire()
+
+/obj/projectile/oil
+	name = "glob of oil"
+	icon_state = "oil_glob"
+	damage = 0
+	speed = 2
+	nodamage = TRUE
+
+/obj/projectile/oil/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(!isliving(target))
+		new /obj/effect/decal/cleanable/oil_pool(get_turf(src))
+		return
+	var/mob/living/victim = target
+	victim.adjust_fire_stacks(OIL_SLIME_STACKS_PER_ATTACK, /datum/status_effect/fire_handler/fire_stacks/oil)
 
 /obj/effect/decal/cleanable/oil_pool
 	name = "pool of oil"
@@ -14,23 +81,46 @@
 	layer = LOW_OBJ_LAYER
 	beauty = -50
 	clean_type = CLEAN_TYPE_BLOOD
-	var/burn_amount = 5
+	var/burn_amount = 3
 	var/burning = FALSE
+
+/obj/effect/decal/cleanable/oil_pool/Initialize(mapload, list/datum/disease/diseases)
+	. = ..()
+	for(var/obj/effect/decal/cleanable/oil_pool/pool in get_turf(src))
+		if(pool == src)
+			continue
+		pool.burn_amount = min(pool.burn_amount + 1, 10)
+		return INITIALIZE_HINT_QDEL
+
+/obj/effect/decal/cleanable/oil_pool/fire_act(exposed_temperature, exposed_volume)
+	. = ..()
+	ignite()
 
 /obj/effect/decal/cleanable/oil_pool/proc/ignite()
 	if(burning)
 		return
 	burning = TRUE
 	addtimer(CALLBACK(src, .proc/ignite_others), 0.5 SECONDS)
-	while(burn_amount)
-		burn_amount -= 1
-		new /obj/effect/hotspot(get_turf(src))
-		sleep(0.5 SECONDS)
-	qdel(src)
+	start_burn()
+
+/obj/effect/decal/cleanable/oil_pool/proc/start_burn()
+	SIGNAL_HANDLER
+
+	if(!burn_amount)
+		qdel(src)
+		return
+
+	burn_amount -= 1
+	var/obj/effect/hotspot/oil/hotspot = new(get_turf(src))
+	RegisterSignal(hotspot, COMSIG_PARENT_QDELETING, .proc/start_burn)
 
 /obj/effect/decal/cleanable/oil_pool/proc/ignite_others()
 	for(var/obj/effect/decal/cleanable/oil_pool/oil in range(1, get_turf(src)))
 		oil.ignite()
+
+/obj/effect/decal/cleanable/oil_pool/bullet_act(obj/projectile/P)
+	. = ..()
+	ignite()
 
 /datum/slime_color/black
 	color = "black"

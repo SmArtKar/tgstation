@@ -108,6 +108,8 @@
 
 			else if(get_dist(Target, src) <= 9 || target_patience > 0) //Previously this used view which is extremely expensive. Also you can no longer make slimes forget about your existence by just hiding behind the corner
 				if(!Target.Adjacent(src)) // Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
+					if(is_in_sight(src, Target) && !Atkcool)
+						SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, Target)
 					start_moveloop(Target)
 			else
 				set_target(null)

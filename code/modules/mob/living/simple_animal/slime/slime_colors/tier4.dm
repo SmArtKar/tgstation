@@ -10,21 +10,19 @@
 /datum/slime_color/cerulean/New(slime)
 	. = ..()
 	RegisterSignal(slime, COMSIG_MOVABLE_IMPACT, .proc/successful_lunge)
+	RegisterSignal(slime, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, .proc/attempt_lunge)
 
 /datum/slime_color/cerulean/remove()
-	UnregisterSignal(slime, COMSIG_MOVABLE_IMPACT)
+	UnregisterSignal(slime, list(COMSIG_MOVABLE_IMPACT, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK))
 
 /datum/slime_color/cerulean/Life(delta_time, times_fired)
 	. = ..()
-
-	if(slime.Target && COOLDOWN_FINISHED(src, lunge_cooldown) && isliving(slime.Target))
-		attempt_lunge()
 
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 	if(our_mix.return_pressure() < CERULEAN_SLIME_MAX_SAFE_PRESSURE)
 		ADD_TRAIT(slime, TRAIT_SPACEWALK, INNATE_TRAIT)
 		fitting_environment = TRUE
-		temperature_modifier = -10 //Space-roaming slimes! -10 because slimes get slowed down on temperature_modifier + 10
+		temperature_modifier = -10 //Space-walking slimes! -10 because slimes get slowed down on temperature_modifier + 10
 		handle_telekinesis(delta_time, times_fired, FALSE)
 		slime.adjustBruteLoss(CERULEAN_SLIME_VACUUM_HEALING * delta_time) //Slow spess healing
 		return
@@ -34,20 +32,22 @@
 	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 	handle_telekinesis(delta_time, times_fired, TRUE)
 
-/datum/slime_color/cerulean/proc/attempt_lunge()
-	if(!(slime.Target in view(7, slime)))
+/datum/slime_color/cerulean/proc/attempt_lunge(datum/source, atom/target)
+	SIGNAL_HANDLER
+
+	if(!COOLDOWN_FINISHED(src, lunge_cooldown) || !isliving(target))
 		return
 
-	if(get_dist(slime, slime.Target) <= 1) //No bullshit melee knockdowns
+	if(get_dist(slime, target) <= 1) //No bullshit melee knockdowns
 		return
 
-	for(var/turf/lunge_turf in get_line(slime, slime.Target))
+	for(var/turf/lunge_turf in get_line(slime, target))
 		if(lunge_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE))
 			return
 
 	COOLDOWN_START(src, lunge_cooldown, CERULEAN_SLIME_LUNGE_COOLDOWN)
-	slime.visible_message(span_warning("[slime] lunges at [slime.Target]!"), span_notice("You lunge at [slime.Target]!"))
-	slime.throw_at(slime.Target, 7, 1, src, FALSE)
+	slime.visible_message(span_warning("[slime] lunges at [target]!"), span_notice("You lunge at [target]!"))
+	slime.throw_at(target, 7, 1, src, FALSE)
 
 /datum/slime_color/cerulean/proc/successful_lunge(datum/source, atom/hit_atom, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER
