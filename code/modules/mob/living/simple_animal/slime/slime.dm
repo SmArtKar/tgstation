@@ -2,7 +2,7 @@
 /mob/living/simple_animal/slime
 	name = "grey baby slime (123)"
 	icon = 'icons/mob/slimes.dmi'
-	icon_state = "grey baby slime"
+	icon_state = "grey"
 	pass_flags = PASSTABLE | PASSGRILLE
 	gender = NEUTER
 	var/is_adult = 0
@@ -12,8 +12,8 @@
 	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,NUTRITION_HUD)
 
 	harm_intent_damage = 5
-	icon_living = "grey baby slime"
-	icon_dead = "grey baby slime dead"
+	icon_living = "grey"
+	icon_dead = "grey-dead"
 	response_help_continuous = "pets"
 	response_help_simple = "pet"
 	response_disarm_continuous = "shoos"

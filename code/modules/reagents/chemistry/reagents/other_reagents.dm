@@ -787,6 +787,20 @@
 
 	target_species = /datum/species/human
 
+/datum/reagent/jelly_toxin/lizard
+	name = "Irradiated Mutation Toxin"
+	description = "An irradiated version of slime mutation toxin which turns it's victims into lizards."
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	limb_transform_types = list(
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/lizard,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/lizard,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/lizard,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/lizard,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/lizard,
+	)
+
+	target_species = /datum/species/lizard
+
 /datum/reagent/mulligan
 	name = "Mulligan Toxin"
 	description = "This toxin will rapidly change the DNA of human beings. Commonly used by Syndicate spies and assassins in need of an emergency ID change."

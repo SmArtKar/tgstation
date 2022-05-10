@@ -376,6 +376,11 @@
 	required_reagents = list(/datum/reagent/blood = 1)
 	results = list(/datum/reagent/jelly_toxin/human = 1)
 
+/datum/chemical_reaction/slime/green_radium
+	required_container = /obj/item/slime_extract/green
+	required_reagents = list(/datum/reagent/uranium/radium = 1)
+	results = list(/datum/reagent/jelly_toxin/lizard = 1)
+
 // ************************************************
 // ******************* TIER SIX *******************
 // ************************************************
