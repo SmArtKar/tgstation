@@ -132,10 +132,10 @@
 	if(!.) //didn't generate
 		return FALSE
 	AddComponent(/datum/component/traitor_objective_register, behead_goal, fail_signals = COMSIG_PARENT_QDELETING)
-	RegisterSignal(kill_target, COMSIG_CARBON_REMOVE_LIMB, .proc/on_target_dismembered)
+	RegisterSignal(kill_target, COMSIG_REMOVE_LIMB, .proc/on_target_dismembered)
 
 /datum/traitor_objective/assassinate/behead/ungenerate_objective()
-	UnregisterSignal(kill_target, COMSIG_CARBON_REMOVE_LIMB)
+	UnregisterSignal(kill_target, COMSIG_REMOVE_LIMB)
 	. = ..() //this unsets kill_target
 	if(behead_goal)
 		UnregisterSignal(behead_goal, COMSIG_ITEM_PICKUP)
@@ -150,7 +150,7 @@
 		taker.visible_message(span_notice("[taker] holds [behead_goal] into the air for a moment."), span_boldnotice("You lift [behead_goal] into the air for a moment."))
 		succeed_objective()
 
-/datum/traitor_objective/assassinate/behead/proc/on_target_dismembered(datum/source, obj/item/bodypart/head/lost_head, special)
+/datum/traitor_objective/assassinate/behead/proc/on_target_dismembered(datum/source, obj/item/bodypart/head/lost_head, mob/living/carbon/last_owner, special)
 	SIGNAL_HANDLER
 	if(!istype(lost_head))
 		return

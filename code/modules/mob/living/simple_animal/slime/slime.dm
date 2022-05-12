@@ -132,6 +132,7 @@
 	AddElement(/datum/element/soft_landing)
 	var/datum/atom_hud/data/human/medical/advanced/slime/slimehud = GLOB.huds[DATA_HUD_MEDICAL_SLIME]
 	slimehud.add_atom_to_hud(src)
+	RegisterSignal(src, COMSIG_LIVING_APPLY_WATER, .proc/apply_water)
 
 /mob/living/simple_animal/slime/prepare_data_huds()
 	. = ..()
@@ -144,6 +145,7 @@
 	set_target(null)
 	set_leader(null)
 	clear_friends()
+	UnregisterSignal(src, COMSIG_LIVING_APPLY_WATER)
 	return ..()
 
 /mob/living/simple_animal/slime/create_reagents(max_vol, flags)
@@ -463,6 +465,7 @@
 	regenerate_icons()
 
 /mob/living/simple_animal/slime/proc/apply_water()
+	SIGNAL_HANDLER
 	if(slime_color.slime_tags & SLIME_WATER_IMMUNITY)
 		return
 

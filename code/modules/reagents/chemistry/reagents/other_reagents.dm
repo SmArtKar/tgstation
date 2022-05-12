@@ -179,11 +179,8 @@
 	if(reac_volume >= 5)
 		exposed_turf.MakeSlippery(TURF_WET_WATER, 10 SECONDS, min(reac_volume*1.5 SECONDS, 60 SECONDS))
 
-	for(var/mob/living/simple_animal/slime/exposed_slime in exposed_turf)
-		exposed_slime.apply_water()
-
-	for(var/mob/living/simple_animal/hostile/slime_blorbie/exposed_blorbie in exposed_turf)
-		exposed_blorbie.apply_water()
+	for(var/mob/living/water_target in exposed_turf)
+		SEND_SIGNAL(water_target, COMSIG_LIVING_APPLY_WATER)
 
 	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in exposed_turf)
 	if(hotspot && !isspaceturf(exposed_turf))
@@ -222,6 +219,7 @@
 
 /datum/reagent/water/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)//Splashing people with water can help put them out!
 	. = ..()
+	SEND_SIGNAL(exposed_mob, COMSIG_LIVING_APPLY_WATER)
 	if(methods & TOUCH)
 		exposed_mob.extinguish_mob() // extinguish removes all fire stacks
 	if(methods & VAPOR)
@@ -237,8 +235,7 @@
 		exposed_mob.blood_volume += 0.1 * REM * delta_time // water is good for you!
 		return
 
-	exposed_mob.adjustBruteLoss(2 * REM * delta_time) //But not if you're a jellyperson!
-	exposed_mob.blood_volume = max(0, exposed_mob.blood_volume - 0.2 * REM * delta_time)
+	exposed_mob.blood_volume = max(0, exposed_mob.blood_volume - 0.2 * REM * delta_time) //But not if you're a jellyperson!
 
 ///For weird backwards situations where water manages to get added to trays nutrients, as opposed to being snowflaked away like usual.
 /datum/reagent/water/on_hydroponics_apply(obj/item/seeds/myseed, datum/reagents/chems, obj/machinery/hydroponics/mytray)
@@ -718,11 +715,11 @@
 	taste_description = "grandma's gelatin"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	var/list/limb_transform_types = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/slime,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/slime,
-		BODY_ZONE_HEAD = /obj/item/bodypart/head/slime,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/slime,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/slime,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/jelly/slime,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/jelly/slime,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly/slime,
 	)
 
 	var/target_species = /datum/species/jelly/slime

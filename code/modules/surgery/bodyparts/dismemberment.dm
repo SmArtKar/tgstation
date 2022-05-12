@@ -81,7 +81,8 @@
 		return
 	var/atom/drop_loc = owner.drop_location()
 
-	SEND_SIGNAL(owner, COMSIG_CARBON_REMOVE_LIMB, src, dismembered)
+	SEND_SIGNAL(owner, COMSIG_REMOVE_LIMB, src, owner, dismembered)
+	SEND_SIGNAL(src, COMSIG_REMOVE_LIMB, src, owner, dismembered)
 	update_limb(1)
 	owner.remove_bodypart(src)
 
@@ -316,7 +317,10 @@
 		head.drop_limb(1)
 
 /obj/item/bodypart/proc/attach_limb(mob/living/carbon/new_limb_owner, special)
-	if(SEND_SIGNAL(new_limb_owner, COMSIG_CARBON_ATTACH_LIMB, src, special) & COMPONENT_NO_ATTACH)
+	if(SEND_SIGNAL(new_limb_owner, COMSIG_ATTACH_LIMB, src, new_limb_owner, special) & COMPONENT_NO_ATTACH)
+		return FALSE
+
+	if(SEND_SIGNAL(src, COMSIG_ATTACH_LIMB, src, new_limb_owner, special) & COMPONENT_NO_ATTACH)
 		return FALSE
 
 	var/obj/item/bodypart/chest/mob_chest = new_limb_owner.get_bodypart(BODY_ZONE_CHEST)

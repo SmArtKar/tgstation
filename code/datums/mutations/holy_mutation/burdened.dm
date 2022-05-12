@@ -18,8 +18,8 @@
 	RegisterSignal(owner, COMSIG_CARBON_GAIN_ORGAN, .proc/organ_added_burden)
 	RegisterSignal(owner, COMSIG_CARBON_LOSE_ORGAN, .proc/organ_removed_burden)
 
-	RegisterSignal(owner, COMSIG_CARBON_ATTACH_LIMB, .proc/limbs_added_burden)
-	RegisterSignal(owner, COMSIG_CARBON_REMOVE_LIMB, .proc/limbs_removed_burden)
+	RegisterSignal(owner, COMSIG_ATTACH_LIMB, .proc/limbs_added_burden)
+	RegisterSignal(owner, COMSIG_REMOVE_LIMB, .proc/limbs_removed_burden)
 
 	RegisterSignal(owner, COMSIG_CARBON_GAIN_ADDICTION, .proc/addict_added_burden)
 	RegisterSignal(owner, COMSIG_CARBON_LOSE_ADDICTION, .proc/addict_removed_burden)
@@ -35,8 +35,8 @@
 	UnregisterSignal(owner, list(
 		COMSIG_CARBON_GAIN_ORGAN,
 		COMSIG_CARBON_LOSE_ORGAN,
-		COMSIG_CARBON_ATTACH_LIMB,
-		COMSIG_CARBON_REMOVE_LIMB,
+		COMSIG_ATTACH_LIMB,
+		COMSIG_REMOVE_LIMB,
 		COMSIG_CARBON_GAIN_ADDICTION,
 		COMSIG_CARBON_LOSE_ADDICTION,
 		COMSIG_CARBON_GAIN_MUTATION,
@@ -129,7 +129,7 @@
 	update_burden(TRUE)//lost organ
 
 /// Signal to decrease burden_level (see update_burden proc) if a limb is added
-/datum/mutation/human/burdened/proc/limbs_added_burden(datum/source, obj/item/bodypart/new_limb, special)
+/datum/mutation/human/burdened/proc/limbs_added_burden(datum/source, obj/item/bodypart/new_limb, mob/living/carbon/new_owner, special)
 	SIGNAL_HANDLER
 
 	if(special) //something we don't wanna consider, like instaswapping limbs
@@ -137,7 +137,7 @@
 	update_burden(FALSE)
 
 /// Signal to increase burden_level (see update_burden proc) if a limb is removed
-/datum/mutation/human/burdened/proc/limbs_removed_burden(datum/source, obj/item/bodypart/old_limb, special)
+/datum/mutation/human/burdened/proc/limbs_removed_burden(datum/source, obj/item/bodypart/old_limb, mob/living/carbon/last_owner, special)
 	SIGNAL_HANDLER
 
 	if(special) //something we don't wanna consider, like instaswapping limbs

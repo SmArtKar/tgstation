@@ -11,73 +11,80 @@
 	id = SPECIES_SLIMEPERSON
 	species_traits = list(MUTCOLORS,EYECOLOR,HAIR,FACEHAIR,NOBLOOD,NO_UNDERWEAR)
 	hair_color = "mutcolor"
-	hair_alpha = 150
+	hair_alpha = 200
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
 	var/datum/action/innate/split_body/slime_split
 	var/list/mob/living/carbon/bodies
 	var/datum/action/innate/swap_body/swap_body
 
 	bodypart_overrides = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/slime,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/slime,
-		BODY_ZONE_HEAD = /obj/item/bodypart/head/slime,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/slime,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/slime,
-		BODY_ZONE_CHEST = /obj/item/bodypart/chest/slime,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/jelly/slime,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/jelly/slime,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly/slime,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/jelly/slime,
 	)
 	var/splits = 0
 
-/datum/species/jelly/slime/on_species_loss(mob/living/carbon/C)
+/datum/species/jelly/slime/on_species_loss(mob/living/carbon/jellyman)
 	if(slime_split)
-		slime_split.Remove(C)
+		slime_split.Remove(jellyman)
 	if(swap_body)
-		swap_body.Remove(C)
-	bodies -= C // This means that the other bodies maintain a link
+		swap_body.Remove(jellyman)
+	bodies -= jellyman // This means that the other bodies maintain a link
 	// so if someone mindswapped into them, they'd still be shared.
 	bodies = null
-	C.blood_volume = min(C.blood_volume, BLOOD_VOLUME_NORMAL)
+	jellyman.blood_volume = min(jellyman.blood_volume, BLOOD_VOLUME_NORMAL)
 	..()
 
-/datum/species/jelly/slime/on_species_gain(mob/living/carbon/C, datum/species/old_species)
+/datum/species/jelly/slime/on_species_gain(mob/living/carbon/new_jellyperson, datum/species/old_species)
 	..()
-	if(ishuman(C))
+	if(ishuman(new_jellyperson))
+		var/mob/living/carbon/human/jellyman = new_jellyperson
 		slime_split = new
-		slime_split.Grant(C)
+		slime_split.Grant(jellyman)
 		swap_body = new
-		swap_body.Grant(C)
+		swap_body.Grant(jellyman)
 
 		if(!bodies || !length(bodies))
-			bodies = list(C)
+			bodies = list(jellyman)
 		else
-			bodies |= C
+			bodies |= jellyman
 
-/datum/species/jelly/slime/spec_death(gibbed, mob/living/carbon/human/H)
+		if(jellyman.dna)
+			jellyman.hair_color = jellyman.dna.features["mcolor"]
+			jellyman.dna.update_ui_block(DNA_HAIR_COLOR_BLOCK)
+			jellyman.facial_hair_color = jellyman.dna.features["mcolor"]
+			jellyman.dna.update_ui_block(DNA_FACIAL_HAIR_COLOR_BLOCK)
+
+/datum/species/jelly/slime/spec_death(gibbed, mob/living/carbon/human/jellyman)
 	if(slime_split)
-		if(!H.mind || !H.mind.active)
+		if(!jellyman.mind || !jellyman.mind.active)
 			return
 
-		var/list/available_bodies = (bodies - H)
-		for(var/mob/living/L in available_bodies)
-			if(!swap_body.can_swap(L))
-				available_bodies -= L
+		var/list/available_bodies = (bodies - jellyman)
+		for(var/mob/living/body in available_bodies)
+			if(!swap_body.can_swap(body))
+				available_bodies -= body
 
 		if(!LAZYLEN(available_bodies))
 			return
 
-		swap_body.swap_to_dupe(H.mind, pick(available_bodies))
+		swap_body.swap_to_dupe(jellyman.mind, pick(available_bodies))
 
 //If you're cloned you get your body pool back
 /datum/species/jelly/slime/copy_properties_from(datum/species/jelly/slime/old_species)
 	bodies = old_species.bodies
 
-/datum/species/jelly/slime/spec_life(mob/living/carbon/human/H, delta_time, times_fired)
-	if(H.blood_volume >= (DEFAULT_SPLIT_VOLUME + SPLIT_PENALTY * splits ** 2))
+/datum/species/jelly/slime/spec_life(mob/living/carbon/human/jellyman, delta_time, times_fired)
+	if(jellyman.blood_volume >= (DEFAULT_SPLIT_VOLUME + SPLIT_PENALTY * splits ** 2))
 		if(DT_PROB(2.5, delta_time))
-			to_chat(H, span_notice("You feel very bloated!"))
+			to_chat(jellyman, span_notice("You feel very bloated!"))
 
-	else if(H.nutrition >= NUTRITION_LEVEL_WELL_FED)
-		H.blood_volume += 1.5 * delta_time
-		H.adjust_nutrition(-1.25 * delta_time)
+	else if(jellyman.nutrition >= NUTRITION_LEVEL_WELL_FED)
+		jellyman.blood_volume += 1.5 * delta_time
+		jellyman.adjust_nutrition(-1.25 * delta_time)
 
 	..()
 
@@ -131,7 +138,7 @@
 
 	spare.underwear = "Nude"
 	human_owner.dna.transfer_identity(spare, transfer_SE=1)
-	spare.dna.features["mcolor"] = "#[pick("7F", "FF")][pick("7F", "FF")][pick("7F", "FF")]"
+	spare.dna.features["mcolor"] = "#[num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)]"
 	spare.dna.update_uf_block(DNA_MUTANT_COLOR_BLOCK)
 	spare.real_name = spare.dna.real_name
 	spare.name = spare.dna.real_name
@@ -185,11 +192,11 @@
 		ui.open()
 
 /datum/action/innate/swap_body/ui_data(mob/user)
-	var/mob/living/carbon/human/H = owner
-	if(!isslimeperson(H))
+	var/mob/living/carbon/human/jellyman = owner
+	if(!isslimeperson(jellyman))
 		return
 
-	var/datum/species/jelly/slime/slime_species = H.dna.species
+	var/datum/species/jelly/slime/slime_species = jellyman.dna.species
 
 	var/list/data = list()
 	data["bodies"] = list()
@@ -210,7 +217,7 @@
 			if(DEAD)
 				stat = "Dead"
 		var/occupied
-		if(body == H)
+		if(body == jellyman)
 			occupied = "owner"
 		else if(body.mind && body.mind.active)
 			occupied = "stranger"

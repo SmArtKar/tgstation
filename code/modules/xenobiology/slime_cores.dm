@@ -15,12 +15,15 @@
 	var/tier = 1
 	var/qdel_timer = null ///deletion timer, for delayed reactions
 	var/list/react_reagents = list()
+	var/activated = FALSE
 
 /obj/item/slime_extract/proc/activate()
 
 /obj/item/slime_extract/proc/use_up()
+	if(activated)
+		return
 	name = "used [name]"
-	desc += "This extract has been used up."
+	desc += " This extract has been used up."
 
 /obj/item/slime_extract/examine(mob/user)
 	. = ..()
@@ -117,6 +120,7 @@
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
 	desc = "An activated [initial(name)]. It's draining plasma from the atmospehre and condensing it into solid plasma sheets."
+	activated = TRUE
 	update_icon()
 	addtimer(CALLBACK(src, .proc/stop_draining), 15 SECONDS)
 
@@ -125,6 +129,7 @@
 	icon_state = initial(icon_state)
 	name = initial(name)
 	desc = initial(desc)
+	activated = FALSE
 	if(uses <= 0)
 		use_up()
 	update_icon()
@@ -149,6 +154,7 @@
 	var/stasis_ready = FALSE
 
 /obj/item/slime_extract/dark_blue/activate()
+	activated = TRUE
 	stasis_ready = TRUE
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
@@ -168,6 +174,7 @@
 	icon_state = initial(icon_state)
 	name = initial(name)
 	desc = initial(desc)
+	activated = FALSE
 	if(uses <= 0)
 		qdel(src)
 
@@ -208,6 +215,7 @@
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
 	desc = "An activated [initial(name)]. It will soon explode into a timestop field!"
+	activated = TRUE
 	addtimer(CALLBACK(src, .proc/slime_stop), 5 SECONDS)
 	playsound(get_turf(src), 'sound/magic/mandswap.ogg', 100, TRUE)
 
@@ -215,6 +223,7 @@
 	icon_state = initial(icon_state)
 	name = initial(name)
 	desc = initial(desc)
+	activated = FALSE
 	new /obj/effect/timestop/small_effect(get_turf(src), 1)
 	if(uses > 0)
 		icon_state = initial(icon_state)
@@ -289,15 +298,16 @@
 	tier = 6
 	var/relimb_ready = FALSE
 	var/list/limb_transform_types = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/slime,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/slime,
-		BODY_ZONE_HEAD = /obj/item/bodypart/head/slime,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/slime,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/slime,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/jelly/slime,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/jelly/slime,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly/slime,
 	)
 
 /obj/item/slime_extract/black/activate()
 	relimb_ready = TRUE
+	activated = TRUE
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
 	desc = "An activated [initial(name)]. It can be smeared over someone's missing limb to restore it or existing one to patch up its wounds."
@@ -310,15 +320,18 @@
 	icon_state = initial(icon_state)
 	name = initial(name)
 	desc = initial(desc)
+	activated = FALSE
 
 	var/mob/living/carbon/human/victim = target
 	var/obj/item/bodypart/target_part = victim.get_bodypart(user.zone_selected)
-	if(target_part)
+	if(target_part && target_part.bodytype & BODYTYPE_ORGANIC)
+		target_part.heal_damage(50, 50) //Usually full heal
 		for(var/datum/wound/wound as anything in target_part.wounds)
 			wound.on_synthflesh(30)
 			wound.on_xadone(70) //Not enough to heal critical wounds, but works for moderate and severe
 		if(uses <= 0)
 			qdel(src)
+			return
 		return
 
 	var/limb_type = limb_transform_types[user.zone_selected]

@@ -94,3 +94,6 @@
 
 ///From obj/item/toy/crayon/spraycan
 #define COMSIG_LIVING_MOB_PAINTED "living_mob_painted"
+
+///From /turf/open/proc/water_vapor_gas_act() and /datum/reagent/water/expose_turf(turf/open/exposed_turf, reac_volume): ()
+#define COMSIG_LIVING_APPLY_WATER "living_apply_water"

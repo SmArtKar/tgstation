@@ -51,62 +51,84 @@
 	limb_id = SPECIES_JELLYPERSON
 	is_dimorphic = TRUE
 
+/obj/item/bodypart/head/jelly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 2, BRUTE)
+
 /obj/item/bodypart/chest/jelly
 	limb_id = SPECIES_JELLYPERSON
 	is_dimorphic = TRUE
 
+/obj/item/bodypart/chest/jelly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 2, BRUTE)
+
 /obj/item/bodypart/l_arm/jelly
 	limb_id = SPECIES_JELLYPERSON
+
+/obj/item/bodypart/l_arm/jelly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 2, BRUTE)
 
 /obj/item/bodypart/r_arm/jelly
 	limb_id = SPECIES_JELLYPERSON
 
+/obj/item/bodypart/r_arm/jelly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 2, BRUTE)
+
 /obj/item/bodypart/l_leg/jelly
 	limb_id = SPECIES_JELLYPERSON
+
+/obj/item/bodypart/l_leg/jelly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 2, BRUTE)
 
 /obj/item/bodypart/r_leg/jelly
 	limb_id = SPECIES_JELLYPERSON
 
+/obj/item/bodypart/r_leg/jelly/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 2, BRUTE)
+
 ///SLIME
-/obj/item/bodypart/head/slime
+/obj/item/bodypart/head/jelly/slime
 	limb_id = SPECIES_SLIMEPERSON
 	is_dimorphic = FALSE
 
-/obj/item/bodypart/chest/slime
-	limb_id = SPECIES_SLIMEPERSON
-	is_dimorphic = TRUE
-
-/obj/item/bodypart/l_arm/slime
+/obj/item/bodypart/chest/jelly/slime
 	limb_id = SPECIES_SLIMEPERSON
 
-/obj/item/bodypart/r_arm/slime
+/obj/item/bodypart/l_arm/jelly/slime
 	limb_id = SPECIES_SLIMEPERSON
 
-/obj/item/bodypart/l_leg/slime
+/obj/item/bodypart/r_arm/jelly/slime
 	limb_id = SPECIES_SLIMEPERSON
 
-/obj/item/bodypart/r_leg/slime
+/obj/item/bodypart/l_leg/jelly/slime
+	limb_id = SPECIES_SLIMEPERSON
+
+/obj/item/bodypart/r_leg/jelly/slime
 	limb_id = SPECIES_SLIMEPERSON
 
 ///LUMINESCENTS
-/obj/item/bodypart/head/luminescent
+/obj/item/bodypart/head/jelly/luminescent
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = FALSE
 
-/obj/item/bodypart/chest/luminescent
-	limb_id = SPECIES_LUMINESCENT
-	is_dimorphic = TRUE
-
-/obj/item/bodypart/l_arm/luminescent
+/obj/item/bodypart/chest/jelly/luminescent
 	limb_id = SPECIES_LUMINESCENT
 
-/obj/item/bodypart/r_arm/luminescent
+/obj/item/bodypart/l_arm/jelly/luminescent
 	limb_id = SPECIES_LUMINESCENT
 
-/obj/item/bodypart/l_leg/luminescent
+/obj/item/bodypart/r_arm/jelly/luminescent
 	limb_id = SPECIES_LUMINESCENT
 
-/obj/item/bodypart/r_leg/luminescent
+/obj/item/bodypart/l_leg/jelly/luminescent
+	limb_id = SPECIES_LUMINESCENT
+
+/obj/item/bodypart/r_leg/jelly/luminescent
 	limb_id = SPECIES_LUMINESCENT
 
 ///ZOMBIE

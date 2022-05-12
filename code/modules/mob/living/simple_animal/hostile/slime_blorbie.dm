@@ -37,8 +37,14 @@
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	AddComponent(/datum/component/clickbox, x_offset = -2, y_offset = -2)
 	AddComponent(/datum/component/swarming)
+	RegisterSignal(src, COMSIG_LIVING_APPLY_WATER, .proc/apply_water)
 
-/mob/living/simple_animal/hostile/slime_blorbie/proc/apply_water()
+/mob/living/simple_animal/hostile/slime_blorbie/Destroy()
+	UnregisterSignal(src, COMSIG_LIVING_APPLY_WATER)
+	return ..()
+
+/mob/living/simple_animal/hostile/slime_blorbie/proc/apply_water(datum/source)
+	SIGNAL_HANDLER
 	adjustBruteLoss(10) //Instant death on water
 
 /mob/living/simple_animal/hostile/slime_blorbie/adjustFireLoss(amount, updating_health = TRUE, forced = FALSE)
