@@ -1648,7 +1648,7 @@
 			return
 
 		var/obj/item/organ/spewed_organ = spewed[1]
-		var/organ_type = mutation_types[organ_tag]
+		var/organ_type = mutation_types[spewed_organ.slot]
 		var/obj/item/organ/our_organ = new organ_type(owner)
 		our_organ.applyOrganDamage(spewed_organ.damage)
 		our_organ.Insert(owner, TRUE)
