@@ -1595,7 +1595,6 @@
 	ph = 2
 	burning_temperature = 20 //cold burning
 	burning_volume = 0.1
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	overdose_threshold = 16 //No more than 1 pen!
 
 /datum/reagent/medicine/trixadone_polymers/on_mob_life(mob/living/carbon/user, delta_time, times_fired)
@@ -1617,3 +1616,44 @@
 /datum/reagent/medicine/trixadone_polymers/overdose_process(mob/living/user, delta_time, times_fired)
 	. = ..()
 	user.adjustToxLoss(3 * REM * delta_time, FALSE, TRUE)
+
+/datum/reagent/medicine/mutanite_solution
+	name = "Mutanite Solution"
+	description = "A dangerous solution found in black slime extracts after they have been exposed to plasma. It has high organ regenerative properties, but can irreversibly mutate them."
+	color = "#0d0e1f"
+	taste_description = "salty grass"
+	ph = 9
+	overdose_threshold = 25 //2 pens
+	chemical_flags = REAGENT_DEAD_PROCESS | REAGENT_IGNORE_STASIS
+	var/static/list/mutation_types = list(
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain/slime,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart/slime,
+		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs/slime,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes/slime,
+		ORGAN_SLOT_EARS = /obj/item/organ/ears/slime,
+		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue/slime,
+		ORGAN_SLOT_LIVER = /obj/item/organ/liver/slime,
+		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach/slime,
+		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix/slime,
+	)
+
+/datum/reagent/medicine/mutanite_solution/on_mob_life(mob/living/carbon/owner, delta_time, times_fired)
+	. = ..()
+	for(var/organ_tag in mutation_types)
+		owner.adjustOrganLoss(organ_tag, -5 * REM * delta_time) //-50 damage of every organ per pen, but has a chance to fuck your organs up.
+
+	if(DT_PROB(2.5, delta_time)) //Usually will fuck up one organ per pen.
+		var/list/spewed = owner.spew_organ(1, 1, safety = TRUE) //No brain spew
+		if(!LAZYLEN(spewed)) //why do i even bother
+			return
+
+		var/obj/item/organ/spewed_organ = spewed[1]
+		var/organ_type = mutation_types[organ_tag]
+		var/obj/item/organ/our_organ = new organ_type(owner)
+		our_organ.applyOrganDamage(spewed_organ.damage)
+		our_organ.Insert(owner, TRUE)
+		owner.vomit(0, TRUE, FALSE, 1, FALSE, force = TRUE)
+		to_chat(owner, span_userdanger("You feel something regrowing inside of you as you spew out [spewed_organ] in a shower of bloody vomit!"))
+		spewed_organ.applyOrganDamage(spewed_organ.maxHealth)
+		spewed_organ.organ_flags |= ORGAN_FAILING
+		spewed_organ.name = "mangled [spewed_organ]"

@@ -122,3 +122,13 @@
 	if(. & EMP_PROTECT_SELF)
 		return
 	applyOrganDamage(40/severity)
+
+/obj/item/organ/ears/slime
+	name = "slimy ears"
+	desc = "A weird snail-like blob of jelly that works as ears for slimefolk."
+	icon_state = "ears-slime"
+	healing_factor = SLIME_ORGAN_HEALING
+
+/obj/item/organ/ears/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)

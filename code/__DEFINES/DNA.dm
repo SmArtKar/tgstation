@@ -143,6 +143,7 @@
 //organ defines
 #define STANDARD_ORGAN_THRESHOLD 100
 #define STANDARD_ORGAN_HEALING 50 / 100000
+#define SLIME_ORGAN_HEALING 1 / 100 //20 times faster
 /// designed to fail organs when left to decay for ~15 minutes
 #define STANDARD_ORGAN_DECAY 111 / 100000
 

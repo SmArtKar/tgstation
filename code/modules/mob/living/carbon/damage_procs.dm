@@ -91,6 +91,9 @@
 			blood_volume = max(blood_volume - amount, 0)
 	else if(HAS_TRAIT(src, TRAIT_TOXIMMUNE)) //Prevents toxin damage, but not healing
 		amount = min(amount, 0)
+	else if(HAS_TRAIT(src, TRAIT_REVERSE_TOXHEAL) && !forced) //Prevents toxin healing, but not damage
+		if(amount < 0)
+			amount = -amount
 	return ..()
 
 /mob/living/carbon/getStaminaLoss()

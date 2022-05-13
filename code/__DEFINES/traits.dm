@@ -424,6 +424,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// You can't gain nutrition with this trait
 #define TRAIT_NO_NUTRITION_GAIN "no_nutrition_gain"
 
+/// Similarly to toxlover, all toxin healing is going to be converted into damage, but toxin damage wont be converted into healing
+#define TRAIT_REVERSE_TOXHEAL "reverse_toxheal"
+
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic

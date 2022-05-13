@@ -8,12 +8,12 @@
 	id = SPECIES_LUMINESCENT
 	examine_limb_id = SPECIES_LUMINESCENT
 	bodypart_overrides = list(
-		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/luminescent,
-		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/luminescent,
+		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly,
+		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly,
 		BODY_ZONE_HEAD = /obj/item/bodypart/head/jelly/luminescent,
-		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/jelly/luminescent,
-		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly/luminescent,
-		BODY_ZONE_CHEST = /obj/item/bodypart/chest/jelly/luminescent,
+		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/jelly,
+		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly,
+		BODY_ZONE_CHEST = /obj/item/bodypart/chest/jelly,
 	)
 	var/glow_intensity = LUMINESCENT_DEFAULT_GLOW
 	var/obj/effect/dummy/luminescent_glow/glow

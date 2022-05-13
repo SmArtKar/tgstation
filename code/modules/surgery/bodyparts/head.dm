@@ -345,7 +345,8 @@
 			. += eye_left
 			. += eye_right
 		else
-			. += image('icons/mob/human_face.dmi', "eyes_missing", -BODY_LAYER, SOUTH)
+			. += image('icons/mob/human_face.dmi', "eyes_missing_left", -BODY_LAYER, SOUTH)
+			. += image('icons/mob/human_face.dmi', "eyes_missing_right", -BODY_LAYER, SOUTH)
 	else
 		if(!facial_hair_hidden && facial_overlay && (FACEHAIR in species_flags_list))
 			facial_overlay.alpha = hair_alpha

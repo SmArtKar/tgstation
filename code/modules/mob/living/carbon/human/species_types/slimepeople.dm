@@ -12,7 +12,7 @@
 	species_traits = list(MUTCOLORS,EYECOLOR,HAIR,FACEHAIR,NOBLOOD,NO_UNDERWEAR)
 	hair_color = "mutcolor"
 	hair_alpha = 200
-	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
+	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN
 	var/datum/action/innate/split_body/slime_split
 	var/list/mob/living/carbon/bodies
 	var/datum/action/innate/swap_body/swap_body
@@ -82,18 +82,14 @@
 		if(DT_PROB(2.5, delta_time))
 			to_chat(jellyman, span_notice("You feel very bloated!"))
 
-	else if(jellyman.nutrition >= NUTRITION_LEVEL_WELL_FED)
-		jellyman.blood_volume += 1.5 * delta_time
-		jellyman.adjust_nutrition(-1.25 * delta_time)
-
-	..()
+	return ..()
 
 /datum/action/innate/split_body
 	name = "Split Body"
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "slimesplit"
 	icon_icon = 'icons/mob/actions/actions_slime.dmi'
-	background_icon_state = "bg_alien"
+	background_icon_state = "bg_slime"
 
 /datum/action/innate/split_body/IsAvailable()
 	. = ..()
@@ -145,6 +141,8 @@
 	spare.updateappearance(mutcolor_update=1)
 	spare.domutcheck()
 	spare.Move(get_step(human_owner.loc, pick(NORTH,SOUTH,EAST,WEST)))
+	for(var/disease in human_owner.diseases)
+		spare.ForceContractDisease(disease)
 
 	human_owner.blood_volume *= 0.45
 	human_owner.notransform = 0
@@ -153,9 +151,12 @@
 	origin_datum.bodies |= spare
 	origin_datum.splits += 1
 
-	var/datum/species/jelly/slime/spare_datum = spare.dna.species
-	spare_datum.bodies = origin_datum.bodies
-	spare_datum.splits = origin_datum.splits
+	for(var/mob/living/carbon/human/jellyman in (origin_datum.bodies - human_owner))
+		if(!jellyman.dna || !jellyman.dna.species)
+			continue
+		var/datum/species/jelly/slime/jellyman_species = jellyman.dna.species
+		jellyman_species.splits = origin_datum.splits
+		jellyman_species.bodies = origin_datum.bodies
 
 	human_owner.transfer_trait_datums(spare)
 	human_owner.mind.transfer_to(spare)
@@ -170,7 +171,7 @@
 	check_flags = NONE
 	button_icon_state = "slimeswap"
 	icon_icon = 'icons/mob/actions/actions_slime.dmi'
-	background_icon_state = "bg_alien"
+	background_icon_state = "bg_slime"
 
 /datum/action/innate/swap_body/Activate()
 	if(!isslimeperson(owner))

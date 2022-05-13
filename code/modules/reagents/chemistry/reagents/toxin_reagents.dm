@@ -178,17 +178,25 @@
 	taste_description = "slime"
 	taste_mult = 1.3
 	ph = 10
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/toxin/slimejelly/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
+/datum/reagent/toxin/slimejelly/on_mob_life(mob/living/carbon/consumer, delta_time, times_fired)
 	if(DT_PROB(5, delta_time))
-		to_chat(M, span_danger("Your insides are burning!"))
-		M.adjustToxLoss(rand(20, 60), 0)
+		to_chat(consumer, span_danger("Your insides are burning!"))
+		consumer.adjustToxLoss(rand(20, 60), 0)
 		. = TRUE
 	else if(DT_PROB(23, delta_time))
-		M.heal_bodypart_damage(5)
+		consumer.heal_bodypart_damage(2.5, 2.5)
 		. = TRUE
-	..()
+	return ..()
+
+/datum/reagent/toxin/slimejelly/empowered
+	name = "Empowered Slime Jelly"
+	description = "An empowered version of slime jelly that is capable of rapidly restoring users' blood."
+
+/datum/reagent/toxin/slimejelly/empowered/on_mob_life(mob/living/carbon/consumer, delta_time, times_fired)
+	if(isjellyperson(consumer))
+		consumer.blood_volume = min(consumer.blood_volume + 5 * REM * delta_time, BLOOD_VOLUME_MAXIMUM)
+	return ..()
 
 /datum/reagent/toxin/minttoxin
 	name = "Mint Toxin"

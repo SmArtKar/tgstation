@@ -335,8 +335,16 @@
 
 /obj/item/reagent_containers/hypospray/medipen/slimepen/silver
 	name = "silver slime autoinjector"
-	desc = "A silver slimy autoinjector filled with extract of a silver slime. It increases your metabolism, granting you speed in cost of rapid nutrition drain."
+	desc = "A silver slimy autoinjector filled with hypertrozine. It increases your metabolism, granting you speed in cost of rapid nutrition drain."
 	icon_state = "slimepen_silver"
 	volume = 15
 	amount_per_transfer_from_this = 15
-	list_reagents = list(/datum/reagent/silver_slime_extract = 15)
+	list_reagents = list(/datum/reagent/hypertrozine = 15)
+
+/obj/item/reagent_containers/hypospray/medipen/slimepen/black
+	name = "black slime autoinjector"
+	desc = "A black slimy autoinjector filled with mutanite solution. It rapidly restores users' internal organs, but has a chance to mutate them irreversibly."
+	icon_state = "slimepen_black"
+	volume = 10
+	amount_per_transfer_from_this = 10
+	list_reagents = list(/datum/reagent/medicine/mutanite_solution = 10)

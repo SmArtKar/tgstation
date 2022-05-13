@@ -488,3 +488,43 @@
 	ethereal_heart.owner.gain_trauma(picked_trauma, TRAUMA_RESILIENCE_ABSOLUTE)
 	playsound(get_turf(ethereal_heart.owner), 'sound/effects/ethereal_revive.ogg', 100)
 	qdel(src)
+
+/obj/item/organ/heart/slime //Handles nutrition to blood conversion
+	name = "slime core"
+	desc = "A core-like structure that acts as a heart for slimefolk. It can rapidly regenerate blood in cost of nutrition and potential brute damage."
+	icon_state = "heart-slime"
+	healing_factor = SLIME_ORGAN_HEALING
+
+/obj/item/organ/heart/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+
+/obj/item/organ/heart/slime/on_life(delta_time, times_fired)
+	. = ..()
+	if(owner.stat == DEAD) //can't farm slime jelly from a dead slime/jelly person indefinitely
+		return
+
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+
+	if(human_owner.blood_volume < BLOOD_VOLUME_BAD)
+		human_owner.blood_volume += 2.5 * delta_time
+		human_owner.adjustBruteLoss(2.5 * delta_time)
+		if(DT_PROB(5, delta_time))
+			to_chat(human_owner, span_danger("You feel empty!"))
+
+	if(human_owner.blood_volume < BLOOD_VOLUME_NORMAL)
+		if(human_owner.nutrition >= NUTRITION_LEVEL_STARVING)
+			human_owner.blood_volume += 1.5 * delta_time
+			human_owner.adjust_nutrition(-1.25 * delta_time)
+
+
+	if(human_owner.nutrition >= NUTRITION_LEVEL_WELL_FED)
+		human_owner.blood_volume += 1.5 * delta_time
+		human_owner.adjust_nutrition(-1.25 * delta_time)
+
+	if(human_owner.blood_volume < BLOOD_VOLUME_OKAY)
+		if(DT_PROB(2.5, delta_time))
+			to_chat(human_owner, span_danger("You feel drained!"))

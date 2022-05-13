@@ -132,7 +132,7 @@
 	//Vars for n2o and healium induced euphorias.
 	var/n2o_euphoria = EUPHORIA_LAST_FLAG
 	var/healium_euphoria = EUPHORIA_LAST_FLAG
-	
+
 	//Handle subtypes' breath processing
 	handle_gas_override(breather,breath_gases, gas_breathed)
 
@@ -536,18 +536,6 @@
 	safe_plasma_min = 4 //We breathe THIS!
 	safe_plasma_max = 0
 
-/obj/item/organ/lungs/slime
-	name = "vacuole"
-	desc = "A large organelle designed to store oxygen and other important gasses."
-
-	safe_plasma_max = 0 //We breathe this to gain POWER.
-
-/obj/item/organ/lungs/slime/check_breath(datum/gas_mixture/breath, mob/living/carbon/human/breather_slime)
-	. = ..()
-	if (breath?.gases[/datum/gas/plasma])
-		var/plasma_pp = breath.get_breath_partial_pressure(breath.gases[/datum/gas/plasma][MOLES])
-		owner.blood_volume += (0.2 * plasma_pp) // 10/s when breathing literally nothing but plasma, which will suffocate you.
-
 /obj/item/organ/lungs/cybernetic
 	name = "basic cybernetic lungs"
 	desc = "A basic cybernetic version of the lungs found in traditional humanoid entities."
@@ -588,7 +576,6 @@
 		COOLDOWN_START(src, severe_cooldown, 30 SECONDS)
 	if(prob(emp_vulnerability/severity)) //Chance of permanent effects
 		organ_flags |= ORGAN_SYNTHETIC_EMP //Starts organ faliure - gonna need replacing soon.
-
 
 /obj/item/organ/lungs/ashwalker
 	name = "blackened frilled lungs" // blackened from necropolis exposure
@@ -665,3 +652,29 @@
 	breath_gases[/datum/gas/oxygen][MOLES] += gas_breathed
 	breath_gases[/datum/gas/hydrogen][MOLES] += gas_breathed*2
 	breath_gases[/datum/gas/water_vapor][MOLES] -= gas_breathed
+
+/obj/item/organ/lungs/slime
+	name = "porous slime"
+	desc = "A heavy sponge-like mass of slime, capable of absorbing enormous amounts of plasma and converting them into nutritious components."
+	icon_state = "lungs-slime"
+
+	safe_plasma_max = 0
+	healing_factor = SLIME_ORGAN_HEALING
+
+/obj/item/organ/lungs/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+
+/obj/item/organ/lungs/slime/check_breath(datum/gas_mixture/breath, mob/living/carbon/human/breather_slime)
+	. = ..()
+	if(breath?.gases[/datum/gas/plasma])
+		var/plasma_pp = breath.get_breath_partial_pressure(breath.gases[/datum/gas/plasma][MOLES])
+		owner.blood_volume += min(0.2 * plasma_pp, 10) // 10/s when breathing literally nothing but plasma, which will suffocate you.
+
+	if(breath?.gases[/datum/gas/bz])
+		var/bz_pp = breath.get_breath_partial_pressure(breath.gases[/datum/gas/bz][MOLES])
+		if(bz_pp <= BZ_brain_damage_min)
+			owner.SetSleeping(10)
+			return
+
+		owner.PermaSleeping() //Just like slimes. Not applying stasis because then they will get permastuck in it due to not breathing at all.

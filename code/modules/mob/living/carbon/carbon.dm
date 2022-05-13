@@ -481,17 +481,25 @@
 	var/obj/effect/decal/cleanable/vomit/spew = new(floor, get_static_viruses())
 	bite.reagents.trans_to(spew, amount, transfered_by = src)
 
-/mob/living/carbon/proc/spew_organ(power = 5, amt = 1)
+/mob/living/carbon/proc/spew_organ(power = 5, amt = 1, safety = FALSE)
+	var/list/organs_spewed = list()
 	for(var/i in 1 to amt)
-		if(!internal_organs.len)
+		var/list/possible_organs = list()
+		for(var/obj/item/organ/possible_brain in internal_organs)
+			if(istype(possible_brain, /obj/item/organ/brain) && safety)
+				continue
+			possible_organs += possible_brain
+
+		if(!possible_organs.len)
 			break //Guess we're out of organs!
-		var/obj/item/organ/guts = pick(internal_organs)
+		var/obj/item/organ/guts = pick(possible_organs)
 		var/turf/T = get_turf(src)
 		guts.Remove(src)
 		guts.forceMove(T)
 		var/atom/throw_target = get_edge_target_turf(guts, dir)
 		guts.throw_at(throw_target, power, 4, src)
-
+		organs_spewed += guts
+	return organs_spewed
 
 /mob/living/carbon/fully_replace_character_name(oldname,newname)
 	..()

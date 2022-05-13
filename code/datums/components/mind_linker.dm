@@ -23,7 +23,7 @@
 	/// The icon state applied to the speech action handed out.
 	var/speech_action_icon_state = "link_speech"
 	/// The icon background for the speech action handed out.
-	var/speech_action_background_icon_state = "bg_alien"
+	var/speech_action_background_icon_state = "bg_slime"
 	/// The master's linking action, which allows them to link people to the network.
 	var/datum/action/linker_action
 	/// The master's speech action. The owner of the link shouldn't lose this as long as the link remains.
@@ -41,7 +41,7 @@
 	datum/callback/post_unlink_callback,
 	speech_action_icon = 'icons/mob/actions/actions_slime.dmi',
 	speech_action_icon_state = "link_speech",
-	speech_action_background_icon_state = "bg_alien",
+	speech_action_background_icon_state = "bg_slime",
 	)
 
 	if(!isliving(parent))
@@ -169,7 +169,7 @@
 	desc = "Send a psychic message to everyone connected to your Link."
 	button_icon_state = "link_speech"
 	icon_icon = 'icons/mob/actions/actions_slime.dmi'
-	background_icon_state = "bg_alien"
+	background_icon_state = "bg_slime"
 
 /datum/action/innate/linked_speech/New(Target)
 	. = ..()

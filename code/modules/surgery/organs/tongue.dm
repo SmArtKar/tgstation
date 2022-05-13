@@ -479,3 +479,45 @@
 		signer.visible_message(span_notice("[signer] raises [signer.p_their()] eyebrows."))
 	else if(question_found)
 		signer.visible_message(span_notice("[signer] lowers [signer.p_their()] eyebrows."))
+
+/obj/item/organ/tongue/slime
+	name = "slimy tongue"
+	desc = "A slimy tongue often found in \"mouths\" of slimefolk."
+	icon_state = "tongueslime"
+	say_mod = "chirps"
+	attack_verb_continuous = list("chirps", "slaps")
+	attack_verb_simple = list("chirps", "slaps")
+	modifies_speech = TRUE
+	taste_sensitivity = 5 //Very sensetive!
+	healing_factor = SLIME_ORGAN_HEALING
+
+	languages_native = list(/datum/language/slime)
+	var/static/list/languages_possible_slime = typecacheof(list(
+		/datum/language/common,
+		/datum/language/uncommon,
+		/datum/language/draconic,
+		/datum/language/codespeak,
+		/datum/language/monkey,
+		/datum/language/narsie,
+		/datum/language/beachbum,
+		/datum/language/aphasia,
+		/datum/language/piratespeak,
+		/datum/language/moffic,
+		/datum/language/sylvan,
+		/datum/language/shadowtongue,
+		/datum/language/terrum,
+		/datum/language/nekomimetic,
+		/datum/language/slime
+	))
+
+/obj/item/organ/tongue/slime/Initialize(mapload)
+	. = ..()
+	languages_possible = languages_possible_slime
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+
+/obj/item/organ/tongue/slime/modify_speech(datum/source, list/speech_args)
+	var/message = speech_args[SPEECH_MESSAGE]
+	if(message[1] != "*")
+		message = replacetext(message, "R", "QI") //Unable to pronounce R due to wobbly and birdlike nature of their tongue and speech
+		message = replacetext(message, "r", "qi") //Sounds extremely funny
+	speech_args[SPEECH_MESSAGE] = message

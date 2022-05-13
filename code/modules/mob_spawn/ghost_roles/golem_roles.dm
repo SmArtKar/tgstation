@@ -5,7 +5,6 @@
 /obj/effect/mob_spawn/ghost_role/human/golem
 	name = "inert free golem shell"
 	desc = "A humanoid shape, empty, lifeless, and full of potential."
-	icon = 'icons/obj/wizard.dmi'
 	icon_state = "construct"
 	mob_species = /datum/species/golem
 	anchored = FALSE

@@ -25,7 +25,7 @@
 	exotic_blood = /datum/reagent/water
 	disliked_food = MEAT | DAIRY | SEAFOOD
 	liked_food = VEGETABLES | FRUIT | GRAIN
-	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
+	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN
 	species_language_holder = /datum/language_holder/plant
 
 	bodypart_overrides = list(

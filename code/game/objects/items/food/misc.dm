@@ -1004,3 +1004,13 @@
 	tastes = list("seaweed" = 1)
 	foodtypes = VEGETABLES
 	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/food/slime_jelly_globule
+	name = "slime jelly globule"
+	desc = "A glob of empowered slime jelly, capable of rapidly restoring user's blood. If they're slimefolk, of course."
+	icon = 'icons/obj/xenobiology/slime_extracts.dmi'
+	icon_state = "empty"
+	food_reagents = list(/datum/reagent/toxin/slimejelly/empowered = 10) //50u of blood
+	tastes = list("your liquified insides" = 1, "pain" = 1, "slime" = 1)
+	foodtypes = TOXIC
+	w_class = WEIGHT_CLASS_SMALL

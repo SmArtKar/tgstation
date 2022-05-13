@@ -20,7 +20,7 @@
 	coldmod = 1.5
 	heatmod = 0.67
 	payday_modifier = 0.75
-	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT
+	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN
 	species_cookie = /obj/item/food/meat/slab
 	attack_verb = "slash"
 	attack_effect = ATTACK_EFFECT_CLAW

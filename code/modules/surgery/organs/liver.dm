@@ -255,4 +255,21 @@
 	if(prob(emp_vulnerability/severity)) //Chance of permanent effects
 		organ_flags |= ORGAN_SYNTHETIC_EMP //Starts organ faliure - gonna need replacing soon.
 
+/obj/item/organ/liver/slime
+	name = "slimy liver"
+	desc = "A slimy transparent liver. Why do slimefolk even need one anyways?"
+	icon_state = "liver-slime"
+	filterToxins = FALSE
+	healing_factor = SLIME_ORGAN_HEALING
 
+/obj/item/organ/liver/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+
+/obj/item/organ/liver/slime/Insert(mob/living/carbon/organ_owner, special, drop_if_replaced)
+	. = ..()
+	ADD_TRAIT(organ_owner, TRAIT_REVERSE_TOXHEAL, ORGAN_TRAIT) //Doesn't actually give toxlover but instead reverses all toxin healing. Good luck.
+
+/obj/item/organ/liver/slime/Remove(mob/living/carbon/organ_owner, special)
+	. = ..()
+	REMOVE_TRAIT(organ_owner, TRAIT_REVERSE_TOXHEAL, ORGAN_TRAIT)

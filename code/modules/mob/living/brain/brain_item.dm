@@ -322,6 +322,15 @@
 	desc = "We barely understand the brains of terrestial animals. Who knows what we may find in the brain of such an advanced species?"
 	icon_state = "brain-x"
 
+/obj/item/organ/brain/slime /// This one is for black autoinjectors
+	name = "glob of thick slime"
+	desc = "A glob of thick, gooey slime. You sure touching this is a good idea?..."
+	icon_state = "brain-slime"
+	healing_factor = SLIME_ORGAN_HEALING
+
+/obj/item/organ/brain/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
 
 ////////////////////////////////////TRAUMAS////////////////////////////////////////
 

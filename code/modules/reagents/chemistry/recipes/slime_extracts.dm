@@ -389,6 +389,14 @@
 
 // Black
 
+/datum/chemical_reaction/slime/black_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/black
+
+/datum/chemical_reaction/slime/black_plasma/on_reaction(datum/reagents/holder, created_volume)
+	new /obj/item/reagent_containers/hypospray/medipen/slimepen/black(get_turf(holder.my_atom))
+	return ..()
+
 /datum/chemical_reaction/slime/black_blood
 	required_container = /obj/item/slime_extract/black
 	required_reagents = list(/datum/reagent/blood = 1)

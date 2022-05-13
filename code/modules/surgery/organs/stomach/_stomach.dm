@@ -329,5 +329,61 @@
 	if(prob(emp_vulnerability/severity)) //Chance of permanent effects
 		organ_flags |= ORGAN_SYNTHETIC_EMP //Starts organ faliure - gonna need replacing soon.
 
+/obj/item/organ/stomach/slime
+	name = "slimy stomach"
+	desc = "A strange organoid that slimefolk use for metabolizing food. It looks very robust."
+	icon_state = "stomach-slime"
+	maxHealth = 1.25 * STANDARD_ORGAN_THRESHOLD
+	disgust_metabolism = 2
+	metabolism_efficiency = 0.1
+	healing_factor = SLIME_ORGAN_HEALING
+	var/datum/action/innate/create_globule/create_globule
+
+/obj/item/organ/stomach/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+	create_globule = new()
+
+/obj/item/organ/stomach/slime/Insert(mob/living/carbon/stomach_owner, special, drop_if_replaced)
+	. = ..()
+	create_globule.Grant(stomach_owner)
+
+/obj/item/organ/stomach/slime/Remove(mob/living/carbon/stomach_owner, special)
+	. = ..()
+	create_globule.Remove(stomach_owner)
+
+/obj/item/organ/stomach/slime/on_life(delta_time, times_fired)
+	. = ..()
+	if(create_globule)
+		create_globule.UpdateButtons()
+
+/datum/action/innate/create_globule
+	name = "Create Jelly Globule"
+	check_flags = AB_CHECK_CONSCIOUS
+	button_icon_state = "create_globule"
+	icon_icon = 'icons/mob/actions/actions_slime.dmi'
+	background_icon_state = "bg_slime"
+
+/datum/action/innate/create_globule/IsAvailable()
+	. = ..()
+	if(!.)
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+	if(human_owner.blood_volume >= BLOOD_VOLUME_OKAY + 50)
+		return TRUE
+	return FALSE
+
+/datum/action/innate/create_globule/Activate()
+	var/mob/living/carbon/human/human_owner = owner
+	if(human_owner.blood_volume < BLOOD_VOLUME_OKAY + 50)
+		return
+
+	human_owner.blood_volume -= 50
+	playsound(get_turf(human_owner), 'sound/effects/blobattack.ogg', 100, TRUE)
+
+	var/obj/item/food/slime_jelly_globule/globule = new(get_turf(human_owner))
+	human_owner.put_in_hands(globule)
+	human_owner.visible_message(span_warning("[human_owner] vomits up [globule]!"), span_notice("You vomite out [globule]."))
 
 #undef STOMACH_METABOLISM_CONSTANT

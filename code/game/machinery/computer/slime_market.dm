@@ -66,6 +66,8 @@
 	for(var/atom/atom_on_pad in items_on_the_pad)
 		current_bounty.process_item(atom_on_pad)
 
+	sleep(12)
+	flick("[initial(bounty_pad.icon_state)]_activate", bounty_pad)
 	current_bounty.reward(bounty_pad)
 
 /obj/machinery/computer/slime_market/ui_assets(mob/user)

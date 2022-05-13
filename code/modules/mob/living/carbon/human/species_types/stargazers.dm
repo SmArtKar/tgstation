@@ -7,6 +7,7 @@
 	plural_form = null
 	id = SPECIES_STARGAZER
 	examine_limb_id = SPECIES_JELLYPERSON
+	mutanteyes = /obj/item/organ/eyes/slime/stargazer
 	/// Special "project thought" telepathy action for stargazers.
 	var/datum/action/innate/project_thought/project_action
 
@@ -35,7 +36,7 @@
 	desc = "Send a private psychic message to someone you can see."
 	button_icon_state = "send_mind"
 	icon_icon = 'icons/mob/actions/actions_slime.dmi'
-	background_icon_state = "bg_alien"
+	background_icon_state = "bg_slime"
 
 /datum/action/innate/project_thought/Activate()
 	var/mob/living/carbon/human/telepath = owner
@@ -73,7 +74,7 @@
 	desc = "Link someone's mind to your Slime Link, allowing them to communicate telepathically with other linked minds."
 	button_icon_state = "mindlink"
 	icon_icon = 'icons/mob/actions/actions_slime.dmi'
-	background_icon_state = "bg_alien"
+	background_icon_state = "bg_slime"
 	/// The species required to use this ability. Typepath.
 	var/req_species = /datum/species/jelly/stargazer
 	/// Whether we're currently linking to someone.

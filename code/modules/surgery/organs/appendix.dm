@@ -89,5 +89,15 @@
 	else
 		return ..()
 
+/obj/item/organ/appendix/slime
+	name = "slimy appendix"
+	icon_state = "appendix-slime"
+	base_icon_state = "appendix-slime"
+	healing_factor = SLIME_ORGAN_HEALING
+
+/obj/item/organ/appendix/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+
 #undef APPENDICITIS_PROB
 #undef INFLAMATION_ADVANCEMENT_PROB

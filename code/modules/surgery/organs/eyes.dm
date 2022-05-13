@@ -570,3 +570,33 @@
 	REMOVE_TRAIT(unadapted, TRAIT_FLASH_SENSITIVE, ORGAN_TRAIT)
 	REMOVE_TRAIT(unadapted, TRAIT_UNNATURAL_RED_GLOWY_EYES, ORGAN_TRAIT)
 	return ..()
+
+/obj/item/organ/eyes/slime
+	name = "slimy eyes"
+	desc = "A pair of glowing slimy eyeballs."
+	icon_state = "eyeballs-slime"
+	healing_factor = SLIME_ORGAN_HEALING
+	overlay_ignore_lighting = TRUE
+	var/obj/item/flashlight/eyelight/adapted/adapt_light
+
+/obj/item/organ/eyes/slime/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/hydrophobic, 0.5, 0, BRUTE)
+
+/obj/item/organ/eyes/slime/Insert(mob/living/carbon/owner, special = FALSE)
+	. = ..()
+	//add lighting
+	if(!adapt_light)
+		adapt_light = new /obj/item/flashlight/eyelight/adapted(src)
+	adapt_light.on = TRUE
+	adapt_light.forceMove(owner)
+	adapt_light.update_brightness(owner)
+
+/obj/item/organ/eyes/slime/Remove(mob/living/carbon/owner, special = FALSE)
+	//remove lighting
+	adapt_light.on = FALSE
+	adapt_light.update_brightness(owner)
+	adapt_light.forceMove(src)
+
+/obj/item/organ/eyes/slime/stargazer
+	eye_icon_state = "jelleyes"

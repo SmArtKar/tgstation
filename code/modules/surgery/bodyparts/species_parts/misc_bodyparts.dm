@@ -116,21 +116,6 @@
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = FALSE
 
-/obj/item/bodypart/chest/jelly/luminescent
-	limb_id = SPECIES_LUMINESCENT
-
-/obj/item/bodypart/l_arm/jelly/luminescent
-	limb_id = SPECIES_LUMINESCENT
-
-/obj/item/bodypart/r_arm/jelly/luminescent
-	limb_id = SPECIES_LUMINESCENT
-
-/obj/item/bodypart/l_leg/jelly/luminescent
-	limb_id = SPECIES_LUMINESCENT
-
-/obj/item/bodypart/r_leg/jelly/luminescent
-	limb_id = SPECIES_LUMINESCENT
-
 ///ZOMBIE
 /obj/item/bodypart/head/zombie
 	limb_id = SPECIES_ZOMBIE
