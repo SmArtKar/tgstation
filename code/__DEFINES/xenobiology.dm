@@ -75,7 +75,7 @@
 
 /// Maximum slime mood
 #define SLIME_MOOD_MAXIMUM 100
-#define SLIME_MOOD_PASSIVE_LEVEL 45
+#define SLIME_MOOD_PASSIVE_LEVEL 50
 #define SLIME_MOOD_GAIN_MODIFIER 0.2
 /// At what level do slimes become happy
 #define SLIME_MOOD_LEVEL_HAPPY 75

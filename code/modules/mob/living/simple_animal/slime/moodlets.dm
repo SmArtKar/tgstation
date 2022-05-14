@@ -2,6 +2,7 @@
 	var/mood_offset = 0
 	var/special_line
 	var/special_mood
+	var/face_priority = 1
 	var/duration = -1
 
 /datum/slime_moodlet/starving
@@ -16,11 +17,13 @@
 	mood_offset = -100
 	special_line = list("Hrr...", "Nhuu...", "Unn...")
 	special_mood = "angry"
+	face_priority = 11
 
 /datum/slime_moodlet/attacked
 	mood_offset = -35
 	special_line = list("Hrr...", "Nhuu...", "Unn...", "Grrr...")
 	special_mood = "angry"
+	face_priority = 10
 	duration = 30 SECONDS
 
 /datum/slime_moodlet/disciplined
@@ -28,11 +31,13 @@
 	special_line = list("Hrr...", "Nhuu...", "Unn...")
 	duration = 1 MINUTES
 	special_mood = "pout"
+	face_priority = 9
 
 /datum/slime_moodlet/cuddly
 	mood_offset = 10
 	special_line = list("Purr...")
 	special_mood = "uwu"
+	face_priority = 0
 	duration = 1 MINUTES
 
 /datum/slime_moodlet/req_not_satisfied
@@ -67,7 +72,6 @@
 /datum/slime_moodlet/bored
 	mood_offset = -10
 	special_line = "Bored..."
-	special_mood = "sad"
 	duration = 30 SECONDS
 
 /datum/slime_moodlet/friend
@@ -81,7 +85,10 @@
 /datum/slime_moodlet/lonely
 	mood_offset = -5
 	special_line = "Lonely..."
-	special_mood = "sad"
+
+/datum/slime_moodlet/crowded
+	mood_offset = -20
+	special_line = "Too much friends..."
 
 /datum/slime_moodlet/dead_slimes
 	mood_offset = -35
@@ -97,17 +104,21 @@
 	mood_offset = 25
 	duration = 20 SECONDS
 	special_mood = "owo"
+	face_priority = 1
 
 /datum/slime_moodlet/crowned
 	mood_offset = 25
 	special_line = list("Bow before me...", "Mortals...")
 	special_mood = "owo"
+	face_priority = 3
 
 /datum/slime_moodlet/friendship_necklace
 	mood_offset = 10
 	special_line = list("Friend...", "Love...", "Peace...")
 	special_mood = "uwu"
+	face_priority = 2
 
 /datum/slime_moodlet/docile
 	mood_offset = 100
 	special_mood = "owo"
+	face_priority = 12

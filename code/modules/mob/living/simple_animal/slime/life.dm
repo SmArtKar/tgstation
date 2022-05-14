@@ -867,12 +867,13 @@
 	handle_moodlets()
 
 	var/new_face
+	var/new_face_priority = 0
 	var/supposed_mood_level = SLIME_MOOD_PASSIVE_LEVEL
 
 	for(var/moodlet_type in moodlets)
 		var/datum/slime_moodlet/moodlet = moodlets[moodlet_type]
 		supposed_mood_level = min(SLIME_MOOD_MAXIMUM, max(0, supposed_mood_level + moodlet.mood_offset))
-		if(!moodlet.special_mood)
+		if(!moodlet.special_mood || moodlet.face_priority < new_face_priority)
 			continue
 
 		if(!islist(moodlet.special_mood))
@@ -880,6 +881,7 @@
 			continue
 
 		new_face = pick(moodlet.special_mood)
+		new_face_priority = moodlet.face_priority
 
 	mood_level = mood_level + (supposed_mood_level - mood_level) * SLIME_MOOD_GAIN_MODIFIER
 
@@ -1142,7 +1144,7 @@
 	else
 		remove_moodlet(/datum/slime_moodlet/power_two)
 
-	if(mood_level > 8 )
+	if(mood_level > 8)
 		apply_moodlet(/datum/slime_moodlet/power_three)
 	else
 		remove_moodlet(/datum/slime_moodlet/power_three)
@@ -1165,7 +1167,12 @@
 		remove_moodlet(/datum/slime_moodlet/friend)
 		apply_moodlet(/datum/slime_moodlet/lonely)
 
-	if(other_slimes > 0)
+	if(other_slimes > 1)
 		apply_moodlet(/datum/slime_moodlet/friends)
 	else
 		remove_moodlet(/datum/slime_moodlet/friends)
+
+	if(other_slimes > 4)
+		apply_moodlet(/datum/slime_moodlet/crowded)
+	else
+		remove_moodlet(/datum/slime_moodlet/crowded)
