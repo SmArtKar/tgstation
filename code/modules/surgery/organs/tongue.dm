@@ -518,6 +518,6 @@
 /obj/item/organ/tongue/slime/modify_speech(datum/source, list/speech_args)
 	var/message = speech_args[SPEECH_MESSAGE]
 	if(message[1] != "*")
-		message = replacetext(message, "R", "QI") //Unable to pronounce R due to wobbly and birdlike nature of their tongue and speech
 		message = replacetext(message, "r", "qi") //Sounds extremely funny
+		message = replacetext(message, "R", "QI") //Unable to pronounce R due to wobbly and birdlike nature of their tongue and speech
 	speech_args[SPEECH_MESSAGE] = message

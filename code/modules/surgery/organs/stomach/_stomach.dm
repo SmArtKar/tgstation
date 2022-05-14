@@ -370,13 +370,13 @@
 		return
 
 	var/mob/living/carbon/human/human_owner = owner
-	if(human_owner.blood_volume >= BLOOD_VOLUME_OKAY + 50)
+	if(human_owner.blood_volume >= BLOOD_VOLUME_SAFE + 50)
 		return TRUE
 	return FALSE
 
 /datum/action/innate/create_globule/Activate()
 	var/mob/living/carbon/human/human_owner = owner
-	if(human_owner.blood_volume < BLOOD_VOLUME_OKAY + 50)
+	if(human_owner.blood_volume < BLOOD_VOLUME_SAFE + 50)
 		return
 
 	human_owner.blood_volume -= 50

@@ -5,6 +5,7 @@
 	var/exposure_damage = 2
 	var/damage_type = BRUTE
 	var/mob/living/carbon/our_owner
+	COOLDOWN_DECLARE(damage_cooldown) //No instakills using extinguishers
 
 /datum/component/hydrophobic/Initialize(_reagent_damage, _exposure_damage, _damage_type)
 	. = ..()
@@ -54,6 +55,11 @@
 
 /datum/component/hydrophobic/proc/on_water_exposure(datum/source)
 	SIGNAL_HANDLER
+
+	if(!COOLDOWN_FINISHED(src, damage_cooldown))
+		return
+
+	COOLDOWN_START(src, damage_cooldown, 1)
 
 	if(istype(parent, /obj/item/bodypart))
 		var/obj/item/bodypart/bodypart = parent
