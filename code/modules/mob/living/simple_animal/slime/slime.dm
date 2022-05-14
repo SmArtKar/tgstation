@@ -65,8 +65,9 @@
 	var/attacked = 0 // Determines if it's been attacked recently. Can be any number, is a cooloff-ish variable
 	var/holding_still = 0 // AI variable, cooloff-ish for how long it's going to stay in one place
 	var/target_patience = 0 // AI variable, cooloff-ish for how long it's going to follow its target
-	var/digestion_progress = 0 //AI variable, starts at 0 and goes to 100
-	var/mood_level = 50 //AI variable, from 0 to 100, determines slime's mood and it's behaviour
+	var/digestion_progress = 0 // AI variable, starts at 0 and goes to 100
+	var/list/moodlets = list() // AI variable, stores all active slime moodlets
+	var/mood_level = 45 // AI variable, stores current mood level
 
 	var/AIproc = 0 // determines if the AI loop is activated
 	var/Atkcool = 0 // attack cooldown
@@ -187,7 +188,9 @@
 	if(stat != DEAD)
 		icon_state = icon_text
 		if(mood && !stat)
-			add_overlay("aslime-[mood]")
+			var/mutable_appearance/mood_overlay = mutable_appearance(icon, "aslime-[mood]")
+			mood_overlay.layer = layer + 0.06
+			add_overlay(mood_overlay)
 	else
 		icon_state = icon_dead
 		if(!cores)
@@ -283,6 +286,7 @@
 
 /mob/living/simple_animal/slime/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
 	attacked += 10
+	apply_moodlet(/datum/slime_moodlet/attacked)
 	if((Proj.damage_type == BURN))
 		adjustBruteLoss(-abs(Proj.damage)) //fire projectiles heals slimes.
 		Proj.on_hit(src, 0, piercing_hit)
@@ -308,7 +312,7 @@
 	if(QDELETED(src))
 		return
 
-	if(buckled && get_turf(src) != get_turf(buckled))
+	if(buckled && isliving(buckled) && get_turf(src) != get_turf(buckled))
 		Feedstop(TRUE)
 
 /mob/living/simple_animal/slime/doUnEquip(obj/item/I, force, newloc, no_move, invdrop = TRUE, silent = FALSE)
@@ -325,12 +329,13 @@
 	if(.) //successful slime attack
 		if(M == src)
 			return
-		if(buckled)
+		if(buckled && isliving(buckled))
 			Feedstop(silent = TRUE)
 			visible_message(span_danger("[M] pulls [src] off!"), \
 				span_danger("You pull [src] off!"))
 			return
 		attacked += 5
+		apply_moodlet(/datum/slime_moodlet/attacked)
 		if(nutrition >= 100) //steal some nutrition. negval handled in life()
 			adjust_nutrition(-(50 + (40 * M.is_adult)))
 			M.add_nutrition(50 + (40 * M.is_adult))
@@ -342,17 +347,20 @@
 	. = ..()
 	if(.)
 		attacked += 10
+		apply_moodlet(/datum/slime_moodlet/attacked)
 
 
 /mob/living/simple_animal/slime/attack_paw(mob/living/carbon/human/user, list/modifiers)
 	. = ..()
 	if(.) //successful monkey bite.
 		attacked += 10
+		apply_moodlet(/datum/slime_moodlet/attacked)
 
 /mob/living/simple_animal/slime/attack_larva(mob/living/carbon/alien/larva/L)
 	. = ..()
 	if(.) //successful larva bite.
 		attacked += 10
+		apply_moodlet(/datum/slime_moodlet/attacked)
 
 /mob/living/simple_animal/slime/attack_hulk(mob/living/carbon/human/user)
 	. = ..()
@@ -360,7 +368,7 @@
 		discipline_slime(user)
 
 /mob/living/simple_animal/slime/attack_hand(mob/living/carbon/human/user, list/modifiers)
-	if(buckled && LAZYACCESS(modifiers, RIGHT_CLICK))
+	if(buckled && isliving(buckled) && LAZYACCESS(modifiers, RIGHT_CLICK))
 		user.do_attack_animation(src, ATTACK_EFFECT_DISARM)
 		if(buckled == user)
 			if(prob(60))
@@ -396,11 +404,13 @@
 		. = ..()
 		if(.) //successful attack
 			attacked += 10
+			apply_moodlet(/datum/slime_moodlet/attacked)
 
 /mob/living/simple_animal/slime/attack_alien(mob/living/carbon/alien/humanoid/user, list/modifiers)
 	. = ..()
 	if(.) //if harm or disarm intent.
 		attacked += 10
+		apply_moodlet(/datum/slime_moodlet/attacked)
 		discipline_slime(user)
 
 
@@ -430,6 +440,7 @@
 		return
 	if(W.force > 0)
 		attacked += 10
+		apply_moodlet(/datum/slime_moodlet/attacked)
 		if(prob(25))
 			user.do_attack_animation(src)
 			user.changeNext_move(CLICK_CD_MELEE)
@@ -481,9 +492,10 @@
 			set_target(null)
 			if(slime_color.slime_tags & SLIME_WATER_WEAKNESS) //If slime hates water than it would become even more agressive
 				attacked += 10
+				apply_moodlet(/datum/slime_moodlet/attacked)
 			else
 				Discipline += 1
-		adjust_mood(SLIME_MOOD_WATER_LOSS)
+		apply_moodlet(/datum/slime_moodlet/watered)
 	return
 
 /mob/living/simple_animal/slime/examine(mob/user)
@@ -540,14 +552,15 @@
 
 	if(prob(80) && !client)
 		Discipline++
-		adjust_mood(SLIME_MOOD_DISCIPLINE_LOSS)
+		apply_moodlet(/datum/slime_moodlet/disciplined)
+		apply_moodlet(/datum/slime_moodlet/disciplined)
 
 		if(!is_adult)
 			if(Discipline == 1)
 				attacked = 0
 
 	set_target(null)
-	if(buckled)
+	if(buckled && isliving(buckled))
 		Feedstop(silent = TRUE) //we unbuckle the slime from the mob it latched onto.
 
 	Stun(rand(20, 40))
@@ -632,9 +645,6 @@
 		accessory = null
 	. = ..()
 
-/mob/living/simple_animal/slime/proc/adjust_mood(mood_offset)
-	mood_level = min(SLIME_MOOD_MAXIMUM, max(0, mood_level + mood_offset))
-
 /mob/living/simple_animal/slime/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
 	if(CanFeedon(hit_atom, silent = TRUE))
@@ -662,13 +672,13 @@
 			update_name()
 			return
 
-	if(buckled)
+	if(buckled && isliving(buckled))
 		Feedstop(silent = TRUE) //releases ourselves from the mob we fed on.
 
 	set_stat(DEAD)
 	regenerate_icons()
 	for(var/mob/living/simple_animal/slime/slime in view(5, get_turf(src)))
-		slime.adjust_mood(SLIME_MOOD_DEATH_LOSS)
+		slime.apply_moodlet(/datum/slime_moodlet/dead_slimes)
 		if(Target) //Likely our killer
 			slime.add_friendship(Target, -1)
 	stop_moveloop()
@@ -677,5 +687,33 @@
 /mob/living/simple_animal/slime/gib()
 	death(TRUE)
 	qdel(src)
+
+/mob/living/simple_animal/slime/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, spans, list/message_mods = list())
+	. = ..()
+	if(speaker == src || radio_freq || stat || !(speaker in Friends))
+		return
+
+	speech_buffer = list()
+	speech_buffer += speaker
+	speech_buffer += lowertext(raw_message)
+
+/mob/living/simple_animal/slime/proc/apply_moodlet(datum/slime_moodlet/moodlet_type)
+	if(moodlet_type in moodlets)
+		if(initial(moodlet_type.duration))
+			QDEL_NULL(moodlets[moodlet_type])
+			moodlets -= moodlet_type
+		else
+			return
+
+	var/datum/slime_moodlet/new_moodlet = new moodlet_type()
+	QDEL_IN(new_moodlet, new_moodlet.duration)
+	moodlets[moodlet_type] = new_moodlet
+
+/mob/living/simple_animal/slime/proc/remove_moodlet(moodlet_type)
+	if(!(moodlet_type in moodlets))
+		return
+
+	QDEL_NULL(moodlets[moodlet_type])
+	moodlets -= moodlet_type
 
 #undef SLIME_CARES_ABOUT

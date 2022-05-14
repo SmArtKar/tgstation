@@ -190,6 +190,40 @@
 	color = "adamantine"
 	coretype = /obj/item/slime_extract/adamantine
 	mutations = null
+	slime_tags = SLIME_WATER_IMMUNITY
+	environmental_req = "Subject appears to posess a fist. Fisting is 300 bucks."
+	var/fist_out = FALSE
+
+/datum/slime_color/adamantine/New(slime)
+	. = ..()
+	//RegisterSignal(slime, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, .proc/attempt_throw)
+	//RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/melee_attack)
+	RegisterSignal(slime, COMSIG_SLIME_POST_REGENERATE_ICONS, .proc/icon_regen)
+
+/datum/slime_color/adamantine/remove()
+	. = ..()
+	UnregisterSignal(slime, list(COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, COMSIG_SLIME_ATTACK_TARGET, COMSIG_SLIME_POST_REGENERATE_ICONS))
+
+/datum/slime_color/adamantine/proc/icon_regen()
+	SIGNAL_HANDLER
+
+	if(slime.stat == DEAD || !fist_out)
+		return
+
+	var/mutable_appearance/fisting = mutable_appearance('icons/mob/big_slimes.dmi', "[slime.icon_state]-arm", slime.layer + 0.03, slime.plane)
+	fisting.pixel_x = -8
+	fisting.pixel_y = -8
+	slime.add_overlay(fisting)
+
+/datum/slime_color/adamantine/Life(delta_time, times_fired)
+	. = ..()
+
+	if(slime.nutrition < (slime.get_starve_nutrition() * 0.5 + slime.get_hunger_nutrition() * 0.5) && fist_out)
+		fist_out = FALSE
+		slime.regenerate_icons()
+		return
+
+
 
 /datum/slime_color/light_pink
 	color = "light pink"
@@ -450,6 +484,7 @@
 		return
 
 	slime.attacked += 10
+	slime.apply_moodlet(/datum/slime_moodlet/attacked)
 
 /datum/slime_color/light_pink/proc/puppet_hulk_attack(datum/source, mob/attacker)
 	SIGNAL_HANDLER
@@ -458,6 +493,7 @@
 		return
 
 	slime.attacked += 10
+	slime.apply_moodlet(/datum/slime_moodlet/attacked)
 
 /datum/slime_color/light_pink/proc/puppet_hand_attack(datum/source, mob/living/attacker)
 	SIGNAL_HANDLER
@@ -466,6 +502,7 @@
 		return
 
 	slime.attacked += 10
+	slime.apply_moodlet(/datum/slime_moodlet/attacked)
 
 /datum/slime_color/light_pink/proc/puppet_paw_attack(datum/source, mob/living/attacker)
 	SIGNAL_HANDLER
@@ -474,6 +511,7 @@
 		return
 
 	slime.attacked += 10
+	slime.apply_moodlet(/datum/slime_moodlet/attacked)
 
 /datum/slime_color/light_pink/proc/puppet_throw_impact(datum/source, atom/movable/thrown_movable, skipcatch = FALSE, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER
@@ -485,6 +523,7 @@
 			return
 
 		slime.attacked += 10
+		slime.apply_moodlet(/datum/slime_moodlet/attacked)
 
 /datum/slime_color/light_pink/proc/puppet_bullet_act(datum/participant, obj/projectile/proj)
 	SIGNAL_HANDLER
@@ -493,6 +532,7 @@
 		return
 
 	slime.attacked += 10
+	slime.apply_moodlet(/datum/slime_moodlet/attacked)
 
 /datum/slime_color/light_pink/get_feed_damage_modifier()
 	if(slime.health >= slime.maxHealth)

@@ -532,6 +532,6 @@
 	playsound(get_turf(src), 'sound/effects/blobattack.ogg', 100, TRUE)
 	flick("slime_plushie-bopped", src)
 	if(!user.client)
-		user.adjust_mood(SLIME_MOOD_PLUSHIE_PLAY_GAIN)
+		user.apply_moodlet(/datum/slime_moodlet/plushie_play)
 		if(user.Target == src)
 			user.set_target(null)

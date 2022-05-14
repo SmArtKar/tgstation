@@ -97,8 +97,8 @@
 		to_chat(user, span_warning("You cannot enhance [extract] further!"))
 		return
 
-	to_chat(user, span_notice("You apply [src] to [extract], allowing it to be reused one more time."))
-	extract.uses += 1
+	to_chat(user, span_notice("You apply [src] to [extract], allowing it to be reused a few more times."))
+	extract.uses = min(5, extract.uses + 2)
 	qdel(src)
 
 /obj/item/slime_potion/docility

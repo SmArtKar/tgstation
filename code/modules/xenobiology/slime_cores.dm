@@ -91,7 +91,7 @@
 	name = "purple slime extract"
 	icon_state = "purple"
 	tier = 2
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/blood = 10, /datum/reagent/toxin/plasma = 5)
 
 // Metal Extract
 
@@ -99,6 +99,7 @@
 	name = "metal slime extract"
 	icon_state = "metal"
 	tier = 2
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
 
 // ************************************************
 // ****************** TIER THREE ******************
@@ -151,6 +152,7 @@
 	name = "dark blue slime extract"
 	icon_state = "dark_blue"
 	tier = 3
+	react_reagents = list(/datum/reagent/water = 5, /datum/reagent/toxin/plasma = 5)
 	var/stasis_ready = FALSE
 
 /obj/item/slime_extract/dark_blue/activate()
@@ -184,6 +186,7 @@
 	name = "silver slime extract"
 	icon_state = "silver"
 	tier = 3
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
 
 // Yellow Extract
 
@@ -191,7 +194,7 @@
 	name = "yellow slime extract"
 	icon_state = "yellow"
 	tier = 3
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/uranium/radium = 5)
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
 
 // ************************************************
 // ****************** TIER FOUR *******************
@@ -203,6 +206,7 @@
 	name = "cerulean slime extract"
 	icon_state = "cerulean"
 	tier = 4
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 // Sepia Extract
 
@@ -210,6 +214,7 @@
 	name = "sepia slime extract"
 	icon_state = "sepia"
 	tier = 4
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 /obj/item/slime_extract/sepia/activate()
 	icon_state = "[initial(icon_state)]_pulsating"
@@ -246,6 +251,7 @@
 	name = "bluespace slime extract"
 	icon_state = "bluespace"
 	tier = 4
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 // ************************************************
 // ****************** TIER FIVE *******************
@@ -257,6 +263,7 @@
 	name = "red slime extract"
 	icon_state = "red"
 	tier = 5
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
 
 // Green Extract
 
@@ -264,6 +271,7 @@
 	name = "green slime extract"
 	icon_state = "green"
 	tier = 5
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/uranium/radium = 5)
 
 // Pink Extract
 
@@ -271,6 +279,7 @@
 	name = "pink slime extract"
 	icon_state = "pink"
 	tier = 5
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 // Gold Extract
 
@@ -296,6 +305,7 @@
 	name = "black slime extract"
 	icon_state = "black"
 	tier = 6
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
 	var/relimb_ready = FALSE
 	var/list/limb_transform_types = list(
 		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,

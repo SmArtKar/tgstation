@@ -306,6 +306,15 @@
 	extract.activate()
 	return ..()
 
+
+/datum/chemical_reaction/slime/cerulean_plasma
+	required_container = /obj/item/slime_extract/cerulean
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/cerulean_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/enhancer(get_turf(holder.my_atom))
+	return ..()
+
 // ************************************************
 // ******************* TIER FIVE ******************
 // ************************************************

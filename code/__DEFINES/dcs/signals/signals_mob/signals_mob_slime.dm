@@ -37,3 +37,6 @@
 	#define COMPONENT_SLIME_NO_SET_TARGET  (1<<0)
 /// From mob/living/simple_animal/slime/AIprocess(): (atom/target)
 #define COMSIG_SLIME_ATTEMPT_RANGED_ATTACK "slime_attempt_ranged_attack"
+/// From mob/living/simple_animal/slime/proc/handle_boredom(delta_time, times_fired, hungry): (atom/possible_interest)
+#define COMSIG_SLIME_CAN_TARGET_POI "slime_can_target_poi"
+	#define COMPONENT_SLIME_TARGET_POI  (1<<0)

@@ -212,7 +212,7 @@
 							span_notice("<i>I stopped feeding.</i>"))
 		layer = initial(layer)
 		SEND_SIGNAL(src, COMSIG_SLIME_FEEDSTOP, buckled)
-		buckled.unbuckle_mob(src,force=TRUE)
+		buckled.unbuckle_mob(src, force = TRUE)
 
 /mob/living/simple_animal/slime/verb/Evolve()
 	set category = "Slime"

@@ -402,6 +402,8 @@
 
 	if(isturf(user.loc))
 		spewed.throw_at(target, min(get_dist(user, target), (pack.illegal ? 5 : 11)), 1, user)
+		if(prob(5))
+			playsound(spewed, 'sound/misc/woohoo.ogg', 50, TRUE)
 
 	if(isslime(spewed))
 		var/mob/living/simple_animal/slime/slime = spewed

@@ -8,10 +8,9 @@
 	if(!slime_color) //If we SOMEHOW lost our color, be it BYOND wizardry, shitcode or adminbus, we become error slimes because it's extremely important to have one
 		set_color(/datum/slime_color)
 
-	if(buckled)
-		handle_feeding(delta_time, times_fired)
 	if(stat) // Slimes in stasis don't lose nutrition, don't change mood and don't respond to speech
 		return
+	handle_feeding(delta_time, times_fired)
 	handle_nutrition(delta_time, times_fired)
 	if(QDELETED(src)) // Stop if the slime split during handle_nutrition()
 		return
@@ -48,6 +47,10 @@
 	while(AIproc && stat != DEAD && (attacked || hungry || HAS_TRAIT(src, TRAIT_SLIME_RABID) || buckled || Target) && !docile)
 
 		if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
+			if(buckled && !isliving(buckled))
+				buckled.unbuckle_mob(src, force = TRUE)
+				continue
+
 			stop_moveloop()
 			break
 
@@ -394,15 +397,25 @@
 	else // This is a hot place
 		adjust_bodytemperature(clamp((temp_delta / divisor) * delta_time, 0, temp_delta))
 
+	if(bodytemperature < slime_color.temperature_modifier)
+		apply_moodlet(/datum/slime_moodlet/cold)
+	else
+		remove_moodlet(/datum/slime_moodlet/cold)
+
 	if(bodytemperature <= (slime_color.temperature_modifier - 40)) // stun temperature
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
+		apply_moodlet(/datum/slime_moodlet/very_cold)
 		if(bodytemperature <= (slime_color.temperature_modifier - 50)) // hurt temperature
+			apply_moodlet(/datum/slime_moodlet/freezing_cold)
 			if(bodytemperature <= 50) // sqrting negative numbers is bad
 				adjustBruteLoss(100 * delta_time)
 			else
 				adjustBruteLoss(round(sqrt(bodytemperature)) * delta_time)
+		else
+			remove_moodlet(/datum/slime_moodlet/freezing_cold)
 	else
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, SLIME_COLD)
+		remove_moodlet(/datum/slime_moodlet/very_cold)
 
 	if(stat != DEAD)
 		var/turf/current_turf = get_turf(src)
@@ -429,7 +442,7 @@
 					REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 					set_target(null)
 					regenerate_icons()
-					if(buckled)
+					if(buckled && isliving(buckled))
 						Feedstop(silent = TRUE)
 
 			if(UNCONSCIOUS, HARD_CRIT)
@@ -447,8 +460,10 @@
 		adjustBruteLoss(-0.5 * delta_time)
 
 /mob/living/simple_animal/slime/proc/handle_feeding(delta_time, times_fired)
-	if(!ismob(buckled))
+	if(!buckled || !ismob(buckled))
+		remove_moodlet(/datum/slime_moodlet/digesting)
 		return
+
 	var/mob/M = buckled
 
 	if(layer < M.layer) //Because mobs change their layers when standing up/lying down
@@ -467,7 +482,7 @@
 		else
 			to_chat(src, "<i>This subject does not have a strong enough life energy anymore...</i>")
 
-		if(M.client && ishuman(M))
+		if(M.client && ishuman(M) && !docile)
 			if(prob(60))
 				ADD_TRAIT(src, TRAIT_SLIME_RABID, "feasted_on_player") //we go rabid after finishing to feed on a human with a client.
 
@@ -535,6 +550,7 @@
 
 	//Heal yourself.
 	adjustBruteLoss(-1.5 * delta_time)
+	apply_moodlet(/datum/slime_moodlet/digesting)
 
 /mob/living/simple_animal/slime/proc/handle_nutrition(delta_time, times_fired)
 
@@ -569,7 +585,7 @@
 		amount_grown++
 		update_action_buttons_icon()
 
-	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD && cores >= max_cores && !buckled && !Target && !ckey)
+	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD && cores >= max_cores && !(buckled && isliving(buckled)) && !Target && !ckey)
 		if(is_adult && loc.AllowDrop())
 			Reproduce()
 		else
@@ -612,6 +628,10 @@
 			return
 
 		if(buckled && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI) )
+			if(!isliving(buckled))
+				buckled.unbuckle_mob(src, force = TRUE)
+				return
+
 			stop_moveloop()
 			return // if it's eating someone already, continue eating!
 
@@ -762,6 +782,9 @@
 				if(mood_level < SLIME_MOOD_LEVEL_HAPPY && DT_PROB((SLIME_MOOD_LEVEL_HAPPY - mood_level) / 3.75 + 15, delta_time))
 					points_of_interest += possible_interest
 
+			if(SEND_SIGNAL(src, COMSIG_SLIME_CAN_TARGET_POI, possible_interest) & COMPONENT_SLIME_TARGET_POI)
+				points_of_interest += possible_interest
+
 		if(LAZYLEN(points_of_interest))
 			set_target(pick(points_of_interest))
 			return
@@ -794,6 +817,9 @@
 			if(LAZYLEN(grief_targets))
 				set_target(pick_weight(grief_targets))
 				target_patience = 10
+
+	if(!Target && DT_PROB(0.5, delta_time))
+		apply_moodlet(/datum/slime_moodlet/bored)
 
 /mob/living/simple_animal/slime/proc/attempt_ventcrawl()
 	var/list/vents_and_scrubbers = list()
@@ -838,47 +864,24 @@
 	return TRUE
 
 /mob/living/simple_animal/slime/proc/handle_mood(delta_time, times_fired)
-	if(mood_level < 0)
-		mood_level = 0
-	else if(mood_level > SLIME_MOOD_MAXIMUM)
-		mood_level = SLIME_MOOD_MAXIMUM
+	handle_moodlets()
 
-	var/newmood = ""
-	if (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
-		newmood = "angry"
-	else if(mood_level > SLIME_MOOD_LEVEL_HAPPY)
-		newmood = pick(":3", ":33")
-	else if(mood_level < SLIME_MOOD_LEVEL_POUT)
-		newmood = "pout"
-	else if(mood_level < SLIME_MOOD_LEVEL_SAD)
-		newmood = "sad"
-	else if (docile)
-		newmood = pick(":3", ":33")
-	else if (Target)
-		newmood = "mischievous"
+	var/new_face
+	var/supposed_mood_level = SLIME_MOOD_PASSIVE_LEVEL
 
-	if (!newmood)
-		if (Discipline && DT_PROB(13, delta_time))
-			newmood = "pout"
-		else if (DT_PROB(0.5, delta_time))
-			newmood = pick("sad", ":3", ":33", "pout")
+	for(var/moodlet_type in moodlets)
+		var/datum/slime_moodlet/moodlet = moodlets[moodlet_type]
+		supposed_mood_level = min(SLIME_MOOD_MAXIMUM, max(0, supposed_mood_level + moodlet.mood_offset))
+		if(!moodlet.special_mood)
+			continue
 
-	if ((mood == "sad" || mood == ":3" || mood == "pout") && !newmood)
-		if(DT_PROB(50, delta_time))
-			newmood = mood
+		if(!islist(moodlet.special_mood))
+			new_face = moodlet.special_mood
+			continue
 
-	if (newmood != mood) // This is so we don't redraw them every time
-		mood = newmood
-		regenerate_icons()
+		new_face = pick(moodlet.special_mood)
 
-	if(!slime_color.fitting_environment && !(slime_color.slime_tags & SLIME_NO_REQUIREMENT_MOOD_LOSS))
-		adjust_mood(SLIME_MOOD_REQUIREMENTS_LOSS * delta_time)
-	else if(nutrition < get_starve_nutrition())
-		adjust_mood(SLIME_MOOD_STARVING_LOSS * delta_time)
-	else if(nutrition < get_hunger_nutrition())
-		adjust_mood(SLIME_MOOD_HUNGRY_LOSS * delta_time)
-	else if(mood_level < SLIME_MOOD_PASSIVE_LEVEL + rand(-SLIME_MOOD_PASSIVE_LEVEL_OFFSET, SLIME_MOOD_PASSIVE_LEVEL_OFFSET))
-		adjust_mood(SLIME_MOOD_PASSIVE_GAIN * delta_time)
+	mood_level = mood_level + (supposed_mood_level - mood_level) * SLIME_MOOD_GAIN_MODIFIER
 
 	if(mood_level < SLIME_MOOD_LEVEL_POUT)
 		if(Discipline && DT_PROB(2, delta_time)) //Faster discipline loss
@@ -893,6 +896,30 @@
 
 	if(mood_level > SLIME_MOOD_LEVEL_HAPPY)
 		REMOVE_TRAIT(src, TRAIT_SLIME_RABID, "bad_slime_mood")
+
+	if(!new_face)
+		switch(mood_level)
+			if(SLIME_MOOD_LEVEL_HAPPY to SLIME_MOOD_MAXIMUM)
+				new_face = pick("owo", "uwu")
+			if(SLIME_MOOD_LEVEL_SAD to SLIME_MOOD_LEVEL_POUT)
+				new_face = "pout"
+			if(0 to SLIME_MOOD_LEVEL_SAD)
+				new_face = pick("pout", "sad")
+
+		if(Target)
+			new_face = "mischievous"
+
+		if(!new_face && DT_PROB(0.5, delta_time))
+			new_face = pick("sad", "uwu", "owo", "pout")
+
+	if(!new_face)
+		return
+
+	if(new_face == mood)
+		return
+
+	mood = new_face
+	regenerate_icons()
 
 /mob/living/simple_animal/slime/proc/handle_speech(delta_time, times_fired)
 	//Speech understanding starts here
@@ -919,7 +946,7 @@
 					else // Not friendly enough
 						to_say = pick("No...", "I no follow...")
 			else if (findtext(phrase, "stop"))
-				if (buckled) // We are asked to stop feeding
+				if (buckled && isliving(buckled)) // We are asked to stop feeding
 					if (Friends[who] >= SLIME_FRIENDSHIP_STOPEAT)
 						Feedstop()
 						set_target(null)
@@ -994,85 +1021,36 @@
 		if(SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_SAY, to_say) & COMPONENT_SLIME_NO_SAY)
 			return
 		say(to_say)
-	else if(DT_PROB(0.5, delta_time))
-		emote(pick("bounce","sway","light","vibrate","jiggle"))
-	else
-		var/t = 10
-		var/slimes_near = 0
-		var/dead_slimes = 0
-		var/friends_near = list()
-		for (var/mob/living/L in view(7,src))
-			if(isslime(L) && L != src)
-				++slimes_near
-				if (L.stat == DEAD)
-					++dead_slimes
-			if (L in Friends)
-				t += 20
-				friends_near += L
+		return
+
+	if(DT_PROB(0.5, delta_time))
+		emote(pick("bounce", "sway", "light", "vibrate", "jiggle"))
+		return
+
+	if (!DT_PROB(1, delta_time) || stat)
+		return
+
+	var/list/speech_lines = list("Rawr...", "Blop...", "Blorble...")
+	for(var/moodlet_type in moodlets)
+		var/datum/slime_moodlet/moodlet = moodlets[moodlet_type]
+		if(moodlet.special_line)
+			speech_lines |= moodlet.special_line
+
+	if (Target)
+		speech_lines += "[Target]... look yummy..."
+
+	for (var/mob/living/possible_friend in view(7, src))
+		if(!(possible_friend in Friends))
+			continue
+
+		speech_lines += "[possible_friend]... friend..."
 		if (nutrition < get_hunger_nutrition())
-			t += 10
-		if (nutrition < get_starve_nutrition())
-			t += 10
-		if (DT_PROB(1, delta_time) && prob(t))
-			var/phrases = list()
-			if (Target)
-				phrases += "[Target]... look yummy..."
-			if (nutrition < get_starve_nutrition())
-				phrases += "So... hungry..."
-				phrases += "Very... hungry..."
-				phrases += "Need... food..."
-				phrases += "Must... eat..."
-			else if (nutrition < get_hunger_nutrition())
-				phrases += "Hungry..."
-				phrases += "Where food?"
-				phrases += "I want to eat..."
-			phrases += "Rawr..."
-			phrases += "Blop..."
-			phrases += "Blorble..."
-			if (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
-				phrases += "Hrr..."
-				phrases += "Nhuu..."
-				phrases += "Unn..."
-			if (mood == ":3")
-				phrases += "Purr..."
-			if (attacked)
-				phrases += "Grrr..."
-			if (bodytemperature < slime_color.temperature_modifier)
-				phrases += "Cold..."
-			if (bodytemperature < slime_color.temperature_modifier - 30)
-				phrases += "So... cold..."
-				phrases += "Very... cold..."
-			if (bodytemperature < slime_color.temperature_modifier - 50)
-				phrases += "..."
-				phrases += "C... c..."
-			if (buckled || Digesting)
-				phrases += "Nom..."
-				phrases += "Yummy..."
-			if (powerlevel > 3)
-				phrases += "Bzzz..."
-			if (powerlevel > 5)
-				phrases += "Zap..."
-			if (powerlevel > 8)
-				phrases += "Zap... Bzz..."
-			if (mood == "sad")
-				phrases += "Bored..."
-			if (slimes_near)
-				phrases += "Slime friend..."
-			if (slimes_near > 1)
-				phrases += "Slime friends..."
-			if (dead_slimes)
-				phrases += "What happened?"
-			if (!slimes_near)
-				phrases += "Lonely..."
-			for (var/M in friends_near)
-				phrases += "[M]... friend..."
-				if (nutrition < get_hunger_nutrition())
-					phrases += "[M]... feed me..."
-			if(!stat)
-				to_say = pick(phrases)
-				if(SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_SAY, to_say) & COMPONENT_SLIME_NO_SAY)
-					return
-				say(to_say)
+			speech_lines += "[possible_friend]... feed me..."
+
+	to_say = pick(speech_lines)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_SAY, to_say) & COMPONENT_SLIME_NO_SAY)
+		return
+	say(to_say)
 
 /mob/living/simple_animal/slime/proc/handle_digestion(delta_time, times_fired)
 	if(!Digesting)
@@ -1135,3 +1113,59 @@
 	if (holding_still)
 		return FALSE
 	return TRUE
+
+/mob/living/simple_animal/slime/proc/handle_moodlets()
+	if(!slime_color.fitting_environment && !(slime_color.slime_tags & SLIME_NO_REQUIREMENT_MOOD_LOSS))
+		apply_moodlet(/datum/slime_moodlet/req_not_satisfied)
+	else
+		remove_moodlet(/datum/slime_moodlet/req_not_satisfied)
+
+	if(nutrition < get_starve_nutrition())
+		remove_moodlet(/datum/slime_moodlet/hungry)
+		apply_moodlet(/datum/slime_moodlet/starving)
+	else if(nutrition < get_hunger_nutrition())
+		remove_moodlet(/datum/slime_moodlet/starving)
+		apply_moodlet(/datum/slime_moodlet/hungry)
+
+	if(HAS_TRAIT(src, TRAIT_SLIME_RABID))
+		apply_moodlet(/datum/slime_moodlet/rabid)
+	else
+		remove_moodlet(/datum/slime_moodlet/rabid)
+
+	if(mood_level > 3 && mood_level <= 5)
+		apply_moodlet(/datum/slime_moodlet/power_one)
+	else
+		remove_moodlet(/datum/slime_moodlet/power_one)
+
+	if(mood_level > 5 && mood_level <= 8)
+		apply_moodlet(/datum/slime_moodlet/power_two)
+	else
+		remove_moodlet(/datum/slime_moodlet/power_two)
+
+	if(mood_level > 8 )
+		apply_moodlet(/datum/slime_moodlet/power_three)
+	else
+		remove_moodlet(/datum/slime_moodlet/power_three)
+
+	if(docile)
+		apply_moodlet(/datum/slime_moodlet/docile)
+	else
+		remove_moodlet(/datum/slime_moodlet/docile)
+
+	var/other_slimes = 0
+	for(var/mob/living/simple_animal/slime in view(5, get_turf(src)))
+		if(slime != src)
+			other_slimes += 1
+
+
+	if(other_slimes)
+		apply_moodlet(/datum/slime_moodlet/friend)
+		remove_moodlet(/datum/slime_moodlet/friend)
+	else
+		remove_moodlet(/datum/slime_moodlet/friend)
+		apply_moodlet(/datum/slime_moodlet/lonely)
+
+	if(other_slimes > 0)
+		apply_moodlet(/datum/slime_moodlet/friends)
+	else
+		remove_moodlet(/datum/slime_moodlet/friends)

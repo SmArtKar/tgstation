@@ -46,16 +46,14 @@
 /obj/item/slime_accessory/crown/slime_equipped(mob/living/simple_animal/slime/new_owner, mob/living/equipper)
 	. = ..()
 	ADD_TRAIT(new_owner, TRAIT_SLIME_KING, SLIME_ACCESSORY_TRAIT)
+	new_owner.apply_moodlet(/datum/slime_moodlet/crowned)
 	if(istype(new_owner.slime_color, /datum/slime_color/rainbow) && equipper.client)
 		equipper.client.give_award(/datum/award/achievement/misc/rainbow_king, equipper)
 
 /obj/item/slime_accessory/crown/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
 	. = ..()
 	REMOVE_TRAIT(former_owner, TRAIT_SLIME_KING, SLIME_ACCESSORY_TRAIT)
-
-/obj/item/slime_accessory/crown/on_life(delta_time, times_fired) //Crown makes slimes wearing it happy
-	if(owner.mood_level < SLIME_MOOD_MAXIMUM)
-		owner.adjust_mood(2 * delta_time)
+	former_owner.remove_moodlet(/datum/slime_moodlet/crowned)
 
 /obj/item/slime_accessory/friendship_necklace
 	name = "friendship necklace"
@@ -66,13 +64,13 @@
 	. = ..()
 	new_owner.add_friendship(equipper, 5)
 	new_owner.visible_message(span_notice("[new_owner] seems to like [src] and blorbles happily."))
-	new_owner.adjust_mood(15)
+	new_owner.apply_moodlet(/datum/slime_moodlet/friendship_necklace)
 
 /obj/item/slime_accessory/friendship_necklace/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
 	. = ..()
 	former_owner.add_friendship(equipper, -5)
 	former_owner.visible_message(span_warning("[former_owner] tries to hold onto [former_owner.p_their()] [name] as it's being removed by [equipper]!"))
-	former_owner.adjust_mood(-35)
+	former_owner.remove_moodlet(/datum/slime_moodlet/friendship_necklace)
 
 /obj/item/slime_accessory/demorpher
 	name = "AX-L demorphing module"
