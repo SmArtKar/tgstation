@@ -229,15 +229,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /turf/open/floor/iron,
 /area/ruin/syndicate_lava_base/arrivals)
-"cA" = (
-/obj/structure/table/reinforced,
-/obj/item/book/manual/wiki/chemistry,
-/obj/item/book/manual/wiki/chemistry,
-/obj/item/clothing/glasses/hud/science,
-/obj/item/clothing/glasses/hud/science,
-/obj/effect/decal/cleanable/dirt,
-/turf/open/floor/iron,
-/area/ruin/syndicate_lava_base/chemistry)
 "cB" = (
 /obj/effect/spawner/structure/window/reinforced/plasma/plastitanium,
 /obj/machinery/atmospherics/pipe/layer_manifold{
@@ -450,10 +441,6 @@
 "dP" = (
 /turf/closed/wall/mineral/plastitanium/explosive,
 /area/ruin/syndicate_lava_base/cargo)
-"dQ" = (
-/obj/structure/sign/warning/securearea,
-/turf/closed/wall/mineral/plastitanium/nodiagonal,
-/area/ruin/syndicate_lava_base/testlab)
 "dU" = (
 /obj/effect/turf_decal/tile/brown,
 /obj/effect/turf_decal/tile/brown{
@@ -827,10 +814,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron,
 /area/ruin/syndicate_lava_base/cargo)
-"fx" = (
-/obj/structure/sign/warning/securearea,
-/turf/closed/wall/mineral/plastitanium/nodiagonal,
-/area/ruin/syndicate_lava_base/cargo)
 "fA" = (
 /obj/structure/table/glass,
 /obj/item/book/manual/wiki/infections{
@@ -1193,19 +1176,6 @@
 	dir = 10
 	},
 /area/ruin/syndicate_lava_base/virology)
-"ht" = (
-/obj/structure/table,
-/obj/item/paper_bin{
-	pixel_x = -2;
-	pixel_y = 5
-	},
-/obj/item/hand_labeler,
-/obj/item/pen/red,
-/obj/item/restraints/handcuffs,
-/obj/effect/decal/cleanable/dirt,
-/obj/item/clothing/glasses/hud/science,
-/turf/open/floor/iron/white/side,
-/area/ruin/syndicate_lava_base/virology)
 "hu" = (
 /obj/structure/table,
 /obj/machinery/reagentgrinder,
@@ -1436,6 +1406,10 @@
 	},
 /turf/open/floor/plating,
 /area/ruin/syndicate_lava_base/main)
+"hZ" = (
+/obj/structure/sign/warning/secure_area,
+/turf/closed/wall/mineral/plastitanium/nodiagonal,
+/area/ruin/syndicate_lava_base/testlab)
 "ie" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4{
 	dir = 5
@@ -1478,10 +1452,6 @@
 	dir = 4
 	},
 /turf/open/floor/iron,
-/area/ruin/syndicate_lava_base/main)
-"iq" = (
-/obj/structure/sign/warning/securearea,
-/turf/closed/wall/mineral/plastitanium/nodiagonal,
 /area/ruin/syndicate_lava_base/main)
 "is" = (
 /obj/machinery/light/small/directional/north,
@@ -1907,19 +1877,6 @@
 /obj/structure/sign/departments/medbay/alt,
 /turf/closed/wall/mineral/plastitanium/nodiagonal,
 /area/ruin/syndicate_lava_base/medbay)
-"kV" = (
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/machinery/power/smes/engineering,
-/obj/structure/sign/warning/electricshock{
-	pixel_x = -32
-	},
-/obj/effect/decal/cleanable/dirt,
-/obj/effect/decal/cleanable/dirt,
-/obj/structure/cable,
-/turf/open/floor/plating,
-/area/ruin/syndicate_lava_base/engineering)
 "kW" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
@@ -2530,10 +2487,6 @@
 	},
 /turf/open/floor/plating,
 /area/ruin/syndicate_lava_base/arrivals)
-"oF" = (
-/obj/structure/sign/warning/securearea,
-/turf/closed/wall/mineral/plastitanium/nodiagonal,
-/area/ruin/syndicate_lava_base/arrivals)
 "oH" = (
 /obj/machinery/door/poddoor/incinerator_syndicatelava_main,
 /turf/open/floor/engine/vacuum,
@@ -2612,6 +2565,10 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
 /area/ruin/syndicate_lava_base/dormitories)
+"pT" = (
+/obj/structure/sign/warning/secure_area,
+/turf/closed/wall/mineral/plastitanium/nodiagonal,
+/area/ruin/syndicate_lava_base/arrivals)
 "pU" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden,
 /obj/effect/turf_decal/stripes/line{
@@ -3328,6 +3285,10 @@
 /obj/effect/turf_decal/tile/neutral/fourcorners,
 /turf/open/floor/iron/dark,
 /area/ruin/syndicate_lava_base/bar)
+"BY" = (
+/obj/structure/sign/warning/secure_area,
+/turf/closed/wall/mineral/plastitanium/nodiagonal,
+/area/ruin/syndicate_lava_base/cargo)
 "Cc" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4,
 /obj/structure/reagent_dispensers/beerkeg,
@@ -3374,6 +3335,15 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /turf/open/floor/iron/white,
 /area/ruin/syndicate_lava_base/virology)
+"Cq" = (
+/obj/structure/table/reinforced,
+/obj/item/book/manual/wiki/chemistry,
+/obj/item/book/manual/wiki/chemistry,
+/obj/item/clothing/glasses/hud/science,
+/obj/item/clothing/glasses/hud/science,
+/obj/effect/decal/cleanable/dirt,
+/turf/open/floor/iron,
+/area/ruin/syndicate_lava_base/chemistry)
 "Cu" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer4{
 	dir = 1
@@ -3955,6 +3925,10 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer2,
 /turf/open/floor/iron,
 /area/ruin/syndicate_lava_base/main)
+"MJ" = (
+/obj/structure/sign/warning/secure_area,
+/turf/closed/wall/mineral/plastitanium/nodiagonal,
+/area/ruin/syndicate_lava_base/main)
 "Nh" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/blue,
@@ -4038,6 +4012,19 @@
 	},
 /turf/open/floor/iron,
 /area/ruin/syndicate_lava_base/main)
+"OA" = (
+/obj/effect/turf_decal/stripes/line{
+	dir = 8
+	},
+/obj/machinery/power/smes/engineering,
+/obj/structure/sign/warning/electric_shock{
+	pixel_x = -32
+	},
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/cable,
+/turf/open/floor/plating,
+/area/ruin/syndicate_lava_base/engineering)
 "OG" = (
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/visible,
 /obj/effect/decal/cleanable/dirt,
@@ -4320,6 +4307,19 @@
 	},
 /turf/open/floor/iron,
 /area/ruin/syndicate_lava_base/engineering)
+"SQ" = (
+/obj/structure/table,
+/obj/item/paper_bin{
+	pixel_x = -2;
+	pixel_y = 5
+	},
+/obj/item/hand_labeler,
+/obj/item/pen/red,
+/obj/item/restraints/handcuffs,
+/obj/effect/decal/cleanable/dirt,
+/obj/item/clothing/glasses/hud/science,
+/turf/open/floor/iron/white/side,
+/area/ruin/syndicate_lava_base/virology)
 "Tt" = (
 /obj/effect/turf_decal/tile/red,
 /obj/effect/turf_decal/tile/red{
@@ -5443,7 +5443,7 @@ fi
 fA
 sd
 gV
-ht
+SQ
 hH
 ab
 ab
@@ -5566,7 +5566,7 @@ HS
 mT
 mT
 mT
-oF
+pT
 ab
 ab
 ab
@@ -5666,7 +5666,7 @@ HQ
 mT
 mT
 mT
-oF
+pT
 ab
 ab
 ab
@@ -5890,7 +5890,7 @@ pa
 pa
 pa
 ae
-dQ
+hZ
 vA
 hd
 hy
@@ -6133,7 +6133,7 @@ ab
 ab
 ab
 at
-cA
+Cq
 dw
 dC
 yS
@@ -6496,9 +6496,9 @@ hk
 hC
 dy
 ha
-iq
+MJ
 Ui
-iq
+MJ
 ha
 ha
 OW
@@ -6555,7 +6555,7 @@ Eg
 jU
 ju
 Bu
-kV
+OA
 lp
 lL
 mg
@@ -6889,9 +6889,9 @@ ab
 ab
 ab
 ab
-fx
+BY
 gh
-fx
+BY
 si
 ab
 ab

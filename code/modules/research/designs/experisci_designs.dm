@@ -6,7 +6,7 @@
 	materials = list(/datum/material/glass = 500, /datum/material/iron = 500)
 	build_path = /obj/item/experi_scanner
 	category = list("Equipment")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
+	departmental_flags = DEPARTMENT_BITFLAG_SCIENCE
 
 /datum/design/slime_scanner
 	name = "Slime Scanner"
@@ -16,7 +16,7 @@
 	materials = list(/datum/material/glass = 500, /datum/material/iron = 500)
 	build_path = /obj/item/slime_scanner
 	category = list("Equipment")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
+	departmental_flags = DEPARTMENT_BITFLAG_SCIENCE
 
 /datum/design/adv_slime_scanner
 	name = "Advanced Slime Scanner"
@@ -26,4 +26,4 @@
 	materials = list(/datum/material/iron = 2000, /datum/material/glass = 1000, /datum/material/silver = 500, /datum/material/gold = 500)
 	build_path = /obj/item/slime_scanner/advanced
 	category = list("Equipment")
-	departmental_flags = DEPARTMENTAL_FLAG_SCIENCE
+	departmental_flags = DEPARTMENT_BITFLAG_SCIENCE
