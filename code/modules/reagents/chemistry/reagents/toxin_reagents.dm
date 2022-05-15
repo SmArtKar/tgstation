@@ -198,6 +198,10 @@
 		consumer.blood_volume = min(consumer.blood_volume + 5 * REM * delta_time, BLOOD_VOLUME_MAXIMUM)
 	return ..()
 
+/datum/reagent/toxin/slimejelly/pink
+	name = "Pink Slime Jelly"
+	color = "#e940b6"
+
 /datum/reagent/toxin/minttoxin
 	name = "Mint Toxin"
 	description = "Useful for dealing with undesirable customers."

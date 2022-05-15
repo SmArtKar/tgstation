@@ -764,3 +764,8 @@
 	results = list(/datum/reagent/consumable/ethanol/helianthus = 5)
 	required_reagents = list(/datum/reagent/consumable/ethanol/absinthe = 1, /datum/reagent/consumable/sugar = 1, /datum/reagent/toxin/mindbreaker = 1)
 	mix_message = "The drink lets out a soft enlightening laughter..."
+
+/datum/chemical_reaction/drink/slime_queen
+	results = list(/datum/reagent/consumable/ethanol/slime_queen = 3)
+	required_reagents = list(/datum/reagent/toxin/slimejelly/pink = 1, /datum/reagent/consumable/berryjuice = 1, /datum/reagent/consumable/ethanol/vodka = 1)
+	mix_message = "Purple swirles appear in the drink as it finishes mixing."

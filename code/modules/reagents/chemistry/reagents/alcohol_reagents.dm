@@ -2829,3 +2829,40 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	if(drinker.hallucination < hal_cap && DT_PROB(5, delta_time))
 		drinker.hallucination += hal_amt
 	..()
+
+/datum/reagent/consumable/ethanol/slime_queen
+	name = "Slime Queen"
+	description = "A mix of vodka, berry juice and pink slime jelly. It looks hallow."
+	color = "#FF4D9D"
+	boozepwr = 40
+	quality = DRINK_FANTASTIC
+	taste_description = "burning berry juice with a hint of cream"
+	metabolization_rate = 2 * REAGENTS_METABOLISM //0.4u per second
+	glass_icon_state = "slime_queen"
+	glass_name = "Slime Queen"
+	glass_desc = "When killing the king is not enough. Blorble live the Queen!"
+	shot_glass_icon_state = "shotglassqueen"
+	ph = 10
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	glass_price = DRINK_PRICE_HIGH
+
+/datum/reagent/consumable/ethanol/slime_queen/on_mob_metabolize(mob/living/drinker)
+	. = ..()
+	if(!isjellyperson(drinker))
+		return
+	drinker.faction += "slime"
+
+/datum/reagent/consumable/ethanol/slime_queen/on_mob_end_metabolize(mob/living/drinker)
+	. = ..()
+	if(!isjellyperson(drinker))
+		return
+	drinker.faction -= "slime"
+
+/datum/reagent/consumable/ethanol/slime_queen/on_mob_life(mob/living/carbon/drinker, delta_time, times_fired)
+	. = ..()
+	drinker.adjustToxLoss(2 * REM * delta_time)
+	if(!isjellyperson(drinker))
+		drinker.set_timed_status_effect(3 SECONDS, /datum/status_effect/dizziness, only_if_higher = TRUE)
+		return
+
+	drinker.blood_volume = min(drinker.blood_volume + 2 * REM * delta_time, BLOOD_VOLUME_MAXIMUM)

@@ -279,7 +279,39 @@
 	name = "pink slime extract"
 	icon_state = "pink"
 	tier = 5
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
+
+/obj/item/slime_extract/pink/on_grind()
+	. = ..()
+	if(uses || activated)
+		grind_results[/datum/reagent/toxin/slimejelly] = 0
+		grind_results[/datum/reagent/toxin/slimejelly/pink] = 20
+
+/obj/item/slime_extract/pink/activate()
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. You can apply it to yourself or someone else to increase their mood for 15 minutes."
+	activated = TRUE
+
+/obj/item/slime_extract/pink/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!isliving(target) || !activated)
+		return
+
+	var/mob/living/victim = target
+	if(!victim.GetComponent(/datum/component/mood))
+		return
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+	to_chat(user, span_notice("You apply [src] to [victim] and it dissolves as soon as it comes in contact with [victim.p_them()]."))
+	to_chat(victim, span_hypnophrase("A wave of heat and pleasure rolls through your body as [user] applies [src] to you!"))
+	SEND_SIGNAL(victim, COMSIG_ADD_MOOD_EVENT, "pink_extract", /datum/mood_event/pink_extract)
+
+	if(uses <= 0)
+		qdel(src)
 
 // Gold Extract
 
@@ -306,7 +338,6 @@
 	icon_state = "black"
 	tier = 6
 	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
-	var/relimb_ready = FALSE
 	var/list/limb_transform_types = list(
 		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
 		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
@@ -316,7 +347,6 @@
 	)
 
 /obj/item/slime_extract/black/activate()
-	relimb_ready = TRUE
 	activated = TRUE
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
@@ -324,7 +354,7 @@
 
 /obj/item/slime_extract/black/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
-	if(!ishuman(target) || !relimb_ready)
+	if(!ishuman(target) || !activated)
 		return
 
 	icon_state = initial(icon_state)

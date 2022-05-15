@@ -293,3 +293,8 @@
 
 	mood_change *= card_players
 	return ..()
+
+/datum/mood_event/pink_extract
+	description = "I feel like I could do anything!"
+	mood_change = 20
+	timeout = 30 SECONDS

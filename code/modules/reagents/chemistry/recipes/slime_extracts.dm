@@ -379,6 +379,13 @@
 	required_container = /obj/item/slime_extract/pink
 	required_reagents = list(/datum/reagent/blood = 1)
 
+/datum/chemical_reaction/slime/pink_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/pink/extract = holder.my_atom
+	if(!istype(extract))
+		return ..()
+	extract.activate()
+	return ..()
+
 // Green
 
 /datum/chemical_reaction/slime/green_plasma
