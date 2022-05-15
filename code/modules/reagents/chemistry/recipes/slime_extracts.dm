@@ -375,6 +375,10 @@
 	new /obj/item/slime_potion/docility(get_turf(holder.my_atom))
 	return ..()
 
+/datum/chemical_reaction/slime/pink_blood
+	required_container = /obj/item/slime_extract/pink
+	required_reagents = list(/datum/reagent/blood = 1)
+
 // Green
 
 /datum/chemical_reaction/slime/green_plasma

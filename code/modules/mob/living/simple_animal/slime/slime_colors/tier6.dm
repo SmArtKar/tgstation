@@ -193,12 +193,14 @@
 	slime_tags = SLIME_WATER_IMMUNITY
 	environmental_req = "Subject appears to posess a fist. Fisting is 300 bucks."
 	var/fist_out = FALSE
+	var/next_move_type
+	var/exercise_cooldown = 0
 
 /datum/slime_color/adamantine/New(slime)
 	. = ..()
-	//RegisterSignal(slime, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, .proc/attempt_throw)
-	//RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/melee_attack)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/melee_attack)
 	RegisterSignal(slime, COMSIG_SLIME_POST_REGENERATE_ICONS, .proc/icon_regen)
+	RegisterSignal(slime, COMSIG_SLIME_CAN_TARGET_POI, .proc/can_target_poi)
 
 /datum/slime_color/adamantine/remove()
 	. = ..()
@@ -218,12 +220,206 @@
 /datum/slime_color/adamantine/Life(delta_time, times_fired)
 	. = ..()
 
-	if(slime.nutrition < (slime.get_starve_nutrition() * 0.5 + slime.get_hunger_nutrition() * 0.5) && fist_out)
+	if(slime.nutrition < (slime.get_starve_nutrition() * 0.5 + slime.get_hunger_nutrition() * 0.5) && fist_out && DT_PROB(25, delta_time)) //Can't maintain fist if too hungry
 		fist_out = FALSE
 		slime.regenerate_icons()
+	else if(!fist_out && (slime.Target || DT_PROB(2.5, delta_time)))
+		fist_out = TRUE
+		slime.regenerate_icons()
+
+	if(exercise_cooldown + ADAMANTINE_SLIME_EXERCISE_TOLERANCE > world.time)
+		fitting_environment = TRUE
 		return
 
+	fitting_environment = FALSE
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
+	slime.adjust_nutrition(-2 * delta_time)
 
+/datum/slime_color/adamantine/proc/can_target_poi(atom/possible_interest)
+	SIGNAL_HANDLER
+
+	if(exercise_cooldown > world.time)
+		return
+
+	if(istype(possible_interest, /obj/structure/punching_bag))
+		return COMPONENT_SLIME_TARGET_POI
+
+	if(istype(possible_interest, /obj/structure/weightmachine))
+		var/obj/structure/weightmachine/machine = possible_interest
+		if(machine.obj_flags & IN_USE)
+			return
+		return COMPONENT_SLIME_TARGET_POI
+
+/datum/slime_color/adamantine/proc/use_punchbag(obj/structure/punching_bag/target)
+	if(!fist_out)
+		fist_out = TRUE
+		slime.regenerate_icons()
+
+	flick("[target.icon_state]-punch", target)
+	playsound(target, pick(target.hit_sounds), 50, TRUE, -1)
+	playsound(target, 'sound/effects/bamf.ogg', 50, TRUE)
+	next_move_type = ADAMANTINE_SLIME_MOVE_SLAM
+	exercise_cooldown = world.time + ADAMANTINE_SLIME_EXERCISE_COOLDOWN
+
+/datum/slime_color/adamantine/proc/use_lifter(obj/structure/weightmachine/stacklifter/target)
+	if(!fist_out)
+		fist_out = TRUE
+		slime.regenerate_icons()
+
+	exercise_cooldown = INFINITY
+	target.start_using(slime)
+	next_move_type = ADAMANTINE_SLIME_MOVE_SUPLEX
+	exercise_cooldown = world.time + ADAMANTINE_SLIME_EXERCISE_COOLDOWN
+
+/datum/slime_color/adamantine/proc/use_bench(obj/structure/weightmachine/weightlifter/target)
+	if(!fist_out)
+		fist_out = TRUE
+		slime.regenerate_icons()
+
+	exercise_cooldown = INFINITY
+	target.start_using(slime)
+	next_move_type = ADAMANTINE_SLIME_MOVE_GROUND_STRIKE
+	exercise_cooldown = world.time + ADAMANTINE_SLIME_EXERCISE_COOLDOWN
+
+/datum/slime_color/adamantine/proc/melee_attack(atom/target)
+	SIGNAL_HANDLER
+
+	if(istype(target, /obj/structure/punching_bag))
+		if(isliving(slime.Target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+			return
+		INVOKE_ASYNC(src, .proc/use_punchbag, target)
+		return COMPONENT_SLIME_NO_ATTACK
+
+	if(istype(target, /obj/structure/weightmachine/stacklifter))
+		if(isliving(slime.Target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+			return
+		INVOKE_ASYNC(src, .proc/use_lifter, target)
+		return COMPONENT_SLIME_NO_ATTACK
+
+	if(istype(target, /obj/structure/weightmachine/weightlifter))
+		if(isliving(slime.Target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+			return
+		INVOKE_ASYNC(src, .proc/use_bench, target)
+		return COMPONENT_SLIME_NO_ATTACK
+
+	if(!fist_out || !ismovable(target))
+		return
+
+	var/atom/movable/movable_target = target
+	if(movable_target.anchored)
+		return
+
+	if(!next_move_type)
+		if(!prob(ADAMANTINE_SLIME_RANDOM_ATTACK))
+			return
+		next_move_type = pick(ADAMANTINE_SLIME_MOVE_SLAM, ADAMANTINE_SLIME_MOVE_SUPLEX, ADAMANTINE_SLIME_MOVE_GROUND_STRIKE)
+
+	switch(next_move_type)
+		if(ADAMANTINE_SLIME_MOVE_SLAM)
+			INVOKE_ASYNC(src, .proc/slam_attack, movable_target)
+			return COMPONENT_SLIME_NO_ATTACK
+		if(ADAMANTINE_SLIME_MOVE_SUPLEX)
+			var/turf/center_turf = get_turf(slime)
+			var/list/suplex_turfs = RANGE_TURFS(1, center_turf)
+			suplex_turfs -= center_turf
+			suplex_turfs -= get_turf(target)
+			for(var/turf/suplex in suplex_turfs)
+				if(suplex.is_blocked_turf_ignore_climbable())
+					suplex_turfs -= suplex
+			if(!LAZYLEN(suplex_turfs))
+				return
+			INVOKE_ASYNC(src, .proc/suplex_attack, movable_target, suplex_turfs)
+			return COMPONENT_SLIME_NO_ATTACK
+		if(ADAMANTINE_SLIME_MOVE_GROUND_STRIKE)
+			INVOKE_ASYNC(src, .proc/ground_strike_attack, movable_target)
+			return COMPONENT_SLIME_NO_ATTACK
+
+/datum/slime_color/adamantine/proc/slam_attack(atom/movable/target)
+	slime.do_attack_animation(target, ATTACK_EFFECT_SMASH)
+	target.visible_message(span_warning("[slime] slams [target], sending [target.p_them()] flying through the air!"), span_userdanger("[slime] slams you, sending you flying through the air!"))
+	playsound(target, 'sound/effects/meteorimpact.ogg', 50, TRUE)
+	playsound(target, 'sound/effects/bamf.ogg', 75, TRUE)
+	var/turf/throwtarget = get_edge_target_turf(target, get_dir(slime, target))
+	target.throw_at(throwtarget, 4, 2, slime)
+	if(isliving(target))
+		var/mob/living/victim = target
+		victim.Paralyze(15)
+		victim.apply_damage(ADAMANTINE_SLIME_SLAM_DAMAGE * victim.getarmor(type = MELEE), BRUTE)
+
+	if(iscarbon(target))
+		shock_target(target)
+
+/datum/slime_color/adamantine/proc/suplex_attack(atom/movable/target, list/suplex_turfs)
+	var/turf/suplex_turf = pick(suplex_turfs)
+	target.forceMove(suplex_turf)
+	playsound(target, 'sound/effects/meteorimpact.ogg', 50, TRUE)
+	playsound(target, 'sound/effects/bamf.ogg', 75, TRUE)
+	slime.do_attack_animation(target, ATTACK_EFFECT_SMASH)
+	target.visible_message(span_warning("[slime] suplexes [target], pinning [target.p_them()] down to the ground!"), span_userdanger("[slime] suplexes you, pinning you down to the ground!"))
+	if(isliving(target))
+		var/mob/living/victim = target
+		victim.Paralyze(25)
+		victim.apply_damage(ADAMANTINE_SLIME_SUPLEX_DAMAGE * victim.getarmor(type = MELEE), BRUTE)
+
+	if(iscarbon(target))
+		shock_target(target)
+
+/datum/slime_color/adamantine/proc/ground_strike_attack(atom/movable/target)
+	playsound(target, 'sound/effects/meteorimpact.ogg', 50, TRUE)
+	playsound(target, 'sound/effects/bamf.ogg', 75, TRUE)
+	slime.do_attack_animation(target, ATTACK_EFFECT_SMASH)
+	slime.visible_message(span_warning("[slime] strikes the ground beneath [target], sending [target.p_them()] and everybody around flying!"))
+	var/turf/center_turf = get_turf(target)
+	for(var/i in 0 to 2)
+		var/list/cascade_turfs = RANGE_TURFS(i, center_turf)
+		if(i > 0)
+			cascade_turfs -= RANGE_TURFS(i - 1, center_turf)
+
+		for(var/turf/open/cascade_turf in cascade_turfs)
+			new /obj/effect/temp_visual/small_smoke/halfsecond(cascade_turf)
+			for(var/atom/movable/cascade_victim in cascade_turf)
+				if(cascade_victim.anchored || isslime(cascade_victim))
+					continue
+
+				INVOKE_ASYNC(src, .proc/up_into_the_air, cascade_victim)
+		sleep(3)
+
+/datum/slime_color/adamantine/proc/up_into_the_air(atom/movable/cascade_victim)
+	cascade_victim.anchored = TRUE
+	ADD_TRAIT(cascade_victim, TRAIT_IMMOBILIZED, XENOBIO_TRAIT)
+	if(isliving(cascade_victim))
+		var/mob/living/victim = cascade_victim
+		victim.Paralyze(17)
+
+	new /obj/effect/temp_visual/item_shadow(get_turf(cascade_victim))
+	animate(cascade_victim, pixel_z = 64, time = 15, easing = CUBIC_EASING | EASE_OUT, flags = ANIMATION_PARALLEL)
+	to_chat(cascade_victim, span_userdanger("You are launched into the air by [slime]'s attack!"))
+	sleep(15)
+	animate(cascade_victim, pixel_z = 0, time = 2, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)
+	sleep(2)
+	playsound(cascade_victim, 'sound/effects/meteorimpact.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(cascade_victim))
+	if(isliving(cascade_victim))
+		var/mob/living/victim = cascade_victim
+		victim.apply_damage(ADAMANTINE_SLIME_GROUND_STRIKE_DAMAGE * victim.getarmor(type = MELEE), BRUTE)
+
+/datum/slime_color/adamantine/proc/shock_target(mob/living/carbon/victim)
+	if(slime.powerlevel <= 0)
+		return
+
+	var/stunprob = slime.powerlevel * 7 + 10  // 17 at level 1, 80 at level 10
+	if(!prob(stunprob))
+		return
+
+	do_sparks(5, TRUE, victim)
+	var/power = slime.powerlevel + rand(0,3)
+	victim.Paralyze(power * 2 SECONDS)
+	victim.set_timed_status_effect(power * 2 SECONDS, /datum/status_effect/speech/stutter, only_if_higher = TRUE)
+	if (prob(stunprob) && slime.powerlevel >= 8)
+		victim.adjustFireLoss(slime.powerlevel * rand(6, 10))
+	slime.powerlevel -= 3
+	if(slime.powerlevel < 0)
+		slime.powerlevel = 0
 
 /datum/slime_color/light_pink
 	color = "light pink"

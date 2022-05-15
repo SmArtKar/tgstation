@@ -246,3 +246,18 @@
 #define LIGHT_PINK_SLIME_RESIST_TIME 2 MINUTES //Like bucklecuffed
 /// How much nutrition do light pinks get when finishing a critted target
 #define LIGHT_PINK_SLIME_FINISHER_NUTRITION 75
+
+/// Attack types for adamantine slime
+#define ADAMANTINE_SLIME_MOVE_SLAM "slam"
+#define ADAMANTINE_SLIME_MOVE_SUPLEX "suplex"
+#define ADAMANTINE_SLIME_MOVE_GROUND_STRIKE "ground_strike"
+/// How often do adamantine slimes need to exercise
+#define ADAMANTINE_SLIME_EXERCISE_COOLDOWN 30 SECONDS
+/// How long can adamantine slimes survive without exercising
+#define ADAMANTINE_SLIME_EXERCISE_TOLERANCE 30 SECONDS
+/// How likely are adamantine slimes to randomly use special attacks
+#define ADAMANTINE_SLIME_RANDOM_ATTACK 10
+/// Attack damages
+#define ADAMANTINE_SLIME_SLAM_DAMAGE 35
+#define ADAMANTINE_SLIME_SUPLEX_DAMAGE 20
+#define ADAMANTINE_SLIME_GROUND_STRIKE_DAMAGE 15

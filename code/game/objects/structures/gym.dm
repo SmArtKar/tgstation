@@ -20,12 +20,22 @@
 		SEND_SIGNAL(user, COMSIG_ADD_MOOD_EVENT, "exercise", /datum/mood_event/exercise)
 		L.apply_status_effect(/datum/status_effect/exercised)
 
+/obj/structure/punching_bag/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	default_unfasten_wrench(user, tool, time = 0.1 SECONDS)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
+
 /obj/structure/weightmachine
 	desc = "Just looking at this thing makes you feel tired."
 	density = TRUE
 	anchored = TRUE
 	blocks_emissive = EMISSIVE_BLOCK_UNIQUE
 	icon = 'icons/obj/gym_equipment.dmi'
+
+/obj/structure/weightmachine/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	default_unfasten_wrench(user, tool, time = 0.1 SECONDS)
+	return TOOL_ACT_TOOLTYPE_SUCCESS
 
 /obj/structure/weightmachine/proc/AnimateMachine(mob/living/user)
 	return
@@ -46,6 +56,9 @@
 		return
 	if(!user.canUseTopic(src, BE_CLOSE, FALSE, NO_TK))
 		return
+	start_using(user)
+
+/obj/structure/weightmachine/proc/start_using(mob/living/user)
 	if(obj_flags & IN_USE)
 		to_chat(user, span_warning("It's already in use - wait a bit!"))
 		return

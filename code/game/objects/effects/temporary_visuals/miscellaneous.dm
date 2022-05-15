@@ -569,3 +569,8 @@
 	. = ..()
 	pixel_y = 24
 	animate(src, pixel_y = 0, alpha = 0, time = duration)
+
+/obj/effect/temp_visual/item_shadow
+	icon_state = "item_shadow"
+	duration = 17
+	layer = BELOW_OPEN_DOOR_LAYER

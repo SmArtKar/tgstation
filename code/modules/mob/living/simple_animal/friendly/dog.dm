@@ -727,7 +727,7 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 
 /mob/living/simple_animal/pet/dog/corgi/sporgi
 	name = "Sporgi"
-	desc = "A cursed abomination created as a result of an unethical genetic experiment."
+	desc = "Australian's best friend."
 	icon_state = "sporgi"
 	icon_living = "sporgi"
 	icon_dead = "sporgi_dead"
