@@ -1134,17 +1134,17 @@
 	else
 		remove_moodlet(/datum/slime_moodlet/rabid)
 
-	if(mood_level > 3 && mood_level <= 5)
+	if(powerlevel > 3 && powerlevel <= 5)
 		apply_moodlet(/datum/slime_moodlet/power_one)
 	else
 		remove_moodlet(/datum/slime_moodlet/power_one)
 
-	if(mood_level > 5 && mood_level <= 8)
+	if(powerlevel > 5 && powerlevel <= 8)
 		apply_moodlet(/datum/slime_moodlet/power_two)
 	else
 		remove_moodlet(/datum/slime_moodlet/power_two)
 
-	if(mood_level > 8)
+	if(powerlevel > 8)
 		apply_moodlet(/datum/slime_moodlet/power_three)
 	else
 		remove_moodlet(/datum/slime_moodlet/power_three)

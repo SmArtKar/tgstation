@@ -706,7 +706,8 @@
 			return
 
 	var/datum/slime_moodlet/new_moodlet = new moodlet_type()
-	QDEL_IN(new_moodlet, new_moodlet.duration)
+	if(new_moodlet.duration > 0)
+		QDEL_IN(new_moodlet, new_moodlet.duration)
 	moodlets[moodlet_type] = new_moodlet
 
 /mob/living/simple_animal/slime/proc/remove_moodlet(moodlet_type)
