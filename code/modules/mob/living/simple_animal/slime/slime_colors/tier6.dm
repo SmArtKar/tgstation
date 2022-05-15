@@ -57,7 +57,7 @@
 	var/obj/projectile/our_projectile = new /obj/projectile/oil(get_turf(slime))
 	our_projectile.firer = slime
 	our_projectile.original = target
-	our_projectile.fire()
+	INVOKE_ASYNC(our_projectile, /obj/projectile.proc/fire)
 
 /obj/projectile/oil
 	name = "glob of oil"
@@ -316,6 +316,7 @@
 
 	switch(next_move_type)
 		if(ADAMANTINE_SLIME_MOVE_SLAM)
+			next_move_type = null
 			INVOKE_ASYNC(src, .proc/slam_attack, movable_target)
 			return COMPONENT_SLIME_NO_ATTACK
 		if(ADAMANTINE_SLIME_MOVE_SUPLEX)
@@ -328,10 +329,12 @@
 					suplex_turfs -= suplex
 			if(!LAZYLEN(suplex_turfs))
 				return
+			next_move_type = null
 			INVOKE_ASYNC(src, .proc/suplex_attack, movable_target, suplex_turfs)
 			return COMPONENT_SLIME_NO_ATTACK
 		if(ADAMANTINE_SLIME_MOVE_GROUND_STRIKE)
 			INVOKE_ASYNC(src, .proc/ground_strike_attack, movable_target)
+			next_move_type = null
 			return COMPONENT_SLIME_NO_ATTACK
 
 /datum/slime_color/adamantine/proc/slam_attack(atom/movable/target)
