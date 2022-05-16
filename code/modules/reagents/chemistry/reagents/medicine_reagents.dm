@@ -1639,8 +1639,15 @@
 		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix/slime,
 	)
 
+/datum/reagent/medicine/mutanite_solution/on_mob_dead(mob/living/carbon/owner, delta_time)
+	. = ..()
+	heal_organs(owner, delta_time)
+
 /datum/reagent/medicine/mutanite_solution/on_mob_life(mob/living/carbon/owner, delta_time, times_fired)
 	. = ..()
+	heal_organs(owner, delta_time)
+
+/datum/reagent/medicine/mutanite_solution/proc/heal_organs(mob/living/carbon/owner, delta_time)
 	for(var/organ_tag in mutation_types)
 		owner.adjustOrganLoss(organ_tag, -5 * REM * delta_time) //-50 damage of every organ per pen, but has a chance to fuck your organs up.
 

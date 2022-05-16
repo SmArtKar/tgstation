@@ -889,7 +889,7 @@
 				if(!reaction.required_container)
 					matching_container = TRUE
 				else
-					if(cached_my_atom.type == reaction.required_container)
+					if(istype(reaction.required_container, cached_my_atom))
 						matching_container = TRUE
 				if (isliving(cached_my_atom) && !reaction.mob_react) //Makes it so certain chemical reactions don't occur in mobs
 					matching_container = FALSE

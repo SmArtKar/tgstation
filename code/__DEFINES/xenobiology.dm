@@ -114,7 +114,9 @@
 /// These slimes take x0.5 damage from water
 #define SLIME_WATER_RESISTANCE (1<<8)
 /// These slimes take x1.5 damage from water
-#define SLIME_WATER_WEAKNESS (1<<8)
+#define SLIME_WATER_WEAKNESS (1<<9)
+/// These slimes will attack the dead
+#define SLIME_ATTACK_DEAD (1<<10)
 
 /// Slime requirements
 

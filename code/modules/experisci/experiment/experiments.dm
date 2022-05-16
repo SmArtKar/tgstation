@@ -24,7 +24,7 @@
 	required_atoms = list(/obj/item/slime_extract/adamantine = 1,
 		/obj/item/slime_extract/oil = 1,
 		/obj/item/slime_extract/black = 1,
-		/obj/item/slime_extract/lightpink = 1,
+		/obj/item/slime_extract/light_pink = 1,
 		/obj/item/slime_extract/special/rainbow = 10)
 
 /datum/experiment/scanning/random/cytology/easy

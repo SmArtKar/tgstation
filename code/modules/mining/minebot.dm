@@ -300,7 +300,7 @@
 
 //AI
 
-/obj/item/slime_potion/slime/sentience/mining
+/obj/item/slime_potion/sentience/mining
 	name = "minebot AI upgrade"
 	desc = "Can be used to grant sentience to minebots. It's incompatible with minebot armor and melee upgrades, and will override them."
 	icon_state = "door_electronics"
@@ -311,7 +311,7 @@
 	var/base_speed_add = 1
 	var/base_cooldown_add = 10 //base cooldown isn't reset to normal, it's just added on, since it's not practical to disable the cooldown module
 
-/obj/item/slime_potion/slime/sentience/mining/after_success(mob/living/user, mob/living/simple_animal/simple_mob)
+/obj/item/slime_potion/sentience/mining/after_success(mob/living/user, mob/living/simple_animal/simple_mob)
 	if(!istype(simple_mob, /mob/living/simple_animal/hostile/mining_drone))
 		return
 	var/mob/living/simple_animal/hostile/mining_drone/minebot = simple_mob

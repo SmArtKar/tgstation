@@ -30,6 +30,17 @@
 	if(!results.len) //if the slime doesn't output chemicals
 		qdel(M)
 
+/datum/chemical_reaction/slime/biohazard
+	required_container = /obj/item/slime_extract
+	required_reagents = list(/datum/reagent/toxin/tuporixin = 1)
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
+
+/datum/chemical_reaction/slime/biohazard/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/extract_turf = get_turf(holder.my_atom)
+	var/mob/living/simple_animal/slime/color/biohazard/slime = new(extract_turf)
+	extract_turf.visible_message(span_danger("[holder.my_atom] starts rapidly expanding and changing it's color, turning into [slime]!"))
+	return ..()
+
 // ************************************************
 // ******************* TIER ONE *******************
 // ************************************************
@@ -42,7 +53,7 @@
 
 /datum/chemical_reaction/slime/grey_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/stack/biomass(get_turf(holder.my_atom), 3) //You can insert these into the biomass recycler and get 3 monkey cubes
-	. = ..()
+	return ..()
 
 /datum/chemical_reaction/slime/grey_plasma
 	required_container = /obj/item/slime_extract/grey
@@ -51,7 +62,7 @@
 /datum/chemical_reaction/slime/grey_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/mob/living/simple_animal/slime/color/grey/slime = new(get_turf(holder.my_atom))
 	slime.visible_message(span_danger("[holder.my_atom] begins to grow as it is injected with plasma and turns into a small grey slime!"))
-	. = ..()
+	return ..()
 
 // ************************************************
 // ******************* TIER TWO *******************
@@ -212,8 +223,8 @@
 
 /datum/chemical_reaction/slime/dark_blue_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/dark_blue/extract = holder.my_atom
-	if(!istype(extract))
-		return ..()
+	if(!istype(extract) || extract.activated)
+		return
 	extract.activate()
 	return ..()
 
@@ -292,6 +303,26 @@
 	playsound(holder_turf, 'sound/effects/phasein.ogg', 100, TRUE)
 	return ..()
 
+/datum/chemical_reaction/slime/bluespace_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/bluespace
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/bluespace_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/bluespace/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	return ..()
+
+/datum/chemical_reaction/slime/bluespace_water
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/bluespace
+
+/datum/chemical_reaction/slime/bluespace_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/radio(get_turf(holder.my_atom))
+	return ..()
+
 // Sepia
 
 /datum/chemical_reaction/slime/sepia_plasma
@@ -301,8 +332,8 @@
 
 /datum/chemical_reaction/slime/sepia_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/sepia/extract = holder.my_atom
-	if(!istype(extract))
-		return ..()
+	if(!istype(extract) || extract.activated)
+		return
 	extract.activate()
 	return ..()
 
@@ -378,11 +409,12 @@
 /datum/chemical_reaction/slime/pink_blood
 	required_container = /obj/item/slime_extract/pink
 	required_reagents = list(/datum/reagent/blood = 1)
+	deletes_extract = FALSE
 
 /datum/chemical_reaction/slime/pink_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/pink/extract = holder.my_atom
-	if(!istype(extract))
-		return ..()
+	if(!istype(extract) || extract.activated)
+		return
 	extract.activate()
 	return ..()
 
@@ -407,6 +439,26 @@
 // ******************* TIER SIX *******************
 // ************************************************
 
+// Oil
+
+/datum/chemical_reaction/slime/oil_plasma
+	required_container = /obj/item/slime_extract/oil
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/oil_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/atom/cycle_loc = holder.my_atom
+	while(!isturf(cycle_loc) && !ishuman(cycle_loc))
+		cycle_loc = cycle_loc.loc
+
+	if(!ishuman(cycle_loc))
+		cycle_loc.visible_message(span_warning("[holder.my_atom] starts to expand, but fails to find something to latch onto and deflates!"))
+		deletes_extract = FALSE
+		return ..()
+
+	var/mob/living/carbon/human/owner = cycle_loc
+	owner.apply_status_effect(/datum/status_effect/slime/oil)
+	return ..()
+
 // Black
 
 /datum/chemical_reaction/slime/black_plasma
@@ -424,9 +476,19 @@
 
 /datum/chemical_reaction/slime/black_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/obj/item/slime_extract/black/extract = holder.my_atom
-	if(!istype(extract))
-		return ..()
+	if(!istype(extract) || extract.activated)
+		return
 	extract.activate()
+	return ..()
+
+/// Light Pink
+
+/datum/chemical_reaction/slime/light_pink_plasma
+	required_container = /obj/item/slime_extract/light_pink
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/light_pink_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/sentience(get_turf(holder.my_atom))
 	return ..()
 
 // ************************************************

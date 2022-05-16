@@ -2976,7 +2976,7 @@
 	description = "An extremely rare solution found in silver slime cores that speeds up metabolism to insane levels, rapidly draining nutrition in exchange for speed."
 	taste_description = "acidic goo"
 	color = "#BCBCBC"
-	chemical_flags = REAGENT_DEAD_PROCESS | REAGENT_IGNORE_STASIS | REAGENT_DONOTSPLIT
+	chemical_flags = REAGENT_DONOTSPLIT
 
 /datum/reagent/silver_slihypertrozineme_extract/on_mob_add(mob/living/owner, amount)
 	. = ..()

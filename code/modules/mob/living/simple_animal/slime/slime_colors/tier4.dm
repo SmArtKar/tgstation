@@ -22,7 +22,7 @@
 	if(our_mix.return_pressure() < CERULEAN_SLIME_MAX_SAFE_PRESSURE)
 		ADD_TRAIT(slime, TRAIT_SPACEWALK, INNATE_TRAIT)
 		fitting_environment = TRUE
-		temperature_modifier = -10 //Space-walking slimes! -10 because slimes get slowed down on temperature_modifier + 10
+		temperature_modifier = -11 //Space-walking slimes! -11 because slimes get slowed down on temperature_modifier + 10
 		handle_telekinesis(delta_time, times_fired, FALSE)
 		slime.adjustBruteLoss(CERULEAN_SLIME_VACUUM_HEALING * delta_time) //Slow spess healing
 		return
@@ -187,16 +187,9 @@
 	. = ..()
 	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/possible_freeze)
 	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/fiery_attack)
-	RegisterSignal(slime, COMSIG_SLIME_POST_REGENERATE_ICONS, .proc/icon_regen)
 
 /datum/slime_color/pyrite/remove()
-	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET, COMSIG_SLIME_REGENERATE_ICONS))
-
-/datum/slime_color/pyrite/proc/icon_regen()
-	SIGNAL_HANDLER
-
-	if(slime.stat != DEAD && fiery_charge >= 0)
-		slime.icon_state = "[slime.icon_state]-ignited"
+	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET))
 
 /datum/slime_color/pyrite/proc/fiery_attack(datum/source, atom/attack_target)
 	SIGNAL_HANDLER

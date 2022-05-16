@@ -26,11 +26,11 @@
 
 
 /datum/species/jelly/luminescent/on_species_loss(mob/living/carbon/C)
-	..()
+	. = ..()
 	QDEL_NULL(glow)
 
 /datum/species/jelly/luminescent/on_species_gain(mob/living/carbon/C, datum/species/old_species)
-	..()
+	. = ..()
 	glow = new(C)
 	update_glow(C)
 
@@ -52,3 +52,30 @@
 	. = ..()
 	if(!isliving(loc))
 		return INITIALIZE_HINT_QDEL
+
+/datum/species/jelly/luminescent/rainbow
+	var/current_hue = 0
+	var/rainbow_active = FALSE
+
+/datum/species/jelly/luminescent/rainbow/on_species_gain(mob/living/carbon/new_jellyperson, datum/species/old_species)
+	. = ..()
+	if(new_jellyperson.dna)
+		rainbow_active = TRUE
+		handle_rainbow(new_jellyperson)
+
+/datum/species/jelly/luminescent/rainbow/on_species_loss(mob/living/carbon/C)
+	. = ..()
+	rainbow_active = FALSE
+
+/datum/species/jelly/luminescent/rainbow/proc/handle_rainbow(mob/living/carbon/jellyman)
+	if(!rainbow_active)
+		return
+	current_hue = (current_hue + 5) % 360
+	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
+	if(current_hue > 240 && current_hue < 270)
+		current_hue = 75
+	var/new_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+	jellyman.dna.features["mcolor"] = new_color
+	glow.set_light_color(new_color)
+	jellyman.update_body(TRUE)
+	addtimer(CALLBACK(src, .proc/handle_rainbow, jellyman), 1)

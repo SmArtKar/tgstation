@@ -283,3 +283,13 @@
 
 /obj/item/reagent_containers/syringe/contraband/morphine
 	list_reagents = list(/datum/reagent/medicine/morphine = 15)
+
+/obj/item/reagent_containers/syringe/tuporixin
+	name = "tuporixin injector"
+	desc = "A sealed heavy duty injector filled with 1 mol of tuporixin, an extremely potent toxin causing irreversible mutations in large doses. 1 mol is not enough to poison someone, but enough to cause its rapid multiplication in an unused slime extract."
+	icon_state = "biohazard_slime"
+	inhand_icon_state = "tbpen"
+	base_icon_state = "biohazard_slime"
+	amount_per_transfer_from_this = 1
+	volume = 1
+	list_reagents = list(/datum/reagent/toxin/tuporixin = 1)

@@ -232,7 +232,7 @@
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time)
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 	slime.adjust_nutrition(-2 * delta_time)
 
 /datum/slime_color/adamantine/proc/can_target_poi(atom/possible_interest)
@@ -427,7 +427,7 @@
 /datum/slime_color/light_pink
 	color = "light pink"
 	icon_color = "light_pink"
-	coretype = /obj/item/slime_extract/lightpink
+	coretype = /obj/item/slime_extract/light_pink
 	mutations = null
 	slime_tags = SLIME_DISCHARGER_WEAKENED
 	environmental_req = "Subject can mind-control whoever it latches onto and requires a host to survive."

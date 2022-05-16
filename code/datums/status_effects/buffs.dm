@@ -766,8 +766,37 @@
 /datum/status_effect/slime/red/on_apply()
 	. = ..()
 	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_HARDLY_WOUNDED, XENOBIO_TRAIT)
+	ADD_TRAIT(owner, TRAIT_NODISMEMBER, XENOBIO_TRAIT)
 	owner.add_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
 
 /datum/status_effect/slime/red/on_remove()
 	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, XENOBIO_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_HARDLY_WOUNDED, XENOBIO_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_NODISMEMBER, XENOBIO_TRAIT)
 	owner.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
+
+/atom/movable/screen/alert/status_effect/oil_slime
+	name = "Oil Slime"
+	desc = "Your feet are enveloped in a layer of oily slime!"
+	icon_state = "oil_slime"
+
+/datum/status_effect/slime/oil
+	id = "oil_slime"
+	alert_type = /atom/movable/screen/alert/status_effect/oil_slime
+	effect_icon_state = "oil_slime"
+	duration = 1 MINUTES
+
+/datum/status_effect/slime/oil/on_apply()
+	. = ..()
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, .proc/on_moved)
+
+/datum/status_effect/slime/oil/on_remove()
+	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+
+/datum/status_effect/slime/oil/proc/on_moved(datum/source, old_loc)
+	SIGNAL_HANDLER
+	if(!isturf(owner.loc)) //No locker abuse
+		return
+
+	new /obj/effect/decal/cleanable/oil_pool(owner.loc)

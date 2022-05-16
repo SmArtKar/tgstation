@@ -1218,3 +1218,65 @@
 		to_chat(M, span_notice("Ah, what was that? You thought you heard something..."))
 		M.adjust_timed_status_effect(5 SECONDS, /datum/status_effect/confusion)
 	return ..()
+
+/datum/reagent/toxin/tuporixin
+	name = "Tuporixin"
+	description = "An extremely potent toxin created by a biohazard slime, Tuporixin is able to rapidly self-replicate after it reaches a certain threshold."
+	color = "#397A46" // rgb: 127, 132, 0
+	toxpwr = 2
+	taste_mult = 5
+	taste_description = "death itself"
+	chemical_flags = REAGENT_DEAD_PROCESS | REAGENT_DONOTSPLIT
+	var/mutable_appearance/infection_overlay
+	var/overlay_active = FALSE
+
+/datum/reagent/toxin/tuporixin/on_mob_dead(mob/living/carbon/victim, delta_time)
+	if(volume < 5)
+		return
+
+	victim.grab_ghost()
+	var/datum/mind/victim_mind = victim.mind
+	victim.visible_message(span_danger("[victim]'s corpse starts shaking and bursts in a shower of green goo!"))
+	var/mob/living/transferred
+	for(var/i in 1 to rand(2, 4))
+		var/mob/living/simple_animal/slime/color/biohazard/slime = new(get_turf(victim))
+		if(transferred || !victim_mind)
+			continue
+		victim_mind.transfer_to(slime)
+		transferred = slime
+	victim.gib(no_brain = TRUE)
+	if(!transferred)
+		return
+	to_chat(transferred, span_alertalien("You are now a biohazard Tuporixin-infused slime! Do not seek for help, do not help any non-slimes in any way, do not harm your fellow biohazard slimes and spread the infection by glomping humans."))
+	to_chat(transferred, span_alertalien("You have slight lifesteal, are generally faster and have more rapid attacks than normal slimes, as well as water resistance. Your only weaknesses are cold and vacuum of space."))
+
+/datum/reagent/toxin/tuporixin/on_mob_delete(mob/living/victim)
+	. = ..()
+	if(!overlay_active)
+		return
+
+	overlay_active = FALSE
+	victim.cut_overlay(infection_overlay)
+	QDEL_NULL(infection_overlay)
+
+/datum/reagent/toxin/tuporixin/on_mob_life(mob/living/carbon/victim, delta_time, times_fired)
+	if(volume < 5)
+		return ..()
+
+	if(volume < 25 && overlay_active)
+		overlay_active = FALSE
+		victim.cut_overlay(infection_overlay)
+		QDEL_NULL(infection_overlay)
+
+	else if(volume >= 25 && !overlay_active)
+		infection_overlay = mutable_appearance('icons/effects/effects.dmi', "slime_infection", -DAMAGE_LAYER)
+		victim.add_overlay(infection_overlay)
+		overlay_active = TRUE
+
+	if(volume < 50) //Maximum of 50 units
+		victim.reagents.add_reagent(type, min(5, volume * 0.2, 50 - volume)) //Your only hope are toxin purgers or blood filtering
+
+	if(DT_PROB(2.5, delta_time))
+		to_chat(victim, span_userdanger("You feel your blood freezing inside your veins!"))
+
+	return ..()

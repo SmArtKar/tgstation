@@ -137,9 +137,8 @@
 /obj/item/slime_potion/transference
 	name = "consciousness transference potion"
 	desc = "A strange slime-based chemical that, when used, allows the user to transfer their consciousness to a lesser being."
-	icon = 'icons/obj/chemical.dmi'
-	icon_state = "potorange"
-	var/prompted = 0
+	icon_state = "potion_transfer"
+	var/prompted = FALSE
 	var/animal_type = SENTIENCE_ORGANIC
 
 /obj/item/slime_potion/transference/afterattack(mob/living/switchy_mob, mob/living/user, proximity)
@@ -176,9 +175,9 @@
 		to_chat(user, span_warning("Your mind goes blank as you attempt to use the potion."))
 		return
 
-	prompted = 1
+	prompted = TRUE
 	if(tgui_alert(usr,"This will permanently transfer your consciousness to [switchy_mob]. Are you sure you want to do this?",,list("Yes","No"))=="No")
-		prompted = 0
+		prompted = FALSE
 		return
 
 	to_chat(user, span_notice("You drink the potion then place your hands on [switchy_mob]..."))
@@ -195,16 +194,14 @@
 		var/mob/living/simple_animal/switchy_animal = switchy_mob
 		switchy_animal.sentience_act()
 
-/obj/item/slime_potion/slime/sentience
+/obj/item/slime_potion/sentience
 	name = "intelligence potion"
 	desc = "A miraculous chemical mix that grants human like intelligence to living beings."
-	icon = 'icons/obj/chemical.dmi'
-	icon_state = "potpink"
-	var/list/not_interested = list()
+	icon_state = "potion_sentience"
 	var/being_used = FALSE
 	var/sentience_type = SENTIENCE_ORGANIC
 
-/obj/item/slime_potion/slime/sentience/attack(mob/living/dumb_mob, mob/user)
+/obj/item/slime_potion/sentience/attack(mob/living/dumb_mob, mob/user)
 	if(being_used || !ismob(dumb_mob))
 		return
 
@@ -253,14 +250,38 @@
 		being_used = FALSE
 		return ..()
 
-/obj/item/slime_potion/slime/sentience/proc/after_success(mob/living/user, mob/living/smart_mob)
+/obj/item/slime_potion/sentience/proc/after_success(mob/living/user, mob/living/smart_mob)
 	return
 
-/obj/item/slime_potion/slime/sentience/nuclear
+/obj/item/slime_potion/sentience/nuclear
 	name = "syndicate intelligence potion"
 	desc = "A miraculous chemical mix that grants human like intelligence to living beings. It has been modified with Syndicate technology to also grant an internal radio implant to the target and authenticate with identification systems."
+	icon_state = "potion_sentience_syndie"
 
-/obj/item/slime_potion/slime/sentience/nuclear/after_success(mob/living/user, mob/living/smart_mob)
+/obj/item/slime_potion/sentience/nuclear/after_success(mob/living/user, mob/living/smart_mob)
 	var/obj/item/implant/radio/syndicate/imp = new(src)
 	imp.implant(smart_mob, user)
 	smart_mob.AddComponent(/datum/component/simple_access, list(ACCESS_SYNDICATE, ACCESS_MAINT_TUNNELS))
+
+/obj/item/slime_potion/radio
+	name = "bluespace radio potion"
+	desc = "A strange chemical that grants those who ingest it the ability to broadcast and receive subscape radio waves."
+	icon_state = "potion_radio"
+
+/obj/item/slime_potion/radio/attack(mob/living/target, mob/user)
+	if(!ismob(target))
+		return ..()
+
+	if(!isanimal(target))
+		to_chat(user, span_warning("[target] is too complex for the potion!"))
+		return
+
+	if(target.stat == DEAD)
+		to_chat(user, span_warning("[target] is dead!"))
+		return
+
+	to_chat(user, span_notice("You feed the potion to [target]."))
+	to_chat(target, span_notice("Your mind tingles as you are fed the potion. You can hear radio waves now!"))
+	var/obj/item/implant/radio/slime/imp = new(src)
+	imp.implant(target, user)
+	qdel(src)

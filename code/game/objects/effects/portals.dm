@@ -183,3 +183,14 @@
 /obj/effect/portal/permanent/one_way/one_use/teleport(atom/movable/M, force = FALSE)
 	. = ..()
 	qdel(src)
+
+/obj/effect/portal/slime
+	name = "wormhole portal"
+	icon_state = "portal_slime"
+	var/turf/linked_turf
+
+/obj/effect/portal/slime/get_link_target_turf()
+	if(!istype(linked_turf) || QDELETED(linked_turf))
+		qdel(src)
+		return
+	return linked_turf

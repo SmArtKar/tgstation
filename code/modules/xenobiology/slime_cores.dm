@@ -63,7 +63,7 @@
 	name = "grey slime extract"
 	icon_state = "grey"
 	tier = 1
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 
 // ************************************************
 // ******************* TIER TWO *******************
@@ -83,7 +83,7 @@
 	name = "blue slime extract"
 	icon_state = "blue"
 	tier = 2
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 
 // Purple Extract
 
@@ -99,7 +99,7 @@
 	name = "metal slime extract"
 	icon_state = "metal"
 	tier = 2
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 
 // ************************************************
 // ****************** TIER THREE ******************
@@ -153,18 +153,16 @@
 	icon_state = "dark_blue"
 	tier = 3
 	react_reagents = list(/datum/reagent/water = 5, /datum/reagent/toxin/plasma = 5)
-	var/stasis_ready = FALSE
 
 /obj/item/slime_extract/dark_blue/activate()
 	activated = TRUE
-	stasis_ready = TRUE
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
 	desc = "An activated [initial(name)]. It can be smeared over somebody in critical condition or youself to cover them in stasis-inducing and pressure-proof slime for one minute."
 
 /obj/item/slime_extract/dark_blue/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
-	if(!ishuman(target) || !stasis_ready)
+	if(!ishuman(target) || !activated)
 		return
 
 	var/mob/living/carbon/human/victim = target
@@ -186,7 +184,7 @@
 	name = "silver slime extract"
 	icon_state = "silver"
 	tier = 3
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 
 // Yellow Extract
 
@@ -194,7 +192,7 @@
 	name = "yellow slime extract"
 	icon_state = "yellow"
 	tier = 3
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 
 // ************************************************
 // ****************** TIER FOUR *******************
@@ -214,7 +212,7 @@
 	name = "sepia slime extract"
 	icon_state = "sepia"
 	tier = 4
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 
 /obj/item/slime_extract/sepia/activate()
 	icon_state = "[initial(icon_state)]_pulsating"
@@ -231,7 +229,6 @@
 	activated = FALSE
 	new /obj/effect/timestop/small_effect(get_turf(src), 1)
 	if(uses > 0)
-		icon_state = initial(icon_state)
 		var/mob/lastheld = get_mob_by_key(fingerprintslast)
 		if(lastheld && !lastheld.equip_to_slot_if_possible(src, ITEM_SLOT_HANDS, disable_warning = TRUE))
 			forceMove(get_turf(lastheld))
@@ -251,7 +248,61 @@
 	name = "bluespace slime extract"
 	icon_state = "bluespace"
 	tier = 4
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	var/activation_x
+	var/activation_y
+	var/activation_z
+
+/obj/item/slime_extract/bluespace/activate()
+	var/turf/our_turf = get_turf(src)
+	var/area/teleport_area = get_area(src)
+	if(teleport_area.area_flags & NOTELEPORT)
+		uses += 1
+		our_turf.visible_message("[src] starts glowing but soon calms down, unable to memorise it's location.")
+		return
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. You can use it in-hand or throw it to create a one-way wormhole portal to its activation spot."
+	activated = TRUE
+	activation_x = our_turf.x
+	activation_y = our_turf.y
+	activation_z = our_turf.z
+
+/obj/item/slime_extract/bluespace/attack_self(mob/user, modifiers)
+	. = ..()
+	if(activated)
+		create_portal()
+
+/obj/item/slime_extract/bluespace/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(. || !activated) //Caught by a mob or not activated
+		return
+	create_portal()
+
+/obj/item/slime_extract/bluespace/proc/create_portal()
+	var/turf/our_turf = get_turf(src)
+	var/area/teleport_area = get_area(src)
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+
+	if(teleport_area.area_flags & NOTELEPORT || !activation_x)
+		uses += 1
+		our_turf.visible_message("[src] starts glowing but soon calms down, unable to channel the portal.")
+		return
+
+	var/turf/target_turf = locate(activation_x, activation_y, activation_z)
+	var/obj/effect/portal/slime/portal = new(our_turf, 10 SECONDS)
+	portal.linked_turf = target_turf
+
+	activation_x = null
+	activation_y = null
+	activation_z = null
+
+	if(uses <= 0)
+		use_up()
 
 // ************************************************
 // ****************** TIER FIVE *******************
@@ -263,7 +314,7 @@
 	name = "red slime extract"
 	icon_state = "red"
 	tier = 5
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/water = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 
 // Green Extract
 
@@ -271,7 +322,7 @@
 	name = "green slime extract"
 	icon_state = "green"
 	tier = 5
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5, /datum/reagent/uranium/radium = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/uranium/radium = 5)
 
 // Pink Extract
 
@@ -279,7 +330,7 @@
 	name = "pink slime extract"
 	icon_state = "pink"
 	tier = 5
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 
 /obj/item/slime_extract/pink/on_grind()
 	. = ..()
@@ -295,20 +346,16 @@
 
 /obj/item/slime_extract/pink/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
-	if(!isliving(target) || !activated)
-		return
-
-	var/mob/living/victim = target
-	if(!victim.GetComponent(/datum/component/mood))
+	if(!isliving(target) || !activated || !target.GetComponent(/datum/component/mood))
 		return
 
 	icon_state = initial(icon_state)
 	name = initial(name)
 	desc = initial(desc)
 	activated = FALSE
-	to_chat(user, span_notice("You apply [src] to [victim] and it dissolves as soon as it comes in contact with [victim.p_them()]."))
-	to_chat(victim, span_hypnophrase("A wave of heat and pleasure rolls through your body as [user] applies [src] to you!"))
-	SEND_SIGNAL(victim, COMSIG_ADD_MOOD_EVENT, "pink_extract", /datum/mood_event/pink_extract)
+	to_chat(user, span_notice("You apply [src] to [target] and it dissolves as soon as it comes in contact with [target.p_them()]."))
+	to_chat(target, span_hypnophrase("A wave of heat and pleasure rolls through your body as [user] applies [src] to you!"))
+	SEND_SIGNAL(target, COMSIG_ADD_MOOD_EVENT, "pink_extract", /datum/mood_event/pink_extract)
 
 	if(uses <= 0)
 		qdel(src)
@@ -330,6 +377,7 @@
 	name = "oil slime extract"
 	icon_state = "oil"
 	tier = 6
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 // Black Extract
 
@@ -337,7 +385,7 @@
 	name = "black slime extract"
 	icon_state = "black"
 	tier = 6
-	react_reagents = list(/datum/reagent/blood = 5, /datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	var/list/limb_transform_types = list(
 		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
 		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
@@ -394,7 +442,7 @@
 
 // Light Pink Extrat
 
-/obj/item/slime_extract/lightpink
+/obj/item/slime_extract/light_pink
 	name = "light pink slime extract"
 	icon_state = "light_pink"
 	tier = 6

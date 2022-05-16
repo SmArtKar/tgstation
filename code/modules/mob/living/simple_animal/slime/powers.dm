@@ -138,7 +138,7 @@
 
 	if(isliving(M))
 		var/mob/living/victim = M
-		if(victim.stat == DEAD)
+		if(victim.stat == DEAD && !(slime_color.slime_tags & SLIME_ATTACK_DEAD))
 			if(silent)
 				return FALSE
 			to_chat(src, span_warning("<i>This subject does not have a strong enough life energy...</i>"))

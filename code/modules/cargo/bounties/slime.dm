@@ -28,7 +28,7 @@
 
 /datum/bounty/item/slime/lightpink
 	name = "Light Pink Slime Extract"
-	wanted_types = list(/obj/item/slime_extract/lightpink = TRUE)
+	wanted_types = list(/obj/item/slime_extract/light_pink = TRUE)
 
 /datum/bounty/item/slime/adamantine
 	name = "Adamantine Slime Extract"
