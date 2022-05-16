@@ -275,9 +275,8 @@
 
 /obj/item/slime_extract/bluespace/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
-	if(. || !activated) //Caught by a mob or not activated
-		return
-	create_portal()
+	if(!. && activated) //Caught by a mob or not activated
+		create_portal()
 
 /obj/item/slime_extract/bluespace/proc/create_portal()
 	var/turf/our_turf = get_turf(src)
@@ -296,10 +295,6 @@
 	var/turf/target_turf = locate(activation_x, activation_y, activation_z)
 	var/obj/effect/portal/slime/portal = new(our_turf, 10 SECONDS)
 	portal.linked_turf = target_turf
-
-	activation_x = null
-	activation_y = null
-	activation_z = null
 
 	if(uses <= 0)
 		use_up()
@@ -446,6 +441,7 @@
 	name = "light pink slime extract"
 	icon_state = "light_pink"
 	tier = 6
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 
 // ************************************************
@@ -468,3 +464,4 @@
 	name = "biohazard slime extract"
 	icon_state = "biohazard"
 	tier = 0
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)

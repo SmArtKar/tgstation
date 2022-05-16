@@ -784,7 +784,7 @@
 /datum/status_effect/slime/oil
 	id = "oil_slime"
 	alert_type = /atom/movable/screen/alert/status_effect/oil_slime
-	effect_icon_state = "oil_slime"
+	effect_icon_state = "oil_slime_feet"
 	duration = 1 MINUTES
 
 /datum/status_effect/slime/oil/on_apply()

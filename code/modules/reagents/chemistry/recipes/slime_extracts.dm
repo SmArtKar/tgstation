@@ -494,3 +494,8 @@
 // ************************************************
 // ***************** TIER SPECIAL *****************
 // ************************************************
+
+/datum/chemical_reaction/slime/biohazard_plasma
+	required_container = /obj/item/slime_extract/special/biohazard
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	results = list(/datum/reagent/aslimetoxin = 3)

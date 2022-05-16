@@ -1223,7 +1223,7 @@
 	name = "Tuporixin"
 	description = "An extremely potent toxin created by a biohazard slime, Tuporixin is able to rapidly self-replicate after it reaches a certain threshold."
 	color = "#397A46" // rgb: 127, 132, 0
-	toxpwr = 2
+	toxpwr = 1
 	taste_mult = 5
 	taste_description = "death itself"
 	chemical_flags = REAGENT_DEAD_PROCESS | REAGENT_DONOTSPLIT
@@ -1274,7 +1274,7 @@
 		overlay_active = TRUE
 
 	if(volume < 50) //Maximum of 50 units
-		victim.reagents.add_reagent(type, min(5, volume * 0.2, 50 - volume)) //Your only hope are toxin purgers or blood filtering
+		victim.reagents.add_reagent(type, min(5, volume * 0.05, 50 - volume)) //Your only hope are toxin purgers or blood filtering
 
 	if(DT_PROB(2.5, delta_time))
 		to_chat(victim, span_userdanger("You feel your blood freezing inside your veins!"))
