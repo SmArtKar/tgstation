@@ -640,7 +640,7 @@
 
 /mob/living/simple_animal/slime/Destroy()
 	if(accessory)
-		accessory.slime_unequipped(src)
+		accessory.slime_unequipped(src, forced = TRUE)
 		accessory.forceMove(get_turf(src))
 		accessory = null
 	. = ..()

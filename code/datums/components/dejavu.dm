@@ -125,6 +125,15 @@
 	playsound(get_turf(parent), 'sound/items/modsuit/rewinder.ogg')
 	. = ..()
 
+///And for slimes as well!
+/datum/component/dejavu/slime
+	rewind_message = "You feel horribly nauseous sepia extract pulls you through space and time!"
+	no_rewinds_message = "You feel your body stabilizing as the now-spent extract finishes its job."
+
+/datum/component/dejavu/slime/rewind()
+	playsound(get_turf(parent), 'sound/magic/timeparadox2.ogg')
+	. = ..()
+
 /datum/saved_bodypart
 	var/obj/item/bodypart/old_part
 	var/bodypart_type

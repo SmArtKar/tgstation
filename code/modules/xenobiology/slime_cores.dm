@@ -213,12 +213,17 @@
 	icon_state = "sepia"
 	tier = 4
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	var/time_jump = FALSE
 
-/obj/item/slime_extract/sepia/activate()
+/obj/item/slime_extract/sepia/activate(explosive = TRUE)
 	icon_state = "[initial(icon_state)]_pulsating"
 	name = "activated [initial(name)]"
-	desc = "An activated [initial(name)]. It will soon explode into a timestop field!"
 	activated = TRUE
+	if(!explosive)
+		time_jump = TRUE
+		desc = "An activated [initial(name)]. It can be applied to pull you through space time, 10 seconds for each of it's uses."
+		return
+	desc = "An activated [initial(name)]. It will soon explode into a timestop field!"
 	addtimer(CALLBACK(src, .proc/slime_stop), 5 SECONDS)
 	playsound(get_turf(src), 'sound/magic/mandswap.ogg', 100, TRUE)
 
@@ -234,6 +239,33 @@
 			forceMove(get_turf(lastheld))
 	else
 		use_up()
+
+/obj/item/slime_extract/sepia/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!isliving(target) || !time_jump)
+		return
+
+	user.visible_message(span_warning("[user] begins applying [src] to [(target == user) ? "themselves" : target]."), span_notice("You begin applying [src] to [(target == user) ? "yourself" : target]."))
+	if(!do_after(user, 3 SECONDS, target))
+		return
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+	time_jump = FALSE
+	var/datum/component/dejavu/slime/existing_dejavu = target.GetComponent(/datum/component/dejavu/slime)
+	if(existing_dejavu)
+		playsound(target, 'sound/magic/teleport_diss.ogg', 50, TRUE)
+		existing_dejavu.rewinds_remaining += uses
+		uses = 0
+		use_up()
+		return
+
+	playsound(target, 'sound/magic/teleport_app.ogg', 50, TRUE)
+	AddComponent(/datum/component/dejavu/slime, uses + 1, 10 SECONDS)
+	uses = 0
+	use_up()
 
 // Pyrite Extract
 
@@ -372,7 +404,33 @@
 	name = "oil slime extract"
 	icon_state = "oil"
 	tier = 6
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	var/primer
+
+/obj/item/slime_extract/oil/activate()
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. It will soon explode!"
+	activated = TRUE
+	playsound(get_turf(src), 'sound/magic/mandswap.ogg', 100, TRUE)
+
+	var/turf/our_turf = get_turf(src)
+	var/touch_msg = "N/A"
+	if(fingerprintslast)
+		primer = get_mob_by_key(fingerprintslast)
+		touch_msg = "[ADMIN_LOOKUPFLW(primer)]."
+	message_admins("Slime Explosion reaction started at [ADMIN_VERBOSEJMP(our_turf)]. Last Fingerprint: [touch_msg]")
+	log_game("Slime Explosion reaction started at [AREACOORD(our_turf)]. Last Fingerprint: [fingerprintslast ? fingerprintslast : "N/A"].")
+	our_turf.visible_message(span_danger("[src] starts to vibrate violently!"))
+
+	addtimer(CALLBACK(src, .proc/slime_explosion), 5 SECONDS)
+	deltimer(qdel_timer)
+
+/obj/item/slime_extract/oil/proc/slime_explosion()
+	if(!primer)
+		primer = src
+	explosion(src, devastation_range = 1, heavy_impact_range = 3, light_impact_range = 6, explosion_cause = primer)
+	qdel(src)
 
 // Black Extract
 
@@ -435,7 +493,7 @@
 	icon_state = "adamantine"
 	tier = 6
 
-// Light Pink Extrat
+// Light Pink Extract
 
 /obj/item/slime_extract/light_pink
 	name = "light pink slime extract"

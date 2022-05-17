@@ -681,6 +681,7 @@
 	to_chat(owner, span_warning("You don't feel any healthier."))
 
 /datum/status_effect/slime
+	id = "slime_goo"
 	status_type = STATUS_EFFECT_REFRESH
 	duration = 1 MINUTES
 	var/mutable_appearance/goo_overlay
@@ -702,16 +703,15 @@
 
 /datum/status_effect/slime/proc/slime_washed()
 	SIGNAL_HANDLER
-	addtimer(CALLBACK(owner, /mob/living.proc/remove_status_effect, type), 1)
+	qdel(src)
 	return COMPONENT_CLEANED
 
 /atom/movable/screen/alert/status_effect/orange_slime
 	name = "Orange Slime"
-	desc = "You are enveloped in a layer of protective orange slime!"
+	desc = "You are enveloped in a layer of fireproof orange slime!"
 	icon_state = "orange_slime"
 
 /datum/status_effect/slime/orange
-	id = "orange_slime"
 	alert_type = /atom/movable/screen/alert/status_effect/orange_slime
 	effect_icon_state = "orange_slime"
 
@@ -726,13 +726,15 @@
 	REMOVE_TRAIT(owner, TRAIT_NOFIRE, XENOBIO_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_RESISTHEAT, XENOBIO_TRAIT)
 
+/datum/status_effect/slime/orange/get_examine_text()
+	return span_notice("[owner.p_they(TRUE)] are covered in a layer of fireproof orange slime.")
+
 /atom/movable/screen/alert/status_effect/dark_blue_slime
 	name = "Dark Blue Slime"
 	desc = "You are enveloped in a layer of stasis-inducing dark blue slime!"
 	icon_state = "dark_blue_slime"
 
 /datum/status_effect/slime/dark_blue
-	id = "dark_blue_slime"
 	alert_type = /atom/movable/screen/alert/status_effect/dark_blue_slime
 	effect_icon_state = "dark_blue_slime"
 
@@ -752,13 +754,15 @@
 	REMOVE_TRAIT(owner, TRAIT_RESISTLOWPRESSURE, XENOBIO_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_NOBREATH, XENOBIO_TRAIT)
 
+/datum/status_effect/slime/dark_blue/get_examine_text()
+	return span_notice("[owner.p_they(TRUE)] are covered in a layer of stasis-inducing dark blue slime.")
+
 /atom/movable/screen/alert/status_effect/red_slime
 	name = "Red Slime"
-	desc = "You are enveloped in a layer of red slime!"
+	desc = "You are enveloped in a layer of shiny red slime!"
 	icon_state = "red_slime"
 
 /datum/status_effect/slime/red
-	id = "red_slime"
 	alert_type = /atom/movable/screen/alert/status_effect/red_slime
 	effect_icon_state = "red_slime"
 	duration = 3 MINUTES
@@ -776,23 +780,31 @@
 	REMOVE_TRAIT(owner, TRAIT_NODISMEMBER, XENOBIO_TRAIT)
 	owner.remove_movespeed_mod_immunities(type, /datum/movespeed_modifier/equipment_speedmod)
 
+/datum/status_effect/slime/red/get_examine_text()
+	return span_notice("[owner.p_they(TRUE)] are covered in a layer of shiny red slime.")
+
 /atom/movable/screen/alert/status_effect/oil_slime
 	name = "Oil Slime"
-	desc = "Your feet are enveloped in a layer of oily slime!"
+	desc = "Your feet are enveloped in a layer of flammable oily slime!"
 	icon_state = "oil_slime"
 
 /datum/status_effect/slime/oil
-	id = "oil_slime"
 	alert_type = /atom/movable/screen/alert/status_effect/oil_slime
 	effect_icon_state = "oil_slime_feet"
-	duration = 1 MINUTES
+	tick_interval = 1
+
+/datum/status_effect/slime/oil/tick(delta_time, times_fired)
+	if(owner.fire_stacks >= 3)
+		return
+	owner.adjust_fire_stacks(3 - owner.fire_stacks, /datum/status_effect/fire_handler/fire_stacks/oil)
 
 /datum/status_effect/slime/oil/on_apply()
 	. = ..()
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, .proc/on_moved)
+	RegisterSignal(owner, COMSIG_LIVING_IGNITED, .proc/slime_washed)
 
 /datum/status_effect/slime/oil/on_remove()
-	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+	UnregisterSignal(owner, list(COMSIG_MOVABLE_MOVED, COMSIG_LIVING_IGNITED))
 
 /datum/status_effect/slime/oil/proc/on_moved(datum/source, old_loc)
 	SIGNAL_HANDLER
@@ -800,3 +812,28 @@
 		return
 
 	new /obj/effect/decal/cleanable/oil_pool(owner.loc)
+
+/datum/status_effect/slime/oil/get_examine_text()
+	return span_notice("[owner.p_their(TRUE)] feet are covered in a layer of flammable oily slime.")
+
+/atom/movable/screen/alert/status_effect/adamantine_slime
+	name = "Adamantine Slime"
+	desc = "You are enveloped in a layer of thick and heavy adamantine slime!"
+	icon_state = "red_slime"
+
+/datum/status_effect/slime/adamantine
+	alert_type = /atom/movable/screen/alert/status_effect/adamantine_slime
+	effect_icon_state = "adamantine_slime"
+	duration = 3 MINUTES
+
+/datum/status_effect/slime/adamantine/on_apply()
+	. = ..()
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/adamantine_slime)
+	owner.physiology.damage_resistance += 25
+
+/datum/status_effect/slime/adamantine/on_remove()
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/adamantine_slime)
+	owner.physiology.damage_resistance -= 25
+
+/datum/status_effect/slime/adamantine/get_examine_text()
+	return span_notice("[owner.p_they(TRUE)] are covered in a thick layer of heavy adamantine slime.")

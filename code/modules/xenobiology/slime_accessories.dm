@@ -10,7 +10,7 @@
 	owner.regenerate_icons()
 	return TRUE
 
-/obj/item/slime_accessory/proc/slime_unequipped(mob/living/former_owner)
+/obj/item/slime_accessory/proc/slime_unequipped(mob/living/former_owner, forced = FALSE)
 	former_owner.regenerate_icons()
 	owner = null
 	return TRUE
@@ -29,7 +29,7 @@
 	. = ..()
 	RegisterSignal(new_owner, COMSIG_MOB_SAY, .proc/handle_speech)
 
-/obj/item/slime_accessory/translator/slime_unequipped(mob/living/simple_animal/slime/former_owner)
+/obj/item/slime_accessory/translator/slime_unequipped(mob/living/simple_animal/slime/former_owner, forced = FALSE)
 	. = ..()
 	UnregisterSignal(former_owner, COMSIG_MOB_SAY)
 
@@ -50,7 +50,7 @@
 	if(istype(new_owner.slime_color, /datum/slime_color/rainbow) && equipper.client)
 		equipper.client.give_award(/datum/award/achievement/misc/rainbow_king, equipper)
 
-/obj/item/slime_accessory/crown/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
+/obj/item/slime_accessory/crown/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null, forced = FALSE)
 	. = ..()
 	REMOVE_TRAIT(former_owner, TRAIT_SLIME_KING, SLIME_ACCESSORY_TRAIT)
 	former_owner.remove_moodlet(/datum/slime_moodlet/crowned)
@@ -66,7 +66,7 @@
 	new_owner.visible_message(span_notice("[new_owner] seems to like [src] and blorbles happily."))
 	new_owner.apply_moodlet(/datum/slime_moodlet/friendship_necklace)
 
-/obj/item/slime_accessory/friendship_necklace/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
+/obj/item/slime_accessory/friendship_necklace/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null, forced = FALSE)
 	. = ..()
 	former_owner.add_friendship(equipper, -5)
 	former_owner.visible_message(span_warning("[former_owner] tries to hold onto [former_owner.p_their()] [name] as it's being removed by [equipper]!"))
@@ -89,5 +89,7 @@
 	owner.add_overlay(nanite_overlay)
 	owner.update_icon()
 
-/obj/item/slime_accessory/demorpher/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null)
+/obj/item/slime_accessory/demorpher/slime_unequipped(mob/living/simple_animal/slime/former_owner, mob/living/equipper = null, forced = FALSE)
+	if(forced)
+		return ..()
 	return FALSE

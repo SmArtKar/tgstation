@@ -93,6 +93,10 @@
 
 	var/obj/item/slime_extract/extract = target
 
+	if(extract.uses <= 0 && !extract.activated)
+		to_chat(user, span_warning("[extract]'s power is already spent and even [src] can't restore it!"))
+		return
+
 	if(extract.uses >= 5)
 		to_chat(user, span_warning("You cannot enhance [extract] further!"))
 		return

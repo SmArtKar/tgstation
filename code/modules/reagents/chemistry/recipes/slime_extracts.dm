@@ -334,9 +334,22 @@
 	var/obj/item/slime_extract/sepia/extract = holder.my_atom
 	if(!istype(extract) || extract.activated)
 		return
-	extract.activate()
+	extract.activate(explosive = TRUE)
 	return ..()
 
+/datum/chemical_reaction/slime/sepia_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/sepia
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/sepia_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/sepia/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate(explosive = FALSE)
+	return ..()
+
+// Cerulean
 
 /datum/chemical_reaction/slime/cerulean_plasma
 	required_container = /obj/item/slime_extract/cerulean
@@ -444,8 +457,21 @@
 /datum/chemical_reaction/slime/oil_plasma
 	required_container = /obj/item/slime_extract/oil
 	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	deletes_extract = FALSE
+	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_SLIME | REACTION_TAG_DANGEROUS
 
 /datum/chemical_reaction/slime/oil_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/oil/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	return ..()
+
+/datum/chemical_reaction/slime/oil_blood
+	required_container = /obj/item/slime_extract/oil
+	required_reagents = list(/datum/reagent/blood = 1)
+
+/datum/chemical_reaction/slime/oil_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/atom/cycle_loc = holder.my_atom
 	while(!isturf(cycle_loc) && !ishuman(cycle_loc))
 		cycle_loc = cycle_loc.loc
@@ -489,6 +515,34 @@
 
 /datum/chemical_reaction/slime/light_pink_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/slime_potion/sentience(get_turf(holder.my_atom))
+	return ..()
+
+/// Adamantine
+
+/datum/chemical_reaction/slime/adamantine_plasma
+	required_container = /obj/item/slime_extract/adamantine
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/adamantine_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/stack/sheet/mineral/adamantine(get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/adamantine_blood
+	required_container = /obj/item/slime_extract/adamantine
+	required_reagents = list(/datum/reagent/blood = 1)
+
+/datum/chemical_reaction/slime/adamantine_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/atom/cycle_loc = holder.my_atom
+	while(!isturf(cycle_loc) && !ishuman(cycle_loc))
+		cycle_loc = cycle_loc.loc
+
+	if(!ishuman(cycle_loc))
+		cycle_loc.visible_message(span_warning("[holder.my_atom] starts to expand, but fails to find something to latch onto and deflates!"))
+		deletes_extract = FALSE
+		return ..()
+
+	var/mob/living/carbon/human/owner = cycle_loc
+	owner.apply_status_effect(/datum/status_effect/slime/adamantine)
 	return ..()
 
 // ************************************************
