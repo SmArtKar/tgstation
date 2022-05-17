@@ -193,7 +193,7 @@
 #define PYRITE_SLIME_MAX_FIERY_CHARGE 25
 
 /// Maximum safe pressure for cerulean slimes
-#define CERULEAN_SLIME_MAX_SAFE_PRESSURE 15
+#define CERULEAN_SLIME_MAX_SAFE_PRESSURE 5
 /// Cooldown between cerulean slime lunges
 #define CERULEAN_SLIME_LUNGE_COOLDOWN 16 SECONDS
 /// How likely it is for a cerulean slime to use TK when it's requirements are satisfied

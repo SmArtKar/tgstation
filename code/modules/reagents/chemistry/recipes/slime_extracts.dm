@@ -30,6 +30,16 @@
 	if(!results.len) //if the slime doesn't output chemicals
 		qdel(M)
 
+/datum/chemical_reaction/slime/proc/attempt_balloon(balloon_text, datum/reagents/holder)
+	var/atom/cycle_loc = holder.my_atom
+	while(!isturf(cycle_loc) && !ishuman(cycle_loc))
+		cycle_loc = cycle_loc.loc
+
+	if(!isliving(cycle_loc))
+		return
+
+	cycle_loc.balloon_alert(cycle_loc, balloon_text)
+
 /datum/chemical_reaction/slime/biohazard
 	required_container = /obj/item/slime_extract
 	required_reagents = list(/datum/reagent/toxin/tuporixin = 1)
@@ -226,6 +236,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate()
+	attempt_balloon("ready for application", holder)
 	return ..()
 
 /datum/chemical_reaction/slime/dark_blue_blood
@@ -356,6 +367,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate()
+	attempt_balloon("ready for application", holder)
 	return ..()
 
 // Green
@@ -402,6 +414,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate()
+	attempt_balloon("ready for usage or throwing", holder)
 	return ..()
 
 /datum/chemical_reaction/slime/bluespace_water
@@ -424,6 +437,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate(explosive = TRUE)
+	attempt_balloon("timestop in 5 seconds!", holder)
 	return ..()
 
 /datum/chemical_reaction/slime/sepia_blood
@@ -436,6 +450,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate(explosive = FALSE)
+	attempt_balloon("ready for application", holder)
 	return ..()
 
 // Cerulean
@@ -446,6 +461,19 @@
 
 /datum/chemical_reaction/slime/cerulean_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/slime_potion/enhancer(get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/cerulean_blood
+	required_container = /obj/item/slime_extract/cerulean
+	required_reagents = list(/datum/reagent/blood = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/cerulean_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/cerulean/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	attempt_balloon("ready for throwing", holder)
 	return ..()
 
 // ************************************************
@@ -465,6 +493,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate()
+	attempt_balloon("explosion in 5 seconds!")
 	return ..()
 
 /datum/chemical_reaction/slime/oil_blood
@@ -505,6 +534,7 @@
 	if(!istype(extract) || extract.activated)
 		return
 	extract.activate()
+	attempt_balloon("ready for application", holder)
 	return ..()
 
 /// Light Pink

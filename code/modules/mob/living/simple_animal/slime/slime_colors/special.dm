@@ -10,6 +10,42 @@
 	slime_tags = SLIME_HOT_LOVING | SLIME_NO_RANDOM_SPAWN | SLIME_ATTACK_SLIMES | SLIME_WATER_WEAKNESS
 	environmental_req = "Non-standard slime located. Subject can manipulate flames and ignite it's targets on attack."
 
+/datum/slime_color/fiery/New(mob/living/simple_animal/slime/slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/fiery_attack)
+	//RegisterSignal(slime, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, .proc/fireball)
+
+/datum/slime_color/fiery/remove()
+	UnregisterSignal(slime, list(COMSIG_SLIME_ATTACK_TARGET, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK))
+
+/datum/slime_color/fiery/proc/fiery_attack(datum/source, atom/attack_target)
+	SIGNAL_HANDLER
+
+	if(!isliving(attack_target))
+		return
+
+	var/mob/living/victim = attack_target
+	if(victim.fire_stacks >= 3)
+		return
+
+	victim.adjust_fire_stacks(3)
+	victim.ignite_mob()
+
+/datum/slime_color/fiery/Life(delta_time, times_fired)
+	. = ..()
+
+	if(!HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+		ADD_TRAIT(slime, TRAIT_SLIME_RABID, "fiery_slime")
+
+	if(!DT_PROB(20, delta_time))
+		return
+
+	for(var/mob/living/victim in range(1, src))
+		if(victim.fire_stacks < 2)
+			victim.adjust_fire_stacks(2)
+			victim.ignite_mob()
+			to_chat(victim, span_userdanger("You are set ablaze by [slime]'s heat!"))
+
 /datum/slime_color/biohazard
 	color = "biohazard"
 	coretype = /obj/item/slime_extract/special/biohazard

@@ -194,11 +194,15 @@
 	if(fiery_charge <= 0)
 		return
 
-	if(isliving(attack_target))
-		var/mob/living/victim = attack_target
-		if(victim.fire_stacks < 3)
-			victim.adjust_fire_stacks(3)
-			victim.ignite_mob()
+	if(!isliving(attack_target))
+		return
+
+	var/mob/living/victim = attack_target
+	if(victim.fire_stacks >= 3)
+		return
+
+	victim.adjust_fire_stacks(3)
+	victim.ignite_mob()
 
 /datum/slime_color/pyrite/proc/possible_freeze(mob/living/simple_animal/slime/dead_body)
 	SIGNAL_HANDLER
@@ -215,7 +219,7 @@
 
 /datum/slime_color/pyrite/Life(delta_time, times_fired)
 	. = ..()
-	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) || DT_PROB(25, delta_time))
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) || DT_PROB(5, delta_time))
 		for(var/mob/living/victim in range(1, src))
 			if(victim.fire_stacks < 2)
 				victim.adjust_fire_stacks(2)

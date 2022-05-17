@@ -267,7 +267,25 @@
 	name = "cerulean slime extract"
 	icon_state = "cerulean"
 	tier = 5
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+
+/obj/item/slime_extract/cerulean/activate()
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. You can throw it at a wall and the extract will stick onto it, creating a proximity slime trap which will jump at whoever triggers them, significantly slowing them. Thrower won't trigger the trap."
+	activated = TRUE
+
+/obj/item/slime_extract/cerulean/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(!activated || !isclosedturf(hit_atom))
+		return
+
+	if(!throwingdatum || !throwingdatum.thrower || !isliving(throwingdatum.thrower))
+		return
+
+	new /obj/item/restraints/legcuffs/bola/slime_trap(get_turf(src), get_dir(get_turf(src), hit_atom), throwingdatum.thrower, uses)
+	visible_message(span_notice("[src] sticks to [hit_atom], forming a small blob-like booby trap!"))
+	qdel(src)
 
 // Sepia Extract
 
