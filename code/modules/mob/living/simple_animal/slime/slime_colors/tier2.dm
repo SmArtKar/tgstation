@@ -1,7 +1,7 @@
 /datum/slime_color/purple
 	color = "purple"
 	coretype = /obj/item/slime_extract/purple
-	mutations = list(/datum/slime_color/dark_blue, /datum/slime_color/dark_purple, /datum/slime_color/green, /datum/slime_color/green)
+	mutations = list(/datum/slime_color/dark_blue = 1, /datum/slime_color/dark_purple = 1, /datum/slime_color/green = 1)
 	food_types = list(/obj/item/food/xenoflora/broombush = 1)
 	slime_tags = SLIME_ATTACK_SLIMES
 
@@ -60,7 +60,7 @@
 /datum/slime_color/blue
 	color = "blue"
 	coretype = /obj/item/slime_extract/blue
-	mutations = list(/datum/slime_color/dark_blue, /datum/slime_color/silver, /datum/slime_color/pink, /datum/slime_color/pink)
+	mutations = list(/datum/slime_color/dark_blue = 1, /datum/slime_color/silver = 1, /datum/slime_color/pink = 1)
 	temperature_modifier = TCRYO
 	food_types = list(/obj/item/food/xenoflora/cubomelon = 4, /obj/item/food/xenoflora/cubomelon_slice = 1)
 	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
@@ -92,7 +92,7 @@
 /datum/slime_color/metal
 	color = "metal"
 	coretype = /obj/item/slime_extract/metal
-	mutations = list(/datum/slime_color/yellow, /datum/slime_color/silver, /datum/slime_color/gold, /datum/slime_color/gold)
+	mutations = list(/datum/slime_color/yellow = 1, /datum/slime_color/silver = 1, /datum/slime_color/gold = 1)
 	food_types = list(/mob/living/basic/cockroach/rockroach = 4, /obj/item/rockroach_shell = 0.2)
 	environmental_req = "Subject requires CO2 in the atmosphere."
 
@@ -109,7 +109,7 @@
 /datum/slime_color/orange
 	color = "orange"
 	coretype = /obj/item/slime_extract/orange
-	mutations = list(/datum/slime_color/yellow, /datum/slime_color/dark_purple, /datum/slime_color/red, /datum/slime_color/red)
+	mutations = list(/datum/slime_color/yellow = 1, /datum/slime_color/dark_purple = 1, /datum/slime_color/red = 1)
 	food_types = list()
 	environmental_req = "Subject requires temperatures higher than 60° Celsius."
 	slime_tags = SLIME_HOT_LOVING

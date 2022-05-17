@@ -5,6 +5,7 @@
 	var/icon_color //In case we have two or three words as our color
 	var/coretype = /obj/item/slime_extract
 	var/list/mutations
+	var/mutation_modifier = 1
 	var/list/food_types = list() //Mob nutrition value is based on their health, while items' is always the same and only depends on the coeff
 	var/temperature_modifier = T0C
 	var/environmental_req

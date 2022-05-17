@@ -1,233 +1,292 @@
-/datum/slime_color/red
-	color = "red"
-	coretype = /obj/item/slime_extract/red
-	mutations = list(/datum/slime_color/red, /datum/slime_color/red, /datum/slime_color/oil, /datum/slime_color/oil)
-	slime_tags = SLIME_BZ_IMMUNE | SLIME_WATER_RESISTANCE
+/datum/slime_color/cerulean
+	color = "cerulean"
+	coretype = /obj/item/slime_extract/cerulean
+	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_WATER_RESISTANCE
+	environmental_req = "Subject has telekinetic capabilities and requires vacuum to survive."
+	var/slime_flying = FALSE
+	COOLDOWN_DECLARE(lunge_cooldown)
 
-	environmental_req = "Subject is quite violent and will become rabid when hungry, causing all red slimes around it to also go rabid."
+/datum/slime_color/cerulean/New(slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_MOVABLE_IMPACT, .proc/successful_lunge)
+	RegisterSignal(slime, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, .proc/attempt_lunge)
 
-/datum/slime_color/red/Life(delta_time, times_fired)
+/datum/slime_color/cerulean/remove()
+	UnregisterSignal(slime, list(COMSIG_MOVABLE_IMPACT, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK))
+
+/datum/slime_color/cerulean/Life(delta_time, times_fired)
+	. = ..()
+
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	if(our_mix.return_pressure() < CERULEAN_SLIME_MAX_SAFE_PRESSURE)
+		ADD_TRAIT(slime, TRAIT_SPACEWALK, INNATE_TRAIT)
+		fitting_environment = TRUE
+		temperature_modifier = -11 //Space-walking slimes! -11 because slimes get slowed down on temperature_modifier + 10
+		handle_telekinesis(delta_time, times_fired, FALSE)
+		slime.adjustBruteLoss(CERULEAN_SLIME_VACUUM_HEALING * delta_time) //Slow spess healing
+		return
+
+	REMOVE_TRAIT(slime, TRAIT_SPACEWALK, INNATE_TRAIT)
+	temperature_modifier = initial(temperature_modifier) //Or not so much
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
+	handle_telekinesis(delta_time, times_fired, TRUE)
+
+/datum/slime_color/cerulean/proc/attempt_lunge(datum/source, atom/target)
+	SIGNAL_HANDLER
+
+	if(!COOLDOWN_FINISHED(src, lunge_cooldown) || !isliving(target))
+		return
+
+	if(get_dist(slime, target) <= 1) //No bullshit melee knockdowns
+		return
+
+	for(var/turf/lunge_turf in get_line(slime, target))
+		if(lunge_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE))
+			return
+
+	COOLDOWN_START(src, lunge_cooldown, CERULEAN_SLIME_LUNGE_COOLDOWN)
+	slime.visible_message(span_warning("[slime] lunges at [target]!"), span_notice("You lunge at [target]!"))
+	slime.throw_at(target, 7, 1, src, FALSE)
+
+/datum/slime_color/cerulean/proc/successful_lunge(datum/source, atom/hit_atom, datum/thrownthing/throwingdatum)
+	SIGNAL_HANDLER
+
+	if(!isliving(hit_atom))
+		return
+
+	var/mob/living/victim = hit_atom
+	to_chat(victim, span_userdanger("You are knocked down by [src]'s lunge!"))
+	victim.Knockdown(8 SECONDS)
+	victim.Paralyze(4 SECONDS)
+
+/datum/slime_color/cerulean/proc/handle_telekinesis(delta_time, times_fired, agressive)
+	if(!DT_PROB(agressive ? CERULEAN_SLIME_AGRESSIVE_TELEKINESIS_CHANCE : CERULEAN_SLIME_TELEKINESIS_CHANCE, delta_time))
+		return
+
+	var/list/openable_airlocks = list()
+	for(var/obj/machinery/door/firedoor/firelock in view(9, slime))
+		if(!firelock.powered() && !firelock.welded && firelock.density)
+			openable_airlocks += firelock
+
+	for(var/obj/machinery/door/window/windoor in view(9, slime))
+		if(!windoor.powered() && windoor.density)
+			openable_airlocks += windoor
+
+	for(var/obj/machinery/door/airlock/airlock in view(9, slime))
+		if(!airlock.powered() && !airlock.welded && !airlock.locked && airlock.density)
+			openable_airlocks += airlock
+
+	if(LAZYLEN(openable_airlocks)) //Allows for much more agressive AI targeting and pathfinding
+		var/obj/machinery/door/door_to_open = pick(openable_airlocks)
+		door_to_open.visible_message(span_warning("[door_to_open] is pried open by an invisible force!"))
+		door_to_open.open(2)
+		for(var/turf/open/open_turf in range(2, door_to_open))
+			if(prob(20))
+				new /obj/effect/temp_visual/cerulean_sparkles(open_turf)
+		return
+
+	var/list/throwable_objects = list()
+	var/list/throwable_weights = list()
+	for(var/obj/possible_throw in view(9, get_turf(slime)))
+		if(possible_throw.anchored)
+			continue
+
+		var/list/possible_targets = list()
+		var/target_weight = 0
+		for(var/mob/living/possible_target in view(5, get_turf(possible_throw)))
+			if(isslime(possible_target))
+				continue
+
+			for(var/turf/turf_in_line in get_line(get_turf(possible_throw), get_turf(possible_target)))
+				if(turf_in_line.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE))
+					continue
+				possible_targets[possible_target] = (6 - get_dist(possible_throw, possible_target)) * (2 - !(possible_target.client))
+				target_weight += (6 - get_dist(possible_throw, possible_target)) * (2 - !(possible_target.client))
+
+		if(!target_weight)
+			continue
+
+		throwable_objects[possible_throw] = possible_targets
+		throwable_weights[possible_throw] = target_weight * possible_throw.throwforce
+
+	if(!LAZYLEN(throwable_weights))
+		return
+
+	var/obj/throwable = pick_weight(throwable_weights)
+	new /obj/effect/temp_visual/cerulean_sparkles(get_turf(throwable))
+	throwable.throw_at(pick_weight(throwable_objects[throwable]), 9, 1, slime)
+
+/datum/slime_color/sepia
+	color = "sepia"
+	coretype = /obj/item/slime_extract/sepia
+	environmental_req = "Subject has time-manipulating capabilities that can be supressed by BZ."
+	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_BZ_IMMUNE
+	var/can_timestop = TRUE
+
+/datum/slime_color/sepia/New(mob/living/simple_animal/slime/slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/timestop_attack)
+	ADD_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
+
+/datum/slime_color/sepia/remove()
+	UnregisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET)
+	REMOVE_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
+
+/datum/slime_color/sepia/proc/timestop_attack(datum/source, atom/attack_target)
+	SIGNAL_HANDLER
+
+	if(!can_timestop || !prob(SEPIA_SLIME_ATTACK_TIMESTOP_CHANCE) || !isliving(attack_target) || !fitting_environment)
+		return
+
+	new /obj/effect/timestop/small_effect(get_turf(attack_target), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(slime))
+	can_timestop = FALSE
+	addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
+
+/datum/slime_color/sepia/Life(delta_time, times_fired)
 	. = ..()
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
-	var/bz_percentage =0
-	if(our_mix.gases[/datum/gas/bz])
-		bz_percentage = our_mix.gases[/datum/gas/bz][MOLES] / our_mix.total_moles()
 
-	var/turf/current_turf = get_turf(slime)
-	var/slime_turf = FALSE
-	if(istype(current_turf, /turf/closed/wall/slime) || istype(current_turf, /turf/open/misc/slime))
-		slime_turf = TRUE
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) && can_timestop)
+		new /obj/effect/timestop/small_effect(get_turf(slime), 1, SEPIA_SLIME_TIMESTOP_DURATION, list(slime))
+		can_timestop = FALSE
+		addtimer(CALLBACK(src, .proc/recover_from_timestop), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
 
-	var/stasis = (bz_percentage >= 0.05 && slime.bodytemperature < (temperature_modifier + 100) && !(slime_tags & SLIME_BZ_IMMUNE) && !slime_turf)
-	if(stasis)
-		slime.powerlevel = 0
-		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, null) //Can be calmed by BZ but not stasis-ed
-
-	if(DT_PROB(65, delta_time) && slime.nutrition > slime.get_hunger_nutrition() + 100) //Even snowflakier because of hunger
-		slime.adjust_nutrition(-1 * (1 + slime.is_adult))
-
-	for(var/mob/living/simple_animal/slime/friend in view(5, get_turf(slime)))
-		if(friend.slime_color.type != type)
-			continue
-
-		if(friend.nutrition <= friend.get_hunger_nutrition() - 100)
-			fitting_environment = FALSE
-			if(!slime.docile)
-				ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
-			return
-
-	if(slime.nutrition > slime.get_hunger_nutrition() - 100) //Both we and our friends are happy
+	if(our_mix.gases[/datum/gas/bz] && our_mix.gases[/datum/gas/bz][MOLES] > SEPIA_SLIME_BZ_REQUIRED)
 		fitting_environment = TRUE
-		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
+		our_mix.remove_specific(/datum/gas/bz, SEPIA_SLIME_BZ_CONSUME * delta_time)
 		return
 
 	fitting_environment = FALSE
-	if(!slime.docile)
-		ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
+	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
 
-/datum/slime_color/green
-	color = "green"
-	coretype = /obj/item/slime_extract/green
-	mutations = list(/datum/slime_color/green, /datum/slime_color/green, /datum/slime_color/black, /datum/slime_color/black)
-	slime_tags = SLIME_DISCHARGER_WEAKENED
-	var/mimicking = FALSE
+	if(!can_timestop)
+		return
 
-/datum/slime_color/green/New(mob/living/simple_animal/slime/slime)
+	if(DT_PROB(SEPIA_SLIME_TIMESTOP_CHANCE, delta_time))
+		can_timestop = FALSE
+		REMOVE_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
+		new /obj/effect/timestop/small_effect(get_turf(slime), 1, SEPIA_SLIME_TIMESTOP_DURATION, list()) //Freezes the slime as well
+		addtimer(CALLBACK(src, .proc/recover_from_timestop, TRUE), SEPIA_SLIME_TIMESTOP_DURATION + SEPIA_SLIME_TIMESTOP_RECOVERY)
+
+/datum/slime_color/sepia/proc/recover_from_timestop(regain_immunity = FALSE)
+	can_timestop = TRUE
+	if(regain_immunity)
+		ADD_TRAIT(slime, TRAIT_TIMESTOP_IMMUNE, XENOBIO_TRAIT)
+
+/datum/slime_color/pyrite /// I think you can farm these without pyrite launchers, but having a burn chamber in xenobio is not really a great idea
+	color = "pyrite"
+	coretype = /obj/item/slime_extract/pyrite
+	environmental_req = "Subject requires high temperatures(above 480° Celsius) or active fires to survive. If subject dies in low temperatures it will freeze and become unrevivable."
+	slime_tags = SLIME_HOT_LOVING | SLIME_WATER_WEAKNESS
+	var/fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE
+
+/datum/slime_color/pyrite/New(mob/living/simple_animal/slime/slime)
 	. = ..()
-	RegisterSignal(slime, COMSIG_SLIME_REGENERATE_ICONS, .proc/can_regenerate_icons)
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/exit_stealth)
+	RegisterSignal(slime, COMSIG_LIVING_DEATH, .proc/possible_freeze)
+	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/fiery_attack)
 
-/datum/slime_color/green/remove()
-	UnregisterSignal(slime, list(COMSIG_SLIME_REGENERATE_ICONS, COMSIG_SLIME_ATTACK_TARGET))
+/datum/slime_color/pyrite/remove()
+	UnregisterSignal(slime, list(COMSIG_LIVING_DEATH, COMSIG_SLIME_ATTACK_TARGET))
 
-/datum/slime_color/green/Life(delta_time, times_fired)
+/datum/slime_color/pyrite/proc/fiery_attack(datum/source, atom/attack_target)
+	SIGNAL_HANDLER
+
+	if(fiery_charge <= 0)
+		return
+
+	if(isliving(attack_target))
+		var/mob/living/victim = attack_target
+		if(victim.fire_stacks < 3)
+			victim.adjust_fire_stacks(3)
+			victim.ignite_mob()
+
+/datum/slime_color/pyrite/proc/possible_freeze(mob/living/simple_animal/slime/dead_body)
+	SIGNAL_HANDLER
+
+	var/turf/our_turf = get_turf(slime)
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	if(our_mix?.temperature >= PYRITE_SLIME_COMFORTABLE_TEMPERATURE || (locate(/obj/effect/hotspot) in our_turf))
+		return
+
+	slime.name = "frozen [slime.name]"
+	slime.add_atom_colour(GLOB.freon_color_matrix, TEMPORARY_COLOUR_PRIORITY)
+	slime.alpha -= 25
+	ADD_TRAIT(slime, TRAIT_NO_REVIVE, XENOBIO_TRAIT)
+
+/datum/slime_color/pyrite/Life(delta_time, times_fired)
 	. = ..()
-	if(slime.accessory && istype(slime.accessory, /obj/item/slime_accessory/demorpher))
+	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time) || DT_PROB(25, delta_time))
+		for(var/mob/living/victim in range(1, src))
+			if(victim.fire_stacks < 2)
+				victim.adjust_fire_stacks(2)
+				victim.ignite_mob()
+				to_chat(victim, span_userdanger("You are set ablaze by [slime]'s heat!"))
+
+	var/turf/our_turf = get_turf(slime)
+	var/datum/gas_mixture/our_mix = slime.loc.return_air()
+	if(our_mix?.temperature >= PYRITE_SLIME_COMFORTABLE_TEMPERATURE || (locate(/obj/effect/hotspot) in our_turf))
 		fitting_environment = TRUE
-		if(mimicking)
-			exit_stealth()
+		fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE
+		return
+
+	if(fiery_charge > 0)
+		fiery_charge = max(0, fiery_charge - delta_time)
+		fitting_environment = TRUE
 		return
 
 	fitting_environment = FALSE
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
+	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * get_passive_damage_modifier())
 
-	if(mimicking)
-		if(DT_PROB(GREEN_SLIME_UNMIMICK_CHANCE, delta_time))
-			exit_stealth()
-		return
+/datum/slime_color/bluespace //These will either kill themselves, get stuck and are generally just hard to contain but don't have any combat abilities so no damage for them.
+	color = "bluespace"
+	coretype = /obj/item/slime_extract/bluespace
+	slime_tags = SLIME_WATER_RESISTANCE
+	environmental_req = "Subject is spartially unstable and will phase through obstacles unless forcefully anchored in bluespace."
 
-	if(DT_PROB(GREEN_SLIME_MIMICK_CHANCE, delta_time))
-		var/possible_mimicks = list()
-
-		for(var/mob/living/possible_target in view(GREEN_SLIME_MIMICK_RANGE, get_turf(slime)))
-			if(possible_target.alpha > 0 && possible_target.invisibility <= slime.see_invisible) // No funny ghost/ninja slimes
-				possible_mimicks[possible_target] = (iscarbon(possible_target) ? GREEN_SLIME_HUMAN_MIMICK_WEIGHT : 1)
-
-		for(var/obj/possible_target in view(GREEN_SLIME_MIMICK_RANGE, get_turf(slime)))
-			if(possible_target.alpha > 0 && possible_target.invisibility <= slime.see_invisible && !(possible_target.bound_width > 32 || possible_target.bound_height > 32)) // And no funny walking xenoflora pods
-				possible_mimicks[possible_target] = 1
-
-		enter_stealth(pick_weight(possible_mimicks))
-
-/datum/slime_color/green/proc/enter_stealth(atom/target)
-	if(mimicking)
-		return
-	mimicking = TRUE
-
-	slime.visible_message(span_warning("[slime] suddenly twists and changes shape, becoming a copy of [target]!"), \
-					span_notice("You twist your body and assume the form of [target]."))
-	slime.appearance = target.appearance
-	slime.copy_overlays(target)
-	slime.alpha = max(slime.alpha, 150)
-	slime.transform = initial(slime.transform)
-	slime.pixel_y = slime.base_pixel_y
-	slime.pixel_x = slime.base_pixel_x
-
-	slime.melee_damage_lower += GREEN_SLIME_MIMICK_DAMAGE_BOOST
-	slime.melee_damage_upper += GREEN_SLIME_MIMICK_DAMAGE_BOOST
-
-/datum/slime_color/green/proc/exit_stealth()
-	if(!mimicking)
-		return
-	mimicking = FALSE
-	slime.alpha = initial(slime.alpha)
-	slime.color = initial(slime.color)
-	slime.desc = initial(slime.desc)
-	slime.name = initial(slime.name)
-	slime.icon = initial(slime.icon)
-	slime.regenerate_icons()
-	slime.update_name()
-
-	slime.animate_movement = SLIDE_STEPS
-	slime.maptext = null
-
-	slime.visible_message(span_warning("[slime] suddenly collapses in on itself, dissolving into a pile of green slime!"), \
-					span_notice("You reform to your normal body."))
-	//Baseline stats
-	slime.melee_damage_lower = initial(slime.melee_damage_lower)
-	slime.melee_damage_upper = initial(slime.melee_damage_upper)
-
-/datum/slime_color/green/proc/can_regenerate_icons(datum/source)
-	SIGNAL_HANDLER
-
-	if(mimicking)
-		return COMPONENT_SLIME_NO_ICON_REGENERATION
-
-/datum/slime_color/pink
-	color = "pink"
-	coretype = /obj/item/slime_extract/pink
-	mutations = list(/datum/slime_color/pink, /datum/slime_color/pink, /datum/slime_color/light_pink, /datum/slime_color/light_pink)
-	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_NO_REQUIREMENT_MOOD_LOSS
-
-/datum/slime_color/pink/Life(delta_time, times_fired)
+/datum/slime_color/bluespace/New(mob/living/simple_animal/slime/slime)
 	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_SQUEESING_ATTEMPT, .proc/handle_teleport)
 
-	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
-		new /obj/effect/temp_visual/annoyed/slime(get_turf(slime))
-		start_hallucinations()
+/datum/slime_color/bluespace/remove()
+	UnregisterSignal(slime, COMSIG_SLIME_SQUEESING_ATTEMPT)
 
-	var/slime_amount = 0
-	for(var/mob/living/simple_animal/slime/other_slime in view(3, get_turf(slime)))
-		if(other_slime != slime && istype(other_slime.slime_color, type))
-			slime_amount += 1
-
-	var/plushie_amount = 0
-	for(var/obj/item/giant_slime_plushie/plush in view(3, get_turf(slime)))
-		plushie_amount += 1
-		if(plushie_amount >= 1 + round(slime_amount / (2 + (slime.accessory && istype(slime.accessory, /obj/item/slime_accessory/friendship_necklace))))) //Friendship necklace lowers requirements
-			fitting_environment = TRUE
-			return
-
-	plushie_amount = 0
-	for(var/obj/item/toy/plush/plush in view(3, get_turf(slime)))
-		if(istype(plush, /obj/item/toy/plush/slimeplushie)) //Twice as fun
-			plushie_amount += 2
-		else
-			plushie_amount += 1
-
-		if(plushie_amount >= (PINK_SLIME_PLUSHIE_REQUIREMENT + slime_amount) / (1 + (slime.accessory && istype(slime.accessory, /obj/item/slime_accessory/friendship_necklace))))
-			fitting_environment = TRUE
-			return
-
-	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
-	new /obj/effect/temp_visual/annoyed/slime(get_turf(slime))
-	if(DT_PROB(PINK_SLIME_HALLUCINATION_CHANCE, delta_time))
-		start_hallucinations()
-
-/datum/slime_color/pink/proc/start_hallucinations()
-	for(var/mob/living/carbon/possible_sentient in view(9, get_turf(slime)))
-		if(!possible_sentient.client)
-			continue
-
-		possible_sentient.apply_status_effect(/datum/status_effect/slime_hallucinations)
-
-/datum/slime_color/gold
-	color = "gold"
-	coretype = /obj/item/slime_extract/gold
-	mutations = list(/datum/slime_color/gold, /datum/slime_color/gold, /datum/slime_color/adamantine, /datum/slime_color/adamantine)
-	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_ATTACK_SLIMES | SLIME_WATER_RESISTANCE
-
-	environmental_req = "Subject is extremely territorial and will attack other slimes at will or when hungry. Their psychic abilities also allow them to force other creatures to attack their targets along with them."
-
-/datum/slime_color/gold/New(mob/living/simple_animal/slime/slime)
-	. = ..()
-	RegisterSignal(slime, COMSIG_SLIME_CAN_FEED, .proc/can_feed)
-	RegisterSignal(slime, COMSIG_SLIME_ATTACK_TARGET, .proc/recruit_creatures)
-
-/datum/slime_color/gold/remove()
-	UnregisterSignal(slime, list(COMSIG_SLIME_CAN_FEED, COMSIG_SLIME_ATTACK_TARGET))
-
-/datum/slime_color/gold/proc/recruit_creatures(datum/source, atom/attack_target)
+/datum/slime_color/bluespace/proc/handle_teleport(datum/source, squeese_direction, datum/move_loop/move_loop, bumped)
 	SIGNAL_HANDLER
 
-	var/recruit_range = GOLDEN_SLIME_RECRUIT_RANGE
-	if(HAS_TRAIT(slime, TRAIT_SLIME_KING))
-		recruit_range = GOLDEN_SLIME_KING_RECRUIT_RANGE
-
-	for(var/mob/living/simple_animal/hostile/hostile in view(recruit_range, get_turf(slime)))
-		if(hostile.target == attack_target || hostile == attack_target)
-			continue
-
-		if(prob(GOLDEN_SLIME_RECRUIT_CREATURE_CHANCE) || HAS_TRAIT(slime, TRAIT_SLIME_KING)) // 100% mind control if you're a king
-			hostile.GiveTarget(attack_target)
-
-	for(var/mob/living/simple_animal/slime/other_slime in view(recruit_range, get_turf(slime)))
-		if(other_slime.Target == attack_target || other_slime == attack_target)
-			continue
-
-		if((prob(GOLDEN_SLIME_RECRUIT_SLIME_CHANCE) || HAS_TRAIT(slime, TRAIT_SLIME_KING)) && !HAS_TRAIT(other_slime, TRAIT_SLIME_KING)) // And 0% if the other slime is a king
-			other_slime.set_target(attack_target)
-			other_slime.Leader = src
-
-/datum/slime_color/gold/proc/can_feed(datum/source, atom/feed_target)
-	SIGNAL_HANDLER
-
-	if(!isslime(feed_target))
+	var/turf/our_turf = get_turf(slime)
+	if(HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 		return
 
-	var/mob/living/simple_animal/slime/feed_slime = feed_target
-	if(!istype(feed_slime.slime_color, type))
+	if(bumped && !((squeese_direction & get_dir(slime, slime.current_loop_target)) || (get_dir(slime, slime.current_loop_target) & squeese_direction)))
 		return
 
-	if(slime.nutrition > slime.get_hunger_nutrition() && slime.mood_level > SLIME_MOOD_LEVEL_POUT)
-		return COMPONENT_SLIME_NO_FEED
+	var/turf/possible_tele_turf = our_turf
+	var/iter = 1
+	var/turf/target_edge_turf = get_edge_target_turf(our_turf, squeese_direction)
+	for(var/turf/tele_turf in get_line(our_turf, target_edge_turf))
+		if(iter > BLUESPACE_SLIME_TELEPORT_DISTANCE)
+			break
+
+		slime.forceMove(tele_turf)
+		if(!get_step_to(slime, slime.current_loop_target) || get_step_to(slime, slime.current_loop_target) == our_turf)
+			slime.forceMove(our_turf)
+			iter += 1
+			continue
+
+		slime.forceMove(our_turf)
+
+		if(tele_turf != our_turf && is_safe_turf(tele_turf, no_teleport = TRUE) && !tele_turf.is_blocked_turf_ignore_climbable(exclude_mobs = TRUE) && !HAS_TRAIT(tele_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
+			var/datum/gas_mixture/air = tele_turf.return_air()
+			if(air.gases[/datum/gas/bz] && air.gases[/datum/gas/bz][MOLES])
+				iter += 1
+				continue
+			possible_tele_turf = tele_turf
+
+		iter += 1
+
+	if(possible_tele_turf == our_turf)
+		return
+
+	our_turf.Beam(possible_tele_turf, "bluespace_phase", time = 12)
+	do_teleport(slime, possible_tele_turf, channel = TELEPORT_CHANNEL_BLUESPACE)
+	return COMPONENT_SLIME_NO_SQUEESING

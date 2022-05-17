@@ -2,7 +2,7 @@
 	color = "dark blue"
 	icon_color = "dark_blue"
 	coretype = /obj/item/slime_extract/dark_blue
-	mutations = list(/datum/slime_color/blue, /datum/slime_color/purple, /datum/slime_color/cerulean, /datum/slime_color/cerulean)
+	mutations = list(/datum/slime_color/blue = 1, /datum/slime_color/purple = 1, /datum/slime_color/cerulean = 2)
 	temperature_modifier = 213.15 //You can put these together with blue slimes to skip water vapor transfer step
 	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
 	environmental_req = "Subject requires water vapour to prevent damage and core loss."
@@ -30,7 +30,7 @@
 	color = "dark purple"
 	icon_color = "dark_purple"
 	coretype = /obj/item/slime_extract/dark_purple
-	mutations = list(/datum/slime_color/purple, /datum/slime_color/orange, /datum/slime_color/sepia, /datum/slime_color/sepia)
+	mutations = list(/datum/slime_color/purple = 1, /datum/slime_color/orange = 1, /datum/slime_color/sepia = 2)
 	slime_tags = SLIME_DISCHARGER_WEAKENED
 
 	environmental_req = "Subject requires plasma to function and will react violently if any oxygen is present in the air."
@@ -55,7 +55,7 @@
 /datum/slime_color/silver
 	color = "silver"
 	coretype = /obj/item/slime_extract/silver
-	mutations = list(/datum/slime_color/blue, /datum/slime_color/metal, /datum/slime_color/pyrite, /datum/slime_color/pyrite)
+	mutations = list(/datum/slime_color/blue = 1, /datum/slime_color/metal = 1, /datum/slime_color/pyrite = 2)
 
 	environmental_req = "Subject's vacuole is unstable, making it will always seek for food regardless of it's size and nutrition. Vacuole stabilizators required to avoid implosion."
 
@@ -85,7 +85,7 @@
 /datum/slime_color/yellow
 	color = "yellow"
 	coretype = /obj/item/slime_extract/yellow
-	mutations = list(/datum/slime_color/orange, /datum/slime_color/metal, /datum/slime_color/bluespace, /datum/slime_color/bluespace)
+	mutations = list(/datum/slime_color/orange = 1, /datum/slime_color/metal = 1, /datum/slime_color/bluespace = 2)
 	food_types = list(/mob/living/simple_animal/xenofauna/wobble_chicken = 8, /mob/living/simple_animal/xenofauna/wobble_chicken/chick = 5, /obj/item/food/wobble_egg = 2, /obj/item/food/meat/slab/chicken/wobble = 2)
 
 	environmental_req = "Subject will create beams of lightning once fully charged. To safely discharge it you'll need a slime discharger."

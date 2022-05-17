@@ -46,40 +46,38 @@
 	slime_scan(slime, user, advanced)
 	flick("[initial(icon_state)]-scan", src)
 
-/proc/slime_scan(mob/living/simple_animal/slime/T, mob/living/user, advanced = FALSE)
+/proc/slime_scan(mob/living/simple_animal/slime/slime, mob/living/user, advanced = FALSE)
 	var/to_render = "========================\
 					\n<b>Slime scan results:</b>\
-					\n[span_notice("[T.slime_color.color] [T.is_adult ? "adult" : "baby"] slime")]\
-					\nNutrition: [T.nutrition]/[T.get_max_nutrition()]"
-	if (T.nutrition < T.get_starve_nutrition())
+					\n[span_notice("[capitalize(slime.slime_color.color)] [slime.is_adult ? "adult" : "baby"] slime")]\
+					\nNutrition: [slime.nutrition]/[slime.get_max_nutrition()]"
+	if (slime.nutrition < slime.get_starve_nutrition())
 		to_render += "\n[span_warning("Warning: slime is starving!")]"
-	else if (T.nutrition < T.get_hunger_nutrition())
+	else if (slime.nutrition < slime.get_hunger_nutrition())
 		to_render += "\n[span_warning("Warning: slime is hungry")]"
-	to_render += "\nElectric change strength: [T.powerlevel]\nHealth: [round(T.health/T.maxHealth,0.01)*100]%"
-	if (T.slime_color.mutations[4] == T.slime_color.type)
+	to_render += "\nElectric change strength: [slime.powerlevel]\nHealth: [round(slime.health / slime.maxHealth, 0.01) * 100]%"
+	if (!LAZYLEN(slime.slime_color.mutations))
 		to_render += "\nThis slime does not evolve any further."
 	else
-		var/datum/slime_color/first = T.slime_color.mutations[1]
-		var/datum/slime_color/second = T.slime_color.mutations[2]
-		var/datum/slime_color/third = T.slime_color.mutations[3]
-		var/datum/slime_color/forth = T.slime_color.mutations[4]
+		var/mutations_text = ""
+		for(var/possible_mutation_type in slime.slime_color.mutations)
+			var/datum/slime_color/possible_mutation = possible_mutation_type
+			if(LAZYLEN(mutations_text))
+				mutations_text = "[mutations_text], "
+			var/muta_chance = ""
+			if(slime.slime_color.mutations[possible_mutation_type] != 1)
+				muta_chance = "(x[slime.slime_color.mutations[possible_mutation_type]])"
+			mutations_text = "[mutations_text][initial(possible_mutation.color)][muta_chance]"
+		to_render += "\nPossible mutations: [mutations_text]"
+		if(advanced)
+			to_render += "\n Genetic instability: [slime.mutation_chance * slime.slime_color.mutation_modifier] % chance of mutation on splitting"
 
-		if (T.slime_color.mutations[3] == T.slime_color.mutations[4])
-			if (T.slime_color.mutations[2] == T.slime_color.mutations[1])
-				to_render += "\nPossible mutation: [initial(third.color)]\
-							  [advanced ? "\n Genetic instability: [T.mutation_chance/2] % chance of mutation on splitting" : ""]"
-			else
-				to_render += "\nPossible mutations: [initial(first.color)], [initial(second.color)], [initial(third.color)] (x2)\
-							  [advanced ? "\n Genetic instability: [T.mutation_chance] % chance of mutation on splitting"  : ""]"
-		else
-			to_render += "\nPossible mutations: [initial(first.color)], [initial(second.color)], [initial(third.color)], [initial(forth.color)]\
-							  [advanced ? "\n Genetic instability: [T.mutation_chance] % chance of mutation on splitting"  : ""]"
-	if (T.cores > 1 && advanced)
+	if (slime.cores > 1 && advanced)
 		to_render += "\nMultiple cores detected"
-	if(T.slime_color.food_types)
+	if(slime.slime_color.food_types)
 		to_render += "\n Prefered food types:"
-		for(var/food_type in T.slime_color.food_types)
+		for(var/food_type in slime.slime_color.food_types)
 			var/atom/food = food_type
 			to_render += "\n [icon2html(icon(initial(food.icon), initial(food.icon_state)), user)] [initial(food.name)]"
-	to_render += "\nGrowth progress: [T.amount_grown]/[SLIME_EVOLUTION_THRESHOLD]"
+	to_render += "\nGrowth progress: [slime.amount_grown]/[SLIME_EVOLUTION_THRESHOLD]"
 	to_chat(user, to_render + "\n========================")

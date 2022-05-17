@@ -829,11 +829,17 @@
 /datum/status_effect/slime/adamantine/on_apply()
 	. = ..()
 	owner.add_movespeed_modifier(/datum/movespeed_modifier/status_effect/adamantine_slime)
-	owner.physiology.damage_resistance += 25
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/human_owner = owner
+	human_owner.physiology.damage_resistance += 25
 
 /datum/status_effect/slime/adamantine/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/status_effect/adamantine_slime)
-	owner.physiology.damage_resistance -= 25
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/human_owner = owner
+	human_owner.physiology.damage_resistance -= 25
 
 /datum/status_effect/slime/adamantine/get_examine_text()
 	return span_notice("[owner.p_they(TRUE)] are covered in a thick layer of heavy adamantine slime.")

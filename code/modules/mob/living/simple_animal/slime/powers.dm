@@ -267,8 +267,8 @@
 
 			for(var/i in 1 to 4)
 				var/child_color
-				if(prob(mutation_chance))
-					child_color = slime_color.mutations[rand(1,4)]
+				if(prob(mutation_chance * slime_color.mutation_modifier) && LAZYLEN(slime_color.mutations))
+					child_color = pick(slime_color.mutations)
 				else
 					child_color = slime_color.type
 				var/mob/living/simple_animal/slime/M

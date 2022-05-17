@@ -198,12 +198,75 @@
 // ****************** TIER FOUR *******************
 // ************************************************
 
+// Red Extract
+
+/obj/item/slime_extract/red
+	name = "red slime extract"
+	icon_state = "red"
+	tier = 4
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+
+// Green Extract
+
+/obj/item/slime_extract/green
+	name = "green slime extract"
+	icon_state = "green"
+	tier = 4
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/uranium/radium = 5)
+
+// Pink Extract
+
+/obj/item/slime_extract/pink
+	name = "pink slime extract"
+	icon_state = "pink"
+	tier = 4
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+
+/obj/item/slime_extract/pink/on_grind()
+	. = ..()
+	if(uses || activated)
+		grind_results[/datum/reagent/toxin/slimejelly] = 0
+		grind_results[/datum/reagent/toxin/slimejelly/pink] = 20
+
+/obj/item/slime_extract/pink/activate()
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. You can apply it to yourself or someone else to increase their mood for 15 minutes."
+	activated = TRUE
+
+/obj/item/slime_extract/pink/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!isliving(target) || !activated || !target.GetComponent(/datum/component/mood))
+		return
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+	to_chat(user, span_notice("You apply [src] to [target] and it dissolves as soon as it comes in contact with [target.p_them()]."))
+	to_chat(target, span_hypnophrase("A wave of heat and pleasure rolls through your body as [user] applies [src] to you!"))
+	SEND_SIGNAL(target, COMSIG_ADD_MOOD_EVENT, "pink_extract", /datum/mood_event/pink_extract)
+
+	if(uses <= 0)
+		qdel(src)
+
+// Gold Extract
+
+/obj/item/slime_extract/gold
+	name = "gold slime extract"
+	icon_state = "gold"
+	tier = 4
+
+// ************************************************
+// ****************** TIER FIVE *******************
+// ************************************************
+
 // Cerulean Extract
 
 /obj/item/slime_extract/cerulean
 	name = "cerulean slime extract"
 	icon_state = "cerulean"
-	tier = 4
+	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 // Sepia Extract
@@ -211,7 +274,7 @@
 /obj/item/slime_extract/sepia
 	name = "sepia slime extract"
 	icon_state = "sepia"
-	tier = 4
+	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	var/time_jump = FALSE
 
@@ -272,14 +335,14 @@
 /obj/item/slime_extract/pyrite
 	name = "pyrite slime extract"
 	icon_state = "pyrite"
-	tier = 4
+	tier = 5
 
 // Bluespace Extract
 
 /obj/item/slime_extract/bluespace
 	name = "bluespace slime extract"
 	icon_state = "bluespace"
-	tier = 4
+	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 	var/activation_x
 	var/activation_y
@@ -330,69 +393,6 @@
 
 	if(uses <= 0)
 		use_up()
-
-// ************************************************
-// ****************** TIER FIVE *******************
-// ************************************************
-
-// Red Extract
-
-/obj/item/slime_extract/red
-	name = "red slime extract"
-	icon_state = "red"
-	tier = 5
-	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
-
-// Green Extract
-
-/obj/item/slime_extract/green
-	name = "green slime extract"
-	icon_state = "green"
-	tier = 5
-	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/uranium/radium = 5)
-
-// Pink Extract
-
-/obj/item/slime_extract/pink
-	name = "pink slime extract"
-	icon_state = "pink"
-	tier = 5
-	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
-
-/obj/item/slime_extract/pink/on_grind()
-	. = ..()
-	if(uses || activated)
-		grind_results[/datum/reagent/toxin/slimejelly] = 0
-		grind_results[/datum/reagent/toxin/slimejelly/pink] = 20
-
-/obj/item/slime_extract/pink/activate()
-	icon_state = "[initial(icon_state)]_pulsating"
-	name = "activated [initial(name)]"
-	desc = "An activated [initial(name)]. You can apply it to yourself or someone else to increase their mood for 15 minutes."
-	activated = TRUE
-
-/obj/item/slime_extract/pink/afterattack(atom/target, mob/living/user, proximity_flag)
-	. = ..()
-	if(!isliving(target) || !activated || !target.GetComponent(/datum/component/mood))
-		return
-
-	icon_state = initial(icon_state)
-	name = initial(name)
-	desc = initial(desc)
-	activated = FALSE
-	to_chat(user, span_notice("You apply [src] to [target] and it dissolves as soon as it comes in contact with [target.p_them()]."))
-	to_chat(target, span_hypnophrase("A wave of heat and pleasure rolls through your body as [user] applies [src] to you!"))
-	SEND_SIGNAL(target, COMSIG_ADD_MOOD_EVENT, "pink_extract", /datum/mood_event/pink_extract)
-
-	if(uses <= 0)
-		qdel(src)
-
-// Gold Extract
-
-/obj/item/slime_extract/gold
-	name = "gold slime extract"
-	icon_state = "gold"
-	tier = 5
 
 // ************************************************
 // ******************* TIER SIX *******************

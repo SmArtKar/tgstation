@@ -1,7 +1,6 @@
 /datum/slime_color/oil
 	color = "oil"
 	coretype = /obj/item/slime_extract/oil
-	mutations = null
 	slime_tags = SLIME_WATER_RESISTANCE
 	environmental_req = "Subject's slime is highly flammable and will leave a trail of oil behind it. You can stabilize the subject using high pressure. Fireproof equipment recommended."
 	COOLDOWN_DECLARE(oil_throw_cooldown)
@@ -125,7 +124,6 @@
 /datum/slime_color/black
 	color = "black"
 	coretype = /obj/item/slime_extract/black
-	mutations = null
 	environmental_req = "Subject has an ability to terraform it's surroundings into slime-like turfs. This ability can be neutered by making the pen look like a natural habitat."
 	slime_tags = SLIME_WATER_RESISTANCE
 	var/list/required_turfs
@@ -189,7 +187,6 @@
 /datum/slime_color/adamantine
 	color = "adamantine"
 	coretype = /obj/item/slime_extract/adamantine
-	mutations = null
 	slime_tags = SLIME_WATER_IMMUNITY
 	environmental_req = "Subject appears to posess a fist. Fisting is 300 bucks."
 	var/fist_out = FALSE
@@ -428,7 +425,6 @@
 	color = "light pink"
 	icon_color = "light_pink"
 	coretype = /obj/item/slime_extract/light_pink
-	mutations = null
 	slime_tags = SLIME_DISCHARGER_WEAKENED
 	environmental_req = "Subject can mind-control whoever it latches onto and requires a host to survive."
 	var/mind_control_timer

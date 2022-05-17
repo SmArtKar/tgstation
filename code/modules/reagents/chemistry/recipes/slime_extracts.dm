@@ -290,79 +290,6 @@
 // ******************* TIER FOUR ******************
 // ************************************************
 
-// Bluespace
-
-/datum/chemical_reaction/slime/bluespace_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
-	required_container = /obj/item/slime_extract/bluespace
-
-/datum/chemical_reaction/slime/bluespace_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/turf/holder_turf = get_turf(holder.my_atom)
-	var/obj/item/stack/sheet/bluespace_crystal/crystals = new (holder_turf, 3)
-	crystals.visible_message(span_notice("[crystals] appear out of thin air!"))
-	playsound(holder_turf, 'sound/effects/phasein.ogg', 100, TRUE)
-	return ..()
-
-/datum/chemical_reaction/slime/bluespace_blood
-	required_reagents = list(/datum/reagent/blood = 1)
-	required_container = /obj/item/slime_extract/bluespace
-	deletes_extract = FALSE
-
-/datum/chemical_reaction/slime/bluespace_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/obj/item/slime_extract/bluespace/extract = holder.my_atom
-	if(!istype(extract) || extract.activated)
-		return
-	extract.activate()
-	return ..()
-
-/datum/chemical_reaction/slime/bluespace_water
-	required_reagents = list(/datum/reagent/water = 1)
-	required_container = /obj/item/slime_extract/bluespace
-
-/datum/chemical_reaction/slime/bluespace_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	new /obj/item/slime_potion/radio(get_turf(holder.my_atom))
-	return ..()
-
-// Sepia
-
-/datum/chemical_reaction/slime/sepia_plasma
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
-	required_container = /obj/item/slime_extract/sepia
-	deletes_extract = FALSE
-
-/datum/chemical_reaction/slime/sepia_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/obj/item/slime_extract/sepia/extract = holder.my_atom
-	if(!istype(extract) || extract.activated)
-		return
-	extract.activate(explosive = TRUE)
-	return ..()
-
-/datum/chemical_reaction/slime/sepia_blood
-	required_reagents = list(/datum/reagent/blood = 1)
-	required_container = /obj/item/slime_extract/sepia
-	deletes_extract = FALSE
-
-/datum/chemical_reaction/slime/sepia_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/obj/item/slime_extract/sepia/extract = holder.my_atom
-	if(!istype(extract) || extract.activated)
-		return
-	extract.activate(explosive = FALSE)
-	return ..()
-
-// Cerulean
-
-/datum/chemical_reaction/slime/cerulean_plasma
-	required_container = /obj/item/slime_extract/cerulean
-	required_reagents = list(/datum/reagent/toxin/plasma = 1)
-
-/datum/chemical_reaction/slime/cerulean_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	new /obj/item/slime_potion/enhancer(get_turf(holder.my_atom))
-	return ..()
-
-// ************************************************
-// ******************* TIER FIVE ******************
-// ************************************************
-
 // Red
 
 /datum/chemical_reaction/slime/red_water
@@ -447,6 +374,79 @@
 	required_container = /obj/item/slime_extract/green
 	required_reagents = list(/datum/reagent/uranium/radium = 1)
 	results = list(/datum/reagent/jelly_toxin/lizard = 1)
+
+// ************************************************
+// ******************* TIER FIVE ******************
+// ************************************************
+
+// Bluespace
+
+/datum/chemical_reaction/slime/bluespace_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/bluespace
+
+/datum/chemical_reaction/slime/bluespace_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/turf/holder_turf = get_turf(holder.my_atom)
+	var/obj/item/stack/sheet/bluespace_crystal/crystals = new (holder_turf, 3)
+	crystals.visible_message(span_notice("[crystals] appear out of thin air!"))
+	playsound(holder_turf, 'sound/effects/phasein.ogg', 100, TRUE)
+	return ..()
+
+/datum/chemical_reaction/slime/bluespace_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/bluespace
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/bluespace_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/bluespace/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	return ..()
+
+/datum/chemical_reaction/slime/bluespace_water
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/bluespace
+
+/datum/chemical_reaction/slime/bluespace_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/radio(get_turf(holder.my_atom))
+	return ..()
+
+// Sepia
+
+/datum/chemical_reaction/slime/sepia_plasma
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	required_container = /obj/item/slime_extract/sepia
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/sepia_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/sepia/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate(explosive = TRUE)
+	return ..()
+
+/datum/chemical_reaction/slime/sepia_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/sepia
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/sepia_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/sepia/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate(explosive = FALSE)
+	return ..()
+
+// Cerulean
+
+/datum/chemical_reaction/slime/cerulean_plasma
+	required_container = /obj/item/slime_extract/cerulean
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/cerulean_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/enhancer(get_turf(holder.my_atom))
+	return ..()
 
 // ************************************************
 // ******************* TIER SIX *******************
