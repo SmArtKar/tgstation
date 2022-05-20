@@ -574,3 +574,16 @@
 	icon_state = "item_shadow"
 	duration = 17
 	layer = BELOW_OPEN_DOOR_LAYER
+
+/obj/effect/temp_visual/slime_plus
+	icon_state = "purple_plus"
+	duration = 12
+	layer = ABOVE_ALL_MOB_LAYER
+	plane = ABOVE_GAME_PLANE
+
+/obj/effect/temp_visual/slime_plus/Initialize(mapload)
+	. = ..()
+	animate(src, pixel_y = 24, alpha = 0, time = duration)
+
+/obj/effect/temp_visual/slime_plus/cerulean
+	icon_state = "cerulean_plus"

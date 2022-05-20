@@ -23,6 +23,7 @@
 
 	to_chat(user, span_notice("You feed [slime] [src]. It will now produce one more extract."))
 	slime.max_cores++
+	new /obj/effect/temp_visual/slime_plus(get_turf(slime))
 	qdel(src)
 
 /obj/item/slime_potion/slime_stabilizer
@@ -103,6 +104,7 @@
 
 	to_chat(user, span_notice("You apply [src] to [extract], allowing it to be reused a few more times."))
 	extract.uses = min(5, extract.uses + 2)
+	new /obj/effect/temp_visual/slime_plus/cerulean(get_turf(extract))
 	qdel(src)
 
 /obj/item/slime_potion/docility

@@ -288,8 +288,16 @@
 	name = initial(name)
 	desc = initial(desc)
 	activated = FALSE
-	to_chat(user, span_notice("You apply [src] to [target] without [target.p_them()] noticing and your vision blurs as your mind links to [target.p_their()] eyes."))
-	user.apply_status_effect(/datum/status_effect/golden_eyes, target)
+
+	var/mob/living/victim = target
+	if(victim.can_block_magic(MAGIC_RESISTANCE_MIND, charge_cost = 0))
+		to_chat(user, span_warning("Something is shielding [target]'s mind from [src]'s influence!"))
+		if(uses <= 0)
+			qdel(src)
+		return
+
+	to_chat(user, span_notice("You apply [src] to [victim] without [victim.p_them()] noticing and your vision blurs as your mind links to [victim.p_their()] eyes."))
+	user.apply_status_effect(/datum/status_effect/golden_eyes, victim)
 	if(uses <= 0)
 		qdel(src)
 
@@ -428,14 +436,12 @@
 	if(existing_dejavu)
 		playsound(target, 'sound/magic/teleport_diss.ogg', 50, TRUE)
 		existing_dejavu.rewinds_remaining += uses
-		uses = 0
-		use_up()
+		qdel(src)
 		return
 
 	playsound(target, 'sound/magic/teleport_app.ogg', 50, TRUE)
 	AddComponent(/datum/component/dejavu/slime, uses + 1, 10 SECONDS)
-	uses = 0
-	use_up()
+	qdel(src)
 
 // Pyrite Extract
 
@@ -452,13 +458,22 @@
 
 /obj/item/slime_extract/pyrite/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
-	if(!iscarbon(target) || !activated)
+	if(!ishuman(target) || !activated)
+		return
+
+	if(user.has_status_effect(/datum/status_effect/slime/pyrite))
+		to_chat(user, "You are already impersonating somebody!")
 		return
 
 	icon_state = initial(icon_state)
 	name = initial(name)
 	desc = initial(desc)
 	activated = FALSE
+	to_chat(user, span_notice("You squish [src] in your hand and think about [target]."))
+	user.apply_status_effect(/datum/status_effect/slime/pyrite, target)
+
+	if(uses <= 0)
+		qdel(src)
 
 // Bluespace Extract
 

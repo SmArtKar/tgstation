@@ -504,6 +504,20 @@
 
 // Pyrite
 
+
+/datum/chemical_reaction/slime/pyrite_plasma
+	required_container = /obj/item/slime_extract/pyrite
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/pyrite_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/pyrite/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	attempt_balloon("ready for application", holder)
+	return ..()
+
 /datum/chemical_reaction/slime/pyrite_blood
 	required_reagents = list(/datum/reagent/blood = 1)
 	required_container = /obj/item/slime_extract/pyrite

@@ -880,13 +880,10 @@
 		CRASH("[type] status effect added with to_follow being non-living: [to_follow ? to_follow.type : "null to_follow"]")
 
 	following = to_follow
-	. = ..()
+	return ..()
 
 /datum/status_effect/golden_eyes/on_apply()
 	. = ..()
-	if(!ishuman(owner))
-		CRASH("[type] status effect added to non-human owner: [owner ? owner.type : "null owner"]")
-
 	var/mob/living/carbon/human/human_owner = owner
 	original_eye_color_left = human_owner.eye_color_left
 	original_eye_color_right = human_owner.eye_color_right
@@ -956,3 +953,89 @@
 	if(!gazing)
 		return span_notice("[owner.p_their(TRUE)] eyes are of unnatural bright golden color")
 	return span_notice("[owner.p_their(TRUE)] eyes are of unnatural bright golden color and it seems like [owner.p_their()] mind is somewhere else...")
+
+
+/atom/movable/screen/alert/status_effect/pyrite_morpher
+	name = "Pyrite Morpher"
+	desc = "Your body is being morphed by a pyrite extract!"
+	icon_state = "pyrite_morpher"
+
+/datum/status_effect/slime/pyrite
+	duration = 5 MINUTES
+	tick_interval = 1
+	alert_type = /atom/movable/screen/alert/status_effect/pyrite_morpher
+	effect_icon_state = "pyrite_slime"
+	var/datum/icon_snapshot/impersonating
+	var/masquerade_on = FALSE
+	var/wibbling = TRUE
+	var/regain_timer
+
+/datum/status_effect/slime/pyrite/on_creation(mob/living/new_owner, mob/living/carbon/human/to_impersonate)
+	if(!ishuman(new_owner))
+		CRASH("[type] status effect added to non-human owner: [new_owner ? new_owner.type : "null owner"]")
+
+	if(!iscarbon(to_impersonate))
+		CRASH("[type] status effect added with non-human to_impersonate: [to_impersonate ? to_impersonate.type : "null to_impersonate"]")
+
+	impersonating = new()
+	impersonating.name = to_impersonate.name
+	impersonating.icon = to_impersonate.icon
+	impersonating.icon_state = to_impersonate.icon_state
+	impersonating.overlays = to_impersonate.get_overlays_copy(list(HANDS_LAYER))
+	return ..()
+
+/datum/status_effect/slime/pyrite/on_apply()
+	. = ..()
+	RegisterSignal(owner, list(COMSIG_PARENT_ATTACKBY, COMSIG_ATOM_HULK_ATTACK, COMSIG_ATOM_ATTACK_HAND, COMSIG_ATOM_ATTACK_PAW, COMSIG_ATOM_HITBY, COMSIG_ATOM_BULLET_ACT), .proc/drop_masquarade)
+	apply_wibbly_filters(owner)
+	playsound(owner, 'sound/effects/attackblob.ogg', 50, TRUE)
+	regain_timer = addtimer(CALLBACK(src, .proc/masquarade), 10 SECONDS, TIMER_STOPPABLE)
+
+/datum/status_effect/slime/pyrite/on_remove()
+	UnregisterSignal(owner, list(COMSIG_PARENT_ATTACKBY, COMSIG_ATOM_HULK_ATTACK, COMSIG_ATOM_ATTACK_HAND,
+									  COMSIG_ATOM_ATTACK_PAW, COMSIG_ATOM_HITBY, COMSIG_ATOM_BULLET_ACT))
+	drop_masquarade(regain = FALSE)
+
+/datum/status_effect/slime/pyrite/proc/drop_masquarade(regain = TRUE)
+	deltimer(regain_timer)
+	if(regain)
+		regain_timer = addtimer(CALLBACK(src, .proc/start_regaining), 5 SECONDS, TIMER_STOPPABLE)
+
+	if(wibbling || masquerade_on)
+		playsound(owner, 'sound/effects/bamf.ogg', 100, TRUE)
+
+	wibbling = FALSE
+	remove_wibbly_filters(owner)
+
+	if(!masquerade_on)
+		return
+
+	masquerade_on = FALSE
+	var/mob/living/carbon/human/human_owner = owner
+	var/name_buffer = human_owner.name_override
+	human_owner.name_override = null
+	human_owner.cut_overlays()
+	human_owner.regenerate_icons()
+	human_owner.visible_message(span_danger("[name_buffer]'s flesh melts, revealing [human_owner.get_visible_name()]!"))
+	human_owner.add_overlay(goo_overlay)
+
+/datum/status_effect/slime/pyrite/proc/start_regaining()
+	apply_wibbly_filters(owner)
+	wibbling = TRUE
+	playsound(owner, 'sound/effects/attackblob.ogg', 50, TRUE)
+	regain_timer = addtimer(CALLBACK(src, .proc/masquarade), 5 SECONDS, TIMER_STOPPABLE)
+
+/datum/status_effect/slime/pyrite/proc/masquarade()
+	var/mob/living/carbon/human/human_owner = owner
+	masquerade_on = TRUE
+	wibbling = FALSE
+	remove_wibbly_filters(human_owner)
+	var/original_name = human_owner.name
+	human_owner.name_override = impersonating.name
+	human_owner.icon = impersonating.icon
+	human_owner.icon_state = impersonating.icon_state
+	human_owner.cut_overlays()
+	human_owner.add_overlay(impersonating.overlays)
+	human_owner.update_inv_hands()
+	human_owner.visible_message(span_danger("[original_name]'s flesh melts, reforming into [human_owner.name_override]!"))
+	playsound(owner, 'sound/effects/bamf.ogg', 100, TRUE)
