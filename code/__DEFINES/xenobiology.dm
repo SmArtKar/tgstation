@@ -117,6 +117,10 @@
 #define SLIME_WATER_WEAKNESS (1<<9)
 /// These slimes will attack the dead
 #define SLIME_ATTACK_DEAD (1<<10)
+/// These slimes will feel very lonely without at least 2 more slimes in their pen
+#define SLIME_SOCIAL (1<<11)
+/// These slimes will feel sad when theres more than 2 other slimes in their pen
+#define SLIME_ANTISOCIAL (1<<12)
 
 /// Slime requirements
 

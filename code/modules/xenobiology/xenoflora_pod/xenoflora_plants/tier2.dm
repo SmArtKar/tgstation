@@ -9,7 +9,7 @@
 	seeds_icon_state = "xenoseeds-broombush"
 
 	required_gases = list(/datum/gas/nitrogen = 0.1)
-	produced_gases = list(/datum/gas/nitrous_oxide = 0.05)
+	produced_gases = list(/datum/gas/nitrous_oxide = 0.01)
 	min_safe_temp = T0C
 	max_safe_temp = T0C + 60
 
@@ -39,7 +39,7 @@
 	seeds_icon_state = "xenoseeds-cubomelon"
 
 	required_chems = list(/datum/reagent/water = 0.2, /datum/reagent/bromine = 0.1)
-	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 0.1)
+	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 0.02)
 	min_safe_temp = TCRYO
 	max_safe_temp = T0C
 

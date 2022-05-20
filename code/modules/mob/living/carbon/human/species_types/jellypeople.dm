@@ -53,6 +53,9 @@
 	. = ..()
 	if(new_jellyperson.dna)
 		var/mutcolor = "#[num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)]"
+		var/datum/status_effect/jelly_color_tracker/tracker = new_jellyperson.has_status_effect(/datum/status_effect/jelly_color_tracker)
+		if(tracker)
+			mutcolor = tracker.mutcolor
 		new_jellyperson.dna.features["mcolor"] = mutcolor
 		for(var/obj/item/organ/slime_organ in new_jellyperson.internal_organs)
 			if(!slime_organ.GetComponent(/datum/component/hydrophobic)) //somehow got non slime organ
@@ -63,17 +66,48 @@
 		regenerate_limbs.Grant(new_jellyperson)
 	new_jellyperson.AddElement(/datum/element/soft_landing)
 
+/datum/species/jelly/proc/change_color(mob/living/carbon/new_jellyperson, new_color = null)
+	if(!new_color)
+		new_color = "#[num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)]"
+
+	new_jellyperson.dna.features["mcolor"] = new_color
+	for(var/obj/item/organ/slime_organ in new_jellyperson.internal_organs)
+		if(!slime_organ.GetComponent(/datum/component/hydrophobic)) //somehow got non slime organ
+			continue
+		slime_organ.add_atom_colour(new_color, FIXED_COLOUR_PRIORITY)
+
+	new_jellyperson.update_body()
+
 /datum/species/jelly/spec_life(mob/living/carbon/human/human_owner, delta_time, times_fired)
 	if(human_owner.stat == DEAD) //can't farm slime jelly from a dead slime/jelly person indefinitely
 		return
 
 	if(human_owner.blood_volume < BLOOD_VOLUME_BAD)
-		Cannibalize_Body(human_owner)
+		cannibalize_body(human_owner)
+
+	if(DT_PROB(0.25, delta_time))
+		pop_robo_limb(human_owner)
 
 	if(regenerate_limbs)
 		regenerate_limbs.UpdateButtons()
 
-/datum/species/jelly/proc/Cannibalize_Body(mob/living/carbon/human/human_owner)
+/datum/species/jelly/proc/pop_robo_limb(mob/living/carbon/human/human_owner)
+	var/list/limbs_to_pop = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG) - human_owner.get_missing_limbs()
+	var/list/popping_limbs = list()
+	for(var/pop_zone in limbs_to_pop)
+		var/obj/item/bodypart/bodypart = human_owner.get_bodypart(pop_zone)
+		if(bodypart && (bodypart.bodytype & BODYTYPE_ROBOTIC))
+			popping_limbs += bodypart
+
+	if(!LAZYLEN(popping_limbs))
+		return
+
+	var/obj/item/bodypart/popped_limb = pick(popping_limbs)
+	popped_limb.drop_limb()
+	playsound(get_turf(human_owner), 'sound/effects/blobattack.ogg', 100, TRUE)
+	to_chat(human_owner, span_userdanger("Your [popped_limb] suddenly pops off as your body rejects it!"))
+
+/datum/species/jelly/proc/cannibalize_body(mob/living/carbon/human/human_owner)
 	var/list/limbs_to_consume = list(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG) - human_owner.get_missing_limbs()
 	var/obj/item/bodypart/consumed_limb
 	if(!length(limbs_to_consume))

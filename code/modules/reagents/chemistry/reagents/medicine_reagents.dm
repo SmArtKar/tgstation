@@ -1666,3 +1666,7 @@
 		spewed_organ.applyOrganDamage(spewed_organ.maxHealth)
 		spewed_organ.organ_flags |= ORGAN_FAILING
 		spewed_organ.name = "mangled [spewed_organ]"
+
+/datum/reagent/medicine/mutanite_solution/overdose_process(mob/living/victim, delta_time, times_fired)
+	. = ..()
+	victim.adjustToxLoss(1 * REM * delta_time)

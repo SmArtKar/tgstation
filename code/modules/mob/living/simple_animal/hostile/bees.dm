@@ -184,10 +184,10 @@
 				beegent.expose_mob(L, INJECT)
 				L.reagents.add_reagent(beegent.type, rand(1,5))
 
-/mob/living/simple_animal/hostile/bee/proc/assign_reagent(datum/reagent/R)
-	if(istype(R))
-		beegent = R
-		name = "[initial(name)] ([R.name])"
+/mob/living/simple_animal/hostile/bee/proc/assign_reagent(datum/reagent/new_beegent)
+	if(istype(new_beegent) && (new_beegent.chemical_flags & REAGENT_CAN_BE_SYNTHESIZED))
+		beegent = new_beegent
+		name = "[initial(name)] ([new_beegent.name])"
 		real_name = name
 		//clear the old since this one is going to have some new value
 		RemoveElement(/datum/element/venomous)

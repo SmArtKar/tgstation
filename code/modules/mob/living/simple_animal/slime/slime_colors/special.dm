@@ -77,7 +77,7 @@
 	if(prob(victim.getarmor(null, BIO)))
 		return
 
-	victim.reagents?.add_reagent(/datum/reagent/toxin/tuporixin, 3) //2 hits to start infection
+	victim.reagents?.add_reagent(/datum/reagent/toxin/tuporixin, 2) //3 hits to start infection in a rapid succession
 
 /datum/slime_color/biohazard/get_attack_cd(atom/attack_target) //Faster than normal ones
 	return 2.5 SECONDS

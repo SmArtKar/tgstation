@@ -204,3 +204,6 @@
 
 /atom/movable/screen/fullscreen/slime_control
 	icon_state = "slime_control"
+
+/atom/movable/screen/fullscreen/golden_eyes
+	icon_state = "golden_eyes"

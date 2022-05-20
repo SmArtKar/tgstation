@@ -73,6 +73,15 @@
 	var/mob/living/victim = target
 	victim.adjust_fire_stacks(OIL_SLIME_STACKS_PER_ATTACK, /datum/status_effect/fire_handler/fire_stacks/oil)
 
+/*
+
+/obj/effect/decal/cleanable/fire_pool/oil
+	name = "pool of oil"
+	desc = "A pool of flammable oil. It's probably wise to clean this off before something ignites it..."
+	hotspot_type = /obj/effect/hotspot/oil
+
+*/
+
 /obj/effect/decal/cleanable/oil_pool
 	name = "pool of oil"
 	desc = "A pool of flammable oil. It's probably wise to clean this off before something ignites it..."

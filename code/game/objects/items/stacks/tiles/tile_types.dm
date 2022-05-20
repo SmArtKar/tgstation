@@ -1298,3 +1298,16 @@
 	max_amount = 60
 	turf_type = /turf/open/floor/sepia
 	merge_type = /obj/item/stack/tile/sepia
+
+/obj/item/stack/tile/pyrite
+	name = "pyrite tiles"
+	singular_name = "pyrite tile"
+	desc = "A piece of a very hot pyrite tile."
+	icon_state = "tile_pyrite"
+	inhand_icon_state = "tile-gold"
+	turf_type = /turf/open/floor/pyrite
+	resistance_flags = FIRE_PROOF
+	merge_type = /obj/item/stack/tile/pyrite
+
+/obj/item/stack/tile/pyrite/five
+	amount = 5

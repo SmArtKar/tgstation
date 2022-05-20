@@ -28,7 +28,6 @@
 	righthand_file = 'icons/mob/inhands/equipment/backpack_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
 	slot_flags = ITEM_SLOT_BACK
-	slowdown = 1
 	actions_types = list(/datum/action/item_action/toggle_nozzle)
 	max_integrity = 200
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, FIRE = 100, ACID = 100)
@@ -325,13 +324,7 @@
 			to_chat(user, span_warning("[target] is too far away!"))
 			return
 
-		var/in_view = FALSE
-		for(var/atom/movable/possible_target in view(user, pack.range))
-			if(possible_target == target)
-				in_view = TRUE
-				break
-
-		if(!in_view)
+		if(!(target in view(user, pack.range)))
 			to_chat(user, span_warning("You can't reach [target]!"))
 			return
 
@@ -349,21 +342,13 @@
 			to_chat(user, span_warning("[pack] is already filled to the brim!"))
 			return
 
-		if(!do_after(user, pack.speed, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE))
+		if(!do_after(user, pack.speed, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE|IGNORE_USER_LOC_CHANGE, extra_checks = CALLBACK(src, .proc/suck_checks, target, user)))
 			return
 
-		playsound(user, 'sound/effects/refill.ogg', 50, TRUE)
-		var/matrix/animation_matrix = matrix()
-		animation_matrix.Scale(0.5)
-		animation_matrix.Translate((user.x - target.x) * 32, (user.y - target.y) * 32)
-		animate(target, alpha = 0, time = 8, easing = QUAD_EASING|EASE_IN, transform = animation_matrix, flags = ANIMATION_PARALLEL)
-		sleep(8)
-		target.forceMove(pack)
-		pack.stored += target
-		if((VACUUM_PACK_UPGRADE_STASIS in pack.upgrades) && isslime(target))
-			var/mob/living/simple_animal/slime/slime = target
-			ADD_TRAIT(slime, TRAIT_SLIME_STASIS, "vacuum_pack_stasis")
-		user.visible_message(span_warning("[user] sucks [target] into their [pack]!"), span_notice("You successfully suck [target] into your [src]."))
+		if(SEND_SIGNAL(target, COMSIG_LIVING_VACUUM_PRESUCK, src, user) & COMPONENT_LIVING_VACUUM_CANCEL_SUCK)
+			return
+
+		suck_victim(target, user)
 		return
 
 	var/area/current_area = get_area(get_turf(src))
@@ -425,6 +410,45 @@
 
 	pack.stored -= spewed
 	user.visible_message(span_warning("[user] shoots [spewed] out their [src]!"), span_notice("You shoot [spewed] out of your [src]."))
+
+/obj/item/vacuum_nozzle/proc/suck_checks(atom/movable/target, mob/user)
+	if(get_dist(user, target) > pack.range)
+		return FALSE
+
+	if(!(target in view(user, pack.range)))
+		return FALSE
+
+	if(target.anchored || target.move_resist > MOVE_FORCE_STRONG)
+		return FALSE
+
+	if(isslime(target))
+		var/mob/living/simple_animal/slime/slime = target
+		if(HAS_TRAIT(slime, TRAIT_SLIME_RABID) && !pack.illegal && !(VACUUM_PACK_UPGRADE_PACIFY in pack.upgrades))
+			return FALSE
+
+	if(LAZYLEN(pack.stored) >= pack.capacity)
+		return FALSE
+
+	return TRUE
+
+/obj/item/vacuum_nozzle/proc/suck_victim(atom/movable/target, mob/user, silent = FALSE)
+	if(!suck_checks(target, user))
+		return
+
+	if(!silent)
+		playsound(user, 'sound/effects/refill.ogg', 50, TRUE)
+	var/matrix/animation_matrix = target.transform
+	animation_matrix.Scale(0.5)
+	animation_matrix.Translate((user.x - target.x) * 32, (user.y - target.y) * 32)
+	animate(target, alpha = 0, time = 8, easing = QUAD_EASING|EASE_IN, transform = animation_matrix, flags = ANIMATION_PARALLEL)
+	sleep(8)
+	target.forceMove(pack)
+	pack.stored += target
+	if((VACUUM_PACK_UPGRADE_STASIS in pack.upgrades) && isslime(target))
+		var/mob/living/simple_animal/slime/slime = target
+		ADD_TRAIT(slime, TRAIT_SLIME_STASIS, "vacuum_pack_stasis")
+	if(!silent)
+		user.visible_message(span_warning("[user] sucks [target] into their [pack]!"), span_notice("You successfully suck [target] into your [src]."))
 
 /obj/item/vacuum_nozzle/proc/start_busting(mob/living/simple_animal/revenant/revenant, mob/living/user)
 	revenant.visible_message(span_warning("[user] starts sucking [revenant] into their [src]!"), span_userdanger("You are being sucked into [user]'s [src]!"))

@@ -387,6 +387,32 @@
 	required_reagents = list(/datum/reagent/uranium/radium = 1)
 	results = list(/datum/reagent/jelly_toxin/lizard = 1)
 
+// Golden
+
+/datum/chemical_reaction/slime/gold_plasma
+	required_container = /obj/item/slime_extract/gold
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/gold_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/special/gold_secondary/first_child = new(get_turf(holder.my_atom))
+	var/obj/item/slime_extract/special/gold_secondary/second_child = new(get_turf(holder.my_atom))
+	first_child.linked_extract = second_child
+	second_child.linked_extract = first_child
+	return ..()
+
+/datum/chemical_reaction/slime/gold_blood
+	required_container = /obj/item/slime_extract/gold
+	required_reagents = list(/datum/reagent/blood = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/gold_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/gold/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	attempt_balloon("ready for application", holder)
+	return ..()
+
 // ************************************************
 // ******************* TIER FIVE ******************
 // ************************************************
@@ -476,6 +502,24 @@
 	attempt_balloon("ready for throwing", holder)
 	return ..()
 
+// Pyrite
+
+/datum/chemical_reaction/slime/pyrite_blood
+	required_reagents = list(/datum/reagent/blood = 1)
+	required_container = /obj/item/slime_extract/pyrite
+
+/datum/chemical_reaction/slime/pyrite_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/stack/tile/pyrite/five(get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/pyrite_water
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/pyrite
+
+/datum/chemical_reaction/slime/pyrite_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/stack/tile/pyrite/five(get_turf(holder.my_atom))
+	return ..()
+
 // ************************************************
 // ******************* TIER SIX *******************
 // ************************************************
@@ -547,6 +591,18 @@
 	new /obj/item/slime_potion/sentience(get_turf(holder.my_atom))
 	return ..()
 
+/datum/chemical_reaction/slime/light_pink_blood
+	required_container = /obj/item/slime_extract/light_pink
+	required_reagents = list(/datum/reagent/blood = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/light_pink_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/light_pink/extract = holder.my_atom
+	if(!istype(extract))
+		return
+	extract.start_pacifism()
+	return ..()
+
 /// Adamantine
 
 /datum/chemical_reaction/slime/adamantine_plasma
@@ -578,6 +634,14 @@
 // ************************************************
 // ***************** TIER SPECIAL *****************
 // ************************************************
+
+/datum/chemical_reaction/slime/fiery_plasma
+	required_container = /obj/item/slime_extract/special/fiery
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+
+/datum/chemical_reaction/slime/fiery_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	new /obj/item/slime_potion/transference(get_turf(holder.my_atom))
+	return ..()
 
 /datum/chemical_reaction/slime/biohazard_plasma
 	required_container = /obj/item/slime_extract/special/biohazard

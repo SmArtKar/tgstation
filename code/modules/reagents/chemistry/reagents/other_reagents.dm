@@ -723,6 +723,8 @@
 	)
 
 	var/target_species = /datum/species/jelly/slime
+	var/current_mut_seconds = 0
+	var/maximum_mut_seconds = 25
 
 /datum/reagent/jelly_toxin/on_mob_add(mob/living/owner, amount)
 	if(isjellyperson(owner))
@@ -739,7 +741,9 @@
 	if(!(owner.dna?.species) || !(owner.mob_biotypes & MOB_ORGANIC) || istype(owner.dna?.species, target_species))
 		return
 
-	if(!DT_PROB(10, delta_time))
+	current_mut_seconds += delta_time
+
+	if(!DT_PROB(current_mut_seconds / maximum_mut_seconds * 100, delta_time))
 		return
 
 	var/list/meatchunks = list()
@@ -765,10 +769,16 @@
 		head_part.hair_color = target_head_part.hair_color
 		head_part.facial_hairstyle = target_head_part.facial_hairstyle
 		head_part.facial_hair_color = target_head_part.facial_hair_color
+	if(ispath(target_species, /datum/species/jelly))
+		if(!owner.has_status_effect(/datum/status_effect/jelly_color_tracker))
+			owner.apply_status_effect(/datum/status_effect/jelly_color_tracker)
+		var/datum/status_effect/jelly_color_tracker/tracker = owner.has_status_effect(/datum/status_effect/jelly_color_tracker)
+		new_part.mutation_color = tracker.mutcolor
 	new_part.replace_limb(owner, TRUE)
 	playsound(owner, 'sound/effects/splat.ogg', 100, TRUE)
 	playsound(owner, SFX_DESECRATION, 100, TRUE)
 	owner.visible_message(span_warning("[target_part] pops off just as [new_part] grows out from [owner]'s body!"), span_userdanger("Your [target_part] pops off just as [new_part] grows out from your body!"))
+	owner.update_body() //For hair render to be correct
 
 /datum/reagent/jelly_toxin/human
 	name = "Stabilized Mutation Toxin"

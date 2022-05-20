@@ -60,6 +60,7 @@
 
 	var/instant = FALSE
 	var/self_contained = TRUE // If it deletes itself when it is empty
+	var/exposed_on_paint = TRUE
 
 	var/edible = TRUE // That doesn't mean eating it is a good idea
 
@@ -383,35 +384,7 @@
 	var/list/turf/affected_turfs = list()
 
 	if(actually_paints)
-		var/obj/effect/decal/cleanable/crayon/C
-		if(gang_mode)
-			if(!can_claim_for_gang(user, target))
-				return
-			tag_for_gang(user, target, gang_mode)
-			affected_turfs += target
-		else
-			switch(paint_mode)
-				if(PAINT_NORMAL)
-					C = new(target, paint_color, drawing, temp, graf_rot)
-					C.pixel_x = clickx
-					C.pixel_y = clicky
-					affected_turfs += target
-				if(PAINT_LARGE_HORIZONTAL)
-					var/turf/left = locate(target.x-1,target.y,target.z)
-					var/turf/right = locate(target.x+1,target.y,target.z)
-					if(isValidSurface(left) && isValidSurface(right))
-						C = new(left, paint_color, drawing, temp, graf_rot, PAINT_LARGE_HORIZONTAL_ICON)
-						affected_turfs += left
-						affected_turfs += right
-						affected_turfs += target
-					else
-						to_chat(user, span_warning("There isn't enough space to paint!"))
-						return
-			C.add_hiddenprint(user)
-			if(istagger)
-				C.AddElement(/datum/element/art, GOOD_ART)
-			else
-				C.AddElement(/datum/element/art, BAD_ART)
+		paint_stuff(target, user, gang_mode, affected_turfs, paint_color, drawing, temp, graf_rot, istagger, clickx, clicky)
 
 	if(!instant)
 		to_chat(user, span_notice("You finish drawing \the [temp]."))
@@ -429,9 +402,44 @@
 	var/fraction = min(1, . / reagents.maximum_volume)
 	if(affected_turfs.len)
 		fraction /= affected_turfs.len
-	for(var/t in affected_turfs)
-		reagents.trans_to(t, ., volume_multiplier, transfered_by = user, methods = TOUCH)
+	if(exposed_on_paint)
+		for(var/t in affected_turfs)
+			reagents.trans_to(t, ., volume_multiplier, transfered_by = user, methods = TOUCH)
 	check_empty(user)
+
+/obj/item/toy/crayon/proc/paint_stuff(atom/target, mob/user, gang_mode, list/turf/affected_turfs, paint_color, drawing, temp, graf_rot, istagger, clickx, clicky)
+	var/obj/effect/decal/cleanable/crayon/painted_decal
+	if(gang_mode)
+		if(!can_claim_for_gang(user, target))
+			return
+		tag_for_gang(user, target, gang_mode)
+		affected_turfs += target
+		return
+
+	switch(paint_mode)
+		if(PAINT_NORMAL)
+			painted_decal = new(target, paint_color, drawing, temp, graf_rot)
+			painted_decal.pixel_x = clickx
+			painted_decal.pixel_y = clicky
+			affected_turfs += target
+		if(PAINT_LARGE_HORIZONTAL)
+			var/turf/left = locate(target.x-1,target.y,target.z)
+			var/turf/right = locate(target.x+1,target.y,target.z)
+			if(isValidSurface(left) && isValidSurface(right))
+				painted_decal = new(left, paint_color, drawing, temp, graf_rot, PAINT_LARGE_HORIZONTAL_ICON)
+				affected_turfs += left
+				affected_turfs += right
+				affected_turfs += target
+			else
+				to_chat(user, span_warning("There isn't enough space to paint!"))
+				return
+	painted_decal.add_hiddenprint(user)
+	if(istagger)
+		painted_decal.AddElement(/datum/element/art, GOOD_ART)
+	else
+		painted_decal.AddElement(/datum/element/art, BAD_ART)
+
+	return painted_decal
 
 /obj/item/toy/crayon/attack(mob/M, mob/user)
 	if(edible && (M == user))
@@ -680,7 +688,6 @@
 
 
 /obj/item/toy/crayon/spraycan/suicide_act(mob/user)
-	var/mob/living/carbon/human/H = user
 	if(is_capped || !actually_paints)
 		user.visible_message(span_suicide("[user] shakes up [src] with a rattle and lifts it to [user.p_their()] mouth, but nothing happens!"))
 		user.say("MEDIOCRE!!", forced="spraycan suicide")
@@ -694,7 +701,7 @@
 			set_painting_tool_color("#C0C0C0")
 		update_appearance()
 		if(actually_paints)
-			H.update_lips("spray_face", paint_color)
+			spray_face(user, user)
 		var/used = use_charges(user, 10, FALSE)
 		reagents.trans_to(user, used, volume_multiplier, transfered_by = user, methods = VAPOR)
 
@@ -727,26 +734,7 @@
 		return
 
 	if(iscarbon(target))
-		if(pre_noise || post_noise)
-			playsound(user.loc, 'sound/effects/spray.ogg', 25, TRUE, 5)
-
-		var/mob/living/carbon/C = target
-		user.visible_message(span_danger("[user] sprays [src] into the face of [target]!"))
-		to_chat(target, span_userdanger("[user] sprays [src] into your face!"))
-
-		if(C.client)
-			C.blur_eyes(3)
-			C.blind_eyes(1)
-		if(C.get_eye_protection() <= 0) // no eye protection? ARGH IT BURNS. Warning: don't add a stun here. It's a roundstart item with some quirks.
-			C.apply_effects(eyeblur = 5, jitter = 10)
-			flash_color(C, flash_color=paint_color, flash_time=40)
-		if(ishuman(C) && actually_paints)
-			var/mob/living/carbon/human/H = C
-			H.update_lips("spray_face", paint_color)
-		. = use_charges(user, 10, FALSE)
-		var/fraction = min(1, . / reagents.maximum_volume)
-		reagents.expose(C, VAPOR, fraction * volume_multiplier)
-
+		spray_face(target, user)
 		return
 
 	if(ismob(target) && (HAS_TRAIT(target, TRAIT_SPRAY_PAINTABLE)))
@@ -820,6 +808,29 @@
 		to_chat(user, span_warning("[target] is not colorful enough, you can't match that color!"))
 
 	return SECONDARY_ATTACK_CONTINUE_CHAIN
+
+/obj/item/toy/crayon/spraycan/proc/spray_face(mob/living/carbon/victim, mob/user)
+	if(pre_noise || post_noise)
+		playsound(user.loc, 'sound/effects/spray.ogg', 25, TRUE, 5)
+
+	user.visible_message(span_danger("[user] sprays [src] into the face of [victim]!"))
+	to_chat(victim, span_userdanger("[user] sprays [src] into your face!"))
+
+	if(victim.client)
+		victim.blur_eyes(3)
+		victim.blind_eyes(1)
+
+	if(victim.get_eye_protection() <= 0) // no eye protection? ARGH IT BURNS. Warning: don't add a stun here. It's a roundstart item with some quirks.
+		victim.apply_effects(eyeblur = 5, jitter = 10)
+		flash_color(victim, flash_color=paint_color, flash_time=40)
+
+	if(ishuman(victim) && actually_paints)
+		var/mob/living/carbon/human/human_victim = victim
+		human_victim.update_lips("spray_face", paint_color)
+
+	. = use_charges(user, 10, FALSE)
+	var/fraction = min(1, . / reagents.maximum_volume)
+	reagents.expose(victim, VAPOR, fraction * volume_multiplier)
 
 /obj/item/toy/crayon/spraycan/attackby_storage_insert(datum/component/storage, atom/storage_holder, mob/user)
 	return is_capped
@@ -906,6 +917,68 @@
 	name = "infinite spraycan"
 	charges = -1
 	desc = "Now with 30% more bluespace technology."
+
+
+/obj/item/toy/crayon/spraycan/pyrite
+	name = "fiery spraycan"
+	desc = "An incredibly hot spraycan. You should be careful with this stuff..."
+	icon_state = "pyrite_cap"
+	icon_capped = "pyrite_cap"
+	icon_uncapped = "pyrite"
+	use_overlays = FALSE
+
+	can_change_colour = FALSE
+	paint_color = "#FFC828"
+	volume_multiplier = 5
+	exposed_on_paint = FALSE //Ruins the effect
+
+	reagent_contents = list(/datum/reagent/clf3 = 1)
+	resistance_flags = LAVA_PROOF | FIRE_PROOF
+
+	var/times_used = 0
+	var/use_timer
+	COOLDOWN_DECLARE(use_cooldown)
+
+/obj/item/toy/crayon/spraycan/pyrite/afterattack(atom/target, mob/user, proximity, params)
+	if(!COOLDOWN_FINISHED(src, use_cooldown))
+		balloon_alert(user, "[src] hasn't recovered yet!")
+		return
+
+	return ..()
+
+/obj/item/toy/crayon/spraycan/pyrite/paint_stuff(atom/target, mob/user, gang_mode, list/turf/affected_turfs, paint_color, drawing, temp, graf_rot, istagger, clickx, clicky)
+	. = ..()
+	var/mob/living/simple_animal/hostile/mimic/copy/pyrite/mimick = new(get_turf(.), ., user)
+	var/painting_size = 1
+	if(paint_mode == PAINT_LARGE_HORIZONTAL)
+		mimick.maxHealth *= 2
+		mimick.health *= 2
+		mimick.melee_damage_lower *= 2
+		mimick.melee_damage_upper *= 2
+		painting_size = 3
+
+	times_used += painting_size
+	deltimer(use_timer)
+	use_timer = addtimer(CALLBACK(src, .proc/remove_stack), 12 SECONDS, TIMER_STOPPABLE)
+	if(times_used >= 5)
+		balloon_alert(user, "[src] overheats!")
+		COOLDOWN_START(src, use_cooldown, times_used * 12 SECONDS)
+
+	var/list/all_spraycans = user.get_all_contents() - src
+	if(istype(user.pulling, type))
+		all_spraycans += user.pulling
+
+	for(var/obj/item/toy/crayon/spraycan/pyrite/another_spraycan in all_spraycans)
+		another_spraycan.times_used += painting_size
+		deltimer(another_spraycan.use_timer)
+		another_spraycan.use_timer = addtimer(CALLBACK(another_spraycan, .proc/remove_stack), 12 SECONDS, TIMER_STOPPABLE)
+		if(another_spraycan.times_used >= 5)
+			COOLDOWN_START(another_spraycan, use_cooldown, another_spraycan.times_used * 12 SECONDS)
+
+/obj/item/toy/crayon/spraycan/pyrite/proc/remove_stack()
+	times_used -= 1
+	if(times_used > 0)
+		use_timer = addtimer(CALLBACK(src, .proc/remove_stack), 12 SECONDS)
 
 #undef RANDOM_GRAFFITI
 #undef RANDOM_LETTER

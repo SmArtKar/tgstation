@@ -564,7 +564,7 @@
 
 	if(new_thrower)
 		our_thrower = new_thrower
-		addtimer(CALLBACK(src, .proc/setup_turfs), 3 SECONDS)
+		addtimer(CALLBACK(src, .proc/setup_turfs), 2 SECONDS)
 	else
 		setup_turfs()
 

@@ -107,7 +107,7 @@ GLOBAL_LIST_INIT(mimic_blacklist, list(/obj/structure/table, /obj/structure/cabl
 	var/mob/living/creator = null // the creator
 	var/destroy_objects = 0
 	var/knockdown_people = 0
-	var/static/mutable_appearance/googly_eyes = mutable_appearance('icons/mob/mob.dmi', "googly_eyes")
+	var/static/mutable_appearance/googly_eyes = mutable_appearance('icons/mob/mob.dmi', "googly_eyes", appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM)
 	var/overlay_googly_eyes = TRUE
 	var/idledamage = TRUE
 
@@ -147,26 +147,27 @@ GLOBAL_LIST_INIT(mimic_blacklist, list(/obj/structure/table, /obj/structure/cabl
 		return TRUE
 	return FALSE
 
-/mob/living/simple_animal/hostile/mimic/copy/proc/CopyObject(obj/O, mob/living/user, destroy_original = 0)
-	if(destroy_original || CheckObject(O))
-		O.forceMove(src)
-		name = O.name
-		desc = O.desc
-		icon = O.icon
-		icon_state = O.icon_state
+/mob/living/simple_animal/hostile/mimic/copy/proc/CopyObject(obj/copy_target, mob/living/user, destroy_original = 0)
+	if(destroy_original || CheckObject(copy_target))
+		copy_target.forceMove(src)
+		name = copy_target.name
+		desc = copy_target.desc
+		icon = copy_target.icon
+		icon_state = copy_target.icon_state
 		icon_living = icon_state
-		copy_overlays(O)
+		color = copy_target.color
+		copy_overlays(copy_target)
 		if (overlay_googly_eyes)
 			add_overlay(googly_eyes)
-		if(isstructure(O) || ismachinery(O))
+		if(isstructure(copy_target) || ismachinery(copy_target))
 			health = (anchored * 50) + 50
 			destroy_objects = 1
-			if(O.density && O.anchored)
+			if(copy_target.density && copy_target.anchored)
 				knockdown_people = 1
 				melee_damage_lower *= 2
 				melee_damage_upper *= 2
-		else if(isitem(O))
-			var/obj/item/I = O
+		else if(isitem(copy_target))
+			var/obj/item/I = copy_target
 			health = 15 * I.w_class
 			melee_damage_lower = 2 + I.force
 			melee_damage_upper = 2 + I.force
@@ -176,7 +177,7 @@ GLOBAL_LIST_INIT(mimic_blacklist, list(/obj/structure/table, /obj/structure/cabl
 			creator = user
 			faction += "[REF(creator)]" // very unique
 		if(destroy_original)
-			qdel(O)
+			qdel(copy_target)
 		return 1
 
 /mob/living/simple_animal/hostile/mimic/copy/DestroySurroundings()
@@ -190,6 +191,40 @@ GLOBAL_LIST_INIT(mimic_blacklist, list(/obj/structure/table, /obj/structure/cabl
 		C.Paralyze(40)
 		C.visible_message(span_danger("\The [src] knocks down \the [C]!"), \
 				span_userdanger("\The [src] knocks you down!"))
+
+/mob/living/simple_animal/hostile/mimic/copy/pyrite
+	health = 30
+	maxHealth = 30
+	idledamage = FALSE
+	attack_sound = 'sound/items/welder.ogg'
+	melee_damage_type = BURN
+	melee_damage_lower = 5
+	melee_damage_upper = 10
+	density = FALSE
+	plane = GAME_PLANE
+	layer = ABOVE_NORMAL_TURF_LAYER
+
+/mob/living/simple_animal/hostile/mimic/copy/pyrite/Initialize(mapload, obj/copy, mob/living/creator, destroy_original, no_googlies)
+	. = ..()
+	RegisterSignal(src, COMSIG_LIVING_APPLY_WATER, .proc/apply_water)
+
+/mob/living/simple_animal/hostile/mimic/copy/pyrite/Destroy()
+	UnregisterSignal(src, COMSIG_LIVING_APPLY_WATER)
+	. = ..()
+
+/mob/living/simple_animal/hostile/mimic/copy/pyrite/CheckObject(obj/checking)
+	. = ..()
+	if(istype(checking, /obj/effect/decal/cleanable/crayon))
+		return TRUE
+
+/mob/living/simple_animal/hostile/mimic/copy/pyrite/proc/apply_water()
+	SIGNAL_HANDLER
+	adjustBruteLoss(15)
+
+/mob/living/simple_animal/hostile/mimic/copy/pyrite/adjustFireLoss(amount, updating_health, forced)
+	if(!forced && amount > 0)
+		amount = -abs(amount)
+	. = ..()
 
 /mob/living/simple_animal/hostile/mimic/copy/machine
 	speak = list(

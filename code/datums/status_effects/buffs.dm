@@ -682,7 +682,7 @@
 
 /datum/status_effect/slime
 	id = "slime_goo"
-	status_type = STATUS_EFFECT_REFRESH
+	status_type = STATUS_EFFECT_REPLACE
 	duration = 1 MINUTES
 	var/mutable_appearance/goo_overlay
 	var/effect_icon_state
@@ -843,3 +843,116 @@
 
 /datum/status_effect/slime/adamantine/get_examine_text()
 	return span_notice("[owner.p_they(TRUE)] are covered in a thick layer of heavy adamantine slime.")
+
+/atom/movable/screen/alert/status_effect/golden_eyes
+	name = "Golden Gaze"
+	desc = "You are using golden slime's power to gaze through someone else's eyes! Click on this alert to toggle this effect on and off."
+	icon_state = "golden_eyes"
+
+/atom/movable/screen/alert/status_effect/golden_eyes/Click(location, control, params)
+	. = ..()
+	if(!.)
+		return
+
+	var/datum/status_effect/golden_eyes/golden_eyes = attached_effect
+	if(golden_eyes.gazing)
+		golden_eyes.stop_gazing()
+	else
+		golden_eyes.start_gazing()
+
+/datum/status_effect/golden_eyes
+	id = "golden_eyes"
+	duration = 3 MINUTES
+	tick_interval = 1
+	alert_type = /atom/movable/screen/alert/status_effect/golden_eyes
+	status_type = STATUS_EFFECT_REPLACE
+	var/original_eye_color_left
+	var/original_eye_color_right
+	var/mob/living/following
+	var/gazing = TRUE
+	var/peers = 0
+
+/datum/status_effect/golden_eyes/on_creation(mob/living/new_owner, mob/living/to_follow)
+	if(!ishuman(new_owner))
+		CRASH("[type] status effect added to non-human owner: [new_owner ? new_owner.type : "null owner"]")
+
+	if(!to_follow || !istype(to_follow))
+		CRASH("[type] status effect added with to_follow being non-living: [to_follow ? to_follow.type : "null to_follow"]")
+
+	following = to_follow
+	. = ..()
+
+/datum/status_effect/golden_eyes/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		CRASH("[type] status effect added to non-human owner: [owner ? owner.type : "null owner"]")
+
+	var/mob/living/carbon/human/human_owner = owner
+	original_eye_color_left = human_owner.eye_color_left
+	original_eye_color_right = human_owner.eye_color_right
+	human_owner.eye_color_left = "#EEAA01"
+	human_owner.eye_color_right = "#EEAA01"
+	human_owner.dna.update_ui_block(DNA_EYE_COLOR_LEFT_BLOCK)
+	human_owner.dna.update_ui_block(DNA_EYE_COLOR_RIGHT_BLOCK)
+	var/obj/item/organ/eyes/eyes = human_owner.getorgan(/obj/item/organ/eyes)
+	if(eyes)
+		eyes.refresh()
+	human_owner.update_body()
+	start_gazing()
+
+/datum/status_effect/golden_eyes/on_remove()
+	if(!ishuman(owner))
+		stack_trace("[type] status effect being removed from non-human owner: [owner ? owner.type : "null owner"]")
+
+	var/mob/living/carbon/human/human_owner = owner
+	human_owner.eye_color_left = original_eye_color_left
+	human_owner.eye_color_right = original_eye_color_right
+	human_owner.dna.update_ui_block(DNA_EYE_COLOR_LEFT_BLOCK)
+	human_owner.dna.update_ui_block(DNA_EYE_COLOR_RIGHT_BLOCK)
+	var/obj/item/organ/eyes/eyes = human_owner.getorgan(/obj/item/organ/eyes)
+	if(eyes)
+		eyes.refresh()
+	human_owner.update_body()
+	stop_gazing()
+
+/datum/status_effect/golden_eyes/proc/stop_gazing()
+	owner.clear_fullscreen("golden_eyes")
+	owner.cure_blind("golden_eyes")
+	owner.cure_nearsighted("golden_eyes")
+	owner.set_blurriness(min(20, owner.eye_blurry)) //No powergaming to get rid of blurry/blind
+	owner.set_blindness(min(20, owner.eye_blind))
+	owner.reset_perspective()
+	gazing = FALSE
+
+/datum/status_effect/golden_eyes/proc/start_gazing()
+	owner.reset_perspective(following)
+	owner.overlay_fullscreen("golden_eyes", /atom/movable/screen/fullscreen/golden_eyes, 0)
+	gazing = TRUE
+	peers += 1
+	if(prob(25 * peers)) /// Don't overuse!
+		to_chat(following, span_warning("Your head pounds as you feel something otherworldly connecting to your mind..."))
+
+/datum/status_effect/golden_eyes/tick(delta_time, times_fired)
+	. = ..()
+	if(!gazing)
+		return
+
+	if(HAS_TRAIT(following, TRAIT_BLIND) && !HAS_TRAIT_FROM(owner, TRAIT_BLIND, "golden_eyes"))
+		owner.become_blind("golden_eyes")
+	else if(!HAS_TRAIT(following, TRAIT_BLIND) && HAS_TRAIT_FROM(owner, TRAIT_BLIND, "golden_eyes"))
+		owner.cure_blind("golden_eyes")
+
+	if(HAS_TRAIT(following, TRAIT_NEARSIGHT) && !HAS_TRAIT_FROM(owner, TRAIT_NEARSIGHT, "golden_eyes"))
+		owner.become_nearsighted("golden_eyes")
+	else if(!HAS_TRAIT(following, TRAIT_NEARSIGHT) && HAS_TRAIT_FROM(owner, TRAIT_NEARSIGHT, "golden_eyes"))
+		owner.cure_nearsighted("golden_eyes")
+
+	if(owner.eye_blurry != following.eye_blurry)
+		owner.set_blurriness(following.eye_blurry)
+	if(owner.eye_blind != following.eye_blind)
+		owner.set_blindness(following.eye_blind)
+
+/datum/status_effect/golden_eyes/get_examine_text()
+	if(!gazing)
+		return span_notice("[owner.p_their(TRUE)] eyes are of unnatural bright golden color")
+	return span_notice("[owner.p_their(TRUE)] eyes are of unnatural bright golden color and it seems like [owner.p_their()] mind is somewhere else...")

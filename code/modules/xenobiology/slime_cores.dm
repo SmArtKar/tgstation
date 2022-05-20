@@ -13,9 +13,9 @@
 	grind_results = list()
 	var/uses = 1 ///uses before it goes inert
 	var/tier = 1
-	var/qdel_timer = null ///deletion timer, for delayed reactions
 	var/list/react_reagents = list()
 	var/activated = FALSE
+	var/attached_gold_core = FALSE
 
 /obj/item/slime_extract/proc/activate()
 
@@ -52,6 +52,14 @@
 		to_chat(user, span_warning("[target] is empty!"))
 	else
 		to_chat(user, span_warning("[src] is full!"))
+
+/obj/item/slime_extract/update_overlays()
+	. = ..()
+	if(attached_gold_core)
+		. += mutable_appearance(icon, icon_state = "gold_secondary_attached")
+
+/obj/item/slime_extract/special
+	tier = 0
 
 // ************************************************
 // ******************* TIER ONE *******************
@@ -162,6 +170,9 @@
 
 /obj/item/slime_extract/dark_blue/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
+	if(!proximity_flag)
+		return
+
 	if(!ishuman(target) || !activated)
 		return
 
@@ -236,6 +247,9 @@
 
 /obj/item/slime_extract/pink/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
+	if(!proximity_flag)
+		return
+
 	if(!isliving(target) || !activated || !target.GetComponent(/datum/component/mood))
 		return
 
@@ -256,6 +270,78 @@
 	name = "gold slime extract"
 	icon_state = "gold"
 	tier = 4
+
+/obj/item/slime_extract/gold/activate()
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. You can apply it to someone else to peer through their eyes."
+	activated = TRUE
+
+/obj/item/slime_extract/gold/afterattack(atom/target, mob/living/user, proximity_flag)
+	if(!isliving(target) || !activated || target == user)
+		return ..()
+
+	if(!proximity_flag)
+		return
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+	to_chat(user, span_notice("You apply [src] to [target] without [target.p_them()] noticing and your vision blurs as your mind links to [target.p_their()] eyes."))
+	user.apply_status_effect(/datum/status_effect/golden_eyes, target)
+	if(uses <= 0)
+		qdel(src)
+
+/obj/item/slime_extract/special/gold_secondary
+	name = "secondary gold slime extract"
+	desc = "A small chunk of gold slime. You can attach it to another slime extract and it will sync it's reagents with the linked secondary extract."
+	icon_state = "gold_secondary"
+	uses = 0
+	var/obj/item/slime_extract/special/gold_secondary/linked_extract
+	var/obj/item/slime_extract/target_extract
+
+/obj/item/slime_extract/special/gold_secondary/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!proximity_flag)
+		return
+
+	if(!istype(target, /obj/item/slime_extract))
+		return
+
+	var/obj/item/slime_extract/extract = target
+
+	if(istype(extract, /obj/item/slime_extract/special/gold_secondary))
+		to_chat(user, span_warning("You can't attach [src] to [target]!"))
+		return
+
+	if(target_extract)
+		to_chat(user, span_warning("[src] is already linked to another extract!"))
+		return
+
+	extract.attached_gold_core = TRUE
+	extract.update_icon()
+	linked_extract.target_extract = extract
+	linked_extract.reagents.trans_to(extract, linked_extract.reagents.total_volume)
+	linked_extract.linked_extract = null
+	QDEL_NULL(src)
+
+/obj/item/slime_extract/special/gold_secondary/create_reagents(max_vol, flags)
+	. = ..()
+	RegisterSignal(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_DEL_REAGENT), .proc/on_reagent_change)
+	RegisterSignal(reagents, COMSIG_PARENT_QDELETING, .proc/on_reagents_del)
+
+/obj/item/slime_extract/special/gold_secondary/proc/on_reagents_del(datum/reagents/reagents)
+	SIGNAL_HANDLER
+	UnregisterSignal(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_DEL_REAGENT, COMSIG_PARENT_QDELETING))
+	return NONE
+
+/obj/item/slime_extract/special/gold_secondary/proc/on_reagent_change(datum/reagents/holder, ...)
+	SIGNAL_HANDLER
+	if(!target_extract)
+		return
+
+	reagents.trans_to(target_extract, reagents.total_volume)
 
 // ************************************************
 // ****************** TIER FIVE *******************
@@ -323,6 +409,9 @@
 
 /obj/item/slime_extract/sepia/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
+	if(!proximity_flag)
+		return
+
 	if(!isliving(target) || !time_jump)
 		return
 
@@ -355,6 +444,22 @@
 	icon_state = "pyrite"
 	tier = 5
 
+/obj/item/slime_extract/pyrite/activate()
+	activated = TRUE
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. You can remotely use it on someone else to temporary copy their appearance."
+
+/obj/item/slime_extract/pyrite/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!iscarbon(target) || !activated)
+		return
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+
 // Bluespace Extract
 
 /obj/item/slime_extract/bluespace
@@ -369,7 +474,7 @@
 /obj/item/slime_extract/bluespace/activate()
 	var/turf/our_turf = get_turf(src)
 	var/area/teleport_area = get_area(src)
-	if(teleport_area.area_flags & NOTELEPORT)
+	if(teleport_area.area_flags & NOTELEPORT || HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 		uses += 1
 		our_turf.visible_message("[src] starts glowing but soon calms down, unable to memorise it's location.")
 		return
@@ -400,7 +505,7 @@
 	desc = initial(desc)
 	activated = FALSE
 
-	if(teleport_area.area_flags & NOTELEPORT || !activation_x)
+	if(teleport_area.area_flags & NOTELEPORT || !activation_x || HAS_TRAIT(our_turf, TRAIT_BLUESPACE_SLIME_FIXATION))
 		uses += 1
 		our_turf.visible_message("[src] starts glowing but soon calms down, unable to channel the portal.")
 		return
@@ -442,7 +547,6 @@
 	our_turf.visible_message(span_danger("[src] starts to vibrate violently!"))
 
 	addtimer(CALLBACK(src, .proc/slime_explosion), 5 SECONDS)
-	deltimer(qdel_timer)
 
 /obj/item/slime_extract/oil/proc/slime_explosion()
 	if(!primer)
@@ -473,6 +577,9 @@
 
 /obj/item/slime_extract/black/afterattack(atom/target, mob/living/user, proximity_flag)
 	. = ..()
+	if(!proximity_flag)
+		return
+
 	if(!ishuman(target) || !activated)
 		return
 
@@ -519,6 +626,86 @@
 	tier = 6
 	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
+/obj/item/slime_extract/light_pink/proc/start_pacifism()
+	var/area/our_area = get_area(get_turf(src))
+	if(our_area.outdoors)
+		return
+
+	for(var/turf/open/affected_turf in our_area)
+		var/obj/effect/abstract/petals_holder/petals = locate() in affected_turf
+		if(petals)
+			deltimer(petals.del_timer)
+			QDEL_IN(petals, 3 MINUTES)
+			continue
+
+		petals = new(affected_turf)
+		for(var/mob/living/victim in affected_turf)
+			ADD_TRAIT(victim, TRAIT_PACIFISM, MAGIC_TRAIT)
+			to_chat(victim, span_notice("You feel hypnotised by the falling sakura petals..."))
+
+/obj/effect/abstract/petals_holder //Because I want particles be ontop of the mobs and byonds system is fucking STUUUUPID. Can't do one particle generator because curved rooms muh.
+	anchored = TRUE //dont move my shit
+	particles = new /particles/sakura_petals()
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	layer = ABOVE_ALL_MOB_LAYER
+	plane = ABOVE_GAME_PLANE
+	var/del_timer
+
+/obj/effect/abstract/petals_holder/Initialize(mapload)
+	. = ..()
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = .proc/on_entered,
+		COMSIG_ATOM_EXITED = .proc/on_exited,
+	)
+
+	AddElement(/datum/element/connect_loc, loc_connections)
+	del_timer = QDEL_IN(src, 3 MINUTES)
+
+/obj/effect/abstract/petals_holder/proc/on_entered(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	SIGNAL_HANDLER
+
+	if(!isliving(arrived) || HAS_TRAIT_FROM(arrived, TRAIT_PACIFISM, MAGIC_TRAIT))
+		return
+
+	ADD_TRAIT(arrived, TRAIT_PACIFISM, MAGIC_TRAIT)
+	to_chat(arrived, span_notice("You feel hypnotised by the falling sakura petals..."))
+
+/obj/effect/abstract/petals_holder/proc/on_exited(datum/source, atom/movable/gone, direction)
+	SIGNAL_HANDLER
+
+	if(!isliving(gone))
+		return
+
+	var/turf/dir_turf = get_step(get_turf(src), direction)
+	if(locate(type) in dir_turf)
+		return
+
+	REMOVE_TRAIT(gone, TRAIT_PACIFISM, MAGIC_TRAIT)
+
+/obj/effect/abstract/petals_holder/Destroy(force)
+	var/turf/our_turf = get_turf(src)
+	for(var/mob/living/victim in our_turf)
+		REMOVE_TRAIT(victim, TRAIT_PACIFISM, MAGIC_TRAIT)
+	return ..()
+
+/particles/sakura_petals
+	icon = 'icons/effects/particles/sakura.dmi'
+	icon_state = list("sakura_1" = 1, "sakura_2" = 2, "sakura_3" = 3)
+	width = 1024
+	height = 1024
+	count = 10000
+	spawning = 0.02
+	lifespan = 9 SECONDS
+	fade = 3 SECONDS
+	fadein = 1 SECONDS
+	grow = -0.001
+	velocity = list(-1.5, -1)
+	position = generator("box", list(48, 96), list(144, 128), NORMAL_RAND)
+	drift = generator("vector", list(0, -0.0010), list(0, 0))
+	scale = generator("vector", list(0.75, 0.75), list(1,1), NORMAL_RAND)
+	rotation = generator("num", 0, 360)
+	spin = generator("num", -20, 20)
+
 
 // ************************************************
 // ****************** TIER SEVEN ******************
@@ -534,10 +721,9 @@
 /obj/item/slime_extract/special/fiery
 	name = "fiery slime extract"
 	icon_state = "fiery"
-	tier = 0 //No selling
+	react_reagents = list(/datum/reagent/toxin/plasma = 5)
 
 /obj/item/slime_extract/special/biohazard
 	name = "biohazard slime extract"
 	icon_state = "biohazard"
-	tier = 0
 	react_reagents = list(/datum/reagent/toxin/plasma = 5)

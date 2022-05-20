@@ -450,3 +450,15 @@
 #undef EIGENSTASIUM_PHASE_2_END
 #undef EIGENSTASIUM_PHASE_3_START
 #undef EIGENSTASIUM_PHASE_3_END
+
+/datum/status_effect/jelly_color_tracker
+	id = "jelly_color_tracker"
+	duration = -1
+	tick_interval = -1
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+	var/mutcolor = "#FFFFFF"
+
+/datum/status_effect/jelly_color_tracker/on_apply()
+	. = ..()
+	mutcolor = "#[num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)]"
