@@ -289,8 +289,8 @@
 //Slime digestion speed, in percents per delta tick
 #define SLIME_DIGESTION_SPEED 2
 
-//How much nutrition slime gets from eating something each second
-#define SLIME_DIGESTION_NUTRITION 6
+//How much nutrition slime gets from eating something each second, per percent
+#define SLIME_DIGESTION_NUTRITION 3
 
 //Slime commands defines
 #define SLIME_FRIENDSHIP_FOLLOW 3 //Min friendship to order it to follow

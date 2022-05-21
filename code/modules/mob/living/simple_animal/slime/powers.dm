@@ -66,7 +66,7 @@
 	Digesting = food
 	digestion_progress = 0
 
-	digestion_overlay = mutable_appearance(food.icon, food.icon_state)
+	digestion_overlay = mutable_appearance(food.icon, food.icon_state, layer = layer + 0.02, plane = plane)
 	digestion_overlay.pixel_x = pixel_x
 	digestion_overlay.pixel_y = pixel_y
 	digestion_overlay.transform = matrix().Scale(0.7)

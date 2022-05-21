@@ -545,7 +545,7 @@
 		Feedstop(0, 0)
 		return
 
-	add_nutrition(rand(7, 15) * 0.5 * delta_time * CONFIG_GET(number/damage_multiplier)* food_multiplier)
+	add_nutrition(rand(7, 15) * 0.5 * delta_time * CONFIG_GET(number/damage_multiplier) * food_multiplier)
 
 	//Heal yourself.
 	adjustBruteLoss(-1.5 * delta_time)
@@ -1067,8 +1067,8 @@
 			food = food_type
 			break
 
-	digestion_progress += delta_time * SLIME_DIGESTION_SPEED * slime_color.food_types[food]
-	adjust_nutrition(SLIME_DIGESTION_NUTRITION * delta_time)
+	digestion_progress += delta_time * SLIME_DIGESTION_SPEED
+	adjust_nutrition(SLIME_DIGESTION_NUTRITION * SLIME_DIGESTION_SPEED * delta_time * slime_color.food_types[food]) //6 nutrition per second, 300 per item by default
 
 	if(digestion_progress >= 100)
 		cut_overlay(digestion_overlay)

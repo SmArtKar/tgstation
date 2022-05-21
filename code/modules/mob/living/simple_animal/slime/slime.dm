@@ -119,7 +119,7 @@
 	else
 		var/datum/action/innate/slime/evolve/E = new
 		E.Grant(src)
-	create_reagents(100)
+	create_reagents(500)
 	if(default_color)
 		new_color = default_color
 	else if(!new_color || !ispath(new_color, /datum/slime_color))
@@ -148,17 +148,6 @@
 	clear_friends()
 	UnregisterSignal(src, COMSIG_LIVING_APPLY_WATER)
 	return ..()
-
-/mob/living/simple_animal/slime/create_reagents(max_vol, flags)
-	. = ..()
-	RegisterSignal(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_DEL_REAGENT), .proc/on_reagent_change)
-	RegisterSignal(reagents, COMSIG_PARENT_QDELETING, .proc/on_reagents_del)
-
-/// Handles removing signal hooks incase someone is crazy enough to reset the reagents datum.
-/mob/living/simple_animal/slime/proc/on_reagents_del(datum/reagents/reagents)
-	SIGNAL_HANDLER
-	UnregisterSignal(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_DEL_REAGENT, COMSIG_PARENT_QDELETING))
-	return NONE
 
 /mob/living/simple_animal/slime/proc/set_color(new_color)
 	if(slime_color)
@@ -208,25 +197,6 @@
 		add_overlay(glitter_overlay)
 	SEND_SIGNAL(src, COMSIG_SLIME_POST_REGENERATE_ICONS)
 	return ..()
-
-/**
- * Snowflake handling of reagent movespeed modifiers
- *
- * Should be moved to the reagents at some point in the future. As it is I'm in a hurry.
- */
-/mob/living/simple_animal/slime/proc/on_reagent_change(datum/reagents/holder, ...)
-	SIGNAL_HANDLER
-	remove_movespeed_modifier(/datum/movespeed_modifier/slime_reagentmod)
-	var/amount = 0
-	if(reagents.has_reagent(/datum/reagent/medicine/morphine)) // morphine slows slimes down
-		amount = 2
-	if(reagents.has_reagent(/datum/reagent/consumable/frostoil)) // Frostoil also makes them move VEEERRYYYYY slow
-		amount = 5
-	if(amount)
-		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/slime_reagentmod, multiplicative_slowdown = amount)
-	if(reagents.has_reagent(/datum/reagent/glitter))
-		glittered = TRUE
-	return NONE
 
 /mob/living/simple_animal/slime/updatehealth()
 	. = ..()
@@ -368,34 +338,7 @@
 		discipline_slime(user)
 
 /mob/living/simple_animal/slime/attack_hand(mob/living/carbon/human/user, list/modifiers)
-	if(buckled && isliving(buckled) && LAZYACCESS(modifiers, RIGHT_CLICK))
-		user.do_attack_animation(src, ATTACK_EFFECT_DISARM)
-		if(buckled == user)
-			if(prob(60))
-				user.visible_message(span_warning("[user] attempts to wrestle \the [name] off!"), \
-					span_danger("You attempt to wrestle \the [name] off!"))
-				playsound(loc, 'sound/weapons/punchmiss.ogg', 25, TRUE, -1)
-
-			else
-				user.visible_message(span_warning("[user] manages to wrestle \the [name] off!"), \
-					span_notice("You manage to wrestle \the [name] off!"))
-				playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
-
-				discipline_slime(user)
-
-		else
-			if(prob(30))
-				buckled.visible_message(span_warning("[user] attempts to wrestle \the [name] off of [buckled]!"), \
-					span_warning("[user] attempts to wrestle \the [name] off of you!"))
-				playsound(loc, 'sound/weapons/punchmiss.ogg', 25, TRUE, -1)
-
-			else
-				buckled.visible_message(span_warning("[user] manages to wrestle \the [name] off of [buckled]!"), \
-					span_notice("[user] manage to wrestle \the [name] off of you!"))
-				playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
-
-				discipline_slime(user)
-	else
+	if(!buckled || !isliving(buckled) || !LAZYACCESS(modifiers, RIGHT_CLICK))
 		if(stat == DEAD && surgeries.len)
 			if(!user.combat_mode || LAZYACCESS(modifiers, RIGHT_CLICK))
 				for(var/datum/surgery/S in surgeries)
@@ -405,6 +348,30 @@
 		if(.) //successful attack
 			attacked += 10
 			apply_moodlet(/datum/slime_moodlet/attacked)
+		return
+
+	user.do_attack_animation(src, ATTACK_EFFECT_DISARM)
+	if(buckled == user)
+		if(prob(60))
+			user.visible_message(span_warning("[user] attempts to wrestle \the [name] off!"), \
+				span_danger("You attempt to wrestle \the [name] off!"))
+			playsound(loc, 'sound/weapons/punchmiss.ogg', 25, TRUE, -1)
+		else
+			user.visible_message(span_warning("[user] manages to wrestle \the [name] off!"), \
+				span_notice("You manage to wrestle \the [name] off!"))
+			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
+			discipline_slime(user)
+	else
+		if(prob(30))
+			buckled.visible_message(span_warning("[user] attempts to wrestle \the [name] off of [buckled]!"), \
+				span_warning("[user] attempts to wrestle \the [name] off of you!"))
+			playsound(loc, 'sound/weapons/punchmiss.ogg', 25, TRUE, -1)
+
+		else
+			buckled.visible_message(span_warning("[user] manages to wrestle \the [name] off of [buckled]!"), \
+				span_notice("[user] manage to wrestle \the [name] off of you!"))
+			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, TRUE, -1)
+			discipline_slime(user)
 
 /mob/living/simple_animal/slime/attack_alien(mob/living/carbon/alien/humanoid/user, list/modifiers)
 	. = ..()

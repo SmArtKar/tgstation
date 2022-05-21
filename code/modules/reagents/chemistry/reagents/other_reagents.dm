@@ -2521,6 +2521,20 @@
 		return
 	new glitter_type(exposed_turf)
 
+/datum/reagent/glitter/on_mob_add(mob/living/victim, amount)
+	. = ..()
+	if(!isslime(victim))
+		return
+	var/mob/living/simple_animal/slime/slime = victim
+	slime.glittered = TRUE
+
+/datum/reagent/glitter/on_mob_delete(mob/living/victim)
+	. = ..()
+	if(!isslime(victim))
+		return
+	var/mob/living/simple_animal/slime/slime = victim
+	slime.glittered = FALSE
+
 /datum/reagent/glitter/pink
 	name = "Pink Glitter"
 	description = "pink sparkles that get everywhere"

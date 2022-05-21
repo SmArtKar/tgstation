@@ -93,8 +93,15 @@
 	color = "metal"
 	coretype = /obj/item/slime_extract/metal
 	mutations = list(/datum/slime_color/yellow = 1, /datum/slime_color/silver = 1, /datum/slime_color/gold = 1)
-	food_types = list(/mob/living/basic/cockroach/rockroach = 4, /obj/item/rockroach_shell = 0.2)
+	food_types = list(/mob/living/basic/cockroach/rockroach = 1, /obj/item/rockroach_shell = 1.5)
 	environmental_req = "Subject requires CO2 in the atmosphere."
+
+/datum/slime_color/metal/New(slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_FEEDON, .proc/start_feeding)
+
+/datum/slime_color/metal/remove()
+	UnregisterSignal(slime, COMSIG_SLIME_FEEDON)
 
 /datum/slime_color/metal/Life(delta_time, times_fired)
 	. = ..()
@@ -105,6 +112,22 @@
 
 	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
+
+/datum/slime_color/metal/proc/start_feeding(datum/source, atom/target)
+	SIGNAL_HANDLER
+
+	if(!istype(target, /mob/living/basic/cockroach/rockroach))
+		return
+
+	var/mob/living/basic/rockroach = target
+	var/turf/target_turf = get_turf(rockroach)
+	rockroach.death(FALSE)
+	var/obj/item/rockroach_shell/shell = locate() in target_turf
+	if(!shell)
+		return COMPONENT_SLIME_NO_FEEDON
+
+	slime.gobble_up(shell)
+	return COMPONENT_SLIME_NO_FEEDON
 
 /datum/slime_color/orange
 	color = "orange"
