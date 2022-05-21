@@ -218,6 +218,9 @@
 /obj/item/transfer_valve,
 /turf/open/floor/plating/airless,
 /area/ruin/unpowered/no_grav)
+"fh" = (
+/turf/closed/mineral/asteroid,
+/area/template_noop)
 "fv" = (
 /obj/machinery/door/window/left/directional/south,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -3561,7 +3564,7 @@ cg
 cg
 cg
 cg
-Ut
+fh
 Ut
 "}
 (30,1,1) = {"
