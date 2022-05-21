@@ -769,3 +769,28 @@
 	results = list(/datum/reagent/consumable/ethanol/slime_queen = 3)
 	required_reagents = list(/datum/reagent/toxin/slime_jelly/pink = 1, /datum/reagent/consumable/berryjuice = 1, /datum/reagent/consumable/ethanol/vodka = 1)
 	mix_message = "Purple swirles appear in the drink as it finishes mixing."
+
+/datum/chemical_reaction/drink/strawberry_banana
+	results = list(/datum/reagent/consumable/strawberry_banana = 3)
+	required_reagents = list(/datum/reagent/consumable/berryjuice = 1, /datum/reagent/consumable/milk = 1, /datum/reagent/consumable/banana = 1)
+
+/datum/chemical_reaction/drink/berry_blast
+	results = list(/datum/reagent/consumable/berry_blast = 3)
+	required_reagents = list(/datum/reagent/consumable/berryjuice = 1, /datum/reagent/consumable/milk = 1, /datum/reagent/consumable/cream = 1)
+
+/datum/chemical_reaction/drink/funky_monkey
+	results = list(/datum/reagent/consumable/funky_monkey = 3)
+	required_reagents = list(/datum/reagent/consumable/coco = 1, /datum/reagent/consumable/milk = 1, /datum/reagent/consumable/banana = 1)
+
+/datum/chemical_reaction/drink/green_giant
+	results = list(/datum/reagent/consumable/green_giant = 3)
+	required_reagents = list(/datum/reagent/consumable/ethanol/creme_de_menthe = 1, /datum/reagent/consumable/milk = 1, /datum/reagent/consumable/limejuice = 1)
+
+/datum/chemical_reaction/drink/melon_baller
+	results = list(/datum/reagent/consumable/melon_baller = 3)
+	required_reagents = list(/datum/reagent/consumable/watermelonjuice = 1, /datum/reagent/consumable/ethanol/creme_de_menthe = 1, /datum/reagent/consumable/milk = 1)
+
+/datum/chemical_reaction/drink/vanilla_dream
+	results = list(/datum/reagent/consumable/vanilla_dream = 3)
+	required_reagents = list(/datum/reagent/consumable/vanilla = 1, /datum/reagent/consumable/milk = 1, /datum/reagent/consumable/cream = 1)
+

@@ -1066,6 +1066,7 @@
 	ADD_TRAIT(owner, TRAIT_NEVER_WOUNDED, type)
 	ADD_TRAIT(owner, TRAIT_NODISMEMBER, type)
 	ADD_TRAIT(owner, TRAIT_NOLIMBDISABLE, type) //Even the crippled will walk!
+	ADD_TRAIT(owner, TRAIT_NODISMEMBER, type)
 	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, type)
 
 	if(!ishuman(owner))
@@ -1105,6 +1106,7 @@
 	REMOVE_TRAIT(owner, TRAIT_NEVER_WOUNDED, type)
 	REMOVE_TRAIT(owner, TRAIT_NODISMEMBER, type)
 	REMOVE_TRAIT(owner, TRAIT_NOLIMBDISABLE, type)
+	REMOVE_TRAIT(owner, TRAIT_NODISMEMBER, type)
 	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, type)
 
 	if(!ishuman(owner))
@@ -1261,6 +1263,11 @@
 /datum/status_effect/rainbow_dash/proc/rainbow_move(turf/source_turf, atom/movable/arrived)
 	if(arrived.loc != source_turf) //They moved
 		return
+
+	if(isitem(arrived))
+		arrived.throw_at(our_turfs[source_turf], 1, 3)
+		return
+
 	arrived.Move(our_turfs[source_turf])
 
 /datum/status_effect/rainbow_dash/tick(delta_time, times_fired)

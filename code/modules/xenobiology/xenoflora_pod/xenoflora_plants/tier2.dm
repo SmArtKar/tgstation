@@ -40,7 +40,7 @@
 
 	required_chems = list(/datum/reagent/water = 0.2, /datum/reagent/bromine = 0.1)
 	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 0.02)
-	min_safe_temp = TCRYO
+	min_safe_temp = 233.15
 	max_safe_temp = T0C
 
 	min_produce = 1

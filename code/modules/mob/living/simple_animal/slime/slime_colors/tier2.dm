@@ -61,7 +61,7 @@
 	color = "blue"
 	coretype = /obj/item/slime_extract/blue
 	mutations = list(/datum/slime_color/dark_blue = 1, /datum/slime_color/silver = 1, /datum/slime_color/pink = 1)
-	temperature_modifier = TCRYO
+	temperature_modifier = 233.15
 	food_types = list(/obj/item/food/xenoflora/cubomelon = 4, /obj/item/food/xenoflora/cubomelon_slice = 1)
 	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
 

@@ -71,8 +71,12 @@
 	if(!rainbow_active)
 		return
 	current_hue = (current_hue + 5) % 360
-	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
-	var/new_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+	var/new_color = rgb(current_hue, 100, 50, space = COLORSPACE_HSL)
+	new_color = rgb2num(new_color, COLORSPACE_RGB)
+	new_color = new_color[1] * 0.213 + new_color[2] * 0.715 + new_color[3] * 0.072
+	new_color = rgb(new_color, new_color, new_color)
+	new_color = rgb2num(new_color, COLORSPACE_HSL)
+	new_color = rgb(current_hue, 100, 50 + (60 - (new_color[3] / 255 * 100)), space = COLORSPACE_HSL)
 	jellyman.dna.features["mcolor"] = new_color
 	glow.set_light_color(new_color)
 	jellyman.update_body(TRUE)
