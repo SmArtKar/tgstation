@@ -10174,9 +10174,6 @@
 /obj/structure/sign/poster/contraband/cc64k_ad,
 /turf/closed/indestructible/syndicate,
 /area/syndicate_mothership/control)
-"DU" = (
-/turf/closed/indestructible/rock/snow,
-/area/space)
 "DV" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-21"
@@ -23915,7 +23912,7 @@ jW
 AI
 CN
 kb
-DU
+aa
 aa
 aa
 aa
