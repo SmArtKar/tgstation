@@ -7974,10 +7974,6 @@
 /obj/machinery/light/directional/south,
 /turf/open/floor/carpet,
 /area/wizard_station)
-"xA" = (
-/mob/living/simple_animal/slime,
-/turf/open/floor/circuit/red/off,
-/area/syndicate_mothership/expansion_bioterrorism)
 "xB" = (
 /obj/item/kirbyplants{
 	icon_state = "plant-21"
@@ -23142,7 +23138,7 @@ CN
 CN
 GI
 jW
-xA
+jW
 CN
 kb
 aa

@@ -28,99 +28,101 @@
 
 // Unlike most of the simple animals, slimes support UNCONSCIOUS. This is an ugly hack.
 /mob/living/simple_animal/slime/update_stat()
-	switch(stat)
-		if(UNCONSCIOUS, HARD_CRIT)
-			if(health > 0)
-				return
+	if(health > 0 && (stat == UNCONSCIOUS || stat == HARD_CRIT))
+		return
 	return ..()
 
-
-/mob/living/simple_animal/slime/proc/AIprocess()  // the master AI process
-
-	if(AIproc || stat || client)
+/mob/living/simple_animal/slime/proc/kickstart_ai()
+	if(ai_active || stat || client)
 		return
 
+	if(nutrition < get_grow_nutrition() && prob(25))
+		will_to_grow = TRUE
+
+	ai_active = TRUE
+	START_PROCESSING(SSfastprocess, src)
+
+/mob/living/simple_animal/slime/proc/stop_ai()
+	if(!ai_active)
+		return
+
+	ai_active = FALSE
+	will_to_grow = FALSE
+	STOP_PROCESSING(SSfastprocess, src)
+
+/mob/living/simple_animal/slime/process(delta_time, times_fired)
 	var/hungry = 0
+	if(nutrition < get_starve_nutrition())
+		hungry = 2
+	else if(nutrition < get_hunger_nutrition())
+		hungry = 1
 
-	AIproc = 1
+	if(!ai_active || stat || !(attacked || hungry || HAS_TRAIT(src, TRAIT_SLIME_RABID) || buckled || target || will_to_grow) || docile)
+		stop_ai()
+		return
 
-	while(AIproc && stat != DEAD && (attacked || hungry || HAS_TRAIT(src, TRAIT_SLIME_RABID) || buckled || Target) && !docile)
 
-		if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
-			if(buckled && !isliving(buckled))
-				buckled.unbuckle_mob(src, force = TRUE)
-				continue
+	if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
+		if(buckled && !isliving(buckled))
+			buckled.unbuckle_mob(src, force = TRUE)
+			return
 
-			stop_moveloop()
-			break
+		stop_moveloop()
+		stop_ai()
+		return
 
-		if(!Target || client)
-			stop_moveloop()
-			break
+	if(!target || client)
+		stop_moveloop()
+		stop_ai()
+		return
 
-		if(isliving(Target))
-			var/mob/living/victim = Target
-			if(victim.health <= -70 || victim.stat == DEAD)
-				set_target(null)
-				AIproc = 0
-				break
+	if(isliving(target))
+		var/mob/living/victim = target
+		if(victim.health <= -70 || victim.stat == DEAD)
+			set_target(null)
+			stop_ai()
+			return
 
-		if (nutrition < get_starve_nutrition())
-			hungry = 2
-		else if (nutrition < get_grow_nutrition() && prob(25) || nutrition < get_hunger_nutrition())
-			hungry = 1
+	if(locate(/mob/living/simple_animal/slime) in target.buckled_mobs)
+		set_target(null)
+		stop_ai()
+		return
 
-		if(Target)
-			if(locate(/mob/living/simple_animal/slime) in Target.buckled_mobs)
-				set_target(null)
-				AIproc = 0
-				break
-			if(!AIproc)
-				stop_moveloop()
-				break
-			if(Target in view(1,src))
-				if(!CanFeedon(Target)) //If they're not able to be fed upon, ignore them.
-					if(!Atkcool)
-						Atkcool = TRUE
-						addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(Target))
-						if(Target.Adjacent(src))
-							attack_target(Target)
-				else if(isliving(Target))
-					var/mob/living/victim = Target
-					if((victim.body_position == STANDING_UP) && prob(80))
-						if(victim.client && victim.health >= 0)
-							if(!Atkcool)
-								Atkcool = TRUE
-								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(victim))
+	if(!target.Adjacent(src))
+		if(get_dist(target, src) > 9 && target_patience < 0)
+			set_target(null)
+			stop_ai()
+			return
 
-								if(victim.Adjacent(src))
-									attack_target(victim)
+		if(is_in_sight(src, target) && !attack_cd)
+			SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, target)
+		start_moveloop(target)
+		return
 
-						else
-							if(!Atkcool && victim.Adjacent(src))
-								Feedon(victim)
-								Atkcool = TRUE
-								addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(victim))
-					else
-						if(!Atkcool && victim.Adjacent(src))
-							Feedon(victim)
-							Atkcool = TRUE
-							addtimer(VARSET_CALLBACK(src, Atkcool, FALSE), slime_color.get_attack_cd(victim))
-				else
-					gobble_up(Target)
+	if(!can_feed_on(target))
+		if(!attack_cd)
+			attack_cd = TRUE
+			addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), slime_color.get_attack_cd(target))
+			attack_target(target)
+		return
 
-			else if(get_dist(Target, src) <= 9 || target_patience > 0) //Previously this used view which is extremely expensive. Also you can no longer make slimes forget about your existence by just hiding behind the corner
-				if(!Target.Adjacent(src)) // Bug of the month candidate: slimes were attempting to move to target only if it was directly next to them, which caused them to target things, but not approach them
-					if(is_in_sight(src, Target) && !Atkcool)
-						SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, Target)
-					start_moveloop(Target)
-			else
-				set_target(null)
-				AIproc = 0
-				break
-		sleep(3.5)
+	if(!isliving(target))
+		gobble_up(target)
+		return
 
-	AIproc = 0
+	if(attack_cd)
+		return
+
+	var/mob/living/victim = target
+	if(!victim.client || victim.health < 0 || victim.body_position == LYING_DOWN || prob(20))
+		feed_on(victim)
+		attack_cd = TRUE
+		addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), slime_color.get_attack_cd(victim))
+		return
+
+	attack_cd = TRUE
+	addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), slime_color.get_attack_cd(victim))
+	attack_target(victim)
 
 /mob/living/simple_animal/slime/proc/attack_target(atom/attack_target)
 	if(SEND_SIGNAL(src, COMSIG_SLIME_ATTACK_TARGET, attack_target) & COMPONENT_SLIME_NO_ATTACK)
@@ -216,15 +218,15 @@
 		if(try_squeesing(source, path_dir))
 			return
 
-/mob/living/simple_animal/slime/Bump(atom/A)
+/mob/living/simple_animal/slime/Bump(atom/bumped_into)
 	. = ..()
 	if(!move_loop)
 		return
 
-	if(SEND_SIGNAL(src, COMSIG_SLIME_SQUEESING_ATTEMPT, get_dir(src, A), move_loop, TRUE) & COMPONENT_SLIME_NO_SQUEESING)
+	if(SEND_SIGNAL(src, COMSIG_SLIME_SQUEESING_ATTEMPT, get_dir(src, bumped_into), move_loop, TRUE) & COMPONENT_SLIME_NO_SQUEESING)
 		return
 
-	if(try_squeesing(move_loop, get_dir(src, A)))
+	if(try_squeesing(move_loop, get_dir(src, bumped_into)))
 		return
 
 /mob/living/simple_animal/slime/proc/try_squeesing(datum/source, squeese_dir)
@@ -442,7 +444,7 @@
 					set_target(null)
 					regenerate_icons()
 					if(buckled && isliving(buckled))
-						Feedstop(silent = TRUE)
+						feed_stop(silent = TRUE)
 
 			if(UNCONSCIOUS, HARD_CRIT)
 				if(!HAS_TRAIT(src, TRAIT_SLIME_STASIS))
@@ -452,63 +454,57 @@
 
 	updatehealth()
 
-
-/mob/living/simple_animal/slime/handle_status_effects(delta_time, times_fired)
-	..()
-	if(!stat && DT_PROB(16, delta_time))
-		adjustBruteLoss(-0.5 * delta_time)
-
 /mob/living/simple_animal/slime/proc/handle_feeding(delta_time, times_fired)
-	if(!buckled || !ismob(buckled))
+	if(!buckled || !isliving(buckled))
 		remove_moodlet(/datum/slime_moodlet/digesting)
 		return
 
-	var/mob/M = buckled
+	var/mob/living/victim = buckled
 
-	if(layer < M.layer) //Because mobs change their layers when standing up/lying down
-		layer = M.layer + 0.01 //appear above the target mob
+	if(layer < victim.layer) //Because mobs change their layers when standing up/lying down
+		layer = victim.layer + 0.01 //appear above the target mob
 
 	if(stat)
-		Feedstop(silent = TRUE)
+		feed_stop(silent = TRUE)
 
-	if(M.stat == DEAD) // our victim died
+	if(victim.stat == DEAD) // our victim died
 		if(!client)
 			if(!HAS_TRAIT(src, TRAIT_SLIME_RABID) && !attacked)
-				var/mob/last_to_hurt = M.LAssailant?.resolve()
-				if(last_to_hurt && last_to_hurt != M)
+				var/mob/last_to_hurt = victim.LAssailant?.resolve()
+				if(last_to_hurt && last_to_hurt != victim)
 					if(prob(30))
 						add_friendship(last_to_hurt, 1)
 		else
-			to_chat(src, "<i>This subject does not have a strong enough life energy anymore...</i>")
+			to_chat(src, span_warning("This subject does not have a strong enough life energy anymore..."))
 
-		if(M.client && ishuman(M) && !docile)
+		if(victim.client && ishuman(victim) && !docile)
 			if(prob(60))
 				ADD_TRAIT(src, TRAIT_SLIME_RABID, "feasted_on_player") //we go rabid after finishing to feed on a human with a client.
 
-		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, M)
-		Feedstop()
+		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, victim)
+		feed_stop()
 		return
 
 	var/food_multiplier = 1
 
-	if(iscarbon(M))
-		var/mob/living/carbon/C = M
-		var/damage_mod = max(1 - (C.getarmor(type = BIO) * 0.25 * 0.01 + HAS_TRAIT(C, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
-		C.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time) //Biosuits reduce damage
-		C.adjustToxLoss(rand(1, 2) * damage_mod * delta_time, forced = TRUE)
+	if(iscarbon(victim))
+		var/mob/living/carbon/carbon_victim = victim
+		var/damage_mod = max(1 - (carbon_victim.getarmor(type = BIO) * 0.25 * 0.01 + HAS_TRAIT(carbon_victim, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
+		carbon_victim.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time) //Biosuits reduce damage
+		carbon_victim.adjustToxLoss(rand(1, 2) * damage_mod * delta_time, forced = TRUE)
 		food_multiplier *= damage_mod
 
-		if(DT_PROB(5, delta_time) && C.client && damage_mod > 0)
-			to_chat(C, "<span class='userdanger'>[pick("You can feel your body becoming weak!", \
+		if(DT_PROB(5, delta_time) && carbon_victim.client && damage_mod > 0)
+			to_chat(carbon_victim, span_userdanger(pick("You can feel your body becoming weak!", \
 			"You feel like you're about to die!", \
 			"You feel every part of your body screaming in agony!", \
 			"A low, rolling pain passes through your body!", \
 			"Your body feels as if it's falling apart!", \
 			"You feel extremely weak!", \
-			"A sharp, deep pain bathes every inch of your body!")]</span>")
+			"A sharp, deep pain bathes every inch of your body!")))
 
-		if(ishuman(C))
-			var/mob/living/carbon/human/human_victim = C
+		if(ishuman(carbon_victim))
+			var/mob/living/carbon/human/human_victim = carbon_victim
 			if(human_victim.dna)
 				var/food_type
 				for(var/food in slime_color.food_types)
@@ -519,14 +515,14 @@
 				if(food_type)
 					food_multiplier *= slime_color.food_types[food_type]
 
-	else if(isanimal(M))
-		var/mob/living/simple_animal/SA = M
-		var/damage_mod = max(1 - (SA.damage_coeff[CLONE] * 0.25 + HAS_TRAIT(SA, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
+	else if(isanimal(victim))
+		var/mob/living/simple_animal/animal_victim = victim
+		var/damage_mod = max(1 - (animal_victim.damage_coeff[CLONE] * 0.25 + HAS_TRAIT(animal_victim, TRAIT_SLIME_RESISTANCE) * 0.25), 0.50) * slime_color.get_feed_damage_modifier()
 		food_multiplier *= damage_mod
 
 		var/food_type
 		for(var/food in slime_color.food_types)
-			if(istype(M, food))
+			if(istype(animal_victim, food))
 				food_type = food
 				break
 
@@ -534,15 +530,15 @@
 			food_multiplier *= slime_color.food_types[food_type]
 
 		var/totaldamage = 0 //total damage done to this unfortunate animal
-		totaldamage += SA.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time)
-		totaldamage += SA.adjustToxLoss(rand(1, 2) * damage_mod * delta_time, forced = TRUE)
+		totaldamage += animal_victim.adjustCloneLoss(rand(2, 4) * damage_mod * delta_time)
+		totaldamage += animal_victim.adjustToxLoss(rand(1, 2) * damage_mod * delta_time, forced = TRUE)
 
 		if(totaldamage <= 0 && slime_color.get_feed_damage_modifier() > 0) //if we did no(or negative!) damage to it, stop
-			Feedstop(0, 0)
+			feed_stop(0, 0)
 			return
 
 	else
-		Feedstop(0, 0)
+		feed_stop(0, 0)
 		return
 
 	add_nutrition(rand(7, 15) * 0.5 * delta_time * CONFIG_GET(number/damage_multiplier) * food_multiplier)
@@ -552,12 +548,14 @@
 	apply_moodlet(/datum/slime_moodlet/digesting)
 
 /mob/living/simple_animal/slime/proc/handle_nutrition(delta_time, times_fired)
+	if(!stat && DT_PROB(16, delta_time))
+		adjustBruteLoss(-0.5 * delta_time)
 
 	if(docile) //God as my witness, I will never go hungry again
 		set_nutrition(700) //fuck you for using the base nutrition var
 		return
 
-	if(cores < max_cores && !stat && nutrition >= get_grow_nutrition() && slime_color.fitting_environment)
+	if(cores < max_cores && !stat && nutrition >= get_hunger_nutrition() && slime_color.fitting_environment)
 		if(core_generation >= SLIME_MAX_CORE_GENERATION)
 			cores += 1
 			regenerate_icons()
@@ -584,11 +582,11 @@
 		amount_grown++
 		update_action_buttons_icon()
 
-	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD && cores >= max_cores && !(buckled && isliving(buckled)) && !Target && !ckey)
+	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD && cores >= max_cores && !(buckled && isliving(buckled)) && !target && !ckey)
 		if(is_adult && loc.AllowDrop())
-			Reproduce()
+			reproduce()
 		else
-			Evolve()
+			grow_up()
 
 /mob/living/simple_animal/slime/proc/add_nutrition(nutrition_to_add = 0)
 	set_nutrition(min((nutrition + nutrition_to_add), get_max_nutrition()))
@@ -596,6 +594,7 @@
 		if(powerlevel<10)
 			if(prob(30-powerlevel*2))
 				powerlevel++
+
 	else if(nutrition >= get_hunger_nutrition() + 100) //can't get power levels unless you're a bit above hunger level.
 		if(powerlevel<5)
 			if(prob(25-powerlevel*5))
@@ -612,14 +611,14 @@
 	if(attacked > 0)
 		attacked--
 
-	if(Discipline > 0)
+	if(discipline > 0)
 
-		if(Discipline >= 5 && HAS_TRAIT(src, TRAIT_SLIME_RABID))
+		if(discipline >= 5 && HAS_TRAIT(src, TRAIT_SLIME_RABID))
 			if(DT_PROB(37, delta_time))
 				REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 
 		if(DT_PROB(5, delta_time))
-			Discipline--
+			discipline--
 
 	if(client)
 		return
@@ -636,15 +635,16 @@
 		stop_moveloop()
 		return // if it's eating someone already, continue eating!
 
-	if(Target)
-		if(get_dist(src, Target) > 1)
+	if(target)
+		if(get_dist(src, target) > 1)
 			target_patience -= 1
-		if (target_patience <= 0 || IsStun() || Discipline || attacked || docile) // Tired of chasing or something draws out attention
+
+		if (target_patience <= 0 || IsStun() || discipline || attacked || docile) // Tired of chasing or something draws out attention
 			REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 			target_patience = 0
 			set_target(null)
 
-	if(AIproc && IsStun())
+	if(ai_active && IsStun())
 		stop_moveloop()
 		return
 
@@ -655,51 +655,53 @@
 	else if (nutrition < get_grow_nutrition() && DT_PROB((mood_level < SLIME_MOOD_LEVEL_POUT ? 25 : 13), delta_time) || nutrition < get_hunger_nutrition())
 		hungry = 1
 
-	if(Target)
+	if(target)
 		return
 
 	if(will_hunt(hungry) && hungry || attacked || HAS_TRAIT(src, TRAIT_SLIME_RABID)) // Only add to the list if we need to
 		var/list/targets = list()
 
-		for(var/mob/living/L in view(7,src))
-			if(L == src)
+		for(var/mob/living/possible_target in view(7,src))
+			if(possible_target == src)
 				continue
 
-			if(isslime(L)) // Don't attack other slimes unless your color allows it
+			if(isslime(possible_target)) // Don't attack other slimes unless your color allows it
 				if(!(slime_color.slime_tags & SLIME_ATTACK_SLIMES))
 					continue
-				else if(!CanFeedon(L))
+				else if(!can_feed_on(possible_target))
 					continue
 
-			if(L.stat == DEAD) // Ignore dead mobs
+
+			if(possible_target.stat == DEAD) // Ignore dead mobs
 				continue
 
-			if(L in Friends) // No eating friends!
+			if(possible_target in friends) // No eating friends!
 				continue
 
 			var/ally = FALSE
-			for(var/F in faction)
-				if(F == "neutral") //slimes are neutral so other mobs not target them, but they can target neutral mobs
+			for(var/our_faction in faction)
+				if(our_faction == "neutral") //slimes are neutral so other mobs not target them, but they can target neutral mobs
 					continue
-				if(F == "slime" && (slime_color.slime_tags & SLIME_ATTACK_SLIMES)) //Allows slimes with attack_slimes tag to attack other slimes
+				if(our_faction == "slime" && (slime_color.slime_tags & SLIME_ATTACK_SLIMES)) //Allows slimes with attack_slimes tag to attack other slimes
 					continue
-				if(F in L.faction)
+				if(our_faction in possible_target.faction)
 					ally = TRUE
 					break
+
 			if(ally)
 				continue
 
-			if(issilicon(L) && (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)) // They can't eat silicons, but they can glomp them in defence
-				targets += L // Possible target found!
+			if(issilicon(possible_target) && (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)) // They can't eat silicons, but they can glomp them in defence
+				targets += possible_target // Possible target found!
 				continue
 
-			if(locate(/mob/living/simple_animal/slime) in L.buckled_mobs) // Only one slime can latch on at a time.
+			if(locate(/mob/living/simple_animal/slime) in possible_target.buckled_mobs) // Only one slime can latch on at a time.
 				continue
 
-			targets += L // Possible target found!
+			targets += possible_target // Possible target found!
 
-		for(var/obj/possible_food in view(7,src))
-			if(CanFeedon(possible_food, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
+		for(var/obj/possible_food in view(7, src))
+			if(can_feed_on(possible_food, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
 				targets += possible_food
 
 		if(targets.len > 0)
@@ -707,24 +709,22 @@
 				set_target(targets[1]) // I am attacked and am fighting back or so hungry
 			else if(hungry == 2)
 				for(var/possible_target in targets)
-					if(CanFeedon(possible_target, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
+					if(can_feed_on(possible_target, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
 						set_target(possible_target)
 						break
 			else
 				for(var/mob/living/possible_target in targets)
-					if(!istype(possible_target) || !CanFeedon(possible_target, TRUE, slimeignore = TRUE, distignore = TRUE))
+					if(!istype(possible_target) || !can_feed_on(possible_target, TRUE, slimeignore = TRUE, distignore = TRUE))
 						continue
 
-					if(!Discipline && DT_PROB((mood_level < SLIME_MOOD_LEVEL_POUT ? 7.5 : 2.5), delta_time))
-						if(ishuman(possible_target) || isalienadult(possible_target))
-							set_target(possible_target)
-							break
+					if(ishuman(possible_target) || isalienadult(possible_target))
+						if(discipline || !DT_PROB((mood_level < SLIME_MOOD_LEVEL_POUT ? 10 : 3), delta_time))
+							continue
 
-					if(islarva(possible_target) || ismonkey(possible_target) || (isslime(possible_target) && (slime_color.slime_tags & SLIME_ATTACK_SLIMES)))
-						set_target(possible_target)
-						break
+					set_target(possible_target)
+					break
 
-				if(!Target)
+				if(!target)
 					var/nearest_food
 					var/food_dist = -1
 					for(var/obj/possible_food in targets)
@@ -735,7 +735,7 @@
 					if(nearest_food)
 						set_target(nearest_food)
 
-	if (Target)
+	if (target)
 		target_patience = rand(5, 7)
 		if (is_adult)
 			target_patience += 3
@@ -743,18 +743,18 @@
 			target_patience += 3
 		if (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
 			target_patience += 3
-		if(!AIproc)
-			INVOKE_ASYNC(src, .proc/AIprocess)
+		if(!ai_active)
+			kickstart_ai()
 		return
 
-	if(!Leader)
+	if(!leader)
 		handle_boredom(delta_time, times_fired, hungry)
 		return
 
 	if(holding_still)
 		holding_still = max(holding_still - (0.5 * delta_time), 0)
 	else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc))
-		start_moveloop(Leader)
+		start_moveloop(leader)
 
 
 /mob/living/simple_animal/slime/handle_automated_movement()
@@ -821,7 +821,7 @@
 				set_target(pick_weight(grief_targets))
 				target_patience = 10
 
-	if(!Target && DT_PROB(0.5, delta_time))
+	if(!target && DT_PROB(0.5, delta_time))
 		apply_moodlet(/datum/slime_moodlet/bored)
 
 /mob/living/simple_animal/slime/proc/attempt_ventcrawl()
@@ -889,12 +889,12 @@
 	mood_level = mood_level + (supposed_mood_level - mood_level) * SLIME_MOOD_GAIN_MODIFIER
 
 	if(mood_level < SLIME_MOOD_LEVEL_POUT)
-		if(Discipline && DT_PROB(2, delta_time)) //Faster discipline loss
-			Discipline -= 1
+		if(discipline && DT_PROB(2, delta_time)) //Faster discipline loss
+			discipline -= 1
 
 	if(mood_level < SLIME_MOOD_LEVEL_SAD)
-		if(Friends.len > 0 && DT_PROB(3, delta_time)) //Lose friends when sad
-			var/mob/nofriend = pick(Friends)
+		if(friends.len > 0 && DT_PROB(3, delta_time)) //Lose friends when sad
+			var/mob/nofriend = pick(friends)
 			add_friendship(nofriend, -1)
 		if(!HAS_TRAIT(src, TRAIT_SLIME_RABID) && !docile && DT_PROB(0.05, delta_time)) //Very low chance to become rabid when sad
 			ADD_TRAIT(src, TRAIT_SLIME_RABID, "bad_slime_mood")
@@ -911,7 +911,7 @@
 			if(0 to SLIME_MOOD_LEVEL_SAD)
 				new_face = pick("pout", "sad")
 
-		if(Target)
+		if(target)
 			new_face = "mischievous"
 
 		if(!new_face && DT_PROB(0.5, delta_time))
@@ -936,82 +936,82 @@
 			if (findtext(phrase, "hello") || findtext(phrase, "hi"))
 				to_say = pick("Hello...", "Hi...")
 			else if (findtext(phrase, "follow"))
-				if (Leader)
-					if (Leader == who) // Already following him
+				if (leader)
+					if (leader == who) // Already following him
 						to_say = pick("Yes...", "Lead...", "Follow...")
-					else if (Friends[who] > Friends[Leader]) // VIVA
+					else if (friends[who] > friends[leader]) // VIVA
 						set_leader(who)
 						to_say = "Yes... I follow [who]..."
 					else
-						to_say = "No... I follow [Leader]..."
+						to_say = "No... I follow [leader]..."
 				else
-					if (Friends[who] >= SLIME_FRIENDSHIP_FOLLOW)
+					if (friends[who] >= SLIME_FRIENDSHIP_FOLLOW)
 						set_leader(who)
 						to_say = "I follow..."
 					else // Not friendly enough
 						to_say = pick("No...", "I no follow...")
 			else if (findtext(phrase, "stop"))
 				if (buckled && isliving(buckled)) // We are asked to stop feeding
-					if (Friends[who] >= SLIME_FRIENDSHIP_STOPEAT)
-						Feedstop()
+					if (friends[who] >= SLIME_FRIENDSHIP_STOPEAT)
+						feed_stop()
 						set_target(null)
-						if (Friends[who] < SLIME_FRIENDSHIP_STOPEAT_NOANGRY)
+						if (friends[who] < SLIME_FRIENDSHIP_STOPEAT_NOANGRY)
 							add_friendship(who, -1)
 							to_say = "Grrr..." // I'm angry but I do it
 						else
 							to_say = "Fine..."
-				else if (Target) // We are asked to stop chasing
-					if (Friends[who] >= SLIME_FRIENDSHIP_STOPCHASE)
+				else if (target) // We are asked to stop chasing
+					if (friends[who] >= SLIME_FRIENDSHIP_STOPCHASE)
 						set_target(null)
-						if (Friends[who] < SLIME_FRIENDSHIP_STOPCHASE_NOANGRY)
+						if (friends[who] < SLIME_FRIENDSHIP_STOPCHASE_NOANGRY)
 							add_friendship(who, -1)
 							to_say = "Grrr..." // I'm angry but I do it
 						else
 							to_say = "Fine..."
-				else if (Leader) // We are asked to stop following
-					if (Leader == who)
+				else if (leader) // We are asked to stop following
+					if (leader == who)
 						to_say = "Yes... I stay..."
 						set_leader(null)
 					else
-						if (Friends[who] > Friends[Leader])
+						if (friends[who] > friends[leader])
 							set_leader(null)
 							to_say = "Yes... I stop..."
 						else
 							to_say = "No... keep follow..."
 			else if (findtext(phrase, "stay"))
-				if (Leader)
-					if (Leader == who)
-						holding_still = Friends[who] * 10
+				if (leader)
+					if (leader == who)
+						holding_still = friends[who] * 10
 						to_say = "Yes... stay..."
-					else if (Friends[who] > Friends[Leader])
-						holding_still = (Friends[who] - Friends[Leader]) * 10
+					else if (friends[who] > friends[leader])
+						holding_still = (friends[who] - friends[leader]) * 10
 						to_say = "Yes... stay..."
 					else
 						to_say = "No... keep follow..."
 				else
-					if (Friends[who] >= SLIME_FRIENDSHIP_STAY)
-						holding_still = Friends[who] * 10
+					if (friends[who] >= SLIME_FRIENDSHIP_STAY)
+						holding_still = friends[who] * 10
 						to_say = "Yes... stay..."
 					else
 						to_say = "No... won't stay..."
 			else if (findtext(phrase, "attack"))
 				if (HAS_TRAIT(src, TRAIT_SLIME_RABID) && prob(20))
 					set_target(who)
-					AIprocess() //Wake up the slime's Target AI, needed otherwise this doesn't work
+					kickstart_ai() //Wake up the slime's target AI, needed otherwise this doesn't work
 					to_say = "ATTACK!?!?"
-				else if (Friends[who] >= SLIME_FRIENDSHIP_ATTACK)
+				else if (friends[who] >= SLIME_FRIENDSHIP_ATTACK)
 					for (var/mob/living/L in view(7,src)-list(src,who))
 						if (findtext(phrase, lowertext(L.name)))
 							if (isslime(L))
 								to_say = "NO... [L] slime friend"
 								add_friendship(who, -1) //Don't ask a slime to attack its friend
-							else if(!Friends[L] || Friends[L] < 1)
+							else if(!friends[L] || friends[L] < 1)
 								set_target(L)
-								AIprocess()//Wake up the slime's Target AI, needed otherwise this doesn't work
-								if(isliving(Target))
-									to_say = "Ok... I attack [Target]"
+								kickstart_ai()//Wake up the slime's target AI, needed otherwise this doesn't work
+								if(isliving(target))
+									to_say = "Ok... I attack [target]"
 								else
-									to_say = "Ok... I eat [Target]"
+									to_say = "Ok... I eat [target]"
 							else
 								to_say = "No... like [L] ..."
 								add_friendship(who, -1) //Don't ask a slime to attack its friend
@@ -1041,11 +1041,11 @@
 		if(moodlet.special_line)
 			speech_lines |= moodlet.special_line
 
-	if (Target)
-		speech_lines += "[Target]... look yummy..."
+	if (target)
+		speech_lines += "[target]... look yummy..."
 
 	for (var/mob/living/possible_friend in view(7, src))
-		if(!(possible_friend in Friends))
+		if(!(possible_friend in friends))
 			continue
 
 		speech_lines += "[possible_friend]... friend..."
@@ -1058,12 +1058,12 @@
 	say(to_say)
 
 /mob/living/simple_animal/slime/proc/handle_digestion(delta_time, times_fired)
-	if(!Digesting)
+	if(!digesting)
 		return
 
 	var/food
 	for(var/food_type in slime_color.food_types)
-		if(istype(Digesting, food_type))
+		if(istype(digesting, food_type))
 			food = food_type
 			break
 
@@ -1072,10 +1072,10 @@
 
 	if(digestion_progress >= 100)
 		cut_overlay(digestion_overlay)
-		to_chat(src, span_notice("<i>You finish digesting [Digesting].</i>"))
-		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, Digesting)
+		to_chat(src, span_notice("You finish digesting [digesting]."))
+		SEND_SIGNAL(src, COMSIG_SLIME_DIGESTED, digesting)
 		QDEL_NULL(digestion_overlay)
-		QDEL_NULL(Digesting)
+		QDEL_NULL(digesting)
 		return
 
 	if(0.7 * (100 - digestion_progress) / 100 < next_overlay_scale) //Not so smooth but it won't cause lag
@@ -1113,7 +1113,7 @@
 		return FALSE
 	if (hunger == 2 || HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)
 		return TRUE
-	if (Leader)
+	if (leader)
 		return FALSE
 	if (holding_still)
 		return FALSE

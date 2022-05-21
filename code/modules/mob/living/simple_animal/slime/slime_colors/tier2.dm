@@ -126,7 +126,7 @@
 	if(!shell)
 		return COMPONENT_SLIME_NO_FEEDON
 
-	slime.gobble_up(shell)
+	INVOKE_ASYNC(slime, /mob/living/simple_animal/slime.proc/gobble_up, shell)
 	return COMPONENT_SLIME_NO_FEEDON
 
 /datum/slime_color/orange

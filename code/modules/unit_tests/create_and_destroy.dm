@@ -11,8 +11,6 @@
 		/mob/living/carbon,
 		//Nother template type, doesn't like being created with no seed
 		/obj/item/food/grown,
-		//And another
-		/obj/item/slimecross/recurring,
 		//This should be obvious
 		/obj/machinery/doomsday_device,
 		//Yet more templates

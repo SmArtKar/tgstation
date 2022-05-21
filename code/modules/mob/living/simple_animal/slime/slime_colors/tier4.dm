@@ -216,12 +216,12 @@
 			hostile.GiveTarget(attack_target)
 
 	for(var/mob/living/simple_animal/slime/other_slime in view(recruit_range, get_turf(slime)))
-		if(other_slime.Target == attack_target || other_slime == attack_target)
+		if(other_slime.target == attack_target || other_slime == attack_target)
 			continue
 
 		if((prob(GOLDEN_SLIME_RECRUIT_SLIME_CHANCE) || HAS_TRAIT(slime, TRAIT_SLIME_KING)) && !HAS_TRAIT(other_slime, TRAIT_SLIME_KING)) // And 0% if the other slime is a king
 			other_slime.set_target(attack_target)
-			other_slime.Leader = src
+			other_slime.set_leader(slime)
 
 /datum/slime_color/gold/proc/can_feed(datum/source, atom/feed_target)
 	SIGNAL_HANDLER

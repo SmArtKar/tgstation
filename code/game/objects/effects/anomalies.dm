@@ -341,7 +341,7 @@
 		T.atmos_spawn_air("o2=500;plasma=500;TEMP=1000") //Make it hot and burny for the new slime
 	var/mob/living/simple_animal/slime/color/fiery/S = new(T)
 	S.amount_grown = SLIME_EVOLUTION_THRESHOLD
-	S.Evolve()
+	S.grow_up()
 	var/datum/action/innate/slime/reproduce/A = new
 	A.Grant(S)
 

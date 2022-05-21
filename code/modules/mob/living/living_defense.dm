@@ -222,6 +222,7 @@
 		visible_message(span_danger("\The [M.name] glomps [src]!"), \
 						span_userdanger("\The [M.name] glomps you!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, M)
 		to_chat(M, span_danger("You glomp [src]!"))
+		playsound(src, 'sound/effects/blobattack.ogg', 75, TRUE)
 		return TRUE
 
 /mob/living/attack_basic_mob(mob/living/basic/user, list/modifiers)

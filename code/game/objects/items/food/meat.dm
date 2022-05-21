@@ -1355,8 +1355,8 @@
 	venue_value = FOOD_PRICE_EXOTIC
 
 /obj/item/food/fried_wings
-	name = "fried shrubberfly wings"
-	desc = "A pair of deep fried shrubberfly wings with a grassy aroma."
+	name = "fried greeblefly wings"
+	desc = "A pair of deep fried greeblefly wings with a grassy aroma."
 	icon_state = "fried_wings"
 	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 4, /datum/reagent/consumable/nutriment/vitamin = 2)
 	tastes = list("grass" = 3, "fried batter" = 1)

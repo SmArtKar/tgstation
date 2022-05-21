@@ -277,7 +277,7 @@
 /datum/crafting_recipe/food/fried_wings
 	name = "Fried Shrubberfly Wings"
 	reqs = list(
-		/obj/item/trash/shrubberfly = 1,
+		/obj/item/trash/greeblefly = 1,
 		/datum/reagent/consumable/flour = 5,
 		/datum/reagent/consumable/corn_starch = 5,
 	)

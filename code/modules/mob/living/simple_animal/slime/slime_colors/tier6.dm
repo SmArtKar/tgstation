@@ -54,6 +54,8 @@
 		return
 
 	COOLDOWN_START(src, oil_throw_cooldown, OIL_SLIME_PROJECTILE_COOLDOWN)
+	slime.attack_cd = TRUE
+	addtimer(VARSET_CALLBACK(slime, attack_cd, FALSE), get_attack_cd(target))
 	var/obj/projectile/our_projectile = new /obj/projectile/oil(get_turf(slime))
 	our_projectile.firer = slime
 	our_projectile.original = target
@@ -230,7 +232,7 @@
 	if(slime.nutrition < (slime.get_starve_nutrition() * 0.5 + slime.get_hunger_nutrition() * 0.5) && fist_out && DT_PROB(25, delta_time)) //Can't maintain fist if too hungry
 		fist_out = FALSE
 		slime.regenerate_icons()
-	else if(!fist_out && (slime.Target || DT_PROB(2.5, delta_time)))
+	else if(!fist_out && (slime.target || DT_PROB(2.5, delta_time)))
 		fist_out = TRUE
 		slime.regenerate_icons()
 
@@ -292,19 +294,19 @@
 	SIGNAL_HANDLER
 
 	if(istype(target, /obj/structure/punching_bag))
-		if(isliving(slime.Target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+		if(isliving(slime.target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
 			return
 		INVOKE_ASYNC(src, .proc/use_punchbag, target)
 		return COMPONENT_SLIME_NO_ATTACK
 
 	if(istype(target, /obj/structure/weightmachine/stacklifter))
-		if(isliving(slime.Target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+		if(isliving(slime.target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
 			return
 		INVOKE_ASYNC(src, .proc/use_lifter, target)
 		return COMPONENT_SLIME_NO_ATTACK
 
 	if(istype(target, /obj/structure/weightmachine/weightlifter))
-		if(isliving(slime.Target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
+		if(isliving(slime.target) || slime.attacked || HAS_TRAIT(slime, TRAIT_SLIME_RABID))
 			return
 		INVOKE_ASYNC(src, .proc/use_bench, target)
 		return COMPONENT_SLIME_NO_ATTACK
@@ -514,7 +516,7 @@
 
 	var/obj/item/new_weapon
 	var/weapon_range = 7
-	if(slime.Target && isliving(slime.Target))
+	if(slime.target && isliving(slime.target))
 		weapon_range = 3
 	for(var/obj/item/possible_weapon in view(weapon_range, get_turf(puppet)))
 		var/actual_force = possible_weapon.force
@@ -610,7 +612,7 @@
 	SIGNAL_HANDLER
 
 	if(puppet)
-		if(isliving(feed_target) && HAS_TRAIT(feed_target, TRAIT_CRITICAL_CONDITION) && !slime.Atkcool)
+		if(isliving(feed_target) && HAS_TRAIT(feed_target, TRAIT_CRITICAL_CONDITION) && !slime.attack_cd)
 			slime.attack_target(feed_target)
 		return COMPONENT_SLIME_NO_FEEDON
 
@@ -618,7 +620,7 @@
 	SIGNAL_HANDLER
 
 	if(puppet)
-		if(isliving(target) && !slime.Atkcool)
+		if(isliving(target) && !slime.attack_cd)
 			slime.attack_target(target)
 		return COMPONENT_SLIME_NO_FEEDON
 
@@ -819,7 +821,7 @@
 	if(!do_after(src, LIGHT_PINK_SLIME_RESIST_TIME, target = body, timed_action_flags = (IGNORE_USER_LOC_CHANGE|IGNORE_TARGET_LOC_CHANGE), extra_checks = CALLBACK(src, .proc/can_resist_control)))
 		return
 	to_chat(src, span_notice("You break free from [color_holder.slime]'s control!"))
-	color_holder.slime.Feedstop(TRUE)
+	color_holder.slime.feed_stop(TRUE)
 
 /mob/living/slime_mind_holder/proc/can_resist_control()
 	if(QDELETED(color_holder) || color_holder.slime.buckled != body)

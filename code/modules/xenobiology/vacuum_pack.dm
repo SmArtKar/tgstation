@@ -44,7 +44,10 @@
 	var/obj/machinery/biomass_recycler/linked
 	var/give_choice = TRUE //If set to true the pack will give the owner a radial selection to choose which object they want to shoot
 	var/check_backpack = TRUE //If it can only be used while worn on the back
-	var/static/list/storable_objects = list(/mob/living/simple_animal/slime, /mob/living/simple_animal/xenofauna)
+	var/static/list/storable_objects = typecacheof(list(/mob/living/simple_animal/slime,
+														/mob/living/simple_animal/xenofauna,
+														/mob/living/basic/cockroach/rockroach,
+														))
 	var/modified = FALSE //If the gun is modified to fight with revenants
 	var/mob/living/simple_animal/revenant/ghost_busting //Stores the revenant we're currently sucking in
 	var/mob/living/ghost_buster //Stores the user
@@ -266,12 +269,6 @@
 		to_chat(user, span_notice("You link [pack] to [target]."))
 		return
 
-	var/can_store = FALSE
-	for(var/storable_type in pack.storable_objects)
-		if(istype(target, storable_type))
-			can_store = TRUE
-			break
-
 	if(pack.linked)
 		var/can_recycle
 		for(var/recycable_type in pack.linked.recyclable_types)
@@ -286,7 +283,7 @@
 			target_stat = living_target.stat
 			buckled_to = living_target.buckled
 
-		if(can_recycle && (!can_store || target_stat != CONSCIOUS))
+		if(can_recycle && (!is_type_in_typecache(target, pack.storable_objects) || target_stat != CONSCIOUS))
 			if(!(VACUUM_PACK_UPGRADE_BIOMASS in pack.upgrades))
 				to_chat(user, span_warning("[pack] does not posess a required upgrade!"))
 				return
@@ -319,7 +316,7 @@
 			pack.linked.stored_matter += pack.linked.cube_production * pack.linked.recyclable_types[can_recycle]
 			return
 
-	if(can_store)
+	if(is_type_in_typecache(target, pack.storable_objects))
 		if(get_dist(user, target) > pack.range)
 			to_chat(user, span_warning("[target] is too far away!"))
 			return

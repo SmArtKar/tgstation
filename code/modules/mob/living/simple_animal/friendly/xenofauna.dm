@@ -188,12 +188,12 @@
 	icon_state = "wobble_meat"
 	desc = "A slab of raw wobble chicken. Remember to wash your hands!"
 
-/mob/living/simple_animal/xenofauna/shrubberfly
-	name = "shrubberfly"
+/mob/living/simple_animal/xenofauna/greeblefly
+	name = "greeblefly"
 	desc = "A giant fly with a trunk and a big glowing butt."
-	icon_state = "shubberfly"
-	icon_living = "shubberfly"
-	icon_dead = "shubberfly-dead"
+	icon_state = "greeblefly"
+	icon_living = "greeblefly"
+	icon_dead = "greeblefly-dead"
 	speak_emote = list("buzzes")
 	emote_hear = list("buzzes")
 	turns_per_move = 2
@@ -212,15 +212,18 @@
 	can_be_held = TRUE
 	held_w_class = WEIGHT_CLASS_TINY
 	del_on_death = 1
+	light_range = 2
+	light_color = "#92FF00"
 
-/mob/living/simple_animal/xenofauna/shrubberfly/Initialize(mapload)
+/mob/living/simple_animal/xenofauna/greeblefly/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_VENTCRAWLER_ALWAYS, INNATE_TRAIT)
 	AddElement(/datum/element/simple_flying)
 	AddComponent(/datum/component/clickbox, x_offset = -2, y_offset = -2)
 	AddComponent(/datum/component/swarming)
+	add_overlay(emissive_appearance(icon, "greeblefly-emissive", alpha = src.alpha))
 
-/mob/living/simple_animal/xenofauna/shrubberfly/mob_pickup(mob/living/user)
+/mob/living/simple_animal/xenofauna/greeblefly/mob_pickup(mob/living/user)
 	if(flags_1 & HOLOGRAM_1)
 		return
 	var/obj/item/clothing/head/mob_holder/destructible/holder = new(get_turf(src), src, held_state, head_icon, held_lh, held_rh, worn_slot_flags)
@@ -228,20 +231,20 @@
 	user.visible_message(span_warning("[user] scoops up [src]!"))
 	user.put_in_hands(holder)
 
-/mob/living/simple_animal/xenofauna/shrubberfly/death(gibbed)
+/mob/living/simple_animal/xenofauna/greeblefly/death(gibbed)
 	if((flags_1 & HOLOGRAM_1))
 		return ..()
-	var/obj/item/trash/shrubberfly/snack = new(loc)
+	var/obj/item/trash/greeblefly/snack = new(loc)
 	snack.pixel_x = pixel_x
 	snack.pixel_y = pixel_y
 	return ..()
 
-/obj/item/trash/shrubberfly
-	name = "shrubberfly"
+/obj/item/trash/greeblefly
+	name = "greeblefly"
 	desc = "Crunchy."
 	icon = 'icons/mob/animal.dmi'
 	icon_state = "shubberfly-dead"
 
-/obj/item/trash/shrubberfly/Initialize(mapload)
+/obj/item/trash/greeblefly/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS, 10, 0, list("grass"), null, 10)

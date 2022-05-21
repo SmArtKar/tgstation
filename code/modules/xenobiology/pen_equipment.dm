@@ -50,7 +50,7 @@
 	for(var/mob/living/simple_animal/slime/slime in range(2, src))
 		if(slime.slime_color.slime_tags & SLIME_DISCHARGER_WEAKENED)
 			slime.adjust_nutrition(SLIME_DISCHARGER_NUTRIMENT_DRAIN * delta_time)
-			if(!slime.Target && DT_PROB(SLIME_DISCHARGER_AGGRESSIVE_EFFECT, delta_time))
+			if(!slime.target && DT_PROB(SLIME_DISCHARGER_AGGRESSIVE_EFFECT, delta_time))
 				slime.set_target(src)
 
 		if(slime.powerlevel > 2 && DT_PROB(SLIME_DISCHARGE_PROB, delta_time))
@@ -533,5 +533,5 @@
 	flick("slime_plushie-bopped", src)
 	if(!user.client)
 		user.apply_moodlet(/datum/slime_moodlet/plushie_play)
-		if(user.Target == src)
+		if(user.target == src)
 			user.set_target(null)

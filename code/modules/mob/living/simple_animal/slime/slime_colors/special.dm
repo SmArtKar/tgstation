@@ -42,6 +42,8 @@
 		return
 
 	COOLDOWN_START(src, fireball_cooldown, FIERY_SLIME_PROJECTILE_COOLDOWN)
+	slime.attack_cd = TRUE
+	addtimer(VARSET_CALLBACK(slime, attack_cd, FALSE), get_attack_cd(target))
 	var/obj/projectile/our_projectile = new /obj/projectile/magic/fireball/minor(get_turf(slime))
 	our_projectile.firer = slime
 	our_projectile.original = target

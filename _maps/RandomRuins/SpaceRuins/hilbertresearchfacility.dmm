@@ -4,9 +4,6 @@
 /turf/open/floor/engine,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "ak" = (
-/mob/living/simple_animal/slime{
-	colour = "bluespace"
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
@@ -831,7 +828,6 @@
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "tL" = (
 /obj/machinery/light/broken/directional/south,
-/obj/item/slime_cookie/bluespace,
 /obj/structure/table/reinforced/plastitaniumglass,
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
@@ -1037,9 +1033,6 @@
 	dir = 10
 	},
 /obj/effect/decal/cleanable/dirt,
-/mob/living/simple_animal/slime{
-	colour = "bluespace"
-	},
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "yi" = (
@@ -1196,12 +1189,6 @@
 /obj/structure/table/reinforced/plastitaniumglass,
 /obj/item/crowbar/large{
 	pixel_y = 4
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/ruin/space/has_grav/powered/hilbertresearchfacility)
-"Az" = (
-/mob/living/simple_animal/slime{
-	colour = "bluespace"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
@@ -1970,13 +1957,6 @@
 	},
 /turf/open/floor/wood,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
-"QP" = (
-/mob/living/simple_animal/slime{
-	colour = "bluespace"
-	},
-/obj/effect/decal/cleanable/dirt,
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "QU" = (
 /obj/structure/railing/corner{
 	dir = 1
@@ -2146,7 +2126,6 @@
 /obj/effect/turf_decal/siding/wideplating_new/dark{
 	dir = 6
 	},
-/obj/item/slimecross/industrial/bluespace,
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "SX" = (
@@ -2175,7 +2154,6 @@
 /area/ruin/space/has_grav/powered/hilbertresearchfacility)
 "TO" = (
 /obj/machinery/light/broken/directional/south,
-/obj/item/slime_extract/bluespace,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/table/reinforced/plastitaniumglass,
 /turf/open/floor/mineral/plastitanium,
@@ -3769,7 +3747,7 @@ Ok
 Bo
 Bo
 kw
-Az
+La
 IU
 sO
 kw
@@ -3888,7 +3866,7 @@ uL
 yw
 VD
 lY
-QP
+lY
 kw
 tL
 Bo
