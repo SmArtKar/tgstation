@@ -225,7 +225,7 @@
 	list_reagents = list(/datum/reagent/toxin/acid = 50)
 
 /obj/item/reagent_containers/glass/beaker/slime
-	list_reagents = list(/datum/reagent/toxin/slimejelly = 50)
+	list_reagents = list(/datum/reagent/toxin/slime_jelly = 50)
 
 /obj/item/reagent_containers/glass/beaker/large/libital
 	name = "libital reserve tank (diluted)"

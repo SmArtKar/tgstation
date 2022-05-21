@@ -38,7 +38,7 @@
 	name = "slime soup"
 	desc = "If no water is available, you may substitute tears."
 	icon_state = "slimesoup"
-	food_reagents = list(/datum/reagent/consumable/nutriment = 6, /datum/reagent/toxin/slimejelly = 10, /datum/reagent/consumable/nutriment/vitamin = 9, /datum/reagent/water = 5)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 6, /datum/reagent/toxin/slime_jelly = 10, /datum/reagent/consumable/nutriment/vitamin = 9, /datum/reagent/water = 5)
 	tastes = list("slime" = 1)
 	foodtypes = TOXIC | SUGAR
 	venue_value = FOOD_PRICE_NORMAL
@@ -105,7 +105,7 @@
 		/datum/reagent/medicine/oculine,
 		/datum/reagent/medicine/omnizine,
 		/datum/reagent/toxin,
-		/datum/reagent/toxin/slimejelly,
+		/datum/reagent/toxin/slime_jelly,
 		)
 	reagents.add_reagent(extra_reagent, 5)
 	reagents.add_reagent(/datum/reagent/consumable/nutriment, 6)
@@ -306,4 +306,4 @@
 	food_reagents = list (/datum/reagent/consumable/nutriment = 8, /datum/reagent/consumable/nutriment/vitamin = 2, /datum/reagent/consumable/nutriment/protein = 2)
 	tastes = list("creamy vegetables"= 2, "sausage" = 1)
 	foodtypes = VEGETABLES | MEAT | GRAIN | BREAKFAST
-	
+

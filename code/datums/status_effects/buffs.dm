@@ -1039,3 +1039,244 @@
 	human_owner.update_inv_hands()
 	human_owner.visible_message(span_danger("[original_name]'s flesh melts, reforming into [human_owner.name_override]!"))
 	playsound(owner, 'sound/effects/bamf.ogg', 100, TRUE)
+
+/datum/status_effect/slime/pyrite/get_examine_text()
+	if(!masquerade_on)
+		return span_warning("[owner.p_they(TRUE)] are covered in a layer of pyrite slime!")
+
+/atom/movable/screen/alert/status_effect/rainbow_shield
+	name = "Rainbow Shield"
+	desc = "You are protected by power of a rainbow slime extract!"
+	icon_state = "rainbow_slime"
+
+/datum/status_effect/rainbow_shield
+	id = "rainbow_slime"
+	duration = 15 SECONDS
+	tick_interval = 1
+	alert_type = /atom/movable/screen/alert/status_effect/rainbow_shield
+	status_type = STATUS_EFFECT_REPLACE
+	var/current_hue = 0 //+8 per sec
+	var/orig_mutcolor
+	var/list/original_limb_color = list()
+	var/orig_facial
+	var/orig_hair
+
+/datum/status_effect/rainbow_shield/on_apply()
+	. = ..()
+	ADD_TRAIT(owner, TRAIT_NEVER_WOUNDED, type)
+	ADD_TRAIT(owner, TRAIT_NODISMEMBER, type)
+	ADD_TRAIT(owner, TRAIT_NOLIMBDISABLE, type) //Even the crippled will walk!
+	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, type)
+
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+
+	human_owner.physiology.damage_resistance += 90
+	human_owner.physiology.bleed_mod *= 0.1
+	human_owner.log_message("gained rainbow shield stun immunity", LOG_ATTACK)
+	human_owner.add_stun_absorption("rainbow_shield", INFINITY, 5)
+
+	orig_facial = human_owner.facial_hair_color
+	orig_hair = human_owner.hair_color
+
+	if(human_owner.dna && human_owner.dna.species)
+		if(MUTCOLORS in human_owner.dna.species)
+			orig_mutcolor = human_owner.dna.features["mcolor"]
+
+	for(var/obj/item/bodypart/limb in human_owner.bodyparts)
+		if(!limb.mutation_color)
+			original_limb_color[WEAKREF(limb)] = FALSE
+			continue
+
+		original_limb_color[WEAKREF(limb)] = limb.mutation_color
+
+	if(prob(5) && SSevents.holidays[APRIL_FOOLS])
+		human_owner.say(";WOMEN FEAR ME", spans = list(SPAN_YELL, "colossus"), ignore_spam = TRUE, forced = type)
+		addtimer(CALLBACK(human_owner, /atom/movable.proc/say, ";FISH FEAR ME", null, list(SPAN_YELL, "colossus"), TRUE, null, TRUE, type), 3 SECONDS)
+		addtimer(CALLBACK(human_owner, /atom/movable.proc/say, ";MEN TURN THEIR EYES AWAY FROM ME", null, list(SPAN_YELL, "colossus"), TRUE, null, TRUE, type), 6 SECONDS)
+		addtimer(CALLBACK(human_owner, /atom/movable.proc/say, ";AS I WALK NO BEAST DARES TO MAKE A SOUND IN MY PRESENCE", null, list(SPAN_YELL, "colossus"), TRUE, null, TRUE, type), 9 SECONDS)
+		addtimer(CALLBACK(human_owner, /atom/movable.proc/say, ";I AM ALONE ON THIS BARREN EARTH", null, list(SPAN_YELL, "colossus"), TRUE, null, TRUE, type), 12 SECONDS)
+		addtimer(CALLBACK(human_owner, /atom/movable.proc/say, ";I AM THY GOD [human_owner.gender == MALE ? "HIM" : (human_owner.gender == FEMALE ? "HER" : "IT")]SELF", null, list(SPAN_YELL, "colossus"), TRUE, null, TRUE, type), 15 SECONDS)
+
+/datum/status_effect/rainbow_shield/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_NEVER_WOUNDED, type)
+	REMOVE_TRAIT(owner, TRAIT_NODISMEMBER, type)
+	REMOVE_TRAIT(owner, TRAIT_NOLIMBDISABLE, type)
+	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, type)
+
+	if(!ishuman(owner))
+		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+
+	human_owner.physiology.damage_resistance -= 90
+	human_owner.physiology.bleed_mod *= 10
+	human_owner.log_message("lost rainbow shield stun immunity", LOG_ATTACK)
+	if(islist(human_owner.stun_absorption) && human_owner.stun_absorption["blooddrunk"])
+		human_owner.stun_absorption -= "rainbow_shield"
+
+	human_owner.facial_hair_color = orig_facial
+	human_owner.hair_color = orig_hair
+
+	if(orig_mutcolor)
+		human_owner.dna.features["mcolor"] = orig_mutcolor
+		if(isluminescent(owner))
+			var/datum/species/jelly/luminescent/species = human_owner.dna.species
+			species.glow.set_light_color(orig_mutcolor)
+
+	for(var/datum/weakref/limb_weakref in original_limb_color)
+		var/obj/item/bodypart/our_limb = limb_weakref.resolve()
+		if(!our_limb)
+			continue
+
+		if(original_limb_color[limb_weakref] == FALSE)
+			our_limb.mutation_color = null
+			continue
+
+		our_limb.mutation_color = original_limb_color[limb_weakref]
+
+	human_owner.update_body(TRUE)
+
+/datum/status_effect/rainbow_shield/tick(delta_time, times_fired)
+	. = ..()
+	current_hue = (current_hue + 8) % 360
+
+	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
+	var/new_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+
+	if(!ishuman(owner)) //In case of admemery
+		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
+		owner.add_atom_colour(new_color, ADMIN_COLOUR_PRIORITY)
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+	if(is_species(owner, /datum/species/jelly/luminescent/rainbow)) //Already rad as fuck
+		return
+
+	human_owner.facial_hair_color = new_color
+	human_owner.hair_color = new_color
+
+	if(orig_mutcolor)
+		human_owner.dna.features["mcolor"] = new_color
+		if(isluminescent(owner))
+			var/datum/species/jelly/luminescent/species = human_owner.dna.species
+			species.glow.set_light_color(new_color)
+
+	var/list/our_parts = human_owner.bodyparts.Copy()
+	for(var/datum/weakref/limb_weakref in original_limb_color)
+		var/obj/item/bodypart/our_limb = limb_weakref.resolve()
+		if(!our_limb)
+			original_limb_color -= limb_weakref
+			continue
+
+		our_parts -= our_limb
+		our_limb.mutation_color = new_color
+
+	for(var/obj/item/bodypart/limb in our_parts)
+		if(!limb.mutation_color)
+			original_limb_color[WEAKREF(limb)] = FALSE
+			continue
+
+		original_limb_color[WEAKREF(limb)] = limb.mutation_color
+		limb.mutation_color = new_color
+
+	human_owner.update_body(TRUE)
+
+/atom/movable/screen/alert/status_effect/rainbow_dash
+	name = "Rainbow Dash"
+	desc = "You are filled with power of a rainbow slime extract!"
+	icon_state = "rainbow_slime"
+
+/atom/movable/screen/alert/status_effect/rainbow_dash/New()
+	. = ..()
+	if(prob(1))
+		desc = "You can be a magical pony too!" //Bruh
+
+/datum/status_effect/rainbow_dash
+	id = "rainbow_slime"
+	duration = 45 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/rainbow_dash
+	status_type = STATUS_EFFECT_REPLACE
+	tick_interval = 1
+	var/current_hue = 0 //+8 per sec
+	var/orig_facial
+	var/orig_hair
+	var/list/our_turfs = list()
+
+/datum/status_effect/rainbow_dash/on_apply()
+	. = ..()
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+
+	human_owner.add_movespeed_modifier(/datum/movespeed_modifier/rainbow_dash)
+
+	orig_facial = human_owner.facial_hair_color
+	orig_hair = human_owner.hair_color
+	human_owner.update_body(TRUE)
+	RegisterSignal(human_owner, COMSIG_MOVABLE_MOVED, .proc/handle_move)
+
+/datum/status_effect/rainbow_dash/on_remove()
+	. = ..()
+
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+
+	human_owner.remove_movespeed_modifier(/datum/movespeed_modifier/rainbow_dash)
+
+	human_owner.facial_hair_color = orig_facial
+	human_owner.hair_color = orig_hair
+	human_owner.update_body(TRUE)
+	UnregisterSignal(human_owner, COMSIG_MOVABLE_MOVED)
+	for(var/turf/target_turf in our_turfs)
+		if(!istype(target_turf) || QDELETED(target_turf))
+			continue
+
+		target_turf.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
+		UnregisterSignal(target_turf, COMSIG_ATOM_ENTERED)
+
+/datum/status_effect/rainbow_dash/proc/handle_move(datum/source, atom/old_loc, move_dir, forced = FALSE)
+	SIGNAL_HANDLER
+	var/turf/owner_turf = get_turf(owner)
+	if(!isturf(old_loc) || (old_loc in our_turfs) || ((owner_turf in our_turfs) && old_loc == our_turfs[owner_turf]) || !owner_turf.Adjacent(old_loc))
+		return
+
+	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
+	var/paint_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+	old_loc.add_atom_colour(paint_color, TEMPORARY_COLOUR_PRIORITY)
+	our_turfs[old_loc] = get_turf(owner)
+	RegisterSignal(old_loc, COMSIG_ATOM_ENTERED, .proc/on_entered)
+
+/datum/status_effect/rainbow_dash/proc/on_entered(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+	SIGNAL_HANDLER
+	addtimer(CALLBACK(src, .proc/rainbow_move, source, arrived), 0.5)
+
+/datum/status_effect/rainbow_dash/proc/rainbow_move(turf/source_turf, atom/movable/arrived)
+	if(arrived.loc != source_turf) //They moved
+		return
+	arrived.Move(our_turfs[source_turf])
+
+/datum/status_effect/rainbow_dash/tick(delta_time, times_fired)
+	. = ..()
+	current_hue = (current_hue + 8) % 360
+
+	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
+	var/new_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+
+	if(!ishuman(owner))
+		return
+
+	var/mob/living/carbon/human/human_owner = owner
+	if(is_species(owner, /datum/species/jelly/luminescent/rainbow)) //Already rad as fuck
+		return
+
+	human_owner.facial_hair_color = new_color
+	human_owner.hair_color = new_color
+	human_owner.update_body(TRUE)

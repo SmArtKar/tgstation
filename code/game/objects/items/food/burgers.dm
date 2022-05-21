@@ -278,7 +278,7 @@
 	venue_value = FOOD_PRICE_EXOTIC
 
 /obj/item/food/burger/jelly/slime
-	food_reagents = list(/datum/reagent/consumable/nutriment = 6, /datum/reagent/toxin/slimejelly = 6, /datum/reagent/consumable/nutriment/vitamin = 6)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 6, /datum/reagent/toxin/slime_jelly = 6, /datum/reagent/consumable/nutriment/vitamin = 6)
 	foodtypes = GRAIN | TOXIC
 
 /obj/item/food/burger/jelly/cherry

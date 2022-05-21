@@ -72,8 +72,6 @@
 		return
 	current_hue = (current_hue + 5) % 360
 	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
-	if(current_hue > 240 && current_hue < 270)
-		current_hue = 75
 	var/new_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
 	jellyman.dna.features["mcolor"] = new_color
 	glow.set_light_color(new_color)

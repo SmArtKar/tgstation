@@ -3,14 +3,14 @@
 	name = "\improper Jellyperson"
 	plural_form = "Jellypeople"
 	id = SPECIES_JELLYPERSON
-	species_traits = list(MUTCOLORS,EYECOLOR,NOBLOOD,NO_UNDERWEAR)
+	species_traits = list(MUTCOLORS,EYECOLOR,NOBLOOD,NO_UNDERWEAR,HAS_FLESH)
 	inherent_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
 		TRAIT_CAN_STRIP,
 		TRAIT_TOXINLOVER,
 	)
 	meat = /obj/item/food/meat/slab/human/mutant/slime
-	exotic_blood = /datum/reagent/toxin/slimejelly
+	exotic_blood = /datum/reagent/toxin/slime_jelly
 	damage_overlay_type = ""
 	var/datum/action/innate/regenerate_limbs/regenerate_limbs
 	liked_food = GROSS | MEAT | TOXIC | RAW

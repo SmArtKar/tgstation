@@ -3,7 +3,7 @@
 	coretype = /obj/item/slime_extract/purple
 	mutations = list(/datum/slime_color/dark_blue = 1, /datum/slime_color/dark_purple = 1, /datum/slime_color/green = 1)
 	food_types = list(/obj/item/food/xenoflora/broombush = 1)
-	slime_tags = SLIME_ATTACK_SLIMES
+	slime_tags = SLIME_ATTACK_SLIMES | SLIME_SOCIAL
 
 	environmental_req = "Subject requires N2O in the atmosphere and is capable of slowly healing other slimes."
 
@@ -22,7 +22,7 @@
 		return
 
 	var/mob/living/simple_animal/slime/heal_slime
-	if(heal_slime.health >= heal_slime.maxHealth)
+	if(heal_slime.health >= heal_slime.maxHealth || heal_slime.docile || fitting_environment)
 		return COMPONENT_SLIME_NO_FEED
 
 	if(heal_slime == src)
@@ -41,7 +41,7 @@
 
 	new /obj/effect/temp_visual/heal(get_turf(heal_slime), "#d737ff")
 	heal_slime.adjustBruteLoss(PURPLE_SLIME_HEALING)
-	if(prob(PURPLE_SLIME_RABID_INFLICTION) && !heal_slime.docile)
+	if(prob(PURPLE_SLIME_RABID_INFLICTION))
 		ADD_TRAIT(heal_slime, TRAIT_SLIME_RABID, "purple_slime_healing")
 
 /datum/slime_color/purple/Life(delta_time, times_fired)

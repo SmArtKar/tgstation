@@ -2992,7 +2992,7 @@
 	. = ..()
 	var/datum/status_effect/no_nutrition_gain/status_effect = owner.apply_status_effect(/datum/status_effect/no_nutrition_gain)
 	status_effect.duration = INFINITY
-	owner.add_movespeed_modifier(/datum/movespeed_modifier/hypertrozine)
+	owner.add_movespeed_modifier(/datum/movespeed_modifier/reagent/hypertrozine)
 
 /datum/reagent/hypertrozine/on_mob_life(mob/living/owner, delta_time, times_fired)
 	. = ..()
@@ -3005,4 +3005,4 @@
 /datum/reagent/hypertrozine/on_mob_delete(mob/living/owner)
 	. = ..()
 	owner.apply_status_effect(/datum/status_effect/no_nutrition_gain) //To refresh duration
-	owner.remove_movespeed_modifier(/datum/movespeed_modifier/hypertrozine)
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/reagent/hypertrozine)

@@ -69,7 +69,7 @@
 
 /obj/item/food/donut/chaos/Initialize(mapload)
 	. = ..()
-	extra_reagent = pick(/datum/reagent/consumable/nutriment, /datum/reagent/consumable/capsaicin, /datum/reagent/consumable/frostoil, /datum/reagent/drug/krokodil, /datum/reagent/toxin/plasma, /datum/reagent/consumable/coco, /datum/reagent/toxin/slimejelly, /datum/reagent/consumable/banana, /datum/reagent/consumable/berryjuice, /datum/reagent/medicine/omnizine)
+	extra_reagent = pick(/datum/reagent/consumable/nutriment, /datum/reagent/consumable/capsaicin, /datum/reagent/consumable/frostoil, /datum/reagent/drug/krokodil, /datum/reagent/toxin/plasma, /datum/reagent/consumable/coco, /datum/reagent/toxin/slime_jelly, /datum/reagent/consumable/banana, /datum/reagent/consumable/berryjuice, /datum/reagent/medicine/omnizine)
 	reagents.add_reagent(extra_reagent, 3)
 
 /obj/item/food/donut/meat
@@ -251,7 +251,7 @@
 /obj/item/food/donut/jelly/slimejelly
 	name = "jelly donut"
 	desc = "You jelly?"
-	extra_reagent = /datum/reagent/toxin/slimejelly
+	extra_reagent = /datum/reagent/toxin/slime_jelly
 	foodtypes = JUNKFOOD | GRAIN | FRIED | TOXIC | SUGAR | BREAKFAST
 
 /obj/item/food/donut/jelly/slimejelly/plain

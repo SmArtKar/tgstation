@@ -2,7 +2,7 @@
 	color = "red"
 	coretype = /obj/item/slime_extract/red
 	mutations = list(/datum/slime_color/oil = 1)
-	slime_tags = SLIME_BZ_IMMUNE | SLIME_WATER_RESISTANCE
+	slime_tags = SLIME_BZ_IMMUNE | SLIME_WATER_RESISTANCE | SLIME_SOCIAL
 	mutation_modifier = 0.5
 
 	environmental_req = "Subject is quite violent and will become rabid when hungry, causing all red slimes around it to also go rabid."
@@ -50,7 +50,7 @@
 	color = "green"
 	coretype = /obj/item/slime_extract/green
 	mutations = list(/datum/slime_color/black = 1)
-	slime_tags = SLIME_DISCHARGER_WEAKENED
+	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_ANTISOCIAL
 	mutation_modifier = 0.5
 	var/mimicking = FALSE
 
@@ -188,7 +188,7 @@
 	color = "gold"
 	coretype = /obj/item/slime_extract/gold
 	mutations = list(/datum/slime_color/adamantine = 1)
-	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_ATTACK_SLIMES | SLIME_WATER_RESISTANCE
+	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_ATTACK_SLIMES | SLIME_WATER_RESISTANCE | SLIME_SOCIAL
 	mutation_modifier = 0.5
 
 	environmental_req = "Subject is extremely territorial and will attack other slimes at will or when hungry. Their psychic abilities also allow them to force other creatures to attack their targets along with them."

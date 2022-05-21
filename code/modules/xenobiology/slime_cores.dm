@@ -37,7 +37,7 @@
 /obj/item/slime_extract/on_grind()
 	. = ..()
 	if(uses)
-		grind_results[/datum/reagent/toxin/slimejelly] = 20
+		grind_results[/datum/reagent/toxin/slime_jelly] = 20
 
 /obj/item/slime_extract/afterattack(atom/target, mob/living/user, proximity_flag)
 	if(!proximity_flag || !target.is_open_container())
@@ -236,8 +236,8 @@
 /obj/item/slime_extract/pink/on_grind()
 	. = ..()
 	if(uses || activated)
-		grind_results[/datum/reagent/toxin/slimejelly] = 0
-		grind_results[/datum/reagent/toxin/slimejelly/pink] = 20
+		grind_results[/datum/reagent/toxin/slime_jelly] = 0
+		grind_results[/datum/reagent/toxin/slime_jelly/pink] = 20
 
 /obj/item/slime_extract/pink/activate()
 	icon_state = "[initial(icon_state)]_pulsating"
@@ -732,11 +732,42 @@
 	name = "rainbow slime extract"
 	icon_state = "rainbow"
 	tier = 7
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	var/shield = FALSE
+
+/obj/item/slime_extract/special/rainbow/activate(shielding)
+	shield = shielding
+	activated = TRUE
+	icon_state = "[initial(icon_state)]_aura"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. It can be applied on yourself or someone else to grant them [shield ? "almost complete protection for 15 seconds" : "incredible speed for 45 seconds"]."
+
+/obj/item/slime_extract/special/rainbow/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!proximity_flag)
+		return
+
+	if(!ishuman(target) || !activated)
+		return
+
+	var/mob/living/carbon/human/victim = target
+
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+	if(shield)
+		victim.apply_status_effect(/datum/status_effect/rainbow_shield)
+	else
+		victim.apply_status_effect(/datum/status_effect/rainbow_dash)
+	victim.visible_message(span_warning("[victim] starts shining with all colors of rainbow as soon as [user] applies [src] to them!"))
+	if(uses <= 0)
+		qdel(src)
 
 /obj/item/slime_extract/special/fiery
 	name = "fiery slime extract"
 	icon_state = "fiery"
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 
 /obj/item/slime_extract/special/biohazard
 	name = "biohazard slime extract"

@@ -767,5 +767,5 @@
 
 /datum/chemical_reaction/drink/slime_queen
 	results = list(/datum/reagent/consumable/ethanol/slime_queen = 3)
-	required_reagents = list(/datum/reagent/toxin/slimejelly/pink = 1, /datum/reagent/consumable/berryjuice = 1, /datum/reagent/consumable/ethanol/vodka = 1)
+	required_reagents = list(/datum/reagent/toxin/slime_jelly/pink = 1, /datum/reagent/consumable/berryjuice = 1, /datum/reagent/consumable/ethanol/vodka = 1)
 	mix_message = "Purple swirles appear in the drink as it finishes mixing."

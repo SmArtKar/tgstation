@@ -238,7 +238,7 @@
 	required_reagents = list(/datum/reagent/consumable/nutriment/protein)
 
 	supplementary_reagents = list(
-		/datum/reagent/toxin/slimejelly = 2,
+		/datum/reagent/toxin/slime_jelly = 2,
 		/datum/reagent/liquidgibs = 2,
 		/datum/reagent/consumable/enzyme = 1)
 
@@ -290,7 +290,7 @@
 	desc = "Cubic ooze particles"
 	required_reagents = list(
 		/datum/reagent/consumable/nutriment/protein,
-		/datum/reagent/toxin/slimejelly,
+		/datum/reagent/toxin/slime_jelly,
 		/datum/reagent/yuck,
 		/datum/reagent/consumable/enzyme) //Powerful enzymes helps the cube digest prey.
 
@@ -315,7 +315,7 @@
 	desc = "Globular ooze particles"
 	required_reagents = list(
 		/datum/reagent/consumable/nutriment/protein,
-		/datum/reagent/toxin/slimejelly,
+		/datum/reagent/toxin/slime_jelly,
 		/datum/reagent/yuck,
 		/datum/reagent/consumable/vitfro)
 
@@ -347,7 +347,7 @@
 	supplementary_reagents = list(
 		/datum/reagent/yuck = 4,
 		/datum/reagent/growthserum = 2,
-		/datum/reagent/toxin/slimejelly = 2,
+		/datum/reagent/toxin/slime_jelly = 2,
 		/datum/reagent/consumable/nutriment/vitamin = 1)
 
 	suppressive_reagents = list(

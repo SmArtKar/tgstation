@@ -48,7 +48,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 
 /obj/item/food/jellysandwich/slime
-	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/toxin/slimejelly = 10, /datum/reagent/consumable/nutriment/vitamin = 4)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 2, /datum/reagent/toxin/slime_jelly = 10, /datum/reagent/consumable/nutriment/vitamin = 4)
 	foodtypes = GRAIN | TOXIC
 
 /obj/item/food/jellysandwich/cherry
@@ -82,7 +82,7 @@
 	foodtypes = GRAIN | FRUIT | SUGAR | BREAKFAST
 
 /obj/item/food/jelliedtoast/slime
-	food_reagents = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/toxin/slimejelly = 8, /datum/reagent/consumable/nutriment/vitamin = 4)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 1, /datum/reagent/toxin/slime_jelly = 8, /datum/reagent/consumable/nutriment/vitamin = 4)
 	foodtypes = GRAIN | TOXIC | SUGAR | BREAKFAST
 
 /obj/item/food/butteredtoast

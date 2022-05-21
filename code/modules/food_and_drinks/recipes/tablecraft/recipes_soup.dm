@@ -140,7 +140,7 @@
 	name = "Slime soup"
 	reqs = list(
 			/datum/reagent/water = 10,
-			/datum/reagent/toxin/slimejelly = 5,
+			/datum/reagent/toxin/slime_jelly = 5,
 			/obj/item/reagent_containers/glass/bowl = 1
 	)
 	result = /obj/item/food/soup/slime

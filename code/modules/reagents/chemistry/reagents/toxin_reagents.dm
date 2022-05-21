@@ -170,16 +170,16 @@
 			C.emote("gasp")
 	..()
 
-/datum/reagent/toxin/slimejelly
+/datum/reagent/toxin/slime_jelly
 	name = "Slime Jelly"
 	description = "A gooey semi-liquid produced from one of the deadliest lifeforms in existence. SO REAL."
-	color = "#801E28" // rgb: 128, 30, 40
+	color = "#C2C2C2" // rgb: 128, 30, 40
 	toxpwr = 0
 	taste_description = "slime"
 	taste_mult = 1.3
 	ph = 10
 
-/datum/reagent/toxin/slimejelly/on_mob_life(mob/living/carbon/consumer, delta_time, times_fired)
+/datum/reagent/toxin/slime_jelly/on_mob_life(mob/living/carbon/consumer, delta_time, times_fired)
 	if(DT_PROB(5, delta_time))
 		to_chat(consumer, span_danger("Your insides are burning!"))
 		consumer.adjustToxLoss(rand(20, 60), 0)
@@ -189,16 +189,16 @@
 		. = TRUE
 	return ..()
 
-/datum/reagent/toxin/slimejelly/empowered
+/datum/reagent/toxin/slime_jelly/empowered
 	name = "Empowered Slime Jelly"
 	description = "An empowered version of slime jelly that is capable of rapidly restoring users' blood."
 
-/datum/reagent/toxin/slimejelly/empowered/on_mob_life(mob/living/carbon/consumer, delta_time, times_fired)
+/datum/reagent/toxin/slime_jelly/empowered/on_mob_life(mob/living/carbon/consumer, delta_time, times_fired)
 	if(isjellyperson(consumer))
 		consumer.blood_volume = min(consumer.blood_volume + 5 * REM * delta_time, BLOOD_VOLUME_MAXIMUM)
 	return ..()
 
-/datum/reagent/toxin/slimejelly/pink
+/datum/reagent/toxin/slime_jelly/pink
 	name = "Pink Slime Jelly"
 	color = "#e940b6"
 

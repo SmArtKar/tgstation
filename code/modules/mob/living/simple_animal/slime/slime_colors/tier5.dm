@@ -1,7 +1,7 @@
 /datum/slime_color/cerulean
 	color = "cerulean"
 	coretype = /obj/item/slime_extract/cerulean
-	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_WATER_RESISTANCE
+	slime_tags = SLIME_BLUESPACE_CONNECTION | SLIME_WATER_RESISTANCE | SLIME_SOCIAL
 	environmental_req = "Subject has telekinetic capabilities and requires vacuum to survive."
 	var/slime_flying = FALSE
 	COOLDOWN_DECLARE(lunge_cooldown)

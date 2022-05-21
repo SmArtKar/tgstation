@@ -469,6 +469,12 @@
 	var/turf/T = get_turf(target)
 	explosion(T, devastation_range = -1, heavy_impact_range = exp_heavy, light_impact_range = exp_light, flame_range = exp_fire, flash_range = exp_flash, adminlog = FALSE, explosion_cause = src)
 
+/obj/projectile/magic/fireball/minor
+	damage_type = BURN
+	exp_heavy = -1
+	exp_light = 0
+	exp_flash = -1
+
 //still magic related, but a different path
 
 /obj/projectile/temp/chill

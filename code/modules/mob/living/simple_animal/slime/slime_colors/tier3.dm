@@ -87,7 +87,7 @@
 	coretype = /obj/item/slime_extract/yellow
 	mutations = list(/datum/slime_color/orange = 1, /datum/slime_color/metal = 1, /datum/slime_color/bluespace = 2)
 	food_types = list(/mob/living/simple_animal/xenofauna/wobble_chicken = 8, /mob/living/simple_animal/xenofauna/wobble_chicken/chick = 5, /obj/item/food/wobble_egg = 2, /obj/item/food/meat/slab/chicken/wobble = 2)
-
+	slime_tags = SLIME_ANTISOCIAL
 	environmental_req = "Subject will create beams of lightning once fully charged. To safely discharge it you'll need a slime discharger."
 
 /datum/slime_color/yellow/New(mob/living/simple_animal/slime/slime)

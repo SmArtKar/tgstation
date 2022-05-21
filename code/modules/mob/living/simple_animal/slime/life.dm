@@ -1162,20 +1162,33 @@
 		if(slime != src)
 			other_slimes += 1
 
+	var/lonely_amount = 0
+	var/friends_amount = 2
+	var/crowded_amount = 5
 
-	if(other_slimes)
-		apply_moodlet(/datum/slime_moodlet/friend)
-		remove_moodlet(/datum/slime_moodlet/friend)
+	if(slime_color.slime_tags & SLIME_SOCIAL)
+		lonely_amount = 1
+		friends_amount = 4
+		crowded_amount = 7
+	else if(slime_color.slime_tags & SLIME_ANTISOCIAL)
+		lonely_amount = -1
+		friends_amount = -1
+		crowded_amount = 3
+
+	if(other_slimes > lonely_amount)
+		if(lonely_amount != -1)
+			apply_moodlet(/datum/slime_moodlet/friend)
+		remove_moodlet(/datum/slime_moodlet/lonely)
 	else
 		remove_moodlet(/datum/slime_moodlet/friend)
 		apply_moodlet(/datum/slime_moodlet/lonely)
 
-	if(other_slimes > 1)
+	if(other_slimes >= friends_amount && friends_amount != -1)
 		apply_moodlet(/datum/slime_moodlet/friends)
 	else
 		remove_moodlet(/datum/slime_moodlet/friends)
 
-	if(other_slimes > 4)
+	if(other_slimes >= crowded_amount)
 		apply_moodlet(/datum/slime_moodlet/crowded)
 	else
 		remove_moodlet(/datum/slime_moodlet/crowded)

@@ -594,6 +594,11 @@
 	if(!isliving(arrived) || arrived == our_thrower)
 		return
 
+	if(iscarbon(arrived))
+		var/mob/living/carbon/victim = arrived
+		if(victim.legcuffed || victim.num_legs < 0)
+			return
+
 	for(var/turf/open/tracked_turf as anything in tracked_turfs)
 		UnregisterSignal(tracked_turf, list(COMSIG_ATOM_ENTERED, COMSIG_TURF_CHANGE))
 

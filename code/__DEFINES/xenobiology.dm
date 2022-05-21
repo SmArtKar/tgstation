@@ -213,6 +213,8 @@
 #define OIL_SLIME_OIL_LIMIT 10
 /// What pressure oil slimes want
 #define OIL_SLIME_REQUIRED_PRESSURE ONE_ATMOSPHERE * 6
+/// How often can oil slime use its ranged attack
+#define OIL_SLIME_PROJECTILE_COOLDOWN 10 SECONDS
 
 /// How likely it is for the black slime to change a random turf around him, per second
 #define BLACK_SLIME_CHANGE_TURF_CHANCE 15
@@ -267,3 +269,6 @@
 #define ADAMANTINE_SLIME_SLAM_DAMAGE 35
 #define ADAMANTINE_SLIME_SUPLEX_DAMAGE 20
 #define ADAMANTINE_SLIME_GROUND_STRIKE_DAMAGE 15
+
+///How often can fiery slime use its ranged attack
+#define FIERY_SLIME_PROJECTILE_COOLDOWN 15 SECONDS

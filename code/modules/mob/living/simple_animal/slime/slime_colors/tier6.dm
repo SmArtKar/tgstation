@@ -1,7 +1,7 @@
 /datum/slime_color/oil
 	color = "oil"
 	coretype = /obj/item/slime_extract/oil
-	slime_tags = SLIME_WATER_RESISTANCE
+	slime_tags = SLIME_WATER_RESISTANCE | SLIME_ANTISOCIAL
 	environmental_req = "Subject's slime is highly flammable and will leave a trail of oil behind it. You can stabilize the subject using high pressure. Fireproof equipment recommended."
 	COOLDOWN_DECLARE(oil_throw_cooldown)
 
@@ -53,6 +53,7 @@
 	if(get_dist(slime, target) <= 1)
 		return
 
+	COOLDOWN_START(src, oil_throw_cooldown, OIL_SLIME_PROJECTILE_COOLDOWN)
 	var/obj/projectile/our_projectile = new /obj/projectile/oil(get_turf(slime))
 	our_projectile.firer = slime
 	our_projectile.original = target
@@ -134,7 +135,7 @@
 	color = "black"
 	coretype = /obj/item/slime_extract/black
 	environmental_req = "Subject has an ability to terraform it's surroundings into slime-like turfs. This ability can be neutered by making the pen look like a natural habitat."
-	slime_tags = SLIME_WATER_RESISTANCE
+	slime_tags = SLIME_WATER_RESISTANCE | SLIME_SOCIAL
 	var/list/required_turfs
 
 /datum/slime_color/black/New(slime)

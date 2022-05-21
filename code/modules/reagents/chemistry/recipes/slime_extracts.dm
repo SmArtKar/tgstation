@@ -272,11 +272,11 @@
 	for(var/i in 1 to 4 + rand(1,2))
 		var/chosen = get_food()
 		var/obj/item/food_item = new chosen(holder_turf)
+		food_item.desc += "\n [span_notice("It vaguely smells like acid")]"
 
 		if(istype(food_item, /obj/item/food))
 			var/obj/item/food/foody = food_item
 			foody.food_flags |= FOOD_SILVER_SPAWNED
-			foody.desc += "\n [span_notice("It vaguely smells like acid")]"
 
 		if(prob(5))//Fry it!
 			var/obj/item/food/deepfryholder/fried
@@ -286,6 +286,10 @@
 		if(prob(50))
 			for(var/j in 1 to rand(1, 3))
 				step(food_item, pick(NORTH,SOUTH,EAST,WEST))
+
+		if(prob(35) && food_item.reagents)
+			food_item.reagents.add_reagent(/datum/reagent/toxin/slime_jelly, rand(5, 15))
+
 	return ..()
 
 /datum/chemical_reaction/slime/silver_plasma/proc/get_food()
@@ -649,6 +653,32 @@
 // ***************** TIER SPECIAL *****************
 // ************************************************
 
+/datum/chemical_reaction/slime/rainbow_plasma
+	required_container = /obj/item/slime_extract/special/rainbow
+	required_reagents = list(/datum/reagent/toxin/plasma = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/rainbow_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/special/rainbow/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate(TRUE)
+	attempt_balloon("ready for application (shield)", holder)
+	return ..()
+
+/datum/chemical_reaction/slime/rainbow_blood
+	required_container = /obj/item/slime_extract/special/rainbow
+	required_reagents = list(/datum/reagent/blood = 1)
+	deletes_extract = FALSE
+
+/datum/chemical_reaction/slime/rainbow_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/special/rainbow/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate(FALSE)
+	attempt_balloon("ready for application (speed)", holder)
+	return ..()
+
 /datum/chemical_reaction/slime/fiery_plasma
 	required_container = /obj/item/slime_extract/special/fiery
 	required_reagents = list(/datum/reagent/toxin/plasma = 1)
@@ -656,6 +686,24 @@
 /datum/chemical_reaction/slime/fiery_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	new /obj/item/slime_potion/transference(get_turf(holder.my_atom))
 	return ..()
+
+/datum/chemical_reaction/slime/fiery_blood
+	required_container = /obj/item/slime_extract/special/fiery
+	required_reagents = list(/datum/reagent/blood = 1)
+
+/datum/chemical_reaction/slime/fiery_blood/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	INVOKE_ASYNC(src, .proc/fiery_cascade, get_turf(holder.my_atom))
+	return ..()
+
+/datum/chemical_reaction/slime/fiery_blood/proc/fiery_cascade(turf/center)
+	playsound(center, 'sound/items/welder.ogg', 75, TRUE)
+	for(var/i in 0 to 4)
+		for(var/turf/nearby_turf as anything in spiral_range_turfs(i, center))
+			new /obj/effect/hotspot(nearby_turf)
+			nearby_turf.hotspot_expose(750, 50, 1)
+			for(var/mob/living/fried_living in nearby_turf.contents)
+				fried_living.adjustFireLoss(5)
+		sleep(3)
 
 /datum/chemical_reaction/slime/biohazard_plasma
 	required_container = /obj/item/slime_extract/special/biohazard

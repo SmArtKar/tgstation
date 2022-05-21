@@ -180,7 +180,7 @@
 	if(!carbon_user.is_mouth_covered())
 		if(carbon_user.combat_mode)
 			carbon_user.visible_message(span_warning("[carbon_user] takes a bite out of [src]."), span_warning("You take a bite out of [src] and it tastes horribly."))
-			carbon_user.reagents.add_reagent(/datum/reagent/toxin/slimejelly, 5)
+			carbon_user.reagents.add_reagent(/datum/reagent/toxin/slime_jelly, 5)
 			playsound(src, 'sound/weapons/bite.ogg', 50, TRUE, -1)
 			return
 
@@ -189,7 +189,7 @@
 			return
 
 		carbon_user.visible_message(span_warning("[carbon_user] licks [src]."), span_warning("You lick [src] and wonder how did you end up here."))
-		carbon_user.reagents.add_reagent(/datum/reagent/toxin/slimejelly, 1)
+		carbon_user.reagents.add_reagent(/datum/reagent/toxin/slime_jelly, 1)
 
 /turf/closed/wall/slime/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()

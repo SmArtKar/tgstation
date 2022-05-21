@@ -204,6 +204,11 @@ GLOBAL_LIST_INIT(mimic_blacklist, list(/obj/structure/table, /obj/structure/cabl
 	plane = GAME_PLANE
 	layer = ABOVE_NORMAL_TURF_LAYER
 
+/mob/living/simple_animal/hostile/mimic/copy/pyrite/CanAllowThrough(atom/movable/mover, border_dir)
+	. = ..()
+	if(istype(mover, type))
+		return FALSE //No stacking
+
 /mob/living/simple_animal/hostile/mimic/copy/pyrite/Initialize(mapload, obj/copy, mob/living/creator, destroy_original, no_googlies)
 	. = ..()
 	RegisterSignal(src, COMSIG_LIVING_APPLY_WATER, .proc/apply_water)
