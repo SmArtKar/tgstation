@@ -41,7 +41,8 @@
 	var/datum/gas_mixture/our_mix = slime.loc.return_air()
 
 	if(SLIME_SHOULD_MISBEHAVE(slime, delta_time))
-		our_turf.atmos_spawn_air("plasma=10;TEMP=1000")
+		our_turf.atmos_spawn_air("plasma=10")
+		our_turf.hotspot_expose(1000, 5)
 
 	if(our_mix.gases[/datum/gas/plasma] && our_mix.gases[/datum/gas/plasma][MOLES] > DARK_PURPLE_SLIME_PLASMA_REQUIRED && (!our_mix.gases[/datum/gas/oxygen] || our_mix.gases[/datum/gas/oxygen][MOLES] < DARK_PURPLE_SLIME_OXYGEN_MAXIMUM))
 		fitting_environment = TRUE
@@ -50,7 +51,8 @@
 	slime.adjustBruteLoss(SLIME_DAMAGE_HIGH * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
 	if(DT_PROB(DARK_PURPLE_SLIME_PUFF_PROBABILITY, delta_time))
-		our_turf.atmos_spawn_air("plasma=10;TEMP=1000")
+		our_turf.atmos_spawn_air("plasma=10")
+		our_turf.hotspot_expose(1000, 5)
 
 /datum/slime_color/silver
 	color = "silver"
@@ -86,7 +88,7 @@
 	color = "yellow"
 	coretype = /obj/item/slime_extract/yellow
 	mutations = list(/datum/slime_color/orange = 1, /datum/slime_color/metal = 1, /datum/slime_color/bluespace = 2)
-	food_types = list(/mob/living/simple_animal/xenofauna/wobble_chicken = 8, /mob/living/simple_animal/xenofauna/wobble_chicken/chick = 5, /obj/item/food/wobble_egg = 2, /obj/item/food/meat/slab/chicken/wobble = 2)
+	food_types = list(/mob/living/simple_animal/xenofauna/wobble_chicken = 6, /mob/living/simple_animal/xenofauna/wobble_chicken/chick = 6, /obj/item/food/wobble_egg = 1, /obj/item/food/meat/slab/chicken/wobble = 1)
 	slime_tags = SLIME_ANTISOCIAL
 	environmental_req = "Subject will create beams of lightning once fully charged. To safely discharge it you'll need a slime discharger."
 

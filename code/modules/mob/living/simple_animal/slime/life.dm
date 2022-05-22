@@ -1059,6 +1059,7 @@
 
 /mob/living/simple_animal/slime/proc/handle_digestion(delta_time, times_fired)
 	if(!digesting)
+		remove_moodlet(/datum/slime_moodlet/digesting_food)
 		return
 
 	var/food
@@ -1067,8 +1068,9 @@
 			food = food_type
 			break
 
-	digestion_progress += delta_time * SLIME_DIGESTION_SPEED
-	adjust_nutrition(SLIME_DIGESTION_NUTRITION * SLIME_DIGESTION_SPEED * delta_time * slime_color.food_types[food]) //6 nutrition per second, 300 per item by default
+	apply_moodlet(/datum/slime_moodlet/digesting_food)
+	digestion_progress += delta_time * slime_color.digestion_speed
+	adjust_nutrition(SLIME_DIGESTION_NUTRITION * slime_color.digestion_speed * delta_time * slime_color.food_types[food]) //6 nutrition per second, 300 per item by default
 
 	if(digestion_progress >= 100)
 		cut_overlay(digestion_overlay)

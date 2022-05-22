@@ -60,6 +60,10 @@
 	mood_offset = 10
 	special_line = list("Nom...", "Yummy...")
 
+/datum/slime_moodlet/digesting_food
+	mood_offset = 10
+	special_line = list("Nom...", "Yummy...")
+
 /datum/slime_moodlet/power_one
 	special_line = "Bzzz..."
 

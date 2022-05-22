@@ -260,8 +260,21 @@
 /datum/chemical_reaction/slime/silver_plasma
 	required_reagents = list(/datum/reagent/toxin/plasma = 1)
 	required_container = /obj/item/slime_extract/silver
+	deletes_extract = FALSE
 
 /datum/chemical_reaction/slime/silver_plasma/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
+	var/obj/item/slime_extract/silver/extract = holder.my_atom
+	if(!istype(extract) || extract.activated)
+		return
+	extract.activate()
+	attempt_balloon("ready for application", holder)
+	return ..()
+
+/datum/chemical_reaction/slime/silver_water
+	required_reagents = list(/datum/reagent/water = 1)
+	required_container = /obj/item/slime_extract/silver
+
+/datum/chemical_reaction/slime/silver_water/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
 	var/turf/holder_turf = get_turf(holder.my_atom)
 
 	playsound(holder_turf, 'sound/effects/phasein.ogg', 100, TRUE)
@@ -270,7 +283,7 @@
 		victim.flash_act()
 
 	for(var/i in 1 to 4 + rand(1,2))
-		var/chosen = get_food()
+		var/chosen = get_random_food()
 		var/obj/item/food_item = new chosen(holder_turf)
 		food_item.desc += "\n [span_notice("It vaguely smells like acid")]"
 
@@ -291,15 +304,6 @@
 			food_item.reagents.add_reagent(/datum/reagent/toxin/slime_jelly, rand(5, 15))
 
 	return ..()
-
-/datum/chemical_reaction/slime/silver_plasma/proc/get_food()
-	return get_random_food()
-
-/datum/chemical_reaction/slime/silver_plasma/water
-	required_reagents = list(/datum/reagent/water = 1)
-
-/datum/chemical_reaction/slime/silver_plasma/water/get_food()
-	return get_random_drink()
 
 // ************************************************
 // ******************* TIER FOUR ******************

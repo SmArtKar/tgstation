@@ -891,9 +891,6 @@
 	human_owner.eye_color_right = "#EEAA01"
 	human_owner.dna.update_ui_block(DNA_EYE_COLOR_LEFT_BLOCK)
 	human_owner.dna.update_ui_block(DNA_EYE_COLOR_RIGHT_BLOCK)
-	var/obj/item/organ/eyes/eyes = human_owner.getorgan(/obj/item/organ/eyes)
-	if(eyes)
-		eyes.refresh()
 	human_owner.update_body()
 	start_gazing()
 
@@ -906,9 +903,6 @@
 	human_owner.eye_color_right = original_eye_color_right
 	human_owner.dna.update_ui_block(DNA_EYE_COLOR_LEFT_BLOCK)
 	human_owner.dna.update_ui_block(DNA_EYE_COLOR_RIGHT_BLOCK)
-	var/obj/item/organ/eyes/eyes = human_owner.getorgan(/obj/item/organ/eyes)
-	if(eyes)
-		eyes.refresh()
 	human_owner.update_body()
 	stop_gazing()
 
@@ -927,7 +921,7 @@
 	gazing = TRUE
 	peers += 1
 	if(prob(25 * peers)) /// Don't overuse!
-		to_chat(following, span_warning("Your head pounds as you feel something otherworldly connecting to your mind..."))
+		to_chat(following, span_warning("Your head pounds as you feel something otherworldly connect to your mind..."))
 
 /datum/status_effect/golden_eyes/tick(delta_time, times_fired)
 	. = ..()
@@ -953,7 +947,6 @@
 	if(!gazing)
 		return span_notice("[owner.p_their(TRUE)] eyes are of unnatural bright golden color")
 	return span_notice("[owner.p_their(TRUE)] eyes are of unnatural bright golden color and it seems like [owner.p_their()] mind is somewhere else...")
-
 
 /atom/movable/screen/alert/status_effect/pyrite_morpher
 	name = "Pyrite Morpher"
@@ -1287,3 +1280,56 @@
 	human_owner.facial_hair_color = new_color
 	human_owner.hair_color = new_color
 	human_owner.update_body(TRUE)
+
+/atom/movable/screen/alert/status_effect/silver_control
+	name = "Silver Blorbie Control"
+	desc = "You are currently controlling a slime blorbie. Click this alert to abandon it."
+	icon_state = "silver_control"
+
+/atom/movable/screen/alert/status_effect/silver_control/Click(location, control, params)
+	. = ..()
+	if(!.)
+		return
+
+	if(tgui_alert(owner, "Are you sure you want to abandon control over your silver blorbie?", "Silver Blorbie Control", list("Yes", "No")) != "Yes")
+		return
+
+	qdel(attached_effect)
+
+/datum/status_effect/silver_control
+	id = "silver_control"
+	duration = 5 MINUTES
+	alert_type = /atom/movable/screen/alert/status_effect/silver_control
+	status_type = STATUS_EFFECT_REFRESH
+	var/mob/living/simple_animal/hostile/slime_blorbie/player/blorbie
+	var/datum/mind/owner_mind
+
+/datum/status_effect/silver_control/on_apply()
+	. = ..()
+	if(!owner.mind)
+		qdel(src)
+		return
+
+	blorbie = new(get_turf(owner))
+	RegisterSignal(blorbie, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), .proc/blorbie_death)
+	owner_mind = owner.mind
+	owner_mind.transfer_to(blorbie)
+	blorbie.copy_languages(owner, LANGUAGE_MIND)
+	blorbie.faction = owner.faction.Copy()
+
+	var/atom/movable/screen/alert/status_effect/blorbie_alert = blorbie.throw_alert(id, alert_type)
+	blorbie_alert.attached_effect = src
+
+/datum/status_effect/silver_control/on_remove()
+	. = ..()
+	owner_mind.transfer_to(owner)
+	if(blorbie && !QDELETED(blorbie))
+		UnregisterSignal(blorbie, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+		blorbie.death(FALSE)
+
+/datum/status_effect/silver_control/proc/blorbie_death(mob/living/dead_blorbie)
+	SIGNAL_HANDLER
+	qdel(src)
+
+/datum/status_effect/silver_control/get_examine_text()
+	return span_notice("[owner.p_they(TRUE)] look like [owner.p_their()] mind is somewhere else...")

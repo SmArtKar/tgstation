@@ -18,6 +18,7 @@
 	health = 10
 	mob_size = MOB_SIZE_TINY
 	density = FALSE
+	initial_language_holder = /datum/language_holder/slime
 
 	melee_damage_lower = 3
 	melee_damage_upper = 3
@@ -29,7 +30,7 @@
 	speak_emote = list("blorbles")
 	bubble_icon = "slime"
 
-	deathmessage = "is squished!"
+	deathmessage = "deflates into a small puddle of silver slime."
 	del_on_death = 1
 
 /mob/living/simple_animal/hostile/slime_blorbie/Initialize(mapload)
@@ -59,3 +60,11 @@
 	else
 		. = ..(Proj)
 	. = . || BULLET_ACT_BLOCK
+
+/mob/living/simple_animal/hostile/slime_blorbie/player
+	AIStatus = AI_OFF
+	stop_automated_movement = TRUE
+	icon_state = "silver-blorbie-eye"
+	icon_living = "silver-blorbie-eye"
+	icon_dead = "silver-blorbie-eye"
+	icon_gib = "silver-blorbie-eye"

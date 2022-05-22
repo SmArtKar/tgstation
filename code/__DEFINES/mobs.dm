@@ -283,30 +283,13 @@
 #define CRYSTALIZE_STAGE_ENCROACHING 300 //In switches
 #define CRYSTALIZE_STAGE_SMALL 600 //Because they're not static
 
-//Slime evolution threshold. Controls how fast slimes can split/grow
-#define SLIME_EVOLUTION_THRESHOLD 10
-
-//Slime digestion speed, in percents per delta tick
-#define SLIME_DIGESTION_SPEED 2
-
-//How much nutrition slime gets from eating something each second, per percent
-#define SLIME_DIGESTION_NUTRITION 3
-
-//Slime commands defines
-#define SLIME_FRIENDSHIP_FOLLOW 3 //Min friendship to order it to follow
-#define SLIME_FRIENDSHIP_STOPEAT 5 //Min friendship to order it to stop eating someone
-#define SLIME_FRIENDSHIP_STOPEAT_NOANGRY 7 //Min friendship to order it to stop eating someone without it losing friendship
-#define SLIME_FRIENDSHIP_STOPCHASE 4 //Min friendship to order it to stop chasing someone (their target)
-#define SLIME_FRIENDSHIP_STOPCHASE_NOANGRY 6 //Min friendship to order it to stop chasing someone (their target) without it losing friendship
-#define SLIME_FRIENDSHIP_STAY 3 //Min friendship to order it to stay
-#define SLIME_FRIENDSHIP_ATTACK 8 //Min friendship to order it to attack
-
 //Sentience types, to prevent things like sentience potions from giving bosses sentience
 #define SENTIENCE_ORGANIC 1
 #define SENTIENCE_ARTIFICIAL 2
 #define SENTIENCE_HUMANOID 3
 #define SENTIENCE_MINEBOT 4
 #define SENTIENCE_BOSS 5
+#define SENTIENCE_SLIME 6
 
 //Mob AI Status
 #define POWER_RESTORATION_OFF 0

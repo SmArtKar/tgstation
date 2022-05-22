@@ -197,6 +197,26 @@
 	tier = 3
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 
+/obj/item/slime_extract/silver/activate()
+	activated = TRUE
+	icon_state = "[initial(icon_state)]_pulsating"
+	name = "activated [initial(name)]"
+	desc = "An activated [initial(name)]. It can be applied to yourself in order to create a small blorbie that you can control remotely."
+
+/obj/item/slime_extract/silver/afterattack(atom/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!proximity_flag || !ishuman(target) || !activated || target != user)
+		return
+
+	var/mob/living/carbon/human/victim = target
+	victim.apply_status_effect(/datum/status_effect/silver_control)
+	icon_state = initial(icon_state)
+	name = initial(name)
+	desc = initial(desc)
+	activated = FALSE
+	if(uses <= 0)
+		qdel(src)
+
 // Yellow Extract
 
 /obj/item/slime_extract/yellow

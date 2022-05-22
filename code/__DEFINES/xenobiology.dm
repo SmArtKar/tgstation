@@ -46,6 +46,23 @@
 #define SLIME_DISCHARGER_NUTRIMENT_DRAIN 3
 #define SLIME_DISCHARGER_AGGRESSIVE_EFFECT 5
 
+//Slime evolution threshold. Controls how fast slimes can split/grow
+#define SLIME_EVOLUTION_THRESHOLD 10
+
+//Slime digestion speed, in percents per delta tick
+#define SLIME_DIGESTION_SPEED 2
+//How much nutrition slime gets from eating something each second, per percent
+#define SLIME_DIGESTION_NUTRITION 3
+
+//Slime commands defines
+#define SLIME_FRIENDSHIP_FOLLOW 3 //Min friendship to order it to follow
+#define SLIME_FRIENDSHIP_STOPEAT 5 //Min friendship to order it to stop eating someone
+#define SLIME_FRIENDSHIP_STOPEAT_NOANGRY 7 //Min friendship to order it to stop eating someone without it losing friendship
+#define SLIME_FRIENDSHIP_STOPCHASE 4 //Min friendship to order it to stop chasing someone (their target)
+#define SLIME_FRIENDSHIP_STOPCHASE_NOANGRY 6 //Min friendship to order it to stop chasing someone (their target) without it losing friendship
+#define SLIME_FRIENDSHIP_STAY 3 //Min friendship to order it to stay
+#define SLIME_FRIENDSHIP_ATTACK 8 //Min friendship to order it to attack
+
 /// How many seconds it takes for slime to generate a core
 #define SLIME_MAX_CORE_GENERATION 30
 
@@ -58,9 +75,9 @@
 #define SLIME_POWER_LEVEL_ENERGY 2500000 //Around 10 slimes should be enough to power xenobio I think?
 
 /// Damages per second when slimes' requirements are not satisfied
-#define SLIME_DAMAGE_LOW  (150 / 600)  //10 minutes to die
-#define SLIME_DAMAGE_MED  (150 / 450)  //7.5 minutes to die
-#define SLIME_DAMAGE_HIGH (150 / 300)  //5 minutes to die
+#define SLIME_DAMAGE_LOW  (150 / 300)  //5 minutes to die
+#define SLIME_DAMAGE_MED  (150 / 240)  //4 minutes to die
+#define SLIME_DAMAGE_HIGH (150 / 180)  //3 minutes to die
 
 /// Additional damage for mobs from slime being an adult
 #define SLIME_ADULT_DAMAGE_BOOST 10

@@ -14,6 +14,7 @@
 	var/fitting_environment = TRUE
 
 	var/warpchance = 0 //For bluespace connected slimes
+	var/digestion_speed = SLIME_DIGESTION_SPEED
 
 	var/mob/living/simple_animal/slime/slime
 

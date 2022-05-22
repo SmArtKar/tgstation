@@ -93,8 +93,9 @@
 	color = "metal"
 	coretype = /obj/item/slime_extract/metal
 	mutations = list(/datum/slime_color/yellow = 1, /datum/slime_color/silver = 1, /datum/slime_color/gold = 1)
-	food_types = list(/mob/living/basic/cockroach/rockroach = 1, /obj/item/rockroach_shell = 1.5)
+	food_types = list(/mob/living/basic/cockroach/rockroach = 1, /obj/item/rockroach_shell = 0.75)
 	environmental_req = "Subject requires CO2 in the atmosphere."
+	digestion_speed = SLIME_DIGESTION_SPEED * 2
 
 /datum/slime_color/metal/New(slime)
 	. = ..()
@@ -113,29 +114,30 @@
 	slime.adjustBruteLoss(SLIME_DAMAGE_LOW * delta_time * get_passive_damage_modifier())
 	fitting_environment = FALSE
 
-/datum/slime_color/metal/proc/start_feeding(datum/source, atom/target)
+/datum/slime_color/metal/proc/start_feeding(datum/source, atom/target) //Metals and oranges have this code so they gobble their victims up instead of buckling to them(imagine buckling to a cockroach or a fucking fly)
 	SIGNAL_HANDLER
 
 	if(!istype(target, /mob/living/basic/cockroach/rockroach))
 		return
 
-	var/mob/living/basic/rockroach = target
-	var/turf/target_turf = get_turf(rockroach)
-	rockroach.death(FALSE)
-	var/obj/item/rockroach_shell/shell = locate() in target_turf
-	if(!shell)
-		return COMPONENT_SLIME_NO_FEEDON
-
-	INVOKE_ASYNC(slime, /mob/living/simple_animal/slime.proc/gobble_up, shell)
+	INVOKE_ASYNC(slime, /mob/living/simple_animal/slime.proc/attack_target, target)
 	return COMPONENT_SLIME_NO_FEEDON
 
 /datum/slime_color/orange
 	color = "orange"
 	coretype = /obj/item/slime_extract/orange
 	mutations = list(/datum/slime_color/yellow = 1, /datum/slime_color/dark_purple = 1, /datum/slime_color/red = 1)
-	food_types = list()
+	food_types = list(/mob/living/simple_animal/xenofauna/greeblefly = 1, /obj/item/trash/greeblefly = 0.33) //Flies are in swarms so they give less nutrition.
 	environmental_req = "Subject requires temperatures higher than 60° Celsius."
 	slime_tags = SLIME_HOT_LOVING
+	digestion_speed = SLIME_DIGESTION_SPEED * 2
+
+/datum/slime_color/orange/New(slime)
+	. = ..()
+	RegisterSignal(slime, COMSIG_SLIME_FEEDON, .proc/start_feeding)
+
+/datum/slime_color/orange/remove()
+	UnregisterSignal(slime, COMSIG_SLIME_FEEDON)
 
 /datum/slime_color/orange/Life(delta_time, times_fired)
 	. = ..()
@@ -156,3 +158,12 @@
 		return
 
 	slime.adjustBruteLoss(SLIME_DAMAGE_MED * delta_time * hotspot_modifier * get_passive_damage_modifier())
+
+/datum/slime_color/orange/proc/start_feeding(datum/source, atom/target) //Metals and oranges have this code so they gobble their victims up instead of buckling to them(imagine buckling to a cockroach or a fucking fly)
+	SIGNAL_HANDLER
+
+	if(!istype(target, /mob/living/simple_animal/xenofauna/greeblefly))
+		return
+
+	INVOKE_ASYNC(slime, /mob/living/simple_animal/slime.proc/attack_target, target)
+	return COMPONENT_SLIME_NO_FEEDON

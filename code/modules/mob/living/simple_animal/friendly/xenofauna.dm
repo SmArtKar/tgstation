@@ -68,7 +68,8 @@
 	if(!danger)
 		SSmove_manager.stop_looping(src)
 		return
-	SSmove_manager.move_towards(src, get_edge_target_turf(get_turf(src), get_dir(danger, src)))
+
+	SSmove_manager.move_away(src, danger)
 
 /mob/living/simple_animal/xenofauna/wobble_chicken/proc/egg_laid(obj/item/egg)
 	var/chicken_count = 0
@@ -203,8 +204,8 @@
 	response_disarm_simple = "swat away"
 	response_harm_continuous = "squashes"
 	response_harm_simple = "squash"
-	maxHealth = 20
-	health = 20
+	maxHealth = 15
+	health = 15
 	pass_flags = PASSTABLE | PASSGRILLE | PASSMOB
 	density = FALSE
 	mob_size = MOB_SIZE_TINY
@@ -214,6 +215,7 @@
 	del_on_death = 1
 	light_range = 2
 	light_color = "#92FF00"
+	maxbodytemp = T0C + 120
 
 /mob/living/simple_animal/xenofauna/greeblefly/Initialize(mapload)
 	. = ..()
@@ -243,7 +245,7 @@
 	name = "greeblefly"
 	desc = "Crunchy."
 	icon = 'icons/mob/animal.dmi'
-	icon_state = "shubberfly-dead"
+	icon_state = "greeblefly-dead"
 
 /obj/item/trash/greeblefly/Initialize(mapload)
 	. = ..()

@@ -43,6 +43,7 @@
 	status_flags = CANUNCONSCIOUS|CANPUSH|CANSTUN
 
 	footstep_type = FOOTSTEP_MOB_SLIME
+	sentience_type = SENTIENCE_SLIME
 
 	var/cores = 0 // the number of /obj/item/slime_extract's the slime has left inside
 	var/max_cores = 1 // how much cores can this slime generate
