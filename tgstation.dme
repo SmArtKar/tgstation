@@ -4508,6 +4508,7 @@
 #include "code\modules\xenobiology\xenoflora_pod\xenoflora_pod.dm"
 #include "code\modules\xenobiology\xenoflora_pod\xenoflora_seeds.dm"
 #include "code\modules\xenobiology\xenoflora_pod\xenoflora_plants\tier2.dm"
+#include "code\modules\xenobiology\xenoflora_pod\xenoflora_plants\tier5.dm"
 #include "code\modules\zombie\items.dm"
 #include "code\modules\zombie\organs.dm"
 #include "interface\interface.dm"

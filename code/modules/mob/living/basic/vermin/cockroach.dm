@@ -147,6 +147,7 @@
 /mob/living/basic/cockroach/rockroach
 	name = "rockroach"
 	desc = "This cockroach has decided to cosplay as a turtle and is carrying a rock shell on it's back."
+	icon = 'icons/mob/xenofauna.dmi'
 	icon_state = "rockroach"
 	health = 15
 	maxHealth = 15
@@ -159,7 +160,7 @@
 /obj/item/rockroach_shell
 	name = "rockroach shell"
 	desc = "A rocky shell of some poor rockroach."
-	icon = 'icons/mob/animal.dmi'
+	icon = 'icons/mob/xenofauna.dmi'
 	icon_state = "rockroach_shell"
 	w_class = WEIGHT_CLASS_SMALL
 	throw_speed = 2

@@ -50,6 +50,7 @@
 /obj/item/bodypart/head/jelly
 	limb_id = SPECIES_JELLYPERSON
 	is_dimorphic = TRUE
+	burn_multiplier = 0.5
 
 /obj/item/bodypart/head/jelly/Initialize(mapload)
 	. = ..()
@@ -58,6 +59,7 @@
 /obj/item/bodypart/chest/jelly
 	limb_id = SPECIES_JELLYPERSON
 	is_dimorphic = TRUE
+	burn_multiplier = 0.5
 
 /obj/item/bodypart/chest/jelly/Initialize(mapload)
 	. = ..()
@@ -65,6 +67,7 @@
 
 /obj/item/bodypart/l_arm/jelly
 	limb_id = SPECIES_JELLYPERSON
+	burn_multiplier = 0.5
 
 /obj/item/bodypart/l_arm/jelly/Initialize(mapload)
 	. = ..()
@@ -72,6 +75,7 @@
 
 /obj/item/bodypart/r_arm/jelly
 	limb_id = SPECIES_JELLYPERSON
+	burn_multiplier = 0.5
 
 /obj/item/bodypart/r_arm/jelly/Initialize(mapload)
 	. = ..()
@@ -79,6 +83,7 @@
 
 /obj/item/bodypart/l_leg/jelly
 	limb_id = SPECIES_JELLYPERSON
+	burn_multiplier = 0.5
 
 /obj/item/bodypart/l_leg/jelly/Initialize(mapload)
 	. = ..()
@@ -86,6 +91,7 @@
 
 /obj/item/bodypart/r_leg/jelly
 	limb_id = SPECIES_JELLYPERSON
+	burn_multiplier = 0.5
 
 /obj/item/bodypart/r_leg/jelly/Initialize(mapload)
 	. = ..()

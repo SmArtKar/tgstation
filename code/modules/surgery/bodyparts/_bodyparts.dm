@@ -80,6 +80,10 @@
 	var/brute_reduction = 0
 	///Subtracted to burn damage taken
 	var/burn_reduction = 0
+	///Brute damage multiplier
+	var/brute_multiplier = 1
+	///Burn damage multiplier
+	var/burn_multiplier = 1
 
 	//Coloring and proper item icon update
 	var/skin_tone = ""
@@ -291,8 +295,8 @@
 	brute = round(max(brute * dmg_multi, 0),DAMAGE_PRECISION)
 	burn = round(max(burn * dmg_multi, 0),DAMAGE_PRECISION)
 	stamina = round(max(stamina * dmg_multi, 0),DAMAGE_PRECISION)
-	brute = max(0, brute - brute_reduction)
-	burn = max(0, burn - burn_reduction)
+	brute = max(0, brute - brute_reduction) * brute_multiplier
+	burn = max(0, burn - burn_reduction) * burn_multiplier
 	//No stamina scaling.. for now..
 
 	if(!brute && !burn && !stamina)

@@ -1270,3 +1270,26 @@
 	glass_name = "vanilla dream smoothie"
 	glass_desc = "A classic drink made with vanilla and fresh cream."
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+
+/datum/reagent/consumable/limonade
+	name = "Lim'O'Nade"
+	description = "Sweet, tangy lemonade. Good for the soul."
+	color = "#FFE978"
+	quality = DRINK_NICE
+	taste_description = "sunshine and summertime"
+	glass_icon_state = "lemonpitcher"
+	glass_name = "pitcher of lemonade"
+	glass_desc = "This drink leaves you feeling nostalgic for some reason."
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	glass_price = DRINK_PRICE_EASY
+
+/datum/reagent/consumable/lemonjuice
+	name = "Lemon Juice"
+	description = "This juice is VERY sour."
+	color = "#863333" // rgb: 175, 175, 0
+	taste_description = "sourness"
+	glass_icon_state = "lemonglass"
+	glass_name = "glass of lemon juice"
+	glass_desc = "Sour..."
+	ph = 2
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED

@@ -956,25 +956,25 @@
 		mimick.health *= 2
 		mimick.melee_damage_lower *= 2
 		mimick.melee_damage_upper *= 2
-		painting_size = 3
+		painting_size = 2
 
 	var/list/all_spraycans = user.get_all_contents() + user.pulling
 
 	for(var/obj/item/toy/crayon/spraycan/pyrite/another_spraycan in all_spraycans)
 		another_spraycan.times_used += painting_size
 		deltimer(another_spraycan.use_timer)
-		another_spraycan.use_timer = addtimer(CALLBACK(another_spraycan, .proc/remove_stack), 12 SECONDS, TIMER_STOPPABLE)
+		another_spraycan.use_timer = addtimer(CALLBACK(another_spraycan, .proc/remove_stack), 20 SECONDS, TIMER_STOPPABLE)
 		if(another_spraycan.times_used < 3)
 			continue
 
-		COOLDOWN_START(another_spraycan, use_cooldown, another_spraycan.times_used * 12 SECONDS)
+		COOLDOWN_START(another_spraycan, use_cooldown, another_spraycan.times_used * 20 SECONDS)
 		if(another_spraycan == src)
 			balloon_alert(user, "[src] overheats!")
 
 /obj/item/toy/crayon/spraycan/pyrite/proc/remove_stack()
 	times_used -= 1
 	if(times_used > 0)
-		use_timer = addtimer(CALLBACK(src, .proc/remove_stack), 12 SECONDS)
+		use_timer = addtimer(CALLBACK(src, .proc/remove_stack), 20 SECONDS)
 
 #undef RANDOM_GRAFFITI
 #undef RANDOM_LETTER

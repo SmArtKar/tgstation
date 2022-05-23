@@ -1316,6 +1316,7 @@
 	owner_mind.transfer_to(blorbie)
 	blorbie.copy_languages(owner, LANGUAGE_MIND)
 	blorbie.faction = owner.faction.Copy()
+	ADD_TRAIT(owner, TRAIT_NO_MINDLESS_MSG, XENOBIO_TRAIT)
 
 	var/atom/movable/screen/alert/status_effect/blorbie_alert = blorbie.throw_alert(id, alert_type)
 	blorbie_alert.attached_effect = src
@@ -1323,6 +1324,7 @@
 /datum/status_effect/silver_control/on_remove()
 	. = ..()
 	owner_mind.transfer_to(owner)
+	REMOVE_TRAIT(owner, TRAIT_NO_MINDLESS_MSG, XENOBIO_TRAIT)
 	if(blorbie && !QDELETED(blorbie))
 		UnregisterSignal(blorbie, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 		blorbie.death(FALSE)

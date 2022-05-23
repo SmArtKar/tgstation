@@ -427,6 +427,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Similarly to toxlover, all toxin healing is going to be converted into damage, but toxin damage wont be converted into healing
 #define TRAIT_REVERSE_TOXHEAL "reverse_toxheal"
 
+/// Mobs with this trait dont display message about being catatonic/SSD
+#define TRAIT_NO_MINDLESS_MSG "no_mindless_msg"
+
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic

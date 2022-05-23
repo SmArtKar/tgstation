@@ -104,20 +104,21 @@
 /datum/slime_color/yellow/Life(delta_time, times_fired)
 	. = ..()
 	fitting_environment = FALSE
+	var/our_discharger
 
 	for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, get_turf(slime)))
 		if(istype(discharger) && discharger.on)
 			fitting_environment = TRUE
+			our_discharger = discharger
 			break
 
 	if(slime.powerlevel >= 5 && DT_PROB(slime.powerlevel * YELLOW_SLIME_ZAP_PROB, delta_time))
 		slime.visible_message(span_danger("[slime] overcharges, sending out arcs of lightning!"))
 
-		for(var/obj/machinery/power/energy_accumulator/slime_discharger/discharger in range(2, get_turf(slime)))
-			if(istype(discharger) && discharger.on)
-				slime.powerlevel = round(slime.powerlevel / 2)
-				slime.Beam(discharger, icon_state="lightning[rand(1,12)]", time = 5)
-				return
+		if(our_discharger)
+			slime.powerlevel = round(slime.powerlevel / 2)
+			slime.Beam(our_discharger, icon_state="lightning[rand(1,12)]", time = 5)
+			return
 
 		tesla_zap(slime, slime.powerlevel * 2, YELLOW_SLIME_ZAP_POWER * (slime.powerlevel - 2), ZAP_MOB_DAMAGE | ZAP_OBJ_DAMAGE)
 		var/datum/effect_system/spark_spread/sparks = new /datum/effect_system/spark_spread

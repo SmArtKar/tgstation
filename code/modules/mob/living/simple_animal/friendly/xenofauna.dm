@@ -1,4 +1,7 @@
 
+/mob/living/simple_animal/xenofauna
+	icon = 'icons/mob/xenofauna.dmi'
+
 // ************************************************
 // ******************* TIER TWO *******************
 // ************************************************
@@ -244,7 +247,7 @@
 /obj/item/trash/greeblefly
 	name = "greeblefly"
 	desc = "Crunchy."
-	icon = 'icons/mob/animal.dmi'
+	icon = 'icons/mob/xenofauna.dmi'
 	icon_state = "greeblefly-dead"
 
 /obj/item/trash/greeblefly/Initialize(mapload)

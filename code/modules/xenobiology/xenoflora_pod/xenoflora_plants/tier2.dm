@@ -9,7 +9,7 @@
 	seeds_icon_state = "xenoseeds-broombush"
 
 	required_gases = list(/datum/gas/nitrogen = 0.1)
-	produced_gases = list(/datum/gas/nitrous_oxide = 0.01)
+	produced_gases = list()
 	min_safe_temp = T0C
 	max_safe_temp = T0C + 60
 
@@ -38,14 +38,14 @@
 	ground_icon_state = "dirt"
 	seeds_icon_state = "xenoseeds-cubomelon"
 
-	required_chems = list(/datum/reagent/water = 0.2, /datum/reagent/bromine = 0.1)
-	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 0.02)
-	min_safe_temp = 233.15
+	required_chems = list(/datum/reagent/bromine = 0.2)
+	produced_chems = list()
+	min_safe_temp = 213.15
 	max_safe_temp = T0C
 
 	min_produce = 1
 	max_produce = 1
-	max_progress = 100 //Grows three times as fast
+	max_progress = 100 //Grows three times as fast because it drops only one melon
 	produce_type = /obj/item/food/xenoflora/cubomelon
 
 /datum/xenoflora_plant/cubomelon/harvested(mob/harvester)
@@ -75,7 +75,7 @@
 	icon_state = "cubomelonslice"
 	food_reagents = list(/datum/reagent/consumable/frostoil = 1, /datum/reagent/consumable/nutriment/vitamin = 0.2, /datum/reagent/consumable/nutriment = 1)
 	tastes = list("cubomelon" = 1, "cold" = 1)
-	juice_results = list(/datum/reagent/consumable/frostoil = 5)
+	juice_results = list(/datum/reagent/consumable/frostoil = 5, /datum/reagent/consumable/nutriment = 1)
 	foodtypes = FRUIT
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
