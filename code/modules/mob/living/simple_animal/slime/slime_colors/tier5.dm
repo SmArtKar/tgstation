@@ -180,6 +180,7 @@
 	coretype = /obj/item/slime_extract/pyrite
 	environmental_req = "Subject requires high temperatures(above 480° Celsius) or active fires to survive. If subject dies in low temperatures it will freeze and become unrevivable."
 	slime_tags = SLIME_HOT_LOVING | SLIME_WATER_WEAKNESS
+	food_types = list(/obj/item/food/xenoflora/pyrite_peach = 0.35)
 	var/fiery_charge = PYRITE_SLIME_MAX_FIERY_CHARGE
 
 /datum/slime_color/pyrite/New(mob/living/simple_animal/slime/slime)
@@ -248,6 +249,7 @@
 	coretype = /obj/item/slime_extract/bluespace
 	slime_tags = SLIME_WATER_RESISTANCE
 	environmental_req = "Subject is spartially unstable and will phase through obstacles unless forcefully anchored in bluespace."
+	food_types = list(/obj/item/food/xenoflora/bluespace_limon = 0.25)
 
 /datum/slime_color/bluespace/New(mob/living/simple_animal/slime/slime)
 	. = ..()

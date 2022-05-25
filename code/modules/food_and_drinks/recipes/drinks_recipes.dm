@@ -794,3 +794,6 @@
 	results = list(/datum/reagent/consumable/vanilla_dream = 3)
 	required_reagents = list(/datum/reagent/consumable/vanilla = 1, /datum/reagent/consumable/milk = 1, /datum/reagent/consumable/cream = 1)
 
+/datum/chemical_reaction/drink/limonade
+	results = list(/datum/reagent/consumable/limonade = 3)
+	required_reagents = list(/datum/reagent/consumable/limonjuice = 1, /datum/reagent/water = 1, /datum/reagent/gunpowder = 1)

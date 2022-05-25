@@ -21,3 +21,9 @@
 
 /obj/item/xeno_seeds/cubomelon
 	plant_type = /datum/xenoflora_plant/cubomelon
+
+/obj/item/xeno_seeds/bluespace_limon
+	plant_type = /datum/xenoflora_plant/bluespace_limon
+
+/obj/item/xeno_seeds/pyrite_peaches
+	plant_type = /datum/xenoflora_plant/pyrite_peaches

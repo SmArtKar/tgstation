@@ -210,10 +210,10 @@
 		. += ground_overlay
 		. += plant_overlay
 		if(on)
-			var/mutable_appearance/screen_overlay = mutable_appearance(icon, (internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE) ? "pod-screen-fire" : "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.1, plane = GAME_PLANE_UPPER)
+			var/mutable_appearance/screen_overlay = mutable_appearance(icon, (internal_gases.return_temperature() >= FIRE_MINIMUM_TEMPERATURE_TO_EXIST + 70) ? "pod-screen-fire" : "pod-screen", layer = ABOVE_ALL_MOB_LAYER + 0.1, plane = GAME_PLANE_UPPER)
 			. += screen_overlay
 
-	if(internal_gases.return_temperature() >= PLASMA_UPPER_TEMPERATURE && dome_extended)
+	if(internal_gases.return_temperature() >= FIRE_MINIMUM_TEMPERATURE_TO_EXIST + 70 && dome_extended)
 		var/mutable_appearance/fire_overlay = mutable_appearance(icon, "fire", layer = ABOVE_ALL_MOB_LAYER + 0.25, plane = GAME_PLANE_UPPER)
 		. += fire_overlay
 

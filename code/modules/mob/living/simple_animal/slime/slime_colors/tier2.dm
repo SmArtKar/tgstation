@@ -2,7 +2,7 @@
 	color = "purple"
 	coretype = /obj/item/slime_extract/purple
 	mutations = list(/datum/slime_color/dark_blue = 1, /datum/slime_color/dark_purple = 1, /datum/slime_color/green = 1)
-	food_types = list(/obj/item/food/xenoflora/broombush = 1)
+	food_types = list(/obj/item/food/xenoflora/broombush = 0.75)
 	slime_tags = SLIME_ATTACK_SLIMES | SLIME_SOCIAL
 
 	environmental_req = "Subject requires N2O in the atmosphere and is capable of slowly healing other slimes."
@@ -61,8 +61,8 @@
 	color = "blue"
 	coretype = /obj/item/slime_extract/blue
 	mutations = list(/datum/slime_color/dark_blue = 1, /datum/slime_color/silver = 1, /datum/slime_color/pink = 1)
-	temperature_modifier = 233.15
-	food_types = list(/obj/item/food/xenoflora/cubomelon = 4, /obj/item/food/xenoflora/cubomelon_slice = 1)
+	temperature_modifier = T0C - 40
+	food_types = list(/obj/item/food/xenoflora/cubomelon = 3, /obj/item/food/xenoflora/cubomelon_slice = 0.5)
 	slime_tags = SLIME_DISCHARGER_WEAKENED | SLIME_WATER_IMMUNITY
 
 	environmental_req = "Subject requires low temperatures ranging from -40° to -10° Celsius."

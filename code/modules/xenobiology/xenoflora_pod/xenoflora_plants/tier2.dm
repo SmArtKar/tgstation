@@ -14,7 +14,7 @@
 	max_safe_temp = T0C + 60
 
 	min_produce = 2
-	max_produce = 5
+	max_produce = 3
 	produce_type = /obj/item/food/xenoflora/broombush
 
 /obj/item/food/xenoflora/broombush
@@ -39,7 +39,7 @@
 	seeds_icon_state = "xenoseeds-cubomelon"
 
 	required_chems = list(/datum/reagent/bromine = 0.2)
-	produced_chems = list()
+	produced_chems = list(/datum/reagent/medicine/c2/hercuri = 0.05) //Slooow
 	min_safe_temp = 213.15
 	max_safe_temp = T0C
 

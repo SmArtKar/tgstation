@@ -587,3 +587,10 @@
 
 /obj/effect/temp_visual/slime_plus/cerulean
 	icon_state = "cerulean_plus"
+
+/obj/effect/temp_visual/rainbow_sparkles
+	icon_state = "rainbow_sparkles"
+	duration = 8
+	layer = ABOVE_ALL_MOB_LAYER
+	plane = ABOVE_GAME_PLANE
+	anchored = TRUE

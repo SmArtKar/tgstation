@@ -689,6 +689,11 @@
 	tastes = list("peaches" = 1, "tin" = 7)
 	venue_value = FOOD_PRICE_EXOTIC
 
+/obj/item/food/canned/peaches/pyrite
+	name = "canned pyrite peaches"
+	desc = "A can of blazing hot pyrite peaches. Nasty."
+	food_reagents = list(/datum/reagent/consumable/peachjuice = 12, /datum/reagent/consumable/sugar = 8, /datum/reagent/consumable/nutriment = 2, /datum/reagent/clf3 = 12)
+
 /obj/item/food/canned/tomatoes
 	name = "canned San Marzano tomatoes"
 	desc = "A can of premium San Marzano tomatoes, from the hills of Southern Italy."

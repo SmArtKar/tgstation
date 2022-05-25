@@ -1061,6 +1061,7 @@
 	ADD_TRAIT(owner, TRAIT_NOLIMBDISABLE, type) //Even the crippled will walk!
 	ADD_TRAIT(owner, TRAIT_NODISMEMBER, type)
 	ADD_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, type)
+	ADD_TRAIT(owner, TRAIT_PACIFISM, type)
 
 	if(!ishuman(owner))
 		return
@@ -1101,6 +1102,7 @@
 	REMOVE_TRAIT(owner, TRAIT_NOLIMBDISABLE, type)
 	REMOVE_TRAIT(owner, TRAIT_NODISMEMBER, type)
 	REMOVE_TRAIT(owner, TRAIT_IGNOREDAMAGESLOWDOWN, type)
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, type)
 
 	if(!ishuman(owner))
 		owner.remove_atom_colour(ADMIN_COLOUR_PRIORITY)
@@ -1200,7 +1202,6 @@
 	var/current_hue = 0 //+8 per sec
 	var/orig_facial
 	var/orig_hair
-	var/list/our_turfs = list()
 
 /datum/status_effect/rainbow_dash/on_apply()
 	. = ..()
@@ -1230,38 +1231,6 @@
 	human_owner.hair_color = orig_hair
 	human_owner.update_body(TRUE)
 	UnregisterSignal(human_owner, COMSIG_MOVABLE_MOVED)
-	for(var/turf/target_turf in our_turfs)
-		if(!istype(target_turf) || QDELETED(target_turf))
-			continue
-
-		target_turf.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
-		UnregisterSignal(target_turf, COMSIG_ATOM_ENTERED)
-
-/datum/status_effect/rainbow_dash/proc/handle_move(datum/source, atom/old_loc, move_dir, forced = FALSE)
-	SIGNAL_HANDLER
-	var/turf/owner_turf = get_turf(owner)
-	if(!isturf(old_loc) || (old_loc in our_turfs) || ((owner_turf in our_turfs) && old_loc == our_turfs[owner_turf]) || !owner_turf.Adjacent(old_loc))
-		return
-
-	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
-	var/paint_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
-	old_loc.add_atom_colour(paint_color, TEMPORARY_COLOUR_PRIORITY)
-	our_turfs[old_loc] = get_turf(owner)
-	RegisterSignal(old_loc, COMSIG_ATOM_ENTERED, .proc/on_entered)
-
-/datum/status_effect/rainbow_dash/proc/on_entered(datum/source, atom/movable/arrived, atom/old_loc, list/atom/old_locs)
-	SIGNAL_HANDLER
-	addtimer(CALLBACK(src, .proc/rainbow_move, source, arrived), 0.5)
-
-/datum/status_effect/rainbow_dash/proc/rainbow_move(turf/source_turf, atom/movable/arrived)
-	if(arrived.loc != source_turf) //They moved
-		return
-
-	if(isitem(arrived))
-		arrived.throw_at(our_turfs[source_turf], 1, 3)
-		return
-
-	arrived.Move(our_turfs[source_turf])
 
 /datum/status_effect/rainbow_dash/tick(delta_time, times_fired)
 	. = ..()
@@ -1280,6 +1249,16 @@
 	human_owner.facial_hair_color = new_color
 	human_owner.hair_color = new_color
 	human_owner.update_body(TRUE)
+
+/datum/status_effect/rainbow_dash/proc/handle_move(datum/source, atom/old_loc, move_dir, forced = FALSE)
+	SIGNAL_HANDLER
+	var/turf/owner_turf = get_turf(owner)
+	if(!isturf(old_loc) || !owner_turf.Adjacent(old_loc))
+		return
+
+	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
+	var/paint_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+	old_loc.AddComponent(/datum/component/rainbow_trail, paint_color, owner_turf)
 
 /atom/movable/screen/alert/status_effect/silver_control
 	name = "Silver Blorbie Control"
@@ -1334,4 +1313,4 @@
 	qdel(src)
 
 /datum/status_effect/silver_control/get_examine_text()
-	return span_notice("[owner.p_they(TRUE)] look like [owner.p_their()] mind is somewhere else...")
+	return span_deadsay("[owner.p_they(TRUE)] look like [owner.p_their()] mind is somewhere else...")

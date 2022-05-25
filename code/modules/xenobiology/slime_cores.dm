@@ -721,6 +721,7 @@
 	var/turf/our_turf = get_turf(src)
 	for(var/mob/living/victim in our_turf)
 		REMOVE_TRAIT(victim, TRAIT_PACIFISM, MAGIC_TRAIT)
+		to_chat(victim, span_notice("You lose the fleeing feeling of inner peace as last sakura petals fall to the ground..."))
 	return ..()
 
 /particles/sakura_petals
