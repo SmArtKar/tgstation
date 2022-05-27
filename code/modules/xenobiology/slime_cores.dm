@@ -1,3 +1,6 @@
+#define CORE_USE_MAJOR (1<<1)
+#define CORE_USE_MINOR (1<<2)
+
 /// Slime Extracts ///
 
 /obj/item/slime_extract
@@ -16,6 +19,9 @@
 	var/list/react_reagents = list()
 	var/activated = FALSE
 	var/attached_gold_core = FALSE
+	var/jelly_color
+	var/use_types = NONE
+	var/luminiscent_description = ""
 
 /obj/item/slime_extract/proc/activate()
 
@@ -24,6 +30,7 @@
 		return
 	name = "used [name]"
 	desc += " This extract has been used up."
+	color = color_matrix_saturation(0.85) //A bit dimmer
 
 /obj/item/slime_extract/examine(mob/user)
 	. = ..()
@@ -40,7 +47,14 @@
 		grind_results[/datum/reagent/toxin/slime_jelly] = 20
 
 /obj/item/slime_extract/afterattack(atom/target, mob/living/user, proximity_flag)
-	if(!proximity_flag || !target.is_open_container())
+	if(!proximity_flag)
+		return ..()
+
+	if(isjellyperson(user) && user.zone_selected == BODY_ZONE_PRECISE_MOUTH && uses > 0 && !activated)
+		attempt_consume(user)
+		return
+
+	if(!target.is_open_container())
 		return ..()
 
 	var/datum/reagents/target_reagents = target.reagents
@@ -52,6 +66,40 @@
 		to_chat(user, span_warning("[target] is empty!"))
 	else
 		to_chat(user, span_warning("[src] is full!"))
+
+/obj/item/slime_extract/proc/attempt_consume(mob/living/carbon/eater)
+	var/covered = ""
+	if(eater.is_mouth_covered(head_only = 1))
+		covered = "headgear"
+	else if(eater.is_mouth_covered(mask_only = 1))
+		covered = "mask"
+
+	if(covered)
+		to_chat(eater, span_warning("You have to remove your [covered] first!"))
+		return
+
+	if(!do_after(eater, 5 SECONDS, src, IGNORE_USER_LOC_CHANGE | IGNORE_TARGET_LOC_CHANGE))
+		return
+
+	var/datum/species/jelly/jelly_species = eater.dna.species
+	jelly_species.consume_extract(eater, src)
+
+/obj/item/slime_extract/proc/luminiscent_life(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species, delta_time, times_fired)
+
+/obj/item/slime_extract/proc/luminiscent_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+	if(use_types & CORE_USE_MAJOR)
+		species.extract_major.Grant(jellyman)
+
+	if(use_types & CORE_USE_MINOR)
+		species.extract_minor.Grant(jellyman)
+
+/obj/item/slime_extract/proc/luminiscent_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+	species.extract_major.Remove(jellyman)
+	species.extract_minor.Remove(jellyman)
+
+/obj/item/slime_extract/proc/luminiscent_minor(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+
+/obj/item/slime_extract/proc/luminiscent_major(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
 
 /obj/item/slime_extract/update_overlays()
 	. = ..()
@@ -72,6 +120,17 @@
 	icon_state = "grey"
 	tier = 1
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#AAAAAA"
+	luminiscent_description = "Shortens cooldown in cost of rapid nutrition drain."
+
+/obj/item/slime_extract/grey/luminiscent_life(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species, delta_time, times_fired)
+	for(var/core_type in species.core_type_cooldowns)
+		species.core_type_cooldowns[core_type] -= delta_time * 0.5 SECONDS
+		jellyman.adjust_nutrition(-delta_time)
+
+	if(!COOLDOWN_FINISHED(species, core_swap_cooldown) && !species.rainbow_active)
+		species.core_swap_cooldown -= delta_time * 0.5 SECONDS
+		jellyman.adjust_nutrition(-delta_time)
 
 // ************************************************
 // ******************* TIER TWO *******************
@@ -84,6 +143,7 @@
 	icon_state = "orange"
 	tier = 2
 	react_reagents = list(/datum/reagent/blood = 21, /datum/reagent/toxin/plasma = 5)
+	jelly_color = "#EEAB46"
 
 // Blue Extract
 
@@ -92,6 +152,7 @@
 	icon_state = "blue"
 	tier = 2
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	jelly_color = "#3BE4E4"
 
 // Purple Extract
 
@@ -100,6 +161,7 @@
 	icon_state = "purple"
 	tier = 2
 	react_reagents = list(/datum/reagent/blood = 10, /datum/reagent/toxin/plasma = 5)
+	jelly_color = "#C84FEC"
 
 // Metal Extract
 
@@ -108,6 +170,7 @@
 	icon_state = "metal"
 	tier = 2
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#909090"
 
 // ************************************************
 // ****************** TIER THREE ******************
@@ -120,6 +183,7 @@
 	icon_state = "dark_purple"
 	tier = 3
 	react_reagents = list(/datum/reagent/water = 5, /datum/reagent/toxin/plasma = 5)
+	jelly_color = "#9948F7"
 	var/drained_amount = 0
 
 /obj/item/slime_extract/dark_purple/proc/plasma_drain()
@@ -161,6 +225,7 @@
 	icon_state = "dark_blue"
 	tier = 3
 	react_reagents = list(/datum/reagent/water = 5, /datum/reagent/toxin/plasma = 5)
+	jelly_color = "#33A0FF"
 
 /obj/item/slime_extract/dark_blue/activate()
 	activated = TRUE
@@ -188,6 +253,7 @@
 	activated = FALSE
 	if(uses <= 0)
 		qdel(src)
+	return
 
 // Silver Extract
 
@@ -196,6 +262,7 @@
 	icon_state = "silver"
 	tier = 3
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	jelly_color = "#DADADA"
 
 /obj/item/slime_extract/silver/activate()
 	activated = TRUE
@@ -216,6 +283,7 @@
 	activated = FALSE
 	if(uses <= 0)
 		qdel(src)
+	return
 
 // Yellow Extract
 
@@ -224,6 +292,7 @@
 	icon_state = "yellow"
 	tier = 3
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	jelly_color = "#FFF419"
 
 // ************************************************
 // ****************** TIER FOUR *******************
@@ -236,6 +305,7 @@
 	icon_state = "red"
 	tier = 4
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	jelly_color = "#F13636"
 
 // Green Extract
 
@@ -244,6 +314,7 @@
 	icon_state = "green"
 	tier = 4
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/uranium/radium = 5)
+	jelly_color = "#37E84D"
 
 // Pink Extract
 
@@ -252,6 +323,7 @@
 	icon_state = "pink"
 	tier = 4
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#FF5BBD"
 
 /obj/item/slime_extract/pink/on_grind()
 	. = ..()
@@ -283,6 +355,7 @@
 
 	if(uses <= 0)
 		qdel(src)
+	return
 
 // Gold Extract
 
@@ -290,6 +363,7 @@
 	name = "gold slime extract"
 	icon_state = "gold"
 	tier = 4
+	jelly_color = "#e0b92c"
 
 /obj/item/slime_extract/gold/activate()
 	icon_state = "[initial(icon_state)]_pulsating"
@@ -299,7 +373,8 @@
 
 /obj/item/slime_extract/gold/afterattack(atom/target, mob/living/user, proximity_flag)
 	if(!isliving(target) || !activated || target == user)
-		return ..()
+		. = ..()
+		return
 
 	if(!proximity_flag)
 		return
@@ -320,6 +395,7 @@
 	user.apply_status_effect(/datum/status_effect/golden_eyes, victim)
 	if(uses <= 0)
 		qdel(src)
+	return
 
 /obj/item/slime_extract/special/gold_secondary
 	name = "secondary gold slime extract"
@@ -340,7 +416,7 @@
 	var/obj/item/slime_extract/extract = target
 
 	if(istype(extract, /obj/item/slime_extract/special/gold_secondary))
-		to_chat(user, span_warning("You can't attach [src] to [target]!"))
+		to_chat(user, span_warning("You can't attach [src] to another [target]!"))
 		return
 
 	if(target_extract)
@@ -382,6 +458,7 @@
 	icon_state = "cerulean"
 	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#5783AA"
 
 /obj/item/slime_extract/cerulean/activate()
 	icon_state = "[initial(icon_state)]_pulsating"
@@ -408,6 +485,7 @@
 	icon_state = "sepia"
 	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#9B8A7A"
 	var/time_jump = FALSE
 
 /obj/item/slime_extract/sepia/activate(explosive = TRUE)
@@ -462,6 +540,7 @@
 	playsound(target, 'sound/magic/teleport_app.ogg', 50, TRUE)
 	AddComponent(/datum/component/dejavu/slime, uses + 1, 10 SECONDS)
 	qdel(src)
+	return
 
 // Pyrite Extract
 
@@ -469,6 +548,8 @@
 	name = "pyrite slime extract"
 	icon_state = "pyrite"
 	tier = 5
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	jelly_color = "#ffde22"
 
 /obj/item/slime_extract/pyrite/activate()
 	activated = TRUE
@@ -494,6 +575,7 @@
 
 	if(uses <= 0)
 		qdel(src)
+	return
 
 // Bluespace Extract
 
@@ -502,6 +584,7 @@
 	icon_state = "bluespace"
 	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
+	jelly_color = "#FFFFFF"
 	var/activation_x
 	var/activation_y
 	var/activation_z
@@ -563,6 +646,8 @@
 	icon_state = "oil"
 	tier = 6
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#3B3B3B"
+	luminiscent_description = "User is extremely flammable and constantly dripping oil."
 	var/primer
 
 /obj/item/slime_extract/oil/activate()
@@ -596,6 +681,7 @@
 	icon_state = "black"
 	tier = 6
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#555555"
 	var/list/limb_transform_types = list(
 		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
 		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
@@ -632,7 +718,6 @@
 			wound.on_xadone(70) //Not enough to heal critical wounds, but works for moderate and severe
 		if(uses <= 0)
 			qdel(src)
-			return
 		return
 
 	var/limb_type = limb_transform_types[user.zone_selected]
@@ -645,6 +730,7 @@
 
 	if(uses <= 0)
 		qdel(src)
+	return
 
 // Adamantine Extract
 
@@ -652,6 +738,8 @@
 	name = "adamantine slime extract"
 	icon_state = "adamantine"
 	tier = 6
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#2A9777"
 
 // Light Pink Extract
 
@@ -659,7 +747,8 @@
 	name = "light pink slime extract"
 	icon_state = "light_pink"
 	tier = 6
-	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#FFD3F7"
 
 /obj/item/slime_extract/light_pink/proc/start_pacifism()
 	var/area/our_area = get_area(get_turf(src))
@@ -784,13 +873,21 @@
 	victim.visible_message(span_warning("[victim] starts shining with all colors of rainbow as soon as [user] applies [src] to them!"))
 	if(uses <= 0)
 		qdel(src)
+	return
 
 /obj/item/slime_extract/special/fiery
 	name = "fiery slime extract"
 	icon_state = "fiery"
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
+	jelly_color = "#F86018"
 
 /obj/item/slime_extract/special/biohazard
 	name = "biohazard slime extract"
 	icon_state = "biohazard"
 	react_reagents = list(/datum/reagent/toxin/plasma = 5)
+	jelly_color = "#319241"
+
+/obj/item/storage/box/syndicate/slime_core_debug/PopulateContents()
+	. = ..()
+	for(var/core_type in (subtypesof(/obj/item/slime_extract) - /obj/item/slime_extract/special))
+		new core_type(src)

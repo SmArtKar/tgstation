@@ -58,10 +58,10 @@
 	for(var/atom/touch_atom in our_turf)
 		if(touch_atom == src)
 			continue
-		reagents.expose(touch_atom, TOUCH, 0.5)
+		reagents.expose(touch_atom, TOUCH)
 
 	if(main_target != our_turf)
-		reagents.expose(our_turf, TOUCH, 0.5)
+		reagents.expose(our_turf, TOUCH)
 
 	qdel(src)
 
@@ -69,7 +69,7 @@
 
 /datum/xenoflora_plant/pyrite_peaches
 	name = "Pyrite Peach Tree"
-	desc = "An unusual subspecies of peaches that naturally produces Chlorine Trifluoride for defence."
+	desc = "An unusual subspecies of peaches that naturally produces Chlorine Trifluoride for self-defence."
 
 	icon_state = "pyrite_peach"
 	ground_icon_state = "grass_alien"
@@ -79,9 +79,9 @@
 	max_safe_temp = T0C + 150
 
 	required_gases = list(/datum/gas/oxygen = 0.3) //Just hook it up to distro and a heater or some shit
-	produced_gases = list(/datum/gas/plasma = 0.1)
+	produced_gases = list()
 
-	required_chems = list(/datum/reagent/clf3 = 0.1)
+	required_chems = list(/datum/reagent/napalm = 0.1)
 	produced_chems = list()
 
 	min_produce = 2
@@ -90,7 +90,7 @@
 
 /obj/item/food/xenoflora/pyrite_peach
 	name = "pyrite peach"
-	desc = "When Indian food meets peaches, this happens."
+	desc = "Do not let the damn indians take our peaches how they took our jobs!" //TODO: racist, need to think up something better
 	icon_state = "bluespace_limon"
 	food_reagents = list(/datum/reagent/consumable/peachjuice = 3, /datum/reagent/consumable/sugar = 2, /datum/reagent/consumable/nutriment = 2, /datum/reagent/clf3 = 5)
 	tastes = list("flames" = 1, "peaches" = 1)
@@ -98,3 +98,14 @@
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
 	seed_type = /obj/item/xeno_seeds/pyrite_peaches
+
+/obj/item/food/xenoflora/pyrite_peach/pickup(mob/living/carbon/user)
+	. = ..()
+	if(!istype(user) || HAS_TRAIT(user, TRAIT_PLANT_SAFE) || !reagents)
+		return
+
+	for(var/obj/item/clothing/worn_item in user.get_equipped_items())
+		if((worn_item.body_parts_covered & HANDS) && (worn_item.clothing_flags & THICKMATERIAL))
+			return
+
+	reagents.expose(user, TOUCH, 0.2)

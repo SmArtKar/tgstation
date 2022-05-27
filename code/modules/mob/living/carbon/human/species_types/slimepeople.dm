@@ -9,7 +9,7 @@
 	name = "\improper Slimeperson"
 	plural_form = "Slimepeople"
 	id = SPECIES_SLIMEPERSON
-	species_traits = list(MUTCOLORS,EYECOLOR,HAIR,FACEHAIR,NOBLOOD,NO_UNDERWEAR,HAS_FLESH)
+	species_traits = list(MUTCOLORS, EYECOLOR, HAIR, FACEHAIR, NOBLOOD, NO_UNDERWEAR, HAS_FLESH)
 	hair_color = "mutcolor"
 	hair_alpha = 200
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | RACE_SWAP | ERT_SPAWN
@@ -36,10 +36,10 @@
 	// so if someone mindswapped into them, they'd still be shared.
 	bodies = null
 	jellyman.blood_volume = min(jellyman.blood_volume, BLOOD_VOLUME_NORMAL)
-	..()
+	return ..()
 
 /datum/species/jelly/slime/on_species_gain(mob/living/carbon/new_jellyperson, datum/species/old_species)
-	..()
+	. = ..()
 	if(ishuman(new_jellyperson))
 		var/mob/living/carbon/human/jellyman = new_jellyperson
 		slime_split = new
@@ -77,8 +77,17 @@
 /datum/species/jelly/slime/copy_properties_from(datum/species/jelly/slime/old_species)
 	bodies = old_species.bodies
 
+/datum/species/jelly/slime/change_color(mob/living/carbon/jellyman, new_color = null)
+	. = ..()
+	if(!ishuman(jellyman))
+		return
+	var/mob/living/carbon/human/jellyhuman = jellyman
+	jellyhuman.hair_color = jellyhuman.dna.features["mcolor"]
+	jellyhuman.facial_hair_color = jellyhuman.dna.features["mcolor"]
+	jellyman.update_body(TRUE)
+
 /datum/species/jelly/slime/spec_life(mob/living/carbon/human/jellyman, delta_time, times_fired)
-	if(jellyman.blood_volume >= (DEFAULT_SPLIT_VOLUME + SPLIT_PENALTY * splits ** 2))
+	if(jellyman.blood_volume >= (DEFAULT_SPLIT_VOLUME + (!rainbow_active) * SPLIT_PENALTY * splits ** 2))
 		if(DT_PROB(2.5, delta_time))
 			to_chat(jellyman, span_notice("You feel very bloated!"))
 
@@ -99,7 +108,7 @@
 	if(!isslimeperson(human_owner))
 		return FALSE
 	var/datum/species/jelly/slime/slime_species = human_owner.dna.species
-	if(human_owner.blood_volume >= (DEFAULT_SPLIT_VOLUME + SPLIT_PENALTY * slime_species.splits ** 2))
+	if(human_owner.blood_volume >= (DEFAULT_SPLIT_VOLUME + (!slime_species.rainbow_active) * SPLIT_PENALTY * slime_species.splits ** 2))
 		return TRUE
 	return FALSE
 
@@ -109,20 +118,16 @@
 		return
 	var/datum/species/jelly/slime/slime_species = human_owner.dna.species
 	CHECK_DNA_AND_SPECIES(human_owner)
-	human_owner.visible_message("<span class='notice'>[human_owner] gains a look of \
-		concentration while standing perfectly still.</span>",
-		"<span class='notice'>You focus intently on moving your body while \
-		standing perfectly still...</span>")
-
+	human_owner.visible_message(span_notice("[human_owner] gains a look of concentration while standing perfectly still."), span_notice("You focus intently on moving your body while standing perfectly still..."))
 	human_owner.notransform = TRUE
 
 	if(do_after(human_owner, delay = 6 SECONDS, target = human_owner, timed_action_flags = IGNORE_HELD_ITEM))
-		if(human_owner.blood_volume >= (DEFAULT_SPLIT_VOLUME + SPLIT_PENALTY * slime_species.splits ** 2))
+		if(human_owner.blood_volume >= (DEFAULT_SPLIT_VOLUME + (!slime_species.rainbow_active) * SPLIT_PENALTY * slime_species.splits ** 2))
 			make_dupe()
 		else
 			to_chat(human_owner, span_warning("...but there is not enough of you to go around! You must attain more mass to split!"))
 	else
-		to_chat(human_owner, span_warning("...but fail to stand perfectly still!"))
+		to_chat(human_owner, span_warning("...but you fail to stand perfectly still!"))
 
 	human_owner.notransform = FALSE
 
@@ -140,7 +145,7 @@
 	spare.name = spare.dna.real_name
 	spare.updateappearance(mutcolor_update=1)
 	spare.domutcheck()
-	spare.Move(get_step(human_owner.loc, pick(NORTH,SOUTH,EAST,WEST)))
+	spare.Move(get_step(human_owner.loc, pick(GLOB.cardinals)))
 	for(var/disease in human_owner.diseases)
 		spare.ForceContractDisease(disease)
 
@@ -160,11 +165,7 @@
 
 	human_owner.transfer_trait_datums(spare)
 	human_owner.mind.transfer_to(spare)
-	spare.visible_message("<span class='warning'>[human_owner] distorts as a new body \
-		\"steps out\" of [human_owner.p_them()].</span>",
-		"<span class='notice'>...and after a moment of disorentation, \
-		you're besides yourself!</span>")
-
+	spare.visible_message(span_warning("[human_owner] distorts as a new body \"steps out\" of [human_owner.p_them()]."), span_notice("...and after a moment of disorentation, you're besides yourself!"))
 
 /datum/action/innate/swap_body
 	name = "Swap Body"
@@ -177,8 +178,9 @@
 	if(!isslimeperson(owner))
 		to_chat(owner, span_warning("You are not a slimeperson."))
 		Remove(owner)
-	else
-		ui_interact(owner)
+		return
+
+	ui_interact(owner)
 
 /datum/action/innate/swap_body/ui_host(mob/user)
 	return owner
@@ -303,3 +305,6 @@
 	owner_mind.current.transfer_trait_datums(dupe)
 	owner_mind.transfer_to(dupe)
 	dupe.visible_message(span_notice("[dupe] blinks and looks around."), span_notice("...and move this one instead."))
+
+#undef DEFAULT_SPLIT_VOLUME
+#undef SPLIT_PENALTY

@@ -60,7 +60,7 @@ export const SlimeBodySwapper = (props, context) => {
       width={400}
       height={400}>
       <Window.Content scrollable>
-        <Section>
+        <Section title="Bodies">
           {bodies.map(body => (
             <BodyEntry
               key={body.name}

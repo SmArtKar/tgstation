@@ -6,8 +6,7 @@
 /// Mob can be spawned with a gold slime core with blood reaction as a friendly creature
 #define FRIENDLY_SPAWN 2
 
-/// Determines how much light the jelly species emit
-#define LUMINESCENT_DEFAULT_GLOW 1
+#define LUMINESCENT_RAINBOW_GLOW 1.5
 
 /// How much gases and chemicals can xenoflora pod contain
 #define XENOFLORA_MAX_MOLES 3000
@@ -30,7 +29,6 @@
 #define SLIME_VALUE_TIER_5 3200
 #define SLIME_VALUE_TIER_6 6400
 #define SLIME_VALUE_TIER_7 12800
-#define SLIME_TIER_AMOUNT 7
 
 #define SLIME_SELL_MODIFIER_MIN 	  -0.03
 #define SLIME_SELL_MODIFIER_MAX 	  -0.01

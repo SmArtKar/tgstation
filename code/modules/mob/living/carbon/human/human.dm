@@ -1113,9 +1113,6 @@
 /mob/living/carbon/human/species/jelly/luminescent
 	race = /datum/species/jelly/luminescent
 
-/mob/living/carbon/human/species/jelly/luminescent/rainbow
-	race = /datum/species/jelly/luminescent/rainbow
-
 /mob/living/carbon/human/species/lizard
 	race = /datum/species/lizard
 

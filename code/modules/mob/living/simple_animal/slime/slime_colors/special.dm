@@ -35,15 +35,14 @@
 /datum/slime_color/fiery/proc/fireball(datum/source, atom/target)
 	SIGNAL_HANDLER
 
-	if(!COOLDOWN_FINISHED(src, fireball_cooldown) || !isliving(target))
+	if(!COOLDOWN_FINISHED(src, fireball_cooldown) || !isliving(target) || !COOLDOWN_FINISHED(slime, attack_cd))
 		return
 
 	if(get_dist(slime, target) <= 1)
 		return
 
 	COOLDOWN_START(src, fireball_cooldown, FIERY_SLIME_PROJECTILE_COOLDOWN)
-	slime.attack_cd = TRUE
-	addtimer(VARSET_CALLBACK(slime, attack_cd, FALSE), get_attack_cd(target))
+	COOLDOWN_START(slime, attack_cd, get_attack_cd(target))
 	var/obj/projectile/our_projectile = new /obj/projectile/magic/fireball/minor(get_turf(slime))
 	our_projectile.firer = slime
 	our_projectile.original = target

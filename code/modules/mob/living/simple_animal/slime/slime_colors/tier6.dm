@@ -47,15 +47,14 @@
 /datum/slime_color/oil/proc/throw_oil(datum/source, atom/target)
 	SIGNAL_HANDLER
 
-	if(!COOLDOWN_FINISHED(src, oil_throw_cooldown) || !isliving(target))
+	if(!COOLDOWN_FINISHED(src, oil_throw_cooldown) || !isliving(target) || !COOLDOWN_FINISHED(slime, attack_cd))
 		return
 
 	if(get_dist(slime, target) <= 1)
 		return
 
 	COOLDOWN_START(src, oil_throw_cooldown, OIL_SLIME_PROJECTILE_COOLDOWN)
-	slime.attack_cd = TRUE
-	addtimer(VARSET_CALLBACK(slime, attack_cd, FALSE), get_attack_cd(target))
+	COOLDOWN_START(slime, attack_cd, get_attack_cd(target))
 	var/obj/projectile/our_projectile = new /obj/projectile/oil(get_turf(slime))
 	our_projectile.firer = slime
 	our_projectile.original = target
@@ -612,7 +611,7 @@
 	SIGNAL_HANDLER
 
 	if(puppet)
-		if(isliving(feed_target) && HAS_TRAIT(feed_target, TRAIT_CRITICAL_CONDITION) && !slime.attack_cd)
+		if(isliving(feed_target) && HAS_TRAIT(feed_target, TRAIT_CRITICAL_CONDITION) && COOLDOWN_FINISHED(slime, attack_cd))
 			slime.attack_target(feed_target)
 		return COMPONENT_SLIME_NO_FEEDON
 
@@ -620,7 +619,7 @@
 	SIGNAL_HANDLER
 
 	if(puppet)
-		if(isliving(target) && !slime.attack_cd)
+		if(isliving(target) && COOLDOWN_FINISHED(slime, attack_cd))
 			slime.attack_target(target)
 		return COMPONENT_SLIME_NO_FEEDON
 

@@ -31,13 +31,13 @@
 		if(friend.slime_color.type != type)
 			continue
 
-		if(friend.nutrition <= friend.get_hunger_nutrition() - 100)
+		if(friend.nutrition <= friend.get_hunger_nutrition() - 200)
 			fitting_environment = FALSE
 			if(!slime.docile)
 				ADD_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 			return
 
-	if(slime.nutrition > slime.get_hunger_nutrition() - 100) //Both we and our friends are happy
+	if(slime.nutrition > slime.get_hunger_nutrition() - 200) //Both we and our friends are happy
 		fitting_environment = TRUE
 		REMOVE_TRAIT(slime, TRAIT_SLIME_RABID, "red_slime_environmental")
 		return

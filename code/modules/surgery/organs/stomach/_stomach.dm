@@ -360,8 +360,8 @@
 /datum/action/innate/create_globule
 	name = "Create Jelly Globule"
 	check_flags = AB_CHECK_CONSCIOUS
-	button_icon_state = "create_globule"
-	icon_icon = 'icons/mob/actions/actions_slime.dmi'
+	button_icon_state = "stomach-slime"
+	icon_icon = 'icons/obj/surgery.dmi'
 	background_icon_state = "bg_slime"
 
 /datum/action/innate/create_globule/IsAvailable()

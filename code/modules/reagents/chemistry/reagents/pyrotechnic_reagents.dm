@@ -346,12 +346,16 @@
 	taste_description = "jelly"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/teslium/energized_jelly/on_mob_life(mob/living/carbon/M, delta_time, times_fired)
-	if(isjellyperson(M))
+/datum/reagent/teslium/energized_jelly/on_mob_life(mob/living/carbon/owner, delta_time, times_fired)
+	if(isjellyperson(owner))
 		shock_timer = 0 //immune to shocks
-		M.AdjustAllImmobility(-40  *REM * delta_time)
+		M.AdjustAllImmobility(-40 * REM * delta_time)
 		M.adjustStaminaLoss(-2 * REM * delta_time, 0)
-	..()
+		if(isluminescent(owner))
+			var/datum/species/jelly/luminescent/species = owner.dna.species
+			for(var/core_type in species.core_type_cooldowns)
+				species.core_type_cooldowns[core_type] -= 0.5 * delta_time * REM
+	return ..()
 
 /datum/reagent/firefighting_foam
 	name = "Firefighting Foam"

@@ -72,7 +72,7 @@
 	var/will_to_grow = FALSE //AI variable, when TRUE slime will have it's AI on as long as its nutrition is lower than required to grow
 
 	var/ai_active = FALSE // determines if the AI loop is activated
-	var/attack_cd = 0 // attack cooldown
+	COOLDOWN_DECLARE(attack_cd)
 	var/discipline = 0 // if a slime has been hit with a freeze gun, or wrestled/attacked off a human, they become disciplined and don't attack anymore for a while
 
 	var/mutable_appearance/digestion_overlay = null //Used for displaying what slime is digesting right now
@@ -230,10 +230,9 @@
 	if(!client && powerlevel > 0)
 		if(prob(powerlevel * 5 + max(SLIME_MOOD_LEVEL_HAPPY - mood_level, 0) / SLIME_MOOD_LEVEL_HAPPY * SLIME_MOOD_OBJ_ATTACK_CHANCE))
 			if(istype(bumpy, /obj/structure/window) || istype(bumpy, /obj/structure/grille))
-				if(nutrition <= get_hunger_nutrition() && !attack_cd && is_adult)
+				if(nutrition <= get_hunger_nutrition() && COOLDOWN_FINISHED(src, attack_cd) && is_adult)
 					attack_target(bumpy)
-					attack_cd = TRUE
-					addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), 4.5 SECONDS)
+					COOLDOWN_START(src, attack_cd, slime_color.get_attack_cd(target))
 
 /mob/living/simple_animal/slime/Process_Spacemove(movement_dir = 0, continuous_move = FALSE)
 	return 2

@@ -34,7 +34,7 @@
 /datum/slime_color/cerulean/proc/attempt_lunge(datum/source, atom/target)
 	SIGNAL_HANDLER
 
-	if(!COOLDOWN_FINISHED(src, lunge_cooldown) || !isliving(target))
+	if(!COOLDOWN_FINISHED(src, lunge_cooldown) || !isliving(target) || !COOLDOWN_FINISHED(slime, attack_cd))
 		return
 
 	if(get_dist(slime, target) <= 1) //No bullshit melee knockdowns
@@ -45,8 +45,7 @@
 			return
 
 	COOLDOWN_START(src, lunge_cooldown, CERULEAN_SLIME_LUNGE_COOLDOWN)
-	slime.attack_cd = TRUE
-	addtimer(VARSET_CALLBACK(slime, attack_cd, FALSE), get_attack_cd(target))
+	COOLDOWN_START(slime, attack_cd, get_attack_cd(target))
 	slime.visible_message(span_warning("[slime] lunges at [target]!"), span_notice("You lunge at [target]!"))
 	slime.throw_at(target, 7, 1, src, FALSE)
 

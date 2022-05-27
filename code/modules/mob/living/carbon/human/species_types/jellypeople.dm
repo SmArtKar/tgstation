@@ -3,7 +3,7 @@
 	name = "\improper Jellyperson"
 	plural_form = "Jellypeople"
 	id = SPECIES_JELLYPERSON
-	species_traits = list(MUTCOLORS,EYECOLOR,NOBLOOD,NO_UNDERWEAR,HAS_FLESH)
+	species_traits = list(MUTCOLORS, EYECOLOR, NOBLOOD, NO_UNDERWEAR, HAS_FLESH)
 	inherent_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
 		TRAIT_CAN_STRIP,
@@ -13,7 +13,7 @@
 	exotic_blood = /datum/reagent/toxin/slime_jelly
 	damage_overlay_type = ""
 	var/datum/action/innate/regenerate_limbs/regenerate_limbs
-	liked_food = GROSS | MEAT | TOXIC | RAW
+	liked_food = TOXIC | RAW
 	disliked_food = NONE
 	toxic_food = NONE
 	coldmod = 6   // = 3x cold damage because of limb damage modifier
@@ -42,10 +42,20 @@
 	mutantstomach = /obj/item/organ/stomach/slime
 	mutantappendix = /obj/item/organ/appendix/slime
 
+	/// Are we currently in RAINBOW MOOOOODE?
+	var/rainbow_active = FALSE
+	/// Current hue for RAINBOW MOOOOODE
+	var/current_hue = 0
+	/// Original color stored for stopping rainbow mode
+	var/original_mcolor
+	/// Timer for rainbow effect removal
+	var/rainbow_timer
+
 /datum/species/jelly/on_species_loss(mob/living/carbon/old_jellyperson)
 	if(regenerate_limbs)
 		regenerate_limbs.Remove(old_jellyperson)
 	old_jellyperson.RemoveElement(/datum/element/soft_landing)
+	stop_rainbow(old_jellyperson)
 	return ..()
 
 /datum/species/jelly/on_species_gain(mob/living/carbon/new_jellyperson, datum/species/old_species)
@@ -65,17 +75,30 @@
 		regenerate_limbs.Grant(new_jellyperson)
 	new_jellyperson.AddElement(/datum/element/soft_landing)
 
-/datum/species/jelly/proc/change_color(mob/living/carbon/new_jellyperson, new_color = null)
+/datum/species/jelly/proc/change_color(mob/living/carbon/jellyman, new_color = null)
 	if(!new_color)
 		new_color = "#[num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)]"
 
-	new_jellyperson.dna.features["mcolor"] = new_color
-	for(var/obj/item/organ/slime_organ in new_jellyperson.internal_organs)
+	jellyman.dna.features["mcolor"] = new_color
+	for(var/obj/item/organ/slime_organ in jellyman.internal_organs)
 		if(!slime_organ.GetComponent(/datum/component/hydrophobic)) //somehow got non slime organ
 			continue
+		slime_organ.remove_atom_colour(FIXED_COLOUR_PRIORITY)
 		slime_organ.add_atom_colour(new_color, FIXED_COLOUR_PRIORITY)
 
-	new_jellyperson.update_body()
+	jellyman.update_body(TRUE)
+
+/datum/species/jelly/proc/consume_extract(mob/living/carbon/jellyman, obj/item/slime_extract/extract)
+	playsound(jellyman,'sound/items/eatfood.ogg', 50, TRUE)
+	jellyman.visible_message(span_notice("[jellyman] consumes [extract]."), span_notice("You consume [extract]."))
+	if(extract.jelly_color)
+		change_color(jellyman, extract.jelly_color)
+
+	if(istype(extract, /obj/item/slime_extract/special/rainbow))
+		start_rainbow(jellyman, 5 MINUTES)
+	else if(rainbow_active)
+		stop_rainbow(jellyman)
+	qdel(extract)
 
 /datum/species/jelly/spec_life(mob/living/carbon/human/human_owner, delta_time, times_fired)
 	if(human_owner.stat == DEAD) //can't farm slime jelly from a dead slime/jelly person indefinitely
@@ -176,3 +199,27 @@
 		to_chat(human_owner, span_warning("...but there is not enough of you to fix everything! You must attain more mass to heal completely!"))
 		return
 	to_chat(human_owner, span_warning("...but there is not enough of you to go around! You must attain more mass to heal!"))
+
+/datum/species/jelly/proc/start_rainbow(mob/living/carbon/jellyman, duration = null)
+	rainbow_active = TRUE
+	original_mcolor = jellyman.dna.features["mcolor"]
+	deltimer(rainbow_timer)
+	if(duration)
+		rainbow_timer = addtimer(CALLBACK(src, .proc/stop_rainbow, jellyman), duration, TIMER_STOPPABLE)
+	INVOKE_ASYNC(src, .proc/handle_rainbow, jellyman)
+
+/datum/species/jelly/proc/stop_rainbow(mob/living/carbon/jellyman)
+	rainbow_active = FALSE
+	if(!original_mcolor)
+		return
+	jellyman.dna.features["mcolor"] = original_mcolor
+	jellyman.update_body(TRUE)
+
+/datum/species/jelly/proc/handle_rainbow(mob/living/carbon/jellyman)
+	if(!rainbow_active)
+		return
+	current_hue = (current_hue + 5) % 360
+	var/light_shift = 60 + abs(current_hue % 120 - 60) / 4
+	var/new_color = rgb(current_hue, 100, light_shift, space = COLORSPACE_HSL)
+	change_color(jellyman, new_color)
+	addtimer(CALLBACK(src, .proc/handle_rainbow, jellyman), 1)

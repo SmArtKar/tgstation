@@ -1151,8 +1151,10 @@
 		return
 
 	var/mob/living/carbon/human/human_owner = owner
-	if(is_species(owner, /datum/species/jelly/luminescent/rainbow)) //Already rad as fuck
-		return
+	if(isjellyperson(human_owner))
+		var/datum/species/jelly/jelly_species = human_owner.dna.species
+		if(jelly_species.rainbow_active) //Already rad as fuck
+			return
 
 	human_owner.facial_hair_color = new_color
 	human_owner.hair_color = new_color
@@ -1243,8 +1245,10 @@
 		return
 
 	var/mob/living/carbon/human/human_owner = owner
-	if(is_species(owner, /datum/species/jelly/luminescent/rainbow)) //Already rad as fuck
-		return
+	if(isjellyperson(human_owner))
+		var/datum/species/jelly/jelly_species = human_owner.dna.species
+		if(jelly_species.rainbow_active) //Already rad as fuck
+			return
 
 	human_owner.facial_hair_color = new_color
 	human_owner.hair_color = new_color

@@ -94,15 +94,14 @@
 			stop_ai()
 			return
 
-		if(is_in_sight(src, target) && !attack_cd)
+		if(is_in_sight(src, target) && COOLDOWN_FINISHED(src, attack_cd))
 			SEND_SIGNAL(src, COMSIG_SLIME_ATTEMPT_RANGED_ATTACK, target)
 		start_moveloop(target)
 		return
 
 	if(!can_feed_on(target))
-		if(!attack_cd)
-			attack_cd = TRUE
-			addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), slime_color.get_attack_cd(target))
+		if(COOLDOWN_FINISHED(src, attack_cd))
+			COOLDOWN_START(src, attack_cd, slime_color.get_attack_cd(target))
 			attack_target(target)
 		return
 
@@ -110,18 +109,16 @@
 		gobble_up(target)
 		return
 
-	if(attack_cd)
+	if(!COOLDOWN_FINISHED(src, attack_cd))
 		return
 
 	var/mob/living/victim = target
 	if(!victim.client || victim.health < 0 || victim.body_position == LYING_DOWN || prob(20))
 		feed_on(victim)
-		attack_cd = TRUE
-		addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), slime_color.get_attack_cd(victim))
+		COOLDOWN_START(src, attack_cd, slime_color.get_attack_cd(target))
 		return
 
-	attack_cd = TRUE
-	addtimer(VARSET_CALLBACK(src, attack_cd, FALSE), slime_color.get_attack_cd(victim))
+	COOLDOWN_START(src, attack_cd, slime_color.get_attack_cd(target))
 	attack_target(victim)
 
 /mob/living/simple_animal/slime/proc/attack_target(atom/attack_target)
