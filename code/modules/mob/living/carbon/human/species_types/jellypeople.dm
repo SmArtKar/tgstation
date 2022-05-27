@@ -13,7 +13,7 @@
 	exotic_blood = /datum/reagent/toxin/slime_jelly
 	damage_overlay_type = ""
 	var/datum/action/innate/regenerate_limbs/regenerate_limbs
-	liked_food = TOXIC | RAW
+	liked_food = TOXIC | RAW | MEAT | BUGS
 	disliked_food = NONE
 	toxic_food = NONE
 	coldmod = 6   // = 3x cold damage because of limb damage modifier

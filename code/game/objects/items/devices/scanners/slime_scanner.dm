@@ -15,7 +15,7 @@
 	var/advanced = FALSE
 
 /obj/item/slime_scanner/attack(mob/living/M, mob/living/user)
-	if(user.stat || user.is_blind())
+	if(user.stat || !user.can_read(src) || user.is_blind())
 		return
 	if (!isslime(M))
 		to_chat(user, span_warning("This device can only scan slimes!"))
