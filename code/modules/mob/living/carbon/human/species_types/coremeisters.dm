@@ -1,18 +1,18 @@
 #define MAX_CORES_CONSUMED 5
 
-///////////////////////////////////LUMINESCENTS//////////////////////////////////////////
+///////////////////////////////////COREMEISTERS//////////////////////////////////////////
 
-//Luminescents are able to consume and use slime extracts, without them decaying.
+//Coremeisters are able to consume and use slime extracts, without them decaying.
 
-/datum/species/jelly/luminescent
-	name = "Luminescent"
+/datum/species/jelly/coremeister
+	name = "Coremeister"
 	plural_form = null
-	id = SPECIES_LUMINESCENT
-	examine_limb_id = SPECIES_LUMINESCENT
+	id = SPECIES_COREMEISTER
+	examine_limb_id = SPECIES_COREMEISTER
 	bodypart_overrides = list(
 		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly,
 		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly,
-		BODY_ZONE_HEAD = /obj/item/bodypart/head/jelly/luminescent,
+		BODY_ZONE_HEAD = /obj/item/bodypart/head/jelly/coremeister,
 		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/jelly,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/jelly,
@@ -20,32 +20,34 @@
 	var/obj/item/slime_extract/current_core
 	var/list/extract_storage = list()
 	var/glow_intensity = 0
-	var/obj/effect/dummy/luminescent_glow/glow
+	var/obj/effect/dummy/coremeister_glow/glow
 	var/datum/action/innate/use_extract/extract_minor
 	var/datum/action/innate/use_extract/major/extract_major
 	var/datum/action/innate/core_menu/core_menu
 	COOLDOWN_DECLARE(core_swap_cooldown)
 	var/list/core_type_cooldowns = list()
 
-/datum/species/jelly/luminescent/spec_life(mob/living/carbon/human/jellyman, delta_time, times_fired)
+/datum/species/jelly/coremeister/spec_life(mob/living/carbon/human/jellyman, delta_time, times_fired)
 	. = ..()
 	if(current_core)
-		current_core.luminiscent_life(jellyman, src, delta_time, times_fired)
+		current_core.coremeister_life(jellyman, src, delta_time, times_fired)
 
 	for(var/core_type in core_type_cooldowns)
 		core_type_cooldowns[core_type] -= delta_time SECONDS
 		if(core_type_cooldowns[core_type] <= 0)
 			core_type_cooldowns -= core_type
+			extract_minor.UpdateButtons()
+			extract_major.UpdateButtons()
 
 //Species datums don't normally implement destroy, but JELLIES SUCK ASS OUT OF A STEEL STRAW
-/datum/species/jelly/luminescent/Destroy(force, ...)
+/datum/species/jelly/coremeister/Destroy(force, ...)
 	QDEL_NULL(glow)
 	QDEL_NULL(extract_major)
 	QDEL_NULL(extract_minor)
 	QDEL_NULL(core_menu)
 	return ..()
 
-/datum/species/jelly/luminescent/on_species_loss(mob/living/carbon/jellyman)
+/datum/species/jelly/coremeister/on_species_loss(mob/living/carbon/jellyman)
 	. = ..()
 	QDEL_NULL(glow)
 	QDEL_NULL(extract_major)
@@ -53,9 +55,9 @@
 	QDEL_NULL(core_menu)
 	UnregisterSignal(jellyman, COMSIG_MOB_MIDDLECLICKON)
 	if(current_core)
-		current_core.luminiscent_discarded(jellyman, src)
+		current_core.coremeister_discarded(jellyman, src)
 
-/datum/species/jelly/luminescent/on_species_gain(mob/living/carbon/jellyman, datum/species/old_species)
+/datum/species/jelly/coremeister/on_species_gain(mob/living/carbon/jellyman, datum/species/old_species)
 	. = ..()
 	glow = new(jellyman)
 	update_glow(jellyman)
@@ -65,29 +67,29 @@
 	core_menu = new(src)
 	core_menu.Grant(jellyman)
 
-/datum/species/jelly/luminescent/proc/update_glow(mob/living/carbon/jellyman, intensity)
+/datum/species/jelly/coremeister/proc/update_glow(mob/living/carbon/jellyman, intensity)
 	if(intensity)
 		glow_intensity = intensity
 	glow.set_light_range_power_color(glow_intensity, glow_intensity, jellyman.dna.features["mcolor"])
 
-/datum/species/jelly/luminescent/change_color(mob/living/carbon/jellyman, new_color = null)
+/datum/species/jelly/coremeister/change_color(mob/living/carbon/jellyman, new_color = null)
 	. = ..()
 	update_glow(jellyman)
 
-/datum/species/jelly/luminescent/handle_rainbow(mob/living/carbon/jellyman)
+/datum/species/jelly/coremeister/handle_rainbow(mob/living/carbon/jellyman)
 	. = ..()
 	update_glow(jellyman)
 
-/datum/species/jelly/luminescent/start_rainbow(mob/living/carbon/jellyman, duration)
+/datum/species/jelly/coremeister/start_rainbow(mob/living/carbon/jellyman, duration)
 	. = ..()
-	glow_intensity = LUMINESCENT_RAINBOW_GLOW
+	glow_intensity = COREMEISTER_RAINBOW_GLOW
 
-/datum/species/jelly/luminescent/stop_rainbow(mob/living/carbon/jellyman)
+/datum/species/jelly/coremeister/stop_rainbow(mob/living/carbon/jellyman)
 	. = ..()
 	glow_intensity = 0
 	update_glow(jellyman)
 
-/datum/species/jelly/luminescent/consume_extract(mob/living/carbon/jellyman, obj/item/slime_extract/extract)
+/datum/species/jelly/coremeister/consume_extract(mob/living/carbon/jellyman, obj/item/slime_extract/extract)
 	if(LAZYLEN(extract_storage) >= MAX_CORES_CONSUMED)
 		to_chat(jellyman, span_warning("You can't consume more slime extracts until you vomit some of your current ones out!"))
 		return
@@ -97,7 +99,7 @@
 	extract_storage += extract
 	extract.forceMove(jellyman)
 
-/datum/species/jelly/luminescent/proc/core_swap(mob/living/carbon/jellyman, atom/clicked, params)
+/datum/species/jelly/coremeister/proc/core_swap(mob/living/carbon/jellyman, atom/clicked, params)
 	if(!COOLDOWN_FINISHED(src, core_swap_cooldown) && !rainbow_active) //Rainbow mode completely removes swap cooldown
 		clicked.balloon_alert(jellyman, "core swap is not ready!")
 		return
@@ -128,13 +130,13 @@
 		return
 
 	if(current_core)
-		current_core.luminiscent_discarded(jellyman, src)
+		current_core.coremeister_discarded(jellyman, src)
 		core_type_cooldowns[current_core.type] = 5 MINUTES
 	current_core = picked_extract
 	COOLDOWN_START(src, core_swap_cooldown, 3 MINUTES)
 	change_color(jellyman, current_core.jelly_color)
 	playsound(jellyman, 'sound/magic/magic_missile.ogg', 50, TRUE)
-	current_core.luminiscent_chosen(jellyman, src)
+	current_core.coremeister_chosen(jellyman, src)
 
 /datum/action/innate/use_extract
 	name = "Extract Minor Activation"
@@ -142,39 +144,39 @@
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "slimeuse1"
 	icon_icon = 'icons/mob/actions/actions_slime.dmi'
-	background_icon_state = "bg_alien"
+	background_icon_state = "bg_slime"
 
 /datum/action/innate/use_extract/IsAvailable()
-	if(!..() || !isluminescent(owner))
+	if(!..() || !iscoremeister(owner))
 		return
 
 	var/mob/living/carbon/human/jellyman = owner
-	var/datum/species/jelly/luminescent/species = jellyman.dna.species
+	var/datum/species/jelly/coremeister/species = jellyman.dna.species
 	return species.current_core && !(species.current_core.type in species.core_type_cooldowns)
 
 /datum/action/innate/use_extract/ApplyIcon(atom/movable/screen/movable/action_button/current_button, force)
 	..(current_button, TRUE)
 
-	if(!isluminescent(owner))
+	if(!iscoremeister(owner))
 		return
 
 	var/mob/living/carbon/human/jellyman = owner
-	var/datum/species/jelly/luminescent/species = jellyman.dna.species
+	var/datum/species/jelly/coremeister/species = jellyman.dna.species
 
 	if(species.current_core)
 		current_button.add_overlay(mutable_appearance(species.current_core.icon, species.current_core.icon_state))
 
 /datum/action/innate/use_extract/Activate()
-	if(!isluminescent(owner))
+	if(!iscoremeister(owner))
 		return
 
 	var/mob/living/carbon/human/jellyman = owner
-	var/datum/species/jelly/luminescent/species = jellyman.dna.species
+	var/datum/species/jelly/coremeister/species = jellyman.dna.species
 
 	if(!species.current_core)
 		return
 
-	current_core.luminiscent_minor(jellyman, species)
+	species.current_core.coremeister_minor(jellyman, species)
 
 /datum/action/innate/use_extract/major
 	name = "Extract Major Activation"
@@ -182,27 +184,27 @@
 	button_icon_state = "slimeuse2"
 
 /datum/action/innate/use_extract/major/Activate()
-	if(!isluminescent(owner))
+	if(!iscoremeister(owner))
 		return
 
 	var/mob/living/carbon/human/jellyman = owner
-	var/datum/species/jelly/luminescent/species = jellyman.dna.species
+	var/datum/species/jelly/coremeister/species = jellyman.dna.species
 
 	if(!species.current_core)
 		return
 
-	current_core.luminiscent_major(jellyman, species)
+	species.current_core.coremeister_major(jellyman, species)
 
-/obj/effect/dummy/luminescent_glow
-	name = "luminescent glow"
+/obj/effect/dummy/coremeister_glow
+	name = "coremeister glow"
 	desc = "Tell a coder if you're seeing this."
 	icon_state = "nothing"
 	light_system = MOVABLE_LIGHT
-	light_range = LUMINESCENT_DEFAULT_GLOW
+	light_range = 0
 	light_power = 2.5
 	light_color = COLOR_WHITE
 
-/obj/effect/dummy/luminescent_glow/Initialize(mapload)
+/obj/effect/dummy/coremeister_glow/Initialize(mapload)
 	. = ..()
 	if(!isliving(loc))
 		return INITIALIZE_HINT_QDEL
@@ -215,7 +217,7 @@
 	background_icon_state = "bg_slime"
 
 /datum/action/innate/core_menu/Activate()
-	if(!isluminescent(owner))
+	if(!iscoremeister(owner))
 		to_chat(owner, span_warning("You are not a walking glowstick, get out of my swamp."))
 		Remove(owner)
 		return
@@ -236,10 +238,10 @@
 
 /datum/action/innate/core_menu/ui_data(mob/user)
 	var/mob/living/carbon/human/jellyman = owner
-	if(!isluminescent(jellyman))
+	if(!iscoremeister(jellyman))
 		return
 
-	var/datum/species/jelly/luminescent/glowstick = jellyman.dna.species
+	var/datum/species/jelly/coremeister/glowstick = jellyman.dna.species
 
 	var/list/data = list()
 
@@ -251,10 +253,10 @@
 		return
 
 	var/mob/living/carbon/human/jellyman = owner
-	if(!isluminescent(jellyman))
+	if(!iscoremeister(jellyman))
 		return
 
-	var/datum/species/jelly/luminescent/glowstick = jellyman.dna.species
+	var/datum/species/jelly/coremeister/glowstick = jellyman.dna.species
 
 	//switch(action)
 	//	if("swap")

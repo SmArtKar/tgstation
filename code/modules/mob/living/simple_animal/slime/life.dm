@@ -872,6 +872,10 @@
 
 	for(var/moodlet_type in moodlets)
 		var/datum/slime_moodlet/moodlet = moodlets[moodlet_type]
+		if(!moodlet)
+			moodlets -= moodlet_type
+			continue
+
 		supposed_mood_level = min(SLIME_MOOD_MAXIMUM, max(0, supposed_mood_level + moodlet.mood_offset))
 		if(!moodlet.special_mood || moodlet.face_priority < new_face_priority)
 			continue

@@ -1015,7 +1015,7 @@
 /mob/living/carbon/human/on_fire_stack(delta_time, times_fired, datum/status_effect/fire_handler/fire_stacks/fire_handler)
 	SEND_SIGNAL(src, COMSIG_HUMAN_BURNING)
 	burn_clothing(delta_time, times_fired, fire_handler.stacks)
-	var/no_protection = FALSE
+	var/no_protection = HAS_TRAIT(src, TRAIT_NO_FIRE_PROTECTION)
 	if(dna && dna.species)
 		no_protection = dna.species.handle_fire(src, delta_time, times_fired, no_protection)
 	fire_handler.harm_human(delta_time, times_fired, no_protection)

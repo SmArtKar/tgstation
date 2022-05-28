@@ -117,9 +117,9 @@
 /obj/item/bodypart/r_leg/jelly/slime
 	limb_id = SPECIES_SLIMEPERSON
 
-///LUMINESCENTS
-/obj/item/bodypart/head/jelly/luminescent
-	limb_id = SPECIES_LUMINESCENT
+///COREMEISTERS
+/obj/item/bodypart/head/jelly/coremeister
+	limb_id = SPECIES_COREMEISTER
 	is_dimorphic = FALSE
 
 ///ZOMBIE

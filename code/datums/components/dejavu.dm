@@ -73,6 +73,7 @@
 	return ..()
 
 /datum/component/dejavu/proc/rewind()
+	SEND_SIGNAL(parent, COMSIG_DEJAVU_REWIND, src)
 	to_chat(parent, span_notice(rewind_message))
 
 	//comes after healing so new limbs comically drop to the floor
@@ -131,8 +132,12 @@
 	no_rewinds_message = "You feel your body stabilizing as the now-spent extract finishes its job."
 
 /datum/component/dejavu/slime/rewind()
-	playsound(get_turf(parent), 'sound/magic/timeparadox2.ogg')
+	playsound(get_turf(parent), 'sound/magic/timeparadox2.ogg', 100, TRUE)
 	. = ..()
+
+/datum/component/dejavu/slime/sepia_core
+
+/datum/component/dejavu/slime/coremeister
 
 /datum/saved_bodypart
 	var/obj/item/bodypart/old_part

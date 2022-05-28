@@ -811,7 +811,7 @@
 	if(!isturf(owner.loc)) //No locker abuse
 		return
 
-	new /obj/effect/decal/cleanable/oil_pool(owner.loc)
+	new /obj/effect/decal/cleanable/fuel_pool/oil(owner.loc)
 
 /datum/status_effect/slime/oil/get_examine_text()
 	return span_notice("[owner.p_their(TRUE)] feet are covered in a layer of flammable oily slime.")
@@ -1121,8 +1121,8 @@
 
 	if(orig_mutcolor)
 		human_owner.dna.features["mcolor"] = orig_mutcolor
-		if(isluminescent(owner))
-			var/datum/species/jelly/luminescent/species = human_owner.dna.species
+		if(iscoremeister(owner))
+			var/datum/species/jelly/coremeister/species = human_owner.dna.species
 			species.glow.set_light_color(orig_mutcolor)
 
 	for(var/datum/weakref/limb_weakref in original_limb_color)
@@ -1161,8 +1161,8 @@
 
 	if(orig_mutcolor)
 		human_owner.dna.features["mcolor"] = new_color
-		if(isluminescent(owner))
-			var/datum/species/jelly/luminescent/species = human_owner.dna.species
+		if(iscoremeister(owner))
+			var/datum/species/jelly/coremeister/species = human_owner.dna.species
 			species.glow.set_light_color(new_color)
 
 	var/list/our_parts = human_owner.bodyparts.Copy()
@@ -1207,6 +1207,8 @@
 
 /datum/status_effect/rainbow_dash/on_apply()
 	. = ..()
+	ADD_TRAIT(owner, TRAIT_PACIFISM, type)
+
 	if(!ishuman(owner))
 		return
 
@@ -1221,6 +1223,7 @@
 
 /datum/status_effect/rainbow_dash/on_remove()
 	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, type)
 
 	if(!ishuman(owner))
 		return

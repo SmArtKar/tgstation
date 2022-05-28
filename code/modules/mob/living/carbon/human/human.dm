@@ -1110,8 +1110,8 @@
 /mob/living/carbon/human/species/jelly/stargazer
 	race = /datum/species/jelly/stargazer
 
-/mob/living/carbon/human/species/jelly/luminescent
-	race = /datum/species/jelly/luminescent
+/mob/living/carbon/human/species/jelly/coremeister
+	race = /datum/species/jelly/coremeister
 
 /mob/living/carbon/human/species/lizard
 	race = /datum/species/lizard

@@ -90,3 +90,5 @@
 /// from base of atom/movable/Process_Spacemove(): (movement_dir, continuous_move)
 #define COMSIG_MOVABLE_SPACEMOVE "spacemove"
 	#define COMSIG_MOVABLE_STOP_SPACEMOVE (1<<0)
+/// from datum/component/dejavu/proc/rewind(): (dejavu_component)
+#define COMSIG_DEJAVU_REWIND "dejavu_rewind"

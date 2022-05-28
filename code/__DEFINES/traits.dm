@@ -431,6 +431,15 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Mobs with this trait dont display message about being catatonic/SSD
 #define TRAIT_NO_MINDLESS_MSG "no_mindless_msg"
 
+/// Mobs with this trait see all wire purposes
+#define TRAIT_KNOW_ALL_WIRES "know_all_wires"
+
+/// Mobs with this trait will get random color for every wire
+#define TRAIT_MESS_UP_WIRES "mess_up_colors"
+
+/// Humans with this trait will ignore fire protection and take damage anyways
+#define TRAIT_NO_FIRE_PROTECTION "no_fire_protection"
+
 // METABOLISMS
 // Various jobs on the station have historically had better reactions
 // to various drinks and foodstuffs. Security liking donuts is a classic

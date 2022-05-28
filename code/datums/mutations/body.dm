@@ -203,7 +203,7 @@
 	quality = POSITIVE
 	text_gain_indication = "<span class='notice'>Your skin begins to glow softly.</span>"
 	instability = 5
-	var/obj/effect/dummy/luminescent_glow/glowth //shamelessly copied from luminescents
+	var/obj/effect/dummy/coremeister_glow/glowth //shamelessly copied from coremeisters
 	var/glow = 2.5
 	var/range = 2.5
 	var/glow_color

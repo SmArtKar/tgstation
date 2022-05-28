@@ -300,6 +300,9 @@
 			for(var/j in 1 to rand(1, 3))
 				step(food_item, pick(NORTH,SOUTH,EAST,WEST))
 
+		for(var/datum/reagent/consumable/consumable in food_item.reagents.reagent_list)
+			food_item.reagents.remove_reagent(consumable.type, consumable.volume * 0.5)
+
 		if(prob(35) && food_item.reagents)
 			food_item.reagents.add_reagent(/datum/reagent/toxin/slime_jelly, rand(5, 15))
 

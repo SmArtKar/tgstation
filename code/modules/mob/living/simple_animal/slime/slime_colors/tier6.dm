@@ -34,7 +34,7 @@
 	if(!isturf(slime.loc)) //No locker abuse
 		return
 
-	new /obj/effect/decal/cleanable/oil_pool(slime.loc)
+	new /obj/effect/decal/cleanable/fuel_pool/oil(slime.loc)
 
 /datum/slime_color/oil/proc/drench_in_oil(datum/source, atom/attack_target)
 	SIGNAL_HANDLER
@@ -70,67 +70,22 @@
 /obj/projectile/oil/on_hit(atom/target, blocked, pierce_hit)
 	. = ..()
 	if(!isliving(target))
-		new /obj/effect/decal/cleanable/oil_pool(get_turf(src))
+		new /obj/effect/decal/cleanable/fuel_pool/oil(get_turf(src))
 		return
 	var/mob/living/victim = target
 	victim.adjust_fire_stacks(OIL_SLIME_STACKS_PER_ATTACK, /datum/status_effect/fire_handler/fire_stacks/oil)
 
-/*
-
-/obj/effect/decal/cleanable/fire_pool/oil
+/obj/effect/decal/cleanable/fuel_pool/oil
 	name = "pool of oil"
 	desc = "A pool of flammable oil. It's probably wise to clean this off before something ignites it..."
 	hotspot_type = /obj/effect/hotspot/oil
 
-*/
-
-/obj/effect/decal/cleanable/oil_pool
-	name = "pool of oil"
-	desc = "A pool of flammable oil. It's probably wise to clean this off before something ignites it..."
-	icon_state = "oil_pool"
-	layer = LOW_OBJ_LAYER
-	beauty = -50
-	clean_type = CLEAN_TYPE_BLOOD
-	var/burn_amount = 3
-	var/burning = FALSE
-
-/obj/effect/decal/cleanable/oil_pool/Initialize(mapload, list/datum/disease/diseases)
-	. = ..()
-	for(var/obj/effect/decal/cleanable/oil_pool/pool in get_turf(src))
-		if(pool == src)
-			continue
-		pool.burn_amount = min(pool.burn_amount + 1, 10)
-		return INITIALIZE_HINT_QDEL
-
-/obj/effect/decal/cleanable/oil_pool/fire_act(exposed_temperature, exposed_volume)
-	. = ..()
-	ignite()
-
-/obj/effect/decal/cleanable/oil_pool/proc/ignite()
+/obj/effect/decal/cleanable/fuel_pool/oil/ignite()
 	if(burning)
 		return
 	burning = TRUE
-	addtimer(CALLBACK(src, .proc/ignite_others), 0.5 SECONDS)
-	start_burn()
-
-/obj/effect/decal/cleanable/oil_pool/proc/start_burn()
-	SIGNAL_HANDLER
-
-	if(!burn_amount)
-		qdel(src)
-		return
-
-	burn_amount -= 1
-	var/obj/effect/hotspot/oil/hotspot = new(get_turf(src))
-	RegisterSignal(hotspot, COMSIG_PARENT_QDELETING, .proc/start_burn)
-
-/obj/effect/decal/cleanable/oil_pool/proc/ignite_others()
-	for(var/obj/effect/decal/cleanable/oil_pool/oil in range(1, get_turf(src)))
-		oil.ignite()
-
-/obj/effect/decal/cleanable/oil_pool/bullet_act(obj/projectile/P)
-	. = ..()
-	ignite()
+	addtimer(CALLBACK(src, .proc/ignite_others), 0.2 SECONDS) //Spreads MUCH faster
+	burn_process()
 
 /datum/slime_color/black
 	color = "black"

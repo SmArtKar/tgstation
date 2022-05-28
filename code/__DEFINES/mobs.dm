@@ -91,7 +91,7 @@
 #define SPECIES_HUMAN "human"
 #define SPECIES_JELLYPERSON "jelly"
 #define SPECIES_SLIMEPERSON "slime"
-#define SPECIES_LUMINESCENT "luminescent"
+#define SPECIES_COREMEISTER "coremeister"
 #define SPECIES_STARGAZER "stargazer"
 #define SPECIES_LIZARD "lizard"
 #define SPECIES_LIZARD_ASH "ashwalker"

@@ -21,7 +21,7 @@
 	var/attached_gold_core = FALSE
 	var/jelly_color
 	var/use_types = NONE
-	var/luminiscent_description = ""
+	var/coremeister_description = ""
 
 /obj/item/slime_extract/proc/activate()
 
@@ -84,22 +84,22 @@
 	var/datum/species/jelly/jelly_species = eater.dna.species
 	jelly_species.consume_extract(eater, src)
 
-/obj/item/slime_extract/proc/luminiscent_life(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species, delta_time, times_fired)
+/obj/item/slime_extract/proc/coremeister_life(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species, delta_time, times_fired)
 
-/obj/item/slime_extract/proc/luminiscent_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+/obj/item/slime_extract/proc/coremeister_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
 	if(use_types & CORE_USE_MAJOR)
 		species.extract_major.Grant(jellyman)
 
 	if(use_types & CORE_USE_MINOR)
 		species.extract_minor.Grant(jellyman)
 
-/obj/item/slime_extract/proc/luminiscent_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+/obj/item/slime_extract/proc/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
 	species.extract_major.Remove(jellyman)
 	species.extract_minor.Remove(jellyman)
 
-/obj/item/slime_extract/proc/luminiscent_minor(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+/obj/item/slime_extract/proc/coremeister_minor(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
 
-/obj/item/slime_extract/proc/luminiscent_major(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species)
+/obj/item/slime_extract/proc/coremeister_major(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
 
 /obj/item/slime_extract/update_overlays()
 	. = ..()
@@ -121,9 +121,9 @@
 	tier = 1
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	jelly_color = "#AAAAAA"
-	luminiscent_description = "Shortens cooldown in cost of rapid nutrition drain."
+	coremeister_description = "Shortens user's cooldowns in cost of rapid nutrition drain."
 
-/obj/item/slime_extract/grey/luminiscent_life(mob/living/carbon/human/jellyman, datum/species/jelly/luminescent/species, delta_time, times_fired)
+/obj/item/slime_extract/grey/coremeister_life(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species, delta_time, times_fired)
 	for(var/core_type in species.core_type_cooldowns)
 		species.core_type_cooldowns[core_type] -= delta_time * 0.5 SECONDS
 		jellyman.adjust_nutrition(-delta_time)
@@ -293,6 +293,61 @@
 	tier = 3
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5, /datum/reagent/water = 5)
 	jelly_color = "#FFF419"
+	coremeister_description = "User is able to see wires when hacking and is immune to shocks at cost of not being able to move away from the powernet."
+
+/obj/item/slime_extract/yellow/coremeister_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	RegisterSignal(jellyman, COMSIG_MOB_CLIENT_PRE_MOVE, .proc/on_move)
+	RegisterSignal(jellyman, COMSIG_MOVABLE_MOVED, .proc/on_moved)
+	ADD_TRAIT(jellyman, TRAIT_KNOW_ALL_WIRES, "yellow_coremeister")
+	ADD_TRAIT(jellyman, TRAIT_MESS_UP_WIRES, "yellow_coremeister") // Randomises wire colors so you can't abuse knowledge of those later when you switch into another form
+	ADD_TRAIT(jellyman, TRAIT_SHOCKIMMUNE, "yellow_coremeister")
+
+/obj/item/slime_extract/yellow/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	UnregisterSignal(jellyman, list(COMSIG_MOB_CLIENT_PRE_MOVE, COMSIG_MOVABLE_MOVED))
+	REMOVE_TRAIT(jellyman, TRAIT_KNOW_ALL_WIRES, "yellow_coremeister")
+	REMOVE_TRAIT(jellyman, TRAIT_MESS_UP_WIRES, "yellow_coremeister")
+	REMOVE_TRAIT(jellyman, TRAIT_SHOCKIMMUNE, "yellow_coremeister")
+
+/obj/item/slime_extract/yellow/proc/on_moved(mob/living/carbon/human/jellyman, old_loc)
+	SIGNAL_HANDLER
+	t_ray_scan(jellyman, 2 SECONDS, 2)
+
+
+/obj/item/slime_extract/yellow/proc/on_move(mob/living/carbon/human/jellyman, list/move_args) //Don't move on tiles that don't have power nearby
+	SIGNAL_HANDLER
+
+	var/power_detected = FALSE
+	for(var/obj/structure/cable/cable in range(1, jellyman))
+		if(!cable.powernet || !cable.powernet.avail)
+			continue
+		power_detected = TRUE
+		break
+
+	if(!power_detected) // We already don't have any power, let them move so they can run up to a cable and not die
+		return
+
+	var/turf/new_loc = get_turf(move_args[MOVE_ARG_NEW_LOC])
+
+	for(var/obj/structure/cable/cable in range(1, new_loc))
+		if(!cable.powernet || !cable.powernet.avail)
+			continue
+		return
+
+	jellyman.setDir(get_dir(jellyman, new_loc))
+	return COMSIG_MOB_CLIENT_BLOCK_PRE_MOVE
+
+/obj/item/slime_extract/yellow/coremeister_life(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species, delta_time, times_fired)
+	. = ..()
+	t_ray_scan(jellyman, 2 SECONDS, 2)
+
+	for(var/obj/structure/cable/cable in range(1, jellyman))
+		if(!cable.powernet || !cable.powernet.avail)
+			continue
+		return
+
+	jellyman.adjustBruteLoss(10 / 3 * delta_time) //30 seconds without power to crit and 30 more to die
 
 // ************************************************
 // ****************** TIER FOUR *******************
@@ -486,6 +541,12 @@
 	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	jelly_color = "#9B8A7A"
+	coremeister_description = "User is able to place a dejavu recall point which lasts for up to a minute. Pressing the ability button again will recall the user and stun the for the duration of the recall."
+	use_types = CORE_USE_MAJOR
+	var/obj/effect/overlay/holo_pad_hologram/recall_hologram
+	var/datum/component/dejavu/slime/coremeister/coremeister_dejavu
+	var/obj/effect/abstract/particle_holder/particle_holder
+	var/dejavu_start = 0
 	var/time_jump = FALSE
 
 /obj/item/slime_extract/sepia/activate(explosive = TRUE)
@@ -530,7 +591,7 @@
 	desc = initial(desc)
 	activated = FALSE
 	time_jump = FALSE
-	var/datum/component/dejavu/slime/existing_dejavu = target.GetComponent(/datum/component/dejavu/slime)
+	var/datum/component/dejavu/slime/sepia_core/existing_dejavu = target.GetComponent(/datum/component/dejavu/slime/sepia_core)
 	if(existing_dejavu)
 		playsound(target, 'sound/magic/teleport_diss.ogg', 50, TRUE)
 		existing_dejavu.rewinds_remaining += uses
@@ -538,9 +599,94 @@
 		return
 
 	playsound(target, 'sound/magic/teleport_app.ogg', 50, TRUE)
-	AddComponent(/datum/component/dejavu/slime, uses + 1, 10 SECONDS)
+	AddComponent(/datum/component/dejavu/slime/sepia_core, uses + 1, 10 SECONDS)
 	qdel(src)
 	return
+
+/obj/item/slime_extract/sepia/coremeister_major(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	if(coremeister_dejavu)
+		coremeister_dejavu.rewind_carbon()
+		return
+
+	recall_hologram = new(get_turf(jellyman))
+	recall_hologram.appearance = jellyman.appearance
+	recall_hologram.alpha = 170
+	recall_hologram.add_atom_colour(COLOR_BROWN, FIXED_COLOUR_PRIORITY)
+	recall_hologram.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	recall_hologram.layer = FLY_LAYER
+	recall_hologram.plane = ABOVE_GAME_PLANE
+	recall_hologram.set_anchored(TRUE)
+	recall_hologram.name = "[jellyman.name]'s Dejavu"
+	recall_hologram.set_light(2)
+	coremeister_dejavu = jellyman.AddComponent(/datum/component/dejavu/slime/coremeister, 1, 1 MINUTES)
+	COOLDOWN_START(species, core_swap_cooldown, 1 MINUTES)
+	RegisterSignal(jellyman, COMSIG_DEJAVU_REWIND, .proc/on_dejavu)
+	dejavu_start = world.time
+	RegisterSignal(jellyman, COMSIG_MOVABLE_MOVED, .proc/on_moved)
+
+/obj/item/slime_extract/sepia/proc/on_moved(mob/living/carbon/human/jellyman, old_loc)
+	SIGNAL_HANDLER
+
+	if(!isturf(jellyman.loc))
+		return
+
+	if(particle_holder)
+		particle_holder.particles.spawning = 0
+		QDEL_IN(particle_holder, 3 SECONDS) //as soon as the last particles disappear
+
+	particle_holder = new(jellyman.loc, /particles/sepia_ash)
+	particle_holder.plane = GAME_PLANE
+	particle_holder.layer = BELOW_MOB_LAYER
+
+	var/particles/sepia_ash/dejavu_particles = particle_holder.particles
+	var/particle_distance = sqrt((recall_hologram.x - jellyman.x) ** 2 + (recall_hologram.y - jellyman.y) ** 2)
+	var/list/particle_dir = list((recall_hologram.x - jellyman.x) / particle_distance, (recall_hologram.y - jellyman.y) / particle_distance)
+	dejavu_particles.velocity = list(particle_dir[1] * 3, particle_dir[2] * 3)
+	dejavu_particles.drift = generator("vector", list(0, 0), list(particle_dir[1] / 40, particle_dir[2] / 40), NORMAL_RAND)
+
+/obj/item/slime_extract/sepia/proc/on_dejavu(mob/living/carbon/human/jellyman, datum/component/dejavu/dejavu)
+	SIGNAL_HANDLER
+
+	if(dejavu != coremeister_dejavu)
+		return
+
+	var/datum/species/jelly/coremeister/species = jellyman.dna.species
+	UnregisterSignal(jellyman, list(COMSIG_MOVABLE_MOVED, COMSIG_DEJAVU_REWIND))
+	QDEL_NULL(recall_hologram)
+	if(type in species.core_type_cooldowns)
+		species.core_type_cooldowns[type] += 1 MINUTES
+		return
+
+	species.core_type_cooldowns[type] = 1 MINUTES
+	ADD_TRAIT(jellyman, TRAIT_MUTE, "sepia_coremeister")
+	jellyman.Stun(world.time - dejavu_start)
+	jellyman.add_atom_colour(list(-1,0,0,0, 0,-1,0,0, 0,0,-1,0, 0,0,0,1, 1,1,1,0), TEMPORARY_COLOUR_PRIORITY)
+	addtimer(CALLBACK(src, .proc/remove_negative, jellyman), world.time - dejavu_start)
+
+/obj/item/slime_extract/sepia/proc/remove_negative(mob/living/carbon/human/jellyman)
+	jellyman.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
+	REMOVE_TRAIT(jellyman, TRAIT_MUTE, "sepia_coremeister")
+
+/obj/item/slime_extract/sepia/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	if(coremeister_dejavu)
+		coremeister_dejavu.rewind_carbon()
+
+/particles/sepia_ash
+	icon = 'icons/effects/particles/sepia.dmi'
+	icon_state = list("sepia_1" = 1, "sepia_2" = 1, "sepia_3" = 1)
+	width = 256
+	height = 256
+	count = 1000
+	spawning = 0.5
+	lifespan = 3 SECONDS
+	fade = 1 SECONDS
+	velocity = list(0, 0)
+	position = generator("box", list(-8, -16), list(8, 16), NORMAL_RAND)
+	scale = 1
+	rotation = generator("num", 0, 360)
+	spin = generator("num", -20, 20)
 
 // Pyrite Extract
 
@@ -647,7 +793,7 @@
 	tier = 6
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	jelly_color = "#3B3B3B"
-	luminiscent_description = "User is extremely flammable and constantly dripping oil."
+	coremeister_description = "User is extremely flammable and constantly dripping oil."
 	var/primer
 
 /obj/item/slime_extract/oil/activate()
@@ -674,6 +820,41 @@
 	explosion(src, devastation_range = 1, heavy_impact_range = 3, light_impact_range = 6, explosion_cause = primer)
 	qdel(src)
 
+/obj/item/slime_extract/oil/coremeister_life(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species, delta_time, times_fired)
+	if(jellyman.fire_stacks >= 3)
+		return
+	jellyman.adjust_fire_stacks(3 - jellyman.fire_stacks, /datum/status_effect/fire_handler/fire_stacks/oil)
+
+/obj/item/slime_extract/oil/coremeister_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	RegisterSignal(jellyman, COMSIG_MOVABLE_MOVED, .proc/on_moved)
+	RegisterSignal(jellyman, COMSIG_HUMAN_MELEE_UNARMED_ATTACK, .proc/on_melee)
+	ADD_TRAIT(jellyman, TRAIT_NO_FIRE_PROTECTION, "oil_coremeister")
+
+/obj/item/slime_extract/oil/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	UnregisterSignal(jellyman, list(COMSIG_MOVABLE_MOVED, COMSIG_HUMAN_MELEE_UNARMED_ATTACK))
+	REMOVE_TRAIT(jellyman, TRAIT_NO_FIRE_PROTECTION, "oil_coremeister")
+
+/obj/item/slime_extract/oil/proc/on_moved(mob/living/carbon/human/jellyman, old_loc)
+	SIGNAL_HANDLER
+	if(!isturf(jellyman.loc)) //No locker abuse
+		return
+
+	new /obj/effect/decal/cleanable/fuel_pool/oil(jellyman.loc)
+
+/obj/item/slime_extract/oil/proc/on_melee(mob/living/carbon/human/jellyman, atom/attacked_atom, proximity)
+	SIGNAL_HANDLER
+
+	if(!isliving(attacked_atom))
+		return
+
+	var/mob/living/victim = attacked_atom
+	if(victim.fire_stacks >= 5)
+		return
+
+	victim.adjust_fire_stacks(1, /datum/status_effect/fire_handler/fire_stacks/oil)
+
 // Black Extract
 
 /obj/item/slime_extract/black
@@ -682,6 +863,7 @@
 	tier = 6
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	jelly_color = "#555555"
+	coremeister_description = "Prevents the user from dying or entering critical condition at cost of doubling all incoming damage and making them easier to wound and dismember." //Sounds OP but in reality it's just a huge meme
 	var/list/limb_transform_types = list(
 		BODY_ZONE_L_ARM = /obj/item/bodypart/l_arm/jelly/slime,
 		BODY_ZONE_R_ARM = /obj/item/bodypart/r_arm/jelly/slime,
@@ -731,6 +913,24 @@
 	if(uses <= 0)
 		qdel(src)
 	return
+
+/obj/item/slime_extract/black/coremeister_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	jellyman.physiology.damage_resistance -= 100
+	ADD_TRAIT(jellyman, TRAIT_NODEATH, "black_coremeister")
+	ADD_TRAIT(jellyman, TRAIT_NOHARDCRIT, "black_coremeister")
+	ADD_TRAIT(jellyman, TRAIT_NOSOFTCRIT, "black_coremeister")
+	ADD_TRAIT(jellyman, TRAIT_EASYDISMEMBER, "black_coremeister")
+	ADD_TRAIT(jellyman, TRAIT_EASILY_WOUNDED, "black_coremeister")
+
+/obj/item/slime_extract/black/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	jellyman.physiology.damage_resistance += 100
+	REMOVE_TRAIT(jellyman, TRAIT_NODEATH, "black_coremeister")
+	REMOVE_TRAIT(jellyman, TRAIT_NOHARDCRIT, "black_coremeister")
+	REMOVE_TRAIT(jellyman, TRAIT_NOSOFTCRIT, "black_coremeister")
+	REMOVE_TRAIT(jellyman, TRAIT_EASYDISMEMBER, "black_coremeister")
+	REMOVE_TRAIT(jellyman, TRAIT_EASILY_WOUNDED, "black_coremeister")
 
 // Adamantine Extract
 
@@ -815,7 +1015,7 @@
 
 /particles/sakura_petals
 	icon = 'icons/effects/particles/sakura.dmi'
-	icon_state = list("sakura_1" = 1, "sakura_2" = 2, "sakura_3" = 3)
+	icon_state = list("sakura_1" = 1, "sakura_2" = 2, "sakura_3" = 2)
 	width = 1024
 	height = 1024
 	count = 10000
@@ -830,7 +1030,6 @@
 	scale = generator("vector", list(0.75, 0.75), list(1,1), NORMAL_RAND)
 	rotation = generator("num", 0, 360)
 	spin = generator("num", -20, 20)
-
 
 // ************************************************
 // ****************** TIER SEVEN ******************

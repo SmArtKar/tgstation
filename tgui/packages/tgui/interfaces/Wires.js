@@ -25,9 +25,9 @@ export const Wires = (props, context) => {
               <LabeledList.Item
                 key={wire.color}
                 className="candystripe"
-                label={wire.color}
-                labelColor={wire.color}
-                color={wire.color}
+                label={wire.visible_color}
+                labelColor={wire.visible_color}
+                color={wire.visible_color}
                 buttons={(
                   <>
                     <Button
