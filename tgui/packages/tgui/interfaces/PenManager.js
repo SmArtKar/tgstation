@@ -129,7 +129,7 @@ export const PenManager = (props, context) => {
       height={600}>
       <Window.Content>
         <Section title="Creatures">
-          {data.creature_data && (
+          {!!data.creature_data && (
             <>
               {data.creature_data.map(creature => (
                 <Collapsible key={creature.name} title={creature.name}>

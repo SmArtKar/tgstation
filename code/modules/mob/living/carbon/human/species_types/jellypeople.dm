@@ -1,5 +1,4 @@
 /datum/species/jelly
-	// Entirely alien beings that seem to be made entirely out of gel. They have three eyes and a skeleton visible within them.
 	name = "\improper Jellyperson"
 	plural_form = "Jellypeople"
 	id = SPECIES_JELLYPERSON
@@ -51,12 +50,6 @@
 	/// Timer for rainbow effect removal
 	var/rainbow_timer
 
-/datum/species/jelly/on_species_loss(mob/living/carbon/old_jellyperson)
-	if(regenerate_limbs)
-		regenerate_limbs.Remove(old_jellyperson)
-	old_jellyperson.RemoveElement(/datum/element/soft_landing)
-	stop_rainbow(old_jellyperson)
-	return ..()
 
 /datum/species/jelly/on_species_gain(mob/living/carbon/new_jellyperson, datum/species/old_species)
 	. = ..()
@@ -74,6 +67,14 @@
 		regenerate_limbs = new
 		regenerate_limbs.Grant(new_jellyperson)
 	new_jellyperson.AddElement(/datum/element/soft_landing)
+
+/datum/species/jelly/on_species_loss(mob/living/carbon/old_jellyperson)
+	if(regenerate_limbs)
+		regenerate_limbs.Remove(old_jellyperson)
+	old_jellyperson.RemoveElement(/datum/element/soft_landing)
+	stop_rainbow(old_jellyperson)
+	old_jellyperson.blood_volume = min(old_jellyperson.blood_volume, BLOOD_VOLUME_NORMAL)
+	return ..()
 
 /datum/species/jelly/proc/change_color(mob/living/carbon/jellyman, new_color = null)
 	if(!new_color)

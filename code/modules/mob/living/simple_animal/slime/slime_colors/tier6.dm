@@ -393,6 +393,7 @@
 	coretype = /obj/item/slime_extract/light_pink
 	slime_tags = SLIME_DISCHARGER_WEAKENED
 	environmental_req = "Subject can mind-control whoever it latches onto and requires a host to survive."
+	food_types = list(/datum/species/human = 0.8, /datum/species/lizard = 1, /datum/species/moth = 1.2, /datum/species/ethereal = 1.4)
 	var/mind_control_timer
 	var/mob/living/carbon/human/puppet
 	var/mutable_appearance/goop_overlay
@@ -618,6 +619,8 @@
 	slime.alpha = initial(slime.alpha)
 	if(mind_control_timer)
 		deltimer(mind_control_timer)
+	if(puppet.ai_controller)
+		puppet.ai_controller.PauseAi(1)
 	puppet = null
 
 /datum/slime_color/light_pink/proc/start_control()
@@ -630,6 +633,9 @@
 	puppet.faction = list("slime", "neutral")
 	if(puppet.mind)
 		puppet.mind.transfer_to(mind_holder)
+
+	if(puppet.ai_controller)
+		puppet.ai_controller.PauseAi(INFINITY)
 
 	RegisterSignal(puppet, COMSIG_PARENT_ATTACKBY, .proc/puppet_parent_attack)
 	RegisterSignal(puppet, COMSIG_ATOM_HULK_ATTACK, .proc/puppet_hulk_attack)

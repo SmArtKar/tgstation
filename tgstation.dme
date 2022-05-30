@@ -715,6 +715,7 @@
 #include "code\datums\components\bakeable.dm"
 #include "code\datums\components\beetlejuice.dm"
 #include "code\datums\components\bloodysoles.dm"
+#include "code\datums\components\body_swapper.dm"
 #include "code\datums\components\boomerang.dm"
 #include "code\datums\components\butchering.dm"
 #include "code\datums\components\caltrop.dm"

@@ -1,7 +1,3 @@
-///////////////////////////////////STARGAZERS//////////////////////////////////////////
-
-//Stargazers are the telepathic branch of jellypeople, able to project psychic messages and to link minds with willing participants.
-
 /datum/species/jelly/stargazer
 	name = "\improper Stargazer"
 	plural_form = null

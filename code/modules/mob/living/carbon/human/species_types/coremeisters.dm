@@ -1,9 +1,5 @@
 #define MAX_CORES_CONSUMED 5
 
-///////////////////////////////////COREMEISTERS//////////////////////////////////////////
-
-//Coremeisters are able to consume and use slime extracts, without them decaying.
-
 /datum/species/jelly/coremeister
 	name = "Coremeister"
 	plural_form = null
@@ -17,13 +13,17 @@
 		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/jelly,
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/jelly,
 	)
-	var/obj/item/slime_extract/current_core
-	var/list/extract_storage = list()
-	var/glow_intensity = 0
+
 	var/obj/effect/dummy/coremeister_glow/glow
 	var/datum/action/innate/use_extract/extract_minor
 	var/datum/action/innate/use_extract/major/extract_major
 	var/datum/action/innate/core_menu/core_menu
+
+	var/glow_intensity = 0
+
+	var/obj/item/slime_extract/current_core
+	var/list/extract_storage = list()
+
 	COOLDOWN_DECLARE(core_swap_cooldown)
 	var/list/core_type_cooldowns = list()
 
@@ -233,7 +233,7 @@
 /datum/action/innate/core_menu/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "SlimeExtractMenu", name)
+		ui = new(user, src, "CoremeisterMenu", name)
 		ui.open()
 
 /datum/action/innate/core_menu/ui_data(mob/user)

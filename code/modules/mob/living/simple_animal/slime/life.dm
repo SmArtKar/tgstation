@@ -61,7 +61,6 @@
 		stop_ai()
 		return
 
-
 	if(!(mobility_flags & MOBILITY_MOVE) && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI)) //also covers buckling. Not sure why buckled is in the while condition if we're going to immediately break, honestly
 		if(buckled && !isliving(buckled))
 			buckled.unbuckle_mob(src, force = TRUE)
@@ -463,6 +462,11 @@
 
 	if(stat)
 		feed_stop(silent = TRUE)
+		return
+
+	if(amount_grown >= SLIME_EVOLUTION_THRESHOLD)
+		feed_stop(silent = TRUE)
+		return
 
 	if(victim.stat == DEAD) // our victim died
 		if(!client)
