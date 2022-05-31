@@ -2,10 +2,6 @@
 /mob/living/simple_animal/xenofauna
 	icon = 'icons/mob/xenofauna.dmi'
 
-// ************************************************
-// ******************* TIER TWO *******************
-// ************************************************
-
 // Wobble Chicken
 
 /mob/living/simple_animal/xenofauna/wobble_chicken
@@ -216,7 +212,8 @@
 	can_be_held = TRUE
 	held_w_class = WEIGHT_CLASS_TINY
 	del_on_death = 1
-	light_range = 2
+	light_power = 0.12
+	light_range = 1
 	light_color = "#92FF00"
 	maxbodytemp = T0C + 120
 

@@ -47,6 +47,7 @@
 	var/static/list/storable_objects = typecacheof(list(/mob/living/simple_animal/slime,
 														/mob/living/simple_animal/xenofauna,
 														/mob/living/basic/cockroach/rockroach,
+														/mob/living/simple_animal/hostile/xenofauna,
 														))
 	var/modified = FALSE //If the gun is modified to fight with revenants
 	var/mob/living/simple_animal/revenant/ghost_busting //Stores the revenant we're currently sucking in
@@ -73,7 +74,7 @@
 		STOP_PROCESSING(SSobj, src)
 
 	for(var/mob/living/simple_animal/animal in stored)
-		animal.adjustBruteLoss(-0.5)
+		animal.adjustBruteLoss(-5 * delta_time)
 
 /obj/item/vacuum_pack/examine(mob/user)
 	. = ..()

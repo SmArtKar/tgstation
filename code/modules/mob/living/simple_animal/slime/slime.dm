@@ -34,6 +34,8 @@
 	see_in_dark = 8
 	speed = 0.75 //+1.5 from run speed
 	see_in_dark = NIGHTVISION_FOV_RANGE
+	maxbodytemp = 0 //Custom handling code
+	minbodytemp = 0
 
 	verb_say = "blorbles"
 	verb_ask = "inquisitively blorbles"
