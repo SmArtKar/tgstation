@@ -31,15 +31,15 @@
 		BODY_ZONE_CHEST = /obj/item/bodypart/chest/jelly,
 	)
 
-	mutantbrain = /obj/item/organ/brain/slime
-	mutantheart = /obj/item/organ/heart/slime
-	mutantlungs = /obj/item/organ/lungs/slime
-	mutanteyes = /obj/item/organ/eyes/slime
-	mutantears = /obj/item/organ/ears/slime
-	mutanttongue = /obj/item/organ/tongue/slime
-	mutantliver = /obj/item/organ/liver/slime
-	mutantstomach = /obj/item/organ/stomach/slime
-	mutantappendix = /obj/item/organ/appendix/slime
+	mutantbrain = /obj/item/organ/internal/brain/slime
+	mutantheart = /obj/item/organ/internal/heart/slime
+	mutantlungs = /obj/item/organ/internal/lungs/slime
+	mutanteyes = /obj/item/organ/internal/eyes/slime
+	mutantears = /obj/item/organ/internal/ears/slime
+	mutanttongue = /obj/item/organ/internal/tongue/slime
+	mutantliver = /obj/item/organ/internal/liver/slime
+	mutantstomach = /obj/item/organ/internal/stomach/slime
+	mutantappendix = /obj/item/organ/internal/appendix/slime
 
 	/// Are we currently in RAINBOW MOOOOODE?
 	var/rainbow_active = FALSE

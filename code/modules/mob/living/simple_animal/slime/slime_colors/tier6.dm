@@ -403,6 +403,7 @@
 	var/obj/item/new_weapon_targeting
 	var/list/blacklisted_targets = list()
 	var/list/initial_puppet_faction = list()
+	var/previous_ai_status = AI_STATUS_ON
 
 /datum/slime_color/light_pink/New(slime)
 	. = ..()
@@ -620,7 +621,7 @@
 	if(mind_control_timer)
 		deltimer(mind_control_timer)
 	if(puppet.ai_controller)
-		puppet.ai_controller.PauseAi(1)
+		puppet.ai_controller.set_ai_status(previous_ai_status)
 	puppet = null
 
 /datum/slime_color/light_pink/proc/start_control()
@@ -635,7 +636,8 @@
 		puppet.mind.transfer_to(mind_holder)
 
 	if(puppet.ai_controller)
-		puppet.ai_controller.PauseAi(INFINITY)
+		previous_ai_status = puppet.ai_controller.ai_status
+		puppet.ai_controller.set_ai_status(AI_STATUS_OFF)
 
 	RegisterSignal(puppet, COMSIG_PARENT_ATTACKBY, .proc/puppet_parent_attack)
 	RegisterSignal(puppet, COMSIG_ATOM_HULK_ATTACK, .proc/puppet_hulk_attack)

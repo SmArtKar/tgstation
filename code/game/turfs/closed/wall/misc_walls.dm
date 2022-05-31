@@ -184,7 +184,7 @@
 			playsound(src, 'sound/weapons/bite.ogg', 50, TRUE, -1)
 			return
 
-		var/obj/item/organ/tongue/licking_tongue = carbon_user.getorganslot(ORGAN_SLOT_TONGUE)
+		var/obj/item/organ/internal/tongue/licking_tongue = carbon_user.getorganslot(ORGAN_SLOT_TONGUE)
 		if(!licking_tongue)
 			return
 
