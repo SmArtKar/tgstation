@@ -123,15 +123,18 @@
 		clicked.balloon_alert(jellyman, "[pick] is not ready!")
 		return
 
+	select_extract(jellyman, picked_extract)
+
+/datum/species/jelly/coremeister/proc/select_extract(mob/living/carbon/jellyman, obj/item/slime_extract/picked_extract)
 	if(istype(picked_extract, /obj/item/slime_extract/special/rainbow))
 		start_rainbow(jellyman, 5 MINUTES)
-		cores -= pick
 		qdel(picked_extract)
 		return
 
 	if(current_core)
 		current_core.coremeister_discarded(jellyman, src)
 		core_type_cooldowns[current_core.type] = 5 MINUTES
+
 	current_core = picked_extract
 	COOLDOWN_START(src, core_swap_cooldown, 3 MINUTES)
 	change_color(jellyman, current_core.jelly_color)
@@ -176,6 +179,12 @@
 	if(!species.current_core)
 		return
 
+	if(species.current_core.type in species.core_type_cooldowns)
+		return
+
+	if(!(species.current_core.use_types & CORE_USE_MINOR))
+		return
+
 	species.current_core.coremeister_minor(jellyman, species)
 
 /datum/action/innate/use_extract/major
@@ -191,6 +200,12 @@
 	var/datum/species/jelly/coremeister/species = jellyman.dna.species
 
 	if(!species.current_core)
+		return
+
+	if(species.current_core.type in species.core_type_cooldowns)
+		return
+
+	if(!(species.current_core.use_types & CORE_USE_MAJOR))
 		return
 
 	species.current_core.coremeister_major(jellyman, species)
@@ -244,6 +259,28 @@
 	var/datum/species/jelly/coremeister/glowstick = jellyman.dna.species
 
 	var/list/data = list()
+	data["swap_cooldown"] = DisplayTimeText(COOLDOWN_TIMELEFT(glowstick, core_swap_cooldown))
+	data["swap_availible"] = COOLDOWN_FINISHED(glowstick, core_swap_cooldown)
+	data["cores"] = list()
+	for(var/obj/item/slime_extract/extract in glowstick.extract_storage)
+		var/list/core_data = list()
+		core_data["name"] = extract.name
+		core_data["desc"] = extract.coremeister_description
+		core_data["color"] = extract.jelly_color
+		core_data["chosen"] = (extract == glowstick.current_core)
+		core_data["ref"] = "[REF(extract)]"
+		if(extract.type in glowstick.core_type_cooldowns)
+			core_data["cooldown"] = DisplayTimeText(glowstick.core_type_cooldowns[extract.type])
+			core_data["select_cooldown"] = DisplayTimeText(max(glowstick.core_type_cooldowns[extract.type], COOLDOWN_TIMELEFT(glowstick, core_swap_cooldown)))
+			core_data["select_availible"] = FALSE
+		else
+			core_data["select_cooldown"] = DisplayTimeText(COOLDOWN_TIMELEFT(glowstick, core_swap_cooldown))
+			core_data["select_availible"] = COOLDOWN_FINISHED(glowstick, core_swap_cooldown)
+
+		core_data["use_minor"] = extract.use_types & CORE_USE_MINOR
+		core_data["use_major"] = extract.use_types & CORE_USE_MAJOR
+
+		data["cores"] += list(core_data)
 
 	return data
 
@@ -257,8 +294,44 @@
 		return
 
 	var/datum/species/jelly/coremeister/glowstick = jellyman.dna.species
+	var/obj/item/slime_extract/extract = locate(params["ref"]) in glowstick.extract_storage
+	if(!extract)
+		return
 
-	//switch(action)
-	//	if("swap")
+	switch(action)
+		if("minor")
+			if(extract != glowstick.current_core || (extract.type in glowstick.core_type_cooldowns) || !(extract.use_types & CORE_USE_MINOR))
+				return
+
+			glowstick.current_core.coremeister_minor(jellyman, glowstick)
+
+		if("major")
+			if(extract != glowstick.current_core || (extract.type in glowstick.core_type_cooldowns) || !(extract.use_types & CORE_USE_MAJOR))
+				return
+
+			glowstick.current_core.coremeister_major(jellyman, glowstick)
+
+		if("eject")
+			if(!COOLDOWN_FINISHED(glowstick, core_swap_cooldown))
+				return
+
+			to_chat(jellyman, span_notice("You eject [extract]."))
+			glowstick.extract_storage -= extract
+			if(glowstick.current_core == extract)
+				extract.coremeister_discarded(jellyman, glowstick)
+				glowstick.current_core = null
+				if(glowstick.initial_mcolor)
+					glowstick.change_color(glowstick.initial_mcolor)
+			extract.forceMove(get_turf(jellyman))
+			jellyman.put_in_hands(extract)
+
+		if("select")
+			if(!COOLDOWN_FINISHED(glowstick, core_swap_cooldown))
+				return
+
+			if(extract == glowstick.current_core || (extract.type in glowstick.core_type_cooldowns))
+				return
+
+			glowstick.select_extract(jellyman, extract)
 
 #undef MAX_CORES_CONSUMED

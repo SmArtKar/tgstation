@@ -51,6 +51,7 @@
 	dismemberable = 0
 	max_damage = 500
 	animal_origin = ALIEN_BODYPART
+	burn_multiplier = 2
 
 /obj/item/bodypart/chest/larva
 	icon = 'icons/mob/animal_parts.dmi'
@@ -58,6 +59,7 @@
 	dismemberable = 0
 	max_damage = 50
 	animal_origin = LARVA_BODYPART
+	burn_multiplier = 2
 
 /obj/item/bodypart/l_arm
 	name = "left arm"
@@ -160,6 +162,7 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
+	burn_multiplier = 2
 
 /obj/item/bodypart/r_arm
 	name = "right arm"
@@ -258,6 +261,7 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
+	burn_multiplier = 2
 
 /obj/item/bodypart/l_leg
 	name = "left leg"
@@ -347,6 +351,7 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
+	burn_multiplier = 2
 
 /obj/item/bodypart/r_leg
 	name = "right leg"
@@ -444,3 +449,4 @@
 	can_be_disabled = FALSE
 	max_damage = 100
 	animal_origin = ALIEN_BODYPART
+	burn_multiplier = 2

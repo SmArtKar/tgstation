@@ -28,10 +28,12 @@
 	var/skill_mod
 	///Some gloves, generally ones that increase mobility, may have a minimum distance to fly. Rocket gloves are especially dangerous with this, be sure you'll hit your target or have a clear background if you miss, or else!
 	var/min_distance
+	///If user is required to have an empty hand in order to tackle
+	var/free_hands_required
 	///A wearkef to the throwdatum we're currently dealing with, if we need it
 	var/datum/weakref/tackle_ref
 
-/datum/component/tackler/Initialize(stamina_cost = 25, base_knockdown = 1 SECONDS, range = 4, speed = 1, skill_mod = 0, min_distance = min_distance)
+/datum/component/tackler/Initialize(stamina_cost = 25, base_knockdown = 1 SECONDS, range = 4, speed = 1, skill_mod = 0, min_distance = min_distance, free_hands_required = TRUE)
 	if(!iscarbon(parent))
 		return COMPONENT_INCOMPATIBLE
 
@@ -41,6 +43,7 @@
 	src.speed = speed
 	src.skill_mod = skill_mod
 	src.min_distance = min_distance
+	src.free_hands_required = free_hands_required
 
 	var/mob/P = parent
 	to_chat(P, span_notice("You are now able to launch tackles! You can do so by activating throw intent, and clicking on your target with an empty hand."))
@@ -74,7 +77,7 @@
 	if(modifiers[ALT_CLICK] || modifiers[SHIFT_CLICK] || modifiers[CTRL_CLICK] || modifiers[MIDDLE_CLICK])
 		return
 
-	if(!user.throw_mode || user.get_active_held_item() || user.pulling || user.buckled || user.incapacitated())
+	if(!user.throw_mode || (user.get_active_held_item() && free_hands_required) || user.pulling || user.buckled || user.incapacitated())
 		return
 
 	if(!A || !(isturf(A) || isturf(A.loc)))

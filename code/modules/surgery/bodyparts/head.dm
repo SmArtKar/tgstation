@@ -413,6 +413,7 @@
 	dismemberable = 0
 	max_damage = 500
 	animal_origin = ALIEN_BODYPART
+	burn_multiplier = 2
 
 /obj/item/bodypart/head/larva
 	icon = 'icons/mob/animal_parts.dmi'
@@ -422,3 +423,4 @@
 	dismemberable = 0
 	max_damage = 50
 	animal_origin = LARVA_BODYPART
+	burn_multiplier = 2

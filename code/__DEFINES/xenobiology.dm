@@ -6,6 +6,9 @@
 /// Mob can be spawned with a gold slime core with blood reaction as a friendly creature
 #define FRIENDLY_SPAWN 2
 
+#define CORE_USE_MAJOR (1<<1)
+#define CORE_USE_MINOR (1<<2)
+
 #define COREMEISTER_RAINBOW_GLOW 2
 
 /// How much gases and chemicals can xenoflora pod contain

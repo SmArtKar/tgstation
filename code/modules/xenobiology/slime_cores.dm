@@ -1,6 +1,3 @@
-#define CORE_USE_MAJOR (1<<1)
-#define CORE_USE_MINOR (1<<2)
-
 /// Slime Extracts ///
 
 /obj/item/slime_extract
@@ -30,7 +27,7 @@
 		return
 	name = "used [name]"
 	desc += " This extract has been used up."
-	color = color_matrix_saturation(0.85) //A bit dimmer
+	add_atom_colour(color_matrix_saturation(0.85), FIXED_COLOUR_PRIORITY)
 
 /obj/item/slime_extract/examine(mob/user)
 	. = ..()
@@ -78,7 +75,7 @@
 		to_chat(eater, span_warning("You have to remove your [covered] first!"))
 		return
 
-	if(!do_after(eater, 5 SECONDS, src, IGNORE_USER_LOC_CHANGE | IGNORE_TARGET_LOC_CHANGE))
+	if(!do_after(eater, 2 SECONDS, src, IGNORE_USER_LOC_CHANGE | IGNORE_TARGET_LOC_CHANGE))
 		return
 
 	var/datum/species/jelly/jelly_species = eater.dna.species
@@ -514,6 +511,8 @@
 	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	jelly_color = "#5783AA"
+	coremeister_description = "User's hands will turn into sharp claws that will allow them to tackle, but prevent picking up or using any items."
+	var/datum/component/tackler
 
 /obj/item/slime_extract/cerulean/activate()
 	icon_state = "[initial(icon_state)]_pulsating"
@@ -533,6 +532,50 @@
 	visible_message(span_notice("[src] sticks to [hit_atom], forming a small blob-like booby trap!"))
 	qdel(src)
 
+/obj/item/slime_extract/cerulean/coremeister_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	tackler = jellyman.AddComponent(/datum/component/tackler, stamina_cost = 15, base_knockdown = 0.75 SECONDS, range = 5, speed = 1, skill_mod = 1, min_distance = 0, free_hands_required = FALSE)
+	species.mutanthands = /obj/item/cerulean_tackle
+
+	for(var/obj/item/held as anything in jellyman.held_items)
+		if(istype(held))
+			jellyman.dropItemToGround(held)
+			continue
+		INVOKE_ASYNC(jellyman, /mob.proc/put_in_hands, new /obj/item/cerulean_tackle)
+
+/obj/item/slime_extract/cerulean/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	QDEL_NULL(tackler)
+	species.mutanthands = initial(species.mutanthands)
+	for(var/obj/item/cerulean_tackle/tackle in jellyman.held_items)
+		qdel(tackle)
+
+/obj/item/cerulean_tackle
+	name = "cerulean claws"
+	desc = "A pair of sharp cerulean slime claws."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "cerulean_tackle_left"
+	item_flags = ABSTRACT | DROPDEL
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	force = 15
+	sharpness = SHARP_EDGED
+	wound_bonus = -30
+	bare_wound_bonus = 15
+	damtype = BRUTE
+
+/obj/item/cerulean_tackle/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, HAND_REPLACEMENT_TRAIT)
+
+/obj/item/cerulean_tackle/visual_equipped(mob/user, slot)
+	. = ..()
+	//these are intentionally inverted
+	var/i = user.get_held_index_of_item(src)
+	if(!(i % 2))
+		icon_state = "cerulean_tackle_left"
+	else
+		icon_state = "cerulean_tackle_right"
+
 // Sepia Extract
 
 /obj/item/slime_extract/sepia
@@ -541,7 +584,7 @@
 	tier = 5
 	react_reagents = list(/datum/reagent/toxin/plasma = 5, /datum/reagent/blood = 5)
 	jelly_color = "#9B8A7A"
-	coremeister_description = "User is able to place a dejavu recall point which lasts for up to a minute. Pressing the ability button again will recall the user and stun the for the duration of the recall."
+	coremeister_description = "User is able to place a dejavu recall point which lasts for up to a minute. Pressing the ability button again will recall the user and stun them for the duration of the recall."
 	use_types = CORE_USE_MAJOR
 	var/obj/effect/overlay/holo_pad_hologram/recall_hologram
 	var/datum/component/dejavu/slime/coremeister/coremeister_dejavu
@@ -632,7 +675,7 @@
 		return
 
 	if(particle_holder)
-		particle_holder.particles.spawning = 0
+		addtimer(VARSET_CALLBACK(particle_holder.particles, spawning, 0), 0.25 SECONDS)
 		QDEL_IN(particle_holder, 3 SECONDS) //as soon as the last particles disappear
 
 	particle_holder = new(jellyman.loc, /particles/sepia_ash)
@@ -641,7 +684,7 @@
 
 	var/particles/sepia_ash/dejavu_particles = particle_holder.particles
 	var/particle_distance = sqrt((recall_hologram.x - jellyman.x) ** 2 + (recall_hologram.y - jellyman.y) ** 2)
-	var/list/particle_dir = list((recall_hologram.x - jellyman.x) / particle_distance, (recall_hologram.y - jellyman.y) / particle_distance)
+	var/list/particle_dir = list((recall_hologram.x - jellyman.x) / max(1, particle_distance), (recall_hologram.y - jellyman.y) / max(1, particle_distance))
 	dejavu_particles.velocity = list(particle_dir[1] * 3, particle_dir[2] * 3)
 	dejavu_particles.drift = generator("vector", list(0, 0), list(particle_dir[1] / 40, particle_dir[2] / 40), NORMAL_RAND)
 
@@ -663,6 +706,10 @@
 	jellyman.Stun(world.time - dejavu_start)
 	jellyman.add_atom_colour(list(-1,0,0,0, 0,-1,0,0, 0,0,-1,0, 0,0,0,1, 1,1,1,0), TEMPORARY_COLOUR_PRIORITY)
 	addtimer(CALLBACK(src, .proc/remove_negative, jellyman), world.time - dejavu_start)
+
+	if(particle_holder)
+		particle_holder.particles.spawning = 0
+		QDEL_IN(particle_holder, 3 SECONDS)
 
 /obj/item/slime_extract/sepia/proc/remove_negative(mob/living/carbon/human/jellyman)
 	jellyman.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)

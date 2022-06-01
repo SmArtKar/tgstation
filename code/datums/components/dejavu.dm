@@ -128,7 +128,7 @@
 
 ///And for slimes as well!
 /datum/component/dejavu/slime
-	rewind_message = "You feel horribly nauseous sepia extract pulls you through space and time!"
+	rewind_message = "You feel horribly nauseous as your sepia extract pulls you through space and time!"
 	no_rewinds_message = "You feel your body stabilizing as the now-spent extract finishes its job."
 
 /datum/component/dejavu/slime/rewind()

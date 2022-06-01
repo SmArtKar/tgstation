@@ -49,7 +49,8 @@
 	var/original_mcolor
 	/// Timer for rainbow effect removal
 	var/rainbow_timer
-
+	/// Initial color stored for core-eating purposes
+	var/initial_mcolor
 
 /datum/species/jelly/on_species_gain(mob/living/carbon/new_jellyperson, datum/species/old_species)
 	. = ..()
@@ -77,6 +78,9 @@
 	return ..()
 
 /datum/species/jelly/proc/change_color(mob/living/carbon/jellyman, new_color = null)
+	if(!initial_mcolor)
+		initial_mcolor = jellyman.dna.features["mcolor"]
+
 	if(!new_color)
 		new_color = "#[num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)][num2hex(rand(85, 255), 2)]"
 
@@ -203,7 +207,8 @@
 
 /datum/species/jelly/proc/start_rainbow(mob/living/carbon/jellyman, duration = null)
 	rainbow_active = TRUE
-	original_mcolor = jellyman.dna.features["mcolor"]
+	if(!original_mcolor)
+		original_mcolor = jellyman.dna.features["mcolor"]
 	deltimer(rainbow_timer)
 	if(duration)
 		rainbow_timer = addtimer(CALLBACK(src, .proc/stop_rainbow, jellyman), duration, TIMER_STOPPABLE)
@@ -214,6 +219,7 @@
 	if(!original_mcolor)
 		return
 	jellyman.dna.features["mcolor"] = original_mcolor
+	original_mcolor = null
 	jellyman.update_body(TRUE)
 
 /datum/species/jelly/proc/handle_rainbow(mob/living/carbon/jellyman)
