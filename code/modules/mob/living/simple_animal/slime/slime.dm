@@ -72,6 +72,7 @@
 	var/list/moodlets = list() // AI variable, stores all active slime moodlets
 	var/mood_level = 45 // AI variable, stores current mood level
 	var/will_to_grow = FALSE //AI variable, when TRUE slime will have it's AI on as long as its nutrition is lower than required to grow
+	var/list/recent_attackers = list() //AI variable, stores recent attackers.
 
 	var/ai_active = FALSE // determines if the AI loop is activated
 	COOLDOWN_DECLARE(attack_cd)
@@ -264,6 +265,8 @@
 /mob/living/simple_animal/slime/bullet_act(obj/projectile/proj, def_zone, piercing_hit = FALSE)
 	attacked += 10
 	apply_moodlet(/datum/slime_moodlet/attacked)
+	if(proj.firer)
+		recent_attackers |= proj.firer
 	if((proj.damage_type == BURN))
 		adjustBruteLoss(-abs(proj.damage)) //fire projectiles heals slimes.
 		proj.on_hit(src, 0, piercing_hit)
@@ -319,6 +322,7 @@
 
 		attacked += 5
 		apply_moodlet(/datum/slime_moodlet/attacked)
+		recent_attackers |= attacker
 		if(nutrition >= 100) //steal some nutrition. negval handled in life()
 			adjust_nutrition(-(50 + (40 * attacker.is_adult)))
 			attacker.add_nutrition(50 + (40 * attacker.is_adult))
@@ -331,24 +335,28 @@
 	if(.)
 		attacked += 10
 		apply_moodlet(/datum/slime_moodlet/attacked)
-
+		recent_attackers |= user
 
 /mob/living/simple_animal/slime/attack_paw(mob/living/carbon/human/user, list/modifiers)
 	. = ..()
 	if(.) //successful monkey bite.
 		attacked += 10
 		apply_moodlet(/datum/slime_moodlet/attacked)
+		recent_attackers |= user
 
 /mob/living/simple_animal/slime/attack_larva(mob/living/carbon/alien/larva/larva)
 	. = ..()
 	if(.) //successful larva bite.
 		attacked += 10
 		apply_moodlet(/datum/slime_moodlet/attacked)
+		recent_attackers |= larva
 
 /mob/living/simple_animal/slime/attack_hulk(mob/living/carbon/human/user)
 	. = ..()
 	if(.)
-		discipline_slime(user)
+		attacked += 10
+		apply_moodlet(/datum/slime_moodlet/attacked)
+		recent_attackers |= user
 
 /mob/living/simple_animal/slime/attack_hand(mob/living/carbon/human/user, list/modifiers)
 	if(!buckled || !isliving(buckled) || !LAZYACCESS(modifiers, RIGHT_CLICK))
@@ -361,6 +369,7 @@
 		if(.) //successful attack
 			attacked += 10
 			apply_moodlet(/datum/slime_moodlet/attacked)
+			recent_attackers |= user
 		return
 
 	user.do_attack_animation(src, ATTACK_EFFECT_DISARM)
@@ -393,6 +402,7 @@
 		attacked += 10
 		apply_moodlet(/datum/slime_moodlet/attacked)
 		discipline_slime(user)
+		recent_attackers |= user
 
 /mob/living/simple_animal/slime/attackby(obj/item/item, mob/living/user, params)
 	if(stat == DEAD && surgeries.len)
@@ -424,6 +434,7 @@
 	if(item.force > 0)
 		attacked += 10
 		apply_moodlet(/datum/slime_moodlet/attacked)
+		recent_attackers |= user
 		if(prob(15 + (10 * (item.sharpness == SHARP_EDGED))))
 			user.do_attack_animation(src)
 			user.changeNext_move(CLICK_CD_MELEE)
@@ -476,11 +487,7 @@
 	if(!client)
 		if(target && !HAS_TRAIT(src, TRAIT_SLIME_RABID)) // Like cats
 			set_target(null)
-			if(slime_color.slime_tags & SLIME_WATER_WEAKNESS) //If slime hates water than it would become even more agressive
-				attacked += 10
-				apply_moodlet(/datum/slime_moodlet/attacked)
-			else
-				discipline += 1
+			discipline += 1
 		apply_moodlet(/datum/slime_moodlet/watered)
 	return
 
@@ -538,7 +545,6 @@
 
 	if(prob(80) && !client)
 		discipline++
-		apply_moodlet(/datum/slime_moodlet/disciplined)
 		apply_moodlet(/datum/slime_moodlet/disciplined)
 
 		if(!is_adult)

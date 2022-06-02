@@ -1360,6 +1360,6 @@
 	icon_state = "fried_wings"
 	food_reagents = list(/datum/reagent/consumable/nutriment/protein = 4, /datum/reagent/consumable/nutriment/vitamin = 2)
 	tastes = list("grass" = 3, "fried batter" = 1)
-	foodtypes = MEAT | FRIED
+	foodtypes = MEAT | FRIED | BUGS
 	junkiness = 25
 	w_class = WEIGHT_CLASS_SMALL

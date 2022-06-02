@@ -277,7 +277,7 @@
 
 /obj/machinery/power/apc/attack_slime(mob/living/simple_animal/slime/user)
 	. = ..()
-	if(prob(user.powerlevel * 5))
+	if(prob(user.powerlevel * 2))
 		do_sparks(5, TRUE, src)
 		visible_message(span_warning("[src] erupts with sparks as it's covered with thick slime!"))
 		set_broken()

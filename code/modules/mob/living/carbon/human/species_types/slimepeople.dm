@@ -107,7 +107,13 @@
 	jellyman.visible_message(span_notice("[jellyman] gains a look of concentration while standing perfectly still."), span_notice("You focus intently on moving your body while standing perfectly still..."))
 	jellyman.notransform = TRUE
 
-	if(!do_after(jellyman, delay = 6 SECONDS, target = jellyman, timed_action_flags = IGNORE_HELD_ITEM))
+	var/split_time = 6 SECONDS
+	if(isjellyperson(jellyman))
+		var/datum/species/jelly/jelly_species = jellyman.dna.species
+		if(jelly_species.rainbow_active)
+			split_time = 2 SECONDS
+
+	if(!do_after(jellyman, delay = split_time, target = jellyman, timed_action_flags = IGNORE_HELD_ITEM))
 		to_chat(jellyman, span_warning("...but you fail to stand perfectly still!"))
 		jellyman.notransform = FALSE
 		return
@@ -147,3 +153,11 @@
 	jellyman.notransform = 0
 	jellyman.mind.transfer_to(spare)
 	spare.visible_message(span_warning("[jellyman] distorts as a new body \"steps out\" of [jellyman.p_them()]."), span_notice("...and after a moment of disorentation, you're besides yourself!"))
+
+	if(!isjellyperson(spare))
+		return
+
+	var/default_cost = DEFAULT_SPLIT_VOLUME + SPLIT_PENALTY * (LAZYLEN(body_swapper.network.total_bodies) / max(1, LAZYLEN(body_swapper.network.minds))) ** 2
+
+	if(default_cost > BLOOD_VOLUME_MAXIMUM) //We split despite split cost being higher than maximum possible blood volume which means that we're in rainbow mode, kill our clone after 5 minutes.
+		addtimer(CALLBACK(spare, /mob/living/carbon.proc/inflate_gib), 5 MINUTES)

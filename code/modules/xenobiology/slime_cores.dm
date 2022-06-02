@@ -40,7 +40,7 @@
 
 /obj/item/slime_extract/on_grind()
 	. = ..()
-	if(uses)
+	if(uses || activated)
 		grind_results[/datum/reagent/toxin/slime_jelly] = 20
 
 /obj/item/slime_extract/afterattack(atom/target, mob/living/user, proximity_flag)
@@ -181,7 +181,57 @@
 	tier = 3
 	react_reagents = list(/datum/reagent/water = 5, /datum/reagent/toxin/plasma = 5)
 	jelly_color = "#9948F7"
+	coremeister_description = "User breaths plasma instead of oxygen."
 	var/drained_amount = 0
+	var/original_oxy_min
+	var/original_plasma_min
+	var/original_plasma_max
+
+/obj/item/slime_extract/dark_purple/coremeister_chosen(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	RegisterSignal(jellyman, COMSIG_CARBON_GAIN_ORGAN, .proc/check_added_organ)
+	RegisterSignal(jellyman, COMSIG_CARBON_LOSE_ORGAN, .proc/check_removed_organ)
+
+	var/obj/item/organ/internal/lungs/lungs = jellyman.getorganslot(ORGAN_SLOT_LUNGS)
+	if(!lungs)
+		return
+
+	original_oxy_min = lungs.safe_oxygen_min
+	original_plasma_min = lungs.safe_plasma_min
+	original_plasma_max = lungs.safe_plasma_max
+
+	lungs.safe_oxygen_min = 0
+	lungs.safe_plasma_min = 4
+	lungs.safe_plasma_max = 0
+
+/obj/item/slime_extract/dark_purple/proc/check_added_organ(mob/owner, obj/item/organ/internal/lungs/lungs)
+	SIGNAL_HANDLER
+
+	if(!istype(lungs))
+		return
+
+	original_oxy_min = lungs.safe_oxygen_min
+	original_plasma_min = lungs.safe_plasma_min
+	original_plasma_max = lungs.safe_plasma_max
+
+	lungs.safe_oxygen_min = 0
+	lungs.safe_plasma_min = 4
+	lungs.safe_plasma_max = 0
+
+/obj/item/slime_extract/dark_purple/proc/check_removed_organ(mob/owner, obj/item/organ/internal/lungs/lungs)
+	SIGNAL_HANDLER
+
+	if(!istype(lungs))
+		return
+
+	lungs.safe_oxygen_min = original_oxy_min
+	lungs.safe_plasma_min = original_plasma_min
+	lungs.safe_plasma_max = original_plasma_max
+
+/obj/item/slime_extract/dark_purple/coremeister_discarded(mob/living/carbon/human/jellyman, datum/species/jelly/coremeister/species)
+	. = ..()
+	UnregisterSignal(jellyman, COMSIG_CARBON_GAIN_ORGAN)
+	UnregisterSignal(jellyman, COMSIG_CARBON_LOSE_ORGAN)
 
 /obj/item/slime_extract/dark_purple/proc/plasma_drain()
 	var/turf/our_turf = get_turf(src)
@@ -310,7 +360,6 @@
 /obj/item/slime_extract/yellow/proc/on_moved(mob/living/carbon/human/jellyman, old_loc)
 	SIGNAL_HANDLER
 	t_ray_scan(jellyman, 2 SECONDS, 2)
-
 
 /obj/item/slime_extract/yellow/proc/on_move(mob/living/carbon/human/jellyman, list/move_args) //Don't move on tiles that don't have power nearby
 	SIGNAL_HANDLER

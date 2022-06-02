@@ -610,7 +610,9 @@
 		attacked = 50
 
 	if(attacked > 0)
-		attacked--
+		attacked -= 1
+	else if(LAZYLEN(recent_attackers))
+		recent_attackers = list()
 
 	if(discipline > 0)
 
@@ -619,7 +621,7 @@
 				REMOVE_TRAIT(src, TRAIT_SLIME_RABID, null)
 
 		if(DT_PROB(5, delta_time))
-			discipline--
+			discipline -= 1
 
 	if(client)
 		return
@@ -628,7 +630,7 @@
 		stop_moveloop()
 		return
 
-	if(buckled && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI) )
+	if(buckled && !(SEND_SIGNAL(src, COMSIG_SLIME_BUCKLED_AI) & COMPONENT_SLIME_ALLOW_BUCKLED_AI))
 		if(!isliving(buckled))
 			buckled.unbuckle_mob(src, force = TRUE)
 			return
@@ -666,12 +668,11 @@
 			if(possible_target == src)
 				continue
 
-			if(isslime(possible_target)) // Don't attack other slimes unless your color allows it
+			if(isslime(possible_target) && !(possible_target in recent_attackers)) // Don't attack other slimes unless your color allows it or you have been attacked by it
 				if(!(slime_color.slime_tags & SLIME_ATTACK_SLIMES))
 					continue
 				else if(!can_feed_on(possible_target))
 					continue
-
 
 			if(possible_target.stat == DEAD) // Ignore dead mobs
 				continue
@@ -683,7 +684,7 @@
 			for(var/our_faction in faction)
 				if(our_faction == "neutral") //slimes are neutral so other mobs not target them, but they can target neutral mobs
 					continue
-				if(our_faction == "slime" && (slime_color.slime_tags & SLIME_ATTACK_SLIMES)) //Allows slimes with attack_slimes tag to attack other slimes
+				if(our_faction == "slime" && ((slime_color.slime_tags & SLIME_ATTACK_SLIMES) || (possible_target in recent_attackers))) //Allows slimes with attack_slimes tag to attack other slimes
 					continue
 				if(our_faction in possible_target.faction)
 					ally = TRUE
@@ -692,7 +693,7 @@
 			if(ally)
 				continue
 
-			if(issilicon(possible_target) && (HAS_TRAIT(src, TRAIT_SLIME_RABID) || attacked)) // They can't eat silicons, but they can glomp them in defence
+			if(issilicon(possible_target) && (HAS_TRAIT(src, TRAIT_SLIME_RABID) || (possible_target in recent_attackers))) // They can't eat silicons, but they can glomp them in defence
 				targets += possible_target // Possible target found!
 				continue
 
@@ -706,8 +707,20 @@
 				targets += possible_food
 
 		if(targets.len > 0)
-			if(attacked || HAS_TRAIT(src, TRAIT_SLIME_RABID))
-				set_target(targets[1]) // I am attacked and am fighting back or so hungry
+			if(HAS_TRAIT(src, TRAIT_SLIME_RABID))
+				set_target(targets[1])
+
+			else if(attacked) //Prioritizes mobs that attacked us, if none found then just go for the first one seen
+				for(var/possible_target in targets)
+					if(!(possible_target in recent_attackers))
+						continue
+
+					set_target(possible_target)
+					break
+
+				if(!target)
+					set_target(targets[1])
+
 			else if(hungry == 2)
 				for(var/possible_target in targets)
 					if(can_feed_on(possible_target, TRUE, slimeignore = (slime_color.slime_tags & SLIME_ATTACK_SLIMES), distignore = TRUE))
@@ -756,7 +769,6 @@
 		holding_still = max(holding_still - (0.5 * delta_time), 0)
 	else if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && isturf(loc))
 		start_moveloop(leader)
-
 
 /mob/living/simple_animal/slime/handle_automated_movement()
 	return //slime random movement is currently handled in handle_targets()

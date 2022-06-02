@@ -675,6 +675,9 @@
 
 	if(breath?.gases[/datum/gas/bz])
 		var/bz_pp = breath.get_breath_partial_pressure(breath.gases[/datum/gas/bz][MOLES])
+		if(bz_pp <= BZ_trip_balls_min)
+			return
+
 		if(bz_pp <= BZ_brain_damage_min)
 			owner.SetSleeping(10)
 			return

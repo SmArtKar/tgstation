@@ -53,6 +53,7 @@
 	var/mob/living/simple_animal/revenant/ghost_busting //Stores the revenant we're currently sucking in
 	var/mob/living/ghost_buster //Stores the user
 	var/busting_beam //Stores visual effects
+	COOLDOWN_DECLARE(busting_throw_cooldown)
 
 /obj/item/vacuum_pack/Initialize(mapload)
 	. = ..()
@@ -202,23 +203,24 @@
 /obj/item/vacuum_nozzle/afterattack_secondary(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
 
-	if(pack.modified && pack.ghost_busting && target != pack.ghost_busting)
+	if(pack.modified && pack.ghost_busting && target != pack.ghost_busting && COOLDOWN_FINISHED(pack, busting_throw_cooldown))
 		pack.ghost_busting.throw_at(get_turf(target), get_dist(pack.ghost_busting, target), 3, user)
-		return
+		COOLDOWN_START(pack, busting_throw_cooldown, 3 SECONDS)
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 	if(!(VACUUM_PACK_UPGRADE_BIOMASS in pack.upgrades))
 		to_chat(user, span_warning("[pack] does not posess a required upgrade!"))
-		return
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 	var/area/current_area = get_area(get_turf(src))
 	if(!(current_area.area_flags & XENOBIOLOGY_COMPATIBLE) && !pack.illegal)
 		playsound(src, 'sound/weapons/gun/general/dry_fire.ogg', 50, TRUE)
 		to_chat(user, span_warning("[src] clicks as it refuses to operate because of it's area lock!"))
-		return
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 	if(!pack.linked)
 		to_chat(user, span_warning("[pack] is not linked to a biomass recycler!"))
-		return
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 	var/list/items = list()
 	var/list/item_names = list()
@@ -231,12 +233,13 @@
 	var/pick = show_radial_menu(user, src, items, custom_check = FALSE, require_near = TRUE, tooltips = TRUE)
 
 	if(!pick)
-		return
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 	var/spawn_type = item_names[pick]
 	if(pack.linked.stored_matter < pack.linked.vacuum_printable_types[spawn_type])
 		to_chat(user, span_warning("[pack.linked] does not have enough stored biomass for that! It currently has [pack.linked.stored_matter] out of [pack.linked.vacuum_printable_types[spawn_type]] unit\s required."))
-		return
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
 	var/atom/movable/spawned = new spawn_type(user.loc)
 	pack.linked.stored_matter -= pack.linked.vacuum_printable_types[spawn_type]
 	playsound(user, 'sound/misc/moist_impact.ogg', 50, TRUE)
@@ -245,16 +248,13 @@
 	animate(spawned, alpha = 255, time = 8, easing = QUAD_EASING|EASE_OUT, transform = matrix(), flags = ANIMATION_PARALLEL)
 
 	if(isturf(user.loc))
-		spawned.throw_at(target, min(get_dist(user, target), (pack.illegal ? 5 : 11)), 1, user)
+		spawned.throw_at(target, min(get_dist(user, target), (pack.illegal ? 5 : 11)), 1, user, gentle = TRUE) //Gentle so eggs have 50% instead of 12.5% to spawn a chick
 
 	user.visible_message(span_warning("[user] shoots [spawned] out their [src]!"), span_notice("You fabricate and shoot [spawned] out of your [src]."))
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/vacuum_nozzle/afterattack(atom/movable/target, mob/user, proximity, params)
 	. = ..()
-
-	if(LAZYACCESS(params2list(params), RIGHT_CLICK))
-		return
-
 	if(pack.ghost_busting)
 		return
 
@@ -385,7 +385,7 @@
 
 	if(isturf(user.loc))
 		spewed.throw_at(target, min(get_dist(user, target), (pack.illegal ? 5 : 11)), 1, user)
-		if(prob(5))
+		if(prob(1))
 			playsound(spewed, 'sound/misc/woohoo.ogg', 50, TRUE)
 
 	if(isslime(spewed))

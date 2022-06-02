@@ -142,7 +142,7 @@
 
 	var/turf/hit_turf = get_turf(hit_atom)
 	new /obj/effect/decal/cleanable/food/egg_smudge(hit_turf)
-	if(prob(12.5 * (1 + (throwingdatum.speed <= 1))) && !no_chick)
+	if(prob(12.5 + (throwingdatum.gentle * 37.5)) && !no_chick)
 		new /mob/living/simple_animal/xenofauna/wobble_chicken/chick(hit_turf)
 
 	reagents.expose(hit_atom, TOUCH)
@@ -229,7 +229,7 @@
 	if(flags_1 & HOLOGRAM_1)
 		return
 	var/obj/item/clothing/head/mob_holder/destructible/holder = new(get_turf(src), src, held_state, head_icon, held_lh, held_rh, worn_slot_flags)
-	holder.AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS, 10, 0, list("grass"), null, 10)
+	holder.AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS | BUGS, 10, 0, list("grass"), null, 10)
 	user.visible_message(span_warning("[user] scoops up [src]!"))
 	user.put_in_hands(holder)
 
@@ -243,10 +243,10 @@
 
 /obj/item/trash/greeblefly
 	name = "greeblefly"
-	desc = "Crunchy."
+	desc = "Crunchy, but no longer buzzy."
 	icon = 'icons/mob/xenofauna.dmi'
 	icon_state = "greeblefly-dead"
 
 /obj/item/trash/greeblefly/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS, 10, 0, list("grass"), null, 10)
+	AddComponent(/datum/component/edible, list(/datum/reagent/consumable/nutriment = 5), null, RAW | MEAT | GROSS | BUGS, 10, 0, list("grass"), null, 10)

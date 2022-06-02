@@ -57,6 +57,13 @@
 	if(current_core)
 		current_core.coremeister_discarded(jellyman, src)
 
+	if(initial_mcolor)
+		change_color(initial_mcolor)
+
+	for(var/obj/item/slime_extract/extract in extract_storage)
+		extract_storage -= extract
+		extract.forceMove(get_turf(jellyman))
+
 /datum/species/jelly/coremeister/on_species_gain(mob/living/carbon/jellyman, datum/species/old_species)
 	. = ..()
 	glow = new(jellyman)
