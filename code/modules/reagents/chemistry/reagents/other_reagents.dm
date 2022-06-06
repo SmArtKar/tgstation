@@ -777,6 +777,7 @@
 	new_part.replace_limb(owner, TRUE)
 	playsound(owner, 'sound/effects/splat.ogg', 100, TRUE)
 	playsound(owner, SFX_DESECRATION, 100, TRUE)
+	qdel(target_part)
 	owner.visible_message(span_warning("[target_part] pops off just as [new_part] grows out from [owner]'s body!"), span_userdanger("Your [target_part] pops off just as [new_part] grows out from your body!"))
 	owner.update_body() //For hair render to be correct
 
