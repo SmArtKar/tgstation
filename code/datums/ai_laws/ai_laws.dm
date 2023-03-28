@@ -14,7 +14,7 @@
 		round_default_lawset = setup_round_default_laws()
 	return  round_default_lawset
 
-//different settings for configged defaults
+//different settings for configured defaults
 
 /// Always make the round default asimov
 #define CONFIG_ASIMOV 0
@@ -22,13 +22,16 @@
 #define CONFIG_CUSTOM 1
 /// Set to a completely random ai law subtype, good, bad, it cares not. Careful with this one
 #define CONFIG_RANDOM 2
-/// Set to a configged weighted list of lawtypes in the config. This lets server owners pick from a pool of sane laws, it is also the same process for ian law rerolls.
+/// Set to a configged weighted list of law types in the config. This lets server owners pick from a pool of sane laws, it is also the same process for ian law rerolls.
 #define CONFIG_WEIGHTED 3
+/// Set to a specific lawset in the game options.
+#define CONFIG_SPECIFIED 4
 
 ///first called when something wants round default laws for the first time in a round, considers config
 ///returns a law datum that GLOB._round_default_lawset will be set to.
 /proc/setup_round_default_laws()
 	var/list/law_ids = CONFIG_GET(keyed_list/random_laws)
+	var/list/specified_law_ids = CONFIG_GET(keyed_list/specified_laws)
 
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_UNIQUE_AI))
 		return pick_weighted_lawset()
@@ -36,6 +39,21 @@
 	switch(CONFIG_GET(number/default_laws))
 		if(CONFIG_ASIMOV)
 			return /datum/ai_laws/default/asimov
+		if(CONFIG_SPECIFIED)
+			var/list/specified_laws = list()
+			for (var/law_id in specified_law_ids)
+				var/datum/ai_laws/laws = lawid_to_type(law_id)
+				if (isnull(laws))
+					log_config("ERROR: Specified law [law_id] does not exist!")
+					continue
+				specified_laws += laws
+			var/datum/ai_laws/lawtype
+			if(specified_laws.len)
+				lawtype = pick(specified_laws)
+			else
+				lawtype = pick(subtypesof(/datum/ai_laws/default))
+
+			return lawtype
 		if(CONFIG_CUSTOM)
 			return /datum/ai_laws/custom
 		if(CONFIG_RANDOM)
@@ -177,39 +195,63 @@
 
 	supplied[number + 1] = law
 
-/datum/ai_laws/proc/replace_random_law(law,groups)
-	var/replaceable_groups = list()
-	if(zeroth && (LAW_ZEROTH in groups))
+/**
+ * Removes a random law and replaces it with the new one
+ *
+ * Args:
+ *  law - The law that is being uploaded
+ * 	remove_law_groups - A list of law categories that can be deleted from
+ *  insert_law_group - The law category that the law will be inserted into
+**/
+/datum/ai_laws/proc/replace_random_law(law, remove_law_groups, insert_law_group)
+	var/list/replaceable_groups = list()
+	if(zeroth && (LAW_ZEROTH in remove_law_groups))
 		replaceable_groups[LAW_ZEROTH] = 1
-	if(ion.len && (LAW_ION in groups))
+	if(ion.len && (LAW_ION in remove_law_groups))
 		replaceable_groups[LAW_ION] = ion.len
-	if(hacked.len && (LAW_HACKED in groups))
+	if(hacked.len && (LAW_HACKED in remove_law_groups))
 		replaceable_groups[LAW_ION] = hacked.len
-	if(inherent.len && (LAW_INHERENT in groups))
+	if(inherent.len && (LAW_INHERENT in remove_law_groups))
 		replaceable_groups[LAW_INHERENT] = inherent.len
-	if(supplied.len && (LAW_SUPPLIED in groups))
+	if(supplied.len && (LAW_SUPPLIED in remove_law_groups))
 		replaceable_groups[LAW_SUPPLIED] = supplied.len
+
+	if(replaceable_groups.len == 0) // unable to replace any laws
+		to_chat(usr, span_alert("Unable to upload law to [owner ? owner : "the AI core"]."))
+		return
+
 	var/picked_group = pick_weight(replaceable_groups)
 	switch(picked_group)
 		if(LAW_ZEROTH)
-			. = zeroth
+			zeroth = null
+		if(LAW_ION)
+			var/i = rand(1, ion.len)
+			ion -= ion[i]
+		if(LAW_HACKED)
+			var/i = rand(1, hacked.len)
+			hacked -= ion[i]
+		if(LAW_INHERENT)
+			var/i = rand(1, inherent.len)
+			inherent -= inherent[i]
+		if(LAW_SUPPLIED)
+			var/i = rand(1, supplied.len)
+			supplied -= supplied[i]
+
+	switch(insert_law_group)
+		if(LAW_ZEROTH)
 			set_zeroth_law(law)
 		if(LAW_ION)
 			var/i = rand(1, ion.len)
-			. = ion[i]
-			ion[i] = law
+			ion.Insert(i, law)
 		if(LAW_HACKED)
 			var/i = rand(1, hacked.len)
-			. = hacked[i]
-			hacked[i] = law
+			hacked.Insert(i, law)
 		if(LAW_INHERENT)
 			var/i = rand(1, inherent.len)
-			. = inherent[i]
-			inherent[i] = law
+			inherent.Insert(i, law)
 		if(LAW_SUPPLIED)
 			var/i = rand(1, supplied.len)
-			. = supplied[i]
-			supplied[i] = law
+			supplied.Insert(i, law)
 
 /datum/ai_laws/proc/shuffle_laws(list/groups)
 	var/list/laws = list()
@@ -281,7 +323,7 @@
 		return TRUE
 	if(owner?.mind?.special_role)
 		return FALSE
-	if (istype(owner, /mob/living/silicon/ai))
+	if (isAI(owner))
 		var/mob/living/silicon/ai/A=owner
 		if(A?.deployed_shell?.mind?.special_role)
 			return FALSE
@@ -309,7 +351,7 @@
 
 	for(var/law in hacked)
 		if (length(law) > 0)
-			data += "[show_numbers ? "[ion_num()]:" : ""] [render_html ? "<font color='#660000'>[law]</font>" : law]"
+			data += "[show_numbers ? "[ion_num()]:" : ""] [render_html ? "<font color='#c00000'>[law]</font>" : law]"
 
 	for(var/law in ion)
 		if (length(law) > 0)

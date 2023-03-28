@@ -76,7 +76,8 @@ GLOBAL_LIST_INIT(testing_global_profiler, list("_PROFILE_NAME" = "Global"))
 
 	var/log_text = "[key_name(src)] [message] [loc_name(src)]"
 	switch(message_type)
-		if(LOG_ATTACK)
+		/// ship both attack logs and victim logs to the end of round attack.log just to ensure we don't lose information
+		if(LOG_ATTACK, LOG_VICTIM)
 			log_attack(log_text)
 		if(LOG_SAY)
 			log_say(log_text)
@@ -114,6 +115,8 @@ GLOBAL_LIST_INIT(testing_global_profiler, list("_PROFILE_NAME" = "Global"))
 			log_mecha(log_text)
 		if(LOG_SHUTTLE)
 			log_shuttle(log_text)
+		if(LOG_SPEECH_INDICATORS)
+			log_speech_indicators(log_text)
 		else
 			stack_trace("Invalid individual logging type: [message_type]. Defaulting to [LOG_GAME] (LOG_GAME).")
 			log_game(log_text)
@@ -168,7 +171,7 @@ GLOBAL_LIST_INIT(testing_global_profiler, list("_PROFILE_NAME" = "Global"))
 		if(istype(whom, /atom))
 			var/atom/A = whom
 			swhom = "[A.name]"
-		else if(istype(whom, /datum))
+		else if(isdatum(whom))
 			swhom = "[whom]"
 
 		if(!swhom)
@@ -184,7 +187,7 @@ GLOBAL_LIST_INIT(testing_global_profiler, list("_PROFILE_NAME" = "Global"))
 	if(key)
 		if(C?.holder && C.holder.fakekey && !include_name)
 			if(include_link)
-				. += "<a href='?priv_msg=[C.findStealthKey()]'>"
+				. += "<a href='?priv_msg=[C.getStealthKey()]'>"
 			. += "Administrator"
 		else
 			if(include_link)
