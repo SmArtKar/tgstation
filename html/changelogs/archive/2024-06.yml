@@ -974,3 +974,37 @@
   r3dj4ck0424:
   - bugfix: puts tiles under the wawa tool storage doors
   - bugfix: allows you to access a door and a fire alarm on wawa's prison second floor
+2024-06-22:
+  AyIong:
+  - qol: Fullscreen mode can now be toggled by pressing F11 or the button at the top
+      right
+  Bisar:
+  - bugfix: Felinids no longer remember losing their tail and regaining it roundstart;
+      you need to do it during the round to get that mood event.
+  FlufflesTheDog:
+  - bugfix: sanitization on citation pda alerts
+  JupiterJaeden:
+  - bugfix: Conga lines of more than 2 no longer break when going up and down stairs.
+  MelokGleb:
+  - image: added sprite for debug heretic painting
+  Mothblocks:
+  - qol: Dramatically improves delete character UI and UX.
+  Thunder12345:
+  - rscdel: Locker staffs have been removed from the Ragin' Mages deathmatch lootcrate
+      pool.
+  mc-oofert:
+  - bugfix: borg factory gives you your preference borg name
+2024-06-23:
+  Donglesplonge:
+  - balance: most livestock crates, with some exception, have been made cheaper to
+      facilitate healthier mental states in the crew, go build a farm!
+  jlsnow301:
+  - bugfix: 'Bitrunning made more illegal: Increased the rate at which antags spawn.'
+  - bugfix: '"Temporary" bitrunning antagonists and spawners are made actually temporary.
+      You will return to your original body after death, just like CTF.'
+  - rscadd: Added more examine text for ghosts to bitrunning equipment.
+  - balance: Server cooldown reduced by 1 minute at base level.
+  - rscadd: As an observer, you can now switch views between station and virtual domain
+      by clicking the hololadder and netpod respectively.
+  - rscdel: Removed the starfront saloon BR map.
+  - bugfix: 'Syndicate assault map: Added pistols, reduced exploits.'
