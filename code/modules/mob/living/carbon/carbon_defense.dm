@@ -699,4 +699,10 @@
 	if(IsKnockdown() && !IsParalyzed())
 		. |= SHOVE_CAN_KICK_SIDE
 
+/mob/living/carbon/check_hit_limb_zone_name(hit_zone)
+	if(get_bodypart(hit_zone))
+		return hit_zone
+	else //when a limb is missing the damage is actually passed to the chest
+		return BODY_ZONE_CHEST
+
 #undef SHAKE_ANIMATION_OFFSET

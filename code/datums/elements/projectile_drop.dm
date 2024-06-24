@@ -13,11 +13,11 @@
 	if(!isprojectile(target))
 		return ELEMENT_INCOMPATIBLE
 	src.drop_type = drop_type
-	RegisterSignal(target, COMSIG_PROJECTILE_RANGE_OUT, PROC_REF(spawn_drop))
+	RegisterSignal(target, COMSIG_PROJECTILE_MAX_RANGE, PROC_REF(spawn_drop))
 	RegisterSignal(target, COMSIG_PROJECTILE_SELF_ON_HIT, PROC_REF(spawn_drop_if_not_embeddable))
 
 /datum/element/projectile_drop/Detach(datum/source)
-	UnregisterSignal(source, list(COMSIG_PROJECTILE_RANGE_OUT, COMSIG_PROJECTILE_SELF_ON_HIT))
+	UnregisterSignal(source, list(COMSIG_PROJECTILE_MAX_RANGE, COMSIG_PROJECTILE_SELF_ON_HIT))
 	return ..()
 
 /datum/element/projectile_drop/proc/spawn_drop(obj/projectile/source)

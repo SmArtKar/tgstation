@@ -385,10 +385,10 @@
 ///sent to targets during the process_hit proc of projectiles
 #define COMSIG_PROJECTILE_PREHIT "com_proj_prehit"
 	#define PROJECTILE_INTERRUPT_HIT (1<<0)
-///from the base of /obj/projectile/Range(): ()
-#define COMSIG_PROJECTILE_RANGE "projectile_range"
-///from the base of /obj/projectile/on_range(): ()
-#define COMSIG_PROJECTILE_RANGE_OUT "projectile_range_out"
+///from the base of /obj/projectile/after_move(distance_passed): (distance_passed)
+#define COMSIG_PROJECTILE_AFTER_MOVE "projectile_after_move"
+///from the base of /obj/projectile/max_range(): ()
+#define COMSIG_PROJECTILE_MAX_RANGE "projectile_max_range"
 ///from [/obj/item/proc/tryEmbed] sent when trying to force an embed (mainly for projectiles and eating glass)
 #define COMSIG_EMBED_TRY_FORCE "item_try_embed"
 	#define COMPONENT_EMBED_SUCCESS (1<<1)

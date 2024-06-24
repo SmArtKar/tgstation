@@ -9,7 +9,7 @@
 	base_icon_state = "l_mushroom"
 	resistance_flags = LAVA_PROOF
 	gender = PLURAL
-	layer = PROJECTILE_HIT_THRESHHOLD_LAYER //sporangiums up don't shoot
+	layer = PROJECTILE_HIT_THRESHOLD_LAYER //sporangiums up don't shoot
 	product_types = list(/obj/item/food/grown/ash_flora/shavings = 1)
 	harvest_with_hands = TRUE
 	harvested_name = "shortened mushrooms"

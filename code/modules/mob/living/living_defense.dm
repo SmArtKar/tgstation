@@ -760,3 +760,8 @@
 		return TRUE
 
 	return FALSE
+
+/// Returns the string form of the def_zone we have hit.
+/mob/living/proc/check_hit_limb_zone_name(hit_zone)
+	if(has_limbs)
+		return hit_zone
