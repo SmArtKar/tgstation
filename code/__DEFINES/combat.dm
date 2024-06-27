@@ -251,10 +251,6 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define SUPPRESSED_QUIET 1 ///standard suppressed
 #define SUPPRESSED_VERY 2 /// no message
 
-//Projectile Reflect
-#define REFLECT_NORMAL (1<<0)
-#define REFLECT_FAKEPROJECTILE (1<<1)
-
 //His Grace.
 #define HIS_GRACE_SATIATED 0 //He hungers not. If bloodthirst is set to this, His Grace is asleep.
 #define HIS_GRACE_PECKISH 20 //Slightly hungry.
@@ -299,9 +295,9 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 #define DAMAGE_PRECISION 0.1
 
 //bullet_act() return values
-#define BULLET_ACT_HIT "HIT" //It's a successful hit, whatever that means in the context of the thing it's hitting.
-#define BULLET_ACT_BLOCK "BLOCK" //It's a blocked hit, whatever that means in the context of the thing it's hitting.
-#define BULLET_ACT_FORCE_PIERCE "PIERCE" //It pierces through the object regardless of the bullet being piercing by default.
+#define BULLET_ACT_HIT "HIT" // Its a successfull hit, bullet's on_hit will be called
+#define BULLET_ACT_BLOCK "BLOCK" // It's a blocked hit, bullet will proceed without calling its hit code
+#define BULLET_ACT_FORCE_PIERCE "PIERCE" // It pierces through the object regardless of the bullet being piercing by default.
 
 #define NICE_SHOT_RICOCHET_BONUS 10 //if the shooter has the NICE_SHOT trait and they fire a ricocheting projectile, add this to the ricochet chance and auto aim angle
 
@@ -341,8 +337,6 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 /// Martial arts attack happened and succeeded, do not allow a check for a regular attack.
 #define MARTIAL_ATTACK_SUCCESS COMPONENT_CANCEL_ATTACK_CHAIN
 
-/// IF an object is weak against armor, this is the value that any present armor is multiplied by
-#define ARMOR_WEAKENED_MULTIPLIER 2
 /// Armor can't block more than this as a percentage
 #define ARMOR_MAX_BLOCK 90
 /// Calculates the new armour value after armour penetration. Can return negative values, and those must be caught.

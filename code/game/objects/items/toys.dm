@@ -195,8 +195,9 @@
 /obj/item/toy/balloon/bullet_act(obj/projectile/P)
 	if((istype(P,/obj/projectile/bullet/p50) || istype(P,/obj/projectile/bullet/foam_dart)) && ismonkey(P.firer))
 		pop_balloon(monkey_pop = TRUE)
-	else
-		return ..()
+		return BULLET_ACT_HIT
+
+	return ..()
 
 /obj/item/toy/balloon/proc/pop_balloon(monkey_pop = FALSE)
 	playsound(src, 'sound/effects/cartoon_pop.ogg', 50, vary = TRUE)

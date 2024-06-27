@@ -132,8 +132,6 @@
 	var/slowdown = 0
 	///percentage of armour effectiveness to remove
 	var/armour_penetration = 0
-	///Whether or not our object is easily hindered by the presence of armor
-	var/weak_against_armour = FALSE
 	/// The click cooldown given after attacking. Lower numbers means faster attacks
 	var/attack_speed = CLICK_CD_MELEE
 	/// The click cooldown on secondary attacks. Lower numbers mean faster attacks. Will use attack_speed if undefined.

@@ -280,20 +280,29 @@
 	// Plumbing pauses if reagents is full.. so let's cheat and make sure it ticks unless both trays are happy
 	reagents = hydro_parent.waterlevel < hydro_parent.maxwater ? water_reagents : nutri_reagents
 
+/obj/machinery/hydroponics/get_bullet_target(obj/projectile/proj)
+	if(istype(proj, /obj/projectile/energy/flora/yield))
+		return myseed
+	return ..()
+
 /obj/machinery/hydroponics/bullet_act(obj/projectile/Proj) //Works with the Somatoray to modify plant variables.
 	if(!myseed)
 		return ..()
+
 	if(istype(Proj , /obj/projectile/energy/flora/mut))
 		mutate()
-	else if(istype(Proj , /obj/projectile/energy/flora/yield))
-		return myseed.bullet_act(Proj)
-	else if(istype(Proj , /obj/projectile/energy/flora/evolution))
-		if(myseed)
-			if(LAZYLEN(myseed.mutatelist))
-				myseed.set_instability(myseed.instability/2)
-		mutatespecie()
-	else
+		return BULLET_ACT_HIT
+
+	if(!istype(Proj, /obj/projectile/energy/flora/evolution))
 		return ..()
+
+	if(myseed)
+		if(LAZYLEN(myseed.mutatelist))
+			myseed.set_instability(myseed.instability/2)
+
+	mutatespecie()
+	return BULLET_ACT_HIT
+
 
 /obj/machinery/hydroponics/power_change()
 	. = ..()

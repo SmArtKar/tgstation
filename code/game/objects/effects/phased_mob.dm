@@ -61,7 +61,7 @@
 /obj/effect/dummy/phased_mob/ex_act()
 	return FALSE
 
-/obj/effect/dummy/phased_mob/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/obj/effect/dummy/phased_mob/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	SHOULD_CALL_PARENT(FALSE)
 	return BULLET_ACT_FORCE_PIERCE
 

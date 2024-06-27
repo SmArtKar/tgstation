@@ -96,10 +96,8 @@
 	STOP_PROCESSING(SSobj,src)
 	return ..()
 
-//bullets will have a 60% chance to hit any riders
-/obj/vehicle/ridden/secway/bullet_act(obj/projectile/P)
-	if(!buckled_mobs || prob(40))
+/obj/vehicle/ridden/secway/get_bullet_target(obj/projectile/proj)
+	if (!LAZYLEN(buckled_mobs) || prob(40))
 		return ..()
-	for(var/mob/rider as anything in buckled_mobs)
-		rider.bullet_act(P)
-	return TRUE
+
+	return pick(buckled_mobs)

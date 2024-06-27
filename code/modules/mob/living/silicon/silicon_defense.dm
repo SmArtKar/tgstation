@@ -119,7 +119,7 @@
 			M.visible_message(span_boldwarning("[M] is thrown off of [src]!"))
 	flash_act(affect_silicon = 1)
 
-/mob/living/silicon/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/mob/living/silicon/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	. = ..()
 	if(. != BULLET_ACT_HIT)
 		return .

@@ -1,11 +1,9 @@
 
-/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent=FALSE, weak_against_armour = FALSE)
+/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent=FALSE)
 	var/our_armor = getarmor(def_zone, attack_flag)
 
 	if(our_armor <= 0)
 		return our_armor
-	if(weak_against_armour && our_armor >= 0)
-		our_armor *= ARMOR_WEAKENED_MULTIPLIER
 	if(silent)
 		return max(0, PENETRATE_ARMOUR(our_armor, armour_penetration))
 
@@ -91,16 +89,20 @@
 /mob/living/proc/is_ears_covered()
 	return null
 
-/mob/living/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/mob/living/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	. = ..()
-	if(. != BULLET_ACT_HIT)
-		return .
-	if(!hitting_projectile.is_hostile_projectile())
-		return BULLET_ACT_HIT
+	// Logging code
+	if (!hitting_projectile.disable_logging)
+		log_projectile_impact(hitting_projectile)
 
-	// we need a second, silent armor check to actually know how much to reduce damage taken, as opposed to
-	// on [/atom/proc/bullet_act] where it's just to pass it to the projectile's on_hit().
-	var/armor_check = check_projectile_armor(def_zone, hitting_projectile, is_silent = TRUE)
+	if(. != BULLET_ACT_HIT)
+		return
+
+	if(!hitting_projectile.is_hostile_projectile())
+		return
+
+	// No longer silent as base atom does not run armor calc by default now
+	var/armor_check = check_projectile_armor(def_zone, hitting_projectile)
 
 	apply_damage(
 		damage = hitting_projectile.damage,
@@ -110,28 +112,93 @@
 		wound_bonus = hitting_projectile.wound_bonus,
 		bare_wound_bonus = hitting_projectile.bare_wound_bonus,
 		sharpness = hitting_projectile.sharpness,
-		attack_direction = get_dir(hitting_projectile.starting, src),
+		attack_direction = get_dir(hitting_projectile.origin_turf, src),
 	)
+
+	if(hitting_projectile.dismemberment)
+		check_projectile_dismemberment(hitting_projectile, def_zone)
+
+	// Display hittext
+	var/organ_hit_text = ""
+	var/hit_limb_zone = check_hit_limb_zone_name(def_zone)
+	if(hit_limb_zone)
+		organ_hit_text = " in \the [parse_zone_with_bodypart(hit_limb_zone)]"
+
+	if(hitting_projectile.suppressed == SUPPRESSED_QUIET)
+		to_chat(src, span_userdanger("You're shot by \a [hitting_projectile][organ_hit_text]!"))
+	else if (!hitting_projectile.suppressed)
+		visible_message(span_danger("[src] is hit by \a [hitting_projectile][organ_hit_text]!"), \
+				span_userdanger("You're hit by \a [hitting_projectile][organ_hit_text]!"), null, COMBAT_MESSAGE_RANGE)
+		if(is_blind())
+			to_chat(src, span_userdanger("You feel something hit you[organ_hit_text]!"))
+
+	// Projectile was fully blocked, do not apply negative effects or do damage VFX
+	if (armor_check >= 100)
+		return
+
 	apply_effects(
 		stun = hitting_projectile.stun,
 		knockdown = hitting_projectile.knockdown,
 		unconscious = hitting_projectile.unconscious,
-		slur = (mob_biotypes & MOB_ROBOTIC) ? 0 SECONDS : hitting_projectile.slur, // Don't want your cyborgs to slur from being ebow'd
+		slur = (mob_biotypes & MOB_ROBOTIC) ? 0 SECONDS : hitting_projectile.slurring, // Don't want your cyborgs to slur from being ebow'd
 		stutter = (mob_biotypes & MOB_ROBOTIC) ? 0 SECONDS : hitting_projectile.stutter, // Don't want your cyborgs to stutter from being tazed
 		eyeblur = hitting_projectile.eyeblur,
 		drowsy = hitting_projectile.drowsy,
-		blocked = armor_check,
 		stamina = hitting_projectile.stamina,
 		jitter = (mob_biotypes & MOB_ROBOTIC) ? 0 SECONDS : hitting_projectile.jitter, // Cyborgs can jitter but not from being shot
 		paralyze = hitting_projectile.paralyze,
 		immobilize = hitting_projectile.immobilize,
 	)
-	if(hitting_projectile.dismemberment)
-		check_projectile_dismemberment(hitting_projectile, def_zone)
-	return BULLET_ACT_HIT
+
+	if (!hitting_projectile.damage || hitting_projectile.damage_type != BRUTE)
+		return
+
+	var/obj/item/bodypart/hit_bodypart = get_bodypart(hit_limb_zone)
+	if (blood_volume && (isnull(hit_bodypart) || hit_bodypart.can_bleed()))
+		var/splatter_dir = dir
+		var/turf/our_turf = get_turf(src)
+		if(hitting_projectile.origin_turf)
+			splatter_dir = get_dir(hitting_projectile.origin_turf, our_turf)
+		if(isalien(src))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter/xenosplatter(our_turf, splatter_dir)
+		else
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(our_turf, splatter_dir)
+		if(prob(33))
+			add_splatter_floor(our_turf)
+		return
+
+	if (!(hit_bodypart?.biological_state & (BIO_METAL|BIO_WIRED)))
+		return
+
+	var/random_damage_mult = RANDOM_DECIMAL(0.85, 1.15) // SOMETIMES you can get more or less sparks
+	var/damage_dealt = ((hitting_projectile.damage / (1 - (armor_check / 100))) * random_damage_mult)
+
+	var/spark_amount = round((damage_dealt / PROJECTILE_DAMAGE_PER_ROBOTIC_SPARK))
+	if (spark_amount > 0)
+		do_sparks(spark_amount, FALSE, src)
+
+/mob/living/proc/log_projectile_impact(obj/projectile/hitting_projectile)
+	var/reagent_note
+	if(hitting_projectile.reagents?.reagent_list)
+		reagent_note = "REAGENTS: [pretty_string_from_reagent_list(hitting_projectile.reagents.reagent_list)]"
+
+	if(ismob(hitting_projectile.firer))
+		log_combat(hitting_projectile.firer, src, "shot", hitting_projectile, reagent_note)
+		return
+
+	if (!isvehicle(hitting_projectile.firer))
+		log_message("has been shot by [hitting_projectile.firer] with [hitting_projectile][reagent_note ? " containing [reagent_note]" : null]", LOG_ATTACK, color="orange")
+		return
+
+	var/obj/vehicle/firing_vehicle = hitting_projectile.firer
+	var/list/logging_mobs = firing_vehicle.return_controllers_with_flag(VEHICLE_CONTROL_EQUIPMENT)
+	if(!LAZYLEN(logging_mobs))
+		logging_mobs = firing_vehicle.return_drivers()
+	for(var/mob/logged_mob as anything in logging_mobs)
+		log_combat(logged_mob, src, "shot", hitting_projectile, "from inside [firing_vehicle][logging_mobs.len > 1 ? " with multiple occupants" : null][reagent_note ? " and contained [reagent_note]" : null]")
 
 /mob/living/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
-	return run_armor_check(def_zone, impacting_projectile.armor_flag, "","",impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour)
+	return run_armor_check(def_zone, impacting_projectile.armor_flag, "","",impacting_projectile.armour_penetration, "", is_silent)
 
 /mob/living/proc/check_projectile_dismemberment(obj/projectile/P, def_zone)
 	return 0
@@ -202,7 +269,7 @@
 					span_userdanger("You're hit by [thrown_item]!"))
 	if(!thrown_item.throwforce)
 		return
-	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
+	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE)
 	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return

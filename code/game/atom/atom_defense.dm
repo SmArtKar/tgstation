@@ -164,3 +164,8 @@
 	if(uses_integrity)
 		return clamp(PENETRATE_ARMOUR(get_armor_rating(impacting_projectile.armor_flag), impacting_projectile.armour_penetration), 0, 100)
 	return 0
+
+/// Overrides projectile target in case another one needs to be hit in our place
+/// Can return a list if the projectile needs to hit multiple targets, for some reason
+/atom/proc/get_bullet_target(obj/projectile/proj)
+	return src

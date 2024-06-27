@@ -214,15 +214,11 @@
 		stutter = 0 SECONDS, // Ditto
 		eyeblur = 0 SECONDS,
 		drowsy = 0 SECONDS,
-		blocked = 0, // This one's not an effect, don't be confused - it's block chance
 		stamina = 0, // This one's a damage type, and not an effect
 		jitter = 0 SECONDS,
 		paralyze = 0,
 		immobilize = 0,
 	)
-
-	if(blocked >= 100)
-		return FALSE
 
 	if(stun)
 		apply_effect(stun, EFFECT_STUN, blocked)

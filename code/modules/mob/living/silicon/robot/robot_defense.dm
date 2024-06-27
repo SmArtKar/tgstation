@@ -422,7 +422,7 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 
 	return TRUE
 
-/mob/living/silicon/robot/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/mob/living/silicon/robot/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	. = ..()
 	if(prob(25) || . != BULLET_ACT_HIT)
 		return

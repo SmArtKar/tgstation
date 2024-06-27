@@ -15,3 +15,11 @@
 
 /turf/closed/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
 	return FALSE
+
+/turf/closed/bullet_act(obj/projectile/hitting_projectile, def_zone)
+	. = ..()
+	if(. != BULLET_ACT_HIT)
+		return
+
+	if(hitting_projectile.damage > 0 && (hitting_projectile.damage_type == BRUTE || hitting_projectile.damage_type == BURN) && prob(75))
+		add_dent(WALL_DENT_SHOT, pixel_x + rand(-8, 8), pixel_y + rand(-8, 8))

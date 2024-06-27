@@ -23,10 +23,10 @@
 
 	return TRUE
 
-/obj/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/obj/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	. = ..()
 	if(. != BULLET_ACT_HIT)
-		return .
+		return
 
 	playsound(src, hitting_projectile.hitsound, 50, TRUE)
 	var/damage_sustained = 0
@@ -39,6 +39,7 @@
 			REVERSE_DIR(hitting_projectile.dir),
 			hitting_projectile.armour_penetration,
 		)
+
 	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
 		visible_message(
 			span_danger("[src] is hit by \a [hitting_projectile][damage_sustained ? "" : ", [no_damage_feedback]"]!"),

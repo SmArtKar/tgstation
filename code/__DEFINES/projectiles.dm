@@ -9,6 +9,16 @@
 // Delete self without hitting
 #define PROJECTILE_DELETE_WITHOUT_HITTING 3
 
+// process_hit() return values
+/// Failed to run the hit code for whatever reason
+#define PROJECTILE_PROCESS_HIT_FAILURE 0
+/// Target blocked the projectile
+#define PROJECTILE_PROCESS_HIT_BLOCKED 1
+/// Target was successfully hit
+#define PROJECTILE_PROCESS_HIT_SUCCESS 2
+/// Target was pierced through, continue looking for valid targets on the same tile
+#define PROJECTILE_PROCESS_HIT_PIERCE 3
+
 // Caliber defines: (current count stands at 24)
 /// The caliber used by the [L6 SAW][/obj/item/gun/ballistic/automatic/l6_saw].
 #define CALIBER_A7MM "a7mm"
@@ -91,3 +101,6 @@
 
 /// Distance at which projectils stop hitting prone target automatically
 #define MAX_RANGE_HIT_PRONE_TARGETS 10
+
+/// Maximum amount of tiles passed per tick, in case of a particularly bad lag spike
+#define MAX_TILES_PER_TICK 10

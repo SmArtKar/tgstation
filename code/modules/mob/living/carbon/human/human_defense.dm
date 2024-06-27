@@ -44,33 +44,51 @@
 				covering_part += C
 	return covering_part
 
-/mob/living/carbon/human/bullet_act(obj/projectile/bullet, def_zone, piercing_hit = FALSE)
-
-	if(bullet.firer == src && bullet.original == src) //can't block or reflect when shooting yourself
+/mob/living/carbon/human/bullet_act(obj/projectile/bullet, def_zone)
+	if(bullet.firer == src && bullet.intended_target == src) //can't block or reflect when shooting yourself
 		return ..()
 
-	if(bullet.reflectable & REFLECT_NORMAL)
-		if(check_reflect(def_zone)) // Checks if you've passed a reflection% check
-			visible_message(
-				span_danger("The [bullet.name] gets reflected by [src]!"),
-				span_userdanger("The [bullet.name] gets reflected by [src]!"),
-			)
-			// Finds and plays the block_sound of item which reflected
-			for(var/obj/item/held_item in held_items)
-				if(held_item.IsReflect(def_zone))
-					playsound(src, held_item.block_sound, BLOCK_SOUND_VOLUME, TRUE)
-			// Find a turf near or on the original location to bounce to
-			if(!isturf(loc)) //Open canopy mech (ripley) check. if we're inside something and still got hit
-				bullet.force_hit = TRUE //The thing we're in passed the bullet to us. Pass it back, and tell it to take the damage.
-				loc.bullet_act(bullet, def_zone, piercing_hit)
-				return BULLET_ACT_HIT
-			bullet.reflect(src)
+	if(!(bullet.reflectable & REFLECT_NORMAL))
+		return ..()
 
-			return BULLET_ACT_FORCE_PIERCE // complete projectile permutation
+	var/obj/item/reflector = check_reflect(def_zone)
 
-	if(check_block(bullet, bullet.damage, "the [bullet.name]", PROJECTILE_ATTACK, bullet.armour_penetration, bullet.damage_type))
-		bullet.on_hit(src, 100, def_zone, piercing_hit)
-		return BULLET_ACT_HIT
+	if(isnull(reflector)) // Checks if you've passed a reflection% check
+		return ..()
+
+	playsound(src, held_item.block_sound, BLOCK_SOUND_VOLUME, TRUE)
+	visible_message(
+		span_danger("The [bullet.name] gets reflected by [src]!"),
+		span_userdanger("The [bullet.name] gets reflected by [src]!"),
+	)
+
+	bullet.reflect(src)
+	return BULLET_ACT_FORCE_PIERCE // complete projectile permutation
+
+/mob/living/carbon/human/get_bullet_target(obj/projectile/proj)
+	if(bullet.firer == src && bullet.intended_target == src) //can't block or reflect when shooting yourself
+		return ..()
+
+	// Redirect only triggers if we are inside of an object, such as a vehicle or a mech
+	if(!(bullet.reflectable & REFLECT_NORMAL) || isturf(loc))
+		return ..()
+
+	var/obj/item/reflector = check_reflect(def_zone)
+
+	if(isnull(reflector)) // Checks if you've passed a reflection% check
+		return ..()
+
+	playsound(src, held_item.block_sound, BLOCK_SOUND_VOLUME, TRUE)
+	visible_message(
+		span_danger("The [bullet.name] gets reflected by [src]!"),
+		span_userdanger("The [bullet.name] gets reflected by [src]!"),
+	)
+
+	return loc
+
+/mob/living/carbon/human/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
+	if(check_block(impacting_projectile, impacting_projectile.damage, "the [impacting_projectile.name]", PROJECTILE_ATTACK, impacting_projectile.armour_penetration, impacting_projectile.damage_type))
+		return 100
 
 	return ..()
 
@@ -78,14 +96,14 @@
 /mob/living/carbon/human/proc/check_reflect(def_zone)
 	if(wear_suit)
 		if(wear_suit.IsReflect(def_zone))
-			return TRUE
+			return wear_suit
 	if(head)
 		if(head.IsReflect(def_zone))
-			return TRUE
+			return head
 	for(var/obj/item/I in held_items)
 		if(I.IsReflect(def_zone))
-			return TRUE
-	return FALSE
+			return I
+	return null
 
 /mob/living/carbon/human/check_block(atom/hit_by, damage, attack_text = "the attack", attack_type = MELEE_ATTACK, armour_penetration = 0, damage_type = BRUTE)
 	. = ..()

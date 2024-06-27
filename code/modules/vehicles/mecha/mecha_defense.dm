@@ -114,17 +114,17 @@
 	log_message("Hit by [AM].", LOG_MECHA, color="red")
 	return ..()
 
-/obj/vehicle/sealed/mecha/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit) //wrapper
-	//allows bullets to hit the pilot of open-canopy mechs
-	if(!(mecha_flags & IS_ENCLOSED) \
-		&& LAZYLEN(occupants) \
-		&& !(mecha_flags & SILICON_PILOT) \
-		&& (def_zone == BODY_ZONE_HEAD || def_zone == BODY_ZONE_CHEST))
-		var/mob/living/hitmob = pick(occupants)
-		return hitmob.bullet_act(hitting_projectile, def_zone, piercing_hit) //If the sides are open, the occupant can be hit
+/obj/vehicle/sealed/mecha/get_bullet_target(obj/projectile/proj)
+	if ((mecha_flags & IS_ENCLOSED) || (mecha_flags & SILICON_PILOT))
+		return ..()
 
+	if (!LAZYLEN(occupants))
+		return ..()
+
+	return pick(occupants)
+
+/obj/vehicle/sealed/mecha/bullet_act(obj/projectile/hitting_projectile, def_zone) //wrapper
 	. = ..()
-
 	log_message("Hit by projectile. Type: [hitting_projectile]([hitting_projectile.damage_type]).", LOG_MECHA, color="red")
 	// yes we *have* to run the armor calc proc here I love tg projectile code too
 	try_damage_component(run_atom_armor(

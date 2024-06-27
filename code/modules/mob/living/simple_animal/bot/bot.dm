@@ -483,7 +483,7 @@
 		. = TRUE
 	return ..() || .
 
-/mob/living/simple_animal/bot/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/mob/living/simple_animal/bot/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	. = ..()
 	if(prob(25) || . != BULLET_ACT_HIT)
 		return

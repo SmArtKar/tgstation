@@ -166,7 +166,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/bullet_act(obj/projectile/P)
-	if(stat == CONSCIOUS && !target && AIStatus != AI_OFF && !client)
+	if(stat == CONSCIOUS && !target && AIStatus != AI_OFF && !client && P.is_hostile_projectile())
 		if(P.firer && get_dist(src, P.firer) <= aggro_vision_range)
 			FindTarget(list(P.firer))
 		Goto(P.starting, move_to_delay, 3)

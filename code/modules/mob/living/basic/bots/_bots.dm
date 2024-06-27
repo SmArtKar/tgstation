@@ -451,7 +451,7 @@ GLOBAL_LIST_INIT(command_strings, list(
 		. = TRUE
 	return ..() || .
 
-/mob/living/basic/bot/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/mob/living/basic/bot/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	. = ..()
 	if(prob(25) || . != BULLET_ACT_HIT)
 		return

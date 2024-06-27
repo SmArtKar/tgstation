@@ -41,7 +41,7 @@
 	. = ..()
 	heat_up() // Who would do this?
 
-/mob/living/basic/mining/basilisk/bullet_act(obj/projectile/bullet, def_zone, piercing_hit)
+/mob/living/basic/mining/basilisk/bullet_act(obj/projectile/bullet, def_zone)
 	. = ..()
 	if(. != BULLET_ACT_HIT)
 		return

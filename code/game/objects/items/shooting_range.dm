@@ -20,7 +20,7 @@
 	. = ..()
 	. |= bullethole_overlays
 
-/obj/item/target/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/obj/item/target/bullet_act(obj/projectile/hitting_projectile, def_zone)
 	if(prob(25))
 		return ..() // RNG change to just not leave a mark, like walls
 	if(length(overlays) > 35)
@@ -41,8 +41,8 @@
 	if(is_generic_projectile && (is_invalid_damage || is_safe))
 		return ..() // Don't bother unless it's real shit
 
-	var/p_x = hitting_projectile.p_x + pick(0, 0, 0, 0, 0, -1, 1) // really ugly way of coding "sometimes offset p_x!"
-	var/p_y = hitting_projectile.p_y + pick(0, 0, 0, 0, 0, -1, 1)
+	var/p_x = hitting_projectile.target_x + pick(0, 0, 0, 0, 0, -1, 1) // really ugly way of coding "sometimes offset p_x!"
+	var/p_y = hitting_projectile.target_y + pick(0, 0, 0, 0, 0, -1, 1)
 	var/icon/our_icon = icon(icon, icon_state)
 	if(!our_icon.GetPixel(p_x, p_y) || hitting_projectile.original != src)
 		return BULLET_ACT_FORCE_PIERCE // We, "missed", I guess?

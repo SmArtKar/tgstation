@@ -37,8 +37,9 @@
 	melee_attack_cooldown = 2 SECONDS
 
 /mob/living/basic/construct/juggernaut/bullet_act(obj/projectile/bullet)
-	if(!istype(bullet, /obj/projectile/energy) && !istype(bullet, /obj/projectile/beam))
+	if(bullet.armor_flag != ENERGY)
 		return ..()
+
 	if(!prob(40 - round(bullet.damage / 3))) // reflect chance
 		return ..()
 
