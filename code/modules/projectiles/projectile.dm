@@ -96,14 +96,35 @@
 	/// Target to home onto
 	var/atom/homing_target
 	/// Maximum angle which projectile can turn per tick
-	/// Raytracer will be split into segments, one segment per 2.5 degrees
 	var/homing_turn_speed = 10
-	/// Override for raytracer splits value
-	var/homing_aggressiveness = -1
 	/// Minimal innacuracy for homing, for a more natural offset
 	var/homing_inaccuracy_min = 0
 	/// Maximal innacuracy for homing
 	var/homing_inaccuracy_max = 0
+
+	// Hitscan data
+	/// If this projectile is hitscan. Speed will be ignored and hits will be registered instantly upon firing
+	/// Should not be enabled with homing. Should not work with homing. Will produce funny results with homing.
+	var/hitscan = FALSE
+	/// VFX for hitscans
+	var/tracer_type
+	var/muzzle_type
+	var/impact_type
+
+	// Hitscan VFX info
+	var/tracer_icon
+	var/tracer_icon_state
+	var/hitscan_light_intensity = 1.5
+	var/hitscan_light_range = 0.75
+	var/hitscan_light_color_override
+	var/muzzle_flash_intensity = 3
+	var/muzzle_flash_range = 1.5
+	var/muzzle_flash_color_override
+	var/impact_light_intensity = 3
+	var/impact_light_range = 2
+	var/impact_light_color_override
+	var/tracer_duration = 3
+	var/animate_tracers = TRUE
 
 	// Piercing data
 	/// If FALSE, allow us to hit something directly targeted/clicked/whatnot even if we're able to phase through it
@@ -154,10 +175,15 @@
 	/// Stored offsets for homing inaccuracy for visuals
 	var/homing_offset_x = 0
 	var/homing_offset_y = 0
-
 	/// When set to true, PHASING will be removed the next time Moved is called
 	/// Used to phase through object upon piercing them
 	var/pierce_phase = FALSE
+	/// Turf we were on before last move_distance
+	var/turf/last_turf
+	/// pixel_x before last move_distance call
+	var/old_x = 0
+	/// pixel_y before last move_distance call
+	var/old_y = 0
 
 /obj/projectile/Initialize(mapload)
 	. = ..()
@@ -187,26 +213,19 @@
 	if (required_moves > MAX_TILES_PER_TICK)
 		overrun = (MAX_TILES_PER_TICK - required_moves) / speed
 
-	if (!homing)
-		move_distance(required_moves)
-		return
-
-	var/homing_angle_left = homing_turn_speed
-	var/homing_steps = ceil(homing_turn_speed / 2.5)
-	for (var/i in 1 to homing_steps)
-		move_distance(required_moves / homing_steps)
-		process_homing(min(homing_angle_left, 2.5))
-		homing_angle_left -= 2.5
+	move_distance(required_moves)
 
 /// Moves projectile a certain amount of tiles
 /obj/projectile/proc/move_distance(distance)
-	distance = min(distance, remaining_range)
-	remaining_range -= distance
+	var/limit_distance = min(distance, remaining_range)
+	remaining_range -= limit_distance
+	last_turf = get_turf(src)
 	var/x_pos = pixel_x
 	var/y_pos = pixel_y
-	var/turf/original_loc = loc
+	old_x = pixel_x
+	old_y = pixel_y
 
-	while (TRUE)
+	while (limit_distance > 0)
 		// Last move impacted something and deleted us
 		if (QDELETED(src))
 			return
@@ -217,10 +236,10 @@
 
 		var/dist_moved = min(x_tile_move, y_tile_move)
 
-		if (dist_moved > distance)
-			break
+		if (dist_moved > limit_distance)
+			dist_moved = limit_distance
 
-		distance -= dist_moved
+		limit_distance -= dist_moved
 		x_pos = (x_pos + dist_moved * x_factor) % 32
 		y_pos = (y_pos + dist_moved * y_factor) % 32
 
@@ -236,6 +255,9 @@
 			qdel(src)
 			return
 
+		if (homing)
+			process_homing(homing_turn_speed * dist_moved / distance)
+
 		if (T.z == loc.z)
 			step_towards(src, T)
 			after_move()
@@ -247,12 +269,16 @@
 	if (QDELETED(src))
 		return
 
-	pixel_x += (original_loc.x - loc.x) * 32
-	pixel_y += (original_loc.y - loc.y) * 32
-	animate(src, pixel_x = x_pos + distance * x_factor, pixel_y = y_pos * y_factor, time = 1, flags = ANIMATION_END_NOW)
-
 	if (remaining_range <= 0)
 		max_range()
+		return
+
+	var/current_x = pixel_x
+	var/current_y = pixel_y
+	pixel_x += (last_turf.x - loc.x) * 32 + old_x
+	pixel_y += (last_turf.y - loc.y) * 32 + old_y
+	animate(src, pixel_x = current_x, pixel_y = current_y, time = 1, flags = ANIMATION_END_NOW)
+	return
 
 /obj/projectile/Process_Spacemove(movement_dir = 0, continuous_move = FALSE)
 	return TRUE // Bullets don't drift in space
@@ -260,6 +286,8 @@
 /// Called when the projectile reaches its maximum range
 /obj/projectile/proc/max_range()
 	SEND_SIGNAL(src, COMSIG_PROJECTILE_MAX_RANGE)
+	if (hitscan)
+		generate_tracer(origin_turf, get_turf(src), origin_x, origin_y, pixel_x, pixel_y)
 	qdel(src)
 
 /obj/projectile/CanPassThrough(atom/blocker, movement_dir, blocker_opinion)
@@ -431,7 +459,6 @@
 		target = find_target(target_turf)
 
 /// Actual hit code
-/// Will call itself recursively when piercing things, and assign PHASE movement tag to itself afterwards to go through the tile
 /// Should not be called directly, or else weird stuff like stuck floating projectiles or multihits may happen
 /obj/projectile/proc/process_hit(atom/target)
 	if (QDELETED(src) || !istype(target))
@@ -439,6 +466,8 @@
 
 	var/pierce_mode = prehit_pierce(target)
 	if(pierce_mode == PROJECTILE_DELETE_WITHOUT_HITTING)
+		if (hitscan)
+			generate_tracer(origin_turf, get_turf(src), origin_x, origin_y, pixel_x, pixel_y)
 		qdel(src)
 		return PROJECTILE_PROCESS_HIT_FAILURE
 
@@ -457,11 +486,18 @@
 
 	if (result == BULLET_ACT_BLOCK)
 		if (pierce_mode == PROJECTILE_PIERCE_NONE)
+			if (hitscan)
+				generate_tracer(origin_turf, get_turf(src), origin_x, origin_y, pixel_x, pixel_y)
 			qdel(src)
 		return PROJECTILE_PROCESS_HIT_BLOCKED
 
+	if (QDELETED(target))
+		return PROJECTILE_PROCESS_HIT_SUCCESS
+
 	on_hit(target, pierce_mode == PROJECTILE_PIERCE_HIT)
 	if (pierce_mode == PROJECTILE_PIERCE_NONE)
+		if (hitscan)
+			generate_tracer(origin_turf, get_turf(src), origin_x, origin_y, pixel_x, pixel_y)
 		qdel(src)
 		return PROJECTILE_PROCESS_HIT_SUCCESS
 
@@ -511,12 +547,66 @@
 		hit_x += rand(-8, 8)
 		hit_y += rand(-8, 8)
 
-	new impact_effect_type(get_turf(target), hit_x, hit_y)
+	if (impact_effect_type)
+		new impact_effect_type(get_turf(target), hit_x, hit_y)
 
 	if (isturf(target) && hitsound_turf)
 		playsound(loc, hitsound_turf, impact_volume(), TRUE, -1)
-	else
+		return
+
+	if (hitsound)
 		playsound(loc, hitsound, impact_volume(), TRUE, -1)
+
+/// Creates a tracer made from a muzzle flash, a beam and an impact light between two points
+/obj/projectile/proc/generate_tracer(turf/starting_point, turf/end_point, start_x, start_y, end_x, end_y)
+	// Creates, lights up and animates the tracer beam
+	if (tracer_type)
+		var/datum/beam/tracer = starting_point.Beam(end_point, tracer_icon_state, tracer_icon, tracer_duration, beam_type = tracer_type, emissive = TRUE, \
+		override_origin_pixel_x = start_x, override_origin_pixel_y = start_y, override_target_pixel_x = end_x, override_target_pixel_y = end_y, layer = layer)
+		tracer.visuals.set_light(hitscan_light_range, hitscan_light_intensity, hitscan_light_color_override || color)
+		tracer.visuals.alpha = 0
+		tracer.visuals.color = color
+		if (isnull(tracer_icon_state))
+			tracer.visuals.icon_state = initial(tracer.visuals.icon_state)
+		if (isnull(tracer_icon))
+			tracer.visuals.icon = initial(tracer.visuals.icon)
+		tracer.visuals.update_appearance()
+		animate(tracer.visuals, alpha = alpha, time = tracer_duration * 0.1)
+		animate(tracer.visuals, alpha = alpha, time = tracer_duration * 0.6)
+		animate(tracer.visuals, alpha = 0, time = tracer_duration * 0.3)
+
+	// Generates muzzle flash
+	if (muzzle_type)
+		var/atom/movable/muzzle = new muzzle_type(starting_point)
+		var/matrix/muzzle_matrix = matrix()
+		muzzle_matrix.Turn(angle)
+		muzzle.transform = muzzle_matrix
+		muzzle.pixel_x = start_x
+		muzzle.pixel_y = start_y
+		muzzle.set_light(muzzle_flash_range, muzzle_flash_intensity, muzzle_flash_color_override || color)
+		muzzle.alpha = 0
+		muzzle.color = color
+		animate(muzzle, alpha = alpha, time = tracer_duration * 0.1)
+		animate(muzzle, alpha = alpha, time = tracer_duration * 0.6)
+		animate(muzzle, alpha = 0, time = tracer_duration * 0.3)
+		QDEL_IN(muzzle, tracer_duration)
+
+	// Generates impact VFX
+	if (impact_type)
+		var/atom/movable/impact = new impact_type(end_point)
+		var/matrix/impact_matrix = matrix()
+		impact_matrix.Turn(angle)
+		impact.transform = impact_matrix
+		impact.pixel_x = end_x
+		impact.pixel_y = end_y
+		impact.set_light(impact_light_range, impact_light_intensity, impact_light_color_override || color)
+		impact.alpha = 0
+		impact.color = color
+		animate(impact, alpha = alpha, time = tracer_duration * 0.1)
+		animate(impact, alpha = alpha, time = tracer_duration * 0.1)
+		animate(impact, alpha = alpha, time = tracer_duration * 0.6)
+		animate(impact, alpha = 0, time = tracer_duration * 0.3)
+		QDEL_IN(impact, tracer_duration)
 
 /*
  * =================================
@@ -638,8 +728,19 @@
 	play_fov_effect(origin_turf, 6, "gunfire", dir = NORTH, angle = angle)
 	SEND_SIGNAL(src, COMSIG_PROJECTILE_FIRE)
 
+	if(hitscan)
+		process_hitscan()
+		return // Hitscans always should be qdeleted at some point in process_hitscan(), be it due to range or other reasons
+
 	if(!(datum_flags & DF_ISPROCESSING))
 		START_PROCESSING(SSprojectiles, src)
+
+/// Runs projectile's hitscan chain. Should handle all movement, hits, VFX and deletion at the end because hitscans should not exist longer than their fire call.
+/obj/projectile/proc/process_hitscan()
+	move_distance(range)
+
+	if (!QDELETED(src))
+		qdel(src)
 
 /**
  * Fire a projectile directed at another atom
@@ -716,8 +817,44 @@
 	angle = ATAN2(tx - oy, ty - ox)
 	return list(angle, target_x, target_y)
 
-/// Fetches current ricochet angle
+/// Fetches current ricochet angle and a rough (middle of the tile border) impact X and Y to cut down on trig for latter
 /// This is a bit messy but probably the best way to do it - we calculate angle between the last "pause" turf and hit object, then compare it to our angle and based on that we get the side we impacted
+/obj/projectile/proc/ricochet_angle_and_pixels(atom/target)
+	var/turf/cur_turf = get_turf(src)
+	var/turf/target_turf = get_turf(target)
+
+	// Distance between target and our last position
+	var/target_diff_x = (target_turf.x - last_turf.x) * world.icon_size + target.pixel_x
+	var/target_diff_y = (target_turf.y - last_turf.y) * world.icon_size + target.pixel_y
+	var/target_angle = ATAN2(target_diff_x, target_diff_y)
+
+	// Whenever we flip the vertical or horizontal direction of the projectile.
+	// Signs required for this flip every 90 degrees of target_angle
+	var/vertical = (round(target_angle / 90) % 2 == 1) ? angle < target_angle : angle > target_angle
+
+	// Return middle of the hit border if we're on a different tile, or middle of the entry border if we're on the same tile as the hit object
+	// Could be done in a single operation but then it becomes barely ledgible
+	if (cur_turf == target_turf)
+		if (vertical)
+			return list(ATAN2(x_factor, y_factor * -1), ((last_turf.x > target_turf.x) ? 0 : world.icon_size), world.icon_size / 2)
+		return list(ATAN2(x_factor * -1, y_factor), world.icon_size / 2, ((last_turf.y > target_turf.y) ? 0 : world.icon_size))
+
+	if (vertical)
+		return list(ATAN2(x_factor, y_factor * -1), ((last_turf.x > target_turf.x) ? world.icon_size : 0), world.icon_size / 2)
+	return list(ATAN2(x_factor * -1, y_factor), world.icon_size / 2, ((last_turf.y > target_turf.y) ? world.icon_size : 0))
+
+/// Reflects the projectile off an object. Unlike ricochets, does not aim itself at nearby people nor does it deal damage to the reflector
+/obj/projectile/proc/reflect(atom/reflector)
+	var/ricochet_data = ricochet_angle_and_pixels(reflector)
+	if (hitscan)
+		generate_tracer(origin_turf, get_turf(src), origin_x, origin_y, pixel_x, pixel_y)
+	origin_turf = get_turf(src)
+	origin_x = pixel_x
+	origin_y = pixel_y
+	set_angle(ricochet_data[1])
+	impacted.Cut()
+	impacted += WEAKREF(reflector)
+	ignore_source_check = TRUE
 
 /*
  * =============================
