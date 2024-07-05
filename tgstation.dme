@@ -6268,6 +6268,7 @@
 #include "code\modules\xenobiology\crossbreeding\selfsustaining.dm"
 #include "code\modules\xenobiology\crossbreeding\stabilized.dm"
 #include "code\modules\xenobiology\machinery\corral_field.dm"
+#include "code\modules\xenobiology\machinery\corral_interface.dm"
 #include "code\modules\xenobiology\vatgrowing\biopsy_tool.dm"
 #include "code\modules\xenobiology\vatgrowing\microscope.dm"
 #include "code\modules\xenobiology\vatgrowing\petri_dish.dm"

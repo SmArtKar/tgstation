@@ -236,6 +236,16 @@
 	if (!isnull(attached_interface))
 		attached_interface.ui_interact(user)
 
+/obj/machinery/corral_generator/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	balloon_alert(user, "interface detached")
+	playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
+	attached_interface.forceMove(get_turf(src))
+	corner_status[interface_direction] = TRUE
+	attached_interface = null
+	update_appearance()
+	return ITEM_INTERACT_SUCCESS
+
 /obj/structure/corral_fence
 	name = "corral fence"
 	desc = "A holographic fence designed to prevent slimes from leaving. Takes some effort to pass through."
