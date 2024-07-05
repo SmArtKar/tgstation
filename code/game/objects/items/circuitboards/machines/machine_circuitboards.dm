@@ -1547,6 +1547,16 @@
 		/datum/stock_part/scanning_module = 4,
 		)
 
+/obj/item/circuitboard/machine/corral_generator
+	name = "Corral Field Generator (Machine Board)"
+	greyscale_colors = CIRCUIT_COLOR_SCIENCE
+	build_path = /obj/machinery/corral_generator
+	req_components = list(
+		/datum/stock_part/capacitor = 1,
+		/datum/stock_part/micro_laser = 1,
+		/datum/stock_part/scanning_module = 2)
+	needs_anchored = TRUE
+
 /obj/item/circuitboard/machine/coffeemaker
 	name = "Coffeemaker (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_SERVICE

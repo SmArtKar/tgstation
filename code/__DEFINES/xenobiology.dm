@@ -14,3 +14,12 @@
 
 /// Determines how much light the jelly species emit
 #define LUMINESCENT_DEFAULT_GLOW 2
+
+/// How long does it take a human to push through an unupgraded field
+#define CORRAL_FIELD_PASS_DELAY 2 SECONDS
+/// How much damage an unupgraded corral generator can sustain before rebooting
+#define CORRAL_GENERATOR_BASE_CHARGE 300
+/// How long does it take for the corral generator to start recovering
+#define CORRAL_GENERATOR_RECOVERY_TIMER 5 SECONDS
+/// How much energy the corral generator recovers per second after not being attacked
+#define CORRAL_GENERATOR_RECOVERY 10
