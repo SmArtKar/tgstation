@@ -1,5 +1,3 @@
-#define CORRAL_INTERFACE_NORTH_OFFSET 3
-
 /obj/machinery/corral_generator
 	name = "corral field generator"
 	desc = "A bulky machine with corral field projectors on its side. Position two of these in a straight line and they'll create a corral field which prevents animals from passing through it."
@@ -28,9 +26,6 @@
 	/// Overlays for active links
 	var/list/active_overlays = list()
 	var/list/active_emissives = list()
-	/// Overlays for the attached corral interface
-	var/mutable_appearance/interface_overlay
-	var/mutable_appearance/interface_emissive
 	/// How much damage we can sustain
 	var/max_charge = CORRAL_GENERATOR_BASE_CHARGE
 	/// Whats the current charge
@@ -209,27 +204,17 @@
 	. = ..()
 	if (!active_overlays.len)
 		for (var/direction in GLOB.cardinals)
-			var/mutable_appearance/mutable = mutable_appearance(icon, "corral_field_link", src, layer = BELOW_MOB_LAYER)
-			var/mutable_appearance/emissive = emissive_appearance(icon, "corral_field_link", src, layer = BELOW_MOB_LAYER, alpha = 200)
-			mutable.dir = direction
-			emissive.dir = direction
+			var/mutable_appearance/mutable = mutable_appearance(icon, "corral_field_link_[direction]", src, layer = BELOW_MOB_LAYER)
+			var/mutable_appearance/emissive = emissive_appearance(icon, "corral_field_link_[direction]", src, layer = BELOW_MOB_LAYER, alpha = 200)
 			active_overlays["[direction]"] = mutable
 			active_emissives["[direction]"] = emissive
-
-		interface_overlay = mutable_appearance(icon, "corral_interface", src, layer = ABOVE_OBJ_LAYER)
-		interface_emissive = emissive_appearance(icon, "corral_interface_emissive", src, layer = ABOVE_OBJ_LAYER)
 
 	for (var/direction in other_generators)
 		. += active_overlays[direction]
 		. += active_emissives[direction]
 
 	if (!isnull(attached_interface))
-		interface_overlay.dir = interface_direction
-		interface_emissive.dir = interface_direction
-		interface_overlay.pixel_y = (interface_direction == NORTH) ? CORRAL_INTERFACE_NORTH_OFFSET : 0
-		interface_emissive.pixel_y = (interface_direction == NORTH) ? CORRAL_INTERFACE_NORTH_OFFSET : 0
-		. += interface_overlay
-		. += interface_emissive
+		. += attached_interface
 
 /obj/machinery/corral_generator/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
@@ -241,7 +226,9 @@
 	balloon_alert(user, "interface detached")
 	playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
 	attached_interface.forceMove(get_turf(src))
-	corner_status[interface_direction] = TRUE
+	attached_interface.generator = null
+	attached_interface.update_appearance()
+	corner_status["[interface_direction]"] = TRUE
 	attached_interface = null
 	update_appearance()
 	return ITEM_INTERACT_SUCCESS
@@ -351,5 +338,3 @@
 
 	flick("corral_field_glitch", src)
 	flick("corral_field_glitch", emissive)
-
-#undef CORRAL_INTERFACE_NORTH_OFFSET
