@@ -7,9 +7,9 @@
 	name = "grey baby slime (123)"
 	icon = 'icons/mob/simple/slimes.dmi'
 	icon_state = "grey-baby"
-	pass_flags = PASSTABLE | PASSGRILLE
+	pass_flags = PASSTABLE | PASSGRILLE | PASSFLAPS
 	gender = NEUTER
-	faction = list(FACTION_SLIME, FACTION_NEUTRAL)
+	faction = list(FACTION_SLIME)
 
 	icon_living = "grey-baby"
 	icon_dead = "grey-baby-dead"

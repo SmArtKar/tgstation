@@ -35,7 +35,6 @@
 	description = "Exploration of non-human biology, unlocking the secrets of extraterrestrial lifeforms and their unique biological processes."
 	prereq_ids = list(TECHWEB_NODE_CYTOLOGY)
 	design_ids = list(
-		"xenobioconsole",
 		"slime_scanner",
 		"limbdesign_ethereal",
 		"limbdesign_felinid",

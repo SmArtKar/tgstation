@@ -21,9 +21,6 @@ GLOBAL_LIST_EMPTY(monkey_recyclers)
 
 /obj/machinery/monkey_recycler/Destroy()
 	GLOB.monkey_recyclers -= src
-	for(var/thing in connected)
-		var/obj/machinery/computer/camera_advanced/xenobio/console = thing
-		console.connected_recycler = null
 	connected.Cut()
 	return ..()
 

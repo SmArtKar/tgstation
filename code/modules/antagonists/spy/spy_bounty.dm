@@ -415,7 +415,6 @@
 	random_options = list(
 		/obj/machinery/chem_dispenser,
 		/obj/machinery/computer/bank_machine,
-		/obj/machinery/computer/camera_advanced/xenobio,
 		/obj/machinery/computer/cargo, // This includes request-only ones in the public lobby
 		/obj/machinery/computer/crew,
 		/obj/machinery/computer/prisoner/management,

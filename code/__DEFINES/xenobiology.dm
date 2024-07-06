@@ -23,3 +23,5 @@
 #define CORRAL_GENERATOR_RECOVERY_TIMER 5 SECONDS
 /// How much energy the corral generator recovers per second after not being attacked
 #define CORRAL_GENERATOR_RECOVERY 10
+/// Maximum radius for corral floodfill
+#define CORRAL_MAXIMUM_SEARCH_RANGE 9
