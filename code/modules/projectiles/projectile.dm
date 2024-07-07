@@ -185,9 +185,16 @@
 	/// pixel_y before last move_distance call
 	var/old_y = 0
 
+	///If we have a shrapnel_type defined, these embedding stats will be passed to the spawned shrapnel type, which will roll for embedding on the target
+	var/embed_type
+	///Saves embedding data
+	var/datum/embed_data/embed_data
+
 /obj/projectile/Initialize(mapload)
 	. = ..()
 	remaining_range = range
+	if(get_embed())
+		AddElement(/datum/element/embed)
 	AddElement(/datum/element/connect_loc, projectile_connections)
 	RegisterSignal(src, COMSIG_ATOM_ATTACK_HAND, PROC_REF(attempt_parry))
 
@@ -923,3 +930,16 @@
 		return TRUE
 
 	return FALSE
+
+/// Fetches embedding data
+/obj/projectile/proc/get_embed()
+	return embed_type ? (embed_data ||= get_embed_by_type(embed_type)) : null
+
+/obj/projectile/proc/set_embed(datum/embed_data/embed)
+	if(embed_data == embed)
+		return
+	// GLOB.embed_by_type stores shared "default" embedding values of datums
+	// Dynamically generated embeds use the base class and thus are not present in there, and should be qdeleted upon being discarded
+	if(!isnull(embed_data) && !GLOB.embed_by_type[embed_data.type])
+		qdel(embed_data)
+	embed_data = ispath(embed) ? get_embed_by_type(armor) : embed
