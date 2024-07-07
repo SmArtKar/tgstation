@@ -72,35 +72,6 @@
 	new /obj/effect/temp_visual/heart(loc)
 	return
 
-///Handles feeding a slim with a bag full of extracts
-/mob/living/basic/slime/proc/use_xeno_bag(obj/item/storage/bag/xeno/xeno_bag, mob/living/user)
-	if(!crossbreed_modification)
-		to_chat(user, span_warning("The slime is not currently being mutated."))
-		return
-	var/has_output = FALSE //Have we outputted text?
-	var/has_found = FALSE //Have we found an extract to be added?
-	for(var/obj/item/slime_extract/extract in xeno_bag.contents)
-		if(extract.crossbreed_modification == crossbreed_modification)
-			xeno_bag.atom_storage.attempt_remove(extract, get_turf(src), silent = TRUE)
-			qdel(extract)
-			applied_crossbreed_amount++
-			has_found = TRUE
-		if(applied_crossbreed_amount >= SLIME_EXTRACT_CROSSING_REQUIRED)
-			to_chat(user, span_notice("You feed the slime as many of the extracts from the bag as you can, and it mutates!"))
-			playsound(src, 'sound/effects/attackblob.ogg', 50, TRUE)
-			spawn_corecross()
-			has_output = TRUE
-			break
-
-	if(has_output)
-		return
-
-	if(!has_found)
-		to_chat(user, span_warning("There are no extracts in the bag that this slime will accept!"))
-	else
-		to_chat(user, span_notice("You feed the slime some extracts from the bag."))
-		playsound(src, 'sound/effects/attackblob.ogg', 50, TRUE)
-
 ///Handles the adverse effects of water on slimes
 /mob/living/basic/slime/proc/apply_water()
 	adjustBruteLoss(rand(15,20))

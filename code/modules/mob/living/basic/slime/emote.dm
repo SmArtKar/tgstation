@@ -41,11 +41,11 @@
 
 /datum/emote/slime/mood/smile
 	key = "moodsmile"
-	mood_key = ":3"
+	mood_key = "uwu"
 
 /datum/emote/slime/mood/cat
 	key = "moodcat"
-	mood_key = ":33"
+	mood_key = "owo"
 
 /datum/emote/slime/mood/pout
 	key = "moodpout"

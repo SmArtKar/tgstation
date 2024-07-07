@@ -13,6 +13,8 @@
 	var/obj/machinery/corral_generator/generator
 	/// Linked corral data
 	var/datum/corral_data/corral
+	/// Turf that we're attached to, if any. Can be different from actual location (for wall attachment)
+	var/turf/attached_turf
 
 /obj/item/slime_corral_interface/Initialize(mapload)
 	. = ..()
@@ -23,27 +25,70 @@
 	. = ..()
 	. += emissive_appearance(icon, "[icon_state]_emissive", src)
 
+/obj/item/slime_corral_interface/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if (!isturf(loc))
+		return
+
+	set_anchored(!anchored)
+	playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
+
+	if (anchored)
+		balloon_alert(user, "bolted the interface")
+		attached_turf = loc
+		update_appearance()
+		return
+
+	balloon_alert(user, "unbolted the interface")
+	attached_turf = null
+	update_appearance()
+
 /obj/item/slime_corral_interface/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
-	if (!istype(interacting_with, /obj/machinery/corral_generator))
+	if (!istype(interacting_with, /obj/machinery/corral_generator) && !iswallturf(interacting_with))
 		return NONE
 
-	generator = interacting_with
-	var/attach_dir = get_dir(generator, user)
+	var/attach_dir = get_dir(interacting_with, user)
+	var/priority_dirs
 	switch (attach_dir)
 		if (SOUTHEAST, SOUTHWEST)
-			if (isnull(generator.other_generators["[SOUTH]"]))
-				attach_dir = SOUTH
+			priority_dirs = list(SOUTH, attach_dir / 16)
 		if (NORTHWEST)
-			if (isnull(generator.other_generators["[WEST]"]))
-				attach_dir = WEST
+			priority_dirs = list(WEST, NORTH)
 		if (NORTHEAST)
-			if (isnull(generator.other_generators["[EAST]"]))
-				attach_dir = EAST
+			priority_dirs = list(EAST, NORTH)
+
+	if (iswallturf(interacting_with))
+		var/turf/closed/wall/wall = interacting_with
+		if (priority_dirs)
+			attach_dir = priority_dirs[1]
+			if (isclosedturf(get_step(wall, attach_dir)))
+				attach_dir = priority_dirs[2]
+		// how the hell
+		if (isclosedturf(get_step(wall, attach_dir)))
+			balloon_alert(user, "side occupied")
+			return ITEM_INTERACT_FAILURE
+
+		forceMove(get_step(wall, attach_dir))
+		attached_turf = wall
+		playsound(src, 'sound/machines/click.ogg', 30, TRUE)
+		setDir(attach_dir)
+		update_appearance()
+		balloon_alert(user, "interface attached")
+		set_anchored(TRUE)
+		return ITEM_INTERACT_SUCCESS
+
+	generator = interacting_with
+
+	if (priority_dirs)
+		attach_dir = priority_dirs[1]
+		if (!isnull(generator.other_generators["[attach_dir]"]))
+			attach_dir = priority_dirs[2]
+
 	if (!isnull(generator.other_generators["[attach_dir]"]))
 		balloon_alert(user, "side occupied")
 		return ITEM_INTERACT_FAILURE
+
 	forceMove(generator)
-	balloon_alert(user, "interface attached")
 	playsound(src, 'sound/machines/click.ogg', 30, TRUE)
 	generator.attached_interface = src
 	generator.interface_direction = attach_dir
@@ -52,18 +97,34 @@
 	generator.setDir(attach_dir)
 	update_appearance()
 	generator.update_appearance()
+	balloon_alert(user, "interface attached")
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/slime_corral_interface/update_icon_state()
-	if (isnull(generator))
+	if (isnull(generator) && isnull(attached_turf))
 		icon_state = base_icon_state
 		return ..()
 
-	icon_state = "corral_interface"
+	icon_state = isopenturf(attached_turf)? "corral_interface_floor" : "corral_interface"
+
+	if (!iswallturf(attached_turf))
+		pixel_x = 0
+		pixel_y = (dir == NORTH ? CORRAL_INTERFACE_NORTH_OFFSET : 0)
+		return ..()
+
 	pixel_x = 0
-	pixel_w = 0
-	pixel_y = (generator.interface_direction == NORTH ? CORRAL_INTERFACE_NORTH_OFFSET : 0)
-	pixel_z = 0
+	pixel_y = 0
+
+	switch (dir)
+		if (NORTH)
+			pixel_y = -34
+		if (SOUTH)
+			pixel_y = 24
+		if (EAST)
+			pixel_x = -24
+		if (WEST)
+			pixel_x = 24
+
 	return ..()
 
 /obj/item/slime_corral_interface/ui_interact(mob/user, datum/tgui/ui)
@@ -78,12 +139,20 @@
 		return
 	corral_setup(get_turf(src))
 
+/obj/item/slime_corral_interface/attack_hand(mob/user, list/modifiers)
+	. = ..()
+	if(. || !user)
+		return
+
+	if (anchored)
+		ui_interact(user)
+
 // Ugly but we lack a floodfill that could fit this usecase
 /obj/item/slime_corral_interface/proc/corral_setup(turf/starting_turf, mob/user = null)
 	var/list/turf/turf_cache = list(starting_turf)
 	var/list/turf/checked_turfs = list()
 	var/invalid_break = FALSE
-	corral = new()
+	corral = new(src)
 
 	while (turf_cache.len)
 		var/turf/check_turf = turf_cache[1]
@@ -156,9 +225,7 @@
 
 	balloon_alert(user, "corral located")
 	playsound(src, 'sound/machines/high_tech_confirm.ogg', 50, FALSE)
-
-	for (var/turf/display in corral.corral_turfs)
-		new /obj/effect/temp_visual/corral_confirm(display)
+	corral.created()
 
 /obj/effect/temp_visual/corral_confirm
 	name = "corral confirmation marker"

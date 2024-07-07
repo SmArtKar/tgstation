@@ -57,35 +57,6 @@
 	to_chat(user, span_warning("Nothing happened... This slime extract cannot be activated this way."))
 	return FALSE
 
-/**
-* Core-crossing: Feeding adult slimes extracts to obtain a much more powerful, single extract.
-*
-* By using a valid core on a living adult slime, then feeding it nine more of the same type, you can mutate it into more useful items. Not every slime type has an implemented core cross.
-*/
-/obj/item/slime_extract/attack(mob/living/basic/slime/target_slime, mob/user)
-	if(!isslime(target_slime))
-		return ..()
-	if(target_slime.stat)
-		to_chat(user, span_warning("The slime is dead!"))
-		return
-	if(target_slime.life_stage != SLIME_LIFE_STAGE_ADULT)
-		to_chat(user, span_warning("The slime must be an adult to cross its core!"))
-		return
-	if(target_slime.crossbreed_modification && target_slime.crossbreed_modification != crossbreed_modification)
-		to_chat(user, span_warning("The slime is already being crossed with a different extract!"))
-		return
-
-	if(!target_slime.crossbreed_modification)
-		target_slime.crossbreed_modification = crossbreed_modification
-
-	target_slime.applied_crossbreed_amount++
-	qdel(src)
-	to_chat(user, span_notice("You feed the slime [src], [target_slime.applied_crossbreed_amount == 1 ? "starting to mutate its core." : "further mutating its core."]"))
-	playsound(target_slime, 'sound/effects/attackblob.ogg', 50, TRUE)
-
-	if(target_slime.applied_crossbreed_amount >= SLIME_EXTRACT_CROSSING_REQUIRED)
-		target_slime.spawn_corecross()
-
 /obj/item/slime_extract/grey
 	name = "grey slime extract"
 	icon_state = "grey-core"
