@@ -30,7 +30,8 @@
 
 /datum/element/projectile_drop/proc/spawn_drop_if_not_embeddable(obj/projectile/source, atom/movable/firer, atom/hit, angle, hit_zone)
 	SIGNAL_HANDLER
-	if(source.can_embed_into(hit))
+	if(source.get_embed()?.can_projectile_embed_into(hit))
 		Detach(source)
 		return
+
 	spawn_drop(source)

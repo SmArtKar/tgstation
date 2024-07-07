@@ -20,6 +20,7 @@
 	RegisterSignal(target, COMSIG_ELEMENT_ATTACH, PROC_REF(sever_element))
 	if(isprojectile(target))
 		RegisterSignal(target, COMSIG_PROJECTILE_SELF_ON_HIT, PROC_REF(check_embed_projectile))
+		RegisterSignal(target, COMSIG_PROJECTILE_AFTER_MOVE, PROC_REF(projectile_after_move))
 		return
 
 	RegisterSignal(target, COMSIG_MOVABLE_IMPACT_ZONE, PROC_REF(check_embed))
@@ -81,6 +82,13 @@
 
 	Detach(weapon)
 
+/datum/element/embed/proc/projectile_after_move(obj/projectile/source, distance_moved)
+	SIGNAL_HANDLER
+
+	var/datum/embed_data/data = source.get_embed()
+	if (data.embed_falloff != null)
+		source.set_embed(data.generate_with_values(embed_chance = data.embed_chance - data.embed_falloff * distance_moved))
+
 ///Someone inspected our embeddable item
 /datum/element/embed/proc/examined(obj/item/I, mob/user, list/examine_list)
 	SIGNAL_HANDLER
@@ -101,11 +109,13 @@
 /datum/element/embed/proc/check_embed_projectile(obj/projectile/source, atom/movable/firer, atom/hit, angle, hit_zone, blocked)
 	SIGNAL_HANDLER
 
-	if(!source.can_embed_into(hit) || blocked)
+	if(!can_projectile_embed_into(source, hit) || blocked)
 		Detach(source)
 		return // we don't care
-	var/payload_type = source.shrapnel_type
+
+	var/payload_type = source.get_embed().shrapnel_type
 	var/obj/item/payload = new payload_type(get_turf(hit))
+	payload.set_embed(source.get_embed())
 	if(istype(payload, /obj/item/shrapnel/bullet))
 		payload.name = source.name
 	SEND_SIGNAL(source, COMSIG_PROJECTILE_ON_SPAWN_EMBEDDED, payload)
@@ -117,6 +127,9 @@
 	if(!try_force_embed(payload, limb))
 		payload.failedEmbed()
 	Detach(source)
+
+/obj/projectile/proc/can_projectile_embed_into(obj/projectile/source, atom/hit)
+	return source.get_embed().shrapnel_type && iscarbon(hit) && !HAS_TRAIT(hit, TRAIT_PIERCEIMMUNE)
 
 /**
  * try_force_embed() is called here when we fire COMSIG_EMBED_TRY_FORCE from [/obj/item/proc/tryEmbed]. Mostly, this means we're a piece of shrapnel from a projectile that just impacted something, and we're trying to embed in it.
@@ -165,10 +178,7 @@
 	if(!armor) // we only care about armor penetration if there's actually armor to penetrate
 		return prob(actual_chance)
 
-	//Keep this above 1, as it is a multiplier for the pen_mod for determining actual embed chance.
-	var/penetrative_behaviour = embedding_item.weak_against_armour ? ARMOR_WEAKENED_MULTIPLIER : 1
-	var/pen_mod = -(armor * penetrative_behaviour) // if our shrapnel is weak into armor, then we restore our armor to the full value.
-	actual_chance += pen_mod // doing the armor pen as a separate calc just in case this ever gets expanded on
+	actual_chance -= armor // doing the armor pen as a separate calc just in case this ever gets expanded on
 	if(actual_chance <= 0)
 		victim.visible_message(span_danger("[embedding_item] bounces off [victim]'s armor, unable to embed!"), span_notice("[embedding_item] bounces off your armor, unable to embed!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		return FALSE

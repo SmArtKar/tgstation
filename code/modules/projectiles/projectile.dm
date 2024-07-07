@@ -151,6 +151,11 @@
 	/// Slurring applied on projectile hit
 	var/slurring = 0 SECONDS
 
+	///If we have a shrapnel_type defined, these embedding stats will be passed to the spawned shrapnel type, which will roll for embedding on the target
+	var/embed_type
+	///Saves embedding data
+	var/datum/embed_data/embed_data
+
 	// Internal variables
 	/// Targets that we have already hit and shouldn't affect again
 	var/list/impacted = list()
@@ -185,16 +190,12 @@
 	/// pixel_y before last move_distance call
 	var/old_y = 0
 
-	///If we have a shrapnel_type defined, these embedding stats will be passed to the spawned shrapnel type, which will roll for embedding on the target
-	var/embed_type
-	///Saves embedding data
-	var/datum/embed_data/embed_data
-
 /obj/projectile/Initialize(mapload)
 	. = ..()
 	remaining_range = range
 	if(get_embed())
 		AddElement(/datum/element/embed)
+
 	AddElement(/datum/element/connect_loc, projectile_connections)
 	RegisterSignal(src, COMSIG_ATOM_ATTACK_HAND, PROC_REF(attempt_parry))
 
@@ -933,7 +934,8 @@
 
 /// Fetches embedding data
 /obj/projectile/proc/get_embed()
-	return embed_type ? (embed_data ||= get_embed_by_type(embed_type)) : null
+	RETURN_TYPE(/datum/embed_data)
+	return embed_type ? (embed_data ||= get_embed_by_type(embed_type)) : embed_data
 
 /obj/projectile/proc/set_embed(datum/embed_data/embed)
 	if(embed_data == embed)
