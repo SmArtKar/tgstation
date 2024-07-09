@@ -19,7 +19,7 @@
 /obj/structure/trader_sign/Initialize(mapload)
 	. = ..()
 	add_overlay("sign")
-	makeHologram()
+	make_hologram()
 
 
 /obj/structure/trader_sign/mrbones

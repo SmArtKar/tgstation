@@ -91,8 +91,8 @@
 	mode = MODE_HOLOPAD
 
 /datum/saymode/holopad/handle_message(mob/living/user, message, datum/language/language)
-	if(isAI(user))
-		var/mob/living/silicon/ai/AI = user
-		AI.holopad_talk(message, language)
-		return FALSE
-	return TRUE
+	if(!isAI(user))
+		return TRUE
+	var/mob/living/silicon/ai/AI = user
+	AI.holopad_talk(message, language)
+	return FALSE

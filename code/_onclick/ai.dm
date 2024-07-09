@@ -276,7 +276,7 @@
 	if (user)
 		balloon_alert(user, "disrupted all active calls")
 		add_hiddenprint(user)
-	hangup_all_calls()
+	holocomms.end_all_calls()
 	return CLICK_ACTION_SUCCESS
 
 //

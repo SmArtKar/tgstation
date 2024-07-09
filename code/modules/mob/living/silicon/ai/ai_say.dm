@@ -33,8 +33,8 @@
 		return
 
 	var/obj/machinery/holopad/active_pad = current
-	if(istype(active_pad) && active_pad.masters[src])//If there is a hologram and its master is the user.
-		var/obj/effect/overlay/holo_pad_hologram/ai_holo = active_pad.masters[src]
+	if(istype(active_pad) && active_pad.ai_holograms[src])
+		var/obj/effect/overlay/holocall_projection/ai_holo = active_pad.ai_holograms[src]
 		var/turf/padturf = get_turf(active_pad)
 		var/padloc
 		if(padturf)

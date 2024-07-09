@@ -37,7 +37,7 @@
 
 		var/obj/effect/rcd_hologram/hologram = new(surrounding_turf)
 		hologram.icon = hologram_icon
-		hologram.makeHologram()
+		hologram.make_hologram()
 		animate(hologram, alpha = 0, time = fade_time, easing = CIRCULAR_EASING | EASE_IN)
 
 #undef RCD_DESTRUCTIVE_SCAN_RANGE

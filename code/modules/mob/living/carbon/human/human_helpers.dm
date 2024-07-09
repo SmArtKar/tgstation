@@ -57,7 +57,8 @@
 	return if_no_id
 
 //repurposed proc. Now it combines get_id_name() and get_face_name() to determine a mob's name variable. Made into a separate proc as it'll be useful elsewhere
-/mob/living/carbon/human/get_visible_name(add_id_name = TRUE)
+// force_id will return ID name regardless if the person's face name is visible or not
+/mob/living/carbon/human/get_visible_name(add_id_name = TRUE, force_id = FALSE)
 	if(HAS_TRAIT(src, TRAIT_UNKNOWN))
 		return "Unknown"
 	var/list/identity = list(null, null)
@@ -66,6 +67,8 @@
 	var/signal_id = LAZYACCESS(identity, VISIBLE_NAME_ID)
 	var/face_name = !isnull(signal_face) ? signal_face : get_face_name("")
 	var/id_name = !isnull(signal_id) ? signal_id : get_id_name("")
+	if (id_name && force_id)
+		return id_name
 	if(face_name)
 		if(add_id_name && id_name && (id_name != face_name))
 			return "[face_name] (as [id_name])"

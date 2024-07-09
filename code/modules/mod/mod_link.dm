@@ -5,7 +5,7 @@
 	link_visual.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	LAZYADD(mod_link.holder.update_on_z, link_visual)
 	link_visual.appearance_flags |= KEEP_TOGETHER
-	link_visual.makeHologram(0.75)
+	link_visual.make_hologram(0.75)
 	mod_link.visual_overlays = user.overlays - user.active_thinking_indicator
 	link_visual.add_overlay(mod_link.visual_overlays)
 	mod_link.visual = link_visual
@@ -75,6 +75,14 @@
 		CALLBACK(src, PROC_REF(get_link_visual)),
 		CALLBACK(src, PROC_REF(delete_link_visual))
 	)
+
+/// Disables the mod link frequency attached to this unit.
+/obj/item/mod/control/proc/disable_modlink()
+	if(isnull(mod_link))
+		return
+
+	mod_link.end_call()
+	mod_link.frequency = null
 
 /obj/item/mod/control/multitool_act_secondary(mob/living/user, obj/item/multitool/tool)
 	. = NONE
@@ -324,7 +332,7 @@
 	cell = new /obj/item/stock_parts/power_store/cell/high(src)
 
 /obj/item/clothing/neck/link_scryer/loaded/charlie
-	starting_frequency = MODLINK_FREQ_CHARLIE
+	starting_frequency = HOLO_FREQ_CHARLIE
 
 /// A MODlink datum, used to handle unique functions that will be used in the MODlink call.
 /datum/mod_link

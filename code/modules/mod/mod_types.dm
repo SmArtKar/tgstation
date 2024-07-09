@@ -1,5 +1,5 @@
 /obj/item/mod/control/pre_equipped
-	starting_frequency = MODLINK_FREQ_NANOTRASEN
+	starting_frequency = HOLO_FREQ_NANOTRASEN
 	/// The skin we apply to the suit, defaults to the default_skin of the theme.
 	var/applied_skin
 	/// The MOD core we apply to the suit.
@@ -217,7 +217,7 @@
 
 /obj/item/mod/control/pre_equipped/traitor
 	theme = /datum/mod_theme/syndicate
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/storage/syndicate,
@@ -238,7 +238,7 @@
 
 /obj/item/mod/control/pre_equipped/traitor_elite
 	theme = /datum/mod_theme/elite
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/power_store/cell/bluespace
 	applied_modules = list(
 		/obj/item/mod/module/storage/syndicate,
@@ -260,7 +260,7 @@
 
 /obj/item/mod/control/pre_equipped/nuclear
 	theme = /datum/mod_theme/syndicate
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/power_store/cell/hyper
 	req_access = list(ACCESS_SYNDICATE)
 	applied_modules = list(
@@ -297,7 +297,7 @@
 
 /obj/item/mod/control/pre_equipped/elite
 	theme = /datum/mod_theme/elite
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/power_store/cell/bluespace
 	req_access = list(ACCESS_SYNDICATE)
 	applied_modules = list(
@@ -340,7 +340,7 @@
 
 /obj/item/mod/control/pre_equipped/infiltrator
 	theme = /datum/mod_theme/infiltrator
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/emp_shield,
@@ -354,7 +354,7 @@
 
 /obj/item/mod/control/pre_equipped/interdyne
 	theme = /datum/mod_theme/interdyne
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/organizer,
@@ -405,7 +405,7 @@
 
 /obj/item/mod/control/pre_equipped/prototype
 	theme = /datum/mod_theme/prototype
-	starting_frequency = MODLINK_FREQ_CHARLIE
+	starting_frequency = HOLO_FREQ_CHARLIE
 	req_access = list(ACCESS_AWAY_GENERAL)
 	applied_modules = list(
 		/obj/item/mod/module/storage,
@@ -438,7 +438,7 @@
 
 /obj/item/mod/control/pre_equipped/responsory
 	theme = /datum/mod_theme/responsory
-	starting_frequency = MODLINK_FREQ_CENTCOM
+	starting_frequency = HOLO_FREQ_CENTCOM
 	applied_cell = /obj/item/stock_parts/power_store/cell/hyper
 	req_access = list(ACCESS_CENT_GENERAL)
 	applied_modules = list(
@@ -502,7 +502,7 @@
 	)
 
 /obj/item/mod/control/pre_equipped/responsory/inquisitory/syndie
-	starting_frequency = MODLINK_FREQ_SYNDICATE
+	starting_frequency = HOLO_FREQ_SYNDICATE
 	req_access = null
 	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	theme = /datum/mod_theme/responsory/traitor
@@ -538,7 +538,7 @@
 
 /obj/item/mod/control/pre_equipped/apocryphal
 	theme = /datum/mod_theme/apocryphal
-	starting_frequency = MODLINK_FREQ_CENTCOM
+	starting_frequency = HOLO_FREQ_CENTCOM
 	applied_cell = /obj/item/stock_parts/power_store/cell/bluespace
 	req_access = list(ACCESS_CENT_SPECOPS)
 	applied_modules = list(
@@ -566,7 +566,7 @@
 
 /obj/item/mod/control/pre_equipped/corporate
 	theme = /datum/mod_theme/corporate
-	starting_frequency = MODLINK_FREQ_CENTCOM
+	starting_frequency = HOLO_FREQ_CENTCOM
 	applied_core = /obj/item/mod/core/infinite
 	req_access = list(ACCESS_CENT_SPECOPS)
 	applied_modules = list(
@@ -613,7 +613,7 @@
 
 /obj/item/mod/control/pre_equipped/administrative
 	theme = /datum/mod_theme/administrative
-	starting_frequency = MODLINK_FREQ_CENTCOM
+	starting_frequency = HOLO_FREQ_CENTCOM
 	applied_core = /obj/item/mod/core/infinite
 	applied_modules = list(
 		/obj/item/mod/module/storage/bluespace,

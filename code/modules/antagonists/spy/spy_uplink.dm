@@ -103,7 +103,7 @@
 	var/obj/effect/scan_effect/active_scan_effect = new(stealing.loc)
 	active_scan_effect.appearance = stealing.appearance
 	active_scan_effect.dir = stealing.dir
-	active_scan_effect.makeHologram()
+	active_scan_effect.make_hologram()
 	SET_PLANE_EXPLICIT(active_scan_effect, stealing.plane, stealing)
 	active_scan_effect.layer = stealing.layer + 0.1
 

@@ -26,7 +26,7 @@
 	///The creation point assigned during the reaction
 	var/turf/location_created
 	///The return point indicator
-	var/obj/effect/overlay/holo_pad_hologram/eigenstate
+	var/obj/effect/overlay/holocall_projection/eigenstate
 	///The point you're returning to after the reagent is removed
 	var/turf/open/location_return = null
 

@@ -92,7 +92,7 @@
 /// So transparent, blue, with a scanline and an emissive glow
 /// This is acomplished using a combination of filters and render steps/overlays
 /// The degree of the opacity is optional, based off the opacity arg (0 -> 1)
-/atom/proc/makeHologram(opacity = 0.5)
+/atom/proc/make_hologram(opacity = 0.5)
 	// First, we'll make things blue (roughly) and sorta transparent
 	add_filter("HOLO: Color and Transparent", 1, color_matrix_filter(rgb(125,180,225, opacity * 255)))
 	// Now we're gonna do a scanline effect

@@ -39,12 +39,6 @@
 #define MOD_ICON_OVERRIDE "mod_icon_override"
 #define MOD_WORN_ICON_OVERRIDE "mod_worn_icon_override"
 
-//Defines for MODlink frequencies
-#define MODLINK_FREQ_NANOTRASEN "NT"
-#define MODLINK_FREQ_SYNDICATE "SYND"
-#define MODLINK_FREQ_CHARLIE "CHRL"
-#define MODLINK_FREQ_CENTCOM "CC"
-
 //Default text for different messages for the user.
 #define HELMET_UNSEAL_MESSAGE "hisses open"
 #define HELMET_SEAL_MESSAGE "hisses closed"

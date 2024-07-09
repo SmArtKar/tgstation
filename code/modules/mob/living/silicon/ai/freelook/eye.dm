@@ -112,9 +112,9 @@
 	update_parallax_contents()
 	//Holopad
 	if(istype(ai.current, /obj/machinery/holopad))
-		var/obj/machinery/holopad/H = ai.current
-		if(!H.move_hologram(ai, destination))
-			H.clear_holo(ai)
+		var/obj/machinery/holopad/holopad = ai.current
+		if(!holopad.move_ai_hologram(ai, destination))
+			holopad.clear_ai_hologram(ai)
 
 	if(ai.camera_light_on)
 		ai.light_cameras()
@@ -196,8 +196,8 @@
 // Return to the Core.
 /mob/living/silicon/ai/proc/view_core()
 	if(istype(current,/obj/machinery/holopad))
-		var/obj/machinery/holopad/H = current
-		H.clear_holo(src)
+		var/obj/machinery/holopad/holopad = current
+		holopad.clear_ai_hologram(src)
 	else
 		current = null
 	if(ai_tracking_tool)
