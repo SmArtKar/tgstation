@@ -25,9 +25,10 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 	/// Call that is currently awaiting answering
 	var/datum/holocall/ringing_call
 
-/datum/holocomm_device/New(atom/movable/owner)
+/datum/holocomm_device/New(atom/movable/owner, start_frequency)
 	. = ..()
 	src.owner = owner
+	set_frequency(start_frequency)
 
 /// Used to generate an ID for the holocomms network. Should only be called after set_frequency has been called at least once!
 /// By default fills itself with random numbers
@@ -67,6 +68,15 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 	var/list/datum/holocall/outgoing = list()
 	for (var/datum/holocall/holocall as anything in active_calls)
 		if (!holocall.answered && holocall.devices[1] == src)
+			outgoing += holocall
+	return outgoing
+
+/// Returns all active outgoing calls
+/datum/holocomm_device/proc/get_ongoing_calls(any_direction = TRUE)
+	RETURN_TYPE(/list/datum/holocall)
+	var/list/datum/holocall/outgoing = list()
+	for (var/datum/holocall/holocall as anything in active_calls)
+		if (holocall.answered && (holocall.devices[1] == src || any_direction))
 			outgoing += holocall
 	return outgoing
 
@@ -113,7 +123,7 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 	update_holoray(hologram, holoray, new_turf)
 	return TRUE
 
-/datum/holocomm_device/proc/update_holoray(obj/effect/overlay/holocall_projection/hologram, obj/effect/overlay/holoray, turf/new_turf)
+/datum/holocomm_device/proc/update_holoray(obj/effect/overlay/holocall_projection/hologram, obj/effect/overlay/holoray/holoray, turf/new_turf)
 	var/dist_x = hologram.x - holoray.x
 	var/dist_y = hologram.y - holoray.y
 	var/newangle
@@ -197,7 +207,7 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 /datum/holocall/proc/start_call()
 	answered = TRUE
 
-/// Call to stop the call. Or just qdel the call, that also does it.
+/// Call to stop the call.
 /datum/holocall/proc/end_call(reason = null)
 	answered = FALSE
 	for (var/datum/holocomm_device/device as anything in devices)

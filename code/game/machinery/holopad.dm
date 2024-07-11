@@ -56,7 +56,7 @@
 /obj/machinery/holopad/Initialize(mapload)
 	. = ..()
 	var/static/list/hovering_mob_typechecks = list(/mob/living/silicon = list(SCREENTIP_CONTEXT_ALT_LMB = "Disconnect all active calls"))
-	holocomms = new(src)
+	holocomms = new(src, holocomm_freq)
 	AddElement(/datum/element/contextual_screentip_mob_typechecks, hovering_mob_typechecks)
 	set_frequency(holocomm_freq)
 	if(SStts.tts_enabled)
@@ -134,7 +134,7 @@
 /obj/machinery/holopad/proc/on_call_end(datum/holocall/holocall)
 	update_power()
 	end_processing()
-	if (!powered())
+	if (!is_operational)
 		return
 	if (istype(holocall, /datum/holocall/full_presence) && holocall.devices[1].owner != src)
 		say("[holocall.caller] disconnected.")
@@ -161,12 +161,16 @@
 		icon_state = "[base_icon_state]_ringing"
 		return ..()
 
-	// No answered calls
-	if(holocomms.get_awaiting_calls().len == holocomms.active_calls.len)
-		icon_state = "[base_icon_state]_calling"
+	if (!holocomms.active_calls.len)
+		icon_state = "[base_icon_state]0"
 		return ..()
 
-	icon_state = "[base_icon_state][holocomms.active_calls.len ? 1 : 0]"
+	// Got an active call
+	if(holocomms.get_ongoing_calls() > 0)
+		icon_state = "[base_icon_state]1"
+		return ..()
+
+	icon_state = "[base_icon_state]_calling"
 	return ..()
 
 /obj/machinery/holopad/power_change()
@@ -208,7 +212,7 @@
 
 	var/turf/holo_turf = get_turf(src)
 	ai_holograms[ai] = create_holocall_projection(ai, holo_turf)
-	ai_holorays[ai] = new(holo_turf)
+	ai_holorays[ai] = new /obj/effect/overlay/holoray(holo_turf)
 	holocomms.update_holoray(ai_holograms[ai], ai_holorays[ai], holo_turf)
 	ai.current = src
 
@@ -220,6 +224,7 @@
 	qdel(ai_holorays[ai])
 	ai_holograms -= ai
 	ai_holorays -= ai
+	ai.current = null
 
 /obj/machinery/holopad/AICtrlClick(mob/living/silicon/ai/user)
 	if (!istype(user))
@@ -232,7 +237,7 @@
 	clear_ai_hologram(user)
 
 /obj/machinery/holopad/attack_ai_secondary(mob/living/silicon/ai/user)
-	if (!istype(user))
+	if (!istype(user) || !is_operational)
 		return SECONDARY_ATTACK_CONTINUE_CHAIN
 	if (holocomms.frequency != HOLO_FREQ_NANOTRASEN)
 		return SECONDARY_ATTACK_CONTINUE_CHAIN
@@ -247,6 +252,40 @@
 		user.lastloc = null
 
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+/obj/machinery/holopad/ui_status(mob/user, datum/ui_state/state)
+	if(!is_operational)
+		return UI_CLOSE
+	if (holocomms.ringing_call)
+		return UI_CLOSE
+	return ..()
+
+/obj/machinery/holopad/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "Holopad", name)
+		ui.open()
+
+/obj/machinery/holopad/ui_data(mob/user)
+	var/list/data = list()
+	data["calling"] = calling
+	data["nanotrasen_freq"] = holocomms.frequency == HOLO_FREQ_NANOTRASEN
+	data["can_request_ai"] = can_request_ai
+	data["allowed"] = allowed(user)
+	data["disk"] = disk ? TRUE : FALSE
+	data["disk_record"] = disk?.record ? TRUE : FALSE
+	data["replay_mode"] = FALSE //replay_mode
+	data["loop_mode"] = FALSE //loop_mode
+	data["record_mode"] = FALSE //record_mode
+	data["holo_calls"] = list()
+	for(var/datum/holocall/holocall as anything in holocomms.active_calls)
+		var/list/call_data = list(
+			caller = holocall.caller,
+			answered = holocall.answered,
+			call_ref = REF(holocall)
+		)
+		data["holo_calls"] += list(call_data)
+	return data
 
 /*
  *
@@ -273,15 +312,17 @@
 	return TRUE
 
 /obj/effect/overlay/holocall_projection/examine(atom/movable/user)
-	if(owner)
+	if(owner && !isAI(owner))
 		return owner.examine(user)
 	return ..()
 
 /obj/effect/overlay/holocall_projection/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods = list(), message_range)
 	. = ..()
-	if (speaker && isAI(owner) && radio_freq) // Prevents AI from hearing radio/intercom stuff through holopads
+	// Don't hear yourself through holopads.
+	// Also ensures that AI don't hear radio a second time through holopads
+	if (speaker == owner || (speaker && isAI(owner) && radio_freq))
 		return
-	owner.Hear(message, speaker, message_language, raw_message, radio_freq, spans, message_mods, message_range)
+	owner.Hear(message, speaker, message_language, raw_message, radio_freq, spans, message_mods, message_range = INFINITY)
 
 /proc/create_holocall_projection(atom/movable/target, holo_loc)
 	var/atom/to_represent = target
@@ -298,9 +339,8 @@
 	if (isAI(target))
 		var/mob/living/silicon/ai/ai = target
 		ai.eyeobj.setLoc(get_turf(hologram))
-	else
-		hologram.owner = target
 
+	hologram.owner = target
 	hologram.mouse_opacity = MOUSE_OPACITY_TRANSPARENT // So you can't click on it.
 	hologram.layer = FLY_LAYER // Above all the other objects/mobs. Or the vast majority of them.
 	SET_PLANE_EXPLICIT(hologram, ABOVE_GAME_PLANE, target)

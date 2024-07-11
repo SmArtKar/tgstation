@@ -63,9 +63,11 @@ const HolopadContent = (props) => {
           <Button
             icon="bell"
             content={
-              on_cooldown ? "AI's Presence Requested" : "Request AI's Presence"
+              can_request_ai
+                ? "AI's Presence Requested"
+                : "Request AI's Presence"
             }
-            disabled={!on_network || on_cooldown}
+            disabled={!nanotrasen_freq || !can_request_ai}
             onClick={() => act('AIrequest')}
           />
         }
@@ -75,27 +77,25 @@ const HolopadContent = (props) => {
             <Button
               icon="phone-alt"
               content={allowed ? 'Connect To Holopad' : 'Call Holopad'}
-              disabled={!on_network}
               onClick={() => act('holocall', { headcall: allowed })}
             />
           </LabeledList.Item>
           {holo_calls.map((call) => {
             return (
               <LabeledList.Item
-                label={call.connected ? 'Current Call' : 'Incoming Call'}
+                label={call.answered ? 'Current Call' : 'Incoming Call'}
                 key={call.ref}
               >
                 <Button
-                  icon={call.connected ? 'phone-slash' : 'phone-alt'}
+                  icon={call.answered ? 'phone-slash' : 'phone-alt'}
                   content={
-                    call.connected
+                    call.answered
                       ? 'Disconnect call from ' + call.caller
                       : 'Answer call from ' + call.caller
                   }
-                  color={call.connected ? 'bad' : 'good'}
-                  disabled={!on_network}
+                  color={call.answered ? 'bad' : 'good'}
                   onClick={() =>
-                    act(call.connected ? 'disconnectcall' : 'connectcall', {
+                    act(call.answered ? 'disconnectcall' : 'connectcall', {
                       holopad: call.ref,
                     })
                   }
