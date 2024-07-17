@@ -219,13 +219,22 @@
 
 			rank = rank_changed
 	meter.maptext = "[format_rank_string(rank)][generate_multiplier()][generate_actions()]"
-	meter.maptext_y = 94 - 12 * length(actions)
+	meter.maptext_y = 89 - 12 * length(actions)
 	update_meter(point_to_rank(), go_back)
+	if (point_to_rank() >= STYLE_SPACED && point_multiplier >= 2)
+		if (meter.icon_state == meter.base_icon_state)
+			meter.icon_state = meter.base_icon_state + "_glow"
+			meter.update_appearance()
+	else if (meter.icon_state != meter.base_icon_state)
+		meter.icon_state = meter.base_icon_state
+		meter.update_appearance()
 
 /datum/component/style/proc/update_meter(new_rank, go_back)
+	meter_image.icon_state = rank_to_bar_icon(new_rank)
+	meter_image.update_appearance()
 	if(!isnull(go_back))
 		animate(meter_image.get_filter("meter_mask"), time = 0 SECONDS, flags = ANIMATION_END_NOW, x = go_back)
-	animate(meter_image.get_filter("meter_mask"), time = 1 SECONDS, x = (rank > new_rank ? 0 : ((rank < new_rank) || (style_points >= 500) ? 100 : (style_points % 100) + 1)))
+	animate(meter_image.get_filter("meter_mask"), time = 1 SECONDS, x = (rank > new_rank ? 0 : ((rank < new_rank) || (style_points >= 500) ? 101 : (style_points % 100) + 1)))
 	if(!isnull(new_rank) && new_rank != rank && !timerid)
 		timerid = addtimer(CALLBACK(src, PROC_REF(update_screen), new_rank), 1 SECONDS)
 
@@ -255,6 +264,14 @@
 		if(400 to INFINITY)
 			return STYLE_SPACED
 
+/datum/component/style/proc/rank_to_bar_icon()
+	switch(point_to_rank())
+		if(STYLE_DULL to STYLE_BRUTAL)
+			return "style_meter"
+		if(STYLE_ABSOLUTE)
+			return "style_meter_striped"
+		if(STYLE_SPACED to INFINITY)
+			return "style_meter_red"
 
 /datum/component/style/proc/rank_to_string(new_rank)
 	switch(new_rank)
@@ -277,7 +294,8 @@
 
 /datum/component/style/proc/generate_actions()
 	var/action_string = ""
-	for(var/action in actions)
+	for(var/i in 1 to min(actions.len, 7))
+		var/action = actions[i]
 		action_string += "<br>" + MAPTEXT_GRAND9K("+ <font color='[action_to_color(actions[action])]'>[actions[action]]</font>")
 	return action_string
 
