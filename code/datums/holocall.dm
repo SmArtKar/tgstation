@@ -19,11 +19,15 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 	var/atom/movable/owner
 	/// Range in which this device picks up living beings / allows holograms to travel
 	var/range = 5
+	/// Types of calls that this device can receive
+	var/list/valid_call_types = list()
 
-	/// All currently existing calls. Includes ringing and outgoing calls!
+	/// All currently existing calls
 	var/list/datum/holocall/active_calls = list()
-	/// Call that is currently awaiting answering
-	var/datum/holocall/ringing_call
+	/// All calls that are currently awaiting answering at this device
+	var/list/datum/holocall/ringing_calls = list()
+	/// Call that is currently awaiting from this device
+	var/datum/holocall/outgoing_call
 
 /datum/holocomm_device/New(atom/movable/owner, start_frequency)
 	. = ..()
@@ -58,62 +62,61 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 
 	if (isnull(id) || GLOB.holocomms_networks[frequency][id])
 		generate_id()
-
-	for (var/datum/holocall/holocall as anything in active_calls)
-		holocall.end_call()
-
-/// Returns all unanswered outgoing calls
-/datum/holocomm_device/proc/get_awaiting_calls()
-	RETURN_TYPE(/list/datum/holocall)
-	var/list/datum/holocall/outgoing = list()
-	for (var/datum/holocall/holocall as anything in active_calls)
-		if (!holocall.answered && holocall.devices[1] == src)
-			outgoing += holocall
-	return outgoing
-
-/// Returns all active outgoing calls
-/datum/holocomm_device/proc/get_ongoing_calls(any_direction = TRUE)
-	RETURN_TYPE(/list/datum/holocall)
-	var/list/datum/holocall/outgoing = list()
-	for (var/datum/holocall/holocall as anything in active_calls)
-		if (holocall.answered && (holocall.devices[1] == src || any_direction))
-			outgoing += holocall
-	return outgoing
+	end_all_calls()
 
 /datum/holocomm_device/proc/end_all_calls()
 	while (active_calls.len)
 		active_calls[1].end_call()
 
+	while (ringing_calls.len)
+		ringing_calls[1].end_call()
+
+	if (!isnull(outgoing_call))
+		outgoing_call.end_call()
+
 /// Handles logic that happens upon receiving a call, ringing or automatically accepting it.
 /// Returns failure reason string or FALSE in case the call passed through
 /datum/holocomm_device/proc/receive_call(datum/holocomm_device/caller, datum/holocall/holocall)
 
-	if (!isnull(ringing_call))
+	if (!isnull(outgoing_call))
 		return CALL_REJECT_BUSY
 
 	if (caller.frequency != frequency)
 		return CALL_REJECT_FREQ
 
 	// We are currently calling someone with a full presence call, user won't be able to see anything on this holopad
-	for (var/datum/holocall/existing_holocall as anything in active_calls)
-		if (istype(existing_holocall, /datum/holocall/full_presence) && existing_holocall.devices[1] == src)
-			return CALL_REJECT_FULL_PRESENCE
+	if (using_full_presence())
+		return CALL_REJECT_FULL_PRESENCE
 
-	ringing_call = holocall
+	ringing_calls += holocall
+
+/// Returns TRUE if there's an outgoing full presence call
+/datum/holocomm_device/proc/using_full_presence()
+	for (var/datum/holocall/existing_holocall as anything in active_calls)
+		if (istype(existing_holocall, /datum/holocall/full_presence) && existing_holocall.initiator == src)
+			return TRUE
+	return FALSE
+
+/// Accept call passed to it. Forced means it's been pushed through by someone with command access.
+/datum/holocomm_device/proc/accept_call(accepted_call, forced = FALSE)
+	if (!(accepted_call in ringing_calls) && !forced)
+		return
+
+	ringing_calls -= accepted_call
+	if (QDELETED(accepted_call))
+		return
+
+	accepted_call.start_call()
 
 /// What happens when a call ends
 /// Should not be called by anything other than holocall's end_call, call that to end the call itself.
 /datum/holocomm_device/proc/end_call(datum/holocall/holocall)
-	active_calls -= holocall
-
-/// Accept the currently ringing call. Forced means it's been pushed through by someone with command access.
-/datum/holocomm_device/proc/accept_call(forced = FALSE)
-	if (QDELETED(ringing_call))
-		ringing_call = null
-		return
-
-	ringing_call.start_call()
-	ringing_call = null
+	if (holocall in active_calls)
+		active_calls -= holocall
+	if (holocall in ringing_calls)
+		ringing_calls -= holocall
+	if (outgoing_call == holocall)
+		outgoing_call = null
 
 /datum/holocomm_device/proc/move_hologram(obj/effect/overlay/holocall_projection/hologram, obj/effect/overlay/holoray, turf/new_turf)
 	if (get_dist(get_turf(owner), new_turf) > range)
@@ -151,12 +154,16 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
  */
 
 /// Holopad holocomm device. Stationary and uses an animation to signal ringing.
-/// Can process unlimited amount of calls, only one can be awaiting answering at a time
 
 /datum/holocomm_device/holopad
+	valid_call_types = list(
+		/datum/holocall/full_presence,
+	)
 
 /datum/holocomm_device/holopad/receive_call(datum/holocomm_device/caller, datum/holocall/holocall)
 	. = ..()
+	if (.)
+		return
 	var/obj/machinery/holopad/holopad = owner
 	holopad.on_call_received(holocall)
 	if (holopad.allowed(holocall.caller))
@@ -189,15 +196,18 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 /datum/holocall
 	/// Mob that initiated the call
 	var/mob/living/caller
-	/// List of all holocomm devices participating in the call. First device should always be the original caller.
-	var/list/datum/holocomm_device/devices = list()
+	/// Device that the call was initiated from
+	var/datum/holocomm_device/initiator
+	/// Device that is receiving the call
+	var/datum/holocomm_device/receiver
 	/// Has this call been answered?
 	var/answered = FALSE
 
-/datum/holocall/New(mob/living/caller, datum/holocomm_device/device)
+/datum/holocall/New(mob/living/caller, datum/holocomm_device/initiator, datum/holocomm_device/receiver)
 	. = ..()
 	src.caller = caller
-	devices += device
+	src.initiator = initiator
+	src.receiver = receiver
 
 /datum/holocall/Destroy()
 	end_call()
@@ -210,15 +220,14 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 /// Call to stop the call.
 /datum/holocall/proc/end_call(reason = null)
 	answered = FALSE
-	for (var/datum/holocomm_device/device as anything in devices)
-		device.end_call(src, reason)
+	initiator.end_call(src, reason)
+	receiver.end_call(src, reason)
 
 /*
  *      Full Presence calls
  */
 
-/// "Full Presence" holocalls - caller gets projected as a hologram for the end device. Only supports 2 devices in a call.
-/// First device is assumed to be the caller and the second is assumed to be the receiver.
+/// "Full Presence" holocalls - caller gets projected as a hologram for the end device
 /datum/holocall/full_presence
 	/// Caller's eye
 	var/mob/camera/holocall/eye
@@ -239,18 +248,18 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 
 /datum/holocall/full_presence/start_call()
 	. = ..()
-	var/turf/holopad_loc = get_turf(devices[2].owner)
-	eye = new(holopad_loc, caller, devices[1], src)
+	var/turf/holopad_loc = get_turf(receiver.owner)
+	eye = new(holopad_loc, caller, initiator, src)
 	hangup_action = new (eye, src)
 	RegisterSignal(caller, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 	RegisterSignal(caller, COMSIG_QDELETING, PROC_REF(on_deleted))
 
 	hologram = create_holocall_projection(holopad_loc)
 	holoray = new(holopad_loc)
-	devices[2].update_holoray(holopad_loc)
+	receiver.update_holoray(holopad_loc)
 
 /datum/holocall/full_presence/proc/move_hologram(turf/new_turf)
-	return devices[2].move_hologram(hologram, holoray, new_turf)
+	return receiver.move_hologram(hologram, holoray, new_turf)
 
 /datum/holocall/full_presence/proc/on_deleted(atom/source)
 	SIGNAL_HANDLER
@@ -259,7 +268,7 @@ GLOBAL_LIST_INIT(holocomms_networks, list(
 /datum/holocall/full_presence/proc/on_moved(atom/movable/source, turf/old_loc)
 	SIGNAL_HANDLER
 	// End the call if the user got moved away from the holopad/modlink
-	if (source.loc != devices[1].owner.loc || devices[1].owner.loc != source)
+	if (source.loc != initiator.owner.loc || initiator.owner.loc != source)
 		end_call()
 
 /// Handles eye deactivation and all additional logic behind it

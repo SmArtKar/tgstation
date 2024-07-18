@@ -23,7 +23,7 @@
 
 	/// Secure holopads cannot be forcefully connected to even with required access
 	var/secure = FALSE
-	/// Can this holopad request AI's presence? Also used by request cooldown timers.
+	/// Can this holopad request AI's presence?
 	var/can_request_ai = TRUE
 	/// This holopad's starting frequency. Determines what holocomm network they can access
 	var/holocomm_freq = HOLO_FREQ_NANOTRASEN
@@ -33,6 +33,8 @@
 	var/list/obj/effect/overlay/holocall_projection/ai_holograms = list()
 	/// Same as ai_holograms, but for holorays.
 	var/list/obj/effect/overlay/holoray/ai_holorays = list()
+	/// AI request cooldown
+	COOLDOWN_DECLARE(ai_request_cooldown)
 
 	/// Currently inserted record disk
 	var/obj/item/disk/holodisk/disk
@@ -165,12 +167,12 @@
 		icon_state = "[base_icon_state]0"
 		return ..()
 
-	// Got an active call
-	if(holocomms.get_ongoing_calls() > 0)
-		icon_state = "[base_icon_state]1"
+	// All calls are awaiting answering
+	if(holocomms.get_awaiting_calls() == holocomms.active_calls.len)
+		icon_state = "[base_icon_state]_calling"
 		return ..()
 
-	icon_state = "[base_icon_state]_calling"
+	icon_state = "[base_icon_state]1"
 	return ..()
 
 /obj/machinery/holopad/power_change()
@@ -230,7 +232,7 @@
 	if (!istype(user))
 		return
 
-	if(!ai_holograms[user]) //If there is no hologram, then this button does nothing.
+	if (!ai_holograms[user]) //If there is no hologram, then this button does nothing.
 		return
 
 	user.lastloc = null
@@ -242,12 +244,12 @@
 	if (holocomms.frequency != HOLO_FREQ_NANOTRASEN)
 		return SECONDARY_ATTACK_CONTINUE_CHAIN
 
-	if(!ai_holograms[user])
+	if (!ai_holograms[user])
 		connect_ai(user)
 		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 	clear_ai_hologram(user)
-	if(user.lastloc)
+	if (user.lastloc)
 		user.eyeobj.setLoc(user.lastloc)
 		user.lastloc = null
 
@@ -262,30 +264,69 @@
 
 /obj/machinery/holopad/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
-	if(!ui)
-		ui = new(user, src, "Holopad", name)
+	if (!ui)
+		ui = new(user, src, "Holocomms", name)
 		ui.open()
 
 /obj/machinery/holopad/ui_data(mob/user)
 	var/list/data = list()
-	data["calling"] = calling
+	data["calling"] = (holocomms.get_awaiting_calls().len > 0)
+	data["busy"] = holocomms.using_full_presence()
 	data["nanotrasen_freq"] = holocomms.frequency == HOLO_FREQ_NANOTRASEN
 	data["can_request_ai"] = can_request_ai
+	data["ai_cooldown_free"] = COOLDOWN_FINISHED(src, ai_request_cooldown)
 	data["allowed"] = allowed(user)
-	data["disk"] = disk ? TRUE : FALSE
-	data["disk_record"] = disk?.record ? TRUE : FALSE
-	data["replay_mode"] = FALSE //replay_mode
-	data["loop_mode"] = FALSE //loop_mode
-	data["record_mode"] = FALSE //record_mode
 	data["holo_calls"] = list()
-	for(var/datum/holocall/holocall as anything in holocomms.active_calls)
+	for (var/datum/holocall/holocall as anything in holocomms.active_calls)
 		var/list/call_data = list(
 			caller = holocall.caller,
 			answered = holocall.answered,
+			outgoing = holocall.devices[1] == src,
+			target = holocall.devices[2],
 			call_ref = REF(holocall)
 		)
 		data["holo_calls"] += list(call_data)
 	return data
+
+/obj/machinery/holopad/ui_act(action, list/params)
+	. = ..()
+	if (.)
+		return
+
+	switch (action)
+		if ("ai_request")
+			if (!can_request_ai)
+				to_chat(usr, span_warning("This holopad cannot request AI's presence!"))
+				playsound(src, 'sound/machines/terminal_error.ogg', 50, FALSE)
+				return
+
+			if (isAI(usr))
+				var/mob/living/silicon/ai/ai_user = usr
+				ai_user.eyeobj.setLoc(get_turf(src))
+				to_chat(usr, span_info("AIs can not request AI presence. Jumping instead."))
+				return
+
+			if (!COOLDOWN_FINISHED(src, ai_request_cooldown))
+				to_chat(usr, span_warning("A request for AI presence was already sent recently."))
+				playsound(src, 'sound/machines/terminal_error.ogg', 50, FALSE)
+				return
+
+			COOLDOWN_START(src, ai_request_cooldown, 20 SECONDS)
+			to_chat(usr, span_info("You requested an AI's presence."))
+			var/area/area = get_area(src)
+			for (var/mob/living/silicon/ai/AI in GLOB.silicon_mobs)
+				if (!isnull(AI.client))
+					to_chat(AI, span_info("Your presence is requested at <a href='?src=[REF(AI)];jump_to_holopad=[REF(src)]'>\the [area]</a>. <a href='?src=[REF(AI)];project_to_holopad=[REF(src)]'>Project Hologram?</a>"))
+			playsound(src, 'sound/machines/terminal_success.ogg', 50, FALSE)
+
+		if ("holocall")
+			if (holocomms.get_awaiting_calls().len)
+				to_chat(usr, span_warning("[src] is busy"))
+				playsound(src, 'sound/machines/terminal_error.ogg', 50, FALSE)
+				return
+
+
+
 
 /*
  *
