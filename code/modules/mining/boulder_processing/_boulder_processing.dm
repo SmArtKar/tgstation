@@ -52,7 +52,7 @@
 /obj/machinery/bouldertech/on_deconstruction(disassembled)
 	if(length(contents))
 		for(var/obj/item/boulder/boulder in contents)
-			remove_boulder(boulder)
+			remove_boulder(boulder, forced = TRUE)
 
 /obj/machinery/bouldertech/add_context(atom/source, list/context, obj/item/held_item, mob/user)
 	. = CONTEXTUAL_SCREENTIP_SET
@@ -401,12 +401,12 @@
  *
  * * obj/item/boulder/specific_boulder - the boulder to remove
  */
-/obj/machinery/bouldertech/proc/remove_boulder(obj/item/boulder/specific_boulder)
+/obj/machinery/bouldertech/proc/remove_boulder(obj/item/boulder/specific_boulder, forced = FAKSE)
 	PRIVATE_PROC(TRUE)
 
 	if(QDELETED(specific_boulder))
 		return TRUE
-	if(locate(/obj/item/boulder) in loc) //There is an boulder in our loc. it has be removed so we don't clog up our loc with even more boulders
+	if(!forced && (locate(/obj/item/boulder) in loc)) //There is an boulder in our loc. it has be removed so we don't clog up our loc with even more boulders
 		return FALSE
 
 	//Reset durability to little random lower value cause we have crushed it so many times
