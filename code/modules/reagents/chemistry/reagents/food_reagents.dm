@@ -78,7 +78,7 @@
 		if(affected_mob.heal_bodypart_damage(brute = brute_heal * REM * seconds_per_tick, burn = burn_heal * REM * seconds_per_tick, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC))
 			return UPDATE_MOB_HEALTH
 
-/datum/reagent/consumable/nutriment/on_new(list/supplied_data)
+/datum/reagent/consumable/nutriment/on_new()
 	. = ..()
 	if(!data)
 		return
@@ -93,7 +93,7 @@
 
 	data = counterlist_normalise(supplied_data)
 
-/datum/reagent/consumable/nutriment/on_merge(list/newdata, newvolume)
+/datum/reagent/consumable/nutriment/on_merge(amount)
 	. = ..()
 	if(!islist(newdata) || !newdata.len)
 		return

@@ -375,7 +375,7 @@
 	glass_price = DRINK_PRICE_STOCK
 	default_container = /obj/item/reagent_containers/cup/glass/bottle/wine
 
-/datum/reagent/consumable/ethanol/wine/on_merge(data)
+/datum/reagent/consumable/ethanol/wine/on_merge(amount)
 	. = ..()
 	if(src.data && data && data["vintage"] != src.data["vintage"])
 		src.data["vintage"] = "mixed wine"
@@ -592,7 +592,7 @@
 	taste_description = "oranges"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/consumable/ethanol/screwdrivercocktail/on_new(data)
+/datum/reagent/consumable/ethanol/screwdrivercocktail/on_new()
 	. = ..()
 	// We want to turn only base drinking glasses with screwdriver(cocktail) into screwdrivers(tool),
 	// but we can't check style so we have to check type, and we don't want it match subtypes like istype does
@@ -1960,7 +1960,7 @@
 	var/list/tastes = list("bad coding" = 1) //List of tastes. See above.
 	ph = 4
 
-/datum/reagent/consumable/ethanol/fruit_wine/on_new(list/data)
+/datum/reagent/consumable/ethanol/fruit_wine/on_new()
 	if(!data)
 		return
 
@@ -1971,7 +1971,7 @@
 	color = data["color"]
 	generate_data_info(data)
 
-/datum/reagent/consumable/ethanol/fruit_wine/on_merge(list/data, amount)
+/datum/reagent/consumable/ethanol/fruit_wine/on_merge(amount)
 	..()
 	var/diff = (amount/volume)
 	if(diff < 1)
@@ -2095,7 +2095,7 @@
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	affected_biotype = MOB_BUG
 
-/datum/reagent/consumable/ethanol/bug_spray/on_new(data)
+/datum/reagent/consumable/ethanol/bug_spray/on_new()
 	. = ..()
 	AddElement(/datum/element/bugkiller_reagent)
 

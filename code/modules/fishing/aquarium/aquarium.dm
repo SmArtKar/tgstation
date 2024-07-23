@@ -83,7 +83,7 @@
 	. = ..()
 	LAZYREMOVEASSOC(tracked_fish_by_type, gone.type, gone)
 
-/obj/structure/aquarium/proc/start_autofeed(datum/source, new_reagent, amount, reagtemp, data, no_react)
+/obj/structure/aquarium/proc/start_autofeed(datum/source, new_reagent, amount, reagtemp, no_react)
 	SIGNAL_HANDLER
 	START_PROCESSING(SSobj, src)
 	UnregisterSignal(reagents, COMSIG_REAGENTS_NEW_REAGENT)

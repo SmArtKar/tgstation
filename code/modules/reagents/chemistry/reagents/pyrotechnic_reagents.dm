@@ -100,7 +100,7 @@
 	taste_description = "salt"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/gunpowder/on_new(data)
+/datum/reagent/gunpowder/on_new()
 	. = ..()
 	if(holder?.my_atom)
 		RegisterSignal(holder.my_atom, COMSIG_ATOM_EX_ACT, PROC_REF(on_ex_act))

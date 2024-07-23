@@ -77,7 +77,6 @@
  * Arguments:
  * * reagent - The reagent id to add
  * * amount - Amount to add
- * * list/data - Any reagent data for this reagent, used for transferring data with reagents
  * * reagtemp - Temperature of this reagent, will be equalized
  * * no_react - prevents reactions being triggered by this addition
  * * added_purity - override to force a purity when added
@@ -88,7 +87,6 @@
 /datum/reagents/proc/add_reagent(
 	datum/reagent/reagent_type,
 	amount,
-	list/data = null,
 	reagtemp = DEFAULT_REAGENT_TEMPERATURE,
 	added_purity = null,
 	added_ph,
@@ -104,7 +102,7 @@
 		stack_trace("non finite amount passed to add reagent [amount] [reagent_type]")
 		return FALSE
 
-	if(SEND_SIGNAL(src, COMSIG_REAGENTS_PRE_ADD_REAGENT, reagent_type, amount, reagtemp, data, no_react) & COMPONENT_CANCEL_REAGENT_ADD)
+	if(SEND_SIGNAL(src, COMSIG_REAGENTS_PRE_ADD_REAGENT, reagent_type, amount, reagtemp, no_react) & COMPONENT_CANCEL_REAGENT_ADD)
 		return FALSE
 
 	var/datum/reagent/glob_reagent = GLOB.chemical_reagents_list[reagent_type]
@@ -147,37 +145,38 @@
 
 	//add the reagent to the existing if it exists
 	for(var/datum/reagent/iter_reagent as anything in cached_reagents)
-		if(iter_reagent.type == reagent_type)
-			if(override_base_ph)
-				added_ph = iter_reagent.ph
-			iter_reagent.purity = ((iter_reagent.creation_purity * iter_reagent.volume) + (added_purity * amount)) /(iter_reagent.volume + amount) //This should add the purity to the product
-			iter_reagent.creation_purity = iter_reagent.purity
-			iter_reagent.ph = ((iter_reagent.ph * (iter_reagent.volume)) + (added_ph * amount)) / (iter_reagent.volume + amount)
-			iter_reagent.volume += amount
-			update_total()
+		if(iter_reagent.type != reagent_type)
+			continue
+		if(override_base_ph)
+			added_ph = iter_reagent.ph
+		iter_reagent.purity = ((iter_reagent.creation_purity * iter_reagent.volume) + (added_purity * amount)) /(iter_reagent.volume + amount) //This should add the purity to the product
+		iter_reagent.creation_purity = iter_reagent.purity
+		iter_reagent.ph = ((iter_reagent.ph * (iter_reagent.volume)) + (added_ph * amount)) / (iter_reagent.volume + amount)
+		iter_reagent.volume += amount
+		update_total()
 
-			iter_reagent.on_merge(data, amount)
-			if(reagtemp != cached_temp)
-				var/new_heat_capacity = heat_capacity()
-				if(new_heat_capacity)
-					set_temperature(((old_heat_capacity * cached_temp) + (iter_reagent.specific_heat * amount * reagtemp)) / new_heat_capacity)
-				else
-					set_temperature(reagtemp)
+		iter_reagent.on_merge(amount)
+		if(reagtemp != cached_temp)
+			var/new_heat_capacity = heat_capacity()
+			if(new_heat_capacity)
+				set_temperature(((old_heat_capacity * cached_temp) + (iter_reagent.specific_heat * amount * reagtemp)) / new_heat_capacity)
+			else
+				set_temperature(reagtemp)
 
-			SEND_SIGNAL(src, COMSIG_REAGENTS_ADD_REAGENT, iter_reagent, amount, reagtemp, data, no_react)
-			if(!no_react && !is_reacting) //To reduce the amount of calculations for a reaction the reaction list is only updated on a reagents addition.
-				handle_reactions()
-			return amount
+		SEND_SIGNAL(src, COMSIG_REAGENTS_ADD_REAGENT, iter_reagent, amount, reagtemp, no_react)
+		if(!no_react && !is_reacting) //To reduce the amount of calculations for a reaction the reaction list is only updated on a reagents addition.
+			handle_reactions()
+		return amount
 
 	//otherwise make a new one
-	var/datum/reagent/new_reagent = new reagent_type(data)
+	var/datum/reagent/new_reagent = new reagent_type()
 	cached_reagents += new_reagent
 	new_reagent.holder = src
 	new_reagent.volume = amount
 	new_reagent.purity = added_purity
 	new_reagent.creation_purity = added_purity
 	new_reagent.ph = added_ph
-	new_reagent.on_new(data)
+	new_reagent.on_new()
 
 	if(isliving(my_atom))
 		new_reagent.on_mob_add(my_atom, amount) //Must occur before it could posibly run on_mob_delete
@@ -193,7 +192,7 @@
 		else
 			set_temperature(reagtemp)
 
-	SEND_SIGNAL(src, COMSIG_REAGENTS_NEW_REAGENT, new_reagent, amount, reagtemp, data, no_react)
+	SEND_SIGNAL(src, COMSIG_REAGENTS_NEW_REAGENT, new_reagent, amount, reagtemp, no_react)
 	if(!no_react)
 		handle_reactions()
 	return amount
@@ -449,7 +448,6 @@
 	if(!no_react)
 		transfer_reactions(target_holder)
 
-	var/trans_data = null
 	var/list/transfer_log = list()
 	var/list/r_to_send = list()	// Validated list of reagents to be exposed
 	var/list/reagents_to_remove = list()
@@ -473,15 +471,15 @@
 		else
 			transfer_amount = reagent.volume * part
 
-		if(preserve_data)
-			trans_data = copy_data(reagent)
 		if(reagent.intercept_reagents_transfer(target_holder, amount))
 			update_total()
 			target_holder.update_total()
 			continue
-		transfered_amount = target_holder.add_reagent(reagent.type, transfer_amount * multiplier, trans_data, chem_temp, reagent.purity, reagent.ph, no_react = TRUE, ignore_splitting = reagent.chemical_flags & REAGENT_DONOTSPLIT) //we only handle reaction after every reagent has been transferred.
+		transfered_amount = target_holder.add_reagent(reagent.type, transfer_amount * multiplier, chem_temp, reagent.purity, reagent.ph, no_react = TRUE, ignore_splitting = reagent.chemical_flags & REAGENT_DONOTSPLIT) //we only handle reaction after every reagent has been transferred.
 		if(!transfered_amount)
 			continue
+		if (preserve_data)
+			target_holder.merge_data_from(reagent)
 		if(methods)
 			r_to_send += reagent
 		reagents_to_remove += list(list("R" = reagent, "T" = transfer_amount))
@@ -559,15 +557,14 @@
 	var/transfer_amount
 	var/transfered_amount = 0
 	var/total_transfered_amount = 0
-	var/trans_data = null
 
 	for(var/datum/reagent/reagent as anything in cached_reagents)
 		transfer_amount = reagent.volume * part * multiplier
-		if(preserve_data)
-			trans_data = copy_data(reagent)
-		transfered_amount = target_holder.add_reagent(reagent.type, transfer_amount, trans_data, chem_temp, reagent.purity, reagent.ph, no_react = TRUE, ignore_splitting = reagent.chemical_flags & REAGENT_DONOTSPLIT)
+		transfered_amount = target_holder.add_reagent(reagent.type, transfer_amount, chem_temp, reagent.purity, reagent.ph, no_react = TRUE, ignore_splitting = reagent.chemical_flags & REAGENT_DONOTSPLIT)
 		if(!transfered_amount)
 			continue
+		if (preserve_data)
+			target_holder.merge_data_from(reagent)
 		total_transfered_amount += transfered_amount
 
 	if(!no_react)
@@ -653,31 +650,14 @@
 		SEND_SIGNAL(src, COMSIG_REAGENTS_DEL_REAGENT, deleted_reagent)
 		qdel(deleted_reagent)
 
-/**
- * Shallow copies (deep copy of viruses) data from the provided reagent into our copy of that reagent
- * Arguments
- * [current_reagent][datum/reagent] - the reagent(not typepath) to copy data from
- */
-/datum/reagents/proc/copy_data(datum/reagent/current_reagent)
-	if(!current_reagent || !current_reagent.data)
-		return null
-	if(!istype(current_reagent.data, /list))
-		return current_reagent.data
-
-	var/list/trans_data = current_reagent.data.Copy()
-
-	// We do this so that introducing a virus to a blood sample
-	// doesn't automagically infect all other blood samples from
-	// the same donor.
-	//
-	// Technically we should probably copy all data lists, but
-	// that could possibly eat up a lot of memory needlessly
-	// if most data lists are read-only.
-	if(trans_data["viruses"])
-		var/list/v = trans_data["viruses"]
-		trans_data["viruses"] = v.Copy()
-
-	return trans_data
+/// Copies reagent-specific data from the passed reagent datum into a reagent of the same type inside of us, if such exists
+/datum/reagents/proc/merge_data_from(datum/reagent/reagent)
+	if (isnull(reagent))
+		return
+	var/datum/reagent/current_reagent = has_reagent(reagent.type)
+	if (isnull(current_reagent))
+		return
+	current_reagent.merge_data(reagent)
 
 //===============================Generic getters=======================================
 /**

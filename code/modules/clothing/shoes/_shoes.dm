@@ -55,10 +55,13 @@
 	if(damaged_clothes)
 		. += mutable_appearance('icons/effects/item_damage.dmi', "damagedshoe")
 	if(GET_ATOM_BLOOD_DNA_LENGTH(src))
+		var/mutable_appearance/blood_appearance
 		if(clothing_flags & LARGE_WORN_ICON)
-			. += mutable_appearance('icons/effects/64x64.dmi', "shoeblood_large")
+			blood_appearance += mutable_appearance('icons/effects/64x64.dmi', "shoeblood_large")
 		else
-			. += mutable_appearance('icons/effects/blood.dmi', "shoeblood")
+			blood_appearance += mutable_appearance('icons/effects/blood.dmi', "shoeblood")
+		blood_appearance.color = GET_ATOM_BLOOD_COLOR(src)
+		. += blood_appearance
 
 /obj/item/clothing/shoes/examine(mob/user)
 	. = ..()

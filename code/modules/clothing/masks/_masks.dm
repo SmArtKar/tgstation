@@ -33,7 +33,9 @@
 		if(damaged_clothes)
 			. += mutable_appearance('icons/effects/item_damage.dmi', "damagedmask")
 		if(GET_ATOM_BLOOD_DNA_LENGTH(src))
-			. += mutable_appearance('icons/effects/blood.dmi', "maskblood")
+			var/mutable_appearance/blood_appearance = mutable_appearance('icons/effects/blood.dmi', "maskblood")
+			blood_appearance.color = GET_ATOM_BLOOD_COLOR(src)
+			. += blood_appearance
 
 /obj/item/clothing/mask/update_clothes_damaged_state(damaged_state = CLOTHING_DAMAGED)
 	..()

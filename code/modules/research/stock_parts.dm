@@ -118,7 +118,7 @@ If you create T5+ please take a pass at mech_fabricator.dm. The parts being good
  * Simply returns COMPONENT_CANCEL_REAGENT_ADD. We never want to allow people to add
  * reagents to beakers in BRPEDs as they can then be used for spammable remote bombing.
  */
-/obj/item/storage/part_replacer/bluespace/proc/on_insered_component_reagent_pre_add(datum/source, reagent, amount, reagtemp, data, no_react)
+/obj/item/storage/part_replacer/bluespace/proc/on_insered_component_reagent_pre_add(datum/source, reagent, amount, reagtemp, no_react)
 	SIGNAL_HANDLER
 
 	return COMPONENT_CANCEL_REAGENT_ADD

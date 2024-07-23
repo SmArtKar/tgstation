@@ -49,7 +49,9 @@
 	if(damaged_clothes)
 		. += mutable_appearance('icons/effects/item_damage.dmi', "damagedgloves")
 	if(GET_ATOM_BLOOD_DNA_LENGTH(src))
-		. += mutable_appearance('icons/effects/blood.dmi', "gloveblood")
+		var/mutable_appearance/blood_appearance = mutable_appearance('icons/effects/blood.dmi', "gloveblood")
+		blood_appearance.color = GET_ATOM_BLOOD_COLOR(src)
+		. += blood_appearance
 
 /obj/item/clothing/gloves/update_clothes_damaged_state(damaged_state = CLOTHING_DAMAGED)
 	..()

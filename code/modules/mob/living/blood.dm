@@ -243,7 +243,7 @@
 
 	blood_volume -= amount
 
-	var/list/blood_data = get_blood_data(blood_id)
+	var/list/blood_data = get_blood_data()
 
 	if(iscarbon(AM))
 		var/mob/living/carbon/C = AM
@@ -266,47 +266,33 @@
 	return TRUE
 
 
-/mob/living/proc/get_blood_data(blood_id)
+/mob/living/proc/get_blood_data()
+	RETURN_TYPE(/datum/blood_data)
 	return
 
-/mob/living/carbon/get_blood_data(blood_id)
-	if(blood_id == /datum/reagent/blood) //actual blood reagent
-		var/blood_data = list()
-		//set the blood data
-		blood_data["viruses"] = list()
+/mob/living/carbon/get_blood_data()
+	var/datum/blood_data/blood_data = new()
+	for (var/datum/disease/disease as anything in diseases)
+		blood_data.viruses += disease.Copy()
 
-		for(var/thing in diseases)
-			var/datum/disease/D = thing
-			blood_data["viruses"] += D.Copy()
+	blood_data.unique_dna = dna.unique_enzymes
+	if(LAZYLEN(disease_resistances))
+		blood_data.immunities = disease_resistances.Copy()
 
-		blood_data["blood_DNA"] = dna.unique_enzymes
-		if(LAZYLEN(disease_resistances))
-			blood_data["resistances"] = disease_resistances.Copy()
-		var/list/temp_chem = list()
-		for(var/datum/reagent/R in reagents.reagent_list)
-			temp_chem[R.type] = R.volume
-		blood_data["trace_chem"] = list2params(temp_chem)
-		if(mind)
-			blood_data["mind"] = mind
-		else if(last_mind)
-			blood_data["mind"] = last_mind
-		if(ckey)
-			blood_data["ckey"] = ckey
-		else if(last_mind)
-			blood_data["ckey"] = ckey(last_mind.key)
+	blood_data.mind = mind || last_mind
+	blood_data.ckey = ckey || last_mind?.key
 
-		if(!HAS_TRAIT_FROM(src, TRAIT_SUICIDED, REF(src)))
-			blood_data["cloneable"] = 1
-		blood_data["blood_type"] = dna.blood_type
-		blood_data["gender"] = gender
-		blood_data["real_name"] = real_name
-		blood_data["features"] = dna.features
-		blood_data["factions"] = faction
-		blood_data["quirks"] = list()
-		for(var/V in quirks)
-			var/datum/quirk/T = V
-			blood_data["quirks"] += T.type
-		return blood_data
+	if(!HAS_TRAIT_FROM(src, TRAIT_SUICIDED, REF(src)))
+		blood_data.cloneable = TRUE
+
+	blood_data.blood_type = dna.blood_type
+	blood_data.gender = gender
+	blood_data.real_name = real_name
+	blood_data.features = dna.features.Copy()
+	blood_data.factions = faction.Copy()
+	for (var/datum/quirk/quirk as anything in quirks)
+		blood_data.quirks += quirk.type
+	return blood_data
 
 //get the id of the substance this mob use as blood.
 /mob/proc/get_blood_id()
@@ -343,7 +329,11 @@
 		"O-" = list("O-"),
 		"O+" = list("O-", "O+"),
 		"L" = list("L"),
-		"U" = list("A-", "A+", "B-", "B+", "O-", "O+", "AB-", "AB+", "L", "U")
+		"U" = list("A-", "A+", "B-", "B+", "O-", "O+", "AB-", "AB+", "L", "U"),
+		"LE" = list("LE"),
+		"S" = list("S"),
+		"TOX" = list("TOX"),
+		"H2O" = list("H2O"),
 	)
 
 	var/safe = bloodtypes_safe[bloodtype]
@@ -355,9 +345,7 @@
  * * donor: Carbon mob, the one that is donating blood.
  */
 /mob/living/carbon/proc/get_blood_compatibility(mob/living/carbon/donor)
-	var/patient_blood_data = get_blood_data(get_blood_id())
-	var/donor_blood_data = donor.get_blood_data(donor.get_blood_id())
-	return donor_blood_data["blood_type"] in get_safe_blood(patient_blood_data["blood_type"])
+	return donor.get_blood_data().blood_type in get_safe_blood(get_blood_data().blood_type)
 
 //to add a splatter of blood or other mob liquid.
 /mob/living/proc/add_splatter_floor(turf/T, small_drip)
@@ -423,6 +411,29 @@
 		blood_alcohol_content = round(inebriation.drunk_value * DRUNK_POWER_TO_BLOOD_ALCOHOL, 0.01)
 
 	return blood_alcohol_content
+
+/// Datum which holds blood data, like blood type, mind, ckey, diseases, dna, etc
+/datum/blood_data
+	/// List of viruses that this blood contains
+	var/list/datum/disease/viruses = list()
+	/// DNA's unique_enzymes variable (which is an md5 hash)
+	var/unique_dna
+	/// Our blood type
+	var/blood_type
+	/// List of disease IDs we're immune to
+	var/list/immunities = list()
+	/// Mind of the person this sample has been taken from
+	var/datum/mind/mind
+	/// Same as above, but ckey as fallback
+	var/ckey
+	// Personal data
+	var/gender
+	var/real_name
+	var/list/features = list()
+	var/list/factions = list()
+	var/list/quirks = list()
+	/// Can this blood sample be used to clone its owner?
+	var/cloneable = FALSE
 
 #undef BLOOD_DRIP_RATE_MOD
 #undef DRUNK_POWER_TO_BLOOD_ALCOHOL

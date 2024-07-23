@@ -31,7 +31,7 @@
 	#define COMPONENT_CANCEL_REAGENT_ADD (1<<0)
 ///from base of [/datum/reagents/proc/add_reagent]: (/datum/reagent, amount, reagtemp, data, no_react)
 #define COMSIG_REAGENTS_NEW_REAGENT "reagents_new_reagent"
-///from base of [/datum/reagents/proc/add_reagent]: (/datum/reagent, amount, reagtemp, data, no_react)
+///from base of [/datum/reagents/proc/add_reagent]: (/datum/reagent, amount, reagtemp, no_react)
 #define COMSIG_REAGENTS_ADD_REAGENT "reagents_add_reagent"
 ///from base of [/datum/reagents/proc/del_reagent]: (/datum/reagent)
 #define COMSIG_REAGENTS_DEL_REAGENT "reagents_del_reagent"

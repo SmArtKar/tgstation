@@ -146,7 +146,7 @@
 	addiction_types = list(/datum/addiction/stimulants = 12) //4.8 per 2 seconds
 	metabolized_traits = list(TRAIT_STIMULATED)
 
-/datum/reagent/drug/methamphetamine/on_new(data)
+/datum/reagent/drug/methamphetamine/on_new()
 	. = ..()
 	//the more pure, the less non-blue colors get involved - best case scenario is rgb(135, 200, 250) AKA #78C8FA
 	//worst case scenario is rgb(250, 250, 250) AKA #FAFAFA
@@ -156,7 +156,7 @@
 	color = BlendRGB(initial(color), "#FAFAFA", effective_impurity)
 
 //we need to update the color whenever purity gets changed
-/datum/reagent/drug/methamphetamine/on_merge(data, amount)
+/datum/reagent/drug/methamphetamine/on_merge(amount)
 	. = ..()
 	var/effective_impurity = min(1, (1 - creation_purity)/0.5)
 	color = BlendRGB(initial(color), "#FAFAFA", effective_impurity)
@@ -789,7 +789,7 @@
 	addiction_types = list(/datum/addiction/stimulants = 20)
 	metabolized_traits = list(TRAIT_STIMULATED)
 
-/datum/reagent/drug/kronkaine/on_new(data)
+/datum/reagent/drug/kronkaine/on_new()
 	. = ..()
 	// Kronkaine also makes for a great fishing bait (found in "natural" baits)
 	if(!istype(holder?.my_atom, /obj/item/food))

@@ -731,11 +731,11 @@
 	reaction_tags = REACTION_TAG_EASY | REACTION_TAG_UNIQUE
 
 /datum/chemical_reaction/metalgen_imprint/on_reaction(datum/reagents/holder, datum/equilibrium/reaction, created_volume)
-	var/datum/reagent/metalgen/MM = holder.has_reagent(/datum/reagent/metalgen)
-	for(var/datum/reagent/R in holder.reagent_list)
-		if(R.material && R.volume >= 40)
-			MM.data["material"] = R.material
-			holder.remove_reagent(R.type, 40)
+	var/datum/reagent/metalgen/metalgen = holder.has_reagent(/datum/reagent/metalgen)
+	for(var/datum/reagent/reagent in holder.reagent_list)
+		if(reagent.material && reagent.volume >= 40)
+			metalgen.material_ref = reagent.material
+			holder.remove_reagent(reagent.type, 40)
 
 /datum/chemical_reaction/gravitum
 	required_reagents = list(/datum/reagent/wittel = 1, /datum/reagent/sorium = 10)

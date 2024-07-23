@@ -100,7 +100,9 @@
 	if(damaged_clothes)
 		. += mutable_appearance('icons/effects/item_damage.dmi', "damageduniform")
 	if(GET_ATOM_BLOOD_DNA_LENGTH(src))
-		. += mutable_appearance('icons/effects/blood.dmi', "uniformblood")
+		var/mutable_appearance/blood_appearance = mutable_appearance('icons/effects/blood.dmi', "uniformblood")
+		blood_appearance.color = GET_ATOM_BLOOD_COLOR(src)
+		. += blood_appearance
 	if(accessory_overlay)
 		. += accessory_overlay
 

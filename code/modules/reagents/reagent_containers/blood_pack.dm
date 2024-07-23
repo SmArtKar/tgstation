@@ -5,32 +5,28 @@
 	icon_state = "bloodpack"
 	volume = 200
 	var/blood_type = null
-	var/unique_blood = null
+	var/reagent_type = /datum/reagent/blood
 	var/labelled = FALSE
 	fill_icon_thresholds = list(10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
 
 /obj/item/reagent_containers/blood/Initialize(mapload, vol)
 	. = ..()
-	if(blood_type != null)
-		reagents.add_reagent(unique_blood ? unique_blood : /datum/reagent/blood, 200, list("viruses"=null,"blood_DNA"=null,"blood_type"=blood_type,"resistances"=null,"trace_chem"=null))
-		update_appearance()
+	if (blood_type == null)
+		return
+
+	reagents.add_reagent(reagent_type, volume)
+	var/datum/reagent/reagent = reagents.has_reagent(reagent_type)
+	reagnet.blood_data = new()
+	reagent.blood_data.blood_type = blood_type
+	update_appearance()
 
 /// Handles updating the container when the reagents change.
 /obj/item/reagent_containers/blood/on_reagent_change(datum/reagents/holder, ...)
-	var/datum/reagent/blood/new_reagent = holder.has_reagent(/datum/reagent/blood)
-	if(new_reagent && new_reagent.data && new_reagent.data["blood_type"])
-		blood_type = new_reagent.data["blood_type"]
-	else if(holder.has_reagent(/datum/reagent/consumable/liquidelectricity))
-		blood_type = "LE"
-	else if(holder.has_reagent(/datum/reagent/lube))
-		blood_type = "S"
-	else if(holder.has_reagent(/datum/reagent/water))
-		blood_type = "H2O"
-	else if(holder.has_reagent(/datum/reagent/toxin/slimejelly))
-		blood_type = "TOX"
-	else
-		blood_type = null
-	return ..()
+	. = ..()
+	for (var/datum/reagent/reagent as anything in reagents)
+		if (!isnull(reagent.blood_data))
+			blood_type = reagent.blood_data.blood_type
+			break
 
 /obj/item/reagent_containers/blood/update_name(updates)
 	. = ..()
@@ -69,11 +65,11 @@
 
 /obj/item/reagent_containers/blood/ethereal
 	blood_type = "LE"
-	unique_blood = /datum/reagent/consumable/liquidelectricity
+	reagent_type = /datum/reagent/consumable/liquidelectricity
 
 /obj/item/reagent_containers/blood/snail
 	blood_type = "S"
-	unique_blood = /datum/reagent/lube
+	reagent_type = /datum/reagent/lube
 
 /obj/item/reagent_containers/blood/snail/examine()
 	. = ..()
@@ -81,7 +77,7 @@
 
 /obj/item/reagent_containers/blood/podperson
 	blood_type = "H2O"
-	unique_blood = /datum/reagent/water
+	reagent_type = /datum/reagent/water
 
 /obj/item/reagent_containers/blood/podperson/examine()
 	. = ..()
@@ -90,7 +86,7 @@
 // for slimepeople
 /obj/item/reagent_containers/blood/toxin
 	blood_type = "TOX"
-	unique_blood = /datum/reagent/toxin/slimejelly
+	reagent_type = /datum/reagent/toxin/slimejelly
 
 /obj/item/reagent_containers/blood/toxin/examine()
 	. = ..()
@@ -100,20 +96,20 @@
 	blood_type = "U"
 
 /obj/item/reagent_containers/blood/attackby(obj/item/tool, mob/user, params)
-	if (IS_WRITING_UTENSIL(tool))
-		if(!user.can_write(tool))
-			return
-		var/custom_label = tgui_input_text(user, "What would you like to label the blood pack?", "Blood Pack", name, MAX_NAME_LEN)
-		if(!user.can_perform_action(src))
-			return
-		if(user.get_active_held_item() != tool)
-			return
-		if(custom_label)
-			labelled = TRUE
-			name = "blood pack - [custom_label]"
-			balloon_alert(user, "new label set")
-		else
-			labelled = FALSE
-			update_name()
-	else
+	if (!IS_WRITING_UTENSIL(tool))
 		return ..()
+
+	if(!user.can_write(tool))
+		return
+	var/custom_label = tgui_input_text(user, "What would you like to label the blood pack?", "Blood Pack", name, MAX_NAME_LEN)
+	if(!user.can_perform_action(src))
+		return
+	if(user.get_active_held_item() != tool)
+		return
+	if(custom_label)
+		labelled = TRUE
+		name = "blood pack - [custom_label]"
+		balloon_alert(user, "new label set")
+		return
+	labelled = FALSE
+	update_name()

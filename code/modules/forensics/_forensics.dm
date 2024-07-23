@@ -38,8 +38,12 @@
 	 * * fiber = fiber
 	 */
 	var/list/fibers
+	/// Current blood color for our item
+	var/blood_color = COLOR_WHITE
+	/// How much "blood" an item is storing - used for color blending
+	var/blood_color_stored = 0
 
-/datum/forensics/New(atom/parent, list/fingerprints, list/hiddenprints, list/blood_DNA, list/fibers)
+/datum/forensics/New(atom/parent, list/fingerprints, list/hiddenprints, list/blood_DNA, list/fibers, blood_color = COLOR_WHITE, blood_color_stored = 0)
 	if(!isatom(parent))
 		stack_trace("We tried adding a forensics datum to something that isnt an atom. What the hell are you doing?")
 		qdel(src)
@@ -52,10 +56,12 @@
 	src.hiddenprints = hiddenprints
 	src.blood_DNA = blood_DNA
 	src.fibers = fibers
+	src.blood_color = blood_color
+	src.blood_color_stored = blood_color_stored
 	check_blood()
 
 /// Merges the given lists into the preexisting values
-/datum/forensics/proc/inherit_new(list/fingerprints, list/hiddenprints, list/blood_DNA, list/fibers) //Use of | and |= being different here is INTENTIONAL.
+/datum/forensics/proc/inherit_new(list/fingerprints, list/hiddenprints, list/blood_DNA, list/fibers, blood_color, blood_color_stored) //Use of | and |= being different here is INTENTIONAL.
 	if (fingerprints)
 		src.fingerprints = LAZY_LISTS_OR(src.fingerprints, fingerprints)
 	if (hiddenprints)
@@ -64,6 +70,8 @@
 		src.blood_DNA = LAZY_LISTS_OR(src.blood_DNA, blood_DNA)
 	if (fibers)
 		src.fibers = LAZY_LISTS_OR(src.fibers, fibers)
+	if (blood_color_stored > 0)
+		merge_blood_color(blood_color, blood_color_stored)
 	check_blood()
 
 /datum/forensics/Destroy(force)
@@ -79,6 +87,7 @@
 /// Empties the blood_DNA list
 /datum/forensics/proc/wipe_blood_DNA()
 	blood_DNA = null
+	blood_color_stored = 0
 	return TRUE
 
 /// Empties the fibers list
@@ -232,3 +241,8 @@
 	if(!length(blood_DNA))
 		return
 	parent.AddElement(/datum/element/decal/blood)
+
+/// Blends new blood HSV values into current ones
+/datum/forensics/proc/merge_blood_color(new_blood_color, new_blood_amount)
+	blood_color = hsv2rgb(BlendHSV(rgb2hsv(blood_color), rgb2hsv(new_blood_color), (blood_amount + new_blood_amount) / new_blood_amount))
+	blood_amount += new_blood_amount

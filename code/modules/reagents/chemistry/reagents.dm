@@ -14,8 +14,6 @@
 	var/datum/reagents/holder = null
 	/// LIQUID, SOLID, GAS
 	var/reagent_state = LIQUID
-	/// Special data associated with the reagent that will be passed on upon transfer to a new holder.
-	var/list/data
 	/// increments everytime on_mob_life is called
 	var/current_cycle = 0
 	///pretend this is moles
@@ -82,6 +80,9 @@
 	///The default reagent container for the reagent, used for icon generation
 	var/obj/item/reagent_containers/default_container = /obj/item/reagent_containers/cup/bottle
 
+	/// Datum which holds blood data
+	var/datum/blood_data/blood_data
+
 	// Used for restaurants.
 	///The amount a robot will pay for a glass of this (20 units but can be higher if you pour more, be frugal!)
 	var/glass_price
@@ -125,6 +126,50 @@
 		var/amount = round(reac_volume*clamp((1 - touch_protection), 0, 1), 0.1)
 		if(amount >= 0.5)
 			exposed_mob.reagents.add_reagent(type, amount, added_purity = purity)
+
+	if (isnull(blood_data))
+		return
+
+	for (var/datum/disease/strain as anything in blood_data.viruses)
+		if((strain.spread_flags & DISEASE_SPREAD_SPECIAL) || (strain.spread_flags & DISEASE_SPREAD_NON_CONTAGIOUS))
+			continue
+
+		if(methods & INGEST)
+			if(strain.has_required_infectious_organ(exposed_mob, ORGAN_SLOT_STOMACH))
+				exposed_mob.ForceContractDisease(strain)
+			continue
+
+		if(methods & (INJECT|PATCH))
+			if(strain.has_required_infectious_organ(exposed_mob, ORGAN_SLOT_HEART))
+				exposed_mob.ForceContractDisease(strain)
+			continue
+
+		if((methods & VAPOR) && (strain.spread_flags & DISEASE_SPREAD_CONTACT_FLUIDS))
+			if(strain.has_required_infectious_organ(exposed_mob, ORGAN_SLOT_LUNGS))
+				exposed_mob.ContactContractDisease(strain)
+			continue
+
+		if((methods & TOUCH) && (strain.spread_flags & DISEASE_SPREAD_CONTACT_FLUIDS))
+			exposed_mob.ContactContractDisease(strain)
+
+	if (methods & (INGEST|INJECT))
+		for(var/datum/disease/infection as anything in exposed_mob.diseases)
+			if(!infection.bypasses_immunity && (infection.GetDiseaseID() in blood_data.immunities))
+				infection.cure(add_resistance = FALSE)
+
+	if (!iscarbon(exposed_mob))
+		return
+
+	var/mob/living/carbon/exposed_carbon = exposed_mob
+	if (exposed_carbon.get_blood_id() != type || !((methods & INJECT) || ((methods & INGEST) && HAS_TRAIT(exposed_carbon, TRAIT_DRINKS_BLOOD))))
+		return
+
+	if (blood_data.blood_type in get_safe_blood(exposed_carbon.dna.blood_type))
+		exposed_carbon.blood_volume = min(exposed_carbon.blood_volume + round(reac_volume, 0.1), BLOOD_VOLUME_MAXIMUM)
+	else
+		exposed_carbon.reagents.add_reagent(/datum/reagent/toxin, reac_volume * 0.5)
+
+	exposed_carbon.reagents.remove_reagent(type, reac_volume) // Because we don't want blood to just lie around in the patient's blood, makes no sense.
 
 /// Applies this reagent to an [/obj]
 /datum/reagent/proc/expose_obj(obj/exposed_obj, reac_volume)
@@ -222,13 +267,30 @@ Primarily used in reagents/reaction_agents
 	SHOULD_CALL_PARENT(TRUE)
 
 /// Called after add_reagents creates a new reagent.
-/datum/reagent/proc/on_new(data)
-	if(data)
-		src.data = data
+/datum/reagent/proc/on_new()
+	return
 
 /// Called when two reagents of the same are mixing.
-/datum/reagent/proc/on_merge(data, amount)
+/datum/reagent/proc/on_merge(amount)
 	return
+
+/// Used to copy over special reagent-specific data from the passed reagent
+/datum/reagent/proc/merge_data(datum/reagent/other_reagent)
+	if (isnull(other_reagent.blood_data) || !istype(other_reagent, type))
+		return
+
+	if (isnull(blood_data))
+		blood_data = new()
+
+	if (blood_data.unique_dna != other_reagent.blood_data.unique_dna)
+		blood_data.cloneable = FALSE
+
+	blood_data.immunities |= other_reagent.immunities
+	var/datum/disease/advance/disease = Advance_Mix(blood_data.viruses | other_reagent.blood_data.viruses)
+	blood_data.viruses = list(disease)
+	for (var/datum/disease/simple_disease as anything in blood_data.viruses)
+		if (!istype(simple_disease, /datum/disease/advance))
+			blood_data.viruses += simple_disease
 
 /// Called if the reagent has passed the overdose threshold and is set to be triggering overdose effects. Returning UPDATE_MOB_HEALTH will cause updatehealth() to be called on the holder mob by /datum/reagents/proc/metabolize.
 /datum/reagent/proc/overdose_process(mob/living/affected_mob, seconds_per_tick, times_fired)

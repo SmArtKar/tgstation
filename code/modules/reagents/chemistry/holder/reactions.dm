@@ -320,7 +320,7 @@
 	for(var/datum/reagent/product as anything in cached_results)
 		yield = cached_results[product] * multiplier * average_purity
 		SSblackbox.record_feedback("tally", "chemical_reaction", yield, product)
-		add_reagent(product, yield, null, chem_temp, average_purity)
+		add_reagent(product, yield, chem_temp, average_purity)
 
 	//play sounds on the target atom
 	var/list/seen = viewers(4, get_turf(my_atom))

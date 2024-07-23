@@ -89,7 +89,7 @@
 	burning_volume = 0.3//But burns fast
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/toxin/plasma/on_new(data)
+/datum/reagent/toxin/plasma/on_new()
 	. = ..()
 	RegisterSignal(holder, COMSIG_REAGENTS_TEMP_CHANGE, PROC_REF(on_temp_change))
 
@@ -391,7 +391,7 @@
 	ph = 3.2
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/toxin/pestkiller/on_new(data)
+/datum/reagent/toxin/pestkiller/on_new()
 	. = ..()
 	AddElement(/datum/element/bugkiller_reagent)
 

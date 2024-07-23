@@ -25,7 +25,9 @@
 	if(damaged_clothes)
 		. += mutable_appearance('icons/effects/item_damage.dmi', "damaged[blood_overlay_type]")
 	if(GET_ATOM_BLOOD_DNA_LENGTH(src))
-		. += mutable_appearance('icons/effects/blood.dmi', "[blood_overlay_type]blood")
+		var/mutable_appearance/blood_appearance = mutable_appearance('icons/effects/blood.dmi', "[blood_overlay_type]blood")
+		blood_appearance.color = GET_ATOM_BLOOD_COLOR(src)
+		. += blood_appearance
 
 	var/mob/living/carbon/human/wearer = loc
 	if(!ishuman(wearer) || !wearer.w_uniform)

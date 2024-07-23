@@ -8,3 +8,5 @@
 #define GET_ATOM_FIBRES(atom) atom.forensics?.fibers
 /// Returns the number of unique blood dna sources on this atom
 #define GET_ATOM_BLOOD_DNA_LENGTH(atom) (isnull(atom.forensics) ? 0 : length(atom.forensics.blood_DNA))
+/// Returns blood color for an atom, if its splattered in any
+#define GET_ATOM_BLOOD_COLOR(atom) (isnull(atom.forensics) ? COLOR_WHITE : atom.forensics.blood_color)
