@@ -38,6 +38,7 @@
 	icon_state = temp.icon_state
 	id = temp.id
 	series = temp.series
+	register_context()
 
 // This totally isn't overengineered to hell, shut up
 /**
@@ -75,7 +76,7 @@
 GLOBAL_LIST_EMPTY(tcgcard_radial_choices)
 
 /obj/item/tcgcard/attack_hand(mob/user, list/modifiers)
-	if(!isturf(loc))
+	if(!isturf(loc) || LAZYACCESS(modifiers, RIGHT_CLICK))
 		return ..()
 	var/list/choices = GLOB.tcgcard_radial_choices
 	if(!length(choices))
@@ -129,14 +130,6 @@ GLOBAL_LIST_EMPTY(tcgcard_radial_choices)
 	return ..()
 
 /obj/item/tcgcard/attackby(obj/item/item, mob/living/user, params)
-	if(istype(item, /obj/item/tcgcard))
-		var/obj/item/tcgcard/second_card = item
-		var/obj/item/tcgcard_deck/new_deck = new /obj/item/tcgcard_deck(drop_location())
-		new_deck.flipped = flipped
-		user.transferItemToLoc(second_card, new_deck)//Start a new pile with both cards, in the order of card placement.
-		user.transferItemToLoc(src, new_deck)
-		new_deck.update_icon_state()
-		user.put_in_hands(new_deck)
 	if(istype(item, /obj/item/tcgcard_deck))
 		var/obj/item/tcgcard_deck/old_deck = item
 		if(length(old_deck.contents) >= 30)
@@ -146,7 +139,46 @@ GLOBAL_LIST_EMPTY(tcgcard_radial_choices)
 		flipped = old_deck.flipped
 		old_deck.update_appearance()
 		update_appearance()
-	return ..()
+		return
+
+	if (!istype(item, /obj/item/tcgcard))
+		return ..()
+
+	var/obj/item/tcgcard/second_card = item
+	playsound(src, 'sound/items/cardflip.ogg', 50, TRUE)
+
+	if (second_card.loc == user && loc == user)
+		var/obj/item/tcgcard_hand/hand = new(drop_location())
+		user.temporarilyRemoveItemFromInventory(src, TRUE)
+		user.temporarilyRemoveItemFromInventory(second_card, TRUE)
+		hand.add_card(src)
+		hand.add_card(second_card)
+		user.put_in_hands(hand)
+		return
+
+	var/obj/item/tcgcard_deck/new_deck = new /obj/item/tcgcard_deck(drop_location())
+	new_deck.flipped = flipped
+	user.transferItemToLoc(second_card, new_deck)//Start a new pile with both cards, in the order of card placement.
+	user.transferItemToLoc(src, new_deck)
+	new_deck.update_icon_state()
+	user.put_in_hands(new_deck)
+
+/obj/item/tcgcard/add_context(atom/source, list/context, obj/item/held_item, mob/user)
+	. = NONE
+
+	if(isnull(held_item))
+		context[SCREENTIP_CONTEXT_LMB] = "Open menu"
+		context[SCREENTIP_CONTEXT_RMB] = "Pick up"
+		return CONTEXTUAL_SCREENTIP_SET
+
+	if (istype(held_item, /obj/item/tcgcard) && held_item != src || istype(held_item, /obj/item/tcgcard_hand))
+		context[SCREENTIP_CONTEXT_LMB] = "Add to the hand"
+		context[SCREENTIP_CONTEXT_RMB] = "Make a deck"
+		return CONTEXTUAL_SCREENTIP_SET
+
+	if (istype(held_item, /obj/item/tcgcard_deck))
+		context[SCREENTIP_CONTEXT_LMB] = "Add to the deck"
+		return CONTEXTUAL_SCREENTIP_SET
 
 /obj/item/tcgcard/proc/check_menu(mob/living/user)
 	if(!istype(user))
@@ -176,6 +208,99 @@ GLOBAL_LIST_EMPTY(tcgcard_radial_choices)
 		desc = "<i>[template.desc]</i>"
 		icon_state = template.icon_state
 	flipped = !flipped
+
+/obj/item/tcgcard_hand
+	name = "hand of TGC cards"
+	desc = "A number of TGC cards not in a deck, customarily held in ones hand."
+	w_class = WEIGHT_CLASS_TINY
+	worn_icon_state = "card"
+
+/obj/item/tcgcard_hand/attack_self(mob/living/user)
+	if(!isliving(user) || !user.can_perform_action(src, NEED_DEXTERITY|FORBID_TELEKINESIS_REACH))
+		return
+
+	var/list/handradial = list()
+	for(var/obj/item/tcgcard/card in contents)
+		handradial[card] = image(icon = card.icon, icon_state = card.icon_state)
+
+	var/obj/item/tcgcard/choice = show_radial_menu(usr, src, handradial, custom_check = CALLBACK(src, PROC_REF(check_menu), user), radius = 36, require_near = TRUE)
+	if(!choice)
+		return FALSE
+
+	choice.forceMove(get_turf(user))
+	user.put_in_hands(choice)
+	playsound(src, 'sound/items/cardflip.ogg', 50, TRUE)
+
+	if (contents.len > 1)
+		update_appearance()
+		return
+
+	var/obj/item/tcgcard/last_card = locate() in contents
+	user.temporarilyRemoveItemFromInventory(src, TRUE)
+	last_card.forceMove(get_turf(user))
+	user.put_in_hands(last_card)
+	qdel(src)
+
+/obj/item/tcgcard_hand/proc/check_menu(mob/living/user)
+	if(!istype(user))
+		return FALSE
+	if(user.incapacitated() || !user.Adjacent(src))
+		return FALSE
+	return TRUE
+
+/obj/item/tcgcard_hand/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
+	if (!istype(interacting_with, /obj/item/tcgcard))
+		return ..()
+	user.temporarilyRemoveItemFromInventory(interacting_with, TRUE)
+	add_card(interacting_with)
+
+/obj/item/tcgcard_hand/interact_with_atom_secondary(atom/interacting_with, mob/living/user, list/modifiers)
+	if (!istype(interacting_with, /obj/item/tcgcard))
+		return ..()
+
+	var/obj/item/tcgcard/card = interacting_with
+	var/obj/item/tcgcard_deck/new_deck = new /obj/item/tcgcard_deck(drop_location())
+	new_deck.flipped = card.flipped
+	user.transferItemToLoc(card, new_deck)//Start a new pile with both cards, in the order of card placement.
+	for (var/obj/item/tcgcard/our_card in contents)
+		new_deck.atom_storage.attempt_insert(card, user, FALSE, TRUE, FALSE)
+	new_deck.update_icon_state()
+	user.temporarilyRemoveItemFromInventory(src, TRUE)
+	user.put_in_hands(new_deck)
+	qdel(src)
+
+/obj/item/tcgcard_hand/attackby(obj/item/attacking_item, mob/user, params)
+	if (!istype(attacking_item, /obj/item/tcgcard))
+		return ..()
+	user.temporarilyRemoveItemFromInventory(attacking_item, TRUE)
+	add_card(attacking_item)
+
+/obj/item/tcgcard_hand/proc/add_card(obj/item/tcgcard/card)
+	card.forceMove(src)
+	card.pixel_x = 0
+	card.pixel_y = 0
+	var/matrix/ntransform = matrix()
+	ntransform.Turn(0)
+	card.transform = ntransform
+	card.update_appearance()
+	update_appearance()
+	playsound(src, 'sound/items/cardflip.ogg', 50, TRUE)
+
+/obj/item/tcgcard_hand/update_overlays()
+	. = ..()
+	if (!contents.len)
+		return
+
+	var/angle_per_card = 10 + 60 / contents.len
+	var/cur_angle = angle_per_card * (contents.len - 1) * -0.5
+	for (var/obj/item/tcgcard/card in contents)
+		var/mutable_appearance/card_overlay = mutable_appearance(card.icon, card.icon_state, layer, src)
+		var/matrix/ntransform = matrix(card_overlay.transform)
+		ntransform.TurnTo(cur_angle, 0)
+		ntransform.Translate(sin(cur_angle) * -15, cos(cur_angle) * 15)
+		card_overlay.transform = ntransform
+		cur_angle += angle_per_card
+		. += card_overlay
 
 /**
  * A stack item that's not actually a stack because ORDER MATTERS with a deck of cards!
@@ -395,9 +520,15 @@ GLOBAL_LIST_EMPTY(tcgcard_radial_choices)
 	else
 		cards = buildCardListWithRarity(card_count, guaranteed_count)
 
+	var/obj/item/tcgcard_hand/hand = new(drop_location())
+	user.temporarilyRemoveItemFromInventory(src, TRUE)
+	user.put_in_hands(hand)
+
 	for(var/template in cards)
 		//Makes a new card based of the series of the pack.
-		new /obj/item/tcgcard(get_turf(user), series, template)
+		var/obj/item/tcgcard/card = new(drop_location(), series, template)
+		hand.add_card(card)
+
 	to_chat(user, span_notice("Wow! Check out these cards!"))
 	new /obj/effect/decal/cleanable/wrapping(get_turf(user))
 	playsound(loc, 'sound/items/poster_ripped.ogg', 20, TRUE)
