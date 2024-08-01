@@ -84,34 +84,56 @@
 			var/mob/living/victim = A
 			if (victim.body_position == LYING_DOWN)
 				var/temp_y = click_y
-				if ((victim.dir & NORTH) || (victim.dir & EAST))
-					click_y = click_x
-					click_x = world.icon_size - temp_y
-				else
-					click_y = world.icon_size - click_x
-					click_x = temp_y
+				click_y = click_x
+				click_x = temp_y
 
-		if (click_y <= 9) //Legs
-			if (click_x > 16)
-				selector.set_selected_zone(BODY_ZONE_L_LEG, src)
-			else
-				selector.set_selected_zone(BODY_ZONE_R_LEG, src)
-		else if (click_y <= 13) //Groin
-			selector.set_selected_zone(BODY_ZONE_PRECISE_GROIN, src)
-		else if (click_y <= 22) // Chest or arms
-			if (click_x < 12)
-				selector.set_selected_zone(BODY_ZONE_R_ARM, src)
-			else if (click_x > 20)
-				selector.set_selected_zone(BODY_ZONE_L_ARM, src)
-			else
-				selector.set_selected_zone(BODY_ZONE_CHEST, src)
-		else // Head, mouth and eyes
-			if (click_x >= 15 && click_x <= 17 && click_y >= 23 && click_y <= 25)
-				selector.set_selected_zone(BODY_ZONE_PRECISE_MOUTH, src)
-			else if (abs(click_x - 15) + abs(click_y - 26) <= 1 || abs(click_x - 17) + abs(click_y - 26) <= 1) // please ignore this
-				selector.set_selected_zone(BODY_ZONE_PRECISE_EYES, src)
-			else
+		if (A.dir & NORTH|WEST)
+			click_x = world.icon_size - click_x
+
+		if (A.dir & NORTH|SOUTH)
+			if (click_y <= 9) //Legs
+				if (click_x > 16)
+					selector.set_selected_zone(BODY_ZONE_L_LEG, src)
+				else
+					selector.set_selected_zone(BODY_ZONE_R_LEG, src)
+			else if (click_y <= 13) //Groin
+				selector.set_selected_zone(BODY_ZONE_PRECISE_GROIN, src)
+			else if (click_y <= 22) // Chest or arms
+				if (click_x < 12)
+					selector.set_selected_zone(BODY_ZONE_R_ARM, src)
+				else if (click_x > 20)
+					selector.set_selected_zone(BODY_ZONE_L_ARM, src)
+				else
+					selector.set_selected_zone(BODY_ZONE_CHEST, src)
+			else if (dir & NORTH) //cant hit face stuff if we're facing away from the screen
 				selector.set_selected_zone(BODY_ZONE_HEAD, src)
+			else // Head, mouth and eyes
+				if (click_x >= 15 && click_x <= 17 && click_y >= 23 && click_y <= 25)
+					selector.set_selected_zone(BODY_ZONE_PRECISE_MOUTH, src)
+				else if (abs(click_x - 15) + abs(click_y - 26) <= 1 || abs(click_x - 17) + abs(click_y - 26) <= 1) // please ignore this
+					selector.set_selected_zone(BODY_ZONE_PRECISE_EYES, src)
+				else
+					selector.set_selected_zone(BODY_ZONE_HEAD, src)
+		else
+			if (click_y <= 9) //Legs
+				if (click_x > 16)
+					selector.set_selected_zone(BODY_ZONE_L_LEG, src)
+				else
+					selector.set_selected_zone(BODY_ZONE_R_LEG, src)
+			else if (click_y <= 13) //Groin
+				selector.set_selected_zone(BODY_ZONE_PRECISE_GROIN, src)
+			else if (click_y <= 22) // Chest or arms
+				if (click_x >= 11 && click_x <= 14) // Can't hit an arm that is away from the screen, doofus
+					selector.set_selected_zone((A.dir & EAST) ? BODY_ZONE_R_ARM : BODY_ZONE_L_ARM, src)
+				else
+					selector.set_selected_zone(BODY_ZONE_CHEST, src)
+			else // Head, mouth and eyes
+				if (click_x >= 18 && click_x <= 20 && click_y >= 23 && click_y <= 25)
+					selector.set_selected_zone(BODY_ZONE_PRECISE_MOUTH, src)
+				else if (abs(click_x - 19) + abs(click_y - 26) <= 1)
+					selector.set_selected_zone(BODY_ZONE_PRECISE_EYES, src)
+				else
+					selector.set_selected_zone(BODY_ZONE_HEAD, src)
 
 	if(LAZYACCESS(modifiers, SHIFT_CLICK))
 		if(LAZYACCESS(modifiers, MIDDLE_CLICK))
