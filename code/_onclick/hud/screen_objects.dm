@@ -532,51 +532,11 @@
 		C.toggle_throw_mode()
 
 /atom/movable/screen/zone_sel
-	name = "damage zone"
-	icon_state = "zone_sel"
 	screen_loc = ui_zonesel
+	alpha = 0 // Still needed since it picks the zone and i'm too lazy to recode it
 	var/overlay_icon = 'icons/hud/screen_gen.dmi'
 	var/static/list/hover_overlays_cache = list()
 	var/hovering
-
-/atom/movable/screen/zone_sel/Click(location, control,params)
-	if(isobserver(usr))
-		return
-
-	var/list/modifiers = params2list(params)
-	var/icon_x = text2num(LAZYACCESS(modifiers, ICON_X))
-	var/icon_y = text2num(LAZYACCESS(modifiers, ICON_Y))
-	var/choice = get_zone_at(icon_x, icon_y)
-	if (!choice)
-		return 1
-
-	return set_selected_zone(choice, usr)
-
-/atom/movable/screen/zone_sel/MouseEntered(location, control, params)
-	. = ..()
-	MouseMove(location, control, params)
-
-/atom/movable/screen/zone_sel/MouseMove(location, control, params)
-	if(isobserver(usr))
-		return
-
-	var/list/modifiers = params2list(params)
-	var/icon_x = text2num(LAZYACCESS(modifiers, ICON_X))
-	var/icon_y = text2num(LAZYACCESS(modifiers, ICON_Y))
-	var/choice = get_zone_at(icon_x, icon_y)
-
-	if(hovering == choice)
-		return
-	vis_contents -= hover_overlays_cache[hovering]
-	hovering = choice
-
-	// Don't need to account for turf cause we're on the hud babyyy
-	var/obj/effect/overlay/zone_sel/overlay_object = hover_overlays_cache[choice]
-	if(!overlay_object)
-		overlay_object = new
-		overlay_object.icon_state = "[choice]"
-		hover_overlays_cache[choice] = overlay_object
-	vis_contents += overlay_object
 
 /obj/effect/overlay/zone_sel
 	icon = 'icons/hud/screen_gen.dmi'
@@ -584,11 +544,6 @@
 	alpha = 128
 	anchored = TRUE
 	plane = ABOVE_HUD_PLANE
-
-/atom/movable/screen/zone_sel/MouseExited(location, control, params)
-	if(!isobserver(usr) && hovering)
-		vis_contents -= hover_overlays_cache[hovering]
-		hovering = null
 
 /atom/movable/screen/zone_sel/proc/get_zone_at(icon_x, icon_y)
 	switch(icon_y)

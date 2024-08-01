@@ -68,15 +68,15 @@
 #define ui_drop_throw "EAST-1:28,SOUTH+1:7"
 #define ui_above_movement "EAST-2:26,SOUTH+1:7"
 #define ui_above_intent "EAST-3:24, SOUTH+1:7"
-#define ui_movi "EAST-2:26,SOUTH:5"
-#define ui_acti "EAST-3:24,SOUTH:5"
-#define ui_combat_toggle "EAST-3:24,SOUTH:5"
+#define ui_movi "EAST-1:28,SOUTH:5"
+#define ui_acti "EAST-2:26,SOUTH:5"
+#define ui_combat_toggle "EAST-2:26,SOUTH:5"
 #define ui_zonesel "EAST-1:28,SOUTH:5"
 #define ui_acti_alt "EAST-1:28,SOUTH:5" //alternative intent switcher for when the interface is hidden (F12)
-#define ui_crafting "EAST-4:22,SOUTH:5"
-#define ui_building "EAST-4:22,SOUTH:21"
-#define ui_language_menu "EAST-4:6,SOUTH:21"
-#define ui_navigate_menu "EAST-4:22,SOUTH:5"
+#define ui_crafting "EAST-3:24,SOUTH:5"
+#define ui_building "EAST-3:24,SOUTH:21"
+#define ui_language_menu "EAST-3:8,SOUTH:21"
+#define ui_navigate_menu "EAST-3:24,SOUTH:5"
 #define ui_floor_menu "EAST-4:14,SOUTH:37"
 
 //Upper left (action buttons)
