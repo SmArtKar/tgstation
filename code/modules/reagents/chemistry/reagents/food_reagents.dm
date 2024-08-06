@@ -339,22 +339,34 @@
 	taste_description = "hot peppers"
 	taste_mult = 1.5
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	var/datum/status_effect/fake_temperature/linked_effect
+
+/datum/reagent/consumable/capsaicin/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	if (!iscarbon(affected_mob))
+		return
+	linked_effect = affected_mob.apply_status_effect(/datum/status_effect/fake_temperature)
+
+/datum/reagent/consumable/capsaicin/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	QDEL_NULL(linked_effect)
 
 /datum/reagent/consumable/capsaicin/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	var/heating = 0
+	if(holder.has_reagent(/datum/reagent/cryostylane))
+		holder.remove_reagent(/datum/reagent/cryostylane, 5 * REM * seconds_per_tick)
+
 	switch(current_cycle)
-		if(1 to 15)
-			heating = 5
-			if(holder.has_reagent(/datum/reagent/cryostylane))
-				holder.remove_reagent(/datum/reagent/cryostylane, 5 * REM * seconds_per_tick)
-		if(15 to 25)
-			heating = 10
-		if(25 to 35)
-			heating = 15
-		if(35 to INFINITY)
-			heating = 20
-	affected_mob.adjust_bodytemperature(heating * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick)
+		if (15 to 25)
+			linked_effect.temperature_override = BODYTEMP_HEAT_DAMAGE_LIMIT
+		if (26 to 40)
+			linked_effect.temperature_override = BODYTEMP_HEAT_WARNING_2
+			if (prob(1))
+				to_chat(affected_mob, span_warning("You feel hot."))
+		if (41 to INFINITY)
+			linked_effect.temperature_override = BODYTEMP_HEAT_WARNING_3
+			if (prob(5))
+				to_chat(affected_mob, span_warning("Your insides feel like they're on fire!"))
 
 /datum/reagent/consumable/frostoil
 	name = "Frost Oil"
@@ -366,26 +378,34 @@
 	///40 joules per unit.
 	specific_heat = 40
 	default_container = /obj/item/reagent_containers/cup/bottle/frostoil
+	var/datum/status_effect/fake_temperature/linked_effect
+
+/datum/reagent/consumable/frostoil/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	if (!iscarbon(affected_mob))
+		return
+	linked_effect = affected_mob.apply_status_effect(/datum/status_effect/fake_temperature)
+
+/datum/reagent/consumable/frostoil/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	QDEL_NULL(linked_effect)
 
 /datum/reagent/consumable/frostoil/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	var/cooling = 0
+	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
+		holder.remove_reagent(/datum/reagent/consumable/capsaicin, 5 * REM * seconds_per_tick)
+
 	switch(current_cycle)
-		if(1 to 15)
-			cooling = -10
-			if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
-				holder.remove_reagent(/datum/reagent/consumable/capsaicin, 5 * REM * seconds_per_tick)
 		if(15 to 25)
-			cooling = -20
-		if(25 to 35)
-			cooling = -30
+			linked_effect.temperature_override = BODYTEMP_COLD_DAMAGE_LIMIT
+		if(25 to 40)
+			linked_effect.temperature_override = BODYTEMP_COLD_WARNING_2
 			if(prob(1))
 				affected_mob.emote("shiver")
-		if(35 to INFINITY)
-			cooling = -40
+		if(41 to INFINITY)
+			linked_effect.temperature_override = BODYTEMP_COLD_WARNING_3
 			if(prob(5))
 				affected_mob.emote("shiver")
-	affected_mob.adjust_bodytemperature(cooling * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 50)
 
 /datum/reagent/consumable/frostoil/expose_turf(turf/exposed_turf, reac_volume)
 	. = ..()

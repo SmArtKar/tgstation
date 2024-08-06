@@ -229,7 +229,7 @@
 	else
 		need_mob_update = affected_mob.adjustFireLoss(-2.25 * REM * seconds_per_tick * normalise_creation_purity(), updating_health = FALSE, required_bodytype = affected_bodytype)
 	affected_mob.adjust_bodytemperature(rand(-25,-5) * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 50)
-	if(ishuman(affected_mob))
+	if(ishuman(affected_mob) && (exposure_type & VAPOR|TOUCH))
 		var/mob/living/carbon/human/humi = affected_mob
 		humi.adjust_coretemperature(rand(-25,-5) * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 50)
 	affected_mob.reagents?.chem_temp += (-10 * REM * seconds_per_tick)
@@ -239,9 +239,8 @@
 
 /datum/reagent/medicine/c2/hercuri/expose_mob(mob/living/carbon/exposed_mob, methods=VAPOR, reac_volume)
 	. = ..()
-	if(!(methods & VAPOR))
+	if (!(exposure_type & VAPOR|TOUCH))
 		return
-
 	exposed_mob.adjust_bodytemperature(-reac_volume * TEMPERATURE_DAMAGE_COEFFICIENT, 50)
 	exposed_mob.adjust_fire_stacks(reac_volume / -2)
 	if(reac_volume >= metabolization_rate)
@@ -249,6 +248,8 @@
 
 /datum/reagent/medicine/c2/hercuri/overdose_process(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
+	if (!(exposure_type & VAPOR|TOUCH))
+		return
 	affected_mob.adjust_bodytemperature(-10 * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, 50) //chilly chilly
 	if(ishuman(affected_mob))
 		var/mob/living/carbon/human/humi = affected_mob

@@ -820,7 +820,6 @@ Basically, we fill the time between now and 2s from now with hands based off the
 /datum/reagent/inverse/oxandrolone/overdose_process(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	if(SPT_PROB(25, seconds_per_tick))
-		affected_mob.adjust_bodytemperature(30 * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick)
 		affected_mob.set_jitter_if_lower(3 SECONDS)
 		affected_mob.adjustStaminaLoss(5 * REM * seconds_per_tick)
 	else if(SPT_PROB(5, seconds_per_tick))

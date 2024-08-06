@@ -93,6 +93,8 @@
 #define COMSIG_CARBON_UPDATING_HEALTH_HUD "carbon_health_hud_update"
 	/// Return if you override the carbon's health hud with something else
 	#define COMPONENT_OVERRIDE_HEALTH_HUD (1<<0)
+///Called when a carbon is trying to apply mood/alert from body temperature (source = carbon, old_bodytemp, bodytemp, bodytemp_overrides = can be added to to override temperature displayed)
+#define COMSIG_CARBON_UPDATING_TEMPERATURE_HUD "carbon_updating_temperature_hud"
 ///Called when a carbon updates their sanity (source = carbon)
 #define COMSIG_CARBON_SANITY_UPDATE "carbon_sanity_update"
 ///Called when a carbon attempts to breath, before the breath has actually occured

@@ -15,6 +15,7 @@
 	default_container = /obj/item/reagent_containers/cup/glass/bottle/beer
 	fallback_icon = 'icons/obj/drinks/bottles.dmi'
 	fallback_icon_state = "beer"
+	metabolized_traits = list(TRAIT_ENHANCED_THERMAL_EXCHANGE) // Alcohol significantly improves blood flow and opens blood vessels near your skin, making you cool down/heat up faster
 	/**
 	 * Boozepwr Chart
 	 *
@@ -237,7 +238,6 @@
 	. = ..()
 	drinker.adjust_drowsiness(-14 SECONDS * REM * seconds_per_tick)
 	drinker.AdjustSleeping(-40 * REM * seconds_per_tick)
-	drinker.adjust_bodytemperature(-5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, drinker.get_body_temp_normal())
 	if(!HAS_TRAIT(drinker, TRAIT_ALCOHOL_TOLERANCE))
 		drinker.set_jitter_if_lower(10 SECONDS)
 
@@ -732,6 +732,10 @@
 	to_chat(drinker, span_notice("The warmth in your body fades."))
 	QDEL_NULL(light_holder)
 
+#define BALLMER_PEAK_LOW_END 12.9
+#define BALLMER_PEAK_HIGH_END 13.8
+#define BALLMER_PEAK_WINDOWS_ME 26
+
 /datum/reagent/consumable/ethanol/toxins_special
 	name = "Toxins Special"
 	description = "This thing is ON FIRE! CALL THE DAMN SHUTTLE!"
@@ -741,9 +745,25 @@
 	taste_description = "spicy toxins"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
+// Keeps you in ballmer peak
 /datum/reagent/consumable/ethanol/toxins_special/on_mob_life(mob/living/drinker, seconds_per_tick, times_fired)
 	. = ..()
-	drinker.adjust_bodytemperature(15 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, drinker.get_body_temp_normal() + 20) //310.15 is the normal bodytemp.
+	var/obj/item/organ/internal/liver/liver_organ = drinker.get_organ_slot(ORGAN_SLOT_LIVER)
+	if(isnull(liver_organ) || !HAS_TRAIT(liver_organ, TRAIT_BALLMER_SCIENTIST))
+		return
+
+	if (drinker.get_drunk_amount() < BALLMER_PEAK_LOW_END)
+		boozepwr = 45
+	else if (drinker.get_drunk_amount() > BALLMER_PEAK_WINDOWS_ME)
+		boozepwr = -10
+	else if (drinker.get_drunk_amount() > BALLMER_PEAK_HIGH_END)
+		boozepwr = 0
+	else
+		boozepwr = initial(boozepwr)
+
+#undef BALLMER_PEAK_LOW_END
+#undef BALLMER_PEAK_HIGH_END
+#undef BALLMER_PEAK_WINDOWS_ME
 
 /datum/reagent/consumable/ethanol/beepsky_smash
 	name = "Beepsky Smash"
@@ -930,10 +950,24 @@
 	quality = DRINK_NICE
 	taste_description = "Jack Frost's piss"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
+	var/datum/status_effect/fake_temperature/linked_effect
+
+/datum/reagent/consumable/ethanol/antifreeze/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	if (!iscarbon(affected_mob))
+		return
+	linked_effect = affected_mob.apply_status_effect(/datum/status_effect/fake_temperature)
+
+/datum/reagent/consumable/ethanol/antifreeze/on_mob_end_metabolize(mob/living/affected_mob)
+	. = ..()
+	QDEL_NULL(linked_effect)
 
 /datum/reagent/consumable/ethanol/antifreeze/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
 	. = ..()
-	drinker.adjust_bodytemperature(20 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, drinker.get_body_temp_normal() + 20) //310.15 is the normal bodytemp.
+	if (drinker.bodytemperature < BODYTEMP_COLD_DAMAGE_LIMIT)
+		linked_effect.temperature_override = BODYTEMP_COLD_DAMAGE_LIMIT
+	else
+		linked_effect.temperature_override = null
 
 /datum/reagent/consumable/ethanol/barefoot
 	name = "Barefoot"
@@ -1111,10 +1145,6 @@
 	taste_description = "hot and spice"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/consumable/ethanol/sbiten/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
-	. = ..()
-	drinker.adjust_bodytemperature(50 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, BODYTEMP_HEAT_DAMAGE_LIMIT) //310.15 is the normal bodytemp.
-
 /datum/reagent/consumable/ethanol/red_mead
 	name = "Red Mead"
 	description = "The true Viking drink! Even though it has a strange red color."
@@ -1141,10 +1171,6 @@
 	boozepwr = 15
 	taste_description = "refreshingly cold"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-
-/datum/reagent/consumable/ethanol/iced_beer/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
-	. = ..()
-	drinker.adjust_bodytemperature(-20 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, T0C) //310.15 is the normal bodytemp.
 
 /datum/reagent/consumable/ethanol/grog
 	name = "Grog"
@@ -1745,7 +1771,6 @@
 /datum/reagent/consumable/ethanol/peppermint_patty/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
 	. = ..()
 	drinker.apply_status_effect(/datum/status_effect/throat_soothed)
-	drinker.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, drinker.get_body_temp_normal())
 
 /datum/reagent/consumable/ethanol/alexander
 	name = "Alexander"
@@ -1926,10 +1951,6 @@
 	taste_description = "a bitter freshness"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	glass_price = DRINK_PRICE_MEDIUM
-
-/datum/reagent/consumable/ethanol/branca_menta/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
-	. = ..()
-	drinker.adjust_bodytemperature(-20 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, T0C)
 
 /datum/reagent/consumable/ethanol/branca_menta/on_mob_metabolize(mob/living/drinker)
 	. = ..()
@@ -2244,8 +2265,6 @@
 
 /datum/reagent/consumable/ethanol/mauna_loa/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
 	. = ..()
-	// Heats the user up while the reagent is in the body. Occasionally makes you burst into flames.
-	drinker.adjust_bodytemperature(25 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick)
 	if (SPT_PROB(2.5, seconds_per_tick))
 		drinker.adjust_fire_stacks(1 * REM * seconds_per_tick)
 		drinker.ignite_mob()
@@ -2616,10 +2635,6 @@
 	quality = DRINK_VERYGOOD
 	taste_description = "light gin with sweet ginger and cucumber"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-
-/datum/reagent/consumable/ethanol/gin_garden/on_mob_life(mob/living/carbon/doll, seconds_per_tick, times_fired)
-	. = ..()
-	doll.adjust_bodytemperature(-5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, doll.get_body_temp_normal())
 
 /datum/reagent/consumable/ethanol/wine_voltaic
 	name = "Voltaic Yellow Wine"

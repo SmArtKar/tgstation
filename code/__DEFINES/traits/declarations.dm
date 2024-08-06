@@ -1227,6 +1227,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Given to a mob that can throw to make them not able to throw
 #define TRAIT_NO_THROWING "no_throwing"
 
+/// Makes the mob have x1.3 thermal exchange with their surroundings
+#define TRAIT_ENHANCED_THERMAL_EXCHANGE "enhanced_thermal_exchange"
+
 ///Trait which allows mobs to parry mining mob projectiles
 #define TRAIT_MINING_PARRYING "mining_parrying"
 

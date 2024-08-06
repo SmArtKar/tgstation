@@ -1201,7 +1201,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/area_skin_diff = area_temp - original_bodytemp
 	if(!humi.on_fire || area_skin_diff > 0)
 		// change rate of 0.05 as area temp has large impact on the surface
-		var/area_skin_change = get_temp_change_amount(area_skin_diff, 0.05 * seconds_per_tick)
+		var/change_rate = 0.05 * seconds_per_tick
+		// Increased from being drunk or similar effects
+		if (HAS_TRAIT(humi, TRAIT_ENHANCED_THERMAL_EXCHANGE))
+			change_rate *= 1.3
+		var/area_skin_change = get_temp_change_amount(area_skin_diff, change_rate)
 
 		// We need to apply the thermal protection of the clothing when applying area to surface change
 		// If the core bodytemp goes over the normal body temp you are overheating and becom sweaty
@@ -1239,6 +1243,14 @@ GLOBAL_LIST_EMPTY(features_by_species)
 /datum/species/proc/body_temperature_alerts(mob/living/carbon/human/humi)
 	var/old_bodytemp = humi.old_bodytemperature
 	var/bodytemp = humi.bodytemperature
+	var/list/bodytemp_overrides = list()
+	SEND_SIGNAL(humi, COMSIG_CARBON_UPDATING_TEMPERATURE_HUD, old_bodytemp, bodytemp, bodytemp_overrides)
+	if (bodytemp_overrides.len)
+		bodytemp = 0
+		for (var/elem in bodytemp_overrides)
+			bodytemp += elem
+		bodytemp /= bodytemp_overrides.len
+		old_bodytemp = bodytemp
 	// Body temperature is too hot, and we do not have resist traits
 	if(bodytemp > bodytemp_heat_damage_limit && !HAS_TRAIT(humi, TRAIT_RESISTHEAT))
 		// Clear cold mood and apply hot mood

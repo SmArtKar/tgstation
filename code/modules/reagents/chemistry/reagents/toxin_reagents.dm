@@ -158,6 +158,8 @@
 	if(holder.has_reagent(/datum/reagent/medicine/epinephrine))
 		holder.remove_reagent(/datum/reagent/medicine/epinephrine, 2 * REM * seconds_per_tick)
 	affected_mob.adjustPlasma(20 * REM * seconds_per_tick)
+	if (!(exposure_type & VAPOR|TOUCH))
+		return
 	affected_mob.adjust_bodytemperature(-7 * TEMPERATURE_DAMAGE_COEFFICIENT * REM * seconds_per_tick, affected_mob.get_body_temp_normal())
 	if(ishuman(affected_mob))
 		var/mob/living/carbon/human/humi = affected_mob
