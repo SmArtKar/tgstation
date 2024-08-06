@@ -413,7 +413,7 @@
 	if(!try_brew())
 		return
 	operate_for(brew_time)
-	coffeepot.reagents.add_reagent_list(cartridge.drink_type)
+	coffeepot.reagents.add_reagent_list(cartridge.drink_type, T0C + 60)
 	cartridge.charges--
 
 //Coffee Cartridges: like toner, but for your coffee!
@@ -731,7 +731,7 @@
 	coffeepot.reagents.add_reagent_list(reagent_delta)
 
 	qdel(reference_bean)
-	
+
 	// remove the coffee beans from the machine
 	coffee.Cut(1,2)
 	coffee_amount--
@@ -739,7 +739,7 @@
 	// fill the rest of the pot with coffee
 	if(coffeepot.reagents.total_volume < 120)
 		var/extra_coffee_amount = 120 - coffeepot.reagents.total_volume
-		coffeepot.reagents.add_reagent(/datum/reagent/consumable/coffee, extra_coffee_amount)
+		coffeepot.reagents.add_reagent(/datum/reagent/consumable/coffee, extra_coffee_amount, reagtemp = T0C + 60)
 
 	update_appearance(UPDATE_OVERLAYS)
 

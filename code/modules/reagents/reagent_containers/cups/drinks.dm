@@ -107,6 +107,7 @@
 	icon_state = "coffee"
 	base_icon_state = "coffee"
 	list_reagents = list(/datum/reagent/consumable/coffee = 30)
+	reagent_temp = T0C + 60
 	spillable = TRUE
 	resistance_flags = FREEZE_PROOF
 	isGlass = FALSE
@@ -140,6 +141,7 @@
 	custom_price = PAYCHECK_LOWER * 0.6
 	icon_state = "icecup"
 	list_reagents = list(/datum/reagent/consumable/ice = 30)
+	reagent_temp = T0C - 20
 	spillable = TRUE
 	isGlass = FALSE
 
@@ -165,6 +167,7 @@
 	name = "Duke Purple tea"
 	desc = "An insult to Duke Purple is an insult to the Space Queen! Any proper gentleman will fight you, if you sully this tea."
 	icon_state = "tea"
+	reagent_temp = T0C + 50
 	list_reagents = list(/datum/reagent/consumable/tea = 30)
 
 /obj/item/reagent_containers/cup/glass/mug/coco
@@ -173,6 +176,7 @@
 	icon_state = "tea"
 	list_reagents = list(/datum/reagent/consumable/hot_coco = 15, /datum/reagent/consumable/sugar = 5)
 	drink_type = SUGAR
+	reagent_temp = T0C + 50
 	resistance_flags = FREEZE_PROOF
 	custom_price = PAYCHECK_CREW * 1.2
 
