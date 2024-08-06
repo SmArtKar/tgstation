@@ -16,6 +16,8 @@
 	fallback_icon = 'icons/obj/drinks/bottles.dmi'
 	fallback_icon_state = "beer"
 	metabolized_traits = list(TRAIT_ENHANCED_THERMAL_EXCHANGE) // Alcohol significantly improves blood flow and opens blood vessels near your skin, making you cool down/heat up faster
+	human_heat_transfer_coeff = 1.3
+
 	/**
 	 * Boozepwr Chart
 	 *
@@ -890,6 +892,7 @@
 	taste_description = "giving up on the day"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	metabolized_traits = list(TRAIT_STIMULATED)
+	human_heat_transfer_coeff = 1.5
 
 /datum/reagent/consumable/ethanol/margarita
 	name = "Margarita"
@@ -2901,6 +2904,7 @@
 	taste_description = "coconut coffee"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	metabolized_traits = list(TRAIT_STIMULATED)
+	human_heat_transfer_coeff = 1.5
 
 /datum/reagent/consumable/ethanol/blue_hawaiian //pineapple juice, lemon juice, coconut rum, blue curacao
 	name = "Blue Hawaiian"

@@ -230,3 +230,6 @@
 #define GRENADE_WIRED 2
 /// Grenade is ready to be finished
 #define GRENADE_READY 3
+
+/// If we assume that an average spessman weighs 70 kgs and is made purely out of water we arrive at roughly this number
+#define MOLES_PER_SPACEMAN 3888.7

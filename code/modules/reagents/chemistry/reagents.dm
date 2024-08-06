@@ -80,6 +80,8 @@
 	var/list/added_traits
 	/// Initial type of exposure from this reagent
 	var/exposure_type = NONE
+	/// Coefficient for heat transfer from this reagent to a human mob
+	var/human_heat_transfer_coeff = 1
 
 	///The default reagent container for the reagent, used for icon generation
 	var/obj/item/reagent_containers/default_container = /obj/item/reagent_containers/cup/bottle

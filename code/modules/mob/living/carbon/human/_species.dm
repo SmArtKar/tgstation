@@ -1143,9 +1143,11 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(istype(humi.loc, /obj/machinery/cryo_cell))
 		return
 
-	//Only stabilise core temp when alive and not in statis
-	if(humi.stat < DEAD && !HAS_TRAIT(humi, TRAIT_STASIS))
-		body_temperature_core(humi, seconds_per_tick, times_fired)
+	if(!HAS_TRAIT(humi, TRAIT_STASIS))
+		//Only stabilise core temp when alive and not in statis
+		if (humi.stat < DEAD)
+			body_temperature_core(humi, seconds_per_tick, times_fired)
+		body_temperature_reagents(humi, seconds_per_tick, times_fired)
 
 	//These do run in statis
 	body_temperature_skin(humi, seconds_per_tick, times_fired)
@@ -1165,6 +1167,17 @@ GLOBAL_LIST_EMPTY(features_by_species)
 /datum/species/proc/body_temperature_core(mob/living/carbon/human/humi, seconds_per_tick, times_fired)
 	var/natural_change = get_temp_change_amount(humi.get_body_temp_normal() - humi.coretemperature, 0.06 * seconds_per_tick)
 	humi.adjust_coretemperature(humi.metabolism_efficiency * natural_change)
+
+/// Used to equalize temperature between core and reagents
+/datum/species/proc/body_temperature_reagents(mob/living/carbon/human/humi, seconds_per_tick, times_fired)
+	var/reagent_temp_weight = 0
+	for (var/datum/reagent/reagent in humi.reagents.reagent_list)
+		reagent_temp_weight += reagent.volume * reagent.human_heat_transfer_coeff
+	var/target_temp = (humi.reagents.chem_temp * reagent_temp_weight + humi.coretemperature * MOLES_PER_SPACEMAN) / (reagent_temp_weight + MOLES_PER_SPACEMAN)
+	// Results in ~0.07 transfer for 100 moles. Artifically tripled as to be noticable in any way since reagents themselves will also cool down, so target_temp at the end will be far closer to initial bodytemp than you'd think
+	var/natural_change = get_temp_change_amount(target_temp, (3 * reagent_temp_weight / (reagent_temp_weight + MOLES_PER_SPACEMAN)) * seconds_per_tick)
+	humi.adjust_coretemperature(humi.metabolism_efficiency * natural_change)
+	humi.reagents.chem_temp += SIGN(target_temp - humi.reagents.chem_temp) * min(MOLES_PER_SPACEMAN / (reagent_temp_weight + MOLES_PER_SPACEMAN) * seconds_per_tick * humi.metabolism_efficiency, abs(target_temp - humi.reagents.chem_temp))
 
 /**
  * Used to normalize the skin temperature on living mobs
