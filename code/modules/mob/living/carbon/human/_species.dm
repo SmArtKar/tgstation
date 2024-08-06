@@ -1270,8 +1270,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		humi.clear_mood_event("cold")
 		humi.add_mood_event("hot", /datum/mood_event/hot)
 
-		//Remove any slowdown from the cold.
-		humi.remove_movespeed_modifier(/datum/movespeed_modifier/cold)
 		// display alerts based on how hot it is
 		// Can't be a switch due to http://www.byond.com/forum/post/2750423
 		if(bodytemp in bodytemp_heat_damage_limit to BODYTEMP_HEAT_WARNING_2)
@@ -1286,8 +1284,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		// clear any hot moods and apply cold mood
 		humi.clear_mood_event("hot")
 		humi.add_mood_event("cold", /datum/mood_event/cold)
-		// Apply cold slow down
-		humi.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/cold, multiplicative_slowdown = ((bodytemp_cold_damage_limit - humi.bodytemperature) / COLD_SLOWDOWN_FACTOR))
+
 		// Display alerts based how cold it is
 		// Can't be a switch due to http://www.byond.com/forum/post/2750423
 		if(bodytemp in BODYTEMP_COLD_WARNING_2 to bodytemp_cold_damage_limit)
@@ -1302,7 +1299,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	// We're not perfect about this, because it'd just add more work to the base case, and resistances are rare
 	else if (old_bodytemp > bodytemp_heat_damage_limit || old_bodytemp < bodytemp_cold_damage_limit)
 		humi.clear_alert(ALERT_TEMPERATURE)
-		humi.remove_movespeed_modifier(/datum/movespeed_modifier/cold)
 		humi.clear_mood_event("cold")
 		humi.clear_mood_event("hot")
 
@@ -1357,6 +1353,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/cold_damage_limit = bodytemp_cold_damage_limit + (is_hulk ? BODYTEMP_HULK_COLD_DAMAGE_LIMIT_MODIFIER : 0)
 
 	if(humi.coretemperature < cold_damage_limit && !HAS_TRAIT(humi, TRAIT_RESISTCOLD))
+		// Apply cold slow down
+		humi.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/cold, multiplicative_slowdown = ((bodytemp_cold_damage_limit - humi.bodytemperature) / COLD_SLOWDOWN_FACTOR))
+
 		var/damage_type = is_hulk ? BRUTE : BURN // Why?
 		var/damage_mod = coldmod * humi.physiology.cold_mod * (is_hulk ? HULK_COLD_DAMAGE_MOD : 1)
 		// Can't be a switch due to http://www.byond.com/forum/post/2750423
@@ -1366,6 +1365,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			humi.apply_damage(COLD_DAMAGE_LEVEL_2 * damage_mod * seconds_per_tick, damage_type)
 		else
 			humi.apply_damage(COLD_DAMAGE_LEVEL_3 * damage_mod * seconds_per_tick, damage_type)
+	else
+		humi.remove_movespeed_modifier(/datum/movespeed_modifier/cold)
 
 /**
  * Used to apply burn wounds on random limbs
