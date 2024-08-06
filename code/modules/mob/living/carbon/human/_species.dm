@@ -1174,8 +1174,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	for (var/datum/reagent/reagent in humi.reagents.reagent_list)
 		reagent_temp_weight += reagent.volume * reagent.human_heat_transfer_coeff
 	var/target_temp = (humi.reagents.chem_temp * reagent_temp_weight + humi.coretemperature * MOLES_PER_SPACEMAN) / (reagent_temp_weight + MOLES_PER_SPACEMAN)
-	// Results in ~0.07 transfer for 100 moles. Artifically tripled as to be noticable in any way since reagents themselves will also cool down, so target_temp at the end will be far closer to initial bodytemp than you'd think
-	var/natural_change = get_temp_change_amount(target_temp, (3 * reagent_temp_weight / (reagent_temp_weight + MOLES_PER_SPACEMAN)) * seconds_per_tick)
+	var/natural_change = get_temp_change_amount(target_temp, (reagent_temp_weight / (reagent_temp_weight + MOLES_PER_SPACEMAN)) * seconds_per_tick)
 	humi.adjust_coretemperature(humi.metabolism_efficiency * natural_change)
 	humi.reagents.chem_temp += SIGN(target_temp - humi.reagents.chem_temp) * min(MOLES_PER_SPACEMAN / (reagent_temp_weight + MOLES_PER_SPACEMAN) * seconds_per_tick * humi.metabolism_efficiency, abs(target_temp - humi.reagents.chem_temp))
 
