@@ -83,6 +83,18 @@
 	else
 		to_chat(user, span_notice("You swallow a gulp of [src]."))
 
+	if (reagents.chem_temp > BODYTEMP_HEAT_WARNING_2)
+		to_chat(target_mob, span_danger("The liquid pouring down your throat is scalding hot!"))
+	else if (reagents.chem_temp < BODYTEMP_COLD_WARNING_2)
+		to_chat(target_mob, span_danger("The liquid pouring down your throat is freezing cold!"))
+
+	if (reagents.chem_temp > BODYTEMP_HEAT_WARNING_3 || reagents.chem_temp < BODYTEMP_COLD_WARNING_3)
+		if (prob(15))
+			target_mob.emote("scream")
+		var/obj/item/organ/internal/tongue/tongue = user.get_organ_slot(ORGAN_SLOT_TONGUE)
+		if (!isnull(tongue))
+			tongue.apply_organ_damage(5)
+
 	SEND_SIGNAL(src, COMSIG_GLASS_DRANK, target_mob, user)
 	var/fraction = min(gulp_size/reagents.total_volume, 1)
 	reagents.trans_to(target_mob, gulp_size, transferred_by = user, methods = INGEST)
