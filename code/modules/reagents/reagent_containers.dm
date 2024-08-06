@@ -91,9 +91,7 @@
 
 /obj/item/reagent_containers/proc/add_initial_reagents()
 	if(list_reagents)
-		reagents.add_reagent_list(list_reagents)
-	if (!isnull(reagent_temp))
-		reagents.chem_temp = reagent_temp
+		reagents.add_reagent_list(list_reagents, reagtemp = reagent_temp)
 
 /obj/item/reagent_containers/attack_self(mob/user)
 	if(has_variable_transfer_amount)
