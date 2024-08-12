@@ -106,7 +106,8 @@
 /// When a direction of the user changes, so do the masks
 /datum/component/fov_handler/proc/on_dir_change(mob/source, old_dir, new_dir)
 	SIGNAL_HANDLER
-	blocker_mask.dir = new_dir
+	if (!isnull(blocker_mask))
+		blocker_mask.dir = new_dir
 
 /// When a mob logs out, delete the component
 /datum/component/fov_handler/proc/mob_logout(mob/source)
