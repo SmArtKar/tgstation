@@ -182,7 +182,7 @@
 		TIMER_COOLDOWN_END(src, REF(user)) //if we fail we can start again immediately
 		return
 	if(ismineralturf(src))
-		gets_drilled(user, TRUE)
+		gets_drilled(user, TRUE, TRUE)
 		SSblackbox.record_feedback("tally", "pick_used_mining", 1, I.type)
 
 /turf/closed/mineral/attack_hand(mob/user)
@@ -202,13 +202,13 @@
 		TIMER_COOLDOWN_END(src, REF(user)) //if we fail we can start again immediately
 		return
 	if(ismineralturf(src))
-		gets_drilled(user)
+		gets_drilled(user, effects = TRUE)
 
 /turf/closed/mineral/attack_robot(mob/living/silicon/robot/user)
 	if(user.Adjacent(src))
 		attack_hand(user)
 
-/turf/closed/mineral/proc/gets_drilled(mob/user, give_exp = FALSE)
+/turf/closed/mineral/proc/gets_drilled(mob/user, give_exp = FALSE, effects = TRUE)
 	if(istype(user))
 		SEND_SIGNAL(user, COMSIG_MOB_MINED, src, give_exp)
 	if(mineralType && (mineralAmt > 0))
@@ -231,6 +231,9 @@
 	if(defer_change) // TODO: make the defer change var a var for any changeturf flag
 		flags = CHANGETURF_DEFER_CHANGE
 	var/turf/open/mined = ScrapeAway(null, flags)
+	if(effects)
+		var/obj/particles = new /obj/effect/abstract/particle_holder(mined, /particles/rock_mine)
+		QDEL_IN(particles, 0.5 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(AfterChange), flags, old_type), 1, TIMER_UNIQUE)
 	playsound(src, 'sound/effects/break_stone.ogg', 50, TRUE) //beautiful destruction
 	mined.update_visuals()
@@ -239,14 +242,14 @@
 	balloon_alert(user, "digging...")
 	playsound(src, 'sound/effects/break_stone.ogg', 50, TRUE)
 	if(do_after(user, 4 SECONDS, target = src))
-		gets_drilled(user)
+		gets_drilled(user, effects = TRUE)
 
 /turf/closed/mineral/attack_hulk(mob/living/carbon/human/H)
 	..()
 	if(do_after(H, 5 SECONDS, target = src))
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 		H.say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!" ), forced = "hulk")
-		gets_drilled(H)
+		gets_drilled(H, effects = TRUE)
 	return TRUE
 
 /turf/closed/mineral/acid_melt()
@@ -831,7 +834,7 @@
 		if(defuser)
 			SEND_SIGNAL(defuser, COMSIG_LIVING_DEFUSED_GIBTONITE, det_time)
 
-/turf/closed/mineral/gibtonite/gets_drilled(mob/user, give_exp = FALSE, triggered_by_explosion = FALSE)
+/turf/closed/mineral/gibtonite/gets_drilled(mob/user, give_exp = FALSE, triggered_by_explosion = FALSE, effects = FALSE)
 	if(istype(user))
 		SEND_SIGNAL(user, COMSIG_MOB_MINED, src, give_exp)
 
@@ -903,7 +906,7 @@
 		to_chat(usr, span_warning("The rock seems to be too strong to destroy. Maybe I can break it once I become a master miner."))
 
 
-/turf/closed/mineral/strong/gets_drilled(mob/user, give_exp = FALSE)
+/turf/closed/mineral/strong/gets_drilled(mob/user, give_exp = FALSE, effects = FALSE)
 	if(istype(user))
 		SEND_SIGNAL(user, COMSIG_MOB_MINED, src, give_exp)
 
@@ -935,5 +938,21 @@
 
 /turf/closed/mineral/strong/ex_act(severity, target)
 	return FALSE
+
+/particles/rock_mine
+	icon = 'icons/effects/particles/rock.dmi'
+	icon_state = list("rock1" = 1, "rock2" = 1, "rock3" = 2, "rock4" = 2, "rock5" = 2)
+	width = 32
+	height = 32
+	count = 1000
+	spawning = 40
+	lifespan = 1.5 SECONDS
+	fade = 1 SECONDS
+	velocity = generator(GEN_SPHERE, 0, 1, NORMAL_RAND)
+	position = generator(GEN_SPHERE, 12, 12, NORMAL_RAND)
+	drift = generator(GEN_SPHERE, 0, 1, NORMAL_RAND)
+	friction = 0.2
+	gravity = list(0, -1)
+	grow = 0.05
 
 #undef MINING_MESSAGE_COOLDOWN

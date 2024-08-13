@@ -226,7 +226,7 @@
 	if(ismineralturf(target_turf))
 		var/turf/closed/mineral/hit_mineral = target_turf
 		new /obj/effect/temp_visual/kinetic_blast(hit_mineral)
-		hit_mineral.gets_drilled(firer)
+		hit_mineral.gets_drilled(firer, effects = TRUE)
 	return ..()
 
 //trophies

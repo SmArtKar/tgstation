@@ -138,7 +138,7 @@
 		return
 	if(ismineralturf(target))
 		var/turf/closed/mineral/mineral_turf = target
-		mineral_turf.gets_drilled(mod.wearer)
+		mineral_turf.gets_drilled(mod.wearer, effects = TRUE)
 		drain_power(use_energy_cost)
 	else if(isasteroidturf(target))
 		var/turf/open/misc/asteroid/sand_turf = target
@@ -158,7 +158,7 @@
 		to_chat(bumper, span_warning("[icon2html(src, bumper)] Unstable gibtonite ore deposit detected! Drills disabled."))
 		on_deactivation()
 		return
-	mineral_turf.gets_drilled(mod.wearer)
+	mineral_turf.gets_drilled(mod.wearer, effects = TRUE)
 	return COMPONENT_CANCEL_ATTACK_CHAIN
 
 ///Ore Bag - Lets you pick up ores and drop them from the suit.

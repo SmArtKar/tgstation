@@ -12,7 +12,7 @@
 	if(!ismineralturf(target))
 		return
 	var/turf/closed/mineral/mineral_wall = target
-	mineral_wall.gets_drilled(source)
+	mineral_wall.gets_drilled(source, effects = TRUE)
 
 /datum/element/proficient_miner/Detach(datum/source, ...)
 	UnregisterSignal(source, COMSIG_MOVABLE_BUMP)

@@ -53,7 +53,7 @@
 
 	if (ismineralturf(target))
 		var/turf/closed/mineral/mineral_wall = target
-		mineral_wall.gets_drilled(puncher)
+		mineral_wall.gets_drilled(puncher, effects = TRUE)
 		return COMPONENT_HOSTILE_NO_ATTACK
 
 	if (!iswallturf(target)) // In case you're some kind of non-wall non-mineral closed turf yet to be invented
