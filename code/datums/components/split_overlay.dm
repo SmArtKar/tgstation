@@ -5,6 +5,7 @@
 /// If the direction is blocked, the overlay won't draw. it'll also use as a dir the direction it's being drawn in
 /// If the overlay has no plane/layer of its own, we'll give it ones that will at the least draw above wall splits, ensuring it actually renders
 /datum/component/split_overlay
+	dupe_mode = COMPONENT_DUPE_ALLOWED
 	/// We draw this normally, in the splitvis form
 	var/mutable_appearance/standard
 	/// This is drawn hidden (IE: onto a separate plane and onto the wall itself to avoid seeing it through the void with mesons)

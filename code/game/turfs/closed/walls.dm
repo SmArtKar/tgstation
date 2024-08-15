@@ -30,6 +30,8 @@
 	var/girder_type = /obj/structure/girder
 	/// A turf that will replace this turf when this turf is destroyed
 	var/decon_type
+	/// Can this wall have wallpaper applied to it?
+	var/can_have_wallpaper = TRUE
 
 	var/list/dent_decals
 
