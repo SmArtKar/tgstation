@@ -200,12 +200,11 @@
 
 //BOX O' IMPLANTS
 
-/obj/item/storage/box/cyber_implants
+/obj/item/storage/box/syndie_kit/cyber_implants
 	name = "boxed cybernetic implants"
-	desc = "A sleek, sturdy box."
-	icon_state = "cyber_implants"
+	illustration = "cyber_implants"
 
-/obj/item/storage/box/cyber_implants/PopulateContents()
+/obj/item/storage/box/syndie_kit/cyber_implants/PopulateContents()
 	new /obj/item/autosurgeon/syndicate/xray_eyes(src)
 	new /obj/item/autosurgeon/syndicate/anti_stun(src)
 	new /obj/item/autosurgeon/syndicate/reviver(src)

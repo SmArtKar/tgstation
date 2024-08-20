@@ -502,7 +502,7 @@
 /datum/uplink_item/bundles_tc/cyber_implants
 	name = "Cybernetic Implants Bundle"
 	desc = "A box containing x-ray eyes, a CNS Rebooter and Reviver implant. Comes with an autosurgeon for each."
-	item = /obj/item/storage/box/cyber_implants
+	item = /obj/item/storage/box/syndie_kit/cyber_implants
 	cost = 20 //worth 24 TC
 	purchasable_from = UPLINK_SERIOUS_OPS
 
