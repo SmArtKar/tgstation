@@ -337,7 +337,7 @@
 	max_share = 0 //Gotta reset our tracker
 	#endif
 
-	for(var/turf/open/enemy_tile as anything in adjacent_turfs)
+	for(var/turf/open/enemy_tile in adjacent_turfs)
 		#ifdef UNIT_TESTS
 		if(!istype(enemy_tile))
 			stack_trace("closed turf inside of adjacent turfs")
