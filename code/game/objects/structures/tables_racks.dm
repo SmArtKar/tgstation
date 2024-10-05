@@ -756,6 +756,12 @@
 	custom_materials = list(/datum/material/silver =SHEET_MATERIAL_AMOUNT)
 	var/mob/living/carbon/patient = null
 	var/obj/machinery/computer/operating/computer = null
+	var/obj/item/tank/internals/tank = /obj/item/tank/internals/anesthetic
+	var/obj/item/clothing/mask/breath_mask = /obj/item/clothing/mask/muzzle/breath
+
+/obj/structure/table/optable/no_anesthetic
+	tank = null
+	breath_mask = null
 
 /obj/structure/table/optable/Initialize(mapload)
 	. = ..()
@@ -767,6 +773,12 @@
 
 	RegisterSignal(loc, COMSIG_ATOM_ENTERED, PROC_REF(mark_patient))
 	RegisterSignal(loc, COMSIG_ATOM_EXITED, PROC_REF(unmark_patient))
+
+	if (istype(tank))
+		tank = new tank(src)
+
+	if (istype(breath_mask))
+		breath_mask = new breath_mask(src)
 
 /obj/structure/table/optable/Destroy()
 	if(computer && computer.table == src)
