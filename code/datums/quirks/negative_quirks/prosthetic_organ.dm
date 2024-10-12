@@ -2,7 +2,7 @@
 	name = "Prosthetic Organ"
 	desc = "An accident caused you to lose one of your organs. Because of this, you now have a surplus prosthetic!"
 	icon = FA_ICON_LUNGS
-	value = -3
+	value = -2
 	medical_record_text = "During physical examination, patient was found to have a low-budget prosthetic organ. \
 		<b>Removal of these organs is known to be dangerous to the patient as well as the practitioner.</b>"
 	hardcore_value = 3

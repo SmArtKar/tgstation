@@ -1,8 +1,8 @@
-/datum/quirk/blooddeficiency
+/datum/quirk/item_quirk/blood_deficiency
 	name = "Blood Deficiency"
 	desc = "Your body can't produce enough blood to sustain itself."
 	icon = FA_ICON_TINT
-	value = -8
+	value = -4
 	gain_text = span_danger("You feel your vigor slowly fading away.")
 	lose_text = span_notice("You feel vigorous again.")
 	medical_record_text = "Patient requires regular treatment for blood loss due to low production of blood."
@@ -11,17 +11,26 @@
 	/// Minimum amount of blood the paint is set to
 	var/min_blood = BLOOD_VOLUME_SAFE - 25 // just barely survivable without treatment
 
-/datum/quirk/blooddeficiency/add(client/client_source)
+/datum/quirk/item_quirk/blood_deficiency/add_unique(client/client_source)
+	give_item_to_holder(new /obj/item/storage/pill_bottle/iron(get_turf(quirk_holder)),
+			list(
+			LOCATION_LPOCKET = ITEM_SLOT_LPOCKET,
+			LOCATION_RPOCKET = ITEM_SLOT_RPOCKET,
+			LOCATION_BACKPACK = ITEM_SLOT_BACKPACK,
+			LOCATION_HANDS = ITEM_SLOT_HANDS,
+			))
+
+/datum/quirk/item_quirk/blood_deficiency/add(client/client_source)
 	RegisterSignal(quirk_holder, COMSIG_HUMAN_ON_HANDLE_BLOOD, PROC_REF(lose_blood))
 	RegisterSignal(quirk_holder, COMSIG_SPECIES_GAIN, PROC_REF(update_mail))
 
 	var/mob/living/carbon/human/human_holder = quirk_holder
 	update_mail(new_species = human_holder.dna.species)
 
-/datum/quirk/blooddeficiency/remove()
+/datum/quirk/item_quirk/blood_deficiency/remove()
 	UnregisterSignal(quirk_holder, list(COMSIG_HUMAN_ON_HANDLE_BLOOD, COMSIG_SPECIES_GAIN))
 
-/datum/quirk/blooddeficiency/proc/lose_blood(datum/source, seconds_per_tick, times_fired)
+/datum/quirk/item_quirk/blood_deficiency/proc/lose_blood(datum/source, seconds_per_tick, times_fired)
 	SIGNAL_HANDLER
 
 	var/mob/living/carbon/human/human_holder = quirk_holder
@@ -31,9 +40,13 @@
 	if(HAS_TRAIT(quirk_holder, TRAIT_NOBLOOD) && isnull(human_holder.dna.species.exotic_blood))
 		return
 
-	human_holder.blood_volume = max(min_blood, human_holder.blood_volume - human_holder.dna.species.blood_deficiency_drain_rate * seconds_per_tick)
+	var/drain_volume = human_holder.dna.species.blood_deficiency_drain_rate
+	if (human_holder.reagents.has_reagent(/datum/reagent/iron))
+		// Makes iron *far* less effective at restoring your blood. Get some saline, buddy!
+		drain_volume -= 0.20
+	human_holder.blood_volume = max(min_blood, human_holder.blood_volume - drain_volume * seconds_per_tick)
 
-/datum/quirk/blooddeficiency/proc/update_mail(datum/source, datum/species/new_species, datum/species/old_species)
+/datum/quirk/item_quirk/blood_deficiency/proc/update_mail(datum/source, datum/species/new_species, datum/species/old_species)
 	SIGNAL_HANDLER
 
 	mail_goodies.Cut()

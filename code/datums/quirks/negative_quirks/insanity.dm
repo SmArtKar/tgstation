@@ -1,10 +1,9 @@
 /datum/quirk/insanity
 	name = "Reality Dissociation Syndrome"
 	desc = "You suffer from a severe disorder that causes very vivid hallucinations and trouble expressing your ideas. \
-		Mindbreaker toxin can suppress its effects, and you are immune to mindbreaker's hallucinogenic properties. \
-		THIS IS NOT A LICENSE TO GRIEF."
+		Mindbreaker toxin can suppress its effects, and you are immune to mindbreaker's hallucinogenic properties."
 	icon = FA_ICON_GRIN_TONGUE_WINK
-	value = -8
+	value = -4
 	gain_text = span_userdanger("...")
 	lose_text = span_notice("You feel in tune with the world again.")
 	medical_record_text = "Patient suffers from acute Reality Dissociation Syndrome and experiences vivid hallucinations, and may have trouble speaking."
@@ -17,7 +16,7 @@
 	if(!iscarbon(quirk_holder))
 		return
 	var/mob/living/carbon/carbon_quirk_holder = quirk_holder
-	
+
 	// Setup our special RDS mild hallucination.
 	// Not a unique subtype so not to plague subtypesof,
 	// also as we inherit the names and values from our quirk.

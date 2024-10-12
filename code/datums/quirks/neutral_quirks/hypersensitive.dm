@@ -2,7 +2,7 @@
 	name = "Hypersensitive"
 	desc = "For better or worse, everything seems to affect your mood more than it should."
 	icon = FA_ICON_FLUSHED
-	value = -2
+	value = 0
 	gain_text = span_danger("You seem to make a big deal out of everything.")
 	lose_text = span_notice("You don't seem to make a big deal out of everything anymore.")
 	medical_record_text = "Patient demonstrates a high level of emotional volatility."

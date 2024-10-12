@@ -54,8 +54,8 @@
 
 /datum/unit_test/blood_deficiency_mail/Run()
 	var/mob/living/carbon/human/dummy = allocate(/mob/living/carbon/human/consistent)
-	dummy.add_quirk(/datum/quirk/blooddeficiency)
-	var/datum/quirk/blooddeficiency/quirk = dummy.get_quirk(/datum/quirk/blooddeficiency)
+	dummy.add_quirk(/datum/quirk/item_quirk/blood_deficiency)
+	var/datum/quirk/item_quirk/blood_deficiency/quirk = dummy.get_quirk(/datum/quirk/item_quirk/blood_deficiency)
 
 	TEST_ASSERT((species_to_test[dummy.dna.species.type] in quirk.mail_goodies), "Blood deficiency quirk spawned with no mail goodies!")
 

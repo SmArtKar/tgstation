@@ -1465,7 +1465,7 @@
 
 	//if  we have TRAIT_STURDY_FRAME, we reduce our overall speed penalty UNLESS that penalty would be a negative value, and therefore a speed boost.
 	if(speedies > 0 && HAS_TRAIT(src, TRAIT_STURDY_FRAME))
-		speedies *= 0.2
+		speedies *= 0.5
 
 	if(immutable_speedies)
 		add_or_update_variable_movespeed_modifier(

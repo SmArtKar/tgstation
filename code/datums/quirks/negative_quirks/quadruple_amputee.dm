@@ -2,7 +2,7 @@
 	name = "Quadruple Amputee"
 	desc = "Oops! All Prosthetics! Due to some truly cruel cosmic punishment, all your limbs have been replaced with surplus prosthetics."
 	icon = "tg-prosthetic-full"
-	value = -6
+	value = -3
 	medical_record_text = "During physical examination, patient was found to have all low-budget prosthetic limbs."
 	hardcore_value = 6
 	quirk_flags = QUIRK_HUMAN_ONLY|QUIRK_CHANGES_APPEARANCE
