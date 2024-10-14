@@ -70,7 +70,7 @@
 	if(!user.temporarilyRemoveItemFromInventory(input_shock_kit))
 		return
 	if(!overlays_from_child_procs || overlays_from_child_procs.len == 0)
-		var/image/echair_over_overlay = image('icons/obj/chairs.dmi', loc, "echair_over")
+		var/image/echair_over_overlay = image('icons/obj/chairs.dmi', loc, "echair_over", ABOVE_MOB_LAYER)
 		AddComponent(/datum/component/electrified_buckle, (SHOCK_REQUIREMENT_ITEM | SHOCK_REQUIREMENT_LIVE_CABLE | SHOCK_REQUIREMENT_SIGNAL_RECEIVED_TOGGLE), input_shock_kit, list(echair_over_overlay), FALSE)
 	else
 		AddComponent(/datum/component/electrified_buckle, (SHOCK_REQUIREMENT_ITEM | SHOCK_REQUIREMENT_LIVE_CABLE | SHOCK_REQUIREMENT_SIGNAL_RECEIVED_TOGGLE), input_shock_kit, overlays_from_child_procs, FALSE)
