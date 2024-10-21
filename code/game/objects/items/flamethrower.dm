@@ -88,7 +88,7 @@
 	if(target_turf)
 		var/turflist = get_line(user, target_turf)
 		log_combat(user, interacting_with, "flamethrowered", src, "with gas mixture: {[print_gas_mixture(ptank.return_analyzable_air())]}, flamethrower: \"[name]\", igniter: \"[igniter.name]\", tank: \"[ptank.name]\" and tank distribution pressure: \"[siunit(1000 * ptank.distribute_pressure, unit = "Pa", maxdecimals = 9)]\"" + (lit ? " while lit." : "."))
-		flame_turf(turflist)
+		INVOKE_ASYNC(src, PROC_REF(flame_turf), turflist)
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/flamethrower/wrench_act(mob/living/user, obj/item/tool)
@@ -206,21 +206,18 @@
 		return
 	operating = TRUE
 	var/turf/previousturf = get_turf(src)
-	for(var/turf/T in turflist)
-		if(T == previousturf)
+	for(var/turf/target_turf in turflist)
+		if(target_turf == previousturf)
 			continue //so we don't burn the tile we be standin on
 		var/list/turfs_sharing_with_prev = previousturf.get_atmos_adjacent_turfs(alldir=1)
-		if(!(T in turfs_sharing_with_prev))
+		if(!(target_turf in turfs_sharing_with_prev))
 			break
-		if(igniter)
-			igniter.ignite_turf(src,T)
-		else
-			default_ignite(T)
+		ignite_turf(target_turf)
 		sleep(0.1 SECONDS)
-		previousturf = T
+		previousturf = target_turf
 	operating = FALSE
 
-/obj/item/flamethrower/proc/default_ignite(turf/target, release_amount = 0.05)
+/obj/item/flamethrower/proc/ignite_turf(turf/target, release_amount = 0.05)
 	//TODO: DEFERRED Consider checking to make sure tank pressure is high enough before doing this...
 	//Transfer 5% of current tank air contents to turf
 	var/datum/gas_mixture/tank_mix = ptank.return_air()
@@ -229,24 +226,24 @@
 	if(air_transfer.gases[/datum/gas/plasma])
 		air_transfer.gases[/datum/gas/plasma][MOLES] *= 5 //Suffering
 	target.assume_air(air_transfer)
-	//Burn it based on transferred gas
-	target.hotspot_expose((tank_mix.temperature*2) + 380,500)
-	//location.hotspot_expose(1000,500,1)
+	if(igniter)
+		igniter.flamethrower_act(src, tank_mix, target)
 
 /obj/item/flamethrower/Initialize(mapload)
 	. = ..()
-	if(create_full)
-		if(!weldtool)
-			weldtool = new /obj/item/weldingtool(src)
-		weldtool.status = FALSE
-		if(!igniter)
-			igniter = new igniter_type(src)
-		igniter.secured = FALSE
-		status = TRUE
-		if(create_with_tank)
-			ptank = new /obj/item/tank/internals/plasma/full(src)
-		update_appearance()
 	RegisterSignal(src, COMSIG_ITEM_RECHARGED, PROC_REF(instant_refill))
+	if(!create_full)
+		return
+	if(!weldtool)
+		weldtool = new /obj/item/weldingtool(src)
+	weldtool.status = FALSE
+	if(!igniter)
+		igniter = new igniter_type(src)
+	igniter.secured = FALSE
+	status = TRUE
+	if(create_with_tank)
+		ptank = new /obj/item/tank/internals/plasma/full(src)
+	update_appearance()
 
 /obj/item/flamethrower/full
 	create_full = TRUE
@@ -255,20 +252,25 @@
 	create_with_tank = TRUE
 
 /obj/item/flamethrower/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(damage && attack_type == PROJECTILE_ATTACK && damage_type != STAMINA && prob(15))
-		owner.visible_message(span_danger("\The [attack_text] hits the fuel tank on [owner]'s [name], rupturing it! What a shot!"))
-		var/turf/target_turf = get_turf(owner)
-		owner.log_message("held a flamethrower tank detonated by a projectile ([hitby])", LOG_GAME)
-		igniter.ignite_turf(src,target_turf, release_amount = 100)
-		qdel(ptank)
-		return 1 //It hit the flamethrower, not them
-
+	if(!damage || attack_type != PROJECTILE_ATTACK || damage_type == STAMINA || !prob(15))
+		return
+	owner.visible_message(span_danger("\The [attack_text] hits the fuel tank on [owner]'s [name], rupturing it! What a shot!"))
+	var/turf/target_turf = get_turf(owner)
+	owner.log_message("held a flamethrower tank detonated by a projectile ([hitby])", LOG_GAME)
+	igniter.ignite_turf(src,target_turf, release_amount = 100)
+	qdel(ptank)
+	return TRUE //It hit the flamethrower, not them
 
 /obj/item/assembly/igniter/proc/flamethrower_process(turf/open/location)
 	location.hotspot_expose(heat,2)
 
-/obj/item/assembly/igniter/proc/ignite_turf(obj/item/flamethrower/F,turf/open/location,release_amount = 0.05)
-	F.default_ignite(location,release_amount)
+/obj/item/assembly/igniter/proc/flamethrower_act(obj/item/flamethrower/weapon, datum/gas_mixture/tank_mix, turf/open/location)
+	//Burn it based on transferred gas
+	location.hotspot_expose((tank_mix.temperature * 2) + 380, 500)
+
+/obj/item/assembly/igniter/condenser/flamethrower_act(obj/item/flamethrower/weapon, datum/gas_mixture/tank_mix, turf/open/location)
+	enviro.temperature = clamp(min(ROOM_TEMP, enviro.temperature * 0.9), MIN_FREEZE_TEMP, MAX_FREEZE_TEMP)
+	location.air_update_turf(FALSE, FALSE)
 
 /obj/item/flamethrower/proc/instant_refill()
 	SIGNAL_HANDLER
