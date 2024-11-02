@@ -138,7 +138,7 @@
 	mod_ai.set_blackboard_key(BB_MOD_IMPLANT, src)
 	module.mod.interaction_flags_item &= ~INTERACT_ITEM_ATTACK_HAND_PICKUP
 	module.mod.AddElement(/datum/element/movetype_handler)
-	ADD_TRAIT(module.mod, TRAIT_MOVE_FLYING, MOD_TRAIT)
+	ADD_TRAIT(module.mod, TRAIT_MOVE_FLYING, REF(src))
 	animate(module.mod, 0.2 SECONDS, pixel_x = base_pixel_y, pixel_y = base_pixel_y)
 	module.mod.add_overlay(jet_icon)
 	RegisterSignal(module.mod, COMSIG_MOVABLE_MOVED, PROC_REF(on_move))
@@ -150,7 +150,7 @@
 		return
 	QDEL_NULL(module.mod.ai_controller)
 	module.mod.interaction_flags_item |= INTERACT_ITEM_ATTACK_HAND_PICKUP
-	REMOVE_TRAIT(module.mod, TRAIT_MOVE_FLYING, MOD_TRAIT)
+	REMOVE_TRAIT(module.mod, TRAIT_MOVE_FLYING, REF(src))
 	module.mod.RemoveElement(/datum/element/movetype_handler)
 	module.mod.cut_overlay(jet_icon)
 	module.mod.transform = matrix()
