@@ -133,11 +133,6 @@
 		MK.uninstall(src)
 	return ..()
 
-/obj/item/gun/energy/recharge/kinetic_accelerator/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
-	. = ..()
-	if(istype(arrived, /obj/item/borg/upgrade/modkit))
-		modkits |= arrived
-
 /obj/item/gun/energy/recharge/kinetic_accelerator/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/borg/upgrade/modkit))
 		var/obj/item/borg/upgrade/modkit/MK = I
@@ -282,11 +277,18 @@
 	. = ..()
 	. += span_notice("Occupies <b>[cost]%</b> of mod capacity.")
 
+/*
 /obj/item/borg/upgrade/modkit/attackby(obj/item/A, mob/user)
 	if(istype(A, /obj/item/gun/energy/recharge/kinetic_accelerator) && !issilicon(user))
 		install(A, user)
 	else
 		return ..()
+*/
+
+/obj/item/borg/upgrade/modkit/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
+	if(istype(tool, /obj/item/gun/energy/recharge/kinetic_accelerator) && !issilicon(user))
+		return install(tool, user) ? ITEM_INTERACT_SUCCESS : ITEM_INTERACT_BLOCKING
+	return NONE
 
 /obj/item/borg/upgrade/modkit/action(mob/living/silicon/robot/R)
 	. = ..()
@@ -294,35 +296,35 @@
 		for(var/obj/item/gun/energy/recharge/kinetic_accelerator/cyborg/H in R.model.modules)
 			return install(H, usr, FALSE)
 
-/obj/item/borg/upgrade/modkit/proc/install(obj/item/gun/energy/recharge/kinetic_accelerator/KA, mob/user, transfer_to_loc = TRUE)
-	. = TRUE
+/obj/item/borg/upgrade/modkit/proc/install(obj/item/gun/energy/recharge/kinetic_accelerator/accelerator, mob/user, transfer_to_loc = TRUE)
 	if(minebot_upgrade)
-		if(minebot_exclusive && !istype(KA.loc, /mob/living/basic/mining_drone))
+		if(minebot_exclusive && !istype(accelerator.loc, /mob/living/basic/mining_drone))
 			to_chat(user, span_notice("The modkit you're trying to install is only rated for minebot use."))
 			return FALSE
-	else if(istype(KA.loc, /mob/living/basic/mining_drone))
+	else if(istype(accelerator.loc, /mob/living/basic/mining_drone))
 		to_chat(user, span_notice("The modkit you're trying to install is not rated for minebot use."))
 		return FALSE
+
+	if(accelerator.get_remaining_mod_capacity() < cost)
+		to_chat(user, span_notice("You don't have room(<b>[accelerator.get_remaining_mod_capacity()]%</b> remaining, [cost]% needed) to install this modkit. Use a crowbar or right click with an empty hand to remove existing modkits."))
+		return FALSE
+
 	if(denied_type)
 		var/number_of_denied = 0
-		for(var/obj/item/borg/upgrade/modkit/modkit_upgrade as anything in KA.modkits)
+		for(var/obj/item/borg/upgrade/modkit/modkit_upgrade as anything in accelerator.modkits)
 			if(istype(modkit_upgrade, denied_type))
 				number_of_denied++
-			if(number_of_denied >= maximum_of_type)
-				. = FALSE
-				break
-	if(KA.get_remaining_mod_capacity() >= cost)
-		if(.)
-			if(transfer_to_loc && !user.transferItemToLoc(src, KA))
-				return
-			to_chat(user, span_notice("You install the modkit."))
-			playsound(loc, 'sound/items/tools/screwdriver.ogg', 100, TRUE)
-			KA.modkits |= src
-		else
-			to_chat(user, span_notice("The modkit you're trying to install would conflict with an already installed modkit. Remove existing modkits first."))
-	else
-		to_chat(user, span_notice("You don't have room(<b>[KA.get_remaining_mod_capacity()]%</b> remaining, [cost]% needed) to install this modkit. Use a crowbar or right click with an empty hand to remove existing modkits."))
-		. = FALSE
+				if(number_of_denied == maximum_of_type)
+					to_chat(user, span_notice("The modkit you're trying to install would conflict with an already installed modkit. Remove existing modkits first."))
+					return FALSE
+
+	if(transfer_to_loc && !user.transferItemToLoc(src, accelerator))
+		return FALSE
+
+	to_chat(user, span_notice("You install the modkit."))
+	playsound(loc, 'sound/items/tools/screwdriver.ogg', 100, TRUE)
+	accelerator.modkits += src
+	return TRUE
 
 /obj/item/borg/upgrade/modkit/deactivate(mob/living/silicon/robot/R, user = usr)
 	. = ..()
@@ -330,8 +332,8 @@
 		for(var/obj/item/gun/energy/recharge/kinetic_accelerator/cyborg/KA in R.model.modules)
 			uninstall(KA)
 
-/obj/item/borg/upgrade/modkit/proc/uninstall(obj/item/gun/energy/recharge/kinetic_accelerator/KA)
-	KA.modkits -= src
+/obj/item/borg/upgrade/modkit/proc/uninstall(obj/item/gun/energy/recharge/kinetic_accelerator/accelerator)
+	accelerator.modkits -= src
 
 /obj/item/borg/upgrade/modkit/proc/modify_projectile(obj/projectile/kinetic/K)
 
