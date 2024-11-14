@@ -74,11 +74,6 @@
 	* BOLT_TYPE_NO_BOLT - This is shotguns and revolvers.  clicking will dump out all the bullets in the gun, spent or not.
 	* see combat.dm defines for bolt types: BOLT_TYPE_STANDARD; BOLT_TYPE_LOCKING; BOLT_TYPE_OPEN; BOLT_TYPE_NO_BOLT
 	**/
-	var/bolt_type = BOLT_TYPE_STANDARD
-	///Used for locking bolt and open bolt guns. Set a bit differently for the two but prevents firing when true for both.
-	var/bolt_locked = FALSE
-	var/show_bolt_icon = TRUE ///Hides the bolt icon.
-	///Whether the gun has to be racked each shot or not.
 	var/semi_auto = TRUE
 	///Actual magazine currently contained within the gun
 	var/obj/item/ammo_box/magazine/magazine
