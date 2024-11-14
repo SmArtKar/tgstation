@@ -79,10 +79,7 @@
 	var/obj/item/ammo_box/magazine/magazine
 	///whether the gun ejects the chambered casing
 	var/casing_ejector = TRUE
-	///Whether the gun has an internal magazine or a detatchable one. Overridden by BOLT_TYPE_NO_BOLT.
-	var/internal_magazine = FALSE
-	///Phrasing of the bolt in examine and notification messages; ex: bolt, slide, etc.
-	var/bolt_wording = "bolt"
+	///Whether the gun has an internal magaz
 	///Phrasing of the magazine in examine and notification messages; ex: magazine, box, etx
 	var/magazine_wording = "magazine"
 	///Phrasing of the cartridge in examine and notification messages; ex: bullet, shell, dart, etc.
