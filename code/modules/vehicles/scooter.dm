@@ -94,17 +94,16 @@
 	var/mob/living/rider = buckled_mobs[1]
 	if(rider.move_intent == MOVE_INTENT_WALK && can_slow_down) //Going slow prevents you from crashing.
 		return
-	crash(bumped_thing)
+	crash(rider, bumped_thing)
 
-/obj/vehicle/ridden/scooter/skateboard/proc/crash(atom/bumped_thing)
-	next_crash = world.time + 10
-	rider.adjustStaminaLoss(instability*6)
+/obj/vehicle/ridden/scooter/skateboard/proc/crash(mob/living/rider, atom/bumped_thing)
+	next_crash = world.time + 1 SECONDS
+	rider.adjustStaminaLoss(instability * 6)
 	playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
 
 	if(iscarbon(rider) && rider.getStaminaLoss() < 100 && !grinding && !iscarbon(bumped_thing))
-		var/backdir = REVERSE_DIR(dir)
-		step(src, backdir)
-		rider.spin(4, 1)
+		step(src, REVERSE_DIR(dir))
+		rider.spin(0.4 SECONDS, 1)
 		return
 
 	var/atom/throw_target = get_edge_target_turf(rider, pick(GLOB.cardinals))

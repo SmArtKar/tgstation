@@ -45,7 +45,7 @@
 	/// Processing sound loop. This is basically a fancy microwave from player's perspective anyways.
 	var/datum/looping_sound/microwave/soundloop
 	/// What sort of items we're producing
-	var/created_type
+	var/created_type = /obj/item/melee/skateboard/hoverboard/jetboard
 	/// Items required to produce a hoverboard
 	var/static/list/required_items = list(
 		/obj/item/stack/sheet/mineral/wood = 5,
@@ -247,7 +247,7 @@
 		if (emissive_overlay)
 			flick("[base_icon_state]_closing_e", emissive_overlay)
 		playsound(src, 'sound/machines/compiler/compiler-stage1.ogg', 50)
-		addtimer(CALLBACK(soundloop, TYPE_PROC_REF(/datum/soundloop, start)), 2.5 SECONDS)
+		addtimer(CALLBACK(soundloop, TYPE_PROC_REF(/datum/looping_sound, start)), 2.5 SECONDS)
 		addtimer(CALLBACK(src, PROC_REF(finish_processing)), HOVERFAB_PRODUCTION_TIME)
 		return
 
@@ -367,53 +367,102 @@
 	attack_verb_simple = list("bash", "crash", "grind", "skate")
 	board_item_type = /obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard
 
+/obj/item/melee/skateboard/hoverboard/jetboard/update_overlays()
+	. = ..()
+	. += emissive_appearance(icon, "[icon_state]_e", src)
+
 /obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard
 	name = "jetboard"
 	desc = "A sleek jetboard using hardlight jets to push itself off the ground. You can feel its internals trembling under your feet."
 	board_item_type = /obj/item/melee/skateboard/hoverboard/jetboard
-	instability = 1.66 // ~10 stam damage per impact
+	instability = 2
 	icon_state = "jetboard"
 	spark_type = /datum/effect_system/spark_spread/holographic
 
-// Jetboards, besides being
-/obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/crash(atom/bumped_thing)
+/obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/update_overlays()
+	. = ..()
+	. += emissive_appearance(icon, "[icon_state]_e", src)
 
-/*
+// Jetboards, besides being rad as fuck, can be used to "tackle" people by ramming into them at full speed with throw intent on.
+// In addition to that, normal crashes also act as rams and simply knock the victim down while dealing some hefty stamina to you
+/obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/crash(mob/living/rider, atom/bumped_thing)
+	if (!iscarbon(rider) || rider.getStaminaLoss() > (iscarbon(bumped_thing) ? 80 : 92) || grinding)
+		return ..()
 
-/obj/vehicle/ridden/scooter/skateboard/proc/crash(atom/bumped_thing)
-	next_crash = world.time + 10
-	rider.adjustStaminaLoss(instability*6)
-	playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
+	var/mob/living/carbon/user = rider
+	next_crash = world.time + (iscarbon(bumped_thing) ? 1 : 1 SECONDS)
 
-	if(iscarbon(rider) && rider.getStaminaLoss() < 100 && !grinding && !iscarbon(bumped_thing))
-		var/backdir = REVERSE_DIR(dir)
-		step(src, backdir)
-		rider.spin(4, 1)
+	if (!iscarbon(bumped_thing))
+		playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
+		user.adjustStaminaLoss(8)
+		step(src, REVERSE_DIR(dir))
+		SpinAnimation(0.4 SECONDS, 1) //Sick flips my dude
+		user.SpinAnimation(0.4 SECONDS, 1)
+		user.spin(0.4 SECONDS, 1)
 		return
 
-	var/atom/throw_target = get_edge_target_turf(rider, pick(GLOB.cardinals))
-	unbuckle_mob(rider)
-
-	if((istype(bumped_thing, /obj/machinery/disposal/bin)))
-		rider.Paralyze(8 SECONDS)
-		rider.forceMove(bumped_thing)
-		forceMove(bumped_thing)
-		visible_message(span_danger("[src] crashes into [bumped_thing], and gets dumped straight into it!"))
-		return
-
-	rider.throw_at(throw_target, 3, 2)
-	var/head_slot = rider.get_item_by_slot(ITEM_SLOT_HEAD)
-	if(!head_slot || !(istype(head_slot,/obj/item/clothing/head/helmet) || istype(head_slot,/obj/item/clothing/head/utility/hardhat)))
-		rider.adjustOrganLoss(ORGAN_SLOT_BRAIN, 5)
-		rider.updatehealth()
-
-	visible_message(span_danger("[src] crashes into [bumped_thing], sending [rider] flying!"))
-	rider.Paralyze(8 SECONDS)
-	if(!iscarbon(bumped_thing))
-		return
 	var/mob/living/carbon/victim = bumped_thing
-	var/grinding_mulitipler = 1
-	if(grinding)
-		grinding_mulitipler = 2
-	victim.Knockdown(4 * grinding_mulitipler SECONDS)
-*/
+	if (!user.throw_mode)
+		playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
+		victim.Knockdown(0.1 SECONDS)
+		victim.adjustStaminaLoss(10)
+		victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
+		user.adjustStaminaLoss(20)
+		user.adjust_eye_blur(2 SECONDS)
+		user.SpinAnimation(0.5 SECONDS, 1)
+		throw_at(get_step(get_step(src, REVERSE_DIR(dir)), REVERSE_DIR(dir)), 2, 1, spin = TRUE) // YEET
+		return
+
+	user.toggle_throw_mode()
+	// Really its just oversimplified tackling because jesus christ that thing is needlessly complicated
+	if(victim.check_block(user, 0, user.name, attack_type = LEAP_ATTACK))
+		victim.visible_message(span_danger("[user]'s [src] tackle is blocked by [victim], softening the effect!"), span_userdanger("You block [user]'s attempt to tackle you with [src], softening the effect!"), ignored_mobs = user)
+		to_chat(user, span_userdanger("[victim] blocks your tackle attempt, softening the effect!"))
+		neutral_effect(user, victim)
+		return
+
+	// Having more stamloss than the tackler screws you over a bit and vise versa
+	var/defense_mod = (user.getStaminaLoss() - victim.getStaminaLoss()) / 50
+	if(HAS_TRAIT(victim, TRAIT_GRABWEAKNESS))
+		defense_mod -= 2
+	if(HAS_TRAIT(victim, TRAIT_GIANT))
+		defense_mod += 2
+
+	// Unlike tackling, you have some advantage when pulling this off and roll directly influences the effects
+	// Going into floats a bit due to stamloss providing minor difference
+	var/tackle_roll = rand(-10, 20) / 5 - defense_mod
+	// High risk, small reward
+	if (grinding)
+		tackle_roll += rand(-2, 1)
+
+	if (tackle_roll > -1 && tackle_roll < 1)
+		neutral_effect(user, victim)
+		return
+
+	if (tackle_roll >= 1)
+		playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
+		victim.Knockdown(tackle_roll * 1 SECONDS)
+		victim.adjust_staggered_up_to(tackle_roll * 2 SECONDS, 10 SECONDS)
+		user.adjustStaminaLoss(20 / tackle_roll)
+		user.SpinAnimation(0.5 SECONDS, 1)
+		sparks.start()
+		throw_at(get_step(get_step(src, dir), dir), 2, 1, spin = TRUE) // Over the bodied target!
+		victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
+		return
+
+	// Fuck around and find out, really
+	instability *= tackle_roll * -2
+	. = ..()
+	instability /= tackle_roll * -2
+
+/obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/proc/neutral_effect(mob/living/carbon/user, mob/living/carbon/victim)
+	playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
+	// Some stamina to the user, some stagger and a bit less stamina to the victim
+	victim.adjustStaminaLoss(10)
+	victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+	user.adjustStaminaLoss(20)
+	user.spin(0.4 SECONDS, 1)
+	user.SpinAnimation(0.4 SECONDS, 1)
+	throw_at(get_step(get_step(src, REVERSE_DIR(dir)), REVERSE_DIR(dir)), 2, 1, spin = TRUE) // YEET ourselves
+	victim.throw_at(get_edge_target_turf(victim, dir), 2, 1, spin = FALSE, gentle = TRUE) // and push the victim back
+	victim.visible_message(span_danger("[user] crashes into [victim], knocking them both back!"), span_userdanger("[user] crashes into you, knocking both of you back!"))
