@@ -87,11 +87,11 @@
 /datum/effect_system/spark_spread
 	effect_type = /obj/effect/particle_effect/sparks
 
-
+/datum/effect_system/spark_spread/holographic
+	effect_type = /obj/effect/particle_effect/sparks/holographic
 
 /datum/effect_system/spark_spread/quantum
 	effect_type = /obj/effect/particle_effect/sparks/quantum
-
 
 //electricity
 
@@ -102,6 +102,10 @@
 /obj/effect/particle_effect/sparks/quantum
 	name = "quantum sparks"
 	icon_state = "quantum_sparks"
+
+/obj/effect/particle_effect/sparks/holographic
+	name = "holographic sparks"
+	icon_state = "shieldsparkles"
 
 /datum/effect_system/lightning_spread
 	effect_type = /obj/effect/particle_effect/sparks/electricity

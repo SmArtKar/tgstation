@@ -41,6 +41,8 @@
 	density = FALSE
 	///Sparks datum for when we grind on tables
 	var/datum/effect_system/spark_spread/sparks
+	///What sort of sparks do we spawn?
+	var/spark_type = /datum/effect_system/spark_spread
 	///Whether the board is currently grinding
 	var/grinding = FALSE
 	///Stores the time of the last crash plus a short cooldown, affects availability and outcome of certain actions
@@ -54,7 +56,7 @@
 
 /obj/vehicle/ridden/scooter/skateboard/Initialize(mapload)
 	. = ..()
-	sparks = new
+	sparks = new spark_type()
 	sparks.set_up(1, 0, src)
 	sparks.attach(src)
 
@@ -92,36 +94,44 @@
 	var/mob/living/rider = buckled_mobs[1]
 	if(rider.move_intent == MOVE_INTENT_WALK && can_slow_down) //Going slow prevents you from crashing.
 		return
+	crash(bumped_thing)
 
+/obj/vehicle/ridden/scooter/skateboard/proc/crash(atom/bumped_thing)
 	next_crash = world.time + 10
 	rider.adjustStaminaLoss(instability*6)
 	playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
-	if(!iscarbon(rider) || rider.getStaminaLoss() >= 100 || grinding || iscarbon(bumped_thing))
-		var/atom/throw_target = get_edge_target_turf(rider, pick(GLOB.cardinals))
-		unbuckle_mob(rider)
-		if((istype(bumped_thing, /obj/machinery/disposal/bin)))
-			rider.Paralyze(8 SECONDS)
-			rider.forceMove(bumped_thing)
-			forceMove(bumped_thing)
-			visible_message(span_danger("[src] crashes into [bumped_thing], and gets dumped straight into it!"))
-			return
-		rider.throw_at(throw_target, 3, 2)
-		var/head_slot = rider.get_item_by_slot(ITEM_SLOT_HEAD)
-		if(!head_slot || !(istype(head_slot,/obj/item/clothing/head/helmet) || istype(head_slot,/obj/item/clothing/head/utility/hardhat)))
-			rider.adjustOrganLoss(ORGAN_SLOT_BRAIN, 5)
-			rider.updatehealth()
-		visible_message(span_danger("[src] crashes into [bumped_thing], sending [rider] flying!"))
-		rider.Paralyze(8 SECONDS)
-		if(iscarbon(bumped_thing))
-			var/mob/living/carbon/victim = bumped_thing
-			var/grinding_mulitipler = 1
-			if(grinding)
-				grinding_mulitipler = 2
-			victim.Knockdown(4 * grinding_mulitipler SECONDS)
-	else
+
+	if(iscarbon(rider) && rider.getStaminaLoss() < 100 && !grinding && !iscarbon(bumped_thing))
 		var/backdir = REVERSE_DIR(dir)
 		step(src, backdir)
 		rider.spin(4, 1)
+		return
+
+	var/atom/throw_target = get_edge_target_turf(rider, pick(GLOB.cardinals))
+	unbuckle_mob(rider)
+
+	if((istype(bumped_thing, /obj/machinery/disposal/bin)))
+		rider.Paralyze(8 SECONDS)
+		rider.forceMove(bumped_thing)
+		forceMove(bumped_thing)
+		visible_message(span_danger("[src] crashes into [bumped_thing], and gets dumped straight into it!"))
+		return
+
+	rider.throw_at(throw_target, 3, 2)
+	var/head_slot = rider.get_item_by_slot(ITEM_SLOT_HEAD)
+	if(!head_slot || !(istype(head_slot,/obj/item/clothing/head/helmet) || istype(head_slot,/obj/item/clothing/head/utility/hardhat)))
+		rider.adjustOrganLoss(ORGAN_SLOT_BRAIN, 5)
+		rider.updatehealth()
+
+	visible_message(span_danger("[src] crashes into [bumped_thing], sending [rider] flying!"))
+	rider.Paralyze(8 SECONDS)
+	if(!iscarbon(bumped_thing))
+		return
+	var/mob/living/carbon/victim = bumped_thing
+	var/grinding_mulitipler = 1
+	if(grinding)
+		grinding_mulitipler = 2
+	victim.Knockdown(4 * grinding_mulitipler SECONDS)
 
 ///Moves the vehicle forward and if it lands on a table, repeats
 /obj/vehicle/ridden/scooter/skateboard/proc/grind()
@@ -152,6 +162,7 @@
 		if(prob(25))
 			location.hotspot_expose(1000,1000)
 			sparks.start() //the most radical way to start plasma fires
+
 	for(var/mob/living/carbon/victim in location)
 		if(victim.body_position == LYING_DOWN)
 			playsound(location, 'sound/items/trayhit/trayhit2.ogg', 40)
@@ -159,6 +170,7 @@
 			victim.Paralyze(1.5 SECONDS)
 			skater.adjustStaminaLoss(instability)
 			victim.visible_message(span_danger("[victim] straight up gets grinded into the ground by [skater]'s [src]! Radical!"))
+
 	addtimer(CALLBACK(src, PROC_REF(grind)), 0.1 SECONDS)
 
 /obj/vehicle/ridden/scooter/skateboard/mouse_drop_dragged(atom/over_object, mob/user)
