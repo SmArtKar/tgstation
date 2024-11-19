@@ -394,7 +394,7 @@
 
 	if (!iscarbon(bumped_thing))
 		playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
-		user.adjustStaminaLoss(8)
+		user.adjustStaminaLoss(7)
 		step(src, REVERSE_DIR(dir))
 		SpinAnimation(0.4 SECONDS, 1) //Sick flips my dude
 		user.SpinAnimation(0.4 SECONDS, 1)
@@ -443,7 +443,7 @@
 		playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
 		victim.Knockdown(tackle_roll * 1 SECONDS)
 		victim.adjust_staggered_up_to(tackle_roll * 2 SECONDS, 10 SECONDS)
-		user.adjustStaminaLoss(20 / tackle_roll)
+		user.adjustStaminaLoss(30 / tackle_roll)
 		user.SpinAnimation(0.5 SECONDS, 1)
 		sparks.start()
 		throw_at(get_step(get_step(src, dir), dir), 2, 1, spin = TRUE) // Over the bodied target!
