@@ -13,6 +13,7 @@
 
 /datum/quirk/monochromatic/add(client/client_source)
 	quirk_holder.add_client_colour(/datum/client_colour/monochrome)
+	ADD_TRAIT(quirk_holder, TRAIT_COLORBLIND, QUIRK_TRAIT)
 
 /datum/quirk/monochromatic/post_add()
 	if(is_detective_job(quirk_holder.mind.assigned_role))
@@ -21,3 +22,4 @@
 
 /datum/quirk/monochromatic/remove()
 	quirk_holder.remove_client_colour(/datum/client_colour/monochrome)
+	REMOVE_TRAIT(quirk_holder, TRAIT_COLORBLIND, QUIRK_TRAIT)

@@ -15,14 +15,14 @@
  * * mob/viewer: The mob the text will be shown to. Nullable (But only in the form of it won't runtime).
  * * text: The text to be shown to viewer. Must not be null.
  */
-/atom/proc/balloon_alert(mob/viewer, text)
+/atom/proc/balloon_alert(mob/viewer, text, starting_x = 0, starting_y = 0)
 	SHOULD_NOT_SLEEP(TRUE)
 
-	INVOKE_ASYNC(src, PROC_REF(balloon_alert_perform), viewer, text)
+	INVOKE_ASYNC(src, PROC_REF(balloon_alert_perform), viewer, text, starting_x, starting_y)
 
 /// Create balloon alerts (text that floats up) to everything within range.
 /// Will only display to people who can see.
-/atom/proc/balloon_alert_to_viewers(message, self_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs)
+/atom/proc/balloon_alert_to_viewers(message, self_message, vision_distance = DEFAULT_MESSAGE_RANGE, list/ignored_mobs, starting_x = 0, starting_y = 0)
 	SHOULD_NOT_SLEEP(TRUE)
 
 	var/list/hearers = get_hearers_in_view(vision_distance, src)
@@ -32,13 +32,13 @@
 		if (hearer.is_blind())
 			continue
 
-		balloon_alert(hearer, (hearer == src && self_message) || message)
+		balloon_alert(hearer, (hearer == src && self_message) || message, starting_x, starting_y)
 
 // Do not use.
 // MeasureText blocks. I have no idea for how long.
 // I would've made the maptext_height update on its own, but I don't know
 // if this would look bad on laggy clients.
-/atom/proc/balloon_alert_perform(mob/viewer, text)
+/atom/proc/balloon_alert_perform(mob/viewer, text, starting_x, starting_y)
 
 	var/client/viewer_client = viewer?.client
 	if (isnull(viewer_client))
@@ -54,7 +54,8 @@
 	balloon_alert.alpha = 0
 	balloon_alert.appearance_flags = RESET_ALPHA|RESET_COLOR|RESET_TRANSFORM
 	balloon_alert.maptext = MAPTEXT("<span style='text-align: center; -dm-text-outline: 1px #0005'>[text]</span>")
-	balloon_alert.maptext_x = (BALLOON_TEXT_WIDTH - bound_width) * -0.5
+	balloon_alert.maptext_x = (BALLOON_TEXT_WIDTH - bound_width) * -0.5 + starting_x
+	balloon_alert.maptext_y = starting_y
 	WXH_TO_HEIGHT(viewer_client?.MeasureText(text, null, BALLOON_TEXT_WIDTH), balloon_alert.maptext_height)
 	balloon_alert.maptext_width = BALLOON_TEXT_WIDTH
 

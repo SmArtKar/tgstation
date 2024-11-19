@@ -8,6 +8,13 @@
 #define HOVERFAB_STATE_OPEN 2
 #define HOVERFAB_STATE_PROCESSING 3
 
+/// How many answers in a row you need to give. Increased by the number of subsequently won rounds.
+#define HOVERFAB_BASE_ROUNDS 4
+/// Delay between each color
+#define HOVERFAB_BASE_DELAY 0.8 SECONDS
+/// How much delay is deducted for every won round
+#define HOVERFAB_DELAY_REDUCTION 0.15 SECONDS
+
 /// Hoverfabricator: A small side-quest for maintenance dwellers (assistants or bored engineers) to do.
 /// You need to repair it with cable coils, plasteel and a welder and then win 3 rounds of Simon Says in order to unlock it
 /// Give it some planks, cable coil, a capacitor and a couple of lightbulbs to get a fancy fast hoverboard that can knock people down
@@ -27,11 +34,26 @@
 	var/repair_state = HOVERFAB_REPAIR_INTACT
 	/// What is our hoverfab's activation state
 	var/current_state = HOVERFAB_STATE_INACTIVE
+	/// How many rounds of Simon Says have been won so far?
+	var/won_rounds = 0
+	/// Is there an active game going on?
+	var/active_game = FALSE
 	/// Emissive overlay, stored so we can flick it for animations
 	var/mutable_appearance/emissive_overlay
+	/// Items required to produce a hoverboard
+	var/static/list/required_items = list(
+		/obj/item/stack/sheet/mineral/wood = 5,
+		/obj/item/stack/cable_coil = MAXCOIL,
+		/obj/item/light/bulb = 2,
+		/obj/item/stock_parts/capacitor = 1,
+	)
 
 /obj/machinery/hoverfab/broken
 	repair_state = HOVERFAB_REPAIR_COIL
+
+/obj/machinery/hoverfab/debug
+	current_state = HOVERFAB_STATE_ACTIVATED
+	won_rounds = 3
 
 /obj/machinery/hoverfab/Initialize(mapload)
 	. = ..()
@@ -50,6 +72,37 @@
 			. += span_notice("Its top panel is cracked and doesn't seem to budge. Maybe you could repair it with some <b>plasteel</b>...")
 		if (HOVERFAB_REPAIR_WELDING)
 			. += span_notice("Its casing is in a pretty rough shape and has some severe dents in it, jamming the lid. You could probably straighten it out after <b>heating the metal up</b>.")
+
+	if (state != HOVERFAB_STATE_OPEN)
+		return
+
+	var/list/missing_items = required_items.Copy()
+	for (var/atom/something as anything in contents)
+		var/found_type = null
+		for (var/req_type in missing_items)
+			if (istype(something, found_type))
+				found_type = something
+				break
+
+		if (!found_type)
+			continue
+
+		if (isstack(something))
+			var/obj/item/stack/stack_something = something
+			missing_items[found_type] -= stack_something.amount
+		else
+			missing_items[found_type] -= 1
+
+		if (missing_items[found_type] <= 0)
+			missing_items -= found_type
+
+	if (!length(missing_items))
+		return
+
+	. += span_notice("[src] needs the following items before it can activate:")
+
+	for (var/atom/missed_item in missing_items)
+		. += span_notice("[missed_item::name]: [required_items[missed_item] - missing_items[missed_item]]/[required_items[missed_item]]")
 
 /obj/machinery/hoverfab/update_icon_state()
 	. = ..()
@@ -73,6 +126,28 @@
 		return
 	emissive_overlay = emissive_appearance(icon, "[icon_state]_e", src)
 	. += emissive_overlay
+
+	if (current_state == HOVERFAB_STATE_PROCESSING)
+		return
+
+	if (current_state == HOVERFAB_STATE_ACTIVATED)
+		for (var/i in 1 to won_rounds)
+			var/mutable_appearance/bar_app = mutable_appearance(icon, "[base_icon_state]_bar", offset_spokesman = src)
+			var/mutable_appearance/bar_emm = emissive_appearance(icon, "[base_icon_state]_bar_e", src)
+			bar_app.pixel_y += (i - 1) * 3
+			bar_emm.pixel_y += (i - 1) * 3
+			. += bar_app
+			. += bar_emm
+		return
+
+	if (locate(/obj/item/stack/sheet/mineral/wood) in contents)
+		. += mutable_appearance(icon, "[base_icon_state]_contents_planks", offset_spokesman = src)
+	if (locate(/obj/item/stack/cable_coil) in contents)
+		. += mutable_appearance(icon, "[base_icon_state]_contents_cable", offset_spokesman = src)'
+	if (locate(/obj/item/light/bulb) in contents)
+		. += mutable_appearance(icon, "[base_icon_state]_contents_lightbulbs", offset_spokesman = src)
+	if (locate(/obj/item/stock_parts/capacitor) in contents)
+		. += mutable_appearance(icon, "[base_icon_state]_contents_capacitor", offset_spokesman = src)
 
 /obj/machinery/hoverfab/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
 	if (!repair_state)
@@ -113,7 +188,7 @@
 
 /obj/machinery/hoverfab/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
-	if (repair_state)
+	if (repair_state || current_state == HOVERFAB_STATE_PROCESSING)
 		return
 
 	if (current_state == HOVERFAB_STATE_INACTIVE)
@@ -125,6 +200,87 @@
 		playsound(src, 'sound/machines/compiler/compiler-stage2.ogg', 50)
 		return
 
+	if (current_state == HOVERFAB_STATE_OPEN)
+		return
+
+	if (active_game)
+		playsound(src, 'sound/machines/uplink/uplinkerror.ogg', 50)
+		return
+
+	if (won_rounds >= 3)
+		current_state = HOVERFAB_STATE_OPEN
+		update_appearance()
+		flick("[base_icon_state]_opening", src)
+		if (emissive_overlay)
+			flick("[base_icon_state]_opening_e", emissive_overlay)
+		playsound(src, 'sound/machines/scanner/scanner.ogg', 50, TRUE)
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/machines/gateway/gateway_calibrated.ogg', 30, -3), 2.4 SECONDS)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(play_round), user)
+
+/obj/machinery/hoverfab/proc/play_round(mob/living/user)
+	// Our color define names are *really* bad
+	var/static/list/all_colors = list(
+		"Red" = COLOR_RED,
+		"Orange" = COLOR_MOSTLY_PURE_ORANGE,
+		"Yellow" = COLOR_TANGERINE_YELLOW,
+		"Green" = COLOR_LIME,
+		"Cyan" = COLOR_CYAN,
+		"Blue" = COLOR_BLUE,
+		"Purple" = COLOR_VIOLET,
+	)
+
+	var/static/list/color_picks = list(
+		"Red" = image(icon = 'icons/hud/radial.dmi', icon_state = "red"),
+		"Orange" = image(icon = 'icons/hud/radial.dmi', icon_state = "orange"),
+		"Yellow" = image(icon = 'icons/hud/radial.dmi', icon_state = "yellow"),
+		"Green" = image(icon = 'icons/hud/radial.dmi', icon_state = "green"),
+		"Cyan" = image(icon = 'icons/hud/radial.dmi', icon_state = "cyan"),
+		"Blue" = image(icon = 'icons/hud/radial.dmi', icon_state = "blue"),
+		"Purple" = image(icon = 'icons/hud/radial.dmi', icon_state = "amethyst"),
+	)
+
+	active_game = TRUE
+	var/list/color_sequence = list()
+	for (var/i in 1 to (HOVERFAB_BASE_ROUNDS + won_rounds))
+		var/picked_color = pick(all_colors)
+		color_sequence += picked_color
+		var/flick_time = HOVERFAB_BASE_DELAY - HOVERFAB_DELAY_REDUCTION * won_rounds
+		var/mutable_appearance/lock_overlay = mutable_appearance(icon, "[base_icon_state]_lock", offset_spokesman = src)
+		lock_overlay.color = all_colors[picked_color]
+		flick_overlay_view(lock_overlay, flick_time)
+		flick_overlay_view(emissive_appearance(icon, "[base_icon_state]_lock_e", src), flick_time)
+		// For colorblind folks out there *unless you're also colorblind in-game*
+		if (!HAS_TRAIT(user, TRAIT_COLORBLIND))
+			balloon_alert(user, lowertext(picked_color), starting_x = 8, starting_y = 4)
+		sleep(flick_time + 0.4 SECONDS)
+
+	if (!user.CanReach(src))
+		active_game = FALSE
+		return
+
+	while (length(color_sequence))
+		var/color_pick = show_radial_menu(user, src, color_picks, require_near = TRUE, tooltips = TRUE, entry_animation = FALSE, offset_x = 8, offset_y = -4)
+		// Yeowch, go get your eyes fixed. Or get a friend to solve it for you.
+		if (HAS_TRAIT(user, TRAIT_COLORBLIND) && prob(15))
+			color_pick = pick(all_colors)
+
+		if (color_pick != color_sequence[1])
+			playsound(src, 'sound/machines/uplink/uplinkerror.ogg', 50)
+			balloon_alert(user, "wrong answer!", starting_x = 8)
+			won_rounds = 0
+			update_appearance()
+			active_game = FALSE
+			return
+
+		playsound(src, length(color_sequence) == 1 ? 'sound/machines/compiler/compiler-stage1.ogg' : 'sound/machines/lever/lever_start.ogg', 50)
+		color_sequence.Cut(1, 2)
+
+	active_game = FALSE
+	won_rounds += 1
+	update_appearance()
+
 #undef HOVERFAB_REPAIR_INTACT
 #undef HOVERFAB_REPAIR_COIL
 #undef HOVERFAB_REPAIR_PLASTEEL
@@ -134,3 +290,7 @@
 #undef HOVERFAB_STATE_ACTIVATED
 #undef HOVERFAB_STATE_OPEN
 #undef HOVERFAB_STATE_PROCESSING
+
+#undef HOVERFAB_BASE_ROUNDS
+#undef HOVERFAB_BASE_DELAY
+#undef HOVERFAB_DELAY_REDUCTION

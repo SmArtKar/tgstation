@@ -1346,6 +1346,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 ///Trait given to mobs that can dig
 #define TRAIT_MOB_CAN_DIG "mob_can_dig"
 
+///Trait given to mobs unable to see colors
+#define TRAIT_COLORBLIND "mob_colorblind"
+
 /**
  *
  * This trait is used in some interactions very high in the interaction chain to allow
