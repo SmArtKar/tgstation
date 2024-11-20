@@ -438,14 +438,14 @@
 		playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
 		if(victim.check_block(user, 0, user.name, attack_type = UNARMED_ATTACK))
 			victim.visible_message(span_danger("[user] crashes into [victim] but [victim.p_they()] manage to block it!"), span_userdanger("[user] crashes into you but you manage to block [user.p_them()]!"))
-			victim.throw_at(get_edge_target_turf(victim, dir), 2, 1, spin = FALSE, gentle = TRUE)
 		else
-			victim.Knockdown(0.1 SECONDS)
-			victim.adjustStaminaLoss(10)
-			victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
+			victim.adjustStaminaLoss(20)
+			victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
+			victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] back!"), span_userdanger("[user] crashes into you, knocking you back!"))
 		user.adjustStaminaLoss(25)
 		user.adjust_eye_blur(2 SECONDS)
 		user.SpinAnimation(0.5 SECONDS, 1)
+		victim.throw_at(get_edge_target_turf(victim, dir), 1, 1, spin = FALSE, gentle = TRUE)
 		throw_at(get_edge_target_turf(src, REVERSE_DIR(dir)), 3, 1, spin = TRUE) // YEET
 		return
 
@@ -474,21 +474,21 @@
 		neutral_effect(user, victim)
 		return
 
-	if (tackle_roll >= 1)
-		playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
-		victim.Knockdown(tackle_roll * 1 SECONDS)
-		victim.adjust_staggered_up_to(tackle_roll * 2 SECONDS, 10 SECONDS)
-		user.adjustStaminaLoss(30 / tackle_roll)
-		user.SpinAnimation(0.5 SECONDS, 1)
-		sparks.start()
-		throw_at(get_edge_target_turf(src, dir), 2, 1, spin = TRUE) // Over the bodied target!
-		victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
+	if (tackle_roll <= -1)
+		// Fuck around and find out, really
+		instability *= tackle_roll * -2
+		. = ..()
+		instability /= tackle_roll * -2
 		return
 
-	// Fuck around and find out, really
-	instability *= tackle_roll * -2
-	. = ..()
-	instability /= tackle_roll * -2
+	playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
+	victim.Knockdown(tackle_roll * 1 SECONDS)
+	victim.adjust_staggered_up_to(tackle_roll * 2 SECONDS, 10 SECONDS)
+	user.adjustStaminaLoss(30 / tackle_roll)
+	user.SpinAnimation(0.5 SECONDS, 1)
+	sparks.start()
+	throw_at(get_edge_target_turf(src, dir), 2, 1, spin = TRUE) // Over the bodied target!
+	victim.visible_message(span_danger("[user] tackles [victim] using [src], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] tackles you with [src], knocking you to the ground!"))
 
 /obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/proc/neutral_effect(mob/living/carbon/user, mob/living/carbon/victim)
 	playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
