@@ -6769,6 +6769,10 @@
 	},
 /turf/open/floor/wood,
 /area/station/service/theater)
+"cwA" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/misc/asteroid,
+/area/station/maintenance/department/science)
 "cwB" = (
 /obj/machinery/computer/order_console/mining,
 /obj/effect/turf_decal/tile/brown/anticorner/contrasted{
@@ -7229,6 +7233,7 @@
 "cGs" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/machinery/light/small/directional/north,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/cargo/storage)
 "cGP" = (
@@ -10542,6 +10547,7 @@
 /obj/structure/railing,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sign/warning/vacuum/external/directional/east,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/disposal)
 "dKI" = (
@@ -13280,6 +13286,13 @@
 	},
 /turf/open/floor/iron,
 /area/station/hallway/primary/central)
+"eHt" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/cable,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/department/medical/central)
 "eHA" = (
 /obj/structure/railing/corner{
 	dir = 1
@@ -22297,6 +22310,7 @@
 "hRM" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/broken_floor,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron/dark,
 /area/station/maintenance/department/engine)
 "hRO" = (
@@ -42539,6 +42553,11 @@
 /obj/structure/barricade/wooden,
 /turf/open/misc/asteroid,
 /area/station/asteroid)
+"pfi" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/department/bridge)
 "pfp" = (
 /obj/structure/closet/secure_closet/personal,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -53274,6 +53293,10 @@
 "sKt" = (
 /turf/open/floor/carpet,
 /area/station/medical/psychology)
+"sKA" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/misc/asteroid,
+/area/station/maintenance/central/greater)
 "sKF" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2{
 	dir = 8
@@ -53309,6 +53332,12 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron/dark,
 /area/station/service/bar/backroom)
+"sLo" = (
+/obj/effect/mapping_helpers/burnt_floor,
+/obj/effect/decal/cleanable/blood/old,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/department/medical/central)
 "sLr" = (
 /obj/machinery/atmospherics/components/binary/pump/on{
 	dir = 8
@@ -67820,6 +67849,10 @@
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/iron/dark,
 /area/station/ai_monitored/command/storage/eva)
+"xUS" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/misc/asteroid,
+/area/station/hallway/secondary/entry)
 "xUT" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
@@ -79524,7 +79557,7 @@ vxX
 rnk
 rnk
 rnk
-dNp
+eHt
 dNp
 dNp
 clY
@@ -81090,7 +81123,7 @@ aKl
 yki
 jJo
 tUo
-sHh
+sLo
 lmt
 aTJ
 rnk
@@ -92340,7 +92373,7 @@ fYe
 vxX
 fri
 taD
-nIb
+pfi
 hNh
 byB
 fkh
@@ -110580,7 +110613,7 @@ cLf
 fYe
 fYe
 lJq
-aku
+cwA
 aku
 aku
 uOo
@@ -153534,7 +153567,7 @@ xQX
 dTe
 gYW
 nev
-dtt
+xUS
 dtt
 nev
 dtt
@@ -159172,7 +159205,7 @@ gnx
 dTe
 sNy
 gYW
-aWJ
+sKA
 aWJ
 ayw
 snk

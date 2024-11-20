@@ -150,6 +150,11 @@
 /obj/structure/cable,
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/starboard/central)
+"nC" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/starboard/central)
 "pk" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/trash/cigbutt,
@@ -1682,7 +1687,7 @@ dS
 dS
 dS
 dS
-dS
+nC
 VL
 Eo
 VL

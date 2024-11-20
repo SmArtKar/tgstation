@@ -235,6 +235,11 @@
 /obj/structure/grille,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/starboard/greater)
+"I" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/starboard/greater)
 "J" = (
 /turf/open/misc/asteroid/airless,
 /area/station/asteroid)
@@ -781,7 +786,7 @@ a
 a
 a
 K
-j
+I
 l
 g
 A

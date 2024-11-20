@@ -591,6 +591,17 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 
 	qdel(src)
 
+//positions where a random core quest object can spawn
+/obj/effect/landmark/quest_spawn
+	name = "random quest spawn"
+	icon = 'icons/effects/random_spawners.dmi'
+	icon_state = "quest"
+
+/obj/effect/landmark/quest_spawn/Initialize(mapload)
+	..()
+	GLOB.quest_spawns += loc
+	return INITIALIZE_HINT_QDEL
+
 //Command
 /obj/effect/landmark/navigate_destination/bridge
 	location = "Bridge"

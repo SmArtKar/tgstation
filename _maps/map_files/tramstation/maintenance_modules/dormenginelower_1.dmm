@@ -457,6 +457,11 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/central/lesser)
+"zG" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/department/crew_quarters/dorms)
 "zQ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -2050,7 +2055,7 @@ AN
 AN
 DP
 Mr
-DP
+zG
 NT
 "}
 (34,1,1) = {"

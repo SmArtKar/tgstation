@@ -369,6 +369,7 @@
 "FW" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer2,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/starboard/central)
 "Gv" = (

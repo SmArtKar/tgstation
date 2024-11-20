@@ -228,6 +228,11 @@
 /obj/item/stack/cable_coil,
 /turf/open/misc/asteroid/airless,
 /area/station/asteroid)
+"DY" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/starboard/greater)
 "Ex" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/closet/firecloset,
@@ -1193,7 +1198,7 @@ cV
 Rk
 Rk
 sj
-VQ
+DY
 VQ
 pJ
 dN

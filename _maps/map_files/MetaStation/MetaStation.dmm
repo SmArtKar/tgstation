@@ -884,6 +884,11 @@
 /obj/effect/spawner/structure/window,
 /turf/open/floor/plating,
 /area/station/cargo/sorting)
+"aqQ" = (
+/obj/effect/turf_decal/delivery,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron,
+/area/station/maintenance/port/aft)
 "aqS" = (
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 4
@@ -19519,6 +19524,7 @@
 /obj/item/reagent_containers/cup/glass/mug/britcup,
 /obj/effect/decal/cleanable/cobweb,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/port/fore)
 "hbv" = (
@@ -26194,6 +26200,10 @@
 /obj/machinery/light/floor,
 /turf/open/floor/wood,
 /area/station/commons/lounge)
+"jpd" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/greater)
 "jpj" = (
 /obj/item/radio/intercom/directional/north,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -40243,6 +40253,10 @@
 	},
 /turf/open/floor/iron/freezer,
 /area/station/commons/toilet/restrooms)
+"ooy" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/fore)
 "ooz" = (
 /obj/structure/closet/emcloset,
 /obj/machinery/camera/directional/west{
@@ -48542,6 +48556,10 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/station/hallway/primary/aft)
+"rku" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/port)
 "rkx" = (
 /obj/structure/table,
 /obj/item/stack/cable_coil{
@@ -56030,6 +56048,10 @@
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating,
 /area/station/maintenance/solars/port/fore)
+"tOx" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/aft/greater)
 "tOK" = (
 /obj/structure/rack,
 /obj/item/cane,
@@ -56532,6 +56554,10 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/station/hallway/secondary/command)
+"tWW" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/fore)
 "tXk" = (
 /obj/structure/disposalpipe/segment{
 	dir = 9
@@ -67865,6 +67891,7 @@
 /area/station/engineering/atmos)
 "xRf" = (
 /obj/effect/mapping_helpers/broken_floor,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/aft/lesser)
 "xRh" = (
@@ -68924,6 +68951,10 @@
 /obj/effect/spawner/random/bureaucracy/stamp,
 /turf/open/floor/wood,
 /area/station/commons/vacant_room/office)
+"yjG" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/port/fore)
 "ykn" = (
 /obj/effect/mapping_helpers/airlock/cyclelink_helper,
 /obj/machinery/door/airlock/external{
@@ -82762,7 +82793,7 @@ jEa
 jXu
 jXu
 jXu
-sHu
+yjG
 uPp
 bPM
 jXu
@@ -83842,7 +83873,7 @@ cMb
 fFu
 wvr
 vzY
-tYi
+rku
 jUb
 eov
 ruz
@@ -84886,7 +84917,7 @@ eNV
 duk
 oOZ
 gbJ
-cBc
+aqQ
 jUb
 tkn
 dqN
@@ -87476,7 +87507,7 @@ jsq
 tSw
 wxF
 tSw
-drm
+tOx
 drm
 tSw
 mnN
@@ -102799,7 +102830,7 @@ wmf
 cur
 cur
 jFy
-cur
+ooy
 ilh
 xAR
 ilh
@@ -107744,7 +107775,7 @@ aXE
 tXk
 itW
 kGv
-izp
+jpd
 fWA
 fWA
 mhl
@@ -108977,7 +109008,7 @@ jRz
 ceD
 qXB
 cgL
-wrn
+tWW
 tCS
 mHe
 wYx

@@ -98,6 +98,7 @@
 "r" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sign/warning/vacuum/external/directional/north,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/starboard/greater)
 "s" = (

@@ -10,6 +10,11 @@
 "h" = (
 /turf/open/misc/asteroid/airless,
 /area/station/asteroid)
+"k" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/port/aft)
 "n" = (
 /turf/closed/wall,
 /area/station/maintenance/port/aft)
@@ -309,7 +314,7 @@ a
 B
 n
 n
-y
+k
 y
 y
 n

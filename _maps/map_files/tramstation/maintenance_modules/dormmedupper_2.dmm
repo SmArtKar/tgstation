@@ -34,6 +34,14 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/department/crew_quarters/dorms)
+"gU" = (
+/obj/structure/lattice/catwalk,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/effect/landmark/quest_spawn,
+/turf/open/openspace,
+/area/station/maintenance/department/crew_quarters/dorms)
 "hn" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/trimline/yellow/warning{
@@ -1074,7 +1082,7 @@ vK
 FK
 FK
 FK
-PN
+gU
 Uk
 CH
 Me

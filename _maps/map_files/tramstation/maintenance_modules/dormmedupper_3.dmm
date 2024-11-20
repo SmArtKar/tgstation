@@ -358,6 +358,10 @@
 /mob/living/basic/butterfly,
 /turf/open/floor/grass,
 /area/station/asteroid)
+"QK" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/misc/asteroid,
+/area/station/maintenance/department/crew_quarters/dorms)
 "SV" = (
 /obj/structure/plasticflaps/opaque{
 	name = "airtight delivery flaps"
@@ -1522,7 +1526,7 @@ EW
 EW
 EW
 dI
-or
+QK
 qr
 or
 Eh

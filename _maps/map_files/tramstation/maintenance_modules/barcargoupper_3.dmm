@@ -395,6 +395,11 @@
 	},
 /turf/open/misc/asteroid,
 /area/station/maintenance/department/cargo)
+"Sj" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/department/cargo)
 "SA" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/structure/plasticflaps,
@@ -1557,7 +1562,7 @@ cK
 cK
 SU
 SU
-Dm
+Sj
 Dm
 SU
 lM

@@ -478,6 +478,10 @@
 	},
 /turf/open/misc/asteroid,
 /area/station/maintenance/starboard/lesser)
+"UR" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/misc/asteroid,
+/area/station/asteroid)
 "VC" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/disposalpipe/segment{
@@ -839,7 +843,7 @@ CX
 "}
 (17,1,1) = {"
 Dw
-hk
+UR
 hk
 hk
 OK

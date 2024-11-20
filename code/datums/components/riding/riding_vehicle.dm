@@ -290,6 +290,13 @@
 	is_slown_down = TRUE
 	vehicle_move_delay += 1
 
+/datum/component/riding/vehicle/scooter/skateboard/hover/jetboard
+
+/datum/component/riding/vehicle/scooter/skateboard/hover/jetboard/check_grav(atom/movable/source, turf/gravity_turf, list/gravs)
+	if (source.throwing)
+		return
+	return ..()
+
 /datum/component/riding/vehicle/scooter/skateboard/wheelys
 	vehicle_move_delay = 0
 	can_slow_down = FALSE

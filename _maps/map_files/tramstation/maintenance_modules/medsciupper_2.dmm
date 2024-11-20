@@ -108,6 +108,11 @@
 "nm" = (
 /turf/template_noop,
 /area/template_noop)
+"nq" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/department/medical)
 "oJ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/spawner/random/trash/cigbutt,
@@ -1480,7 +1485,7 @@ kq
 kq
 Sz
 Sz
-Kw
+nq
 xh
 Xc
 Sz

@@ -374,6 +374,10 @@
 	},
 /turf/open/floor/plating,
 /area/station/maintenance/department/cargo)
+"Vp" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/misc/asteroid,
+/area/station/maintenance/department/cargo)
 "Xu" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -547,7 +551,7 @@ vh
 Dm
 vh
 QC
-QC
+Vp
 vh
 eJ
 eJ

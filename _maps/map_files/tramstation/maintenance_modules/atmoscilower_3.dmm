@@ -309,6 +309,11 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/starboard/lesser)
+"T" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/starboard/lesser)
 "U" = (
 /turf/template_noop,
 /area/template_noop)
@@ -557,7 +562,7 @@ U
 U
 l
 H
-n
+T
 n
 f
 l

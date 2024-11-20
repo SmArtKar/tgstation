@@ -12,10 +12,16 @@
 #define HOVERFAB_BASE_ROUNDS 4
 /// Delay between each color
 #define HOVERFAB_BASE_DELAY 0.8 SECONDS
-/// How much delay is deducted for every won round
+/// How much delay is deducted for every won round/reset
 #define HOVERFAB_DELAY_REDUCTION 0.15 SECONDS
+/// Minimum delay between colors
+#define HOVERFAB_MINIMUM_DELAY 0.2 SECONDS
 /// How long it takes for a hoverfab to produce an item
 #define HOVERFAB_PRODUCTION_TIME 10 SECONDS
+/// How many boards can a fabricator produce before rebooting, with game getting harder every reboot
+#define HOVERFAB_MAX_BOARDS 3
+/// How many rounds you have to fail for the thing to blow up
+#define HOVERFAB_FAILURES_TO_KABOOM 10
 
 /// Hoverfabricator: A small side-quest for maintenance dwellers (assistants or bored engineers) to do.
 /// You need to repair it with cable coils, plasteel and a welder and then win 3 rounds of Simon Says in order to unlock it
@@ -38,6 +44,10 @@
 	var/current_state = HOVERFAB_STATE_INACTIVE
 	/// How many rounds of Simon Says have been won so far?
 	var/won_rounds = 0
+	/// How many times has this fabricator rebooted?
+	var/reboots = 0
+	/// How many boards has this fabricator produced so far?
+	var/produced_items = 0
 	/// Is there an active game going on?
 	var/active_game = FALSE
 	/// Emissive overlay, stored so we can flick it for animations
@@ -46,6 +56,8 @@
 	var/datum/looping_sound/microwave/soundloop
 	/// What sort of items we're producing
 	var/created_type = /obj/item/melee/skateboard/hoverboard/jetboard
+	/// List of all dummies who failed the game (and how many times)
+	var/list/losers = list()
 	/// Items required to produce a hoverboard
 	var/static/list/required_items = list(
 		/obj/item/stack/sheet/mineral/wood = 5,
@@ -60,6 +72,14 @@
 /obj/machinery/hoverfab/debug
 	current_state = HOVERFAB_STATE_ACTIVATED
 	won_rounds = 3
+
+/obj/machinery/hoverfab/debug/Initialize(mapload)
+	. = ..()
+	new /obj/item/stack/sheet/mineral/wood/fifty(src)
+	new /obj/item/stack/cable_coil/thirty(src)
+	new /obj/item/light/bulb(src)
+	new /obj/item/light/bulb(src)
+	new /obj/item/stock_parts/capacitor(src)
 
 /obj/machinery/hoverfab/Initialize(mapload)
 	. = ..()
@@ -247,7 +267,7 @@
 		if (emissive_overlay)
 			flick("[base_icon_state]_closing_e", emissive_overlay)
 		playsound(src, 'sound/machines/compiler/compiler-stage1.ogg', 50)
-		addtimer(CALLBACK(soundloop, TYPE_PROC_REF(/datum/looping_sound, start)), 2.5 SECONDS)
+		addtimer(CALLBACK(soundloop, TYPE_PROC_REF(/datum/looping_sound, start)), 2.3 SECONDS)
 		addtimer(CALLBACK(src, PROC_REF(finish_processing)), HOVERFAB_PRODUCTION_TIME)
 		return
 
@@ -266,19 +286,6 @@
 		return
 
 	INVOKE_ASYNC(src, PROC_REF(play_round), user)
-
-/obj/machinery/hoverfab/proc/finish_processing()
-	soundloop.stop()
-	current_state = HOVERFAB_STATE_OPEN
-	update_appearance()
-	flick("[base_icon_state]_opening", src)
-	if (emissive_overlay)
-		flick("[base_icon_state]_opening_e", emissive_overlay)
-	playsound(src, 'sound/machines/scanner/scanner.ogg', 50, TRUE)
-	addtimer(CALLBACK(src, PROC_REF(create_board)), 2.4 SECONDS)
-
-/obj/machinery/hoverfab/proc/create_board()
-	playsound(src, 'sound/machines/compiler/compiler-stage2.ogg', 50)
 
 /obj/machinery/hoverfab/proc/play_round(mob/living/user)
 	// Our color define names are *really* bad
@@ -304,10 +311,10 @@
 
 	active_game = TRUE
 	var/list/color_sequence = list()
-	for (var/i in 1 to (HOVERFAB_BASE_ROUNDS + won_rounds))
+	for (var/i in 1 to (HOVERFAB_BASE_ROUNDS + won_rounds + reboots))
 		var/picked_color = pick(all_colors)
 		color_sequence += picked_color
-		var/flick_time = HOVERFAB_BASE_DELAY - HOVERFAB_DELAY_REDUCTION * won_rounds
+		var/flick_time = max(HOVERFAB_BASE_DELAY - HOVERFAB_DELAY_REDUCTION * (won_rounds + reboots), HOVERFAB_MINIMUM_DELAY)
 		var/mutable_appearance/lock_overlay = mutable_appearance(icon, "[base_icon_state]_lock", offset_spokesman = src)
 		lock_overlay.color = all_colors[picked_color]
 		flick_overlay_view(lock_overlay, flick_time)
@@ -330,9 +337,14 @@
 		if (color_pick != color_sequence[1])
 			playsound(src, 'sound/machines/uplink/uplinkerror.ogg', 50)
 			balloon_alert(user, "wrong answer!", starting_x = 8)
+			if (!losers[user])
+				losers[user] = 0
+			losers[user] += 1
 			won_rounds = 0
 			update_appearance()
 			active_game = FALSE
+			if (losers[user] >= HOVERFAB_FAILURES_TO_KABOOM)
+				explosion(src, 0, rand(0, 1), rand(2, 3), 4, 5)
 			return
 
 		playsound(src, length(color_sequence) == 1 ? 'sound/machines/compiler/compiler-stage1.ogg' : 'sound/machines/lever/lever_start.ogg', 50)
@@ -340,23 +352,42 @@
 
 	active_game = FALSE
 	won_rounds += 1
+	// Some mercy
+	losers[user] -= 0.25
 	update_appearance()
 
-#undef HOVERFAB_REPAIR_INTACT
-#undef HOVERFAB_REPAIR_COIL
-#undef HOVERFAB_REPAIR_PLASTEEL
-#undef HOVERFAB_REPAIR_WELDING
+/obj/machinery/hoverfab/proc/finish_processing()
+	for (var/atom/something as anything in contents)
+		for (var/req_type in required_items)
+			if (istype(something, req_type))
+				qdel(something)
+				break
+	soundloop.stop()
+	current_state = HOVERFAB_STATE_OPEN
+	update_appearance()
+	flick("[base_icon_state]_opening", src)
+	if (emissive_overlay)
+		flick("[base_icon_state]_opening_e", emissive_overlay)
+	playsound(src, 'sound/machines/scanner/scanner.ogg', 50, TRUE)
+	addtimer(CALLBACK(src, PROC_REF(create_board)), 2.4 SECONDS)
 
-#undef HOVERFAB_STATE_INACTIVE
-#undef HOVERFAB_STATE_ACTIVATED
-#undef HOVERFAB_STATE_OPEN
-#undef HOVERFAB_STATE_PROCESSING
+/obj/machinery/hoverfab/proc/create_board()
+	playsound(src, 'sound/machines/compiler/compiler-stage2.ogg', 50)
+	new created_type(drop_location())
+	produced_items += 1
+	if (produced_items < HOVERFAB_MAX_BOARDS)
+		return
+	current_state = HOVERFAB_STATE_ACTIVATED
+	won_rounds = 0
+	reboots += 1
+	update_appearance()
+	flick("[base_icon_state]_closing", src)
+	if (emissive_overlay)
+		flick("[base_icon_state]_closing_e", emissive_overlay)
+	playsound(src, 'sound/machines/buzz/buzz-sigh.ogg', 50)
 
-#undef HOVERFAB_BASE_ROUNDS
-#undef HOVERFAB_BASE_DELAY
-#undef HOVERFAB_DELAY_REDUCTION
-#undef HOVERFAB_PRODUCTION_TIME
-
+// Jetboards, besides being rad as fuck, can be used to "tackle" people by ramming into them at full speed with throw intent on.
+// In addition to that, normal crashes also act as rams and simply knock the victim down while dealing some hefty stamina to you
 /obj/item/melee/skateboard/hoverboard/jetboard
 	name = "jetboard"
 	desc = "A sleek jetboard using hardlight jets to push itself off the ground. You can feel its internals trembling under your fingers."
@@ -383,8 +414,9 @@
 	. = ..()
 	. += emissive_appearance(icon, "[icon_state]_e", src)
 
-// Jetboards, besides being rad as fuck, can be used to "tackle" people by ramming into them at full speed with throw intent on.
-// In addition to that, normal crashes also act as rams and simply knock the victim down while dealing some hefty stamina to you
+/obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/make_ridable()
+	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard/hover/jetboard)
+
 /obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/crash(mob/living/rider, atom/bumped_thing)
 	if (!iscarbon(rider) || rider.getStaminaLoss() > (iscarbon(bumped_thing) ? 80 : 92) || grinding)
 		return ..()
@@ -393,7 +425,7 @@
 	next_crash = world.time + (iscarbon(bumped_thing) ? 1 : 1 SECONDS)
 
 	if (!iscarbon(bumped_thing))
-		playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
+		playsound(src, 'sound/effects/bang.ogg', 30, TRUE)
 		user.adjustStaminaLoss(7)
 		step(src, REVERSE_DIR(dir))
 		SpinAnimation(0.4 SECONDS, 1) //Sick flips my dude
@@ -410,7 +442,7 @@
 		user.adjustStaminaLoss(20)
 		user.adjust_eye_blur(2 SECONDS)
 		user.SpinAnimation(0.5 SECONDS, 1)
-		throw_at(get_step(get_step(src, REVERSE_DIR(dir)), REVERSE_DIR(dir)), 2, 1, spin = TRUE) // YEET
+		throw_at(get_edge_target_turf(src, REVERSE_DIR(dir)), 2, 1, spin = TRUE) // YEET
 		return
 
 	user.toggle_throw_mode()
@@ -446,7 +478,7 @@
 		user.adjustStaminaLoss(30 / tackle_roll)
 		user.SpinAnimation(0.5 SECONDS, 1)
 		sparks.start()
-		throw_at(get_step(get_step(src, dir), dir), 2, 1, spin = TRUE) // Over the bodied target!
+		throw_at(get_edge_target_turf(src, dir), 2, 1, spin = TRUE) // Over the bodied target!
 		victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
 		return
 
@@ -456,13 +488,31 @@
 	instability /= tackle_roll * -2
 
 /obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/proc/neutral_effect(mob/living/carbon/user, mob/living/carbon/victim)
-	playsound(src, 'sound/effects/bang.ogg', 40, TRUE)
+	playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
 	// Some stamina to the user, some stagger and a bit less stamina to the victim
 	victim.adjustStaminaLoss(10)
 	victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
 	user.adjustStaminaLoss(20)
 	user.spin(0.4 SECONDS, 1)
 	user.SpinAnimation(0.4 SECONDS, 1)
-	throw_at(get_step(get_step(src, REVERSE_DIR(dir)), REVERSE_DIR(dir)), 2, 1, spin = TRUE) // YEET ourselves
-	victim.throw_at(get_edge_target_turf(victim, dir), 2, 1, spin = FALSE, gentle = TRUE) // and push the victim back
+	victim.throw_at(get_edge_target_turf(victim, dir), 2, 1, spin = FALSE, gentle = TRUE) // push the victim back
+	throw_at(get_edge_target_turf(src, REVERSE_DIR(dir)), 2, 1, spin = TRUE) // and YEET ourselves
 	victim.visible_message(span_danger("[user] crashes into [victim], knocking them both back!"), span_userdanger("[user] crashes into you, knocking both of you back!"))
+
+#undef HOVERFAB_REPAIR_INTACT
+#undef HOVERFAB_REPAIR_COIL
+#undef HOVERFAB_REPAIR_PLASTEEL
+#undef HOVERFAB_REPAIR_WELDING
+
+#undef HOVERFAB_STATE_INACTIVE
+#undef HOVERFAB_STATE_ACTIVATED
+#undef HOVERFAB_STATE_OPEN
+#undef HOVERFAB_STATE_PROCESSING
+
+#undef HOVERFAB_BASE_ROUNDS
+#undef HOVERFAB_BASE_DELAY
+#undef HOVERFAB_DELAY_REDUCTION
+#undef HOVERFAB_MINIMUM_DELAY
+#undef HOVERFAB_PRODUCTION_TIME
+#undef HOVERFAB_MAX_BOARDS
+#undef HOVERFAB_FAILURES_TO_KABOOM

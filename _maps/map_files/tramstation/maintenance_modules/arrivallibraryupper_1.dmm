@@ -15,6 +15,11 @@
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /turf/open/floor/plating,
 /area/station/maintenance/port/aft)
+"e" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/port/aft)
 "f" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
@@ -420,7 +425,7 @@ y
 E
 y
 y
-y
+e
 k
 y
 z

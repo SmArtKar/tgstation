@@ -104,6 +104,11 @@
 /obj/structure/cable,
 /turf/open/floor/catwalk_floor,
 /area/station/maintenance/department/eva)
+"Y" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron/smooth,
+/area/station/maintenance/department/eva)
 
 (1,1,1) = {"
 a
@@ -219,7 +224,7 @@ e
 Q
 q
 A
-e
+Y
 t
 T
 t

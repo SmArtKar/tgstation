@@ -38589,6 +38589,7 @@
 	name = "darwin award counter";
 	desc = "A display that indicates how many dents that'll need fixed after the shift is over."
 	},
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron,
 /area/station/maintenance/port/central)
 "mBq" = (

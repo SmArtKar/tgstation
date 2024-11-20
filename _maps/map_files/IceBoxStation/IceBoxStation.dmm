@@ -24964,6 +24964,11 @@
 /obj/effect/landmark/start/chemist,
 /turf/open/floor/iron/textured,
 /area/station/medical/chem_storage)
+"hhW" = (
+/obj/effect/mapping_helpers/burnt_floor,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/fore)
 "hil" = (
 /obj/structure/reagent_dispensers/fueltank,
 /turf/open/floor/plating,
@@ -27672,6 +27677,7 @@
 	dir = 4
 	},
 /obj/effect/mapping_helpers/broken_floor,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/port/lesser)
 "hVz" = (
@@ -44356,6 +44362,10 @@
 	},
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/lobby)
+"mUk" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/port/greater)
 "mUs" = (
 /obj/machinery/light/directional/south,
 /turf/open/floor/plating,
@@ -44945,6 +44955,10 @@
 	},
 /turf/open/floor/iron/white,
 /area/station/medical/medbay/aft)
+"nbY" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/department/chapel)
 "nbZ" = (
 /obj/machinery/firealarm/directional/north,
 /obj/effect/turf_decal/tile/blue/half/contrasted{
@@ -45487,6 +45501,11 @@
 	},
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/captain)
+"nkc" = (
+/obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/aft)
 "nkh" = (
 /obj/structure/disposalpipe/segment,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -49915,6 +49934,11 @@
 /obj/machinery/light/small/directional/east,
 /turf/open/floor/iron,
 /area/mine/living_quarters)
+"our" = (
+/obj/machinery/atmospherics/pipe/smart/manifold4w/purple/visible,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/port/aft)
 "ous" = (
 /obj/machinery/door/airlock/security/glass{
 	name = "N2O Storage"
@@ -52713,6 +52737,10 @@
 	},
 /turf/open/floor/iron/dark,
 /area/station/engineering/atmos/hfr_room)
+"phT" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/department/medical/morgue)
 "pib" = (
 /obj/machinery/camera/motion/directional/south{
 	c_tag = "Vault";
@@ -54038,6 +54066,10 @@
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/iron,
 /area/station/hallway/primary/port)
+"pBq" = (
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/iron,
+/area/station/maintenance/port/fore)
 "pBs" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
@@ -65244,6 +65276,7 @@
 /obj/machinery/camera/directional/south{
 	c_tag = "Solar Maintenance - South East Access"
 	},
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/aft)
 "sMp" = (
@@ -81719,6 +81752,7 @@
 "xGL" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/mapping_helpers/broken_floor,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/lesser)
 "xGM" = (
@@ -181473,7 +181507,7 @@ iDt
 rxW
 rxW
 nxM
-qck
+phT
 owG
 owG
 qoM
@@ -196852,7 +196886,7 @@ iWq
 tBs
 wMj
 lpL
-wMj
+nbY
 tBs
 etH
 etH
@@ -200754,7 +200788,7 @@ hMA
 iFw
 vzD
 bhI
-uZc
+nkc
 vzD
 thA
 thA
@@ -228749,7 +228783,7 @@ inQ
 jZD
 erK
 bCQ
-pdf
+mUk
 teN
 bln
 bln
@@ -233073,7 +233107,7 @@ kdS
 lJO
 gLZ
 cXp
-xiW
+pBq
 lJO
 hjI
 qDI
@@ -234947,7 +234981,7 @@ cnd
 hth
 wEW
 hth
-hjH
+our
 pRj
 vgw
 rlj
@@ -257236,7 +257270,7 @@ bln
 bln
 bln
 kKL
-sRI
+hhW
 lli
 kKL
 hJx

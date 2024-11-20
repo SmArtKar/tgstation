@@ -10438,6 +10438,7 @@
 /area/station/hallway/primary/port)
 "dTI" = (
 /obj/effect/decal/cleanable/dirt,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron,
 /area/station/maintenance/starboard/aft)
 "dTW" = (
@@ -20382,6 +20383,15 @@
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/engine,
 /area/station/science/cytology)
+"hje" = (
+/obj/structure/disposalpipe/segment{
+	dir = 10
+	},
+/obj/effect/decal/cleanable/dirt,
+/obj/structure/cable,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/starboard/fore)
 "hjk" = (
 /obj/structure/railing{
 	dir = 4
@@ -21247,6 +21257,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 6
 	},
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/fore/lesser)
 "hyA" = (
@@ -29519,6 +29530,11 @@
 /obj/machinery/airalarm/directional/south,
 /turf/open/floor/iron/smooth,
 /area/station/maintenance/solars/starboard/fore)
+"kbA" = (
+/obj/structure/cable,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/port/lesser)
 "kbI" = (
 /obj/structure/table/glass,
 /obj/machinery/cell_charger,
@@ -33076,6 +33092,7 @@
 /obj/structure/sign/directions/evac/directional/west{
 	dir = 2
 	},
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/iron,
 /area/station/maintenance/department/medical/central)
 "lkN" = (
@@ -39436,6 +39453,7 @@
 "nuY" = (
 /obj/structure/broken_flooring/pile/directional/east,
 /obj/structure/alien/weeds/node,
+/obj/effect/landmark/quest_spawn,
 /turf/open/floor/plating,
 /area/station/maintenance/starboard/greater)
 "nvB" = (
@@ -47711,6 +47729,11 @@
 /obj/item/radio/intercom/directional/west,
 /turf/open/floor/eighties/red,
 /area/station/hallway/primary/central/fore)
+"qqP" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/quest_spawn,
+/turf/open/floor/plating,
+/area/station/maintenance/department/engine/atmos)
 "qrb" = (
 /obj/structure/sign/warning/biohazard,
 /turf/closed/wall/r_wall,
@@ -84939,7 +84962,7 @@ qVP
 qVP
 qVP
 qVP
-wmV
+kbA
 cpH
 tqo
 hzV
@@ -90768,7 +90791,7 @@ xxt
 xxt
 knv
 xxt
-xxt
+qqP
 knv
 knv
 dDB
@@ -118819,7 +118842,7 @@ xfa
 xXT
 qNF
 rej
-wBs
+hje
 ijk
 jSR
 wxd
