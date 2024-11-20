@@ -418,7 +418,7 @@
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/scooter/skateboard/hover/jetboard)
 
 /obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/crash(mob/living/rider, atom/bumped_thing)
-	if (!iscarbon(rider) || rider.getStaminaLoss() > (iscarbon(bumped_thing) ? 80 : 92) || grinding)
+	if (!iscarbon(rider) || rider.getStaminaLoss() > (iscarbon(bumped_thing) ? 75 : 93) || grinding)
 		return ..()
 
 	var/mob/living/carbon/user = rider
@@ -436,13 +436,17 @@
 	var/mob/living/carbon/victim = bumped_thing
 	if (!user.throw_mode)
 		playsound(src, 'sound/items/weapons/shove.ogg', 50, TRUE)
-		victim.Knockdown(0.1 SECONDS)
-		victim.adjustStaminaLoss(10)
-		victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
-		user.adjustStaminaLoss(20)
+		if(victim.check_block(user, 0, user.name, attack_type = UNARMED_ATTACK))
+			victim.visible_message(span_danger("[user] crashes into [victim] but [victim.p_they()] manage to block it!"), span_userdanger("[user] crashes into you but you manage to block [user.p_them()]!"))
+			victim.throw_at(get_edge_target_turf(victim, dir), 2, 1, spin = FALSE, gentle = TRUE)
+		else
+			victim.Knockdown(0.1 SECONDS)
+			victim.adjustStaminaLoss(10)
+			victim.visible_message(span_danger("[user] crashes into [victim], knocking [victim.p_them()] to the ground!"), span_userdanger("[user] crashes into you, knocking you to the ground!"))
+		user.adjustStaminaLoss(25)
 		user.adjust_eye_blur(2 SECONDS)
 		user.SpinAnimation(0.5 SECONDS, 1)
-		throw_at(get_edge_target_turf(src, REVERSE_DIR(dir)), 2, 1, spin = TRUE) // YEET
+		throw_at(get_edge_target_turf(src, REVERSE_DIR(dir)), 3, 1, spin = TRUE) // YEET
 		return
 
 	user.toggle_throw_mode()
@@ -460,9 +464,8 @@
 	if(HAS_TRAIT(victim, TRAIT_GIANT))
 		defense_mod += 2
 
-	// Unlike tackling, you have some advantage when pulling this off and roll directly influences the effects
 	// Going into floats a bit due to stamloss providing minor difference
-	var/tackle_roll = rand(-10, 20) / 5 - defense_mod
+	var/tackle_roll = rand(-15, 20) / 5 - defense_mod
 	// High risk, small reward
 	if (grinding)
 		tackle_roll += rand(-2, 1)
@@ -498,6 +501,12 @@
 	victim.throw_at(get_edge_target_turf(victim, dir), 2, 1, spin = FALSE, gentle = TRUE) // push the victim back
 	throw_at(get_edge_target_turf(src, REVERSE_DIR(dir)), 2, 1, spin = TRUE) // and YEET ourselves
 	victim.visible_message(span_danger("[user] crashes into [victim], knocking them both back!"), span_userdanger("[user] crashes into you, knocking both of you back!"))
+
+/obj/effect/temp_visual/decoy/jetboard_fade/Initialize(mapload, atom/mimiced_atom)
+	. = ..()
+	color = "#BD69E0"
+	alpha = 200
+	animate(src, alpha = 0, time = 1 SECONDS)
 
 #undef HOVERFAB_REPAIR_INTACT
 #undef HOVERFAB_REPAIR_COIL

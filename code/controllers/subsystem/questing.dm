@@ -1,7 +1,7 @@
 /// Chance that a quest will spawn in a certain round
 #define QUEST_ROUND_PROBABILITY 66
 /// Chance that there'll be more than one quest per round (if there's enough quest types)
-#define ADDITIONAL_QUEST_PROBABILITY 50
+#define ADDITIONAL_QUEST_PROBABILITY 33
 // Questing subsystem, responsible for spawning (and later probably ticking) different round quests
 SUBSYSTEM_DEF(questing)
 	name = "Questing"

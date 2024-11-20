@@ -305,6 +305,15 @@
 		return
 	return ..()
 
+/datum/component/riding/vehicle/scooter/skateboard/hover/jetboard/vehicle_moved(atom/movable/source, oldloc, dir, forced)
+	. = ..()
+	var/obj/vehicle/ridden/scooter/skateboard/hoverboard/jetboard/board = source
+	if (!board.grinding)
+		return
+	var/obj/effect/temp_visual/decoy/jetboard_fade/board_decoy = new(board.loc, board)
+	for (var/mob/buckled_mob as anything in board.buckled_mobs)
+		var/obj/effect/temp_visual/decoy/jetboard_fade/rider_decoy = new(board.loc, buckled_mob)
+
 /datum/component/riding/vehicle/scooter/skateboard/wheelys
 	vehicle_move_delay = 0
 	can_slow_down = FALSE
