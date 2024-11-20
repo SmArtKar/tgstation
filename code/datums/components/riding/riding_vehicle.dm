@@ -292,6 +292,14 @@
 
 /datum/component/riding/vehicle/scooter/skateboard/hover/jetboard
 
+/datum/component/riding/vehicle/scooter/skateboard/hover/jetboard/RegisterWithParent()
+	. = ..()
+	RegisterSignal(parent, COMSIG_MOVABLE_POST_THROW, PROC_REF(post_throw))
+
+/datum/component/riding/vehicle/scooter/skateboard/hover/jetboard/proc/post_throw(datum/source, datum/thrownthing/throwingdatum, spin)
+	SIGNAL_HANDLER
+	COOLDOWN_START(src, vehicle_move_cooldown, 0.5 SECONDS)
+
 /datum/component/riding/vehicle/scooter/skateboard/hover/jetboard/check_grav(atom/movable/source, turf/gravity_turf, list/gravs)
 	if (source.throwing)
 		return

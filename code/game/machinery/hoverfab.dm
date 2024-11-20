@@ -311,7 +311,7 @@
 
 	active_game = TRUE
 	var/list/color_sequence = list()
-	for (var/i in 1 to (HOVERFAB_BASE_ROUNDS + won_rounds + reboots))
+	for (var/i in 1 to (HOVERFAB_BASE_ROUNDS + won_rounds + reboots * 2))
 		var/picked_color = pick(all_colors)
 		color_sequence += picked_color
 		var/flick_time = max(HOVERFAB_BASE_DELAY - HOVERFAB_DELAY_REDUCTION * (won_rounds + reboots), HOVERFAB_MINIMUM_DELAY)
