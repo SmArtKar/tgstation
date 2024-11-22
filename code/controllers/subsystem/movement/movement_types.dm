@@ -113,6 +113,7 @@
 	lifetime -= old_delay //This needs to be based on work over time, not just time passed
 
 	if(lifetime < 0) //Otherwise lag would make things look really weird
+		SEND_SIGNAL(src, COMSIG_MOVELOOP_TIMEOUT)
 		qdel(src)
 		return
 
