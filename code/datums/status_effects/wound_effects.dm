@@ -50,8 +50,6 @@
 	if(!iscarbon(owner))
 		return FALSE
 	var/mob/living/carbon/carbon_owner = owner
-	left = carbon_owner.get_bodypart(BODY_ZONE_L_LEG)
-	right = carbon_owner.get_bodypart(BODY_ZONE_R_LEG)
 	update_limp()
 	RegisterSignal(carbon_owner, COMSIG_MOVABLE_MOVED, PROC_REF(check_step))
 	RegisterSignals(carbon_owner, list(COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_POST_LOSE_WOUND, COMSIG_CARBON_ATTACH_LIMB, COMSIG_CARBON_REMOVE_LIMB), PROC_REF(update_limp))
@@ -59,6 +57,10 @@
 
 /datum/status_effect/limp/on_remove()
 	UnregisterSignal(owner, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_POST_LOSE_WOUND, COMSIG_CARBON_ATTACH_LIMB, COMSIG_CARBON_REMOVE_LIMB))
+	if (left)
+		UnregisterSignal(left, COMSIG_QDELETING)
+	if (right)
+		UnregisterSignal(right, COMSIG_QDELETING)
 	left = null
 	right = null
 
@@ -90,12 +92,19 @@
 /datum/status_effect/limp/proc/update_limp()
 	SIGNAL_HANDLER
 
-	var/mob/living/carbon/C = owner
-	left = C.get_bodypart(BODY_ZONE_L_LEG)
-	right = C.get_bodypart(BODY_ZONE_R_LEG)
+	if (left)
+		UnregisterSignal(left, COMSIG_QDELETING)
+	if (right)
+		UnregisterSignal(right, COMSIG_QDELETING)
+
+	var/mob/living/carbon/carbon_owner = owner
+	left = carbon_owner.get_bodypart(BODY_ZONE_L_LEG)
+	right = carbon_owner.get_bodypart(BODY_ZONE_R_LEG)
+	RegisterSignal(left, COMSIG_QDELETING, PROC_REF(update_limp))
+	RegisterSignal(right, COMSIG_QDELETING, PROC_REF(update_limp))
 
 	if(!left && !right)
-		C.remove_status_effect(src)
+		carbon_owner.remove_status_effect(src)
 		return
 
 	slowdown_left = 0
@@ -106,19 +115,19 @@
 	// technically you can have multiple wounds causing limps on the same limb, even if practically only bone wounds cause it in normal gameplay
 	if(left)
 		for(var/thing in left.wounds)
-			var/datum/wound/W = thing
-			slowdown_left += W.limp_slowdown
-			limp_chance_left = max(limp_chance_left, W.limp_chance)
+			var/datum/wound/wound = thing
+			slowdown_left += wound.limp_slowdown
+			limp_chance_left = max(limp_chance_left, wound.limp_chance)
 
 	if(right)
 		for(var/thing in right.wounds)
-			var/datum/wound/W = thing
-			slowdown_right += W.limp_slowdown
-			limp_chance_right = max(limp_chance_right, W.limp_chance)
+			var/datum/wound/wound = thing
+			slowdown_right += wound.limp_slowdown
+			limp_chance_right = max(limp_chance_right, wound.limp_chance)
 
 	// this handles losing your leg with the limp and the other one being in good shape as well
 	if(!slowdown_left && !slowdown_right)
-		C.remove_status_effect(src)
+		carbon_owner.remove_status_effect(src)
 		return
 
 /////////////////////////
