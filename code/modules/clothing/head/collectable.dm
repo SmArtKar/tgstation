@@ -72,6 +72,7 @@
 	greyscale_config_worn = /datum/greyscale_config/beret/worn
 	greyscale_colors = "#972A2A"
 	dog_fashion = /datum/dog_fashion/head/beret
+	hair_mask = HAIR_MASK_HIDE_ABOVE_45_DEG_MEDIUM
 
 /obj/item/clothing/head/collectable/welding
 	name = "collectable welding helmet"
@@ -99,6 +100,7 @@
 	greyscale_config_worn = /datum/greyscale_config/beret/worn
 	greyscale_colors = "#8F7654"
 	inhand_icon_state = null
+	hair_mask = HAIR_MASK_HIDE_ABOVE_45_DEG_MEDIUM
 
 /obj/item/clothing/head/collectable/pirate
 	name = "collectable pirate hat"
