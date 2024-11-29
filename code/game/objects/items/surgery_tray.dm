@@ -128,12 +128,52 @@
 /obj/item/surgery_tray/attack_hand(mob/living/user)
 	if(!user.can_perform_action(src, NEED_HANDS))
 		return ..()
+
 	if(!length(contents))
 		balloon_alert(user, "empty!")
-	else
-		var/obj/item/grabbies = pick(contents)
-		atom_storage.remove_single(user, grabbies, drop_location())
-		user.put_in_hands(grabbies)
+		return TRUE
+
+	var/obj/structure/table/optable/operating_table
+	for (var/turf_dir in GLOB.alldirs)
+		var/turf/table_turf = get_step(src, turf_dir)
+		// Skip turfs that the user cannot reach *unless* the user is also not adjacent to us (telekinesis)
+		if (isnull(table_turf) || (user.CanReach(src) && !user.CanReach(table_turf)))
+			continue
+		operating_table = locate() in table_turf
+		if (!isnull(operating_table))
+			break
+
+	if (isnull(operating_table) || isnull(operating_table.patient) || !length(operating_table.patient.surgeries))
+		var/obj/item/picked_tool = pick(contents)
+		atom_storage.remove_single(user, picked_tool, drop_location())
+		user.put_in_hands(picked_tool)
+		return TRUE
+
+	var/datum/surgery/procedure = operating_table.patient.surgeries[1]
+	var/datum/surgery_step/surgery_step = GLOB.surgery_steps[procedure.steps[procedure.status]]
+	var/obj/item/picked_tool
+	var/highest_chance = 0
+	for(var/key in surgery_step.implements)
+		if (surgery_step.implements[key] < highest_chance)
+			continue
+
+		for (var/obj/item/grabby in contents)
+			if(ispath(key) && istype(grabby, key))
+				picked_tool = grabby
+			else if(key in grabby.get_all_tool_behaviours())
+				picked_tool = grabby
+
+			if (!isnull(picked_tool))
+				break
+
+		if (!isnull(picked_tool))
+			highest_chance = surgery_step.implements[key]
+
+	if (isnull(picked_tool))
+		picked_tool = pick(contents)
+
+	atom_storage.remove_single(user, picked_tool, drop_location())
+	user.put_in_hands(picked_tool)
 	return TRUE
 
 /obj/item/surgery_tray/screwdriver_act_secondary(mob/living/user, obj/item/tool)
