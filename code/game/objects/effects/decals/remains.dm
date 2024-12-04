@@ -24,6 +24,8 @@
 	var/datum/proximity_monitor/proximity_monitor
 	///The reagent we will release when our remains are disturbed.
 	var/datum/reagent/that_shit_that_killed_saddam
+	/// Amount of reagents in the smoke puff we release
+	var/how_much_shit_killed_saddam = 15
 	///A cooldown for how frequently the gas is released when disturbed.
 	COOLDOWN_DECLARE(gas_cooldown)
 	///The length of the aforementioned cooldown.
@@ -50,9 +52,10 @@
 /obj/effect/decal/remains/human/smokey/proc/release_smoke(mob/living/smoke_releaser)
 	visible_message(span_warning("[smoke_releaser] disturbs the [src], which releases a huge cloud of gas!"))
 	var/datum/effect_system/fluid_spread/smoke/chem/cigarette_puff = new()
-	cigarette_puff.chemholder.add_reagent(that_shit_that_killed_saddam, 15)
+	var/datum/reagents/smoke_reagents = new/datum/reagents(how_much_shit_killed_saddam)
+	smoke_reagents.add_reagent(that_shit_that_killed_saddam, how_much_shit_killed_saddam)
 	cigarette_puff.attach(get_turf(src))
-	cigarette_puff.set_up(range = 2, amount = DIAMOND_AREA(2), holder = src, location = get_turf(src), silent = TRUE)
+	cigarette_puff.set_up(range = 2, amount = DIAMOND_AREA(2), holder = src, location = get_turf(src), carry = smoke_reagents, silent = TRUE)
 	cigarette_puff.start()
 
 ///Subtype of smokey remains used for rare maintenance spawns.
