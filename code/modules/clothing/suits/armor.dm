@@ -234,7 +234,7 @@
 		. += emissive_appearance(icon_file, "[icon_state]-emissive", src, alpha = src.alpha)
 
 /datum/armor/armor_secjacket //Gotta compensate those extra covered limbs
-	slash = 30
+	slash = 40
 	puncture = 25
 	blunt = 15
 	laser = 25
@@ -267,7 +267,7 @@
 /datum/armor/vest_capcarapace
 	slash = 50
 	puncture = 40
-	blunt = 40
+	blunt = 25
 	laser = 50
 	energy = 50
 	bomb = 25

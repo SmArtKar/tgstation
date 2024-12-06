@@ -57,6 +57,13 @@
 /// Checks if the impact is energy or laser
 #define IS_SCIFI_ARMOR(x) (x == LASER || x == ENERGY)
 
+/// Attack animation for sharp items
+#define ATTACK_ANIMATION_SLASH "slash"
+/// Attack animation for pointy items
+#define ATTACK_ANIMATION_PUNCTURE "puncture"
+/// Animation for blunt attacks
+#define ATTACK_ANIMATION_BLUNT "blunt"
+
 //bitflag damage defines used for suicide_act
 #define BRUTELOSS (1<<0)
 #define FIRELOSS (1<<1)

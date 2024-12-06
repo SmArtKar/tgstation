@@ -1606,44 +1606,104 @@
 	// This is instant on byond's end, but to our clients this looks like a quick drop
 	animate(src, alpha = old_alpha, pixel_x = old_x, pixel_y = old_y, transform = old_transform, time = 3, easing = CUBIC_EASING)
 
-/atom/movable/proc/do_item_attack_animation(atom/attacked_atom, visual_effect_icon, obj/item/used_item)
-	var/image/attack_image
-	if(visual_effect_icon)
-		attack_image = image(icon = 'icons/effects/effects.dmi', icon_state = visual_effect_icon)
-	else if(used_item)
-		attack_image = image(icon = used_item)
+/atom/movable/proc/do_item_attack_animation(atom/attacked_atom, visual_effect_icon, obj/item/used_item, animation_type = ATTACK_ANIMATION_BLUNT)
+	if (visual_effect_icon)
+		var/image/attack_image = image(icon = 'icons/effects/effects.dmi', icon_state = visual_effect_icon)
 		attack_image.plane = attacked_atom.plane + 1
-
 		// Scale the icon.
 		attack_image.transform *= 0.4
 		// The icon should not rotate.
 		attack_image.appearance_flags = APPEARANCE_UI
-
-		// Set the direction of the icon animation.
-		var/direction = get_dir(src, attacked_atom)
-		if(direction & NORTH)
-			attack_image.pixel_y = -12
-		else if(direction & SOUTH)
-			attack_image.pixel_y = 12
-
-		if(direction & EAST)
-			attack_image.pixel_x = -14
-		else if(direction & WEST)
-			attack_image.pixel_x = 14
-
-		if(!direction) // Attacked self?!
-			attack_image.pixel_y = 12
-			attack_image.pixel_x = 5 * (prob(50) ? 1 : -1)
-
-	if(!attack_image)
+		var/atom/movable/flick_visual/attack = attacked_atom.flick_overlay_view(attack_image, 1 SECONDS)
+		var/matrix/copy_transform = new(transform)
+		animate(attack, alpha = 175, transform = copy_transform.Scale(0.75), time = 0.3 SECONDS)
+		animate(time = 0.1 SECONDS)
+		animate(alpha = 0, time = 0.3 SECONDS, easing = CIRCULAR_EASING|EASE_OUT)
 		return
+
+	if (isnull(used_item))
+		return
+
+	var/image/attack_image = image(icon = used_item)
+	attack_image.plane = attacked_atom.plane + 1
+	// Scale the icon.
+	attack_image.transform *= 0.4
+	// The icon should not rotate.
+	attack_image.appearance_flags = APPEARANCE_UI
 
 	var/atom/movable/flick_visual/attack = attacked_atom.flick_overlay_view(attack_image, 1 SECONDS)
 	var/matrix/copy_transform = new(transform)
+	var/x_sign = 0
+	var/y_sign = 0
+	var/direction = get_dir(src, attacked_atom)
+	if (direction & NORTH)
+		y_sign = -1
+	else if (direction & SOUTH)
+		y_sign = 1
+
+	if (direction & EAST)
+		x_sign = -1
+	else if (direction & WEST)
+		x_sign = 1
+
+	// Attacking self, or something on the same turf as us
+	if (!direction)
+		y_sign = 1
+		// Not a fan of this, but its the "cleanest" way to animate this
+		x_sign = 0.25 * (prob(50) ? 1 : -1)
+
 	// And animate the attack!
-	animate(attack, alpha = 175, transform = copy_transform.Scale(0.75), pixel_x = 0, pixel_y = 0, pixel_z = 0, time = 0.3 SECONDS)
-	animate(time = 0.1 SECONDS)
-	animate(alpha = 0, time = 0.3 SECONDS, easing = CIRCULAR_EASING|EASE_OUT)
+	switch (animation_type)
+		if (ATTACK_ANIMATION_BLUNT)
+			attack.pixel_x = 14 * x_sign
+			attack.pixel_y = 12 * y_sign
+			animate(attack, alpha = 175, transform = copy_transform.Scale(0.75), pixel_x = 5 * x_sign, pixel_y = 4 * y_sign, time = 0.2 SECONDS)
+			animate(time = 0.1 SECONDS)
+			animate(alpha = 0, time = 0.1 SECONDS, easing = CIRCULAR_EASING|EASE_OUT)
+
+		if (ATTACK_ANIMATION_PUNCTURE)
+			attack.pixel_x = 14 * x_sign
+			attack.pixel_y = 12 * y_sign
+			animate(attack, alpha = 175, transform = copy_transform.Scale(0.75), pixel_x = 0, pixel_y = 0, time = 0.3 SECONDS)
+			animate(time = 0.1 SECONDS)
+			animate(alpha = 0, pixel_x = 3 * -x_sign, pixel_y = 2 * -y_sign, time = 0.1 SECONDS, easing = CIRCULAR_EASING|EASE_OUT)
+
+		if (ATTACK_ANIMATION_SLASH)
+			attack.pixel_x = 14 * x_sign
+			attack.pixel_y = 12 * y_sign
+			var/x_rot_sign = 0
+			var/y_rot_sign = 0
+			if (x_sign)
+				if (y_sign)
+					y_rot_sign = -y_sign
+				else
+					y_rot_sign = (prob(50) ? 1 : -1)
+			if (y_sign)
+				if (x_sign)
+					x_rot_sign = -x_sign
+				else
+					x_rot_sign = (prob(50) ? 1 : -1)
+
+			attack.pixel_x += 10 * x_rot_sign
+			attack.pixel_y += 8 * y_rot_sign
+			animate(attack, alpha = 175, transform = copy_transform.Scale(0.75), time = 0.3 SECONDS, flags = ANIMATION_PARALLEL)
+			animate(time = 0.1 SECONDS)
+			animate(alpha = 0, time = 0.1 SECONDS, easing = CIRCULAR_EASING|EASE_OUT)
+
+			var/x_return = 10 * -x_rot_sign
+			var/y_return = 8 * -y_rot_sign
+
+			if (!x_rot_sign)
+				x_return = 14 * x_sign
+
+			if (!y_rot_sign)
+				y_return = 12 * y_sign
+
+			animate(attack, pixel_x = 4 * x_sign, time = 0.25 SECONDS, easing = SINE_EASING | EASE_IN, flags = ANIMATION_PARALLEL)
+			animate(pixel_x = x_return, time = 0.25 SECONDS, easing = SINE_EASING | EASE_OUT)
+
+			animate(attack, pixel_y = 3 * y_sign, time = 0.2 SECONDS, easing = CIRCULAR_EASING | EASE_IN, flags = ANIMATION_PARALLEL)
+			animate(pixel_y = y_return, time = 0.25 SECONDS, easing = CIRCULAR_EASING | EASE_OUT)
 
 /// Common proc used by painting tools like spraycans and palettes that can access the entire 24 bits color space.
 /obj/item/proc/pick_painting_tool_color(mob/user, default_color)
