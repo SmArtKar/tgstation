@@ -17,6 +17,7 @@
 	icon_state = "pen"
 	inhand_icon_state = "pen"
 	worn_icon_state = "pen"
+	icon_angle = -45
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_EARS
 	throwforce = 0
 	w_class = WEIGHT_CLASS_TINY
@@ -304,8 +305,8 @@
  * (Alan) Edaggers
  */
 /obj/item/pen/edagger
-	attack_verb_continuous = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts") //these won't show up if the pen is off
-	attack_verb_simple = list("slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts") //these won't show up if the pen is off
+	attack_verb_simple = list("slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	sharpness = SHARP_POINTY
 	armour_penetration = 20
 	bare_wound_bonus = 10
@@ -322,6 +323,8 @@
 	var/hidden_desc = "It's a normal black ink pe- Wait. That's a thing used to stab people!"
 	/// The real icons used when extended.
 	var/hidden_icon = "edagger"
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
 
 /obj/item/pen/edagger/Initialize(mapload)
 	. = ..()
@@ -329,6 +332,7 @@
 	speed = 6 SECONDS, \
 	butcher_sound = 'sound/items/weapons/blade1.ogg', \
 	)
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -5, TRAIT_TRANSFORM_ACTIVE)
 	RegisterSignal(src, COMSIG_DETECTIVE_SCANNED, PROC_REF(on_scan))
 
 /obj/item/pen/edagger/create_transform_component()

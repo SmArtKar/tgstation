@@ -116,9 +116,16 @@
 	block_sound = 'sound/items/weapons/parry.ogg'
 	sharpness = SHARP_EDGED
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	menu_description = "A sharp claymore which provides a low chance of blocking incoming melee attacks. Can be worn on the back or belt."
+
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
+
+/obj/item/nullrod/claymore/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -8)
 
 /obj/item/nullrod/claymore/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(attack_type == PROJECTILE_ATTACK || attack_type == LEAP_ATTACK)
@@ -427,13 +434,14 @@
 	icon = 'icons/obj/weapons/khopesh.dmi'
 	icon_state = "clownrender"
 	inhand_icon_state = "cultdagger"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	worn_icon_state = "render"
 	hitsound = 'sound/items/bikehorn.ogg'
 	sharpness = SHARP_EDGED
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	menu_description = "A sharp dagger. Fits in pockets. Can be worn on the belt. Honk."
 
 // Pride-struck Hammer - Transfers reagents in your body to those you hit.
@@ -622,14 +630,18 @@
 	sharpness = SHARP_EDGED
 	slot_flags = null
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	item_flags = SLOWS_WHILE_IN_HAND
 	menu_description = "A sharp knife. Randomly speeds or slows its user at a regular intervals. Capable of butchering bodies. Cannot be worn anywhere."
+
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
 
 /obj/item/nullrod/tribal_knife/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSobj, src)
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -8)
 	AddComponent(/datum/component/butchering, \
 	speed = 5 SECONDS, \
 	effectiveness = 100, \
@@ -709,6 +721,7 @@
 	icon = 'icons/obj/weapons/spear.dmi'
 	icon_state = "ratvarian_spear"
 	inhand_icon_state = "ratvarian_spear"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/antag/clockwork_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/clockwork_righthand.dmi'
 	slot_flags = ITEM_SLOT_BELT
@@ -728,6 +741,7 @@
 	icon = 'icons/obj/weapons/spear.dmi'
 	icon_state = "ratvarian_spear"
 	inhand_icon_state = "ratvarian_spear"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/antag/clockwork_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/clockwork_righthand.dmi'
 	slot_flags = ITEM_SLOT_BELT
@@ -751,6 +765,7 @@
 	icon_state = "nullsword"
 	inhand_icon_state = "nullsword"
 	worn_icon_state = "nullsword"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
@@ -759,13 +774,19 @@
 	bare_wound_bonus = 30
 	slot_flags = ITEM_SLOT_BELT
 	block_sound = 'sound/items/weapons/parry.ogg'
-	sharpness = SHARP_POINTY
+	sharpness = SHARP_EDGED
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	attack_verb_continuous = list("attacks", "punctures", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_continuous = list("attacks", "punctures", "slices", "tears", "lacerates", "rips", "dices", "cuts")
 	attack_verb_simple = list("attack", "puncture", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	menu_description = "A blade that deals variable, low amounts of damage, but does easily inflict wounds. \
 		The stronger your swinging arm is, the stronger the blade is, though only slightly. \
 		Against debilitated targets, can also deal additional sneak attack damage with a very high wound chance."
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
+
+/obj/item/nullrod/nullblade/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple)
 
 /obj/item/nullrod/nullblade/melee_attack_chain(mob/user, atom/target, params)
 	//Track our actual force separately

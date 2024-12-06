@@ -14,6 +14,7 @@
 	icon_state = "render"
 	inhand_icon_state = "cultdagger"
 	worn_icon_state = "render"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	inhand_x_dimension = 32
@@ -75,13 +76,16 @@ Striking a noncultist, however, will tear their flesh."}
 	bare_wound_bonus = 20
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	block_sound = 'sound/items/weapons/parry.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "rends")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "rend")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "rends")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "rend")
 	/// If TRUE, it can be used at will by anyone, non-cultists included
 	var/free_use = FALSE
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
 
 /obj/item/melee/cultblade/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -10)
 	AddComponent(/datum/component/butchering, \
 	speed = 4 SECONDS, \
 	effectiveness = 100, \

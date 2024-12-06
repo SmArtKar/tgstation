@@ -212,6 +212,7 @@
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "trench_tool"
 	inhand_icon_state = "trench_tool"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/equipment/mining_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/mining_righthand.dmi'
 	obj_flags = CONDUCTS_ELECTRICITY

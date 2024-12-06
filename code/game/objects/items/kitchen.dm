@@ -22,6 +22,7 @@
 	name = "fork"
 	desc = "Pointy."
 	icon_state = "fork"
+	icon_angle = -90
 	force = 4
 	w_class = WEIGHT_CLASS_TINY
 	throwforce = 0
@@ -107,6 +108,7 @@
 	name = "Kitchen Toolset"
 	icon = 'icons/obj/items_cyborg.dmi'
 	icon_state = "sili_knife"
+	icon_angle = 0
 	desc = "A breakthrough in synthetic engineering, this tool is a knife programmed to dull when not used for cooking purposes, and can exchange the blade for a rolling pin"
 	force = 0
 	throwforce = 0

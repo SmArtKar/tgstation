@@ -109,6 +109,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	icon = 'icons/obj/weapons/sword.dmi'
 	icon_state = "claymore"
 	inhand_icon_state = "claymore"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
@@ -117,14 +118,16 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	force = 40
 	throwforce = 10
 	w_class = WEIGHT_CLASS_NORMAL
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	block_chance = 50
 	block_sound = 'sound/items/weapons/parry.ogg'
 	sharpness = SHARP_EDGED
 	max_integrity = 200
 	armor_type = /datum/armor/item_claymore
 	resistance_flags = FIRE_PROOF
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
 
 /datum/armor/item_claymore
 	fire = 100
@@ -132,6 +135,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 
 /obj/item/claymore/Initialize(mapload)
 	. = ..()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -10)
 	AddComponent(/datum/component/butchering, \
 	speed = 4 SECONDS, \
 	effectiveness = 105, \
@@ -356,6 +360,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	icon_state = "katana"
 	inhand_icon_state = "katana"
 	worn_icon_state = "katana"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	obj_flags = CONDUCTS_ELECTRICITY
@@ -364,14 +369,21 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throwforce = 10
 	w_class = WEIGHT_CLASS_HUGE
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	block_chance = 50
 	block_sound = 'sound/items/weapons/parry.ogg'
 	sharpness = SHARP_EDGED
 	max_integrity = 200
 	armor_type = /datum/armor/item_katana
 	resistance_flags = FIRE_PROOF
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
+
+/obj/item/katana/Initialize(mapload)
+	. = ..()
+	// 40 piercing damage is extremely dangerous
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -10)
 
 /datum/armor/item_katana
 	fire = 100
@@ -1145,6 +1157,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	icon_state = "swordon"
 	inhand_icon_state = "swordon"
 	worn_icon_state = "swordon"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
@@ -1155,8 +1168,15 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	force = 14
 	throwforce = 12
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
+
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
+
+/obj/item/melee/moonlight_greatsword/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -4)
 
 //High Frequency Blade
 
@@ -1167,6 +1187,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	icon = 'icons/obj/weapons/sword.dmi'
 	icon_state = "hfrequency0"
 	worn_icon_state = "hfrequency0"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	force = 10

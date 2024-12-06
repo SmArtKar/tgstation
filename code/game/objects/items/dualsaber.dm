@@ -14,6 +14,7 @@
 	throw_speed = 3
 	throw_range = 5
 	sharpness = SHARP_EDGED
+	icon_angle = 45
 	w_class = WEIGHT_CLASS_SMALL
 	hitsound = SFX_SWING_HIT
 	armour_penetration = 35
@@ -21,8 +22,8 @@
 	light_range = 6 //TWICE AS BRIGHT AS A REGULAR ESWORD
 	light_color = LIGHT_COLOR_ELECTRIC_GREEN
 	light_on = FALSE
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	block_chance = 75
 	block_sound = 'sound/items/weapons/block_blade.ogg'
 	max_integrity = 200
@@ -73,7 +74,9 @@
 	set_light_on(FALSE)
 
 /obj/item/dualsaber/get_sharpness()
-	return HAS_TRAIT(src, TRAIT_WIELDED) && sharpness
+	if (!HAS_TRAIT(src, TRAIT_WIELDED))
+		return NONE
+	return ..()
 
 /obj/item/dualsaber/update_icon_state()
 	icon_state = inhand_icon_state = HAS_TRAIT(src, TRAIT_WIELDED) ? "dualsaber[saber_color][HAS_TRAIT(src, TRAIT_WIELDED)]" : "dualsaber0"

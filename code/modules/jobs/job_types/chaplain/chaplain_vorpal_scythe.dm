@@ -31,6 +31,7 @@ If the scythe isn't empowered when you sheath it, you take a heap of damage and 
 	icon = 'icons/obj/weapons/staff.dmi'
 	icon_state = "vorpalscythe"
 	inhand_icon_state = "vorpalscythe"
+	icon_angle = -55 // Technically -45, but its a scythe so angle it a bit when attacking
 	worn_icon_state = null
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'

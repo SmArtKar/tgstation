@@ -5,13 +5,14 @@
  * Also fireproof for some reason.
  */
 /obj/item/pitchfork
+	name = "pitchfork"
+	desc = "A simple tool used for moving hay."
 	icon = 'icons/obj/weapons/spear.dmi'
 	icon_state = "pitchfork0"
 	base_icon_state = "pitchfork"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/polearms_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/polearms_righthand.dmi'
-	name = "pitchfork"
-	desc = "A simple tool used for moving hay."
 	force = 7
 	throwforce = 15
 	w_class = WEIGHT_CLASS_BULKY

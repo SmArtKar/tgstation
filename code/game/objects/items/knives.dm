@@ -7,6 +7,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
 	inhand_icon_state = "knife"
 	worn_icon_state = "knife"
+	icon_angle = -90
 	desc = "The original knife, it is said that all other knives are only copies of this one."
 	obj_flags = CONDUCTS_ELECTRICITY
 	force = 10
@@ -17,13 +18,15 @@
 	throw_speed = 3
 	throw_range = 6
 	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 6)
-	attack_verb_continuous = list("slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	sharpness = SHARP_EDGED
 	armor_type = /datum/armor/item_knife
 	wound_bonus = 5
 	bare_wound_bonus = 15
 	tool_behaviour = TOOL_KNIFE
+	var/static/list/alt_continuous = list("stabs", "pierces", "shanks")
+	var/static/list/alt_simple = list("stab", "pierce", "shank")
 
 /datum/armor/item_knife
 	fire = 50
@@ -32,6 +35,7 @@
 /obj/item/knife/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/eyestab)
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple)
 	set_butchering()
 
 ///Adds the butchering component, used to override stats for special cases
@@ -56,6 +60,7 @@
 	icon_state = "bone_blade"
 	inhand_icon_state = "bone_blade"
 	worn_icon_state = "bone_blade"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
 	inhand_x_dimension = 64
@@ -72,6 +77,7 @@
 	icon = 'icons/obj/weapons/khopesh.dmi'
 	icon_state = "bloodletter"
 	worn_icon_state = "render"
+	icon_angle = -45
 	w_class = WEIGHT_CLASS_NORMAL
 	/// Bleed stacks applied when an organic mob target is hit
 	var/bleed_stacks_per_hit = 3
@@ -92,6 +98,7 @@
 	name = "butcher's cleaver"
 	icon_state = "butch"
 	inhand_icon_state = "butch"
+	icon_angle = -45
 	desc = "A huge thing used for chopping and chopping up meat. This includes clowns and clown by-products."
 	obj_flags = CONDUCTS_ELECTRICITY
 	force = 15
@@ -109,6 +116,7 @@
 	desc = "Despite its name, it's mainly used for cutting meat from dead prey rather than actual hunting."
 	inhand_icon_state = "huntingknife"
 	icon_state = "huntingknife"
+	icon_angle = 180
 	wound_bonus = 10
 
 /obj/item/knife/hunting/set_butchering()
@@ -123,6 +131,7 @@
 	icon = 'icons/obj/weapons/stabby.dmi'
 	icon_state = "buckknife"
 	worn_icon_state = "buckknife"
+	icon_angle = -45
 	desc = "A military combat utility survival knife."
 	embed_type = /datum/embed_data/combat_knife
 	force = 20
@@ -210,6 +219,7 @@
 	icon = 'icons/obj/weapons/stabby.dmi'
 	icon_state = "shiv"
 	inhand_icon_state = "shiv"
+	icon_angle = -25
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	desc = "A makeshift glass shiv."
@@ -289,6 +299,7 @@
 	name = "carrot shiv"
 	icon_state = "carrotshiv"
 	inhand_icon_state = "carrotshiv"
+	icon_angle = -45
 	desc = "Unlike other carrots, you should probably keep this far away from your eyes."
 	custom_materials = null
 
@@ -300,6 +311,7 @@
 	name = "parsnip shiv"
 	icon_state = "parsnipshiv"
 	inhand_icon_state = "parsnipshiv"
+	icon_angle = -45
 	desc = "Truly putting 'snip' in the 'parsnip', and it's not sub-par either!"
 	custom_materials = null
 
@@ -307,6 +319,7 @@
 	name = "cahn'root shiv"
 	icon_state = "rootshiv"
 	inhand_icon_state = "rootshiv"
+	icon_angle = -45
 	desc = "A root sharpened into a shiv. A root source of someone's stab wounds soon, most likely."
 	custom_materials = null
 

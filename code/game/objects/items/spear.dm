@@ -1,11 +1,12 @@
 //spears
 /obj/item/spear
+	name = "spear"
+	desc = "A haphazardly-constructed yet still deadly weapon of ancient design."
 	icon = 'icons/obj/weapons/spear.dmi'
 	icon_state = "spearglass0"
 	lefthand_file = 'icons/mob/inhands/weapons/polearms_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/polearms_righthand.dmi'
-	name = "spear"
-	desc = "A haphazardly-constructed yet still deadly weapon of ancient design."
+	icon_angle = -45
 	force = 10
 	w_class = WEIGHT_CLASS_BULKY
 	slot_flags = ITEM_SLOT_BACK

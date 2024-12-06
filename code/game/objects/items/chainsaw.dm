@@ -7,6 +7,7 @@
 	icon_state = "chainsaw"
 	lefthand_file = 'icons/mob/inhands/weapons/chainsaw_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/chainsaw_righthand.dmi'
+	icon_angle = 180
 	obj_flags = CONDUCTS_ELECTRICITY
 	force = 13
 	w_class = WEIGHT_CLASS_HUGE

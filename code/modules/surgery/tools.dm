@@ -201,6 +201,7 @@
 	icon = 'icons/obj/medical/surgery_tools.dmi'
 	icon_state = "scalpel"
 	inhand_icon_state = "scalpel"
+	icon_angle = 180
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 	obj_flags = CONDUCTS_ELECTRICITY
@@ -212,8 +213,8 @@
 	throw_speed = 3
 	throw_range = 5
 	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*2, /datum/material/glass =HALF_SHEET_MATERIAL_AMOUNT)
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	sharpness = SHARP_EDGED
 	tool_behaviour = TOOL_SCALPEL
@@ -222,6 +223,8 @@
 	bare_wound_bonus = 15
 	/// How this looks when placed in a surgical tray
 	var/surgical_tray_overlay = "scalpel_normal"
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
 
 /obj/item/scalpel/Initialize(mapload)
 	. = ..()
@@ -230,6 +233,7 @@
 	effectiveness = 100, \
 	bonus_modifier = 0, \
 	)
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple)
 	AddElement(/datum/element/eyestab)
 
 /obj/item/scalpel/get_surgery_tool_overlay(tray_extended)
@@ -253,6 +257,7 @@
 	icon = 'icons/obj/medical/surgery_tools.dmi'
 	icon_state = "saw"
 	inhand_icon_state = "saw"
+	icon_angle = 180
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
 	hitsound = 'sound/items/weapons/circsawhit.ogg'
@@ -507,6 +512,7 @@
 	desc = "A type of heavy duty surgical shears used for achieving a clean separation between limb and patient. Keeping the patient still is imperative to be able to secure and align the shears."
 	icon = 'icons/obj/medical/surgery_tools.dmi'
 	icon_state = "shears"
+	icon_angle = 90
 	obj_flags = CONDUCTS_ELECTRICITY
 	item_flags = SURGICAL_TOOL
 	toolspeed = 1

@@ -239,6 +239,7 @@
 	desc = "A bottle with a sharp broken bottom."
 	icon = 'icons/obj/drinks/drink_effects.dmi'
 	icon_state = "broken_bottle"
+	icon_angle = 90
 	force = 9
 	throwforce = 5
 	throw_speed = 3

@@ -23,6 +23,7 @@ Slimecrossing Weapons
 	icon = 'icons/obj/weapons/stabby.dmi'
 	icon_state = "rainbowknife"
 	inhand_icon_state = "rainbowknife"
+	icon_angle = -45
 	force = 15
 	throwforce = 15
 	damtype = BRUTE

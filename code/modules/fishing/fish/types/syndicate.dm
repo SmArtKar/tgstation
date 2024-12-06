@@ -67,6 +67,7 @@
 	icon_state = "chainsawfish"
 	inhand_icon_state = "chainsawfish"
 	icon_state_dead = "chainsawfish_dead"
+	icon_angle = 180
 	force = 22
 	demolition_mod = 1.5
 	block_chance = 15
@@ -187,6 +188,7 @@
 	desc = "A long-bodied, metal-clad predator with a snout that almost looks like an halberd. Definitely a weapon to swing around."
 	icon_state = "armored_pike"
 	inhand_icon_state = "armored_pike"
+	icon_angle = 180
 	attack_verb_continuous = list("attacks", "pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("attack", "poke", "jab", "tear", "lacerate", "gore")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'

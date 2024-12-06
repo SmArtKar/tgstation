@@ -63,8 +63,8 @@
 		sharpness_on = active_sharpness, \
 		hitsound_on = active_hitsound, \
 		w_class_on = active_w_class, \
-		attack_verb_continuous_on = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts"), \
-		attack_verb_simple_on = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut"), \
+		attack_verb_continuous_on = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts"), \
+		attack_verb_simple_on = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut"), \
 	)
 	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
 
@@ -134,6 +134,7 @@
 	icon_state = "axe"
 	inhand_icon_state = "axe"
 	base_icon_state = "axe"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/axes_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/axes_righthand.dmi'
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
@@ -190,6 +191,12 @@
 	block_chance = 50
 	block_sound = 'sound/items/weapons/block_blade.ogg'
 	embed_type = /datum/embed_data/esword
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
+
+/obj/item/melee/energy/sword/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -10, TRAIT_TRANSFORM_ACTIVE)
 
 /obj/item/melee/energy/sword/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(!HAS_TRAIT(src, TRAIT_TRANSFORM_ACTIVE))
@@ -319,11 +326,12 @@
 	desc = "A concentrated beam of energy in the shape of a blade. Very stylish... and lethal."
 	icon_state = "blade"
 	base_icon_state = "blade"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	hitsound = 'sound/items/weapons/blade1.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "cuts")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "cut")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	force = 30
 	throwforce = 1 // Throwing or dropping the item deletes it.
 	throw_speed = 3
@@ -333,6 +341,8 @@
 	w_class = WEIGHT_CLASS_BULKY
 	/// Our linked spark system that emits from our sword.
 	var/datum/effect_system/spark_spread/spark_system
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
 
 //Most of the other special functions are handled in their own files. aka special snowflake code so kewl
 /obj/item/melee/energy/blade/Initialize(mapload)
@@ -342,6 +352,7 @@
 	spark_system.attach(src)
 	START_PROCESSING(SSobj, src)
 	ADD_TRAIT(src, TRAIT_TRANSFORM_ACTIVE, INNATE_TRAIT) // Functions as an extended esword
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple, -10, TRAIT_TRANSFORM_ACTIVE)
 
 /obj/item/melee/energy/blade/Destroy()
 	QDEL_NULL(spark_system)

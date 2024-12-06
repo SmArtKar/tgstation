@@ -365,6 +365,7 @@
 	icon = 'icons/obj/mining_zones/artefacts.dmi'
 	icon_state = "soulscythe"
 	inhand_icon_state = "soulscythe"
+	icon_angle = -55 // Scythes look better when angled
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
 	attack_verb_continuous = list("chops", "slices", "cuts", "reaps")
@@ -650,6 +651,7 @@
 	icon = 'icons/obj/weapons/sword.dmi'
 	icon_state = "spectral"
 	inhand_icon_state = "spectral"
+	icon_angle = -45
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	obj_flags = CONDUCTS_ELECTRICITY
@@ -659,11 +661,16 @@
 	throwforce = 1
 	hitsound = 'sound/effects/ghost2.ogg'
 	block_sound = 'sound/items/weapons/parry.ogg'
-	attack_verb_continuous = list("attacks", "slashes", "stabs", "slices", "tears", "lacerates", "rips", "dices", "rends")
-	attack_verb_simple = list("attack", "slash", "stab", "slice", "tear", "lacerate", "rip", "dice", "rend")
+	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "rends")
+	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "rend")
 	resistance_flags = LAVA_PROOF | FIRE_PROOF | ACID_PROOF
 	var/summon_cooldown = 0
 	var/list/mob/dead/observer/spirits
+	var/static/list/alt_continuous = list("stabs", "pierces", "impales")
+	var/static/list/alt_simple = list("stab", "pierce", "impale")
+
+/obj/item/nullrod/claymore/Initialize(mapload)
+	. = ..()
 
 /obj/item/melee/ghost_sword/Initialize(mapload)
 	. = ..()
@@ -675,6 +682,7 @@
 		speed = 15 SECONDS, \
 		effectiveness = 90, \
 	)
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple)
 
 /obj/item/melee/ghost_sword/Destroy()
 	for(var/mob/dead/observer/G in spirits)
@@ -867,6 +875,7 @@
 	icon_state = "cleaving_saw"
 	inhand_icon_state = "cleaving_saw"
 	worn_icon_state = "cleaving_saw"
+	icon_angle = 135
 	attack_verb_continuous = list("attacks", "saws", "slices", "tears", "lacerates", "rips", "dices", "cuts")
 	attack_verb_simple = list("attack", "saw", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	force = 12

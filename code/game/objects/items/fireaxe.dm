@@ -4,13 +4,13 @@ GLOBAL_DATUM(bridge_axe, /obj/item/fireaxe)
  * Fireaxe
  */
 /obj/item/fireaxe  // DEM AXES MAN, marker -Agouri
+	name = "fire axe"
+	desc = "Truly, the weapon of a madman. Who would think to fight fire with an axe?"
 	icon = 'icons/obj/weapons/fireaxe.dmi'
 	icon_state = "fireaxe0"
 	base_icon_state = "fireaxe"
 	lefthand_file = 'icons/mob/inhands/weapons/axes_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/axes_righthand.dmi'
-	name = "fire axe"
-	desc = "Truly, the weapon of a madman. Who would think to fight fire with an axe?"
 	force = 5
 	throwforce = 15
 	demolition_mod = 1.25
@@ -73,10 +73,11 @@ GLOBAL_DATUM(bridge_axe, /obj/item/fireaxe)
  * Bone Axe
  */
 /obj/item/fireaxe/boneaxe  // Blatant imitation of the fireaxe, but made out of bone.
-	icon_state = "bone_axe0"
-	base_icon_state = "bone_axe"
 	name = "bone axe"
 	desc = "A large, vicious axe crafted out of several sharpened bone plates and crudely tied together. Made of monsters, by killing monsters, for killing monsters."
+	icon_state = "bone_axe0"
+	base_icon_state = "bone_axe"
+	icon_angle = 180
 	force_unwielded = 5
 	force_wielded = 23
 
@@ -84,10 +85,11 @@ GLOBAL_DATUM(bridge_axe, /obj/item/fireaxe)
  * Metal Hydrogen Axe
  */
 /obj/item/fireaxe/metal_h2_axe
-	icon_state = "metalh2_axe0"
-	base_icon_state = "metalh2_axe"
 	name = "metallic hydrogen axe"
 	desc = "A lightweight crowbar with an extreme sharp fire axe head attached. It trades its heft as a weapon by making it easier to carry around when holstered to suits without having to sacrifice your backpack."
+	icon_state = "metalh2_axe0"
+	base_icon_state = "metalh2_axe"
+	icon_angle = -45
 	force_unwielded = 5
 	force_wielded = 15
 	demolition_mod = 2

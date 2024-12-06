@@ -9,6 +9,7 @@
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "crusher"
 	inhand_icon_state = "crusher0"
+	icon_angle = -55 // Looks better when angled
 	lefthand_file = 'icons/mob/inhands/weapons/hammers_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/hammers_righthand.dmi'
 	name = "proto-kinetic crusher"

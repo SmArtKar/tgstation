@@ -134,6 +134,7 @@
 	icon = 'icons/obj/aquarium/wide.dmi'
 	icon_state = "swordfish"
 	inhand_icon_state = "swordfish"
+	icon_angle = 180
 	force = 18
 	sharpness = SHARP_EDGED
 	attack_verb_continuous = list("slashes", "cuts", "pierces")
