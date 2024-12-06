@@ -208,7 +208,8 @@ GLOBAL_LIST_INIT(prglass_recipes, list ( \
 	drop_sound = 'sound/items/handling/materials/glass_drop.ogg'
 
 /datum/armor/sheet_plasmarglass
-	melee = 20
+	slash = 20
+	blunt = 20
 	fire = 80
 	acid = 100
 
@@ -317,7 +318,8 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 	pain_chance = 5
 
 /datum/armor/item_shard
-	melee = 100
+	slash = 100
+	blunt = 100
 	energy = 100
 	fire = 50
 	acid = 100

@@ -897,7 +897,7 @@
 	// Affecting body part check.
 	var/obj/item/bodypart/affecting = living_target.get_bodypart(user.get_random_valid_zone(user.zone_selected))
 	// Target's armor value. Accounts for armor penetration even though we have no armour_penetration defined on the parent.
-	var/armor_block = living_target.run_armor_check(affecting, MELEE, armour_penetration = armour_penetration)
+	var/armor_block = living_target.run_armor_check(affecting, get_damage_armor_type(), armour_penetration = armour_penetration)
 
 	// We got a sneak attack!
 	living_target.apply_damage(round(sneak_attack_dice, DAMAGE_PRECISION), BRUTE, def_zone = affecting, blocked = armor_block, wound_bonus = bare_wound_bonus, sharpness = SHARP_EDGED)

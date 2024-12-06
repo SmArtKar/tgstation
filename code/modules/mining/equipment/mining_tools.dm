@@ -335,12 +335,13 @@
 	return list(TOOL_SHOVEL, TOOL_WRENCH)
 
 /datum/armor/giant_wrench
-	acid = 30
-	bomb = 100
-	bullet = 30
-	fire = 100
+	slash = 30
+	puncture = 30
+	blunt = 30
 	laser = 30
-	melee = 30
+	bomb = 100
+	acid = 30
+	fire = 100
 
 /obj/item/shovel/giant_wrench/Initialize(mapload)
 	. = ..()
@@ -382,6 +383,6 @@
 		target_mob.throw_at(throw_target, 2, 2, user, gentle = TRUE)
 		target_mob.Knockdown(2 SECONDS)
 	var/body_zone = pick(GLOB.all_body_zones)
-	user.apply_damage(force / recoil_factor, BRUTE, body_zone, user.run_armor_check(body_zone, MELEE))
+	user.apply_damage(force / recoil_factor, BRUTE, body_zone, user.run_armor_check(body_zone, get_damage_armor_type()))
 	to_chat(user, span_danger("The weight of the Big Slappy recoils!"))
 	log_combat(user, user, "recoiled Big Slappy into")

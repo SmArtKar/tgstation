@@ -24,8 +24,6 @@
 #define BIO "bio"
 /// Involves a shockwave, usually from an explosion.
 #define BOMB "bomb"
-/// Involves a solid projectile.
-#define BULLET "bullet"
 /// Involves being eaten
 #define CONSUME "consume"
 /// Involves an EMP or energy-based projectile.
@@ -34,21 +32,30 @@
 #define FIRE "fire"
 /// Involves a laser.
 #define LASER "laser"
-/// Involves a melee attack or a thrown object.
-#define MELEE "melee"
+/// Involves a sharp melee attack or some sort of slashing projectile
+#define SLASH "slash"
+/// Involves stabbing attacks (like spears) or bullets
+#define PUNCTURE "puncture"
+/// Involves blunt attacks, like toolboxes
+#define BLUNT "blunt"
 /// Involved in checking the likelihood of applying a wound to a mob.
 #define WOUND "wound"
 
 #define ARMOR_ALL "all_damage_types"
 
 /// Armor values that are used for damage
-#define ARMOR_LIST_DAMAGE(...) list(BIO, BOMB, BULLET, ENERGY, LASER, MELEE, WOUND)
+#define ARMOR_LIST_DAMAGE(...) list(SLASH, PUNCTURE, BLUNT, LASER, ENERGY, BOMB, WOUND, BIO)
 
 /// Armor values that are used for durability
 #define ARMOR_LIST_DURABILITY(...) list(ACID, FIRE)
 
 /// All armors, preferable in the order as seen above
-#define ARMOR_LIST_ALL(...) list(ACID, BIO, BOMB, BULLET, CONSUME, ENERGY, FIRE, LASER, MELEE, WOUND)
+#define ARMOR_LIST_ALL(...) list(SLASH, PUNCTURE, BLUNT, LASER, ENERGY, BOMB, WOUND, BIO, ACID, FIRE, CONSUME)
+
+/// Checks if the impact is "physical"
+#define IS_PHYSICAL_ARMOR(x) (x == SLASH || x == PUNCTURE || x == BLUNT)
+/// Checks if the impact is energy or laser
+#define IS_SCIFI_ARMOR(x) (x == LASER || x == ENERGY)
 
 //bitflag damage defines used for suicide_act
 #define BRUTELOSS (1<<0)

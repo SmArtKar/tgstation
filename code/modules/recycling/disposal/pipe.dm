@@ -23,8 +23,9 @@
 	var/spawn_pipe = TRUE
 
 /datum/armor/structure_disposalpipe
-	melee = 25
-	bullet = 10
+	slash = 40
+	puncture = 10
+	blunt = 25
 	laser = 10
 	energy = 100
 	fire = 90

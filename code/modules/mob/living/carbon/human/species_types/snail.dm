@@ -118,8 +118,8 @@
 	equip_sound = null
 
 /datum/armor/backpack_snail
-	melee = 40
-	bullet = 30
+	slash = 40
+	puncture = 30
 	laser = 30
 	energy = 10
 	bomb = 25

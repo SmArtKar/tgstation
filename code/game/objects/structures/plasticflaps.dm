@@ -14,8 +14,9 @@
 	opacity = TRUE
 
 /datum/armor/structure_plasticflaps
-	melee = 100
-	bullet = 80
+	slash = 60
+	puncture = 80
+	blunt = 100
 	laser = 80
 	energy = 100
 	bomb = 50

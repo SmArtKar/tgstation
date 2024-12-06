@@ -15,8 +15,9 @@
 	armor_type = /datum/armor/suit_armor
 
 /datum/armor/suit_armor
-	melee = 35
-	bullet = 30
+	slash = 15
+	puncture = 30
+	blunt = 40
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -83,8 +84,9 @@
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 
 /datum/armor/vest_marine
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 30
 	energy = 25
 	bomb = 50
@@ -94,8 +96,9 @@
 	wound = 20
 
 /datum/armor/pmc
-	melee = 40
-	bullet = 50
+	slash = 40
+	puncture = 50
+	blunt = 35
 	laser = 60
 	energy = 50
 	bomb = 50
@@ -161,8 +164,9 @@
 	strip_delay = 80
 
 /datum/armor/armor_hos
-	melee = 30
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 30
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -230,8 +234,9 @@
 		. += emissive_appearance(icon_file, "[icon_state]-emissive", src, alpha = src.alpha)
 
 /datum/armor/armor_secjacket //Gotta compensate those extra covered limbs
-	melee = 25
-	bullet = 25
+	slash = 30
+	puncture = 25
+	blunt = 15
 	laser = 25
 	energy = 35
 	bomb = 20
@@ -260,8 +265,9 @@
 	resistance_flags = FIRE_PROOF
 
 /datum/armor/vest_capcarapace
-	melee = 50
-	bullet = 40
+	slash = 50
+	puncture = 40
+	blunt = 40
 	laser = 50
 	energy = 50
 	bomb = 25
@@ -307,8 +313,9 @@
 	AddComponent(/datum/component/item_equipped_movement_rustle)
 
 /datum/armor/armor_riot
-	melee = 50
-	bullet = 10
+	slash = 40
+	puncture = 10
+	blunt = 50
 	laser = 10
 	energy = 10
 	fire = 80
@@ -327,7 +334,8 @@
 	equip_delay_other = 50
 
 /datum/armor/balloon_vest
-	melee = 10
+	slash = 10
+	blunt = 20
 	laser = 10
 	energy = 10
 	fire = 60
@@ -336,7 +344,7 @@
 /obj/item/clothing/suit/armor/balloon_vest/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(isitem(hitby))
 		var/obj/item/item_hit = hitby
-		if(item_hit.sharpness)
+		if(item_hit.get_sharpness())
 			pop()
 
 	if(istype(hitby, /obj/projectile/bullet))
@@ -360,8 +368,9 @@
 	equip_delay_other = 50
 
 /datum/armor/armor_bulletproof
-	melee = 15
-	bullet = 60
+	slash = 20
+	puncture = 60
+	blunt = 10
 	laser = 10
 	energy = 10
 	bomb = 40
@@ -383,8 +392,9 @@
 	var/hit_reflect_chance = 50
 
 /datum/armor/armor_laserproof
-	melee = 10
-	bullet = 10
+	slash = 10
+	puncture = 10
+	blunt = 10
 	laser = 60
 	energy = 60
 	fire = 100
@@ -433,12 +443,10 @@
 /obj/item/clothing/suit/armor/swat/proc/init_rustle_component()
 	AddComponent(/datum/component/item_equipped_movement_rustle)
 
-
-//All of the armor below is mostly unused
-
 /datum/armor/armor_swat
-	melee = 40
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 50
 	laser = 30
 	energy = 40
 	bomb = 50
@@ -446,6 +454,10 @@
 	fire = 100
 	acid = 100
 	wound = 15
+
+//All of the armor below is mostly unused
+
+
 
 /obj/item/clothing/suit/armor/heavy
 	name = "heavy armor"
@@ -460,8 +472,9 @@
 	armor_type = /datum/armor/armor_heavy
 
 /datum/armor/armor_heavy
-	melee = 80
-	bullet = 80
+	slash = 80
+	puncture = 80
+	blunt = 80
 	laser = 50
 	energy = 50
 	bomb = 100
@@ -478,8 +491,9 @@
 	armor_type = /datum/armor/armor_tdome
 
 /datum/armor/armor_tdome
-	melee = 80
-	bullet = 80
+	slash = 80
+	puncture = 80
+	blunt = 80
 	laser = 50
 	energy = 50
 	bomb = 100
@@ -506,8 +520,9 @@
 	heat_protection = null
 
 /datum/armor/tdome_holosuit
-	melee = 10
-	bullet = 10
+	slash = 10
+	puncture = 10
+	blunt = 10
 
 /obj/item/clothing/suit/armor/tdome/holosuit/red
 	desc = "Reddish armor."
@@ -555,8 +570,9 @@
 	armor_type = /datum/armor/knight_greyscale
 
 /datum/armor/knight_greyscale
-	melee = 35
-	bullet = 10
+	slash = 35
+	puncture = 10
+	blunt = 35
 	laser = 10
 	energy = 10
 	bomb = 10
@@ -581,8 +597,9 @@
 	allowed |= /obj/item/clothing/suit/apron::allowed
 
 /datum/armor/vest_durathread
-	melee = 20
-	bullet = 10
+	slash = 30
+	puncture = 10
+	blunt = 10
 	laser = 30
 	energy = 40
 	bomb = 15
@@ -598,8 +615,9 @@
 	dog_fashion = null
 
 /datum/armor/vest_russian
-	melee = 25
-	bullet = 30
+	slash = 25
+	puncture = 30
+	blunt = 15
 	energy = 10
 	bomb = 10
 	fire = 20
@@ -618,8 +636,9 @@
 	dog_fashion = null
 
 /datum/armor/vest_russian_coat
-	melee = 25
-	bullet = 20
+	slash = 15
+	puncture = 20
+	blunt = 35
 	laser = 20
 	energy = 30
 	bomb = 20
@@ -646,8 +665,9 @@
 	)
 
 /datum/armor/armor_elder_atmosian
-	melee = 25
-	bullet = 20
+	slash = 25
+	puncture = 20
+	blunt = 25
 	laser = 30
 	energy = 30
 	bomb = 85
@@ -665,8 +685,9 @@
 	armor_type = /datum/armor/armor_centcom_formal
 
 /datum/armor/armor_centcom_formal
-	melee = 35
-	bullet = 40
+	slash = 35
+	puncture = 40
+	blunt = 35
 	laser = 40
 	energy = 50
 	bomb = 35
@@ -697,8 +718,9 @@
 	armor_type = /datum/armor/coat_militia
 
 /datum/armor/coat_militia
-	melee = 40
-	bullet = 40
+	slash = 30
+	puncture = 40
+	blunt = 45
 	laser = 30
 	energy = 25
 	bomb = 50
@@ -726,8 +748,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 5)
 
 /datum/armor/military
-	melee = 45
-	bullet = 25
+	slash = 50
+	puncture = 25
+	blunt = 30
 	laser = 25
 	energy = 25
 	bomb = 25
@@ -746,8 +769,9 @@
 	slowdown = 0.8
 
 /datum/armor/armor_warlord
-	melee = 70
-	bullet = 60
+	slash = 70
+	puncture = 60
+	blunt = 70
 	laser = 70
 	energy = 70
 	bomb = 40
@@ -775,8 +799,9 @@
 	armor_type = /datum/armor/watermelon_fr
 
 /datum/armor/watermelon
-	melee = 15
-	bullet = 10
+	slash = 5
+	puncture = 10
+	blunt = 15
 	energy = 10
 	bomb = 10
 	fire = 0
@@ -784,8 +809,9 @@
 	wound = 5
 
 /datum/armor/watermelon_fr
-	melee = 15
-	bullet = 10
+	slash = 5
+	puncture = 10
+	blunt = 15
 	energy = 10
 	bomb = 10
 	fire = 15
@@ -844,8 +870,9 @@
 	armor_type = /datum/armor/barrelmelon_fr
 
 /datum/armor/barrelmelon
-	melee = 25
-	bullet = 20
+	slash = 10
+	puncture = 20
+	blunt = 20
 	energy = 15
 	bomb = 10
 	fire = 0
@@ -853,8 +880,9 @@
 	wound = 10
 
 /datum/armor/barrelmelon_fr
-	melee = 25
-	bullet = 20
+	slash = 10
+	puncture = 20
+	blunt = 25
 	energy = 15
 	bomb = 10
 	fire = 20

@@ -512,7 +512,7 @@
 	playsound(living_target.loc, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 
 	var/target_zone = living_target.get_random_valid_zone(source.zone_selected)
-	var/armor_block = living_target.run_armor_check(target_zone, MELEE, armour_penetration = attacking_bodypart.unarmed_effectiveness)
+	var/armor_block = living_target.run_armor_check(target_zone, source.get_arm_damage_flag(), armour_penetration = attacking_bodypart.unarmed_effectiveness)
 	living_target.apply_damage(potential_damage * 2, attacking_bodypart.attack_type, target_zone, armor_block)
 
 	if(source.body_position != LYING_DOWN) //Throw them if we are standing

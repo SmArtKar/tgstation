@@ -40,8 +40,9 @@
 	var/current_pressure_state
 
 /datum/armor/portable_atmospherics_canister
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 50
 	energy = 100
 	bomb = 10
@@ -417,7 +418,7 @@
 	if(gone == internal_cell)
 		internal_cell = null
 
-/obj/machinery/portable_atmospherics/canister/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/machinery/portable_atmospherics/canister/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(!. || QDELETED(src))
 		return

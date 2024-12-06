@@ -10,8 +10,9 @@
 	var/hit_reflect_chance = 50
 
 /datum/armor/hooded_ablative
-	melee = 10
-	bullet = 10
+	slash = 10
+	puncture = 10
+	blunt = 10
 	laser = 60
 	energy = 60
 	fire = 100

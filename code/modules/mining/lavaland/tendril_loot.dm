@@ -624,8 +624,9 @@
 	armor_type = /datum/armor/gloves_gauntlets
 
 /datum/armor/gloves_gauntlets
-	melee = 15
-	bullet = 25
+	slash = 15
+	puncture = 25
+	blunt = 15
 	laser = 15
 	energy = 15
 	bomb = 100
@@ -680,8 +681,9 @@
 	clothing_flags = THICKMATERIAL|HEADINTERNALS
 
 /datum/armor/hooded_berserker
-	melee = 30
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 30
 	laser = 10
 	energy = 20
 	bomb = 50
@@ -691,7 +693,7 @@
 	wound = 10
 
 /datum/armor/drake_empowerment
-	melee = 35
+	slash = 35
 	laser = 30
 	energy = 20
 	bomb = 20

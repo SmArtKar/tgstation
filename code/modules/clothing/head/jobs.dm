@@ -104,10 +104,10 @@
 	strip_delay = 60
 	dog_fashion = /datum/dog_fashion/head/captain
 
-//Captain: This is no longer space-worthy
 /datum/armor/hats_caphat
-	melee = 25
-	bullet = 15
+	slash = 35
+	puncture = 15
+	blunt = 10
 	laser = 25
 	energy = 35
 	bomb = 25
@@ -115,6 +115,7 @@
 	acid = 50
 	wound = 5
 
+//Captain: This is no longer space-worthy
 /obj/item/clothing/head/hats/caphat/parade
 	name = "captain's parade cap"
 	desc = "Worn only by Captains with an abundance of class."
@@ -137,16 +138,17 @@
 	armor_type = /datum/armor/hats_hopcap
 	dog_fashion = /datum/dog_fashion/head/hop
 
-//Chaplain
 /datum/armor/hats_hopcap
-	melee = 25
-	bullet = 15
+	slash = 30
+	puncture = 15
+	blunt = 15
 	laser = 25
 	energy = 35
 	bomb = 25
 	fire = 50
 	acid = 50
 
+//Chaplain
 /obj/item/clothing/head/chaplain/nun_hood
 	name = "nun hood"
 	desc = "Maximum piety in this star system."
@@ -184,8 +186,9 @@
 
 
 /datum/armor/fedora_det_hat
-	melee = 25
-	bullet = 5
+	slash = 30
+	puncture = 5
+	blunt = 10
 	laser = 25
 	energy = 35
 	fire = 30
@@ -418,8 +421,9 @@
 	)
 
 /datum/armor/hats_hos
-	melee = 40
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 30
 	laser = 25
 	energy = 35
 	bomb = 25
@@ -466,8 +470,9 @@
 	dog_fashion = /datum/dog_fashion/head/warden
 
 /datum/armor/hats_warden
-	melee = 40
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 40
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -567,8 +572,9 @@
 	flags_1 = NONE
 
 /datum/armor/cosmetic_sec
-	melee = 30
-	bullet = 25
+	slash = 40
+	puncture = 25
+	blunt = 20
 	laser = 25
 	energy = 35
 	bomb = 25
@@ -776,8 +782,9 @@
 	armor_type = /datum/armor/beret_durathread
 
 /datum/armor/beret_durathread
-	melee = 15
-	bullet = 5
+	slash = 30
+	puncture = 5
+	blunt = 10
 	laser = 15
 	energy = 25
 	bomb = 10
@@ -811,8 +818,9 @@
 #undef DRILL_CANADIAN
 
 /datum/armor/beret_centcom_formal
-	melee = 80
-	bullet = 80
+	slash = 80
+	puncture = 80
+	blunt = 80
 	laser = 50
 	energy = 50
 	bomb = 100

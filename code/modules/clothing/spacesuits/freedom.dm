@@ -12,8 +12,9 @@
 	fishing_modifier = 0
 
 /datum/armor/space_freedom
-	melee = 20
-	bullet = 40
+	slash = 20
+	puncture = 40
+	blunt = 20
 	laser = 30
 	energy = 40
 	bomb = 100

@@ -191,8 +191,9 @@
 	var/mutable_appearance/damage_overlay
 
 /datum/armor/tram_floor
-	melee = 40
-	bullet = 10
+	slash = 60
+	puncture = 10
+	blunt = 40
 	laser = 10
 	bomb = 45
 	fire = 90
@@ -212,7 +213,7 @@
 		. += span_notice("You can [EXAMINE_HINT("crowbar")] to remove the tile.")
 		. += span_notice("It can be re-secured using a [EXAMINE_HINT("screwdriver.")]")
 
-/obj/structure/thermoplastic/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/structure/thermoplastic/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(.) //received damage
 		update_appearance()

@@ -18,7 +18,7 @@
 	var/force_fee = 0
 
 /datum/armor/structure_holopay
-	bullet = 50
+	puncture = 50
 	laser = 50
 	energy = 50
 	fire = 20
@@ -56,7 +56,7 @@
 		return .
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
 	user.changeNext_move(CLICK_CD_MELEE)
-	take_damage(5, BRUTE, MELEE, 1)
+	take_damage(5, BRUTE, user.get_arm_damage_flag(), 1)
 
 /obj/structure/holopay/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)

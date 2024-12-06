@@ -275,7 +275,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/damage = take_damage(attacking_item.force, attacking_item.damtype, MELEE, 1, get_dir(src, user))
+	var/damage = take_damage(attacking_item.force, attacking_item.damtype, attacking_item.get_damage_armor_type(), 1, get_dir(src, user))
 	//only witnesses close by and the victim see a hit message.
 	user.visible_message(span_danger("[user] hits [src] with [attacking_item][damage ? "." : ", without leaving a mark!"]"), \
 		span_danger("You hit [src] with [attacking_item][damage ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
@@ -298,7 +298,7 @@
 
 	var/armor_block = min(run_armor_check(
 			def_zone = targeting,
-			attack_flag = MELEE,
+			attack_flag = attacking_item.get_damage_armor_type(),
 			absorb_text = span_notice("Your armor has protected your [targeting_human_readable]!"),
 			soften_text = span_warning("Your armor has softened a hit to your [targeting_human_readable]!"),
 			armour_penetration = attacking_item.armour_penetration,

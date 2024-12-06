@@ -78,8 +78,9 @@
 	armor_type = /datum/armor/costume_justice
 
 /datum/armor/costume_justice
-	melee = 35
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 30
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -311,7 +312,8 @@
 	resistance_flags = NONE
 
 /datum/armor/carp_costume_spaceproof
-	melee = -20
+	slash = -10
+	blunt = -20
 	bio = 100
 	fire = 60
 	acid = 75
@@ -320,7 +322,7 @@
 	name = "carp helmet"
 	desc = "Spaceworthy and it looks like a space carp's head, smells like one too."
 	icon_state = "carp_helm"
-	armor_type = /datum/armor/carp_hood_spaceproof
+	armor_type = /datum/armor/carp_costume_spaceproof
 	flags_inv = HIDEEARS|HIDEHAIR|HIDEFACIALHAIR //facial hair will clip with the helm, this'll need a dynamic_fhair_suffix at some point.
 	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
 	heat_protection = HEAD
@@ -330,12 +332,6 @@
 	resistance_flags = NONE
 	flash_protect = FLASH_PROTECTION_WELDER
 	flags_cover = HEADCOVERSEYES|HEADCOVERSMOUTH|PEPPERPROOF
-
-/datum/armor/carp_hood_spaceproof
-	melee = -20
-	bio = 100
-	fire = 60
-	acid = 75
 
 /obj/item/clothing/head/hooded/carp_hood/spaceproof/Initialize(mapload)
 	. = ..()
@@ -596,8 +592,9 @@
 	armor_type = /datum/armor/suit_coordinator
 
 /datum/armor/suit_coordinator
-	melee = 25
-	bullet = 15
+	slash = 25
+	puncture = 15
+	blunt = 25
 	laser = 25
 	energy = 35
 	bomb = 25

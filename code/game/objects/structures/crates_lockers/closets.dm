@@ -100,8 +100,9 @@ GLOBAL_LIST_EMPTY(roundstart_station_closets)
 	var/y_shake_pixel_shift = 1
 
 /datum/armor/structure_closet
-	melee = 20
-	bullet = 10
+	slash = 20
+	puncture = 10
+	blunt = 20
 	laser = 10
 	bomb = 10
 	fire = 70

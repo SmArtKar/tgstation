@@ -121,7 +121,7 @@
 	triggermine(gone)
 	foot_on_mine = null
 
-/obj/effect/mine/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir)
+/obj/effect/mine/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	triggermine()
 

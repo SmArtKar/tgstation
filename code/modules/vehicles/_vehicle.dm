@@ -36,8 +36,9 @@
 	var/are_legs_exposed = FALSE
 
 /datum/armor/obj_vehicle
-	melee = 30
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 30
 	laser = 30
 	bomb = 30
 	fire = 60

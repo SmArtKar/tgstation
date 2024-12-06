@@ -19,8 +19,9 @@
 	COOLDOWN_DECLARE(spam_cooldown_time)
 
 /datum/armor/machinery_prisongate
-	melee = 30
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 30
 	laser = 20
 	energy = 20
 	bomb = 10

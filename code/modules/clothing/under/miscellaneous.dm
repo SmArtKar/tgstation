@@ -65,8 +65,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, -25)
 
 /datum/armor/clothing_under/adminsuit
-	melee = 100
-	bullet = 100
+	slash = 100
+	puncture = 100
+	blunt = 100
 	laser = 100
 	energy = 100
 	bomb = 100
@@ -107,7 +108,7 @@
 	armor_type = /datum/armor/clothing_under/durathread
 
 /datum/armor/clothing_under/durathread
-	melee = 10
+	slash = 20
 	laser = 10
 	fire = 40
 	acid = 10
@@ -123,7 +124,8 @@
 	armor_type = /datum/armor/clothing_under/bouncer
 
 /datum/armor/clothing_under/bouncer
-	melee = 5
+	slash = 5
+	blunt = 5
 	fire = 30
 	acid = 30
 

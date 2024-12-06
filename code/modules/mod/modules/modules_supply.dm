@@ -378,8 +378,9 @@
 	var/static/list/keep_turfs
 
 /datum/armor/mod_ash_accretion
-	melee = 4
-	bullet = 1
+	slash = 4
+	puncture = 1
+	blunt = 4
 	laser = 2
 	energy = 2
 	bomb = 4

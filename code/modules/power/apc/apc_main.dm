@@ -143,8 +143,9 @@
 	armor_type = /datum/armor/power_apc
 
 /datum/armor/power_apc
-	melee = 20
-	bullet = 20
+	slash = 20
+	puncture = 20
+	blunt = 20
 	laser = 10
 	energy = 100
 	bomb = 30

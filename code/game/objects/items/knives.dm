@@ -232,8 +232,9 @@
 	custom_materials = list(/datum/material/glass=SMALL_MATERIAL_AMOUNT *4, /datum/material/plasma=SMALL_MATERIAL_AMOUNT * 2)
 
 /datum/armor/shiv_plasma
-	melee = 25
-	bullet = 25
+	slash = 25
+	puncture = 25
+	blunt = 25
 	laser = 25
 	energy = 25
 	bomb = 25
@@ -252,8 +253,8 @@
 	custom_materials = list(/datum/material/glass=SMALL_MATERIAL_AMOUNT * 4, /datum/material/titanium=SMALL_MATERIAL_AMOUNT * 2)
 
 /datum/armor/shiv_titanium
-	melee = 25
-	bullet = 25
+	slash = 25
+	puncture = 25
 	laser = 25
 	energy = 25
 	bomb = 25
@@ -275,8 +276,9 @@
 	custom_materials = list(/datum/material/glass= SMALL_MATERIAL_AMOUNT * 4, /datum/material/alloy/plastitanium= SMALL_MATERIAL_AMOUNT * 2)
 
 /datum/armor/shiv_plastitanium
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 50

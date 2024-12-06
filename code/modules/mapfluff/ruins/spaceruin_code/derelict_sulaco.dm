@@ -25,8 +25,9 @@
 	armor_type = /datum/armor/derelict_marine
 
 /datum/armor/derelict_marine
-	melee = 20
-	bullet = 20
+	slash = 20
+	puncture = 20
+	blunt = 20
 	bio = 100
 	fire = 40
 	acid = 50

@@ -83,8 +83,9 @@
 	icon_state = "igniter1"
 
 /datum/armor/machinery_igniter
-	melee = 50
-	bullet = 30
+	slash = 50
+	puncture = 30
+	blunt = 50
 	laser = 70
 	energy = 50
 	bomb = 20

@@ -55,8 +55,9 @@ no power level overlay is currently in the overlays list.
 	var/instantenous = FALSE
 
 /datum/armor/field_generator
-	melee = 25
-	bullet = 10
+	slash = 35
+	puncture = 10
+	blunt = 25
 	laser = 100
 	energy = 100
 	fire = 50
@@ -183,7 +184,7 @@ no power level overlay is currently in the overlays list.
 		return ..()
 
 /obj/machinery/field/generator/bullet_act(obj/projectile/considered_bullet)
-	if(considered_bullet.armor_flag != BULLET)
+	if(IS_SCIFI_ARMOR(considered_bullet.armor_flag))
 		power = min(power + considered_bullet.damage, field_generator_max_power)
 		check_power_level()
 	. = ..()

@@ -3,7 +3,7 @@
 	icon_state = "bullet"
 	damage = 60
 	damage_type = BRUTE
-	armor_flag = BULLET
+	armor_flag = PUNCTURE
 	hitsound_wall = SFX_RICOCHET
 	sharpness = SHARP_POINTY
 	impact_effect_type = /obj/effect/temp_visual/impact_effect

@@ -10,8 +10,9 @@
 	material_drop_amount = 5
 
 /datum/armor/closet_secure_closet
-	melee = 30
-	bullet = 50
+	slash = 30
+	puncture = 50
+	blunt = 30
 	laser = 50
 	energy = 100
 	fire = 80

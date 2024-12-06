@@ -10,8 +10,9 @@
 	var/obj/item/stored
 
 /datum/armor/machinery_blackbox_recorder
-	melee = 25
-	bullet = 10
+	slash = 25
+	puncture = 10
+	blunt = 25
 	laser = 10
 	fire = 50
 	acid = 70

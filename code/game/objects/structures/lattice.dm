@@ -26,7 +26,8 @@
 	AddElement(/datum/element/footstep_override, footstep = FOOTSTEP_CATWALK)
 
 /datum/armor/structure_lattice
-	melee = 50
+	slash = 50
+	blunt = 50
 	fire = 80
 	acid = 50
 

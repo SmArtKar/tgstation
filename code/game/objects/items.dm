@@ -387,9 +387,9 @@
 		return FALSE
 	return TRUE
 
-/obj/item/blob_act(obj/structure/blob/B)
-	if(B && B.loc == loc)
-		atom_destruction(MELEE)
+/obj/item/blob_act(obj/structure/blob/blob)
+	if(blob && blob.loc == loc)
+		atom_destruction(BLUNT)
 
 /**Makes cool stuff happen when you suicide with an item
  *
@@ -956,6 +956,19 @@
 /obj/item/proc/get_sharpness()
 	return sharpness
 
+/// Returns armor type which resists us when attacking in melee
+/obj/item/proc/get_damage_armor_type()
+	switch (get_sharpness())
+		if (NONE)
+			return BLUNT
+		if (SHARP_EDGED)
+			return SLASH
+		if (SHARP_POINTY)
+			return PUNCTURE
+	// Blunt as fallback, but this shouldn't ever happen
+	stack_trace("[src] of [type] has attempted to deal melee damage with invalid sharpness of [get_sharpness()]!")
+	return BLUNT
+
 /obj/item/proc/get_dismember_sound()
 	if(damtype == BURN)
 		. = SFX_SEAR
@@ -1399,10 +1412,10 @@
 		victim.visible_message(span_warning("[victim] looks like [victim.p_theyve()] just bit something they shouldn't have!"), \
 							span_boldwarning("OH GOD! Was that a crunch? That didn't feel good at all!!"))
 
-		victim.apply_damage(max(15, force), BRUTE, BODY_ZONE_HEAD, wound_bonus = 10, sharpness = TRUE)
+		victim.apply_damage(max(15, force), BRUTE, BODY_ZONE_HEAD, wound_bonus = 10, sharpness = SHARP_EDGED)
 		victim.losebreath += 2
 		if(tryEmbed(victim.get_bodypart(BODY_ZONE_CHEST), forced = TRUE)) //and if it embeds successfully in their chest, cause a lot of pain
-			victim.apply_damage(max(25, force*1.5), BRUTE, BODY_ZONE_CHEST, wound_bonus = 7, sharpness = TRUE)
+			victim.apply_damage(max(25, force*1.5), BRUTE, BODY_ZONE_CHEST, wound_bonus = 7, sharpness = SHARP_EDGED)
 			victim.losebreath += 6
 			discover_after = FALSE
 		if(QDELETED(src)) // in case trying to embed it caused its deletion (say, if it's DROPDEL)

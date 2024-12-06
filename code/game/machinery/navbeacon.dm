@@ -28,8 +28,9 @@
 	req_one_access = list(ACCESS_ENGINEERING, ACCESS_ROBOTICS)
 
 /datum/armor/machinery_navbeacon
-	melee = 70
-	bullet = 70
+	slash = 70
+	puncture = 70
+	blunt = 70
 	laser = 70
 	energy = 70
 	fire = 80

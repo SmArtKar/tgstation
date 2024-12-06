@@ -54,7 +54,7 @@ Simple datum which is instanced once per type and is used for every object of sa
 	var/tradable_base_quantity = 0
 
 	///Armor modifiers, multiplies an items normal armor vars by these amounts.
-	var/armor_modifiers = list(MELEE = 1, BULLET = 1, LASER = 1, ENERGY = 1, BOMB = 1, BIO = 1, FIRE = 1, ACID = 1)
+	var/armor_modifiers = list(SLASH = 1, PUNCTURE = 1, BLUNT = 1, LASER = 1, ENERGY = 1, BOMB = 1, BIO = 1, FIRE = 1, ACID = 1)
 	///How beautiful is this material per unit.
 	var/beauty_modifier = 0
 	///Can be used to override the sound items make, lets add some SLOSHing.

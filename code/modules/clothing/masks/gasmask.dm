@@ -226,7 +226,8 @@ GLOBAL_LIST_INIT(clown_mask_options, list(
 	fishing_modifier = 8
 
 /datum/armor/gas_welding
-	melee = 10
+	slash = 20
+	blunt = 10
 	bio = 100
 	fire = 100
 	acid = 55

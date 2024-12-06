@@ -29,8 +29,9 @@
 	equip_delay_other = 20
 
 /datum/armor/pirate_armored
-	melee = 30
-	bullet = 50
+	slash = 30
+	puncture = 50
+	blunt = 30
 	laser = 30
 	energy = 40
 	bomb = 30
@@ -55,8 +56,9 @@
 	equip_delay_other = 20
 
 /datum/armor/bandana_armored
-	melee = 30
-	bullet = 50
+	slash = 30
+	puncture = 50
+	blunt = 30
 	laser = 30
 	energy = 40
 	bomb = 30

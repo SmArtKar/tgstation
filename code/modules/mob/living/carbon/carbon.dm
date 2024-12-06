@@ -55,52 +55,57 @@
 
 	if(istype(throwingdatum))
 		hurt = !throwingdatum.gentle
+
 	if(hurt && hit_atom.density)
 		if(isturf(hit_atom))
 			Paralyze(2 SECONDS)
-			take_bodypart_damage(10 + 5 * extra_speed, check_armor = TRUE, wound_bonus = extra_speed * 5)
+			take_bodypart_damage(10 + 5 * extra_speed, check_armor = BLUNT, wound_bonus = extra_speed * 5)
 		else if(isstructure(hit_atom) && extra_speed)
 			Paralyze(1 SECONDS)
-			take_bodypart_damage(5 + 5 * extra_speed, check_armor = TRUE, wound_bonus = extra_speed * 5)
+			take_bodypart_damage(5 + 5 * extra_speed, check_armor = BLUNT, wound_bonus = extra_speed * 5)
 		else if(!iscarbon(hit_atom) && extra_speed)
-			take_bodypart_damage(5 * extra_speed, check_armor = TRUE, wound_bonus = extra_speed * 5)
+			take_bodypart_damage(5 * extra_speed, check_armor = BLUNT, wound_bonus = extra_speed * 5)
 		visible_message(span_danger("[src] crashes into [hit_atom][extra_speed ? " really hard" : ""]!"),\
 			span_userdanger("You violently crash into [hit_atom][extra_speed ? " extra hard" : ""]!"))
 		log_combat(hit_atom, src, "crashes ")
 		oof_noise = TRUE
 
-	if(iscarbon(hit_atom) && hit_atom != src)
-		var/mob/living/carbon/victim = hit_atom
-		var/blocked = FALSE
-		if(victim.movement_type & FLYING)
-			return
-		if(!hurt)
-			return
+	if(!iscarbon(hit_atom) || hit_atom == src)
+		return
+	var/mob/living/carbon/victim = hit_atom
+	var/blocked = FALSE
+	if(victim.movement_type & FLYING)
+		return
 
-		if(victim.check_block(src, 0, "[name]", LEAP_ATTACK))
-			blocked = TRUE
+	if(!hurt)
+		return
 
-		take_bodypart_damage(10 + 5 * extra_speed, check_armor = TRUE, wound_bonus = extra_speed * 5)
-		Paralyze(2 SECONDS)
-		oof_noise = TRUE
+	if(victim.check_block(src, 0, "[name]", LEAP_ATTACK))
+		blocked = TRUE
 
-		if(blocked)
-			visible_message(span_danger("[src] crashes into [victim][extra_speed ? " really hard" : ""], but [victim] blocked the worst of it!"),\
-				span_userdanger("You violently crash into [victim][extra_speed ? " extra hard" : ""], but [victim] managed to block the worst of it!"))
-			log_combat(src, victim, "crashed into and was blocked by")
-			return
-		else if(HAS_TRAIT(victim, TRAIT_BRAWLING_KNOCKDOWN_BLOCKED))
-			victim.take_bodypart_damage(10 + 5 * extra_speed, check_armor = TRUE, wound_bonus = extra_speed * 5)
-			victim.apply_damage(10 + 10 * extra_speed, STAMINA)
-			victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
-			visible_message(span_danger("[src] crashes into [victim][extra_speed ? " really hard" : ""], but [victim] was able to stay on their feet!"),\
-				span_userdanger("You violently crash into [victim][extra_speed ? " extra hard" : ""], but [victim] managed to stay on their feet!"))
-		else
-			victim.Paralyze(2 SECONDS)
-			victim.take_bodypart_damage(10 + 5 * extra_speed, check_armor = TRUE, wound_bonus = extra_speed * 5)
-			visible_message(span_danger("[src] crashes into [victim][extra_speed ? " really hard" : ""], knocking them both over!"),\
-				span_userdanger("You violently crash into [victim][extra_speed ? " extra hard" : ""]!"))
-		log_combat(src, victim, "crashed into")
+	take_bodypart_damage(10 + 5 * extra_speed, check_armor = BLUNT, wound_bonus = extra_speed * 5)
+	Paralyze(2 SECONDS)
+	oof_noise = TRUE
+
+	if(blocked)
+		visible_message(span_danger("[src] crashes into [victim][extra_speed ? " really hard" : ""], but [victim] blocked the worst of it!"),\
+			span_userdanger("You violently crash into [victim][extra_speed ? " extra hard" : ""], but [victim] managed to block the worst of it!"))
+		log_combat(src, victim, "crashed into and was blocked by")
+		return
+
+	if(HAS_TRAIT(victim, TRAIT_BRAWLING_KNOCKDOWN_BLOCKED))
+		victim.take_bodypart_damage(10 + 5 * extra_speed, check_armor = BLUNT, wound_bonus = extra_speed * 5)
+		victim.apply_damage(10 + 10 * extra_speed, STAMINA)
+		victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
+		visible_message(span_danger("[src] crashes into [victim][extra_speed ? " really hard" : ""], but [victim] was able to stay on their feet!"),\
+			span_userdanger("You violently crash into [victim][extra_speed ? " extra hard" : ""], but [victim] managed to stay on their feet!"))
+	else
+		victim.Paralyze(2 SECONDS)
+		victim.take_bodypart_damage(10 + 5 * extra_speed, check_armor = BLUNT, wound_bonus = extra_speed * 5)
+		visible_message(span_danger("[src] crashes into [victim][extra_speed ? " really hard" : ""], knocking them both over!"),\
+			span_userdanger("You violently crash into [victim][extra_speed ? " extra hard" : ""]!"))
+
+	log_combat(src, victim, "crashed into")
 
 	if(oof_noise)
 		playsound(src,'sound/items/weapons/punch1.ogg',50,TRUE)

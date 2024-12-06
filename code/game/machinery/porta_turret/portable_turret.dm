@@ -107,8 +107,9 @@ DEFINE_BITFIELD(turret_flags, list(
 	COOLDOWN_DECLARE(disabled_time)
 
 /datum/armor/machinery_porta_turret
-	melee = 50
-	bullet = 30
+	slash = 50
+	puncture = 30
+	blunt = 50
 	laser = 30
 	energy = 30
 	bomb = 30
@@ -403,7 +404,7 @@ DEFINE_BITFIELD(turret_flags, list(
 		set_disabled(rand(6 SECONDS, 20 SECONDS))
 		remove_control()
 
-/obj/machinery/porta_turret/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/machinery/porta_turret/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(. && atom_integrity > 0) //damage received
 		if(prob(30))
@@ -776,8 +777,9 @@ DEFINE_BITFIELD(turret_flags, list(
 	armor_type = /datum/armor/syndicate_turret
 
 /datum/armor/syndicate_turret
-	melee = 40
-	bullet = 40
+	slash = 40
+	puncture = 40
+	blunt = 40
 	laser = 60
 	energy = 60
 	bomb = 60
@@ -822,8 +824,9 @@ DEFINE_BITFIELD(turret_flags, list(
 	armor_type = /datum/armor/syndicate_shuttle
 
 /datum/armor/syndicate_shuttle
-	melee = 50
-	bullet = 30
+	slash = 50
+	puncture = 30
+	blunt = 50
 	laser = 30
 	energy = 30
 	bomb = 80

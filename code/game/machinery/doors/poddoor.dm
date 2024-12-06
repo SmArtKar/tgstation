@@ -24,8 +24,9 @@
 	var/animation_sound = 'sound/machines/blastdoor.ogg'
 
 /datum/armor/door_poddoor
-	melee = 50
-	bullet = 100
+	slash = 50
+	puncture = 100
+	blunt = 50
 	laser = 100
 	energy = 100
 	bomb = 50

@@ -13,7 +13,7 @@
 	var/use_vis_overlay = TRUE
 
 /datum/armor/structure_holosign
-	bullet = 50
+	puncture = 50
 	laser = 50
 	energy = 50
 	fire = 20
@@ -46,7 +46,7 @@
 /obj/structure/holosign/proc/attack_holosign(mob/living/user, list/modifiers)
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
 	user.changeNext_move(CLICK_CD_MELEE)
-	take_damage(5 , BRUTE, MELEE, 1)
+	take_damage(5 , BRUTE, BLUNT, 1)
 	log_combat(user, src, "swatted")
 
 /obj/structure/holosign/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
@@ -227,10 +227,11 @@
 	armor_type = /datum/armor/structure_holosign/cyborg_barrier // Gets a special armor subtype which is extra good at defense.
 
 /datum/armor/structure_holosign/cyborg_barrier
-	bullet = 80
+	slash = 20
+	puncture = 80
+	blunt = 20
 	laser = 80
 	energy = 80
-	melee = 20
 
 /obj/structure/holosign/barrier/medical
 	name = "\improper PENLITE holobarrier"

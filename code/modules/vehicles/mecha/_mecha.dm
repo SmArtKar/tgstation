@@ -219,8 +219,9 @@
 	var/ui_selected_module_index
 
 /datum/armor/sealed_mecha
-	melee = 20
-	bullet = 10
+	slash = 30
+	puncture = 10
+	blunt = 20
 	bomb = 10
 	fire = 100
 	acid = 100

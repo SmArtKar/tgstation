@@ -64,7 +64,8 @@
 	armor_type = /datum/armor/clothing_under/centcom_military
 
 /datum/armor/clothing_under/centcom_military
-	melee = 10
+	slash = 10
+	blunt = 10
 	fire = 50
 	acid = 40
 	wound = 10

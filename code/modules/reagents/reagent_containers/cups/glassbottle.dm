@@ -160,17 +160,17 @@
 
 		var/mob/living/carbon/human/H = target
 		var/headarmor = 0 // Target's head armor
-		armor_block = H.run_armor_check(affecting, MELEE, "", "", armour_penetration) // For normal attack damage
+		armor_block = H.run_armor_check(affecting, BLUNT, "", "", armour_penetration) // For normal attack damage
 
 		//If they have a hat/helmet and the user is targeting their head.
 		if(istype(H.head, /obj/item/clothing/head) && affecting == BODY_ZONE_HEAD)
-			headarmor = H.head.get_armor_rating(MELEE)
+			headarmor = H.head.get_armor_rating(BLUNT)
 		//Calculate the knockdown duration for the target.
 		knockdown_effectiveness = (bottle_knockdown_duration - headarmor) + force
 
 	else
 		//Only humans can have armor, right?
-		armor_block = living_target.run_armor_check(affecting, MELEE)
+		armor_block = living_target.run_armor_check(affecting, BLUNT)
 		if(affecting == BODY_ZONE_HEAD)
 			knockdown_effectiveness = bottle_knockdown_duration + force
 	//Apply the damage!
@@ -676,7 +676,7 @@
 	if(spillable)
 		return
 
-	if(attacking_item.sharpness != SHARP_EDGED)
+	if(attacking_item.get_sharpness() != SHARP_EDGED)
 		return
 
 	if(attacking_item != user.get_active_held_item()) //no TK allowed

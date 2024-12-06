@@ -72,8 +72,9 @@
 	var/transport_linked_id
 
 /datum/armor/machinery_door
-	melee = 30
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 30
 	laser = 20
 	energy = 20
 	bomb = 10
@@ -392,7 +393,7 @@
 	try_to_crowbar_secondary(tool, user, forced_open)
 	return ITEM_INTERACT_SUCCESS
 
-/obj/machinery/door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/machinery/door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(. && atom_integrity > 0)
 		if(damage_amount >= 10 && prob(30))

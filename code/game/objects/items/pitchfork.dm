@@ -18,7 +18,7 @@
 	attack_verb_continuous = list("attacks", "impales", "pierces")
 	attack_verb_simple = list("attack", "impale", "pierce")
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	sharpness = SHARP_EDGED
+	sharpness = SHARP_POINTY
 	max_integrity = 200
 	armor_type = /datum/armor/item_pitchfork
 	resistance_flags = FIRE_PROOF

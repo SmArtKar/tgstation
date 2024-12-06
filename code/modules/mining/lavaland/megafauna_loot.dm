@@ -277,8 +277,9 @@
 	flags_1 = IS_PLAYER_COLORABLE_1
 
 /datum/armor/hooded_hostile_environment
-	melee = 70
-	bullet = 40
+	slash = 70
+	puncture = 40
+	blunt = 70
 	laser = 10
 	energy = 20
 	bomb = 50
@@ -568,7 +569,7 @@
 		to_chat(attacked_mob, span_userdanger("You're slashed by [src]!"))
 	else if((ismachinery(attacked_atom) || isstructure(attacked_atom)) && use_blood(5))
 		var/obj/attacked_obj = attacked_atom
-		attacked_obj.take_damage(force, BRUTE, MELEE, FALSE)
+		attacked_obj.take_damage(force, BRUTE, get_damage_armor_type(), FALSE)
 	else
 		return
 	COOLDOWN_START(src, attack_cooldown, 1 SECONDS)
@@ -628,7 +629,7 @@
 /obj/projectile/soulscythe
 	name = "soulslash"
 	icon_state = "soulslash"
-	armor_flag = MELEE //jokair
+	armor_flag = SLASH //jokair
 	damage = 15
 	light_range = 1
 	light_power = 1

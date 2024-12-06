@@ -55,8 +55,9 @@ GLOBAL_LIST_EMPTY(req_console_ckey_departments)
 	COOLDOWN_DECLARE(announcement_cooldown)
 
 /datum/armor/machinery_requests_console
-	melee = 70
-	bullet = 30
+	slash = 70
+	puncture = 30
+	blunt = 70
 	laser = 30
 	energy = 30
 	fire = 90

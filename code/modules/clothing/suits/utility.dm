@@ -44,8 +44,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 7)
 
 /datum/armor/utility_fire
-	melee = 15
-	bullet = 5
+	slash = 10
+	blunt = 20
+	puncture = 5
 	laser = 20
 	energy = 20
 	bomb = 20
@@ -112,7 +113,8 @@
 	AddComponent(/datum/component/hat_stabilizer, loose_hat = TRUE)
 
 /datum/armor/utility_bomb_hood
-	melee = 20
+	slash = 20
+	blunt = 30
 	laser = 20
 	energy = 30
 	bomb = 100
@@ -144,7 +146,8 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 8)
 
 /datum/armor/utility_bomb_suit
-	melee = 20
+	slash = 20
+	blunt = 30
 	laser = 20
 	energy = 30
 	bomb = 100

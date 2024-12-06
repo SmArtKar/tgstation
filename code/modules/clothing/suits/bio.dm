@@ -67,26 +67,17 @@
 
 //Security biosuit, grey with red stripe across the chest
 /obj/item/clothing/head/bio_hood/security
-	armor_type = /datum/armor/bio_hood_security
+	armor_type = /datum/armor/bio_suit_security
 	icon_state = "bio_security"
-
-/datum/armor/bio_hood_security
-	melee = 25
-	bullet = 15
-	laser = 25
-	energy = 35
-	bomb = 25
-	bio = 100
-	fire = 30
-	acid = 100
 
 /obj/item/clothing/suit/bio_suit/security
 	armor_type = /datum/armor/bio_suit_security
 	icon_state = "bio_security"
 
 /datum/armor/bio_suit_security
-	melee = 25
-	bullet = 15
+	slash = 20
+	puncture = 15
+	blunt = 30
 	laser = 25
 	energy = 35
 	bomb = 25

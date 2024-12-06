@@ -192,7 +192,7 @@
  *
  * First, we determine severity by taking our roll result, multiplying it by 10, and then rolling within that value.
  *
- * If our target is human, their armor will reduce the severity of the roll. We pass along any MELEE armor as a percentage reduction.
+ * If our target is human, their armor will reduce the severity of the roll. We pass along any BLUNT armor as a percentage reduction.
  * If they're not human (such as a carbon), we give them a small grace of a 10% reduction.
  *
  * Finally, we figure out what effect our target receives. Note that all positive outcomes inflict staggered, resulting in a much harder time escaping the potential grab:
@@ -205,7 +205,7 @@
 	var/potential_outcome = (roll * 10)
 
 	if(ishuman(target))
-		potential_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE)) /100)
+		potential_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, BLUNT)) /100)
 	else
 		potential_outcome *= 0.9
 
@@ -285,7 +285,7 @@
  *
  * First, we determine severity by taking our roll result, multiplying it by -10, and then rolling within that value.
  *
- * If our tackler is human, their armor will reduce the severity of the roll. We pass along any MELEE armor as a percentage reduction.
+ * If our tackler is human, their armor will reduce the severity of the roll. We pass along any BLUNT armor as a percentage reduction.
  * If they're not human (such as a carbon), we give them a small grace of a 10% reduction.
  *
  * Finally, we figure out what effect our target receives and what our tackler receives:
@@ -298,7 +298,7 @@
 	var/potential_roll_outcome = (roll * -10)
 
 	if(ishuman(user))
-		potential_roll_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE)) /100)
+		potential_roll_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, BLUNT)) /100)
 	else
 		potential_roll_outcome *= 0.9
 

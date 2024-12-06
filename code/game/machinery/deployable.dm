@@ -148,8 +148,9 @@
 
 
 /datum/armor/barricade_security
-	melee = 10
-	bullet = 50
+	slash = 10
+	puncture = 50
+	blunt = 30
 	laser = 50
 	energy = 50
 	bomb = 10

@@ -111,7 +111,7 @@
 	var/obj/item/forcefield_projector/generator
 
 /datum/armor/structure_projected_forcefield
-	bullet = 25
+	puncture = 25
 	laser = 50
 	energy = 50
 	bomb = 25
@@ -133,7 +133,7 @@
 /obj/structure/projected_forcefield/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	playsound(loc, 'sound/items/weapons/egloves.ogg', 80, TRUE)
 
-/obj/structure/projected_forcefield/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/projected_forcefield/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	if(sound_effect)
 		play_attack_sound(damage_amount, damage_type, damage_flag)
 	if(generator)

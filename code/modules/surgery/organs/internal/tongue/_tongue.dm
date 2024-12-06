@@ -343,8 +343,9 @@
 	QDEL_NULL(statue)
 
 /datum/armor/obj_structure/silverscale_statue_armor
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 70
 	energy = 70
 	bomb = 50

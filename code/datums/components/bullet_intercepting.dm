@@ -15,7 +15,7 @@
 	/// Number of things we can block before we delete ourself (stop being able to block)
 	var/block_charges = INFINITY
 
-/datum/component/bullet_intercepting/Initialize(block_chance = 2, block_type = BULLET, active_slots, datum/callback/on_intercepted, block_charges = INFINITY)
+/datum/component/bullet_intercepting/Initialize(block_chance = 2, block_type = PUNCTURE, active_slots, datum/callback/on_intercepted, block_charges = INFINITY)
 	. = ..()
 	if (!isitem(parent))
 		return COMPONENT_INCOMPATIBLE

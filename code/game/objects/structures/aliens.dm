@@ -11,8 +11,8 @@
 	icon = 'icons/mob/nonhuman-player/alien.dmi'
 	max_integrity = 100
 
-/obj/structure/alien/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	if(damage_flag == MELEE)
+/obj/structure/alien/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, ranged = FALSE)
+	if(IS_PHYSICAL_ARMOR(damage_flag) && !ranged)
 		switch(damage_type)
 			if(BRUTE)
 				damage_amount *= 0.25

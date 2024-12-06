@@ -24,8 +24,9 @@
 	COOLDOWN_DECLARE(sound_cooldown)
 
 /datum/armor/car_vim
-	melee = 70
-	bullet = 40
+	slash = 70
+	puncture = 40
+	blunt = 70
 	laser = 40
 	bomb = 30
 	fire = 80

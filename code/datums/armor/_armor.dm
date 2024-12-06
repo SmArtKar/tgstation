@@ -25,16 +25,21 @@ GLOBAL_LIST_INIT(armor_by_type, generate_armor_type_cache())
  * It also contains logic and helpers for calculating damage and effective damage
  */
 /datum/armor
-	VAR_PROTECTED/acid = 0
-	VAR_PROTECTED/bio = 0
-	VAR_PROTECTED/bomb = 0
-	VAR_PROTECTED/bullet = 0
-	VAR_PROTECTED/consume = 0
-	VAR_PROTECTED/energy = 0
+	// Melee types
+	VAR_PROTECTED/slash = 0
+	VAR_PROTECTED/puncture = 0
+	VAR_PROTECTED/blunt = 0
+	// Projectile types
 	VAR_PROTECTED/laser = 0
+	VAR_PROTECTED/energy = 0
+	// Rare types
+	VAR_PROTECTED/bomb = 0
 	VAR_PROTECTED/fire = 0
-	VAR_PROTECTED/melee = 0
+	VAR_PROTECTED/acid = 0
+	// Snowflakes
+	VAR_PROTECTED/bio = 0
 	VAR_PROTECTED/wound = 0
+	VAR_PROTECTED/consume = 0
 
 /// A version of armor with no protections
 /datum/armor/none
@@ -210,25 +215,31 @@ GLOBAL_LIST_INIT(armor_by_type, generate_armor_type_cache())
  * * armor_type - The type to convert
  */
 /proc/armor_to_protection_name(armor_type)
-	switch(armor_type)
-		if(ACID)
-			return "ACID"
-		if(BIO)
-			return "BIOHAZARD"
-		if(BOMB)
-			return "EXPLOSIVE"
-		if(BULLET)
-			return "BULLET"
-		if(CONSUME)
-			return "CONSUMING"
-		if(ENERGY)
-			return "ENERGY"
-		if(FIRE)
-			return "FIRE"
-		if(LASER)
+	switch (armor_type)
+		// Melee types
+		if (SLASH)
+			return "SLASH"
+		if (PUNCTURE)
+			return "PUNCTURE"
+		if (BLUNT)
+			return "BLUNT"
+		// Projectile types
+		if (LASER)
 			return "LASER"
-		if(MELEE)
-			return "MELEE"
-		if(WOUND)
+		if (ENERGY)
+			return "ENERGY"
+		// Rare stuff
+		if (BOMB)
+			return "BOMB"
+		if (FIRE)
+			return "FIRE"
+		if (ACID)
+			return "ACID"
+		// Snowflakes
+		if (BIO)
+			return "BIOHAZARD"
+		if (WOUND)
 			return "WOUNDING"
+		if (CONSUME)
+			return "CONSUMING"
 	CRASH("Unknown armor type '[armor_type]'")

@@ -6,8 +6,9 @@
 	resistance_flags = FIRE_PROOF
 
 /datum/armor/costume_crown
-	melee = 15
+	slash = 20
 	energy = 10
+	blunt = 10
 	fire = 100
 	acid = 50
 	wound = 5

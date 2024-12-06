@@ -63,8 +63,9 @@
 	base_icon_state = "tram-split"
 
 /datum/armor/tram_structure
-	melee = 40
-	bullet = 10
+	slash = 60
+	puncture = 10
+	blunt = 40
 	laser = 10
 	bomb = 45
 	fire = 90
@@ -137,7 +138,7 @@
 			return TRUE
 	return FALSE
 
-/obj/structure/tram/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/structure/tram/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(.) //received damage
 		update_appearance()

@@ -10,8 +10,9 @@
 	var/static/mutable_appearance/atvcover
 
 /datum/armor/ridden_atv
-	melee = 50
-	bullet = 25
+	slash = 50
+	puncture = 25
+	blunt = 50
 	laser = 20
 	bomb = 50
 	fire = 60

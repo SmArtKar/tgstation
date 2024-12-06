@@ -23,4 +23,5 @@
 	)
 
 /datum/armor/suit_caution
-	melee = 5
+	slash = 5
+	blunt = 10

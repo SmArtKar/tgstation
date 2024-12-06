@@ -28,8 +28,9 @@
 	clothing_traits = list(TRAIT_HEAD_INJURY_BLOCKED)
 
 /datum/armor/utility_hardhat
-	melee = 15
-	bullet = 5
+	slash = 5
+	puncture = 5
+	blunt = 25
 	laser = 20
 	energy = 10
 	bomb = 20

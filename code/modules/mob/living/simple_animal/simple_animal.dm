@@ -580,3 +580,16 @@
 
 /mob/living/simple_animal/compare_sentience_type(compare_type)
 	return sentience_type == compare_type
+
+/// Returns armor type which resists us when attacking in melee
+/mob/living/simple_animal/proc/get_damage_armor_type()
+	switch (sharpness)
+		if (NONE)
+			return BLUNT
+		if (SHARP_EDGED)
+			return SLASH
+		if (SHARP_POINTY)
+			return PUNCTURE
+	// Blunt as fallback, but this shouldn't ever happen
+	stack_trace("[src] of [type] has attempted to deal melee damage with invalid sharpness of [sharpness]!")
+	return BLUNT

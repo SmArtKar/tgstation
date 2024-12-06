@@ -20,8 +20,9 @@
 	var/charged = TRUE
 
 /datum/armor/item_singularityhammer
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 50
 	bomb = 50
 	fire = 100

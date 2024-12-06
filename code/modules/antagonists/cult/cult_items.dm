@@ -543,21 +543,11 @@ Striking a noncultist, however, will tear their flesh."}
 	desc = "A torn, dust-caked hood. Strange letters line the inside."
 	flags_inv = HIDEFACE|HIDEHAIR|HIDEEARS
 	flags_cover = HEADCOVERSEYES
-	armor_type = /datum/armor/hooded_cult_hoodie
+	armor_type = /datum/armor/hooded_cultrobes
 	cold_protection = HEAD
 	min_cold_protection_temperature = HELMET_MIN_TEMP_PROTECT
 	heat_protection = HEAD
 	max_heat_protection_temperature = HELMET_MAX_TEMP_PROTECT
-
-/datum/armor/hooded_cult_hoodie
-	melee = 40
-	bullet = 30
-	laser = 40
-	energy = 40
-	bomb = 25
-	bio = 10
-	fire = 10
-	acid = 10
 
 /obj/item/clothing/suit/hooded/cultrobes
 	name = "ancient cultist robes"
@@ -587,8 +577,9 @@ Striking a noncultist, however, will tear their flesh."}
 	hood_up = FALSE
 
 /datum/armor/hooded_cultrobes
-	melee = 40
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 40
 	laser = 40
 	energy = 40
 	bomb = 25
@@ -626,8 +617,9 @@ Striking a noncultist, however, will tear their flesh."}
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH
 
 /datum/armor/wizard_magus
-	melee = 50
-	bullet = 30
+	slash = 50
+	puncture = 30
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 25
@@ -648,8 +640,9 @@ Striking a noncultist, however, will tear their flesh."}
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 
 /datum/armor/suit_magusred
-	melee = 50
-	bullet = 30
+	slash = 50
+	puncture = 30
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 25
@@ -673,8 +666,9 @@ Striking a noncultist, however, will tear their flesh."}
 	resistance_flags = NONE
 
 /datum/armor/cultrobes_hardened
-	melee = 50
-	bullet = 40
+	slash = 50
+	puncture = 40
+	blunt = 50
 	laser = 50
 	energy = 60
 	bomb = 50
@@ -687,7 +681,7 @@ Striking a noncultist, however, will tear their flesh."}
 	desc = "A heavily-armored helmet worn by warriors of the Nar'Sien cult. It can withstand hard vacuum."
 	icon_state = "cult_helmet"
 	inhand_icon_state = null
-	armor_type = /datum/armor/cult_hoodie_hardened
+	armor_type = /datum/armor/cultrobes_hardened
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL | SNUG_FIT | STACKABLE_HELMET_EXEMPT | HEADINTERNALS
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
@@ -695,16 +689,6 @@ Striking a noncultist, however, will tear their flesh."}
 	flash_protect = FLASH_PROTECTION_WELDER
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH | PEPPERPROOF
 	resistance_flags = NONE
-
-/datum/armor/cult_hoodie_hardened
-	melee = 50
-	bullet = 40
-	laser = 50
-	energy = 60
-	bomb = 50
-	bio = 100
-	fire = 100
-	acid = 100
 
 /obj/item/sharpener/cult
 	name = "eldritch whetstone"
@@ -730,8 +714,9 @@ Striking a noncultist, however, will tear their flesh."}
 	hoodtype = /obj/item/clothing/head/hooded/cult_hoodie/cult_shield
 
 /datum/armor/cultrobes_cult_shield
-	melee = 50
-	bullet = 40
+	slash = 50
+	puncture = 40
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 50
@@ -760,17 +745,7 @@ Striking a noncultist, however, will tear their flesh."}
 	name = "empowered cultist helmet"
 	desc = "Empowered helmet which creates a powerful shield around the user."
 	icon_state = "cult_hoodalt"
-	armor_type = /datum/armor/cult_hoodie_cult_shield
-
-/datum/armor/cult_hoodie_cult_shield
-	melee = 50
-	bullet = 40
-	laser = 50
-	energy = 50
-	bomb = 50
-	bio = 30
-	fire = 50
-	acid = 60
+	armor_type = /datum/armor/cultrobes_cult_shield
 
 /obj/item/clothing/suit/hooded/cultrobes/cult_shield/equipped(mob/living/user, slot)
 	..()
@@ -789,8 +764,9 @@ Striking a noncultist, however, will tear their flesh."}
 	hoodtype = /obj/item/clothing/head/hooded/cult_hoodie/berserkerhood
 
 /datum/armor/cultrobes_berserker
-	melee = -45
-	bullet = -45
+	slash = -45
+	puncture = -45
+	blunt = -45
 	laser = -45
 	energy = -55
 	bomb = -45
@@ -798,15 +774,8 @@ Striking a noncultist, however, will tear their flesh."}
 /obj/item/clothing/head/hooded/cult_hoodie/berserkerhood
 	name = "flagellant's hood"
 	desc = "A blood-soaked hood infused with dark magic."
-	armor_type = /datum/armor/cult_hoodie_berserkerhood
+	armor_type = /datum/armor/cultrobes_berserker
 	slowdown = -0.3
-
-/datum/armor/cult_hoodie_berserkerhood
-	melee = -45
-	bullet = -45
-	laser = -45
-	energy = -55
-	bomb = -45
 
 /obj/item/clothing/suit/hooded/cultrobes/berserker/equipped(mob/living/user, slot)
 	..()

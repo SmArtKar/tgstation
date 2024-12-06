@@ -170,8 +170,9 @@
 		mod.wearer?.update_clothing(part.slot_flags)
 
 /datum/armor/mod_theme
-	melee = 10
-	bullet = 5
+	slash = 10
+	puncture = 5
+	blunt = 10
 	laser = 5
 	energy = 5
 	bio = 100
@@ -224,8 +225,9 @@
 	)
 
 /datum/armor/mod_theme_civilian
-	melee = 5
-	bullet = 5
+	slash = 5
+	puncture = 5
+	blunt = 5
 	laser = 5
 	energy = 5
 	bio = 50
@@ -290,8 +292,9 @@
 	)
 
 /datum/armor/mod_theme_engineering
-	melee = 10
-	bullet = 5
+	slash = 10
+	puncture = 5
+	blunt = 10
 	laser = 20
 	energy = 10
 	bomb = 10
@@ -359,8 +362,9 @@
 	)
 
 /datum/armor/mod_theme_atmospheric
-	melee = 10
-	bullet = 5
+	slash = 10
+	puncture = 5
+	blunt = 10
 	laser = 10
 	energy = 15
 	bomb = 10
@@ -431,8 +435,9 @@
 	)
 
 /datum/armor/mod_theme_advanced
-	melee = 15
-	bullet = 5
+	slash = 10
+	puncture = 5
+	blunt = 20
 	laser = 20
 	energy = 15
 	bomb = 50
@@ -541,8 +546,9 @@
 	allowed_suit_storage = GLOB.mining_suit_allowed
 
 /datum/armor/mod_theme_mining
-	melee = 20
-	bullet = 5
+	slash = 20
+	puncture = 5
+	blunt = 20
 	laser = 5
 	energy = 5
 	bomb = 30
@@ -609,8 +615,9 @@
 	)
 
 /datum/armor/mod_theme_loader
-	melee = 15
-	bullet = 5
+	slash = 15
+	puncture = 5
+	blunt = 20
 	laser = 5
 	energy = 5
 	bomb = 10
@@ -718,8 +725,9 @@
 	)
 
 /datum/armor/mod_theme_medical
-	melee = 5
-	bullet = 5
+	slash = 5
+	puncture = 5
+	blunt = 5
 	laser = 5
 	energy = 5
 	bomb = 10
@@ -798,8 +806,9 @@
 	)
 
 /datum/armor/mod_theme_rescue
-	melee = 10
-	bullet = 10
+	slash = 10
+	puncture = 10
+	blunt = 10
 	laser = 5
 	energy = 5
 	bomb = 10
@@ -870,8 +879,9 @@
 	)
 
 /datum/armor/mod_theme_research
-	melee = 20
-	bullet = 15
+	slash = 20
+	puncture = 15
+	blunt = 20
 	laser = 5
 	energy = 5
 	bomb = 100
@@ -937,8 +947,9 @@
 	)
 
 /datum/armor/mod_theme_security
-	melee = 15
-	bullet = 15
+	slash = 10
+	puncture = 15
+	blunt = 25
 	laser = 15
 	energy = 15
 	bomb = 25
@@ -1004,8 +1015,9 @@
 	)
 
 /datum/armor/mod_theme_safeguard
-	melee = 15
-	bullet = 15
+	slash = 10
+	puncture = 15
+	blunt = 25
 	laser = 15
 	energy = 15
 	bomb = 40
@@ -1077,8 +1089,9 @@
 	)
 
 /datum/armor/mod_theme_magnate
-	melee = 20
-	bullet = 15
+	slash = 20
+	puncture = 15
+	blunt = 25
 	laser = 15
 	energy = 15
 	bomb = 50
@@ -1145,8 +1158,9 @@
 	)
 
 /datum/armor/mod_theme_cosmohonk
-	melee = 5
-	bullet = 5
+	slash = 0
+	puncture = 5
+	blunt = 20 // Basically a huge balloon outside
 	laser = 20
 	energy = 20
 	bomb = 10
@@ -1253,8 +1267,9 @@
 	)
 
 /datum/armor/mod_theme_syndicate
-	melee = 15
-	bullet = 20
+	slash = 15
+	puncture = 20
+	blunt = 20
 	laser = 15
 	energy = 15
 	bomb = 35
@@ -1326,8 +1341,9 @@
 	)
 
 /datum/armor/mod_theme_elite
-	melee = 35
-	bullet = 30
+	slash = 35
+	puncture = 30
+	blunt = 40
 	laser = 35
 	energy = 35
 	bomb = 55
@@ -1399,8 +1415,9 @@
 	)
 
 /datum/armor/mod_theme_infiltrator
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 40
 	energy = 50
 	bomb = 40
@@ -1486,8 +1503,9 @@
 	)
 
 /datum/armor/mod_theme_interdyne
-	melee = 30
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 30
 	laser = 30
 	energy = 30
 	bomb = 20
@@ -1556,8 +1574,9 @@
 	)
 
 /datum/armor/mod_theme_enchanted
-	melee = 40
-	bullet = 40
+	slash = 40
+	puncture = 40
+	blunt = 40
 	laser = 50
 	energy = 50
 	bomb = 35
@@ -1625,8 +1644,9 @@
 	)
 
 /datum/armor/mod_theme_ninja
-	melee = 40
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 45
 	laser = 20
 	energy = 30
 	bomb = 30
@@ -1696,8 +1716,9 @@
 	)
 
 /datum/armor/mod_theme_prototype
-	melee = 20
-	bullet = 5
+	slash = 10
+	puncture = 5
+	blunt = 25
 	laser = 10
 	energy = 10
 	bomb = 50
@@ -1764,8 +1785,9 @@
 	)
 
 /datum/armor/mod_theme_glitch
-	melee = 15
-	bullet = 20
+	slash = 15
+	puncture = 20
+	blunt = 25
 	laser = 35
 	bomb = 65
 	bio = 100
@@ -1862,8 +1884,9 @@
 	)
 
 /datum/armor/mod_theme_responsory
-	melee = 50
-	bullet = 40
+	slash = 50
+	puncture = 40
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 50
@@ -1944,8 +1967,9 @@
 	)
 
 /datum/armor/mod_theme_apocryphal
-	melee = 80
-	bullet = 80
+	slash = 80
+	puncture = 80
+	blunt = 80
 	laser = 50
 	energy = 60
 	bomb = 100
@@ -2013,8 +2037,9 @@
 	)
 
 /datum/armor/mod_theme_corporate
-	melee = 65
-	bullet = 65
+	slash = 65
+	puncture = 65
+	blunt = 65
 	laser = 55
 	energy = 50
 	bomb = 60
@@ -2077,8 +2102,9 @@
 	)
 
 /datum/armor/mod_theme_chrono
-	melee = 60
-	bullet = 60
+	slash = 60
+	puncture = 60
+	blunt = 60
 	laser = 60
 	energy = 60
 	bomb = 30
@@ -2143,8 +2169,9 @@
 	)
 
 /datum/armor/mod_theme_debug
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 100
@@ -2205,8 +2232,9 @@
 	)
 
 /datum/armor/mod_theme_administrative
-	melee = 100
-	bullet = 100
+	slash = 100
+	puncture = 100
+	blunt = 100
 	laser = 100
 	energy = 100
 	bomb = 100

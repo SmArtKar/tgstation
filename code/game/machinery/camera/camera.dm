@@ -96,8 +96,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/motion, 0)
 MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 
 /datum/armor/machinery_camera
-	melee = 50
-	bullet = 20
+	slash = 50
+	puncture = 20
+	blunt = 50
 	laser = 20
 	energy = 20
 	fire = 90
@@ -291,7 +292,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 	else if(upgrade_dropped == proximity_monitor)
 		proximity_monitor = null
 
-/obj/machinery/camera/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
+/obj/machinery/camera/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, ranged = FALSE)
 	if(machine_stat & BROKEN)
 		return damage_amount
 	. = ..()

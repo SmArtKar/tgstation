@@ -53,7 +53,7 @@
 		M.gets_drilled()
 	if(ismecha(target))
 		var/obj/vehicle/sealed/mecha/M = target
-		M.take_damage(50, BRUTE, MELEE, 1)
+		M.take_damage(50, BRUTE, get_damage_armor_type(), 1)
 
 //Elites can't talk (normally)!
 /mob/living/simple_animal/hostile/asteroid/elite/can_speak(allow_mimes)
@@ -142,8 +142,9 @@ While using this makes the system rely on OnFire, it still gives options for tim
 	)
 
 /datum/armor/structure_elite_tumor
-	melee = 100
-	bullet = 100
+	slash = 100
+	puncture = 100
+	blunt = 100
 	laser = 100
 	energy = 100
 	bomb = 100

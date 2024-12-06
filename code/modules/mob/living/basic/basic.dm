@@ -233,6 +233,19 @@
 /mob/living/basic/resolve_unarmed_attack(atom/attack_target, list/modifiers)
 	melee_attack(attack_target, modifiers)
 
+/// Returns armor type which resists us when attacking in melee
+/mob/living/basic/proc/get_damage_armor_type()
+	switch (sharpness)
+		if (NONE)
+			return BLUNT
+		if (SHARP_EDGED)
+			return SLASH
+		if (SHARP_POINTY)
+			return PUNCTURE
+	// Blunt as fallback, but this shouldn't ever happen
+	stack_trace("[src] of [type] has attempted to deal melee damage with invalid sharpness of [sharpness]!")
+	return BLUNT
+
 /mob/living/basic/vv_edit_var(vname, vval)
 	switch(vname)
 		if(NAMEOF(src, habitable_atmos), NAMEOF(src, unsuitable_atmos_damage))

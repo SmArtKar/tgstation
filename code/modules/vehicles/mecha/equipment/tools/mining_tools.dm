@@ -202,7 +202,7 @@
 	//drill makes a hole
 	var/def_zone = target.get_random_valid_zone(BODY_ZONE_CHEST)
 	var/obj/item/bodypart/target_part = target.get_bodypart(def_zone)
-	var/blocked = target.run_armor_check(def_zone, MELEE)
+	var/blocked = target.run_armor_check(def_zone, PUNCTURE)
 	target.apply_damage(10, BRUTE, def_zone, blocked)
 
 	//blood splatters

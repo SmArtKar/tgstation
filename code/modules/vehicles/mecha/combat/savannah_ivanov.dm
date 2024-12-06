@@ -41,8 +41,9 @@
 	phasing_energy_drain = 0
 
 /datum/armor/mecha_savannah_ivanov
-	melee = 45
-	bullet = 40
+	slash = 50
+	puncture = 40
+	blunt = 40
 	laser = 30
 	energy = 30
 	bomb = 40

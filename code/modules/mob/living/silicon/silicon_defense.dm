@@ -84,7 +84,7 @@
 	. = ..()
 	if(.)
 		return TRUE
-	if(damage_type == BRUTE && attack_type == UNARMED_ATTACK && attack_flag == MELEE && damage <= 10)
+	if(damage_type == BRUTE && attack_type == UNARMED_ATTACK && IS_PHYSICAL_ARMOR(attack_flag) && damage <= 10)
 		playsound(src, 'sound/effects/bang.ogg', 10, TRUE)
 		visible_message(span_danger("[attack_text] doesn't leave a dent on [src]!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		return TRUE

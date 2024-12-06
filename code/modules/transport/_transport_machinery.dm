@@ -21,8 +21,9 @@
 	var/malfunctioning = FALSE
 
 /datum/armor/transport_machinery
-	melee = 40
-	bullet = 10
+	slash = 60
+	puncture = 10
+	blunt = 40
 	laser = 10
 	bomb = 45
 	fire = 90

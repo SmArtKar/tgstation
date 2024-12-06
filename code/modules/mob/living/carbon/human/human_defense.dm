@@ -185,16 +185,22 @@
 	if(user.limb_destroyer)
 		dismembering_strike(user, affecting.body_zone)
 
-	if(try_inject(user, affecting, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))//Thick suits can stop monkey bites.
-		if(..()) //successful monkey bite, this handles disease contraction.
-			var/obj/item/bodypart/head/monkey_mouth = user.get_bodypart(BODY_ZONE_HEAD)
-			var/damage = HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) ? monkey_mouth.unarmed_damage_high : rand(monkey_mouth.unarmed_damage_low, monkey_mouth.unarmed_damage_high)
-			if(!damage)
-				return FALSE
-			if(check_block(user, damage, "the [user.name]"))
-				return FALSE
-			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
+	if(!try_inject(user, affecting, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE)) //Thick suits can stop monkey bites.
+		return FALSE
+
+	. = ..()
+	if(!.)
 		return TRUE
+
+	//successful monkey bite, this handles disease contraction.
+	var/obj/item/bodypart/head/monkey_mouth = user.get_bodypart(BODY_ZONE_HEAD)
+	var/damage = HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) ? monkey_mouth.unarmed_damage_high : rand(monkey_mouth.unarmed_damage_low, monkey_mouth.unarmed_damage_high)
+	if(!damage)
+		return FALSE
+	if(check_block(user, damage, "the [user.name]"))
+		return FALSE
+	apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, user.get_arm_damage_flag()))
+	return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
 	. = ..()
@@ -237,7 +243,7 @@
 			to_chat(user, span_danger("You lunge at [src]!"))
 			return FALSE
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE,"","",10)
+		var/armor_block = run_armor_check(affecting, SLASH,"","",10)
 
 		playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
 		visible_message(span_danger("[user] slashes at [src]!"), \
@@ -263,7 +269,7 @@
 	if(stat != DEAD)
 		L.amount_grown = min(L.amount_grown + damage, L.max_grown)
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(L.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE)
+		var/armor_block = run_armor_check(affecting, PUNCTURE)
 		apply_damage(damage, BRUTE, affecting, armor_block)
 
 /mob/living/carbon/human/ex_act(severity, target, origin)
@@ -359,7 +365,7 @@
 	show_message(span_userdanger("The blob attacks you!"))
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
-	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE))
+	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, BLUNT))
 
 
 ///Calculates the siemens coeff based on clothing and species, can also restart hearts.

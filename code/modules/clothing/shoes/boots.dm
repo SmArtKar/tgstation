@@ -11,8 +11,9 @@
 	lace_time = 12 SECONDS
 
 /datum/armor/shoes_combat
-	melee = 25
-	bullet = 25
+	slash = 25
+	puncture = 25
+	blunt = 25
 	laser = 25
 	energy = 25
 	bomb = 50
@@ -32,8 +33,9 @@
 	armor_type = /datum/armor/combat_swat
 
 /datum/armor/combat_swat
-	melee = 40
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 40
 	laser = 25
 	energy = 25
 	bomb = 50
@@ -122,8 +124,9 @@
 	resistance_flags = NONE
 
 /datum/armor/ice_boots_eva
-	melee = 10
+	slash = 10
 	laser = 10
+	blunt = 10
 	energy = 10
 	bio = 50
 	fire = 50
@@ -197,8 +200,9 @@
 	body_parts_covered = FEET|LEGS
 
 /datum/armor/shoes_pirate
-	melee = 25
-	bullet = 25
+	slash = 25
+	puncture = 25
+	blunt = 25
 	laser = 25
 	energy = 25
 	bomb = 50

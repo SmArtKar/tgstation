@@ -86,10 +86,10 @@
 
 	return ..()
 
-/obj/item/cardboard_cutout/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+/obj/item/cardboard_cutout/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	var/damage_sustained = . || 0
-	if((damage_flag == BULLET || damage_flag == MELEE) && (damage_type == BRUTE) && prob(damage_sustained))
+	if(IS_PHYSICAL_ARMOR(damage_flag) && !ranged && (damage_type == BRUTE) && prob(damage_sustained))
 		push_over()
 
 /obj/item/cardboard_cutout/atom_deconstruct(disassembled)

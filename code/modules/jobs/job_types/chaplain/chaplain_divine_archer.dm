@@ -26,8 +26,9 @@
 	hood_up_affix = ""
 
 /datum/armor/chaplainsuit_armor_weaker
-	melee = 40
-	bullet = 5
+	slash = 40
+	puncture = 5
+	blunt = 25
 	laser = 5
 	energy = 5
 	fire = 60

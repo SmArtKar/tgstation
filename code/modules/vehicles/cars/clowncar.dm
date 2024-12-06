@@ -26,8 +26,9 @@
 	var/enforce_clown_role = TRUE
 
 /datum/armor/car_clowncar
-	melee = 70
-	bullet = 40
+	slash = 60
+	puncture = 40
+	blunt = 70
 	laser = 40
 	bomb = 30
 	fire = 80
@@ -93,7 +94,7 @@
 	. = ..()
 	UnregisterSignal(M, COMSIG_MOB_CLICKON)
 
-/obj/vehicle/sealed/car/clowncar/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/vehicle/sealed/car/clowncar/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(prob(33))
 		visible_message(span_danger("[src] spews out a ton of space lube!"))

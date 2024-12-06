@@ -74,8 +74,9 @@
 	var/list/current_operators
 
 /datum/armor/transport_module
-	melee = 80
-	bullet = 90
+	slash = 80
+	puncture = 90
+	blunt = 80
 	bomb = 70
 	fire = 100
 	acid = 100

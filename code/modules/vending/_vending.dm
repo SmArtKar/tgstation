@@ -221,7 +221,8 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 	var/obj/item/radio/sec_radio
 
 /datum/armor/machinery_vending
-	melee = 20
+	slash = 20
+	blunt = 20
 	fire = 50
 	acid = 70
 
@@ -845,12 +846,12 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
  * * paralyze_time: The time, in deciseconds, a given mob/living will be paralyzed for if crushed.
  * * crush_dir: The direction the crush is coming from. Default: dir of src to [target].
  * * damage_type: The type of damage to do. Default: BRUTE
- * * damage_flag: The attack flag for armor purposes. Default: MELEE
+ * * damage_flag: The attack flag for armor purposes. Default: BLUNT
  * * rotation: The angle of which to rotate src's transform by on a successful tilt. Default: 90.
  *
  * Returns: A collection of bitflags defined in crushing.dm. Read that file's documentation for info.
  */
-/atom/movable/proc/fall_and_crush(turf/target, damage, chance_to_crit = 0, forced_crit_case = null, paralyze_time, crush_dir = get_dir(get_turf(src), target), damage_type = BRUTE, damage_flag = MELEE, rotation = 90)
+/atom/movable/proc/fall_and_crush(turf/target, damage, chance_to_crit = 0, forced_crit_case = null, paralyze_time, crush_dir = get_dir(get_turf(src), target), damage_type = BRUTE, damage_flag = BLUNT, rotation = 90)
 
 	ASSERT(!isnull(target))
 
@@ -888,8 +889,8 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 					else
 						var/brute = (damage_type == BRUTE ? damage : 0) * 0.5
 						var/burn = (damage_type == BURN ? damage : 0) * 0.5
-						carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5) // otherwise, deal it to 2 random limbs (or the same one) which will likely shatter something
-						carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5)
+						carbon_target.take_bodypart_damage(brute, burn, check_armor = brute ? BLUNT : FIRE, wound_bonus = 5) // otherwise, deal it to 2 random limbs (or the same one) which will likely shatter something
+						carbon_target.take_bodypart_damage(brute, burn, check_armor = brute ? BLUNT : FIRE, wound_bonus = 5)
 					carbon_target.AddElement(/datum/element/squish, 80 SECONDS)
 				else
 					living_target.apply_damage(adjusted_damage, damage_type, blocked = blocked, forced = TRUE, attack_direction = crush_dir)

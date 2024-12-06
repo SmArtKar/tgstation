@@ -23,8 +23,9 @@
 	resistance_flags = NONE
 
 /datum/armor/clown_shoes_combat
-	melee = 25
-	bullet = 25
+	slash = 25
+	puncture = 25
+	blunt = 25
 	laser = 25
 	energy = 25
 	bomb = 50
@@ -53,8 +54,9 @@
 	body_parts_covered = FEET|LEGS
 
 /datum/armor/banana_shoes_combat
-	melee = 25
-	bullet = 25
+	slash = 25
+	puncture = 25
+	blunt = 25
 	laser = 25
 	energy = 25
 	bomb = 50

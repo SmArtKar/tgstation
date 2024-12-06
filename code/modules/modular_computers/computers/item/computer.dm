@@ -122,7 +122,7 @@
 	var/datum/component/shell/shell
 
 /datum/armor/item_modular_computer
-	bullet = 20
+	puncture = 20
 	laser = 20
 	energy = 100
 

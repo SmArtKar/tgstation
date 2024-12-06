@@ -126,9 +126,12 @@
 	if (mecha_attacker.damtype == BRUTE || mecha_attacker.damtype == FIRE)
 		var/def_zone = get_random_valid_zone(user.zone_selected, even_weights = TRUE)
 		var/zone_readable = parse_zone_with_bodypart(def_zone)
+		var/armor_flag = BLUNT
+		if (mecha_attacker.damtype == FIRE)
+			armor_flag = FIRE
 		apply_damage(damage, mecha_attacker.damtype, def_zone, run_armor_check(
 			def_zone = def_zone,
-			attack_flag = MELEE,
+			attack_flag = armor_flag,
 			absorb_text = span_notice("Your armor has protected your [zone_readable]!"),
 			soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!")
 		))

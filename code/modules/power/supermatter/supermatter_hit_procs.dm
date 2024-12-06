@@ -21,19 +21,21 @@
 
 	if(!istype(projectile.firer, /obj/machinery/power/emitter))
 		investigate_log("has been hit by [projectile] fired by [key_name(projectile.firer)]", INVESTIGATE_ENGINE)
-	if(projectile.armor_flag != BULLET || kiss_power)
+	if(IS_SCIFI_ARMOR(projectile.armor_flag) || kiss_power)
 		if(kiss_power)
 			psy_coeff = 1
 		external_power_immediate += projectile.damage * bullet_energy + kiss_power
 		log_activation(who = projectile.firer, how = projectile.fired_from)
-	else
-		external_damage_immediate += projectile.damage * bullet_energy * 0.1
-		// Stop taking damage at emergency point, yell to players at danger point.
-		// This isn't clean and we are repeating [/obj/machinery/power/supermatter_crystal/proc/calculate_damage], sorry for this.
-		var/damage_to_be = damage + external_damage_immediate * clamp((emergency_point - damage) / emergency_point, 0, 1)
-		if(damage_to_be > danger_point)
-			visible_message(span_notice("[src] compresses under stress, resisting further impacts!"))
-		playsound(src, 'sound/effects/supermatter.ogg', 50, TRUE)
+		qdel(projectile)
+		return COMPONENT_BULLET_BLOCKED
+
+	external_damage_immediate += projectile.damage * bullet_energy * 0.1
+	// Stop taking damage at emergency point, yell to players at danger point.
+	// This isn't clean and we are repeating [/obj/machinery/power/supermatter_crystal/proc/calculate_damage], sorry for this.
+	var/damage_to_be = damage + external_damage_immediate * clamp((emergency_point - damage) / emergency_point, 0, 1)
+	if(damage_to_be > danger_point)
+		visible_message(span_notice("[src] compresses under stress, resisting further impacts!"))
+	playsound(src, 'sound/effects/supermatter.ogg', 50, TRUE)
 
 	qdel(projectile)
 	return COMPONENT_BULLET_BLOCKED

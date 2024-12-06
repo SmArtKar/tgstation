@@ -173,7 +173,8 @@
 	var/obj/item/pillow/unstoppably_plushed
 
 /datum/armor/suit_pillow_suit
-	melee = 5
+	slash = 5
+	blunt = 20
 	acid = 75
 
 /obj/item/clothing/suit/pillow_suit/Initialize(mapload)
@@ -197,7 +198,8 @@
 	armor_type = /datum/armor/head_pillow_hood
 
 /datum/armor/head_pillow_hood
-	melee = 5
+	slash = 5
+	blunt = 20
 	acid = 75
 
 /obj/item/clothing/neck/pillow_tag

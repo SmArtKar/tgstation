@@ -32,8 +32,9 @@
 	var/shield_bash_sound = 'sound/effects/shieldbash.ogg'
 
 /datum/armor/item_shield
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 50
 	bomb = 30
 	fire = 80
@@ -82,7 +83,7 @@
 	if(!breakable_by_damage || (damage_type != BRUTE && damage_type != BURN))
 		return TRUE
 	var/penetration = 0
-	var/armor_flag = MELEE
+	var/armor_flag = BLUNT
 	if(isprojectile(hitby))
 		var/obj/projectile/bang_bang = hitby
 		armor_flag = bang_bang.armor_flag
@@ -90,13 +91,19 @@
 	else if(isitem(hitby))
 		var/obj/item/weapon = hitby
 		penetration = weapon.armour_penetration
+		armor_flag = weapon.get_damage_armor_type()
 	else if(isanimal(hitby))
 		var/mob/living/simple_animal/critter = hitby
 		penetration = critter.armour_penetration
+		armor_flag = critter.get_damage_armor_type()
 	else if(isbasicmob(hitby))
 		var/mob/living/basic/critter = hitby
 		penetration = critter.armour_penetration
-	take_damage(damage, damage_type, armor_flag, armour_penetration = penetration)
+		armor_flag = critter.get_damage_armor_type()
+	else if (attack_type == UNARMED_ATTACK)
+		var/mob/living/carbon/pasta = hitby
+		armor_flag = pasta.get_arm_damage_flag()
+	take_damage(damage, damage_type, armor_flag, armour_penetration = penetration, ranged = isprojectile(hitby))
 
 /obj/item/shield/atom_destruction(damage_flag)
 	playsound(src, shield_break_sound, 50)
@@ -151,8 +158,9 @@
 	max_integrity = 30
 
 /datum/armor/item_shield/riot
-	melee = 80
-	bullet = 20
+	slash = 60
+	puncture = 20
+	blunt = 80
 	laser = 20
 
 /obj/item/shield/riot
@@ -431,8 +439,9 @@
 		return COMPONENT_BLOCK_ITEM_DISARM_ATTACK
 
 /datum/armor/item_shield/ballistic
-	melee = 30
-	bullet = 85
+	slash = 30
+	puncture = 85
+	blunt = 45
 	bomb = 10
 	laser = 80
 
@@ -459,8 +468,9 @@
 	return ..()
 
 /datum/armor/item_shield/improvised
-	melee = 40
-	bullet = 30
+	slash = 20
+	puncture = 30
+	blunt = 40
 	laser = 30
 
 /obj/item/shield/improvised

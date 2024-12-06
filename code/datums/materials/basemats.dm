@@ -49,7 +49,7 @@
 	tradable = TRUE
 	tradable_base_quantity = MATERIAL_QUANTITY_COMMON
 	beauty_modifier = 0.05
-	armor_modifiers = list(MELEE = 0.2, BULLET = 0.2, ENERGY = 1, BIO = 0.2, FIRE = 1, ACID = 0.2)
+	armor_modifiers = list(SLASH = 0.3, PUNCTURE = 0.2, BLUNT = 0.1, ENERGY = 1, BIO = 0.2, FIRE = 1, ACID = 0.2)
 	mineral_rarity = MATERIAL_RARITY_COMMON
 	points_per_unit = 1 / SHEET_MATERIAL_AMOUNT
 	texture_layer_icon_state = "shine"
@@ -132,7 +132,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	tradable = TRUE
 	tradable_base_quantity = MATERIAL_QUANTITY_RARE
 	beauty_modifier = 0.15
-	armor_modifiers = list(MELEE = 1.1, BULLET = 1.1, LASER = 1.15, ENERGY = 1.15, BOMB = 1, BIO = 1, FIRE = 0.7, ACID = 1.1)
+	armor_modifiers = list(SLASH = 1.1, PUNCTURE = 1.1, BLUNT = 1.1, LASER = 1.15, ENERGY = 1.15, BOMB = 1, BIO = 1, FIRE = 0.7, ACID = 1.1)
 	mineral_rarity = MATERIAL_RARITY_PRECIOUS
 	points_per_unit = 18 / SHEET_MATERIAL_AMOUNT
 	texture_layer_icon_state = "shine"
@@ -172,7 +172,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	tradable = TRUE
 	tradable_base_quantity = MATERIAL_QUANTITY_EXOTIC
 	beauty_modifier = 0.3
-	armor_modifiers = list(MELEE = 1.3, BULLET = 1.3, LASER = 0.6, ENERGY = 1, BOMB = 1.2, BIO = 1, FIRE = 1, ACID = 1)
+	armor_modifiers = list(SLASH = 1.3, PUNCTURE = 1.3, BLUNT = 1.3, LASER = 0.6, ENERGY = 1, BOMB = 1.2, BIO = 1, FIRE = 1, ACID = 1)
 	mineral_rarity = MATERIAL_RARITY_RARE
 	points_per_unit = 50 / SHEET_MATERIAL_AMOUNT
 	fish_weight_modifier = 1.4
@@ -207,7 +207,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	tradable = TRUE
 	tradable_base_quantity = MATERIAL_QUANTITY_RARE
 	beauty_modifier = 0.3 //It shines so beautiful
-	armor_modifiers = list(MELEE = 1.5, BULLET = 1.4, LASER = 0.5, ENERGY = 0.5, FIRE = 1, ACID = 1)
+	armor_modifiers = list(SLASH = 1.5, PUNCTURE = 1.4, BLUNT = 1.2, LASER = 0.5, ENERGY = 0.5, FIRE = 1, ACID = 1)
 	mineral_rarity = MATERIAL_RARITY_SEMIPRECIOUS
 	points_per_unit = 30 / SHEET_MATERIAL_AMOUNT
 	fish_weight_modifier = 2
@@ -256,7 +256,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	ore_type = /obj/item/stack/ore/plasma
 	value_per_unit = 200 / SHEET_MATERIAL_AMOUNT
 	beauty_modifier = 0.15
-	armor_modifiers = list(MELEE = 1.4, BULLET = 0.7, ENERGY = 1.2, BIO = 1.2, ACID = 0.5)
+	armor_modifiers = list(SLASH = 1.4, PUNCTURE = 0.7, BLUNT = 0.9, ENERGY = 1.2, BIO = 1.2, ACID = 0.5)
 	mineral_rarity = MATERIAL_RARITY_PRECIOUS
 	points_per_unit = 15 / SHEET_MATERIAL_AMOUNT
 	fish_weight_modifier = 1.3
@@ -430,7 +430,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	tradable = TRUE
 	tradable_base_quantity = MATERIAL_QUANTITY_UNCOMMON
 	beauty_modifier = 0.05
-	armor_modifiers = list(MELEE = 1.35, BULLET = 1.3, LASER = 1.3, ENERGY = 1.25, BOMB = 1.25, BIO = 1, FIRE = 0.7, ACID = 1)
+	armor_modifiers = list(SLASH = 1.35, PUNCTURE = 1.3, BLUNT = 1.4, LASER = 1.3, ENERGY = 1.25, BOMB = 1.25, BIO = 1, FIRE = 0.7, ACID = 1)
 	mat_rust_resistance = RUST_RESISTANCE_TITANIUM
 	mineral_rarity = MATERIAL_RARITY_SEMIPRECIOUS
 	texture_layer_icon_state = "shine"
@@ -461,7 +461,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	sheet_type = /obj/item/stack/sheet/mineral/runite
 	value_per_unit = 600 / SHEET_MATERIAL_AMOUNT
 	beauty_modifier = 0.5
-	armor_modifiers = list(MELEE = 1.35, BULLET = 2, LASER = 0.5, ENERGY = 1.25, BOMB = 1.25, BIO = 1, FIRE = 1.4, ACID = 1) //rune is weak against magic lasers but strong against bullets. This is the combat triangle.
+	armor_modifiers = list(SLASH = 1.35, PUNCTURE = 2, BLUNT = 1.5, LASER = 0.5, ENERGY = 1.25, BOMB = 1.25, BIO = 1, FIRE = 1.4, ACID = 1) //rune is weak against magic lasers but strong against bullets. This is the combat triangle.
 	mineral_rarity = MATERIAL_RARITY_UNDISCOVERED
 	points_per_unit = 100 / SHEET_MATERIAL_AMOUNT
 	fish_weight_modifier = 1.5
@@ -504,7 +504,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	)
 	value_per_unit = 25 / SHEET_MATERIAL_AMOUNT
 	beauty_modifier = -0.01
-	armor_modifiers = list(MELEE = 1.5, BULLET = 1.1, LASER = 0.3, ENERGY = 0.5, BOMB = 1, BIO = 1, FIRE = 1.1, ACID = 1)
+	armor_modifiers = list(SLASH = 1.5, PUNCTURE = 1.1, BLUNT = 0.9, LASER = 0.3, ENERGY = 0.5, BOMB = 1, BIO = 1, FIRE = 1.1, ACID = 1)
 	mineral_rarity = MATERIAL_RARITY_UNDISCOVERED //Nobody's found oil on lavaland yet.
 	points_per_unit = 4 / SHEET_MATERIAL_AMOUNT
 	fish_weight_modifier = 0.8
@@ -543,7 +543,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 		)
 	value_per_unit = 20 / SHEET_MATERIAL_AMOUNT
 	beauty_modifier = 0.1
-	armor_modifiers = list(MELEE = 1.1, BULLET = 1.1, LASER = 0.4, ENERGY = 0.4, BOMB = 1, BIO = 0.2, ACID = 0.3)
+	armor_modifiers = list(SLASH = 1.1, PUNCTURE = 1.1, LASER = 0.4, ENERGY = 0.4, BOMB = 1, BIO = 0.2, ACID = 0.3)
 	texture_layer_icon_state = "woodgrain"
 	fish_weight_modifier = 0.5
 	fishing_difficulty_modifier = 8
@@ -589,7 +589,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	sheet_type = /obj/item/stack/sheet/mineral/adamantine
 	value_per_unit = 500 / SHEET_MATERIAL_AMOUNT
 	beauty_modifier = 0.4
-	armor_modifiers = list(MELEE = 1.5, BULLET = 1.5, LASER = 1.3, ENERGY = 1.3, BOMB = 1, BIO = 1, FIRE = 2.5, ACID = 1)
+	armor_modifiers = list(SLASH = 1.5, PUNCTURE = 1.5, BLUNT = 1.5, LASER = 1.3, ENERGY = 1.3, BOMB = 1, BIO = 1, FIRE = 2.5, ACID = 1)
 	mineral_rarity = MATERIAL_RARITY_UNDISCOVERED //Doesn't naturally spawn on lavaland.
 	points_per_unit = 100 / SHEET_MATERIAL_AMOUNT
 	fish_weight_modifier = 1.6
@@ -630,7 +630,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	sheet_type = /obj/item/stack/sheet/mineral/mythril
 	value_per_unit = 1500 / SHEET_MATERIAL_AMOUNT
 	strength_modifier = 1.2
-	armor_modifiers = list(MELEE = 1.5, BULLET = 1.5, LASER = 1.5, ENERGY = 1.5, BOMB = 1.5, BIO = 1.5, FIRE = 1.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 1.5, PUNCTURE = 1.5, BLUNT = 1.5, LASER = 1.5, ENERGY = 1.5, BOMB = 1.5, BIO = 1.5, FIRE = 1.5, ACID = 1.5)
 	beauty_modifier = 0.5
 	mineral_rarity = MATERIAL_RARITY_UNDISCOVERED //Doesn't naturally spawn on lavaland.
 	points_per_unit = 100 / SHEET_MATERIAL_AMOUNT
@@ -716,7 +716,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	value_per_unit = 700 / SHEET_MATERIAL_AMOUNT
 	beauty_modifier = 0.35
 	strength_modifier = 1.2
-	armor_modifiers = list(MELEE = 1.35, BULLET = 1.3, LASER = 1.3, ENERGY = 1.25, BOMB = 0.7, BIO = 1, FIRE = 1.3, ACID = 1)
+	armor_modifiers = list(SLASH = 1.35, PUNCTURE = 1.3, BLUNT = 1.35, LASER = 1.3, ENERGY = 1.25, BOMB = 0.7, BIO = 1, FIRE = 1.3, ACID = 1)
 	fish_weight_modifier = 0.6 //It may be metallic, but it's just "denser" hydrogen at the end of the day, no?
 	fishing_difficulty_modifier = -13
 	fishing_cast_range = 4
@@ -745,7 +745,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	value_per_unit = 2 / SHEET_MATERIAL_AMOUNT
 	strength_modifier = 0.5
 	integrity_modifier = 0.1
-	armor_modifiers = list(MELEE = 0.25, BULLET = 0.25, LASER = 1.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, FIRE = 1.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 0.3, PUNCTURE = 0.25, BLUNT = 0.15, LASER = 1.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, FIRE = 1.5, ACID = 1.5)
 	beauty_modifier = 0.25
 	turf_sound_override = FOOTSTEP_SAND
 	texture_layer_icon_state = "sand"
@@ -776,7 +776,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 		)
 	sheet_type = /obj/item/stack/sheet/mineral/sandstone
 	value_per_unit = 5 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 0.5, BULLET = 0.5, LASER = 1.25, ENERGY = 0.5, BOMB = 0.5, BIO = 0.25, FIRE = 1.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 0.6, PUNCTURE = 0.5, BLUNT = 0.4, LASER = 1.25, ENERGY = 0.5, BOMB = 0.5, BIO = 0.25, FIRE = 1.5, ACID = 1.5)
 	beauty_modifier = 0.3
 	turf_sound_override = FOOTSTEP_WOOD
 	texture_layer_icon_state = "brick"
@@ -803,7 +803,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	strength_modifier = 0.4
 	integrity_modifier = 0.4
 	value_per_unit = 5 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 0.25, BULLET = 0.25, LASER = 0.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, FIRE = 0.25, ACID = 1.5)
+	armor_modifiers = list(SLASH = 0.25, PUNCTURE = 0.25, BLUNT = 0.15, LASER = 0.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, FIRE = 0.25, ACID = 1.5)
 	beauty_modifier = 0.3
 	turf_sound_override = FOOTSTEP_SAND
 	texture_layer_icon_state = "sand"
@@ -833,7 +833,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 		)
 	sheet_type = /obj/item/stack/sheet/runed_metal
 	value_per_unit = 1500 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 1.2, BULLET = 1.2, LASER = 1, ENERGY = 1, BOMB = 1.2, BIO = 1.2, FIRE = 1.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 1.2, PUNCTURE = 1.2, BLUNT = 1.2, LASER = 1, ENERGY = 1, BOMB = 1.2, BIO = 1.2, FIRE = 1.5, ACID = 1.5)
 	beauty_modifier = -0.15
 	texture_layer_icon_state = "runed"
 	fish_weight_modifier = 1.5
@@ -862,7 +862,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 		)
 	sheet_type = /obj/item/stack/sheet/bronze
 	value_per_unit = 50 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 1, BULLET = 1, LASER = 1, ENERGY = 1, BOMB = 1, BIO = 1, FIRE = 1.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 1, PUNCTURE = 1, BLUNT = 1, LASER = 1, ENERGY = 1, BOMB = 1, BIO = 1, FIRE = 1.5, ACID = 1.5)
 	beauty_modifier = 0.2
 	fish_weight_modifier = 1.4
 	fishing_bait_speed_mult = 1.1
@@ -883,7 +883,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	sheet_type = /obj/item/stack/sheet/paperframes
 	value_per_unit = 5 / SHEET_MATERIAL_AMOUNT
 	strength_modifier = 0.3
-	armor_modifiers = list(MELEE = 0.1, BULLET = 0.1, LASER = 0.1, ENERGY = 0.1, BOMB = 0.1, BIO = 0.1, ACID = 1.5)
+	armor_modifiers = list(SLASH = 0.1, PUNCTURE = 0.1, BLUNT = 0.1, LASER = 0.1, ENERGY = 0.1, BOMB = 0.1, BIO = 0.1, ACID = 1.5)
 	beauty_modifier = 0.3
 	turf_sound_override = FOOTSTEP_SAND
 	texture_layer_icon_state = "paper"
@@ -937,7 +937,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	sheet_type = /obj/item/stack/sheet/cardboard
 	value_per_unit = 6 / SHEET_MATERIAL_AMOUNT
 	strength_modifier = 0.3
-	armor_modifiers = list(MELEE = 0.25, BULLET = 0.25, LASER = 0.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, ACID = 1.5)
+	armor_modifiers = list(SLASH = 0.25, PUNCTURE = 0.25, BLUNT = 0.15, LASER = 0.25, ENERGY = 0.25, BOMB = 0.25, BIO = 0.25, ACID = 1.5)
 	beauty_modifier = -0.1
 	fish_weight_modifier = 0.4
 	fishing_difficulty_modifier = 40 //child's play
@@ -973,7 +973,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 		)
 	sheet_type = /obj/item/stack/sheet/bone
 	value_per_unit = 100 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 1.2, BULLET = 0.75, LASER = 0.75, ENERGY = 1.2, BOMB = 1, BIO = 1, FIRE = 1.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 1.2, PUNCTURE = 0.75, BLUNT = 1, ASER = 0.75, ENERGY = 1.2, BOMB = 1, BIO = 1, FIRE = 1.5, ACID = 1.5)
 	beauty_modifier = -0.2
 	fish_weight_modifier = 1.05
 	fishing_difficulty_modifier = 15
@@ -1031,7 +1031,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 	sheet_type = /obj/item/stack/sheet/mineral/bamboo
 	strength_modifier = 0.5
 	value_per_unit = 5 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 0.5, BULLET = 0.5, LASER = 0.5, ENERGY = 0.5, BOMB = 0.5, BIO = 0.51, FIRE = 0.5, ACID = 1.5)
+	armor_modifiers = list(SLASH = 0.5, PUNCTURE = 0.5, BLUNT = 0.5, LASER = 0.5, ENERGY = 0.5, BOMB = 0.5, BIO = 0.51, FIRE = 0.5, ACID = 1.5)
 	beauty_modifier = 0.2
 	turf_sound_override = FOOTSTEP_WOOD
 	texture_layer_icon_state = "bamboo"
@@ -1057,7 +1057,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 		)
 	sheet_type = /obj/item/stack/sheet/mineral/zaukerite
 	value_per_unit = 900 / SHEET_MATERIAL_AMOUNT
-	armor_modifiers = list(MELEE = 0.9, BULLET = 0.9, LASER = 1.75, ENERGY = 1.75, BOMB = 0.5, BIO = 1, FIRE = 0.1, ACID = 1)
+	armor_modifiers = list(SLASH = 0.9, PUNCTURE = 0.9, BLUNT = 0.8, LASER = 1.75, ENERGY = 1.75, BOMB = 0.5, BIO = 1, FIRE = 0.1, ACID = 1)
 	beauty_modifier = 0.001
 	fish_weight_modifier = 1.2
 	fishing_difficulty_modifier = -14

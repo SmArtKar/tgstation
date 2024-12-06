@@ -30,7 +30,8 @@
 	var/autoexamine_while_closed = TRUE
 
 /datum/armor/structure_displaycase
-	melee = 30
+	slash = 30
+	blunt = 10
 	bomb = 10
 	fire = 70
 	acid = 100

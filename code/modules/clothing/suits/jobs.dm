@@ -127,8 +127,9 @@
 	flags_inv = HIDEBELT
 
 /datum/armor/jacket_det_suit
-	melee = 25
-	bullet = 10
+	slash = 30
+	blunt = 20
+	puncture = 10
 	laser = 25
 	energy = 35
 	acid = 45
@@ -376,8 +377,9 @@
 	heat_protection = CHEST|ARMS
 
 /datum/armor/jacket_curator
-	melee = 25
-	bullet = 10
+	slash = 30
+	blunt = 20
+	puncture = 10
 	laser = 25
 	energy = 35
 	acid = 45

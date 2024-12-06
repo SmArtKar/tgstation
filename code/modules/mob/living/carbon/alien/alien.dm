@@ -181,3 +181,6 @@ Des: Removes all infected images from the alien.
 
 /mob/living/carbon/alien/get_footprint_sprite()
 	return FOOTPRINT_SPRITE_CLAWS
+
+/mob/living/carbon/alien/get_arm_damage_flag()
+	return SLASH

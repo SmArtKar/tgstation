@@ -47,8 +47,9 @@
 	var/last_spin = 13
 
 /datum/armor/machinery_roulette
-	melee = 45
-	bullet = 30
+	slash = 45
+	puncture = 30
+	blunt = 45
 	laser = 30
 	energy = 30
 	bomb = 10

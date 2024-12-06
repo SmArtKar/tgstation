@@ -38,8 +38,9 @@
 	step_energy_drain = 2
 
 /datum/armor/mecha_justice
-	melee = 30
-	bullet = 20
+	slash = 30
+	puncture = 20
+	blunt = 30
 	laser = 20
 	energy = 30
 	fire = 100
@@ -142,7 +143,7 @@
 	animate(src, alpha = 255, time = 0.5 SECONDS)
 	playsound(src, 'sound/vehicles/mecha/mech_stealth_effect.ogg' , 75, FALSE)
 
-/obj/vehicle/sealed/mecha/justice/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+/obj/vehicle/sealed/mecha/justice/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	if(LAZYLEN(occupants))
 		if(prob(60))
 			new /obj/effect/temp_visual/mech_sparks(get_turf(src))

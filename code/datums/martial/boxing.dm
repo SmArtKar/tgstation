@@ -134,7 +134,7 @@
 		return FALSE
 
 	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
-	var/armor_block = defender.run_armor_check(affecting, MELEE, armour_penetration = base_unarmed_effectiveness)
+	var/armor_block = defender.run_armor_check(affecting, BLUNT, armour_penetration = base_unarmed_effectiveness)
 
 	playsound(defender, attack_sound, 25, TRUE, -1)
 

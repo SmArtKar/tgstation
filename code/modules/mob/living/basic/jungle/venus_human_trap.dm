@@ -54,7 +54,7 @@
 	addtimer(CALLBACK(src, PROC_REF(progress_growth)), growth_time/4)
 	countdown.start()
 
-/obj/structure/alien/resin/flower_bud/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
+/obj/structure/alien/resin/flower_bud/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, ranged = FALSE)
 	if((trait_flags & SPACEVINE_HEAT_RESISTANT) && damage_type == BURN)
 		damage_amount = 0
 	. = ..()
@@ -66,7 +66,7 @@
 	if(item.get_sharpness())
 		damage_dealt *= 16 // alien resin applies 75% reduction to brute damage so this actually x4 damage
 
-	take_damage(damage_dealt, item.damtype, MELEE, 1)
+	take_damage(damage_dealt, item.damtype, item.get_damage_armor_type(), 1)
 
 /obj/structure/alien/resin/flower_bud/Destroy()
 	QDEL_LIST(vines)

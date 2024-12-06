@@ -26,8 +26,9 @@
 	armor_type = /datum/armor/cultrobes_eldritch
 
 /datum/armor/cultrobes_eldritch
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 50
 	energy = 50
 	bomb = 35
@@ -57,15 +58,7 @@
 	flags_inv = NONE
 	flags_cover = NONE
 	item_flags = EXAMINE_SKIP
-	armor_type = /datum/armor/cult_hoodie_void
-
-/datum/armor/cult_hoodie_void
-	melee = 30
-	bullet = 30
-	laser = 30
-	energy = 30
-	bomb = 15
-	wound = 10
+	armor_type = /datum/armor/cultrobes_void
 
 /obj/item/clothing/head/hooded/cult_hoodie/void/Initialize(mapload)
 	. = ..()
@@ -86,8 +79,9 @@
 	alternative_mode = TRUE
 
 /datum/armor/cultrobes_void
-	melee = 30
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 15
 	laser = 30
 	energy = 30
 	bomb = 15

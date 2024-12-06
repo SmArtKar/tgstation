@@ -14,7 +14,8 @@
 	var/engraved = FALSE
 
 /datum/armor/structure_plaque
-	melee = 50
+	slash = 50
+	blunt = 50
 	fire = 50
 	acid = 50
 
@@ -130,7 +131,8 @@
 	var/engraved = FALSE
 
 /datum/armor/item_plaque
-	melee = 50
+	slash = 50
+	blunt = 50
 	fire = 50
 	acid = 50
 

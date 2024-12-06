@@ -27,8 +27,9 @@
 	var/datum/weakref/connected_ship_ref
 
 /datum/armor/power_shuttle_engine
-	melee = 100
-	bullet = 10
+	slash = 100
+	puncture = 10
+	blunt = 100
 	laser = 10
 	fire = 50
 	acid = 70

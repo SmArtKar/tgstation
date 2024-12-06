@@ -160,7 +160,8 @@
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|HIDEHAIR|HIDEFACIALHAIR|HIDESNOUT
 
 /datum/armor/costume_bronze
-	melee = 5
+	slash = 5
+	blunt = 5
 	laser = -5
 	energy = -15
 	bomb = 10

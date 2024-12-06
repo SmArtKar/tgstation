@@ -153,8 +153,9 @@
 	armor_type = /datum/armor/obj_machinery
 
 /datum/armor/obj_machinery
-	melee = 25
-	bullet = 10
+	slash = 25
+	puncture = 10
+	blunt = 25
 	laser = 10
 	fire = 50
 	acid = 70
@@ -724,14 +725,14 @@
 
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-	var/damage = take_damage(damage_amount = 4, damage_type = BRUTE, damage_flag = MELEE, sound_effect = TRUE, attack_dir = get_dir(user, src))
-
 	var/hit_with_what_noun = "paws"
 	var/obj/item/bodypart/arm/arm = user.get_active_hand()
 	if(!isnull(arm))
 		hit_with_what_noun = arm.appendage_noun // hit with "their hand"
 		if(user.usable_hands > 1)
 			hit_with_what_noun += plural_s(hit_with_what_noun) // hit with "their hands"
+
+	var/damage = take_damage(damage_amount = 4, damage_type = BRUTE, damage_flag = user.get_arm_damage_flag(), sound_effect = TRUE, attack_dir = get_dir(user, src))
 
 	user.visible_message(
 		span_danger("[user] smashes [src] with [user.p_their()] [hit_with_what_noun][damage ? "." : ", [no_damage_feedback]!"]"),
@@ -1200,7 +1201,7 @@
 	dropped_atom.pixel_y = -8 + (round( . / 3)*8)
 
 /obj/machinery/rust_heretic_act()
-	take_damage(500, BRUTE, MELEE, 1)
+	take_damage(500, BRUTE, BLUNT, 1)
 
 /obj/machinery/vv_edit_var(vname, vval)
 	if(vname == NAMEOF(src, occupant))

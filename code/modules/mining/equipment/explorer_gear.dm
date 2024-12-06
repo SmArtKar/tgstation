@@ -20,8 +20,9 @@
 	return "#796755"
 
 /datum/armor/hooded_explorer
-	melee = 30
-	bullet = 10
+	slash = 20
+	puncture = 10
+	blunt = 40
 	laser = 10
 	energy = 20
 	bomb = 50
@@ -67,8 +68,9 @@
 	resistance_flags = FIRE_PROOF
 
 /datum/armor/gas_explorer
-	melee = 10
-	bullet = 5
+	slash = 10
+	puncture = 5
+	blunt = 10
 	laser = 5
 	energy = 5
 	bio = 50
@@ -127,8 +129,9 @@
 	allowed = GLOB.mining_suit_allowed
 
 /datum/armor/hooded_goliath
-	melee = 60
-	bullet = 10
+	slash = 60
+	puncture = 10
+	blunt = 60
 	laser = 10
 	energy = 20
 	bomb = 50
@@ -233,8 +236,9 @@
 	transparent_protection = HIDEGLOVES|HIDESUITSTORAGE|HIDEJUMPSUIT|HIDESHOES
 
 /datum/armor/cloak_drake
-	melee = 65
-	bullet = 15
+	slash = 65
+	puncture = 15
+	blunt = 65
 	laser = 40
 	energy = 40
 	bomb = 70
@@ -284,8 +288,9 @@
 	var/static/list/damage_heal_order = list(BRUTE, BURN, OXY)
 
 /datum/armor/cloak_godslayer
-	melee = 50
-	bullet = 25
+	slash = 50
+	puncture = 25
+	blunt = 50
 	laser = 25
 	energy = 25
 	bomb = 50
@@ -349,8 +354,9 @@
 	armor_type = /datum/armor/hooded_explorer_syndicate
 
 /datum/armor/hooded_explorer_syndicate
-	melee = 30
-	bullet = 15
+	slash = 20
+	puncture = 15
+	blunt = 40
 	laser = 25
 	energy = 35
 	bomb = 50

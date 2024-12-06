@@ -17,8 +17,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 2)
 
 /datum/armor/gloves_bracer
-	melee = 15
-	bullet = 25
+	slash = 20
+	puncture = 25
+	blunt = 10
 	laser = 15
 	energy = 15
 	bomb = 20

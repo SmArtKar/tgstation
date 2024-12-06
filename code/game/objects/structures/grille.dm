@@ -21,8 +21,9 @@
 	var/dramatically_disappearing = FALSE
 
 /datum/armor/structure_grille
-	melee = 50
-	bullet = 70
+	slash = 50
+	puncture = 70
+	blunt = 30
 	laser = 70
 	energy = 100
 	bomb = 10
@@ -35,7 +36,7 @@
 	update_cable_icons_on_turf(get_turf(src))
 	return ..()
 
-/obj/structure/grille/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/grille/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	update_appearance()
 
@@ -148,12 +149,12 @@
 	var/mob/M = AM
 	shock(M, 70)
 
-/obj/structure/grille/attack_animal(mob/user, list/modifiers)
+/obj/structure/grille/attack_animal(mob/living/simple_animal/user, list/modifiers)
 	. = ..()
 	if(!.)
 		return
 	if(!shock(user, 70) && !QDELETED(src)) //Last hit still shocks but shouldn't deal damage to the grille
-		take_damage(rand(5,10), BRUTE, MELEE, 1)
+		take_damage(rand(5,10), BRUTE, user.get_damage_armor_type(), 1)
 
 /obj/structure/grille/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
@@ -175,14 +176,14 @@
 	user.visible_message(span_warning("[user] hits [src]."), null, null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "hit")
 	if(!shock(user, 70))
-		take_damage(rand(5,10), BRUTE, MELEE, 1)
+		take_damage(rand(5,10), BRUTE, user.get_arm_damage_flag(), 1)
 
 /obj/structure/grille/attack_alien(mob/living/user, list/modifiers)
 	user.do_attack_animation(src)
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.visible_message(span_warning("[user] mangles [src]."), null, null, COMBAT_MESSAGE_RANGE)
 	if(!shock(user, 70))
-		take_damage(20, BRUTE, MELEE, 1)
+		take_damage(20, BRUTE, SLASH, 1)
 
 /obj/structure/grille/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()

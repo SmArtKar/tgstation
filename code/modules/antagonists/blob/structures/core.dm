@@ -62,7 +62,7 @@
 	take_damage(damage, BRUTE, BOMB, 0)
 	return TRUE
 
-/obj/structure/blob/special/core/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir, overmind_reagent_trigger = 1)
+/obj/structure/blob/special/core/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(atom_integrity > 0)
 		if(overmind) //we should have an overmind, but...

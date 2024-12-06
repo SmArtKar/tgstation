@@ -69,8 +69,9 @@ Slimecrossing Weapons
 	shield_bash_sound = 'sound/effects/glass/glassknock.ogg'
 
 /datum/armor/shield_adamantineshield
-	melee = 50
-	bullet = 50
+	slash = 70
+	puncture = 50
+	blunt = 50
 	laser = 50
 	bomb = 30
 	fire = 80

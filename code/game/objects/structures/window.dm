@@ -41,7 +41,8 @@
 	var/added_leaning = FALSE
 
 /datum/armor/structure_window
-	melee = 50
+	slash = 50
+	blunt = 30
 	fire = 80
 	acid = 100
 
@@ -321,7 +322,7 @@
 	return TRUE
 
 
-/obj/structure/window/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/structure/window/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(.) //received damage
 		update_nearby_icons()
@@ -501,8 +502,11 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/unanchored/spawner, 0)
 //2021 AND STILLLL GOING STRONG
 //2022 BABYYYYY ~lewc
 //2023 ONE YEAR TO GO! -LT3
+//2024 WE HIT THE MARK - SmArtKar
 /datum/armor/window_reinforced
-	melee = 80
+	slash = 80
+	puncture = 20
+	blunt = 60
 	bomb = 25
 	fire = 80
 	acid = 100
@@ -638,8 +642,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/unanchored/spawner,
 	glass_material_datum = /datum/material/alloy/plasmaglass
 
 /datum/armor/window_plasma
-	melee = 80
-	bullet = 5
+	slash = 80
+	puncture = 20
+	blunt = 60
 	bomb = 45
 	fire = 99
 	acid = 100
@@ -668,8 +673,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/plasma/spawner, 0)
 	glass_material_datum = /datum/material/alloy/plasmaglass
 
 /datum/armor/reinforced_plasma
-	melee = 80
-	bullet = 20
+	slash = 80
+	puncture = 40
+	blunt = 60
 	bomb = 60
 	fire = 99
 	acid = 100
@@ -827,7 +833,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	glass_material_datum = /datum/material/alloy/titaniumglass
 
 /datum/armor/reinforced_shuttle
-	melee = 90
+	slash = 90
+	puncture = 40
+	blunt = 70
 	bomb = 50
 	fire = 80
 	acid = 100
@@ -909,7 +917,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 
 /datum/armor/plasma_plastitanium
-	melee = 95
+	slash = 95
+	puncture = 40
+	blunt = 80
 	bomb = 50
 	fire = 80
 	acid = 100
@@ -965,7 +975,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	if(.)
 		return
 	if(user.combat_mode)
-		take_damage(4, BRUTE, MELEE, 0)
+		take_damage(4, BRUTE, user.get_arm_damage_flag(), 0)
 		if(!QDELETED(src))
 			update_appearance()
 

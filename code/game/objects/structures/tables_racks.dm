@@ -633,8 +633,9 @@
 	armor_type = /datum/armor/table_reinforced
 
 /datum/armor/table_reinforced
-	melee = 10
-	bullet = 30
+	slash = 10
+	puncture = 30
+	blunt = 20
 	laser = 30
 	energy = 100
 	bomb = 20
@@ -939,7 +940,7 @@
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_KICK)
 	user.visible_message(span_danger("[user] kicks [src]."), null, null, COMBAT_MESSAGE_RANGE)
-	take_damage(rand(4,8), BRUTE, MELEE, 1)
+	take_damage(rand(4,8), BRUTE, BLUNT, 1)
 
 /obj/structure/rack/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)

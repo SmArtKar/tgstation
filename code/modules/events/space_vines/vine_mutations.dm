@@ -173,40 +173,47 @@
 /// Hurts mobs. To be used when a vine with aggressive spread mutation spreads into the mob's tile or buckles them.
 /datum/spacevine_mutation/aggressive_spread/aggrospread_act(obj/structure/spacevine/vine, mob/living/living_mob)
 	var/mob/living/carbon/victim = living_mob //If the mob is carbon then it now also exists as a victim, and not just an living mob.
-	if(istype(victim)) //If the mob (M) is a carbon subtype (C) we move on to pick a more complex damage proc, with damage zones, wounds and armor mitigation.
-		var/obj/item/bodypart/limb = victim.get_bodypart(victim.get_random_valid_zone(even_weights = TRUE)) //Picks a random bodypart.
-		var/armor = victim.run_armor_check(limb, MELEE, null, null) //armor = the armor value of that randomly chosen bodypart. Nulls to not print a message, because it would still print on pierce.
-		var/datum/spacevine_mutation/thorns/thorn = locate() in vine.mutations //Searches for the thorns mutation in the "mutations"-list inside obj/structure/spacevine, and defines T if it finds it.
-		if(thorn && prob(40) && !HAS_TRAIT(victim, TRAIT_PIERCEIMMUNE)) //If we found the thorns mutation there is now a chance to get stung instead of lashed or smashed.
-			victim.apply_damage(50, BRUTE, def_zone = limb, wound_bonus = rand(-20,10), sharpness = SHARP_POINTY) //This one gets a bit lower damage because it ignores armor.
-			victim.Stun(1 SECONDS) //Stopped in place for a moment.
-			playsound(living_mob, 'sound/items/weapons/pierce.ogg', 50, TRUE, -1)
-			living_mob.visible_message(span_danger("[living_mob] is nailed by a sharp thorn!"), \
-			span_userdanger("You are nailed by a sharp thorn!"))
-			log_combat(vine, living_mob, "aggressively pierced") //"Aggressively" for easy ctrl+F'ing in the attack logs.
-		else
-			if(prob(80) && !HAS_TRAIT(victim, TRAIT_PIERCEIMMUNE))
-				victim.apply_damage(60, BRUTE, def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = SHARP_EDGED)
-				victim.Knockdown(2 SECONDS)
-				playsound(victim, 'sound/items/weapons/whip.ogg', 50, TRUE, -1)
-				living_mob.visible_message(span_danger("[living_mob] is lacerated by an outburst of vines!"), \
-				span_userdanger("You are lacerated by an outburst of vines!"))
-				log_combat(vine, living_mob, "aggressively lacerated")
-			else
-				victim.apply_damage(60, BRUTE, def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = NONE)
-				victim.Knockdown(3 SECONDS)
-				var/atom/throw_target = get_edge_target_turf(living_mob, get_dir(vine, get_step_away(living_mob, vine)))
-				victim.throw_at(throw_target, 3, 6)
-				playsound(victim, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
-				living_mob.visible_message(span_danger("[living_mob] is smashed by a large vine!"), \
-				span_userdanger("You are smashed by a large vine!"))
-				log_combat(vine, living_mob, "aggressively smashed")
-	else //Living but not a carbon? Maybe a silicon? Can't be wounded so have a big chunk of simple bruteloss with no special effects. They can be entangled.
+
+	// Living but not a carbon? Maybe a silicon? Can't be wounded so have a big chunk of simple bruteloss with no special effects. They can be entangled.
+	if (!istype(victim))
 		living_mob.adjustBruteLoss(75)
 		playsound(living_mob, 'sound/items/weapons/whip.ogg', 50, TRUE, -1)
 		living_mob.visible_message(span_danger("[living_mob] is brutally threshed by [vine]!"), \
 		span_userdanger("You are brutally threshed by [vine]!"))
 		log_combat(vine, living_mob, "aggressively spread into") //You aren't being attacked by the vines. You just happen to stand in their way.
+		return
+
+	// If the mob (M) is a carbon subtype (C) we move on to pick a more complex damage proc, with damage zones, wounds and armor mitigation.
+	var/obj/item/bodypart/limb = victim.get_bodypart(victim.get_random_valid_zone(even_weights = TRUE)) //Picks a random bodypart.
+	var/armor = victim.run_armor_check(limb, SLASH, null, null) //armor = the armor value of that randomly chosen bodypart. Nulls to not print a message, because it would still print on pierce.
+	var/datum/spacevine_mutation/thorns/thorn = locate() in vine.mutations //Searches for the thorns mutation in the "mutations"-list inside obj/structure/spacevine, and defines T if it finds it.
+
+	if(thorn && prob(40) && !HAS_TRAIT(victim, TRAIT_PIERCEIMMUNE)) //If we found the thorns mutation there is now a chance to get stung instead of lashed or smashed.
+		victim.apply_damage(50, BRUTE, def_zone = limb, wound_bonus = rand(-20,10), sharpness = SHARP_POINTY) //This one gets a bit lower damage because it ignores armor.
+		victim.Stun(1 SECONDS) //Stopped in place for a moment.
+		playsound(living_mob, 'sound/items/weapons/pierce.ogg', 50, TRUE, -1)
+		living_mob.visible_message(span_danger("[living_mob] is nailed by a sharp thorn!"), \
+		span_userdanger("You are nailed by a sharp thorn!"))
+		log_combat(vine, living_mob, "aggressively pierced") //"Aggressively" for easy ctrl+F'ing in the attack logs.
+		return
+
+	if(prob(80) && !HAS_TRAIT(victim, TRAIT_PIERCEIMMUNE))
+		victim.apply_damage(60, BRUTE, def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = SHARP_EDGED)
+		victim.Knockdown(2 SECONDS)
+		playsound(victim, 'sound/items/weapons/whip.ogg', 50, TRUE, -1)
+		living_mob.visible_message(span_danger("[living_mob] is lacerated by an outburst of vines!"), \
+		span_userdanger("You are lacerated by an outburst of vines!"))
+		log_combat(vine, living_mob, "aggressively lacerated")
+		return
+
+	victim.apply_damage(60, BRUTE, def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = NONE)
+	victim.Knockdown(3 SECONDS)
+	var/atom/throw_target = get_edge_target_turf(living_mob, get_dir(vine, get_step_away(living_mob, vine)))
+	victim.throw_at(throw_target, 3, 6)
+	playsound(victim, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
+	living_mob.visible_message(span_danger("[living_mob] is smashed by a large vine!"), \
+	span_userdanger("You are smashed by a large vine!"))
+	log_combat(vine, living_mob, "aggressively smashed")
 
 /datum/spacevine_mutation/transparency
 	name = "transparent"

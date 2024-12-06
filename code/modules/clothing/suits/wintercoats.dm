@@ -16,6 +16,7 @@
 	var/zipped = FALSE
 
 /datum/armor/hooded_wintercoat
+	blunt = 5
 	bio = 10
 
 /obj/item/clothing/suit/hooded/wintercoat/Initialize(mapload)
@@ -91,8 +92,9 @@
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/eva
 
 /datum/armor/wintercoat_eva
-	melee = 10
+	slash = 10
 	laser = 10
+	blunt = 10
 	energy = 10
 	bio = 50
 	fire = 50
@@ -105,20 +107,13 @@
 /obj/item/clothing/head/hooded/winterhood/eva
 	name = "\proper Endotherm winter hood"
 	desc = "A thickly padded hood attached to an even thicker coat."
-	armor_type = /datum/armor/winterhood_eva
+	armor_type = /datum/armor/wintercoat_eva
 	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
 	max_heat_protection_temperature = SPACE_HELM_MAX_TEMP_PROTECT
 	clothing_flags = THICKMATERIAL|SNUG_FIT // Snug fit doesn't really matter, but might as well
 	resistance_flags = NONE
 
 // CentCom
-/datum/armor/winterhood_eva
-	melee = 10
-	laser = 10
-	energy = 10
-	bio = 50
-	fire = 50
-	acid = 20
 
 /obj/item/clothing/suit/hooded/wintercoat/centcom
 	name = "centcom winter coat"
@@ -129,8 +124,9 @@
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/centcom
 
 /datum/armor/wintercoat_centcom
-	melee = 35
-	bullet = 40
+	slash = 40
+	puncture = 40
+	blunt = 30
 	laser = 40
 	energy = 50
 	bomb = 35
@@ -144,18 +140,9 @@
 
 /obj/item/clothing/head/hooded/winterhood/centcom
 	icon_state = "hood_centcom"
-	armor_type = /datum/armor/winterhood_centcom
+	armor_type = /datum/armor/wintercoat_centcom
 
 // Captain
-/datum/armor/winterhood_centcom
-	melee = 35
-	bullet = 40
-	laser = 40
-	energy = 50
-	bomb = 35
-	bio = 10
-	fire = 10
-	acid = 60
 
 /obj/item/clothing/suit/hooded/wintercoat/captain
 	name = "captain's winter coat"
@@ -168,8 +155,9 @@
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/captain
 
 /datum/armor/wintercoat_captain
-	melee = 25
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 20
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -181,16 +169,9 @@
 
 /obj/item/clothing/head/hooded/winterhood/captain
 	icon_state = "hood_captain"
-	armor_type = /datum/armor/winterhood_captain
+	armor_type = /datum/armor/wintercoat_captain
 
 // Head of Personnel
-/datum/armor/winterhood_captain
-	melee = 25
-	bullet = 30
-	laser = 30
-	energy = 40
-	bomb = 25
-	acid = 50
 
 /obj/item/clothing/suit/hooded/wintercoat/hop
 	name = "head of personnel's winter coat"
@@ -205,8 +186,9 @@
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/hop
 
 /datum/armor/wintercoat_hop
-	melee = 10
-	bullet = 15
+	slash = 15
+	puncture = 15
+	blunt = 5
 	laser = 15
 	energy = 25
 	bomb = 10
@@ -214,6 +196,7 @@
 
 /obj/item/clothing/head/hooded/winterhood/hop
 	icon_state = "hood_hop"
+	armor_type = /datum/armor/wintercoat_hop
 
 // Botanist
 /obj/item/clothing/suit/hooded/wintercoat/hydro
@@ -260,8 +243,9 @@
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/security
 
 /datum/armor/wintercoat_security
-	melee = 25
-	bullet = 15
+	slash = 30
+	puncture = 15
+	blunt = 20
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -274,16 +258,9 @@
 /obj/item/clothing/head/hooded/winterhood/security
 	desc = "A red, armour-padded winter hood. Definitely not bulletproof, especially not the part where your face goes."
 	icon_state = "hood_security"
-	armor_type = /datum/armor/winterhood_security
+	armor_type = /datum/armor/wintercoat_security
 
 // Medical Doctor
-/datum/armor/winterhood_security
-	melee = 25
-	bullet = 15
-	laser = 30
-	energy = 40
-	bomb = 25
-	acid = 45
 
 /obj/item/clothing/suit/hooded/wintercoat/medical
 	name = "medical winter coat"
@@ -636,15 +613,13 @@
 	hoodtype = /obj/item/clothing/head/hooded/winterhood/miner
 
 /datum/armor/wintercoat_miner
-	melee = 10
+	slash = 10
+	blunt = 10
 
 /obj/item/clothing/head/hooded/winterhood/miner
 	desc = "A dusty winter coat hood."
 	icon_state = "hood_miner"
-	armor_type = /datum/armor/winterhood_miner
-
-/datum/armor/winterhood_miner
-	melee = 10
+	armor_type = /datum/armor/wintercoat_miner
 
 /obj/item/clothing/suit/hooded/wintercoat/custom
 	name = "tailored winter coat"

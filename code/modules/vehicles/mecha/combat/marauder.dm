@@ -25,8 +25,8 @@
 	bumpsmash = TRUE
 
 /datum/armor/mecha_marauder
-	melee = 70
-	bullet = 60
+	slash = 70
+	puncture = 60
 	laser = 60
 	energy = 30
 	bomb = 50
@@ -111,8 +111,9 @@
 	)
 
 /datum/armor/mecha_seraph
-	melee = 80
-	bullet = 65
+	slash = 80
+	puncture = 65
+	blunt = 80
 	laser = 65
 	energy = 50
 	bomb = 50
@@ -147,8 +148,10 @@
 	destruction_sleep_duration = 20
 
 /datum/armor/mecha_mauler
-	melee = 80
-	bullet = 60
+	slash = 80
+	puncture = 60
+	blunt = 80
+	blunt = 80
 	laser = 50
 	energy = 30
 	bomb = 50

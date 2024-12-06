@@ -177,7 +177,7 @@
 	. = ..()
 	if (!. || !ismecha(target))
 		return
-	target.take_damage(obj_damage, BRUTE, MELEE)
+	target.take_damage(obj_damage, BRUTE, get_damage_armor_type())
 
 /// Before we attack something, check if we want to do something else instead
 /mob/living/basic/space_dragon/proc/pre_attack(mob/living/source, atom/target)

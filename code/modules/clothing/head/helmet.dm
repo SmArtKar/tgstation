@@ -18,8 +18,9 @@
 	dog_fashion = /datum/dog_fashion/head/helmet
 
 /datum/armor/head_helmet
-	melee = 35
-	bullet = 30
+	slash = 15
+	puncture = 30
+	blunt = 40
 	laser = 30
 	energy = 40
 	bomb = 25
@@ -122,8 +123,9 @@
 	drop_sound = 'sound/items/handling/helmet/helmet_drop1.ogg'
 
 /datum/armor/helmet_alt
-	melee = 15
-	bullet = 60
+	slash = 10
+	puncture = 60
+	blunt = 20
 	laser = 10
 	energy = 10
 	bomb = 40
@@ -152,8 +154,9 @@
 	drop_sound = 'sound/items/handling/helmet/helmet_drop1.ogg'
 
 /datum/armor/helmet_marine
-	melee = 50
-	bullet = 50
+	slash = 50
+	puncture = 50
+	blunt = 50
 	laser = 30
 	energy = 25
 	bomb = 50
@@ -252,8 +255,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 2)
 
 /datum/armor/toggleable_riot
-	melee = 50
-	bullet = 10
+	slash = 35
+	puncture = 10
+	blunt = 50
 	laser = 10
 	energy = 10
 	fire = 80
@@ -271,7 +275,8 @@
 	dog_fashion = null
 
 /datum/armor/balloon
-	melee = 10
+	slash = 10
+	blunt = 20
 	fire = 60
 	acid = 50
 
@@ -345,8 +350,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 3)
 
 /datum/armor/helmet_swat
-	melee = 40
-	bullet = 30
+	slash = 40
+	puncture = 30
+	blunt = 25
 	laser = 30
 	energy = 40
 	bomb = 50
@@ -383,8 +389,9 @@
 	dog_fashion = null
 
 /datum/armor/helmet_thunderdome
-	melee = 80
-	bullet = 80
+	slash = 80
+	puncture = 80
+	blunt = 80
 	laser = 50
 	energy = 50
 	bomb = 100
@@ -398,8 +405,8 @@
 	armor_type = /datum/armor/thunderdome_holosuit
 
 /datum/armor/thunderdome_holosuit
-	melee = 10
-	bullet = 10
+	slash = 10
+	puncture = 10
 
 /obj/item/clothing/head/helmet/roman
 	name = "\improper Roman helmet"
@@ -414,7 +421,8 @@
 	dog_fashion = null
 
 /datum/armor/helmet_roman
-	melee = 25
+	slash = 30
+	blunt = 20
 	laser = 25
 	energy = 10
 	bomb = 10
@@ -455,8 +463,9 @@
 	drop_sound = 'sound/items/handling/helmet/helmet_drop1.ogg'
 
 /datum/armor/helmet_taghelm
-	melee = 15
-	bullet = 10
+	slash = 15
+	puncture = 10
+	blunt = 15
 	laser = 20
 	energy = 10
 	bomb = 20
@@ -492,8 +501,9 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 3)
 
 /datum/armor/helmet_knight
-	melee = 50
-	bullet = 10
+	slash = 60
+	puncture = 10
+	blunt = 40
 	laser = 10
 	energy = 10
 	fire = 80
@@ -526,8 +536,9 @@
 	strip_delay = 60
 
 /datum/armor/helmet_durathread
-	melee = 20
-	bullet = 10
+	slash = 30
+	puncture = 10
+	blunt = 10
 	laser = 30
 	energy = 40
 	bomb = 15
@@ -547,8 +558,9 @@
 	drop_sound = 'sound/items/handling/helmet/helmet_drop1.ogg'
 
 /datum/armor/helmet_rus_helmet
-	melee = 25
-	bullet = 30
+	slash = 30
+	puncture = 30
+	blunt = 20
 	energy = 10
 	bomb = 10
 	fire = 20
@@ -571,8 +583,9 @@
 	armor_type = /datum/armor/helmet_rus_ushanka
 
 /datum/armor/helmet_rus_ushanka
-	melee = 25
-	bullet = 20
+	slash = 20
+	puncture = 20
+	blunt = 30
 	laser = 20
 	energy = 30
 	bomb = 20
@@ -592,8 +605,9 @@
 	flags_cover = HEADCOVERSEYES | HEADCOVERSMOUTH
 
 /datum/armor/helmet_elder_atmosian
-	melee = 25
-	bullet = 20
+	slash = 25
+	puncture = 20
+	blunt = 25
 	laser = 30
 	energy = 30
 	bomb = 85
@@ -619,8 +633,9 @@
 	drop_sound = 'sound/items/handling/helmet/helmet_drop1.ogg'
 
 /datum/armor/helmet_military
-	melee = 45
-	bullet = 25
+	slash = 55
+	puncture = 25
+	blunt = 35
 	laser = 25
 	energy = 25
 	bomb = 25
@@ -644,8 +659,9 @@
 	slowdown = 0.2
 
 /datum/armor/helmet_warlord
-	melee = 70
-	bullet = 60
+	slash = 70
+	puncture = 60
+	blunt = 70
 	laser = 70
 	energy = 70
 	bomb = 40
@@ -671,8 +687,9 @@
 	armor_type = /datum/armor/helmet_watermelon_fr
 
 /datum/armor/helmet_watermelon
-	melee = 15
-	bullet = 10
+	slash = 10
+	puncture = 10
+	blunt = 20
 	energy = 10
 	bomb = 10
 	fire = 0
@@ -680,8 +697,9 @@
 	wound = 5
 
 /datum/armor/helmet_watermelon_fr
-	melee = 15
-	bullet = 10
+	slash = 10
+	puncture = 10
+	blunt = 20
 	energy = 10
 	bomb = 10
 	fire = 15
@@ -735,8 +753,9 @@
 	armor_type = /datum/armor/helmet_barrelmelon_fr
 
 /datum/armor/helmet_barrelmelon
-	melee = 25
-	bullet = 20
+	slash = 10
+	puncture = 20
+	blunt = 30
 	energy = 15
 	bomb = 10
 	fire = 0
@@ -744,8 +763,9 @@
 	wound = 10
 
 /datum/armor/helmet_barrelmelon_fr
-	melee = 25
-	bullet = 20
+	slash = 10
+	puncture = 20
+	blunt = 30
 	energy = 15
 	bomb = 10
 	fire = 20

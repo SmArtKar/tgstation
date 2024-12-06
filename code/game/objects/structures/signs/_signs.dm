@@ -18,7 +18,8 @@
 	var/knock_down_callback
 
 /datum/armor/structure_sign
-	melee = 50
+	slash = 50
+	blunt = 50
 	fire = 50
 	acid = 50
 
@@ -174,7 +175,8 @@
 	var/is_editable = TRUE
 
 /datum/armor/item_sign
-	melee = 50
+	slash = 50
+	blunt = 50
 	fire = 50
 	acid = 50
 

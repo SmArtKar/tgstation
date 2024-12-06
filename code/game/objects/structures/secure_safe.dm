@@ -85,8 +85,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/secure_safe, 32)
 	material_flags = MATERIAL_EFFECTS
 
 /datum/armor/safe_caps_spare
-	melee = 100
-	bullet = 100
+	slash = 100
+	puncture = 100
+	blunt = 100
 	laser = 100
 	energy = 100
 	bomb = 70
@@ -105,4 +106,4 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/secure_safe, 32)
 	new /obj/item/card/id/advanced/gold/captains_spare(src)
 
 /obj/structure/secure_safe/caps_spare/rust_heretic_act()
-	take_damage(damage_amount = 100, damage_type = BRUTE, damage_flag = MELEE, armour_penetration = 100)
+	take_damage(damage_amount = 100, damage_type = BRUTE, damage_flag = BLUNT, armour_penetration = 100)
