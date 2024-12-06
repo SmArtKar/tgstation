@@ -18,7 +18,7 @@
 	dog_fashion = /datum/dog_fashion/head/helmet
 
 /datum/armor/head_helmet
-	slash = 15
+	slash = 20
 	puncture = 30
 	blunt = 40
 	laser = 30
@@ -255,7 +255,7 @@
 	AddComponent(/datum/component/adjust_fishing_difficulty, 2)
 
 /datum/armor/toggleable_riot
-	slash = 35
+	slash = 40
 	puncture = 10
 	blunt = 50
 	laser = 10
