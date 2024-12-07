@@ -75,4 +75,4 @@
 	icon_state = "chronobolt"
 	damage = 40
 	damage_type = BRUTE
-	sharpness = SHARP_POINTYc
+	sharpness = SHARP_POINTY
