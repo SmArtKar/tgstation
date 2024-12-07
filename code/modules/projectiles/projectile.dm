@@ -185,9 +185,8 @@
 	var/damage = 10
 	var/damage_type = BRUTE //BRUTE, BURN, TOX, OXY are the only things that should be in here
 
-	/// Override for projectile's armor flag to use when it hits things. Must be set to laser, energy, or bomb
-	/// If null, then the projectile defaults to "physical" flags which it picks based on the sharpness variable
-	var/armor_flag = null
+	/// Defines what armor to use when it hits things. Must be set to any of the 3 physical types, laser, energy, or bomb
+	var/armor_flag = PUNCTURE
 	/// How much armor this projectile pierces.
 	var/armour_penetration = 0
 	/// Whether or not our projectile doubles the value of affecting armour
@@ -742,21 +741,11 @@
 	return FALSE
 
 /obj/projectile/proc/check_ricochet_flag(atom/target)
-	if((get_armor_flag() in list(ENERGY, LASER)) && (target.flags_ricochet & RICOCHET_SHINY))
+	if((armor_flag in list(ENERGY, LASER)) && (target.flags_ricochet & RICOCHET_SHINY))
 		return TRUE
-	if((IS_PHYSICAL_ARMOR(get_armor_flag()) || get_armor_flag() == BOMB) && (target.flags_ricochet & RICOCHET_HARD))
+	if((IS_PHYSICAL_ARMOR(armor_flag) || armor_flag == BOMB) && (target.flags_ricochet & RICOCHET_HARD))
 		return TRUE
 	return FALSE
-
-/obj/projectile/proc/get_armor_flag()
-	if (!isnull(armor_flag))
-		return armor_flag
-	switch (sharpness)
-		if (SHARP_EDGED)
-			return SHARP
-		if (SHARP_POINTY)
-			return PUNCTURE
-	return BLUNT
 
 /obj/projectile/Process_Spacemove(movement_dir = 0, continuous_move = FALSE)
 	return TRUE //Bullets don't drift in space

@@ -153,6 +153,12 @@ DEFINE_BITFIELD(status_flags, list(
 /// We're being tackled or leaped at.
 #define LEAP_ATTACK 5
 
+// Attack range helpers
+/// Checks if an attack is performed in melee
+#define IS_MELEE_ATTACK(x) (x == MELEE_ATTACK || x == UNARMED_ATTACK)
+/// Checks if an attack is performed using a projectile weapon, be it a bullet or a spear
+#define IS_RANGED_ATTACK(x) (x == PROJECTILE_ATTACK || x == THROWN_PROJECTILE_ATTACK)
+
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))
 

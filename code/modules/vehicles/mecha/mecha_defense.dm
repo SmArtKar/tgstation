@@ -50,7 +50,7 @@
 
 	return damage_taken
 
-/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, armour_penetration = 0, ranged = FALSE)
+/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, armour_penetration = 0, attack_type = MELEE_ATTACK)
 	. = ..()
 	if(attack_dir)
 		var/facing_modifier = get_armour_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
@@ -130,10 +130,10 @@
 	try_damage_component(run_atom_armor(
 		damage_amount = hitting_projectile.damage,
 		damage_type = hitting_projectile.damage_type,
-		damage_flag = hitting_projectile.get_armor_flag(),
+		damage_flag = hitting_projectile.armor_flag,
 		attack_dir = REVERSE_DIR(hitting_projectile.dir),
 		armour_penetration = hitting_projectile.armour_penetration,
-		ranged = TRUE,
+		attack_type = PROJECTILE_ATTACK,
 	), def_zone)
 
 

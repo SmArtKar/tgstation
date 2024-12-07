@@ -39,7 +39,7 @@
 		damage_sustained = take_damage(
 			hitting_projectile.damage * hitting_projectile.demolition_mod,
 			hitting_projectile.damage_type,
-			hitting_projectile.get_armor_flag(),
+			hitting_projectile.armor_flag,
 			FALSE,
 			REVERSE_DIR(hitting_projectile.dir),
 			hitting_projectile.armour_penetration,

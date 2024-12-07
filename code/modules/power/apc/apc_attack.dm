@@ -101,7 +101,7 @@
 		return
 	return ..()
 
-/obj/machinery/power/apc/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, ranged = FALSE)
+/obj/machinery/power/apc/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, attack_type = MELEE_ATTACK)
 	if(machine_stat & BROKEN)
 		return damage_amount
 	. = ..()

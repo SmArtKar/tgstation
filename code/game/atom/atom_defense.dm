@@ -14,7 +14,7 @@
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
 /// The essential proc to call when an atom must receive damage of any kind.
-/atom/proc/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, ranged = FALSE)
+/atom/proc/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir, armour_penetration = 0, attack_type = MELEE_ATTACK)
 	if(!uses_integrity)
 		CRASH("[src] had /atom/proc/take_damage() called on it without it being a type that has uses_integrity = TRUE!")
 	if(QDELETED(src))
@@ -25,7 +25,7 @@
 		play_attack_sound(damage_amount, damage_type, damage_flag)
 	if(resistance_flags & INDESTRUCTIBLE)
 		return
-	damage_amount = run_atom_armor(damage_amount, damage_type, damage_flag, attack_dir, armour_penetration, ranged)
+	damage_amount = run_atom_armor(damage_amount, damage_type, damage_flag, attack_dir, armour_penetration, attack_type)
 	if(damage_amount < DAMAGE_PRECISION)
 		return
 	if(SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration) & COMPONENT_NO_TAKE_DAMAGE)
@@ -89,7 +89,7 @@
 	return round(atom_integrity / max_integrity, 0.01)
 
 ///returns the damage value of the attack after processing the atom's various armor protections
-/atom/proc/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, armour_penetration = 0, ranged = FALSE)
+/atom/proc/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = 0, armour_penetration = 0, attack_type = MELEE_ATTACK)
 	if(!uses_integrity)
 		CRASH("/atom/proc/run_atom_armor was called on [src] without being implemented as a type that uses integrity!")
 	if(IS_PHYSICAL_ARMOR(damage_flag) && !ranged && damage_amount < damage_deflection)
@@ -162,5 +162,5 @@
 /// A cut-out proc for [/atom/proc/bullet_act] so living mobs can have their own armor behavior checks without causing issues with needing their own on_hit call
 /atom/proc/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
 	if(uses_integrity)
-		return clamp(PENETRATE_ARMOUR(get_armor_rating(impacting_projectile.get_armor_flag()), impacting_projectile.armour_penetration), 0, 100)
+		return clamp(PENETRATE_ARMOUR(get_armor_rating(impacting_projectile.armor_flag), impacting_projectile.armour_penetration), 0, 100)
 	return 0
