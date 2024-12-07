@@ -214,3 +214,4 @@
 	damage = 5
 	damage_type = BRUTE
 	armour_penetration = 100
+	sharpness = SHARP_POINTY

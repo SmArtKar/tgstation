@@ -174,7 +174,7 @@
 
 /datum/armor/suit_pillow_suit
 	slash = 5
-	blunt = 20
+	blunt = 35
 	acid = 75
 
 /obj/item/clothing/suit/pillow_suit/Initialize(mapload)
@@ -199,7 +199,7 @@
 
 /datum/armor/head_pillow_hood
 	slash = 5
-	blunt = 20
+	blunt = 35
 	acid = 75
 
 /obj/item/clothing/neck/pillow_tag

@@ -85,6 +85,7 @@
 /obj/projectile/glockroachbullet
 	damage = 10 //same damage as a hivebot
 	damage_type = BRUTE
+	sharpness = SHARP_POINTY
 
 /obj/item/ammo_casing/glockroach
 	name = "0.9mm bullet casing"

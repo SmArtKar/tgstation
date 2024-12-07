@@ -57,6 +57,7 @@
 	stamina = 20
 	armour_penetration = 60
 	damage_type = BRUTE
+	sharpness = SHARP_EDGED
 	hitsound = 'sound/effects/splat.ogg'
 	/// The chain we send out while we are in motion, referred to as "initial" to not get confused with the chain we use to reel the victim in.
 	var/datum/beam/initial_chain

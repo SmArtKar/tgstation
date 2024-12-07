@@ -128,6 +128,7 @@
 	hitsound_wall = 'sound/items/weapons/batonextend.ogg'
 	suppressed = SUPPRESSED_VERY
 	hit_threshhold = ABOVE_NORMAL_TURF_LAYER
+	sharpness = SHARP_POINTY
 	embed_type = /datum/embed_data/tether_projectile
 	shrapnel_type = /obj/item/tether_anchor
 	/// Reference to the beam following the projectile.

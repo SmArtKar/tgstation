@@ -35,8 +35,8 @@
 /obj/item/knife/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/eyestab)
-	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple)
 	set_butchering()
+	make_stabby()
 
 ///Adds the butchering component, used to override stats for special cases
 /obj/item/knife/proc/set_butchering()
@@ -46,6 +46,10 @@
 	bonus_modifier = force - 10, \
 	)
 	//bonus chance increases depending on force
+
+///Adds alt sharpness component, used for overrides
+/obj/item/knife/proc/make_stabby()
+	AddComponent(/datum/component/alternative_sharpness, SHARP_POINTY, alt_continuous, alt_simple)
 
 /obj/item/knife/suicide_act(mob/living/user)
 	user.visible_message(pick(span_suicide("[user] is slitting [user.p_their()] wrists with the [src.name]! It looks like [user.p_theyre()] trying to commit suicide."), \
@@ -109,6 +113,10 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	custom_price = PAYCHECK_CREW * 5
 	wound_bonus = 15
+
+// No :[
+/obj/item/knife/butcher/make_stabby()
+	return
 
 /obj/item/knife/hunting
 	name = "hunting knife"

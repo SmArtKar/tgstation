@@ -82,6 +82,7 @@
 	speed = 0.33
 	damage = 5
 	color = "#dbdd4c"
+	sharpness = NONE
 
 	/// Save the turf we're aiming for for future use
 	var/turf/target_turf

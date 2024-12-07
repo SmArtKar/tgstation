@@ -231,6 +231,7 @@
 	speed = 0.5
 	damage_type = BRUTE
 	pass_flags = PASSTABLE
+	sharpness = SHARP_POINTY
 
 /obj/projectile/herald/Initialize(mapload)
 	. = ..()

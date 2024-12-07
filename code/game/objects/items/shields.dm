@@ -86,7 +86,7 @@
 	var/armor_flag = BLUNT
 	if(isprojectile(hitby))
 		var/obj/projectile/bang_bang = hitby
-		armor_flag = bang_bang.armor_flag
+		armor_flag = bang_bang.get_armor_flag()
 		penetration = bang_bang.armour_penetration
 	else if(isitem(hitby))
 		var/obj/item/weapon = hitby

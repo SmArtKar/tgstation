@@ -630,7 +630,7 @@
 /obj/projectile/soulscythe
 	name = "soulslash"
 	icon_state = "soulslash"
-	armor_flag = SLASH //jokair
+	sharpness = SHARP_EDGED
 	damage = 15
 	light_range = 1
 	light_power = 1

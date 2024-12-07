@@ -186,6 +186,7 @@
 	damage_type = BRUTE
 	pass_flags = PASSTABLE
 	plane = GAME_PLANE
+	sharpness = SHARP_POINTY
 	var/explode_hit_objects = TRUE
 
 /obj/projectile/colossus/Initialize(mapload)
@@ -283,7 +284,7 @@
 	if(istype(proj, /obj/projectile/magic))
 		ActivationReaction(proj.firer, ACTIVATE_MAGIC, proj.damage_type)
 		return
-	ActivationReaction(proj.firer, proj.armor_flag, proj.damage_type)
+	ActivationReaction(proj.firer, proj.get_armor_flag(), proj.damage_type)
 
 /obj/machinery/anomalous_crystal/proc/ActivationReaction(mob/user, method, damtype)
 	if(!COOLDOWN_FINISHED(src, cooldown_timer))

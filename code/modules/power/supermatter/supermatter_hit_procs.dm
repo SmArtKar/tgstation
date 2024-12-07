@@ -21,7 +21,7 @@
 
 	if(!istype(projectile.firer, /obj/machinery/power/emitter))
 		investigate_log("has been hit by [projectile] fired by [key_name(projectile.firer)]", INVESTIGATE_ENGINE)
-	if(IS_SCIFI_ARMOR(projectile.armor_flag) || kiss_power)
+	if(IS_SCIFI_ARMOR(projectile.get_armor_flag()) || kiss_power)
 		if(kiss_power)
 			psy_coeff = 1
 		external_power_immediate += projectile.damage * bullet_energy + kiss_power

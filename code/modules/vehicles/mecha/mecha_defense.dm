@@ -130,7 +130,7 @@
 	try_damage_component(run_atom_armor(
 		damage_amount = hitting_projectile.damage,
 		damage_type = hitting_projectile.damage_type,
-		damage_flag = hitting_projectile.armor_flag,
+		damage_flag = hitting_projectile.get_armor_flag(),
 		attack_dir = REVERSE_DIR(hitting_projectile.dir),
 		armour_penetration = hitting_projectile.armour_penetration,
 		ranged = TRUE,

@@ -255,6 +255,7 @@
 	damage = 10
 	damage_type = BRUTE // Mining mobs don't take a lot of burn damage so we'll pretend
 	speed = 0.5
+	sharpness = SHARP_POINTY
 
 /obj/projectile/baby_watcher_blast/Initialize(mapload)
 	. = ..()

@@ -171,7 +171,7 @@
 			do_sparks(spark_amount, FALSE, src)
 
 /mob/living/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
-	return run_armor_check(def_zone, impacting_projectile.armor_flag, "", "", impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour, TRUE)
+	return run_armor_check(def_zone, impacting_projectile.get_armor_flag(), "", "", impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour, TRUE)
 
 /mob/living/proc/check_projectile_dismemberment(obj/projectile/proj, def_zone)
 	return
