@@ -168,7 +168,7 @@
 	if(embedding_item.is_embed_harmless()) // all the armor in the world won't save you from a kick me sign
 		return prob(actual_chance)
 
-	var/armor = max(victim.run_armor_check(hit_zone, embedding_item.get_damage_armor_type(), silent=TRUE), victim.run_armor_check(hit_zone, BOMB, silent=TRUE)) * 0.5 // we'll be nice and take the better of bullet and bomb armor, halved
+	var/armor = max(victim.run_armor_check(hit_zone, embedding_item.get_damage_armor_type(), silent=TRUE), victim.run_armor_check(hit_zone, BOMB, silent = TRUE, ranged = !isnull(throwingdatum))) * 0.5 // we'll be nice and take the better of bullet and bomb armor, halved
 	if(!armor) // we only care about armor penetration if there's actually armor to penetrate
 		return prob(actual_chance)
 

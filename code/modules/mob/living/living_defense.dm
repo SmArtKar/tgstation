@@ -1,5 +1,5 @@
 
-/mob/living/proc/run_armor_check(def_zone = null, attack_flag = SLASH, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent=FALSE, weak_against_armour = FALSE)
+/mob/living/proc/run_armor_check(def_zone = null, attack_flag = SLASH, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent = FALSE, weak_against_armour = FALSE, ranged = FALSE)
 	var/our_armor = getarmor(def_zone, attack_flag)
 
 	if(our_armor <= 0)
@@ -171,7 +171,7 @@
 			do_sparks(spark_amount, FALSE, src)
 
 /mob/living/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
-	return run_armor_check(def_zone, impacting_projectile.armor_flag, "","",impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour)
+	return run_armor_check(def_zone, impacting_projectile.armor_flag, "", "", impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour, TRUE)
 
 /mob/living/proc/check_projectile_dismemberment(obj/projectile/proj, def_zone)
 	return
@@ -241,7 +241,7 @@
 					span_userdanger("You're hit by [thrown_item]!"))
 	if(!thrown_item.throwforce)
 		return
-	var/armor = run_armor_check(zone, thrown_item.get_damage_armor_type(), "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
+	var/armor = run_armor_check(zone, thrown_item.get_damage_armor_type(), "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour, TRUE)
 	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return

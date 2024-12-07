@@ -50,7 +50,7 @@
 
 	return damage_taken
 
-/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, ranged = FALSE)
+/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir, armour_penetration = 0, ranged = FALSE)
 	. = ..()
 	if(attack_dir)
 		var/facing_modifier = get_armour_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
