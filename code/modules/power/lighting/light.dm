@@ -413,7 +413,7 @@
 	new_light.setDir(dir)
 	new_light.stage = current_stage
 	if(!disassembled)
-		new_light.take_damage(new_light.max_integrity * 0.5, sound_effect=FALSE)
+		new_light.take_damage(new_light.max_integrity * 0.5, sound_effect = FALSE)
 		if(status != LIGHT_BROKEN)
 			break_light_tube()
 		if(status != LIGHT_EMPTY)

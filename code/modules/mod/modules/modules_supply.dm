@@ -627,5 +627,5 @@
 		var/mob/living/simple_animal/hostile/hostile_mob = mob
 		hostile_mob.GiveTarget(firer)
 	for(var/obj/object in range(1, src))
-		object.take_damage(damage, BRUTE, BOMB)
+		object.take_damage(damage, BRUTE, BOMB, attack_type = ENVIRONMENTAL_ATTACK)
 	qdel(src)

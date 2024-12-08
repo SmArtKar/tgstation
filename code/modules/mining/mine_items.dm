@@ -249,7 +249,7 @@
 			span_userdanger("You are smacked by [src]!"),
 		)
 	playsound(src, 'sound/effects/bang.ogg', 50, vary = TRUE)
-	take_damage(max_integrity * 0.05)
+	take_damage(max_integrity * 0.05, attack_type = MELEE_ATTACK)
 	momentum = floor(momentum / momentum_mod)
 	if(smacked.body_position == LYING_DOWN)
 		smacked.Paralyze(4 SECONDS)

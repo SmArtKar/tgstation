@@ -17,15 +17,15 @@
 	if(QDELETED(src))
 		return TRUE
 	if(target == src)
-		take_damage(INFINITY, BRUTE, BOMB, FALSE)
+		take_damage(INFINITY, BRUTE, BOMB, FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 		return TRUE
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			take_damage(INFINITY, BRUTE, BOMB, FALSE)
+			take_damage(INFINITY, BRUTE, BOMB, FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 		if(EXPLODE_HEAVY)
-			take_damage(rand(100, 250), BRUTE, BOMB, FALSE)
+			take_damage(rand(100, 250), BRUTE, BOMB, FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 		if(EXPLODE_LIGHT)
-			take_damage(rand(10, 90), BRUTE, BOMB, FALSE)
+			take_damage(rand(10, 90), BRUTE, BOMB, FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 
 	return TRUE
 
