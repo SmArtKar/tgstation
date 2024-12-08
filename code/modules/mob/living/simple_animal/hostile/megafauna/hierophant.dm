@@ -721,7 +721,7 @@ Difficulty: Hard
 		playsound(L,'sound/items/weapons/sear.ogg', 50, TRUE, -4)
 		to_chat(L, span_userdanger("You're struck by a [name]!"))
 		var/limb_to_hit = L.get_bodypart(L.get_random_valid_zone(even_weights = TRUE))
-		var/armor = L.run_armor_check(limb_to_hit, MELEE, "Your armor absorbs [src]!", "Your armor blocks part of [src]!", FALSE, 50, "Your armor was penetrated by [src]!")
+		var/armor = L.run_armor_check(limb_to_hit, MELEE, "Your armor absorbs [src]!", "Your armor blocks part of [src]!", FALSE, 50, "Your armor was penetrated by [src]!", attack_type = MAGIC_ATTACK)
 		L.apply_damage(damage, BURN, limb_to_hit, armor, wound_bonus=CANT_WOUND)
 		if(ishostile(L))
 			var/mob/living/simple_animal/hostile/H = L //mobs find and damage you...
@@ -743,7 +743,7 @@ Difficulty: Hard
 				continue
 			to_chat(occupant, span_userdanger("Your [M.name] is struck by a [name]!"))
 			playsound(M,'sound/items/weapons/sear.ogg', 50, TRUE, -4)
-			M.take_damage(damage, BURN, 0, 0)
+			M.take_damage(damage, BURN, NONE, FALSE, attack_type = MAGIC_ATTACK)
 
 /obj/effect/temp_visual/hierophant/blast/visual
 	icon_state = "hierophant_blast"

@@ -856,71 +856,72 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 
 	var/flags_to_return = NONE
 
-	if (!target.is_blocked_turf(TRUE, src, list(src)))
-		for(var/atom/atom_target in (target.contents) + target)
-			if (isarea(atom_target))
-				continue
-
-			if (SEND_SIGNAL(atom_target, COMSIG_PRE_TILT_AND_CRUSH, src) & COMPONENT_IMMUNE_TO_TILT_AND_CRUSH)
-				continue
-
-			var/crit_case = forced_crit_case
-			if (isnull(crit_case) && chance_to_crit > 0)
-				if (prob(chance_to_crit))
-					crit_case = pick_weight(get_crit_crush_chances())
-			var/crit_rebate_mult = 1 // lessen the normal damage we deal for some of the crits
-
-			if (!isnull(crit_case))
-				crit_rebate_mult = fall_and_crush_crit_rebate_table(crit_case)
-				apply_crit_crush(crit_case, atom_target)
-
-			var/adjusted_damage = damage * crit_rebate_mult
-			var/crushed
-			if (isliving(atom_target))
-				crushed = TRUE
-				var/mob/living/carbon/living_target = atom_target
-				var/was_alive = (living_target.stat != DEAD)
-				var/blocked = living_target.run_armor_check(attack_flag = damage_flag)
-				if (iscarbon(living_target))
-					var/mob/living/carbon/carbon_target = living_target
-					if(prob(30))
-						carbon_target.apply_damage(max(0, adjusted_damage), damage_type, blocked = blocked, forced = TRUE, spread_damage = TRUE, attack_direction = crush_dir) // the 30% chance to spread the damage means you escape breaking any bones
-					else
-						var/brute = (damage_type == BRUTE ? damage : 0) * 0.5
-						var/burn = (damage_type == BURN ? damage : 0) * 0.5
-						carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5) // otherwise, deal it to 2 random limbs (or the same one) which will likely shatter something
-						carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5)
-					carbon_target.AddElement(/datum/element/squish, 80 SECONDS)
-				else
-					living_target.apply_damage(adjusted_damage, damage_type, blocked = blocked, forced = TRUE, attack_direction = crush_dir)
-
-				living_target.Paralyze(paralyze_time)
-				living_target.emote("scream")
-				playsound(living_target, 'sound/effects/blob/blobattack.ogg', 40, TRUE)
-				playsound(living_target, 'sound/effects/splat.ogg', 50, TRUE)
-				post_crush_living(living_target, was_alive)
-				flags_to_return |= (SUCCESSFULLY_CRUSHED_MOB|SUCCESSFULLY_CRUSHED_ATOM)
-
-			else if(check_atom_crushable(atom_target))
-				atom_target.take_damage(adjusted_damage, damage_type, damage_flag, FALSE, crush_dir)
-				crushed = TRUE
-				flags_to_return |= SUCCESSFULLY_CRUSHED_ATOM
-
-			if (crushed)
-				atom_target.visible_message(span_danger("[atom_target] is crushed by [src]!"), span_userdanger("You are crushed by [src]!"))
-				SEND_SIGNAL(atom_target, COMSIG_POST_TILT_AND_CRUSH, src)
-
-		var/matrix/to_turn = turn(transform, rotation)
-		animate(src, transform = to_turn, 0.2 SECONDS)
-		playsound(src, 'sound/effects/bang.ogg', 40)
-
-		visible_message(span_danger("[src] tips over, slamming hard onto [target]!"))
-		flags_to_return |= SUCCESSFULLY_FELL_OVER
-		post_tilt()
-	else
+	if (target.is_blocked_turf(TRUE, src, list(src)))
 		visible_message(span_danger("[src] rebounds comically as it fails to slam onto [target]!"))
+		Move(target, crush_dir) // we still TRY to move onto it for shit like teleporters
+		return flags_to_return
 
-	Move(target, crush_dir) // we still TRY to move onto it for shit like teleporters
+	for(var/atom/atom_target in (target.contents) + target)
+		if (isarea(atom_target))
+			continue
+
+		if (SEND_SIGNAL(atom_target, COMSIG_PRE_TILT_AND_CRUSH, src) & COMPONENT_IMMUNE_TO_TILT_AND_CRUSH)
+			continue
+
+		var/crit_case = forced_crit_case
+		if (isnull(crit_case) && chance_to_crit > 0)
+			if (prob(chance_to_crit))
+				crit_case = pick_weight(get_crit_crush_chances())
+		var/crit_rebate_mult = 1 // lessen the normal damage we deal for some of the crits
+
+		if (!isnull(crit_case))
+			crit_rebate_mult = fall_and_crush_crit_rebate_table(crit_case)
+			apply_crit_crush(crit_case, atom_target)
+
+		var/adjusted_damage = damage * crit_rebate_mult
+		var/crushed
+		if (isliving(atom_target))
+			crushed = TRUE
+			var/mob/living/carbon/living_target = atom_target
+			var/was_alive = (living_target.stat != DEAD)
+			var/blocked = living_target.run_armor_check(attack_flag = damage_flag, attack_type = ENVIRONMENTAL_ATTACK)
+			if (iscarbon(living_target))
+				var/mob/living/carbon/carbon_target = living_target
+				if(prob(30))
+					carbon_target.apply_damage(max(0, adjusted_damage), damage_type, blocked = blocked, forced = TRUE, spread_damage = TRUE, attack_direction = crush_dir) // the 30% chance to spread the damage means you escape breaking any bones
+				else
+					var/brute = (damage_type == BRUTE ? damage : 0) * 0.5
+					var/burn = (damage_type == BURN ? damage : 0) * 0.5
+					carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5, attack_type = ENVIRONMENTAL_ATTACK) // otherwise, deal it to 2 random limbs (or the same one) which will likely shatter something
+					carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5, attack_type = ENVIRONMENTAL_ATTACK)
+				carbon_target.AddElement(/datum/element/squish, 80 SECONDS)
+			else
+				living_target.apply_damage(adjusted_damage, damage_type, blocked = blocked, forced = TRUE, attack_direction = crush_dir)
+
+			living_target.Paralyze(paralyze_time)
+			living_target.emote("scream")
+			playsound(living_target, 'sound/effects/blob/blobattack.ogg', 40, TRUE)
+			playsound(living_target, 'sound/effects/splat.ogg', 50, TRUE)
+			post_crush_living(living_target, was_alive)
+			flags_to_return |= (SUCCESSFULLY_CRUSHED_MOB|SUCCESSFULLY_CRUSHED_ATOM)
+
+		else if(check_atom_crushable(atom_target))
+			atom_target.take_damage(adjusted_damage, damage_type, damage_flag, FALSE, crush_dir, attack_type = ENVIRONMENTAL_ATTACK)
+			crushed = TRUE
+			flags_to_return |= SUCCESSFULLY_CRUSHED_ATOM
+
+		if (crushed)
+			atom_target.visible_message(span_danger("[atom_target] is crushed by [src]!"), span_userdanger("You are crushed by [src]!"))
+			SEND_SIGNAL(atom_target, COMSIG_POST_TILT_AND_CRUSH, src)
+
+	var/matrix/to_turn = turn(transform, rotation)
+	animate(src, transform = to_turn, 0.2 SECONDS)
+	playsound(src, 'sound/effects/bang.ogg', 40)
+
+	visible_message(span_danger("[src] tips over, slamming hard onto [target]!"))
+	flags_to_return |= SUCCESSFULLY_FELL_OVER
+	post_tilt()
+	Move(target, crush_dir)
 	return flags_to_return
 
 /**

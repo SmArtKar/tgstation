@@ -43,7 +43,7 @@
 
 	RegisterSignal(src, COMSIG_LIVING_TRYING_TO_PULL, PROC_REF(react_to_mob))
 
-/obj/item/clothing/mask/facehugger/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/item/clothing/mask/facehugger/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	..()
 	if(atom_integrity < 90)
 		Die()
@@ -185,7 +185,7 @@
 
 
 	if(!sterile)
-		victim.take_bodypart_damage(strength,0) //done here so that humans in helmets take damage
+		victim.take_bodypart_damage(strength, 0) //done here so that humans in helmets take damage
 	if(real && !sterile)
 		victim.Knockdown(5 SECONDS)
 	GoIdle() //so it doesn't jump the people that tear it off

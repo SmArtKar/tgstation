@@ -353,4 +353,4 @@
 		span_notice("[user] fixes some of [target]'s wounds."),
 		target_detailed = TRUE,
 	)
-	target.take_bodypart_damage(5,5)
+	target.take_bodypart_damage(5, 5)

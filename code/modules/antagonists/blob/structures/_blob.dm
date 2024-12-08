@@ -288,7 +288,7 @@
 		if(BURN)
 			playsound(src.loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
-/obj/structure/blob/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
+/obj/structure/blob/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = MELEE_ATTACK)
 	switch(damage_type)
 		if(BRUTE)
 			damage_amount *= brute_resist
@@ -304,7 +304,7 @@
 		damage_amount = overmind.blobstrain.damage_reaction(src, damage_amount, damage_type, damage_flag)
 	return damage_amount
 
-/obj/structure/blob/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/blob/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	. = ..()
 	if(. && atom_integrity > 0)
 		update_appearance()

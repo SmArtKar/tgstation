@@ -135,7 +135,7 @@
 			)
 			to_chat(attacker, span_danger("In a swift motion, you snap the neck of [defender]!"))
 			log_combat(attacker, defender, "snapped neck")
-			defender.apply_damage(100, BRUTE, BODY_ZONE_HEAD, wound_bonus=CANT_WOUND)
+			defender.apply_damage(100, BRUTE, BODY_ZONE_HEAD, wound_bonus = CANT_WOUND)
 			if(!HAS_TRAIT(defender, TRAIT_NODEATH))
 				defender.death()
 				defender.investigate_log("has had [defender.p_their()] neck snapped by [attacker].", INVESTIGATE_DEATHS)
@@ -277,9 +277,9 @@
 		user.Paralyze(6 SECONDS)
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
-			H.apply_damage(2*force, BRUTE, BODY_ZONE_HEAD)
+			H.apply_damage(2 * force, BRUTE, BODY_ZONE_HEAD)
 		else
-			user.take_bodypart_damage(2*force)
+			user.take_bodypart_damage(2 * force, attack_type = UNARMED_ATTACK)
 		return
 	if(iscyborg(target))
 		return ..()
@@ -317,7 +317,7 @@
 	else
 		return ..()
 
-/obj/item/staff/bostaff/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
+/obj/item/staff/bostaff/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = UNARMED_ATTACK, damage_type = BRUTE)
 	if(!HAS_TRAIT(src, TRAIT_WIELDED))
 		return ..()
 	return FALSE

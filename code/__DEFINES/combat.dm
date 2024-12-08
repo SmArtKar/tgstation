@@ -127,6 +127,8 @@ DEFINE_BITFIELD(status_flags, list(
 #define CRAWLING_ADD_SLOWDOWN 4
 
 //Attack types for checking block reactions
+/// Base type, aka the reason as to why you'd want to avoid exclude checking attacks
+#define UNDEFINED_ATTACK 0
 /// Attack was made with a melee weapon
 #define MELEE_ATTACK (1<<0)
 /// Attack is a punch or kick.
@@ -138,6 +140,22 @@ DEFINE_BITFIELD(status_flags, list(
 #define THROWN_PROJECTILE_ATTACK (1<<3)
 /// We're being tackled or leaped at.
 #define LEAP_ATTACK (1<<4)
+/// We're being hit by a giant tincan. Don't mark as MELEE_ATTACK or you'll end up having them parried at some point
+#define MECH_ATTACK (1<<5)
+/// Damage is dealt via foul magicks
+#define MAGIC_ATTACK (1<<6)
+/// Damage comes from environmental sources, like atmos, tesla, lava or a particularly rowsy airlock
+#define ENVIRONMENTAL_ATTACK (1<<7)
+/// We've been sprayed with nasty chemicals or acid
+#define REAGENT_ATTACK (1<<8)
+/// Blob is attacking us
+#define BLOB_ATTACK (1<<9)
+
+// Attack range helpers
+/// Checks if an attack is performed in melee
+#define IS_MELEE_ATTACK(x) (x & MELEE_ATTACK|UNARMED_ATTACK)
+/// Checks if an attack is performed using a projectile weapon, be it a bullet or a spear
+#define IS_RANGED_ATTACK(x) (x & PROJECTILE_ATTACK|THROWN_PROJECTILE_ATTACK)
 
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))

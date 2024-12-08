@@ -49,7 +49,7 @@
 			return
 	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
 	..()
-	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), attack_type = MECH_ATTACK) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
 
 /obj/machinery/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!user.combat_mode)
@@ -65,7 +65,7 @@
 			return
 	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
 	..()
-	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), attack_type = MECH_ATTACK) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
 
 /obj/structure/window/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!can_be_reached())
@@ -86,7 +86,7 @@
 			return
 	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
 	..()
-	return take_damage(mecha_attacker.force, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker))
+	return take_damage(mecha_attacker.force, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), attack_type = MECH_ATTACK)
 
 /mob/living/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(istype(user) && !user.combat_mode)
@@ -114,7 +114,7 @@
 			playsound(src, mecha_attacker.burn_attack_sound, 50, TRUE)
 		if(TOX)
 			playsound(src, mecha_attacker.tox_attack_sound, 50, TRUE)
-			var/bio_armor = (100 - run_armor_check(attack_flag = BIO, silent = TRUE)) / 100
+			var/bio_armor = (100 - run_armor_check(attack_flag = BIO, silent = TRUE, attack_type = MECH_ATTACK)) / 100
 			if((reagents.get_reagent_amount(/datum/reagent/cryptobiolin) + mecha_attacker.force) < mecha_attacker.force * 2)
 				reagents.add_reagent(/datum/reagent/cryptobiolin, mecha_attacker.force / 2 * bio_armor)
 			if((reagents.get_reagent_amount(/datum/reagent/toxin) + mecha_attacker.force) < mecha_attacker.force * 2)
@@ -130,7 +130,8 @@
 			def_zone = def_zone,
 			attack_flag = MELEE,
 			absorb_text = span_notice("Your armor has protected your [zone_readable]!"),
-			soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!")
+			soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!"),
+			attack_type = MECH_ATTACK,
 		))
 
 	visible_message(span_danger("[mecha_attacker.name] [mecha_attacker.attack_verbs[1]] [src]!"), \

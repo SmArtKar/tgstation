@@ -48,7 +48,7 @@ Striking a noncultist, however, will tear their flesh."}
 	if(owner.get_active_held_item() != src)
 		block_message = "[owner] parries [attack_text] with [src] in their offhand"
 
-	if(IS_CULTIST(owner) && prob(final_block_chance) && attack_type != PROJECTILE_ATTACK)
+	if(IS_CULTIST(owner) && prob(final_block_chance) && IS_MELEE_ATTACK(attack_type) || (attack_type & THROWN_PROJECTILE_ATTACK))
 		new /obj/effect/temp_visual/cult/sparks(get_turf(owner))
 		owner.visible_message(span_danger("[block_message]"))
 		return TRUE
@@ -110,11 +110,7 @@ Striking a noncultist, however, will tear their flesh."}
 		user.dropItemToGround(src, TRUE)
 		user.visible_message(span_warning("A powerful force shoves [user] away from [target]!"), \
 				span_cult_large("\"You shouldn't play with sharp things. You'll poke someone's eye out.\""))
-		if(ishuman(user))
-			var/mob/living/carbon/human/miscreant = user
-			miscreant.apply_damage(rand(force/2, force), BRUTE, pick(GLOB.arm_zones))
-		else
-			user.adjustBruteLoss(rand(force/2,force))
+		user.apply_damage(rand(force/2, force), BRUTE, ishuman(user) ? pick(GLOB.arm_zones) : null)
 		return
 	..()
 
@@ -1425,7 +1421,7 @@ Striking a noncultist, however, will tear their flesh."}
 
 /obj/item/shield/mirror/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(IS_CULTIST(owner))
-		if(attack_type == PROJECTILE_ATTACK)
+		if(attack_type & PROJECTILE_ATTACK)
 			if(damage_type == BRUTE || damage_type == BURN)
 				if(damage >= 30)
 					var/turf/T = get_turf(owner)

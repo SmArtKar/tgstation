@@ -142,7 +142,7 @@
 	animate(src, alpha = 255, time = 0.5 SECONDS)
 	playsound(src, 'sound/vehicles/mecha/mech_stealth_effect.ogg' , 75, FALSE)
 
-/obj/vehicle/sealed/mecha/justice/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+/obj/vehicle/sealed/mecha/justice/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	if(LAZYLEN(occupants))
 		if(prob(60))
 			new /obj/effect/temp_visual/mech_sparks(get_turf(src))
@@ -216,7 +216,7 @@
 	RegisterSignal(chassis, COMSIG_MECHA_MELEE_CLICK, PROC_REF(stealth_attack_aoe))
 	RegisterSignal(chassis, COMSIG_MOVABLE_BUMP, PROC_REF(bumb_on))
 	RegisterSignal(chassis, COMSIG_ATOM_BUMPED, PROC_REF(bumbed_on))
-	RegisterSignal(chassis, COMSIG_ATOM_TAKE_DAMAGE, PROC_REF(take_damage))
+	RegisterSignal(chassis, COMSIG_ATOM_TAKE_DAMAGE, PROC_REF(on_take_damage))
 	chassis.use_energy(energy_cost)
 	build_all_button_icons()
 
@@ -277,11 +277,11 @@
 	make_visible()
 
 /**
- * ## take_damage
+ * ## on_take_damage
  *
  * Called when mech take damage. Shutdown mech invisibility.
  */
-/datum/action/vehicle/sealed/mecha/invisibility/proc/take_damage(obj/vehicle/sealed/mecha/our_mech)
+/datum/action/vehicle/sealed/mecha/invisibility/proc/on_take_damage(obj/vehicle/sealed/mecha/our_mech)
 	SIGNAL_HANDLER
 
 	make_visible()

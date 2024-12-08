@@ -146,7 +146,7 @@
 /obj/item/dualsaber/proc/impale(mob/living/user)
 	to_chat(user, span_warning("You twirl around a bit before losing your balance and impaling yourself on [src]."))
 	if(HAS_TRAIT(src, TRAIT_WIELDED))
-		user.take_bodypart_damage(20,25,check_armor = TRUE)
+		user.take_bodypart_damage(20, 25, check_armor = TRUE, attack_type = MELEE_ATTACK)
 	else
 		user.adjustStaminaLoss(25)
 
@@ -154,7 +154,7 @@
 	if(!HAS_TRAIT(src, TRAIT_WIELDED))
 		return FALSE //not interested unless we're wielding
 
-	if(attack_type == PROJECTILE_ATTACK)
+	if(attack_type & PROJECTILE_ATTACK)
 		var/obj/projectile/our_projectile = hitby
 
 		if(our_projectile.reflectable)
@@ -162,7 +162,7 @@
 		else
 			final_block_chance -= 25 //We aren't AS good at blocking physical projectiles, like ballistics and thermals
 
-	if(attack_type == LEAP_ATTACK)
+	if(attack_type & LEAP_ATTACK)
 		final_block_chance -= 50 //We are particularly bad at blocking someone JUMPING at us..
 
 	return ..()

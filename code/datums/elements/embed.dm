@@ -119,7 +119,7 @@
 	if(!limb)
 		limb = C.get_bodypart()
 
-	if(!try_force_embed(payload, limb))
+	if(!try_force_embed(payload, limb, attack_type = PROJECTILE_ATTACK))
 		payload.failedEmbed()
 	else
 		SEND_SIGNAL(source, COMSIG_PROJECTILE_ON_EMBEDDED, payload, hit)
@@ -137,7 +137,7 @@
  * * hit_zone- if our target is a carbon, try to hit them in this zone, if we don't have one, pick a random one. If our target is a bodypart, we already know where we're hitting.
  * * forced- if we want this to succeed 100%
  */
-/datum/element/embed/proc/try_force_embed(obj/item/embedding_item, atom/target, hit_zone, forced=FALSE)
+/datum/element/embed/proc/try_force_embed(obj/item/embedding_item, atom/target, hit_zone, forced = FALSE, attack_type = THROWN_PROJECTILE_ATTACK)
 	SIGNAL_HANDLER
 
 	var/obj/item/bodypart/limb
@@ -153,13 +153,13 @@
 		hit_zone = limb.body_zone
 		victim = limb.owner
 
-	if(!forced && !roll_embed_chance(embedding_item, victim, hit_zone))
+	if(!forced && !roll_embed_chance(embedding_item, victim, hit_zone, attack_type))
 		return
 
 	return check_embed(embedding_item, victim, hit_zone, forced=TRUE) // Don't repeat the embed roll, we already did it
 
 /// Calculates the actual chance to embed based on armour penetration and throwing speed, then returns true if we pass that probability check
-/datum/element/embed/proc/roll_embed_chance(obj/item/embedding_item, mob/living/victim, hit_zone, datum/thrownthing/throwingdatum)
+/datum/element/embed/proc/roll_embed_chance(obj/item/embedding_item, mob/living/victim, hit_zone, datum/thrownthing/throwingdatum, attack_type = THROWN_PROJECTILE_ATTACK)
 	var/actual_chance = embedding_item.get_embed().embed_chance
 
 	if(throwingdatum?.speed > embedding_item.throw_speed)
@@ -168,7 +168,7 @@
 	if(embedding_item.is_embed_harmless()) // all the armor in the world won't save you from a kick me sign
 		return prob(actual_chance)
 
-	var/armor = max(victim.run_armor_check(hit_zone, BULLET, silent=TRUE), victim.run_armor_check(hit_zone, BOMB, silent=TRUE)) * 0.5 // we'll be nice and take the better of bullet and bomb armor, halved
+	var/armor = max(victim.run_armor_check(hit_zone, BULLET, silent = TRUE, attack_type = attack_type), victim.run_armor_check(hit_zone, BOMB, silent = TRUE, attack_type = attack_type)) * 0.5 // we'll be nice and take the better of bullet and bomb armor, halved
 	if(!armor) // we only care about armor penetration if there's actually armor to penetrate
 		return prob(actual_chance)
 

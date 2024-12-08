@@ -116,7 +116,7 @@
 /mob/living/basic/drone/transferItemToLoc(obj/item/item, newloc, force, silent)
 	return !(item.type in drone_item_whitelist_flat) && ..()
 
-/mob/living/basic/drone/getarmor(def_zone, type)
+/mob/living/basic/drone/getarmor(def_zone, type, attack_type = UNDEFINED_ATTACK)
 	var/armorval = 0
 
 	if(head)

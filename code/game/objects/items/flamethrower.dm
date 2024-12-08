@@ -257,14 +257,13 @@
 	create_with_tank = TRUE
 
 /obj/item/flamethrower/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(damage && attack_type == PROJECTILE_ATTACK && damage_type != STAMINA && prob(15))
+	if(damage && (attack_type & PROJECTILE_ATTACK) && damage_type != STAMINA && prob(15))
 		owner.visible_message(span_danger("\The [attack_text] hits the fuel tank on [owner]'s [name], rupturing it! What a shot!"))
 		var/turf/target_turf = get_turf(owner)
 		owner.log_message("held a flamethrower tank detonated by a projectile ([hitby])", LOG_GAME)
 		igniter.ignite_turf(src,target_turf, release_amount = 100)
 		qdel(ptank)
-		return 1 //It hit the flamethrower, not them
-
+		return TRUE // It hit the flamethrower, not them
 
 /obj/item/assembly/igniter/proc/flamethrower_process(turf/open/location)
 	location.hotspot_expose(heat,2)

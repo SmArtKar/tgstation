@@ -105,13 +105,14 @@
 	def_zone = null,
 	sharpness = NONE,
 	attack_direction = null,
-	attacking_item,
+	attacking_item = null,
+	attack_type = UNDEFINED_ATTACK,
 )
 	SHOULD_CALL_PARENT(TRUE)
 	SHOULD_BE_PURE(TRUE)
 
 	var/list/damage_mods = list()
-	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, damage_mods, damage, damagetype, def_zone, sharpness, attack_direction, attacking_item)
+	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, damage_mods, damage, damagetype, def_zone, sharpness, attack_direction, attacking_item, attack_type)
 
 	var/final_mod = 1
 	for(var/new_mod in damage_mods)
@@ -505,7 +506,7 @@
 		updatehealth()
 
 /// damage ONE external organ, organ gets randomly selected from damaged ones.
-/mob/living/proc/take_bodypart_damage(brute = 0, burn = 0, updating_health = TRUE, required_bodytype, check_armor = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = NONE)
+/mob/living/proc/take_bodypart_damage(brute = 0, burn = 0, updating_health = TRUE, required_bodytype, check_armor = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = NONE, attack_type = UNDEFINED_ATTACK)
 	. = (adjustBruteLoss(abs(brute), updating_health = FALSE) + adjustFireLoss(abs(burn), updating_health = FALSE))
 	if(!.) // no change, no need to update
 		return FALSE

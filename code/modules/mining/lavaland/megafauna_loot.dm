@@ -568,7 +568,7 @@
 		to_chat(attacked_mob, span_userdanger("You're slashed by [src]!"))
 	else if((ismachinery(attacked_atom) || isstructure(attacked_atom)) && use_blood(5))
 		var/obj/attacked_obj = attacked_atom
-		attacked_obj.take_damage(force, BRUTE, MELEE, FALSE)
+		attacked_obj.take_damage(force, BRUTE, MELEE, FALSE, attack_type = MELEE_ATTACK)
 	else
 		return
 	COOLDOWN_START(src, attack_cooldown, 1 SECONDS)
@@ -1106,7 +1106,7 @@
 			hit_mob.electrocute_act(15 * (isanimal_or_basicmob(hit_mob) ? 3 : 1) * (turf == target ? 2 : 1) * (boosted ? 2 : 1), src, flags = SHOCK_TESLA|SHOCK_NOSTUN)
 
 		for(var/obj/hit_thing in turf)
-			hit_thing.take_damage(20, BURN, ENERGY, FALSE)
+			hit_thing.take_damage(20, BURN, ENERGY, FALSE, attack_type = MAGIC_ATTACK)
 	playsound(target, 'sound/effects/magic/lightningbolt.ogg', 100, TRUE)
 	target.visible_message(span_danger("A thunderbolt strikes [target]!"))
 	explosion(target, light_impact_range = (boosted ? 1 : 0), flame_range = (boosted ? 2 : 1), silent = TRUE)

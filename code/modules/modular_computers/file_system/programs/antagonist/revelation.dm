@@ -29,7 +29,7 @@
 
 		QDEL_LIST(computer.stored_files)
 
-		computer.take_damage(25, BRUTE, 0, 0)
+		computer.take_damage(25, BRUTE, NONE, FALSE)
 
 		if(computer.internal_cell && prob(25))
 			QDEL_NULL(computer.internal_cell)

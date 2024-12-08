@@ -145,7 +145,7 @@ GLOBAL_DATUM_INIT(acid_overlay, /mutable_appearance, mutable_appearance('icons/e
 /datum/component/acid/proc/process_movable(atom/movable/target, seconds_per_tick)
 	if(target.resistance_flags & ACID_PROOF)
 		return
-	target.take_damage(min(1 + round(sqrt(acid_power * acid_volume)*0.3), MOVABLE_ACID_DAMAGE_MAX) * seconds_per_tick, BURN, ACID, 0)
+	target.take_damage(min(1 + round(sqrt(acid_power * acid_volume)*0.3), MOVABLE_ACID_DAMAGE_MAX) * seconds_per_tick, BURN, ACID, FALSE, attack_type = REAGENT_ATTACK)
 
 /// Handles processing on a [/mob/living].
 /datum/component/acid/proc/process_mob(mob/living/target, seconds_per_tick)

@@ -905,7 +905,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		log_combat(user, target, "attempted to punch")
 		return FALSE
 
-	var/armor_block = target.run_armor_check(affecting, MELEE)
+	var/armor_block = target.run_armor_check(affecting, MELEE, attack_type = UNARMED_ATTACK)
 
 	// In a brawl, drunkenness is a boon if you're a bit drunk but not too much. Else you're easier to hit.
 	// But, generally, getting hit while drunk is probably a good way to start throwing up

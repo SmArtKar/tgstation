@@ -113,8 +113,8 @@
 	if(harvest(user))
 		after_harvest(user)
 
-/obj/structure/flora/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	if(damage_flag == MELEE)
+/obj/structure/flora/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = MELEE_ATTACK)
+	if(IS_MELEE_ATTACK(attack_type))
 		if(damage_type == BURN)
 			damage_amount *= 4
 	return ..()

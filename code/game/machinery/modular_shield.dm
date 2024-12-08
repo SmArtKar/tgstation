@@ -701,7 +701,7 @@
 
 
 //Damage from direct attacks
-/obj/structure/emergency_shield/modular/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/emergency_shield/modular/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	. = ..()
 	if(damage_type == BRUTE || damage_type == BURN)
 		if(isnull(shield_generator))

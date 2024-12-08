@@ -93,7 +93,7 @@
 
 	SIGNAL_HANDLER
 
-	if(attack_type != MELEE_ATTACK)
+	if(!(attack_type & MELEE_ATTACK))
 		return
 
 	if(!riposte_ready)

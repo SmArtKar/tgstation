@@ -123,7 +123,7 @@
 	new /obj/effect/temp_visual/kinetic_blast(get_turf(target))
 	var/backstabbed = FALSE
 	var/combined_damage = detonation_damage
-	var/def_check = target.getarmor(type = BOMB)
+	var/def_check = target.getarmor(type = BOMB, attack_type = MELEE_ATTACK)
 	// Backstab bonus
 	if(check_behind(user, target) || boosted_mark)
 		backstabbed = TRUE

@@ -275,7 +275,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/damage = take_damage(attacking_item.force, attacking_item.damtype, MELEE, 1, get_dir(src, user))
+	var/damage = take_damage(attacking_item.force, attacking_item.damtype, MELEE, TRUE, get_dir(src, user), attacking_item.armour_penetration, MELEE_ATTACK)
 	//only witnesses close by and the victim see a hit message.
 	user.visible_message(span_danger("[user] hits [src] with [attacking_item][damage ? "." : ", without leaving a mark!"]"), \
 		span_danger("You hit [src] with [attacking_item][damage ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
@@ -303,6 +303,7 @@
 			soften_text = span_warning("Your armor has softened a hit to your [targeting_human_readable]!"),
 			armour_penetration = attacking_item.armour_penetration,
 			weak_against_armour = attacking_item.weak_against_armour,
+			attack_type = MELEE_ATTACK,
 		), ARMOR_MAX_BLOCK)
 
 	var/damage = attacking_item.force
@@ -444,21 +445,30 @@
 		else
 			return clamp(w_class * 6, 10, 100) // Multiply the item's weight class by 6, then clamp the value between 10 and 100
 
-/mob/living/proc/send_item_attack_message(obj/item/I, mob/living/user, hit_area, def_zone)
-	if(!I.force && !length(I.attack_verb_simple) && !length(I.attack_verb_continuous))
+/mob/living/proc/send_item_attack_message(obj/item/weapon, mob/living/user, hit_area, def_zone)
+	if(!weapon.force && !length(weapon.attack_verb_simple) && !length(weapon.attack_verb_continuous))
 		return
-	var/message_verb_continuous = length(I.attack_verb_continuous) ? "[pick(I.attack_verb_continuous)]" : "attacks"
-	var/message_verb_simple = length(I.attack_verb_simple) ? "[pick(I.attack_verb_simple)]" : "attack"
-	var/message_hit_area = get_hit_area_message(hit_area)
 
-	var/attack_message_spectator = "[src] [message_verb_continuous][message_hit_area] with [I]!"
-	var/attack_message_victim = "Something [message_verb_continuous] you[message_hit_area] with [I]!"
-	var/attack_message_attacker = "You [message_verb_simple] [src][message_hit_area] with [I]!"
+	// Sanity in case one is null for some reason
+	var/picked_index = rand(max(length(weapon.attack_verb_simple), length(weapon.attack_verb_continuous)))
+
+	var/message_verb_continuous = "attacks"
+	var/message_verb_simple = "attack"
+	var/message_hit_area = get_hit_area_message(hit_area)
+	// Sanity in case one is... longer than the other?
+	if (length(weapon.attack_verb_continuous) >= picked_index)
+		message_verb_continuous = weapon.attack_verb_continuous[picked_index]
+	if (length(weapon.attack_verb_simple) >= picked_index)
+		message_verb_simple = weapon.attack_verb_simple[picked_index]
+
+	var/attack_message_spectator = "[src] [message_verb_continuous][message_hit_area] with [weapon]!"
+	var/attack_message_victim = "Something [message_verb_continuous] you[message_hit_area] with [weapon]!"
+	var/attack_message_attacker = "You [message_verb_simple] [src][message_hit_area] with [weapon]!"
 	if(user in viewers(src, null))
-		attack_message_spectator = "[user] [message_verb_continuous] [src][message_hit_area] with [I]!"
-		attack_message_victim = "[user] [message_verb_continuous] you[message_hit_area] with [I]!"
+		attack_message_spectator = "[user] [message_verb_continuous] [src][message_hit_area] with [weapon]!"
+		attack_message_victim = "[user] [message_verb_continuous] you[message_hit_area] with [weapon]!"
 	if(user == src)
-		attack_message_victim = "You [message_verb_simple] yourself[message_hit_area] with [I]."
+		attack_message_victim = "You [message_verb_simple] yourself[message_hit_area] with [weapon]."
 	visible_message(span_danger("[attack_message_spectator]"),\
 		span_userdanger("[attack_message_victim]"), null, COMBAT_MESSAGE_RANGE, user)
 	if(is_blind())

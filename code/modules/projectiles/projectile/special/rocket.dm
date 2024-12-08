@@ -36,11 +36,11 @@
 
 	do_boom(target, random_crit_gib)
 	if(anti_armour_damage && ismecha(target))
-		var/obj/vehicle/sealed/mecha/M = target
-		M.take_damage(anti_armour_damage)
+		var/obj/vehicle/sealed/mecha/mech = target
+		mech.take_damage(anti_armour_damage, attack_type = PROJECTILE_ATTACK)
 	if(issilicon(target))
-		var/mob/living/silicon/S = target
-		S.take_overall_damage(anti_armour_damage*0.75, anti_armour_damage*0.25)
+		var/mob/living/silicon/robot = target
+		robot.take_overall_damage(anti_armour_damage*0.75, anti_armour_damage*0.25)
 	return BULLET_ACT_HIT
 
 /** This proc allows us to customize the conditions necesary for the rocket to detonate, allowing for different explosions for living targets, turf targets,

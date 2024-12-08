@@ -724,7 +724,7 @@
 
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-	var/damage = take_damage(damage_amount = 4, damage_type = BRUTE, damage_flag = MELEE, sound_effect = TRUE, attack_dir = get_dir(user, src))
+	var/damage = take_damage(damage_amount = 4, damage_type = BRUTE, damage_flag = MELEE, sound_effect = TRUE, attack_dir = get_dir(user, src), attack_type = UNARMED_ATTACK)
 
 	var/hit_with_what_noun = "paws"
 	var/obj/item/bodypart/arm/arm = user.get_active_hand()
@@ -1185,7 +1185,7 @@
 	if(prob(85) && (zap_flags & ZAP_MACHINE_EXPLOSIVE) && !(resistance_flags & INDESTRUCTIBLE))
 		explosion(src, devastation_range = 1, heavy_impact_range = 2, light_impact_range = 4, flame_range = 2, adminlog = TRUE, smoke = FALSE)
 	else if(zap_flags & ZAP_OBJ_DAMAGE)
-		take_damage(power * 2.5e-4, BURN, ENERGY)
+		take_damage(power * 2.5e-4, BURN, ENERGY, attack_type = ENVIRONMENTAL_ATTACK)
 		if(prob(40))
 			emp_act(EMP_LIGHT)
 		power -= power * 5e-4
@@ -1200,7 +1200,7 @@
 	dropped_atom.pixel_y = -8 + (round( . / 3)*8)
 
 /obj/machinery/rust_heretic_act()
-	take_damage(500, BRUTE, MELEE, 1)
+	take_damage(500, BRUTE, MELEE, TRUE, attack_type = MAGIC_ATTACK)
 
 /obj/machinery/vv_edit_var(vname, vval)
 	if(vname == NAMEOF(src, occupant))

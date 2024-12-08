@@ -50,7 +50,7 @@
 			buckle_mob(victim, TRUE)
 			SEND_SIGNAL(victim, COMSIG_GOLIATH_TENTACLED_GRABBED)
 	for (var/obj/vehicle/sealed/mecha/mech in loc)
-		mech.take_damage(rand(min_damage, max_damage), damage_type = BRUTE, damage_flag = MELEE, sound_effect = TRUE)
+		mech.take_damage(rand(min_damage, max_damage), damage_type = BRUTE, damage_flag = MELEE, sound_effect = TRUE, attack_type = MELEE_ATTACK)
 	if (!has_buckled_mobs())
 		retract()
 		return

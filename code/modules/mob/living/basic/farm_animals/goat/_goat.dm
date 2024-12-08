@@ -127,7 +127,7 @@
 			eaten = TRUE
 
 		if(istype(target, /obj/structure/alien/resin/flower_bud))
-			target.take_damage(rand(30, 50), BRUTE, 0)
+			target.take_damage(rand(30, 50), BRUTE, FALSE, attack_type = MELEE_ATTACK)
 			eaten = TRUE
 
 		if(istype(target, /obj/structure/glowshroom))

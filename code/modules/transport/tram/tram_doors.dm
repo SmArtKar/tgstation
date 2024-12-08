@@ -150,7 +150,7 @@
 			log_combat(src, future_pancake, "crushed")
 
 		for(var/obj/vehicle/sealed/mecha/mech in checked_turf) // Your fancy metal won't save you here!
-			mech.take_damage(DOOR_CRUSH_DAMAGE)
+			mech.take_damage(DOOR_CRUSH_DAMAGE, attack_type = ENVIRONMENTAL_ATTACK)
 			log_combat(src, mech, "crushed")
 
 /**

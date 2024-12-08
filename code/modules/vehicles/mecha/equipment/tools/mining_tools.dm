@@ -143,7 +143,7 @@
 				var/obj/item/boulder/nu_boulder = obj_target
 				nu_boulder.manual_process(src, source)
 			else
-				obj_target.take_damage(15, BRUTE, 0, FALSE, get_dir(chassis, target))
+				obj_target.take_damage(15, BRUTE, NONE, FALSE, get_dir(chassis, target), attack_type = MECH_ATTACK)
 			playsound(src,'sound/items/weapons/drill.ogg', 40, TRUE)
 
 		// If we caused a qdel drilling the target, we can stop drilling them.
@@ -202,7 +202,7 @@
 	//drill makes a hole
 	var/def_zone = target.get_random_valid_zone(BODY_ZONE_CHEST)
 	var/obj/item/bodypart/target_part = target.get_bodypart(def_zone)
-	var/blocked = target.run_armor_check(def_zone, MELEE)
+	var/blocked = target.run_armor_check(def_zone, MELEE, attack_type = MECH_ATTACK)
 	target.apply_damage(10, BRUTE, def_zone, blocked)
 
 	//blood splatters

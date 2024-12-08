@@ -1,6 +1,6 @@
 
-/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent=FALSE, weak_against_armour = FALSE)
-	var/our_armor = getarmor(def_zone, attack_flag)
+/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent = FALSE, weak_against_armour = FALSE, attack_type = UNDEFINED_ATTACK)
+	var/our_armor = getarmor(def_zone, attack_flag, attack_type)
 
 	if(our_armor <= 0)
 		return our_armor
@@ -28,7 +28,7 @@
 			to_chat(src, span_warning("Your armor softens the blow!"))
 	return our_armor
 
-/mob/living/proc/getarmor(def_zone, type)
+/mob/living/proc/getarmor(def_zone, type, attack_type = UNDEFINED_ATTACK)
 	return 0
 
 //this returns the mob's protection against eye damage (number between -1 and 2) from bright lights
@@ -171,7 +171,7 @@
 			do_sparks(spark_amount, FALSE, src)
 
 /mob/living/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
-	return run_armor_check(def_zone, impacting_projectile.armor_flag, "","",impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour)
+	return run_armor_check(def_zone, impacting_projectile.armor_flag, "", "", impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour, attack_type = PROJECTILE_ATTACK)
 
 /mob/living/proc/check_projectile_dismemberment(obj/projectile/proj, def_zone)
 	return
@@ -241,7 +241,7 @@
 					span_userdanger("You're hit by [thrown_item]!"))
 	if(!thrown_item.throwforce)
 		return
-	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
+	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour, attack_type = THROWN_PROJECTILE_ATTACK)
 	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
@@ -411,7 +411,7 @@
 	if(!dam_zone) //Dismemberment successful
 		return FALSE
 
-	var/armor_block = run_armor_check(user.zone_selected, MELEE, armour_penetration = user.armour_penetration)
+	var/armor_block = run_armor_check(user.zone_selected, MELEE, armour_penetration = user.armour_penetration, attack_type = MELEE_ATTACK)
 
 	to_chat(user, span_danger("You [user.attack_verb_simple] [src]!"))
 	log_combat(user, src, "attacked")
@@ -539,7 +539,7 @@
 	return ..()
 
 /mob/living/acid_act(acidpwr, acid_volume)
-	take_bodypart_damage(acidpwr * min(1, acid_volume * 0.1))
+	take_bodypart_damage(acidpwr * min(1, acid_volume * 0.1), attack_type = REAGENT_ATTACK)
 	return TRUE
 
 ///As the name suggests, this should be called to apply electric shocks.
@@ -675,7 +675,7 @@
 	if(methods & (INGEST | INHALE))
 		taste_list(reagents)
 
-	var/touch_protection = (methods & VAPOR) ? getarmor(null, BIO) * 0.01 : 0
+	var/touch_protection = (methods & VAPOR) ? getarmor(null, BIO, attack_type = REAGENT_ATTACK) * 0.01 : 0
 	SEND_SIGNAL(source, COMSIG_REAGENTS_EXPOSE_MOB, src, reagents, methods, volume_modifier, show_message, touch_protection)
 	for(var/datum/reagent/reagent as anything in reagents)
 		var/reac_volume = reagents[reagent]

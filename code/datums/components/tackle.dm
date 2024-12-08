@@ -205,7 +205,7 @@
 	var/potential_outcome = (roll * 10)
 
 	if(ishuman(target))
-		potential_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE)) /100)
+		potential_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE, attack_type = LEAP_ATTACK)) /100)
 	else
 		potential_outcome *= 0.9
 
@@ -298,7 +298,7 @@
 	var/potential_roll_outcome = (roll * -10)
 
 	if(ishuman(user))
-		potential_roll_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE)) /100)
+		potential_roll_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE, attack_type = LEAP_ATTACK)) /100)
 	else
 		potential_roll_outcome *= 0.9
 
@@ -493,9 +493,9 @@
 		darth_vendor.tilt(user, 100)
 		return
 	else if(istype(hit, /obj/structure/window))
-		var/obj/structure/window/W = hit
-		splatWindow(user, W)
-		if(QDELETED(W))
+		var/obj/structure/window/window = hit
+		splatWindow(user, window)
+		if(QDELETED(window))
 			return COMPONENT_MOVABLE_IMPACT_NEVERMIND
 		return
 
@@ -602,32 +602,32 @@
 	UnregisterSignal(parent, COMSIG_MOVABLE_MOVED)
 
 ///A special case for splatting for handling windows
-/datum/component/tackler/proc/splatWindow(mob/living/carbon/user, obj/structure/window/W)
+/datum/component/tackler/proc/splatWindow(mob/living/carbon/user, obj/structure/window/window)
 	playsound(user, 'sound/effects/glass/Glasshit.ogg', 140, TRUE)
 
-	if(W.type in list(/obj/structure/window, /obj/structure/window/fulltile, /obj/structure/window/unanchored, /obj/structure/window/fulltile/unanchored)) // boring unreinforced windows
+	if(window.type in list(/obj/structure/window, /obj/structure/window/fulltile, /obj/structure/window/unanchored, /obj/structure/window/fulltile/unanchored)) // boring unreinforced windows
 		for(var/i in 1 to speed)
 			var/obj/item/shard/shard = new /obj/item/shard(get_turf(user))
 			shard.set_embed(/datum/embed_data/glass_candy)
 			user.hitby(shard, skipcatch = TRUE, hitpush = FALSE)
 			shard.set_embed(initial(shard.embed_type))
-		W.atom_destruction()
+		window.atom_destruction()
 		user.adjustStaminaLoss(10 * speed)
 		user.Paralyze(3 SECONDS)
-		user.visible_message(span_danger("[user] smacks into [W] and shatters it, shredding [user.p_them()]self with glass!"), span_userdanger("You smacks into [W] and shatter it, shredding yourself with glass!"))
+		user.visible_message(span_danger("[user] smacks into [window] and shatters it, shredding [user.p_them()]self with glass!"), span_userdanger("You smacks into [window] and shatter it, shredding yourself with glass!"))
 
 	else
-		user.visible_message(span_danger("[user] smacks into [W] like a bug!"), span_userdanger("You smacks into [W] like a bug!"))
+		user.visible_message(span_danger("[user] smacks into [window] like a bug!"), span_userdanger("You smacks into [window] like a bug!"))
 		user.Paralyze(1 SECONDS)
 		user.Knockdown(3 SECONDS)
-		W.take_damage(30 * speed)
+		window.take_damage(30 * speed)
 		user.adjustStaminaLoss(10 * speed, updating_stamina=FALSE)
 		user.adjustBruteLoss(5 * speed)
 
-/datum/component/tackler/proc/delayedSmash(obj/structure/window/W)
-	if(W)
-		W.atom_destruction()
-		playsound(W, SFX_SHATTER, 70, TRUE)
+/datum/component/tackler/proc/delayedSmash(obj/structure/window/window)
+	if(window)
+		window.atom_destruction()
+		playsound(window, SFX_SHATTER, 70, TRUE)
 
 ///Check to see if we hit a table, and if so, make a big mess!
 /datum/component/tackler/proc/checkObstacle(mob/living/carbon/owner)

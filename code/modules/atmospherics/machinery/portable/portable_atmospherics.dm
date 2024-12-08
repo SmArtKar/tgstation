@@ -135,7 +135,7 @@
 	if(!taking_damage)
 		return FALSE
 
-	take_damage(clamp(temp_damage * pressure_damage, 5, 50), BURN, 0)
+	take_damage(clamp(temp_damage * pressure_damage, 5, 50), BURN, NONE, attack_type = ENVIRONMENTAL_ATTACK)
 	return TRUE
 
 /obj/machinery/portable_atmospherics/return_air()
@@ -289,7 +289,7 @@
 
 /obj/machinery/portable_atmospherics/attacked_by(obj/item/item, mob/user)
 	if(item.force < 10 && !(machine_stat & BROKEN))
-		take_damage(0)
+		take_damage(0, attack_type = MELEE_ATTACK)
 		return
 	investigate_log("was smacked with \a [item] by [key_name(user)].", INVESTIGATE_ATMOS)
 	add_fingerprint(user)

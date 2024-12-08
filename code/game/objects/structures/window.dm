@@ -321,7 +321,7 @@
 	return TRUE
 
 
-/obj/structure/window/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/structure/window/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	. = ..()
 	if(.) //received damage
 		update_nearby_icons()
@@ -428,7 +428,7 @@
 	return exposed_temperature > T0C + heat_resistance
 
 /obj/structure/window/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(round(air.return_volume() / 100), BURN, 0, 0)
+	take_damage(round(air.return_volume() / 100), BURN, NONE, FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 
 /obj/structure/window/get_dumping_location()
 	return null
@@ -621,7 +621,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/unanchored/spawner,
 	add_atom_colour(COLOR_RUSTED_GLASS, FIXED_COLOUR_PRIORITY)
 	AddElement(/datum/element/rust)
 	set_armor(/datum/armor/none)
-	take_damage(get_integrity() * 0.5)
+	take_damage(get_integrity() * 0.5, attack_type = MAGIC_ATTACK)
 	modify_max_integrity(max_integrity * 0.5)
 
 /obj/structure/window/plasma
@@ -965,7 +965,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	if(.)
 		return
 	if(user.combat_mode)
-		take_damage(4, BRUTE, MELEE, 0)
+		take_damage(4, BRUTE, MELEE, FALSE, attack_type = UNARMED_ATTACK)
 		if(!QDELETED(src))
 			update_appearance()
 

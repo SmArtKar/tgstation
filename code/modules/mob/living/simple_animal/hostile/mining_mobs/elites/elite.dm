@@ -53,7 +53,7 @@
 		M.gets_drilled()
 	if(ismecha(target))
 		var/obj/vehicle/sealed/mecha/M = target
-		M.take_damage(50, BRUTE, MELEE, 1)
+		M.take_damage(50, BRUTE, MELEE, TRUE, attack_type = MELEE_ATTACK)
 
 //Elites can't talk (normally)!
 /mob/living/simple_animal/hostile/asteroid/elite/can_speak(allow_mimes)

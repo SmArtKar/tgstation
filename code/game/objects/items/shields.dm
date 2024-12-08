@@ -96,7 +96,7 @@
 	else if(isbasicmob(hitby))
 		var/mob/living/basic/critter = hitby
 		penetration = critter.armour_penetration
-	take_damage(damage, damage_type, armor_flag, armour_penetration = penetration)
+	take_damage(damage, damage_type, armor_flag, TRUE, get_dir(owner, hitby), penetration, attack_type)
 
 /obj/item/shield/atom_destruction(damage_flag)
 	playsound(src, shield_break_sound, 50)

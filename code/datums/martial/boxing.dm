@@ -134,7 +134,7 @@
 		return FALSE
 
 	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
-	var/armor_block = defender.run_armor_check(affecting, MELEE, armour_penetration = base_unarmed_effectiveness)
+	var/armor_block = defender.run_armor_check(affecting, MELEE, armour_penetration = base_unarmed_effectiveness, attack_type = UNARMED_ATTACK)
 
 	playsound(defender, attack_sound, 25, TRUE, -1)
 
@@ -235,7 +235,7 @@
 	if(!can_use(boxer) || !boxer.throw_mode || INCAPACITATED_IGNORING(boxer, INCAPABLE_GRAB))
 		return NONE
 
-	if(attack_type != UNARMED_ATTACK)
+	if(!(attack_type & UNARMED_ATTACK))
 		return NONE
 
 	//Determines unarmed defense against boxers using our current active arm.

@@ -224,7 +224,7 @@
 
 	// deals damage to mechs
 	for(var/obj/vehicle/sealed/mecha/M in T.contents)
-		M.take_damage(45, BRUTE, MELEE, 1)
+		M.take_damage(45, BRUTE, MELEE, TRUE, attack_type = ENVIRONMENTAL_ATTACK)
 
 	// changes turf to lava temporarily
 	if(!isclosedturf(T) && !islava(T))

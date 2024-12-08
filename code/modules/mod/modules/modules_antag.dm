@@ -375,7 +375,7 @@
 		living_target.apply_damage(damage, BRUTE, mod.wearer.zone_selected, wound_bonus = wounding_power)
 		living_target.Knockdown(knockdown_time)
 	else if(target.uses_integrity)
-		target.take_damage(damage, BRUTE, MELEE)
+		target.take_damage(damage, BRUTE, MELEE, attack_type = THROWN_PROJECTILE_ATTACK)
 	else
 		return
 	mod.wearer.do_attack_animation(target, ATTACK_EFFECT_SMASH)

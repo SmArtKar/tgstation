@@ -252,7 +252,7 @@ GLOBAL_VAR_INIT(glowshrooms, 0)
 	return exposed_temperature > 300
 
 /obj/structure/glowshroom/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(5, BURN, NONE, FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 
 /obj/structure/glowshroom/acid_act(acidpwr, acid_volume)
 	visible_message(span_danger("[src] melts away!"))

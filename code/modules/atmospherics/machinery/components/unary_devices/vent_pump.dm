@@ -254,7 +254,7 @@
 		return
 
 	if(fan_overclocked)
-		take_damage(fan_damage_rate, sound_effect=FALSE)
+		take_damage(fan_damage_rate, sound_effect = FALSE, attack_type = ENVIRONMENTAL_ATTACK)
 		if(get_integrity() == 0)
 			investigate_log("was destroyed as a result of overclocking", INVESTIGATE_ATMOS)
 			return

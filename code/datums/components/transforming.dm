@@ -279,9 +279,9 @@
 			if(TOX)
 				user.adjustToxLoss(clumsy_damage)
 			if(BRUTE)
-				user.take_bodypart_damage(brute=clumsy_damage)
+				user.take_bodypart_damage(brute = clumsy_damage, attack_type = MELEE_ATTACK)
 			if(BURN)
-				user.take_bodypart_damage(burn=clumsy_damage)
+				user.take_bodypart_damage(burn = clumsy_damage, attack_type = MELEE_ATTACK)
 
 		return TRUE
 

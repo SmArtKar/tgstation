@@ -756,7 +756,7 @@
 	wound = 30
 
 /obj/item/clothing/suit/armor/durability/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	take_damage(1, BRUTE, 0, 0)
+	take_damage(1, BRUTE, NONE, FALSE)
 
 /obj/item/clothing/suit/armor/durability/watermelon
 	name = "watermelon armor"
@@ -824,7 +824,7 @@
 	to_chat(user, span_warning("[src] looses a bit of its shimmer and glossiness..."))
 
 /obj/item/clothing/suit/armor/durability/holymelon/proc/decay()
-	take_damage(8, BRUTE, 0, 0)
+	take_damage(8, BRUTE, NONE, FALSE)
 
 
 /obj/item/clothing/suit/armor/durability/barrelmelon

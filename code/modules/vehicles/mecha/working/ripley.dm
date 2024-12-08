@@ -233,7 +233,7 @@
 
 /obj/vehicle/sealed/mecha/ripley/mining/Initialize(mapload)
 	. = ..()
-	take_damage(125)
+	take_damage(125, sound_effect = FALSE)
 	if(cell)
 		cell.charge = FLOOR(cell.charge * 0.25, 1) //Starts at very low charge
 	if(prob(70)) //Maybe add a drill
@@ -270,7 +270,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 	var/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/HC = new
 	HC.attach(src)
 
-	take_damage(max_integrity * 0.5, sound_effect=FALSE) //Low starting health
+	take_damage(max_integrity * 0.5, sound_effect = FALSE) //Low starting health
 	if(!GLOB.cargo_ripley && mapload)
 		GLOB.cargo_ripley = src
 

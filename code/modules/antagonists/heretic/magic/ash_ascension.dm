@@ -164,5 +164,5 @@
 			if(M in hit_list)
 				continue
 			hit_list += M
-			M.take_damage(45, BURN, MELEE, 1)
+			M.take_damage(45, BURN, MELEE, TRUE, attack_type = MAGIC_ATTACK)
 		sleep(0.15 SECONDS)

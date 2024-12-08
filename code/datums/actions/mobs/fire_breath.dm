@@ -66,7 +66,7 @@
 		if(robotron in hit_list)
 			continue
 		hit_list |= robotron
-		robotron.take_damage(mech_damage, BURN, FIRE)
+		robotron.take_damage(mech_damage, BURN, FIRE, attack_type = ENVIRONMENTAL_ATTACK)
 
 	return fire_hotspot
 

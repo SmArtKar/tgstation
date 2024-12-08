@@ -1,4 +1,4 @@
-/mob/living/carbon/human/getarmor(def_zone, type)
+/mob/living/carbon/human/getarmor(def_zone, type, attack_type = UNDEFINED_ATTACK)
 	var/armorval = 0
 	var/organnum = 0
 
@@ -6,21 +6,21 @@
 		if(isbodypart(def_zone))
 			var/obj/item/bodypart/bp = def_zone
 			if(bp)
-				return check_armor(def_zone, type)
+				return check_armor(def_zone, type, attack_type)
 		var/obj/item/bodypart/affecting = get_bodypart(check_zone(def_zone))
 		if(affecting)
-			return check_armor(affecting, type)
+			return check_armor(affecting, type, attack_type)
 		//If a specific bodypart is targeted, check how that bodypart is protected and return the value.
 
 	//If you don't specify a bodypart, it checks ALL your bodyparts for protection, and averages out the values
 	for(var/X in bodyparts)
 		var/obj/item/bodypart/BP = X
-		armorval += check_armor(BP, type)
+		armorval += check_armor(BP, type, attack_type)
 		organnum++
 	return (armorval/max(organnum, 1))
 
 
-/mob/living/carbon/human/proc/check_armor(obj/item/bodypart/def_zone, damage_type)
+/mob/living/carbon/human/proc/check_armor(obj/item/bodypart/def_zone, damage_type, attack_type = UNDEFINED_ATTACK)
 	if(!damage_type)
 		return 0
 	var/protection = 100
@@ -193,7 +193,7 @@
 				return FALSE
 			if(check_block(user, damage, "the [user.name]"))
 				return FALSE
-			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
+			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE), attack_type = UNARMED_ATTACK)
 		return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
@@ -237,7 +237,7 @@
 			to_chat(user, span_danger("You lunge at [src]!"))
 			return FALSE
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE,"","",10)
+		var/armor_block = run_armor_check(affecting, MELEE, "", "", 10, attack_type = MELEE_ATTACK)
 
 		playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
 		visible_message(span_danger("[user] slashes at [src]!"), \
@@ -263,7 +263,7 @@
 	if(stat != DEAD)
 		L.amount_grown = min(L.amount_grown + damage, L.max_grown)
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(L.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE)
+		var/armor_block = run_armor_check(affecting, MELEE, attack_type = MELEE_ATTACK)
 		apply_damage(damage, BRUTE, affecting, armor_block)
 
 /mob/living/carbon/human/ex_act(severity, target, origin)
@@ -359,7 +359,7 @@
 	show_message(span_userdanger("The blob attacks you!"))
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
-	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE))
+	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE), attack_type = BLOB_ATTACK)
 
 
 ///Calculates the siemens coeff based on clothing and species, can also restart hearts.
@@ -738,8 +738,8 @@
 		if(leg_clothes)
 			torn_items |= leg_clothes
 
-	for(var/obj/item/I in torn_items)
-		I.take_damage(damage_amount, damage_type, damage_flag, 0)
+	for(var/obj/item/torn in torn_items)
+		torn.take_damage(damage_amount, damage_type, damage_flag, FALSE)
 
 /**
  * Used by fire code to damage worn items.

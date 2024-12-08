@@ -84,7 +84,7 @@
 	. = ..()
 	if(.)
 		return TRUE
-	if(damage_type == BRUTE && attack_type == UNARMED_ATTACK && attack_flag == MELEE && damage <= 10)
+	if(damage_type == BRUTE && (attack_type & UNARMED_ATTACK) && attack_flag == MELEE && damage <= 10)
 		playsound(src, 'sound/effects/bang.ogg', 10, TRUE)
 		visible_message(span_danger("[attack_text] doesn't leave a dent on [src]!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		return TRUE
@@ -107,9 +107,9 @@
 		return
 	switch(severity)
 		if(1)
-			src.take_bodypart_damage(20)
+			src.take_bodypart_damage(20, attack_type = ENVIRONMENTAL_ATTACK)
 		if(2)
-			src.take_bodypart_damage(10)
+			src.take_bodypart_damage(10, attack_type = ENVIRONMENTAL_ATTACK)
 	to_chat(src, span_userdanger("*BZZZT*"))
 	for(var/mob/living/M in buckled_mobs)
 		if(prob(severity*50))

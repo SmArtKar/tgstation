@@ -184,7 +184,7 @@
 			return ..()
 
 		var/obj/clong_obj = clong
-		clong_obj.take_damage(INFINITY, BRUTE, NONE, TRUE, dir, INFINITY)
+		clong_obj.take_damage(INFINITY, BRUTE, NONE, TRUE, dir, INFINITY, attack_type = ENVIRONMENTAL_ATTACK) // Kinda counts as environment?
 		return ..()
 
 	// If we Bump into a living thing, living thing goes splat.

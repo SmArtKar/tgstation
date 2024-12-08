@@ -392,7 +392,7 @@
 	try_to_crowbar_secondary(tool, user, forced_open)
 	return ITEM_INTERACT_SUCCESS
 
-/obj/machinery/door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/machinery/door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	. = ..()
 	if(. && atom_integrity > 0)
 		if(damage_amount >= 10 && prob(30))
@@ -586,7 +586,7 @@
 				future_pancake.add_splatter_floor(location)
 				log_combat(src, future_pancake, "crushed")
 		for(var/obj/vehicle/sealed/mecha/mech in get_turf(src)) // Your fancy metal won't save you here!
-			mech.take_damage(DOOR_CRUSH_DAMAGE)
+			mech.take_damage(DOOR_CRUSH_DAMAGE, attack_type = ENVIRONMENTAL_ATTACK)
 			log_combat(src, mech, "crushed")
 
 /obj/machinery/door/proc/autoclose()

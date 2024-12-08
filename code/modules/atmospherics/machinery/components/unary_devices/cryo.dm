@@ -465,7 +465,7 @@
 
 	//take damage from high temperatures
 	if(air1.temperature > 2000)
-		take_damage(clamp((air1.temperature) / 200, 10, 20), BURN)
+		take_damage(clamp((air1.temperature) / 200, 10, 20), BURN, attack_type = ENVIRONMENTAL_ATTACK)
 
 	//adjust temperature of mob
 	if(!QDELETED(occupant))

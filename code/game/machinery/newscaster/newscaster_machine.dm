@@ -549,9 +549,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/newscaster, 30)
 	if(!user.combat_mode)
 		to_chat(user, span_warning("The newscaster controls are far too complicated for your tiny brain!"))
 	else
-		take_damage(5, BRUTE, MELEE)
+		take_damage(5, BRUTE, MELEE, attack_type = UNARMED_ATTACK)
 
-/obj/machinery/newscaster/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/machinery/newscaster/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	. = ..()
 	update_appearance()
 

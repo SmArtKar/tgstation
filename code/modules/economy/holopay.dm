@@ -56,7 +56,7 @@
 		return .
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
 	user.changeNext_move(CLICK_CD_MELEE)
-	take_damage(5, BRUTE, MELEE, 1)
+	take_damage(5, BRUTE, MELEE, TRUE, attack_type = UNARMED_ATTACK)
 
 /obj/structure/holopay/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)

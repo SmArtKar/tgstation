@@ -36,7 +36,7 @@
 		to_chat(occupants, "[icon2html(src, occupants)][span_danger("[gear] is critically damaged!")]")
 		playsound(src, gear.destroy_sound, 50)
 
-/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = NONE, sound_effect = TRUE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	var/damage_taken = ..()
 	if(damage_taken <= 0 || atom_integrity < 0)
 		return damage_taken
@@ -50,7 +50,7 @@
 
 	return damage_taken
 
-/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armour_penetration)
+/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = MELEE_ATTACK)
 	. = ..()
 	if(attack_dir)
 		var/facing_modifier = get_armour_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
@@ -105,7 +105,7 @@
 
 /obj/vehicle/sealed/mecha/blob_act(obj/structure/blob/B)
 	log_message("Attack by blob. Attacker - [B].", LOG_MECHA, color="red")
-	take_damage(30, BRUTE, MELEE, 0, get_dir(src, B))
+	take_damage(30, BRUTE, MELEE, FALSE, get_dir(src, B), attack_type = BLOB_ATTACK)
 
 /obj/vehicle/sealed/mecha/attack_tk()
 	return
@@ -133,6 +133,7 @@
 		damage_flag = hitting_projectile.armor_flag,
 		attack_dir = REVERSE_DIR(hitting_projectile.dir),
 		armour_penetration = hitting_projectile.armour_penetration,
+		attack_type = PROJECTILE_ATTACK,
 	), def_zone)
 
 
@@ -172,7 +173,7 @@
 		return
 	if(get_charge())
 		use_energy((cell.charge/3)/(severity*2))
-		take_damage(30 / severity, BURN, ENERGY, 1)
+		take_damage(30 / severity, BURN, ENERGY, TRUE, attack_type = ENVIRONMENTAL_ATTACK)
 	log_message("EMP detected", LOG_MECHA, color="red")
 
 	//Mess with the focus of the inbuilt camera if present
@@ -193,7 +194,7 @@
 
 /obj/vehicle/sealed/mecha/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	log_message("Exposed to dangerous temperature.", LOG_MECHA, color="red")
-	take_damage(5, BURN, 0, 1)
+	take_damage(5, BURN, NONE, TRUE, attack_type = ENVIRONMENTAL_ATTACK)
 
 /obj/vehicle/sealed/mecha/fire_act() //Check if we should ignite the pilot of an open-canopy mech
 	. = ..()
@@ -317,7 +318,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/damage_taken = take_damage(attacking_item.force * attacking_item.demolition_mod, attacking_item.damtype, MELEE, 1, get_dir(src, user))
+	var/damage_taken = take_damage(attacking_item.force * attacking_item.demolition_mod, attacking_item.damtype, MELEE, TRUE, get_dir(src, user), attack_type = MELEE_ATTACK)
 	try_damage_component(damage_taken, user.zone_selected)
 
 	var/hit_verb = length(attacking_item.attack_verb_simple) ? "[pick(attacking_item.attack_verb_simple)]" : "hit"
