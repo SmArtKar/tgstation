@@ -943,7 +943,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		log_combat(user, target, grappled ? "grapple punched" : "kicked")
 		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_direction = attack_direction)
 	else // Normal attacks do not gain the benefit of armor penetration.
-		target.apply_damage(damage, attack_type, affecting, armor_block, attack_direction = attack_direction)
+		target.apply_damage(damage, attack_type, affecting, armor_block, attack_direction = attack_direction, sharpness = attacking_bodypart?.get_sharpness())
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, "punched")
