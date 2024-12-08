@@ -128,7 +128,7 @@ DEFINE_BITFIELD(status_flags, list(
 
 //Attack types for checking block reactions
 /// Base type, aka the reason as to why you'd want to avoid exclude checking attacks
-#define UNDEFINED_ATTACK 0
+#define UNDEFINED_ATTACK NONE
 /// Attack was made with a melee weapon
 #define MELEE_ATTACK (1<<0)
 /// Attack is a punch or kick.
@@ -153,9 +153,9 @@ DEFINE_BITFIELD(status_flags, list(
 
 // Attack range helpers
 /// Checks if an attack is performed in melee
-#define IS_MELEE_ATTACK(x) (x & MELEE_ATTACK|UNARMED_ATTACK)
+#define IS_MELEE_ATTACK(x) ((x) & (MELEE_ATTACK|UNARMED_ATTACK))
 /// Checks if an attack is performed using a projectile weapon, be it a bullet or a spear
-#define IS_RANGED_ATTACK(x) (x & PROJECTILE_ATTACK|THROWN_PROJECTILE_ATTACK)
+#define IS_RANGED_ATTACK(x) ((x) & (PROJECTILE_ATTACK|THROWN_PROJECTILE_ATTACK))
 
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))
