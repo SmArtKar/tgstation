@@ -191,7 +191,7 @@ DEFINE_BITFIELD(food_flags, list(
 #define FOOD_MEAT_MUTANT 100
 #define FOOD_MEAT_MUTANT_RARE 200
 
-#define IS_EDIBLE(O) (O.GetComponent(/datum/component/edible))
+#define IS_EDIBLE(O) (HAS_TRAIT(O, TRAIT_EDIBLE))
 
 ///Food trash flags
 #define FOOD_TRASH_POPABLE (1<<0)

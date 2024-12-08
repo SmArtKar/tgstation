@@ -71,6 +71,7 @@ Behavior that's still missing from this component that original food items had t
 	src.tastes = string_assoc_list(tastes)
 	src.check_liked = check_liked
 
+	ADD_TRAIT(parent, TRAIT_EDIBLE, REF(src))
 	setup_initial_reagents(initial_reagents, reagent_purity)
 
 /datum/component/edible/RegisterWithParent()
@@ -115,6 +116,7 @@ Behavior that's still missing from this component that original food items had t
 		COMSIG_ATOM_EXAMINE,
 	))
 
+	REMOVE_TRAIT(parent, TRAIT_EDIBLE, REF(src))
 	qdel(GetComponent(/datum/component/connect_loc_behalf))
 
 	if(foodtypes & GORE)

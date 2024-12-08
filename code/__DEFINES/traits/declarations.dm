@@ -1399,4 +1399,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 ///Trait given to atoms currently affected by projectile dampeners
 #define TRAIT_GOT_DAMPENED "got_dampened"
 
+/// Tells us that something can be eaten
+#define TRAIT_EDIBLE "edible"
+
 // END TRAIT DEFINES
