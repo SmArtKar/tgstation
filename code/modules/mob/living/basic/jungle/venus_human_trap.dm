@@ -54,7 +54,7 @@
 	addtimer(CALLBACK(src, PROC_REF(progress_growth)), growth_time/4)
 	countdown.start()
 
-/obj/structure/alien/resin/flower_bud/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = MELEE_ATTACK)
+/obj/structure/alien/resin/flower_bud/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	if((trait_flags & SPACEVINE_HEAT_RESISTANT) && damage_type == BURN)
 		damage_amount = 0
 	. = ..()

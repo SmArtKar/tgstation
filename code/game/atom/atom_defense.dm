@@ -89,7 +89,7 @@
 	return round(atom_integrity / max_integrity, 0.01)
 
 ///returns the damage value of the attack after processing the atom's various armor protections
-/atom/proc/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = MELEE_ATTACK)
+/atom/proc/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	if(!uses_integrity)
 		CRASH("/atom/proc/run_atom_armor was called on [src] without being implemented as a type that uses integrity!")
 	if(IS_MELEE_ATTACK(attack_type) && damage_amount < damage_deflection)

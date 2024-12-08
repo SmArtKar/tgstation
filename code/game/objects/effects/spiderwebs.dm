@@ -16,7 +16,7 @@
 	if(damage_type == BURN)//the stickiness of the web mutes all attack sounds except fire damage type
 		playsound(loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
-/obj/structure/spider/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = MELEE_ATTACK)
+/obj/structure/spider/run_atom_armor(damage_amount, damage_type, damage_flag = NONE, attack_dir = NONE, armour_penetration = 0, attack_type = UNDEFINED_ATTACK)
 	if(IS_MELEE_ATTACK(attack_type))
 		switch(damage_type)
 			if(BURN)
