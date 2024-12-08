@@ -43,22 +43,18 @@
 
 	var/force_boosted
 	var/applied_dam_type
-	var/applied_type = UNDEFINED_ATTACK
 
 	if(isitem(element_owner))
 		var/obj/item/item_owner = element_owner
 		force_boosted = item_owner.force
 		applied_dam_type = item_owner.damtype
-		applied_type = throw_hit ? THROWN_PROJECTILE_ATTACK : MELEE_ATTACK
 	else if(isprojectile(element_owner))
 		var/obj/projectile/projectile_owner = element_owner
 		force_boosted = projectile_owner.damage
 		applied_dam_type = projectile_owner.damage_type
-		applied_type = PROJECTILE_ATTACK
 	else if (isliving(element_owner))
 		var/mob/living/living_owner = element_owner
 		force_boosted = (living_owner.melee_damage_lower + living_owner.melee_damage_upper) / 2
-		applied_type = UNARMED_ATTACK
 		//commence crying. yes, these really are the same check. FUCK.
 		if(isbasicmob(living_owner))
 			var/mob/living/basic/basic_owner = living_owner
@@ -72,7 +68,7 @@
 		return
 
 	var/extra_damage = max(0, (force_boosted * damage_multiplier) + added_damage)
-	baned_target.apply_damage(extra_damage, applied_dam_type, hit_zone, attack_type = applied_type)
+	baned_target.apply_damage(extra_damage, applied_dam_type, hit_zone)
 	SEND_SIGNAL(baned_target, COMSIG_LIVING_BANED, bane_applier, baned_target) // for extra effects when baned.
 	SEND_SIGNAL(element_owner, COMSIG_OBJECT_ON_BANING, baned_target)
 

@@ -193,7 +193,7 @@
 				return FALSE
 			if(check_block(user, damage, "the [user.name]"))
 				return FALSE
-			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE), attack_type = UNARMED_ATTACK)
+			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
 		return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
@@ -359,7 +359,7 @@
 	show_message(span_userdanger("The blob attacks you!"))
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
-	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE), attack_type = BLOB_ATTACK)
+	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE))
 
 
 ///Calculates the siemens coeff based on clothing and species, can also restart hearts.
