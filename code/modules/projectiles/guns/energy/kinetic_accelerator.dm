@@ -266,8 +266,7 @@
 	for(var/turf/closed/mineral/mineral_turf in RANGE_TURFS(1, target) - target)
 		mineral_turf.gets_drilled(firer, TRUE)
 	for(var/mob/living/living_mob in range(1, target) - firer - target)
-		var/armor = living_mob.run_armor_check(def_zone, armor_flag, armour_penetration = armour_penetration, attack_type = PROJECTILE_ATTACK)
-		living_mob.apply_damage(damage, damage_type, def_zone, armor)
+		living_mob.deal_damage(damage, damage_type, def_zone, armor_flag, armour_penetration = armour_penetration, attack_type = PROJECTILE_ATTACK)
 		to_chat(living_mob, span_userdanger("You're struck by a [name]!"))
 
 //Modkits
@@ -440,8 +439,7 @@
 				M.gets_drilled(proj.firer, TRUE)
 	if(modifier)
 		for(var/mob/living/victim in range(1, target_turf) - proj.firer - target)
-			var/armor = victim.run_armor_check(proj.def_zone, proj.armor_flag, "", "", proj.armour_penetration, attack_type = PROJECTILE_ATTACK)
-			victim.apply_damage(proj.damage * modifier, proj.damage_type, proj.def_zone, armor)
+			victim.deal_damage(proj.damage * modifier, proj.damage_type, proj.def_zone, proj.armor_flag, armour_penetration = proj.armour_penetration, attack_type = PROJECTILE_ATTACK)
 			to_chat(victim, span_userdanger("You're struck by a [proj.name]!"))
 
 /obj/item/borg/upgrade/modkit/aoe/turfs
@@ -569,8 +567,7 @@
 			var/kill_modifier = 1
 			if(proj.pressure_decrease_active)
 				kill_modifier *= proj.pressure_decrease
-			var/armor = L.run_armor_check(proj.def_zone, proj.armor_flag, "", "", proj.armour_penetration, attack_type = PROJECTILE_ATTACK)
-			L.apply_damage(bounties_reaped[L.type]*kill_modifier, proj.damage_type, proj.def_zone, armor)
+			L.deal_damage(bounties_reaped[L.type]*kill_modifier, proj.damage_type, proj.def_zone, proj.armor_flag, armour_penetration = proj.armour_penetration, attack_type = PROJECTILE_ATTACK)
 
 /obj/item/borg/upgrade/modkit/bounty/proc/get_kill(mob/living/L)
 	var/bonus_mod = 1

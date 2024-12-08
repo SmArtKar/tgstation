@@ -359,7 +359,8 @@
 	var/mob/living/victim = punchee
 	if (victim.body_position == LYING_DOWN || (!(FACTION_MINING in victim.faction) && !(FACTION_BOSS in victim.faction)))
 		return NONE
-	victim.apply_damage(mining_bonus, BRUTE)
+	var/obj/item/bodypart/attacking_bodypart = puncher.get_active_hand()
+	victim.deal_damage(mining_bonus, BRUTE, null, MELEE, armour_penetration = attacking_bodypart?.unarmed_effectiveness, attack_type = UNARMED_ATTACK)
 
 /// Make the targeted arm big and strong
 /datum/status_effect/golem/titanium/proc/buff_arm(obj/item/bodypart/arm/arm)

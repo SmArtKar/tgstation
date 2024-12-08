@@ -95,7 +95,7 @@
 				span_warning("\A [new_wall] [rises_message] and slams into [living_mob]!"),
 				span_userdanger("\A [new_wall] [rises_message] beneath your feet and slams into you!"),
 			)
-			living_mob.apply_damage(10, BRUTE, wound_bonus = 10)
+			living_mob.deal_damage(10, BRUTE, null, MELEE, wound_bonus = 10, attack_type = ENVIRONMENTAL_ATTACK)
 			living_mob.Knockdown(5 SECONDS)
 		living_mob.SpinAnimation(5, 1)
 

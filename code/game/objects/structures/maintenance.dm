@@ -82,7 +82,7 @@ at the cost of risking a vicious bite.**/
 		var/mob/living/carbon/bite_victim = user
 		var/obj/item/bodypart/affecting = bite_victim.get_active_hand()
 		to_chat(user, span_danger("You feel a sharp pain as an unseen creature sinks its [pick("fangs", "beak", "proboscis")] into your [affecting.plaintext_zone]!"))
-		bite_victim.apply_damage(30, BRUTE, affecting)
+		bite_victim.deal_damage(30, BRUTE, affecting, MELEE, attack_type = MELEE_ATTACK)
 		playsound(src,'sound/items/weapons/bite.ogg', 70, TRUE)
 		return
 	to_chat(user, span_warning("You find nothing of value..."))

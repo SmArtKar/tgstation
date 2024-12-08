@@ -2671,17 +2671,21 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 	if(!istype(loc, /turf/open/openspace) && !isplatingturf(loc))
 		return
 
+	var/armor = run_armor_check(BODY_ZONE_CHEST, MELEE, attack_type = ENVIRONMENTAL_ATTACK)
+
 	if(isplatingturf(loc))
 		var/turf/open/floor/smashed_plating = loc
 		visible_message(span_danger("[src] is thrown violently into [smashed_plating], smashing through it and punching straight through!"),
 				span_userdanger("You're thrown violently into [smashed_plating], smashing through it and punching straight through!"))
-		apply_damage(rand(5,20), BRUTE, BODY_ZONE_CHEST)
+		if (armor < 100)
+			apply_damage(rand(5,20), BRUTE, BODY_ZONE_CHEST) // Tram is a force of nature, your armor won't save you here traveller
 		smashed_plating.ScrapeAway(1, CHANGETURF_INHERIT_AIR)
 
 	for(var/obj/structure/lattice/lattice in loc)
 		visible_message(span_danger("[src] is thrown violently into [lattice], smashing through it and punching straight through!"),
 			span_userdanger("You're thrown violently into [lattice], smashing through it and punching straight through!"))
-		apply_damage(rand(5,10), BRUTE, BODY_ZONE_CHEST)
+		if (armor < 100)
+			apply_damage(rand(5,10), BRUTE, BODY_ZONE_CHEST)
 		lattice.deconstruct(FALSE)
 
 /// Prints an ominous message if something bad is going to happen to you

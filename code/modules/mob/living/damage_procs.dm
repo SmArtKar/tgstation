@@ -31,7 +31,7 @@
 	bare_wound_bonus = 0,
 	sharpness = NONE,
 	attack_direction = null,
-	attacking_item,
+	attacking_item = null,
 	wound_clothing = TRUE,
 )
 	SHOULD_CALL_PARENT(TRUE)
@@ -118,6 +118,27 @@
 	for(var/new_mod in damage_mods)
 		final_mod *= new_mod
 	return final_mod
+
+/// Helper proc which runs armor calculations for you
+/mob/living/proc/deal_damage(
+	damage = 0,
+	damagetype = BRUTE,
+	def_zone = null,
+	attack_flag = NONE,
+	forced = FALSE,
+	spread_damage = FALSE,
+	wound_bonus = 0,
+	bare_wound_bonus = 0,
+	sharpness = NONE,
+	attack_direction = null,
+	attacking_item = null,
+	wound_clothing = TRUE,
+	armour_penetration = 0,
+	weak_against_armour = FALSE,
+	attack_type = UNDEFINED_ATTACK,
+)
+	var/armor_value = run_armor_check(def_zone, attack_flag, armour_penetration = armour_penetration, silent = TRUE, weak_against_armour = weak_against_armour, attack_type = attack_type)
+	return apply_damage(damage, damagetype, def_zone, armor_value, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item, wound_clothing)
 
 /**
  * Simply a wrapper for calling mob adjustXLoss() procs to heal a certain damage type,

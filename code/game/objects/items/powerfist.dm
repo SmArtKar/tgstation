@@ -24,6 +24,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	armor_type = /datum/armor/melee_powerfist
 	resistance_flags = FIRE_PROOF
+	armour_penetration = 60
 	/// Delay between attacks
 	var/click_delay = 0.15 SECONDS
 	/// Pressure level on the fist
@@ -117,7 +118,7 @@
 	var/datum/gas_mixture/gas_used = tank.remove_air(gas_per_fist * fist_pressure_setting)
 	if(!gas_used)
 		to_chat(user, span_warning("\The [src]'s tank is empty!"))
-		target.apply_damage((force / 5), BRUTE)
+		target.deal_damage((force / 5), BRUTE, null, MELEE, armour_penetration = armour_penetration, attack_type = MELEE)
 		playsound(loc, 'sound/items/weapons/punch1.ogg', 50, TRUE)
 		target.visible_message(span_danger("[user]'s powerfist lets out a dull thunk as [user.p_they()] punch[user.p_es()] [target.name]!"), \
 			span_userdanger("[user]'s punches you!"))
@@ -127,7 +128,7 @@
 		our_turf.assume_air(gas_used)
 		to_chat(user, span_warning("\The [src]'s piston-ram lets out a weak hiss, it needs more gas!"))
 		playsound(loc, 'sound/items/weapons/punch4.ogg', 50, TRUE)
-		target.apply_damage((force / 2), BRUTE)
+		target.deal_damage((force / 2), BRUTE, null, MELEE, armour_penetration = armour_penetration, attack_type = MELEE)
 		target.visible_message(span_danger("[user]'s powerfist lets out a weak hiss as [user.p_they()] punch[user.p_es()] [target.name]!"), \
 			span_userdanger("[user]'s punch strikes with force!"))
 		return
@@ -135,7 +136,7 @@
 	target.visible_message(span_danger("[user]'s powerfist lets out a loud hiss as [user.p_they()] punch[user.p_es()] [target.name]!"), \
 		span_userdanger("You cry out in pain as [user]'s punch flings you backwards!"))
 	new /obj/effect/temp_visual/kinetic_blast(target.loc)
-	target.apply_damage(force * fist_pressure_setting, BRUTE, wound_bonus = CANT_WOUND)
+	target.deal_damage(force * fist_pressure_setting, BRUTE, wound_bonus = CANT_WOUND, null, MELEE, armour_penetration = armour_penetration, attack_type = MELEE)
 	playsound(src, 'sound/items/weapons/resonator_blast.ogg', 50, TRUE)
 	playsound(src, 'sound/items/weapons/genhit2.ogg', 50, TRUE)
 

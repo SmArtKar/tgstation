@@ -110,11 +110,15 @@
 	StartCooldown(cooldown_time)
 
 /datum/action/cooldown/mob_cooldown/exenterate/proc/slash_em(atom/caster)
+	var/armor_pen = 0
+	if (isbasicmob(caster))
+		var/mob/living/basic/basic_caster = caster
+		armor_pen = basic_caster.armour_penetration
 	for(var/mob/living/victim in range(ability_range, caster))
 		if(faction_check(victim.faction, immune_factions) && owner.CanReach(victim))
 			continue
 		to_chat(caster, span_warning("You slice [victim]!"))
 		to_chat(victim, span_warning("You are cut by [caster]'s blades!"))
-		victim.apply_damage(damage = damage_dealt, damagetype = BRUTE, def_zone = pick(valid_targets), sharpness = SHARP_EDGED)
+		victim.deal_damage(damage_dealt, BRUTE, def_zone = pick(valid_targets), MELEE, sharpness = SHARP_EDGED, armour_penetration = armor_pen, attack_type = MELEE_ATTACK)
 
 #undef SPIN_SLASH_ABILITY_TYPEPATH

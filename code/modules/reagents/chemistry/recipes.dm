@@ -410,7 +410,7 @@
 			continue
 		if(isliving(movey) && damage)
 			var/mob/living/live = movey
-			live.apply_damage(damage)//Since this can be called multiple times
+			live.deal_damage(damage, BRUTE, null, BOMB, attack_type = ENVIRONMENTAL_ATTACK)//Since this can be called multiple times
 		if(movey.anchored)
 			continue
 		if(iseffect(movey) || iseyemob(movey) || isdead(movey))

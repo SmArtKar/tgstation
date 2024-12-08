@@ -302,7 +302,7 @@
 	owner.visible_message(span_danger("The reactive teleport system flings [owner] clear of [attack_text] and slams [owner.p_them()] into a fabricated table!"))
 	owner.visible_message("<font color='red' size='3'>[owner] GOES ON THE TABLE!!!</font>")
 	owner.Knockdown(30)
-	owner.apply_damage(10, BRUTE)
+	owner.deal_damage(10, BRUTE, null, MELEE, attack_type = ENVIRONMENTAL_ATTACK)
 	owner.apply_damage(40, STAMINA)
 	playsound(owner, 'sound/effects/tableslam.ogg', 90, TRUE)
 	owner.add_mood_event("table", /datum/mood_event/table)

@@ -9,7 +9,7 @@
 	bare_wound_bonus = 0,
 	sharpness = NONE,
 	attack_direction = null,
-	attacking_item,
+	attacking_item = null,
 	wound_clothing = TRUE,
 )
 	// Spread damage should always have def zone be null
@@ -46,7 +46,7 @@
 	bare_wound_bonus = 0,
 	sharpness = NONE,
 	attack_direction = null,
-	attacking_item,
+	attacking_item = null,
 	wound_clothing = TRUE,
 )
 

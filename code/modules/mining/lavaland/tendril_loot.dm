@@ -1062,7 +1062,7 @@
 	RegisterSignal(target, COMSIG_MOVABLE_IMPACT, PROC_REF(strike_throw_impact))
 	var/atom/throw_target = get_edge_target_turf(target, user.dir)
 	target.throw_at(throw_target, 5, 3, user, FALSE, gentle = TRUE)
-	target.apply_damage(damage = 17, bare_wound_bonus = 10)
+	target.deal_damage(17, BRUTE, null, MELEE, bare_wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 	to_chat(target, span_userdanger("You've been struck by [user]!"))
 	user.do_attack_animation(target, ATTACK_EFFECT_PUNCH)
 
@@ -1071,7 +1071,7 @@
 
 	UnregisterSignal(source, COMSIG_MOVABLE_IMPACT)
 	if(isclosedturf(hit_atom))
-		source.apply_damage(damage = 5)
+		source.deal_damage(5, BRUTE, null, MELEE, attack_type = LEAP_ATTACK) //Closest would be leaping?
 		if(ishostile(source))
 			var/mob/living/simple_animal/hostile/target = source
 			target.ranged_cooldown += 5 SECONDS
@@ -1092,9 +1092,9 @@
 		user.do_attack_animation(turf, ATTACK_EFFECT_SLASH)
 		for(var/mob/living/additional_target in turf)
 			if(user.Adjacent(additional_target) && additional_target.density)
-				additional_target.apply_damage(damage = 15, sharpness = SHARP_EDGED, bare_wound_bonus = 10)
+				additional_target.apply_damage(15, BRUTE, null, MELEE, sharpness = SHARP_EDGED, bare_wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 				to_chat(additional_target, span_userdanger("You've been sliced by [user]!"))
-	target.apply_damage(damage = 5, sharpness = SHARP_EDGED, wound_bonus = 10)
+	target.deal_damage(5, BRUTE, null, MELEE, sharpness = SHARP_EDGED, wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 
 /obj/item/cursed_katana/proc/cloak(mob/living/target, mob/user)
 	user.alpha = 150
@@ -1123,7 +1123,7 @@
 	user.visible_message(span_warning("[user] cuts [target]'s tendons!"),
 		span_notice("You tendon cut [target]!"))
 	to_chat(target, span_userdanger("Your tendons have been cut by [user]!"))
-	target.apply_damage(damage = 15, sharpness = SHARP_EDGED, wound_bonus = 15)
+	target.deal_damage(15, BRUTE, null, MELEE, sharpness = SHARP_EDGED, wound_bonus = 15, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 	user.do_attack_animation(target, ATTACK_EFFECT_DISARM)
 	playsound(src, 'sound/items/weapons/rapierhit.ogg', 50, TRUE)
 	var/datum/status_effect/stacking/saw_bleed/bloodletting/status = target.has_status_effect(/datum/status_effect/stacking/saw_bleed/bloodletting)
@@ -1137,7 +1137,7 @@
 		span_notice("You dash through [target]!"))
 	to_chat(target, span_userdanger("[user] dashes through you!"))
 	playsound(src, 'sound/effects/magic/blink.ogg', 50, TRUE)
-	target.apply_damage(damage = 17, sharpness = SHARP_POINTY, bare_wound_bonus = 10)
+	target.deal_damage(17, BRUTE, null, MELEE, sharpness = SHARP_POINTY, bare_wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 	var/turf/dash_target = get_turf(target)
 	for(var/distance in 0 to 8)
 		var/turf/current_dash_target = dash_target
@@ -1154,7 +1154,7 @@
 	user.visible_message(span_warning("[user] shatters [src] over [target]!"),
 		span_notice("You shatter [src] over [target]!"))
 	to_chat(target, span_userdanger("[user] shatters [src] over you!"))
-	target.apply_damage(damage = ishostile(target) ? 75 : 35, wound_bonus = 20)
+	target.deal_damage(ishostile(target) ? 75 : 35, BRUTE, null, MELEE, wound_bonus = 20, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 	user.do_attack_animation(target, ATTACK_EFFECT_SMASH)
 	playsound(src, 'sound/effects/glass/glassbr3.ogg', 100, TRUE)
 	shattered = TRUE

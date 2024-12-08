@@ -168,7 +168,7 @@
 		owner.apply_status_effect(/datum/status_effect/brimdust_concussion)
 
 	for(var/mob/living/target in possible_targets)
-		var/armor = target.run_armor_check(attack_flag = BOMB)
+		var/armor = target.run_armor_check(attack_flag = BOMB, attack_type = MAGIC_ATTACK)
 		target.apply_damage(damage_dealt, damagetype = BURN, blocked = armor, spread_damage = TRUE)
 
 	SEND_SIGNAL(owner, COMSIG_BRIMDUST_EXPLOSION)

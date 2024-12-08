@@ -51,8 +51,8 @@
 			else
 				to_chat(user, span_notice("You navigate the sharp edges of circuitry and remove a single board from [src]"))
 		else
-			H.apply_damage(15, BRUTE, pick(GLOB.arm_zones))
-			to_chat(user, span_warning("You give yourself a wicked cut on [src]'s many sharp corners and edges!"))
+			if (H.deal_damage(15, BRUTE, pick(GLOB.arm_zones), MELEE, attack_type = ENVIRONMENTAL_ATTACK))
+				to_chat(user, span_warning("You give yourself a wicked cut on [src]'s many sharp corners and edges!"))
 
 /obj/item/stack/circuit_stack/full
 	amount = 8

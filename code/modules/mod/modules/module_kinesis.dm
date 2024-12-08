@@ -239,7 +239,7 @@
 		damage = 15
 	if(isliving(hit_atom))
 		var/mob/living/living_atom = hit_atom
-		living_atom.apply_damage(damage, BRUTE)
+		living_atom.deal_damage(damage, BRUTE, null, MELEE, attack_type = THROWN_PROJECTILE_ATTACK)
 	else if(hit_atom.uses_integrity)
 		hit_atom.take_damage(damage, BRUTE, MELEE, attack_type = THROWN_PROJECTILE_ATTACK)
 	if(damage_self && source.uses_integrity)

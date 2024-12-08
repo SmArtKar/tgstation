@@ -335,10 +335,14 @@
 			continue
 		if(something_living == pilot)
 			continue
-		if(prob(DISMEMBER_CHANCE_LOW))
-			var/obj/item/bodypart/cut_bodypart = something_living.get_bodypart(pick(BODY_ZONE_R_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG))
+		var/targeted_part = pick(BODY_ZONE_R_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG)
+		var/armor_value = something_living.run_armor_check(targeted_part, MELEE, armour_penetration = 100, silent = TRUE, attack_type = MECH_ATTACK)
+		if (armor_value >= 100)
+			continue
+		if (prob(DISMEMBER_CHANCE_LOW))
+			var/obj/item/bodypart/cut_bodypart = something_living.get_bodypart()
 			cut_bodypart?.dismember(BRUTE)
-		something_living.apply_damage(35, BRUTE)
+		something_living.apply_damage(35, BRUTE, targeted_part, armor_value)
 	playsound(chassis, stealth_attack_sound, 75, FALSE)
 	REMOVE_TRAIT(chassis, TRAIT_IMMOBILIZED, REF(src))
 	on = !on
@@ -481,10 +485,14 @@
 		for(var/mob/living/something_living in line_turf.contents)
 			if(something_living.stat >= UNCONSCIOUS || something_living.getStaminaLoss() >= 100 || something_living == charger)
 				continue
+			var/targeted_part = pick(BODY_ZONE_R_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_HEAD)
+			var/armor_value = something_living.run_armor_check(targeted_part, MELEE, armour_penetration = 100, silent = TRUE, attack_type = MECH_ATTACK)
+			if (armor_value >= 100)
+				continue
 			if(prob(DISMEMBER_CHANCE_LOW))
-				var/obj/item/bodypart/cut_bodypart = something_living.get_bodypart(pick(BODY_ZONE_R_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_HEAD))
+				var/obj/item/bodypart/cut_bodypart = something_living.get_bodypart(targeted_part)
 				cut_bodypart?.dismember(BRUTE)
-			something_living.apply_damage(35, BRUTE)
+			something_living.apply_damage(35, BRUTE, targeted_part, armor_value)
 		here_we_go = line_turf
 
 	// If the mech didn't move, it didn't charge

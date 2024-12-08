@@ -76,8 +76,7 @@
 	new /obj/effect/temp_visual/explosion/fast(origin_turf)
 	var/list/possible_targets = range(1, origin_turf)
 	for(var/mob/living/target in possible_targets)
-		var/armor = target.run_armor_check(attack_flag = BOMB)
-		target.apply_damage(20, damagetype = BURN, blocked = armor, spread_damage = TRUE)
+		target.deal_damage(20, BURN, null, BOMB, spread_damage = TRUE, attack_type = MAGIC_ATTACK)
 
 	for (var/atom/movable/thing as anything in contents)
 		thing.forceMove(loc)

@@ -564,7 +564,7 @@
 		var/mob/living/attacked_mob = attacked_atom
 		if(attacked_mob.stat != DEAD)
 			give_blood(15)
-		attacked_mob.apply_damage(damage = force * (ishostile(attacked_mob) ? 2 : 1), sharpness = SHARP_EDGED, bare_wound_bonus = 5)
+		attacked_mob.deal_damage(force * (ishostile(attacked_mob) ? 2 : 1), BRUTE, null, MELEE, sharpness = SHARP_EDGED, bare_wound_bonus = 5, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 		to_chat(attacked_mob, span_userdanger("You're slashed by [src]!"))
 	else if((ismachinery(attacked_atom) || isstructure(attacked_atom)) && use_blood(5))
 		var/obj/attacked_obj = attacked_atom

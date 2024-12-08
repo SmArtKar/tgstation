@@ -34,7 +34,7 @@
 	)
 	to_chat(user, span_danger("You [response_harm_simple] [src]!"))
 	playsound(loc, attacked_sound, 25, TRUE, -1)
-	apply_damage(damage)
+	deal_damage(damage, active_arm.attack_type, null, MELEE, attack_type = MELEE_ATTACK)
 	log_combat(user, src, "attacked")
 	updatehealth()
 	return TRUE
@@ -60,12 +60,12 @@
 	visible_message(span_danger("[user] punches [src]!"), \
 					span_userdanger("You're punched by [user]!"), null, COMBAT_MESSAGE_RANGE, user)
 	to_chat(user, span_danger("You punch [src]!"))
-	apply_damage(15, damagetype = BRUTE)
+	deal_damage(15, BRUTE, null, MELEE, attack_type = UNARMED_ATTACK)
 
 /mob/living/basic/attack_paw(mob/living/carbon/human/user, list/modifiers)
 	if(..()) //successful monkey bite.
 		if(stat != DEAD)
-			return apply_damage(rand(1, 3))
+			return deal_damage(rand(1, 3), BRUTE, null, MELEE, attack_type = UNARMED_ATTACK)
 
 	if (!user.combat_mode)
 		if (health > 0)
@@ -91,13 +91,13 @@
 		span_userdanger("You're slashed at by [user]!"), null, COMBAT_MESSAGE_RANGE, user)
 	to_chat(user, span_danger("You slash at [src]!"))
 	playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
-	apply_damage(damage)
+	deal_damage(damage, BRUTE, null, MELEE, attack_type = UNARMED_ATTACK)
 	log_combat(user, src, "attacked")
 
 /mob/living/basic/attack_larva(mob/living/carbon/alien/larva/attacking_larva, list/modifiers)
 	. = ..()
 	if(. && stat != DEAD) //successful larva bite
-		var/damage_done = apply_damage(rand(attacking_larva.melee_damage_lower, attacking_larva.melee_damage_upper), BRUTE)
+		var/damage_done = deal_damage(rand(attacking_larva.melee_damage_lower, attacking_larva.melee_damage_upper), BRUTE, BRUTE, null, MELEE, attack_type = UNARMED_ATTACK)
 		if(damage_done > 0)
 			attacking_larva.amount_grown = min(attacking_larva.amount_grown + damage_done, attacking_larva.max_grown)
 

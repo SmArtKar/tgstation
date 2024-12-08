@@ -47,7 +47,7 @@
 		if(carbon_victim.electrocute_act(5, caster, 1, SHOCK_NOGLOVES | SHOCK_NOSTUN))//doesn't stun. never let this stun
 
 			var/obj/item/bodypart/affecting = carbon_victim.get_bodypart(carbon_victim.get_random_valid_zone(caster.zone_selected))
-			var/armor_block = carbon_victim.run_armor_check(affecting, ENERGY)
+			var/armor_block = carbon_victim.run_armor_check(affecting, ENERGY, attack_type = MAGIC_ATTACK)
 			carbon_victim.apply_damage(20, STAMINA, def_zone = affecting, blocked = armor_block)
 
 			carbon_victim.dropItemToGround(carbon_victim.get_active_held_item())

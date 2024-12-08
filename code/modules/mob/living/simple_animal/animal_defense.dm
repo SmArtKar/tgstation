@@ -14,20 +14,28 @@
 						span_notice("[user] [response_help_continuous] you."), null, null, user)
 		to_chat(user, span_notice("You [response_help_simple] [src]."))
 		playsound(loc, 'sound/items/weapons/thudswoosh.ogg', 50, TRUE, -1)
-	else
-		if(HAS_TRAIT(user, TRAIT_PACIFISM))
-			to_chat(user, span_warning("You don't want to hurt [src]!"))
-			return
-		if(check_block(user, harm_intent_damage, "[user]'s punch", UNARMED_ATTACK, 0, BRUTE))
-			return
-		user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-		visible_message(span_danger("[user] [response_harm_continuous] [src]!"),\
-						span_userdanger("[user] [response_harm_continuous] you!"), null, COMBAT_MESSAGE_RANGE, user)
-		to_chat(user, span_danger("You [response_harm_simple] [src]!"))
-		playsound(loc, attacked_sound, 25, TRUE, -1)
-		apply_damage(harm_intent_damage)
-		log_combat(user, src, "attacked")
-		return TRUE
+		return FALSE
+
+	if(HAS_TRAIT(user, TRAIT_PACIFISM))
+		to_chat(user, span_warning("You don't want to hurt [src]!"))
+		return
+
+	if(check_block(user, harm_intent_damage, "[user]'s punch", UNARMED_ATTACK, 0, BRUTE))
+		return
+
+	var/obj/item/bodypart/attacking_bodypart = user.get_active_hand()
+	var/damtype = BRUTE
+	if (attacking_bodypart)
+		damtype = attacking_bodypart.attack_type
+
+	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
+	visible_message(span_danger("[user] [response_harm_continuous] [src]!"),\
+					span_userdanger("[user] [response_harm_continuous] you!"), null, COMBAT_MESSAGE_RANGE, user)
+	to_chat(user, span_danger("You [response_harm_simple] [src]!"))
+	playsound(loc, attacked_sound, 25, TRUE, -1)
+	deal_damage(harm_intent_damage, damtype, null, MELEE, attack_type = UNARMED_ATTACK)
+	log_combat(user, src, "attacked")
+	return TRUE
 
 /mob/living/simple_animal/get_shoving_message(mob/living/shover, obj/item/weapon, shove_flags)
 	if(weapon) // no "gently pushing aside" if you're pressing a shield at them.
@@ -55,7 +63,8 @@
 /mob/living/simple_animal/attack_paw(mob/living/carbon/human/user, list/modifiers)
 	if(..()) //successful monkey bite.
 		if(stat != DEAD)
-			return apply_damage(rand(1, 3))
+			return deal_damage(rand(1, 3), BRUTE, null, MELEE, attack_type = UNARMED_ATTACK)
+
 	if (!user.combat_mode)
 		if (health > 0)
 			visible_message(span_notice("[user.name] [response_help_continuous] [src]."), \
@@ -78,14 +87,14 @@
 							span_userdanger("You're slashed at by [user]!"), null, COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_danger("You slash at [src]!"))
 			playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
-			apply_damage(damage)
+			deal_damage(damage, BRUTE, null, MELEE, attack_type = MELEE_ATTACK)
 			log_combat(user, src, "attacked")
 		return 1
 
 /mob/living/simple_animal/attack_larva(mob/living/carbon/alien/larva/L, list/modifiers)
 	. = ..()
 	if(. && stat != DEAD) //successful larva bite
-		var/damage_done = apply_damage(rand(L.melee_damage_lower, L.melee_damage_upper), BRUTE)
+		var/damage_done = deal_damage(rand(L.melee_damage_lower, L.melee_damage_upper), BRUTE, null, MELEE, attack_type = MELEE_ATTACK)
 		if(damage_done > 0)
 			L.amount_grown = min(L.amount_grown + damage_done, L.max_grown)
 

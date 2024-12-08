@@ -389,6 +389,6 @@
 		target_mob.throw_at(throw_target, 2, 2, user, gentle = TRUE)
 		target_mob.Knockdown(2 SECONDS)
 	var/body_zone = pick(GLOB.all_body_zones)
-	user.apply_damage(force / recoil_factor, BRUTE, body_zone, user.run_armor_check(body_zone, MELEE))
+	user.deal_damage(force / recoil_factor, BRUTE, body_zone, MELEE, attack_type = MELEE_ATTACK)
 	to_chat(user, span_danger("The weight of the Big Slappy recoils!"))
 	log_combat(user, user, "recoiled Big Slappy into")

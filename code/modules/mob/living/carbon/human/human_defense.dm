@@ -121,7 +121,7 @@
 	visible_message(span_danger("[user] [hulk_verb]ed [src]!"), \
 					span_userdanger("[user] [hulk_verb]ed [src]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), null, user)
 	to_chat(user, span_danger("You [hulk_verb] [src]!"))
-	apply_damage(15, BRUTE, wound_bonus=10)
+	deal_damage(15, BRUTE, null, MELEE, wound_bonus = 10, attack_type = UNARMED_ATTACK) // Hulks are too angry to hit precisely
 
 /mob/living/carbon/human/attack_hand(mob/user, list/modifiers)
 	. = ..()
@@ -193,7 +193,7 @@
 				return FALSE
 			if(check_block(user, damage, "the [user.name]"))
 				return FALSE
-			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
+			deal_damage(damage, BRUTE, affecting, MELEE, attack_type = UNARMED_ATTACK)
 		return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
@@ -263,8 +263,7 @@
 	if(stat != DEAD)
 		L.amount_grown = min(L.amount_grown + damage, L.max_grown)
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(L.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE, attack_type = MELEE_ATTACK)
-		apply_damage(damage, BRUTE, affecting, armor_block)
+		deal_damage(damage, BRUTE, affecting, MELEE, attack_type = MELEE_ATTACK)
 
 /mob/living/carbon/human/ex_act(severity, target, origin)
 	if(HAS_TRAIT(src, TRAIT_BOMBIMMUNE))
@@ -359,7 +358,7 @@
 	show_message(span_userdanger("The blob attacks you!"))
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
-	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE))
+	deal_damage(5, BRUTE, affecting, MELEE, attack_type = BLOB_ATTACK)
 
 
 ///Calculates the siemens coeff based on clothing and species, can also restart hearts.

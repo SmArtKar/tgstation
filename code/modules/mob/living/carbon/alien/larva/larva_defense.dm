@@ -15,7 +15,7 @@
 			Unconscious(rand(100,200))
 
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-		apply_damage(damage, BRUTE, affecting)
+		deal_damage(damage, BRUTE, affecting, MELEE, attack_type = UNARMED_ATTACK)
 	else
 		playsound(loc, 'sound/items/weapons/punchmiss.ogg', 25, TRUE, -1)
 		visible_message(span_danger("[user]'s kick misses [src]!"), \

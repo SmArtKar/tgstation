@@ -372,7 +372,7 @@
 		return
 	if(isliving(target))
 		var/mob/living/living_target = target
-		living_target.apply_damage(damage, BRUTE, mod.wearer.zone_selected, wound_bonus = wounding_power)
+		living_target.deal_damage(damage, BRUTE, mod.wearer.zone_selected, MELEE, wound_bonus = wounding_power, attack_type = UNARMED_ATTACK)
 		living_target.Knockdown(knockdown_time)
 	else if(target.uses_integrity)
 		target.take_damage(damage, BRUTE, MELEE, attack_type = THROWN_PROJECTILE_ATTACK)

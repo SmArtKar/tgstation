@@ -201,12 +201,12 @@ Difficulty: Hard
 	else
 		new /obj/effect/temp_visual/bubblegum_hands/leftsmack(T)
 	SLEEP_CHECK_DEATH(4, src)
-	for(var/mob/living/L in T)
-		if(!faction_check_atom(L))
-			to_chat(L, span_userdanger("[src] rends you!"))
+	for(var/mob/living/victim in T)
+		if(!faction_check_atom(victim))
+			to_chat(victim, span_userdanger("[src] rends you!"))
 			playsound(T, attack_sound, 100, TRUE, -1)
-			var/limb_to_hit = L.get_bodypart(L.get_random_valid_zone(even_weights = TRUE))
-			L.apply_damage(10, BRUTE, limb_to_hit, L.run_armor_check(limb_to_hit, MELEE, null, null, armour_penetration), wound_bonus = CANT_WOUND)
+			var/limb_to_hit = victim.get_bodypart(victim.get_random_valid_zone(even_weights = TRUE))
+			victim.deal_damage(10, BRUTE, limb_to_hit, MELEE, wound_bonus = CANT_WOUND, armour_penetration, attack_type = MELEE_ATTACK)
 	SLEEP_CHECK_DEATH(3, src)
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/bloodgrab(turf/T, handedness)

@@ -37,7 +37,7 @@
 		return FALSE
 
 	var/mob/living/living_hit = victim
-	living_hit.apply_damage(10, BRUTE, wound_bonus = CANT_WOUND)
+	living_hit.deal_damage(10, BRUTE, null, MELEE, wound_bonus = CANT_WOUND, armour_penetration = 100, attack_type = MAGIC_ATTACK)
 	if(!iscarbon(victim))
 		return TRUE
 

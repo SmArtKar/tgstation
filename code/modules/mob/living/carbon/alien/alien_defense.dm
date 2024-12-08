@@ -61,10 +61,11 @@ In all, this is a lot like the monkey code. /N
 		. &= ~(SHOVE_CAN_MOVE|SHOVE_CAN_HIT_SOMETHING|SHOVE_CAN_STAGGER)
 
 /mob/living/carbon/alien/attack_paw(mob/living/carbon/human/user, list/modifiers)
-	if(..())
+	. = ..()
+	if(.)
 		if (stat != DEAD)
 			var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-			apply_damage(rand(1, 3), BRUTE, affecting)
+			deal_damage(rand(1, 3), BRUTE, affecting, MELEE, attack_type = UNARMED_ATTACK)
 
 /mob/living/carbon/alien/create_splatter(splatter_dir)
 	new /obj/effect/temp_visual/dir_setting/bloodsplatter/xenosplatter(get_turf(src), splatter_dir)

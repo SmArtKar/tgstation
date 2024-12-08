@@ -225,8 +225,8 @@
 		return
 	var/mob/living/carbon/carbon_victim = victim
 	carbon_victim.Paralyze(5 SECONDS)
-	carbon_victim.apply_damage(20, BRUTE, BODY_ZONE_R_LEG)
-	carbon_victim.apply_damage(20, BRUTE, BODY_ZONE_L_LEG)
+	carbon_victim.deal_damage(20, BRUTE, BODY_ZONE_R_LEG, MELEE, armour_penetration = 100, attack_type = MAGIC_ATTACK)
+	carbon_victim.deal_damage(20, BRUTE, BODY_ZONE_L_LEG, MELEE, armour_penetration = 100, attack_type = MAGIC_ATTACK)
 	playsound(src, 'sound/effects/magic/demon_attack1.ogg', 75, TRUE)
 
 /obj/structure/trap/eldritch/mad

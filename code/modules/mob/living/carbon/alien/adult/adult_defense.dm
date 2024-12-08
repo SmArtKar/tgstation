@@ -30,7 +30,7 @@
 							span_userdanger("[user] knocks you down!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), null, user)
 			to_chat(user, span_danger("You knock [src] down!"))
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-		apply_damage(damage, BRUTE, affecting)
+		deal_damage(damage, BRUTE, affecting, MELEE, attack_type = UNARMED_ATTACK)
 		log_combat(user, src, "attacked")
 	else
 		playsound(loc, 'sound/items/weapons/punchmiss.ogg', 25, TRUE, -1)

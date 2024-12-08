@@ -71,7 +71,7 @@
 		beam_parts += new_brimbeam
 		new_brimbeam.assign_creator(owner)
 		for(var/mob/living/hit_mob in affected_turf.contents)
-			hit_mob.apply_damage(damage = 25, damagetype = BURN)
+			hit_mob.deal_damage(25, BURN, null, ENERGY, attack_type = MAGIC_ATTACK)
 			to_chat(hit_mob, span_userdanger("You're blasted by [owner]'s brimbeam!"))
 		RegisterSignal(new_brimbeam, COMSIG_QDELETING, PROC_REF(extinguish_laser)) // In case idk a singularity eats it or something
 	if(!length(beam_parts))

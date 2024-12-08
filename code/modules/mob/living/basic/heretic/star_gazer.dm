@@ -70,7 +70,7 @@
 		if(target == nearby_mob || !target_confirmer?.can_attack(src, nearby_mob))
 			continue
 		nearby_mob.apply_status_effect(/datum/status_effect/star_mark)
-		nearby_mob.apply_damage(10)
+		nearby_mob.deal_damage(10, BRUTE, null, MELEE, attack_type = MELEE_ATTACK)
 		to_chat(nearby_mob, span_userdanger("\The [src] [attack_verb_continuous] you!"))
 		do_attack_animation(nearby_mob, ATTACK_EFFECT_SLASH)
 		log_combat(src, nearby_mob, "slashed")

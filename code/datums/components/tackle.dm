@@ -332,7 +332,7 @@
 
 			user.Paralyze(3 SECONDS)
 			user.apply_damage(80, STAMINA)
-			user.apply_damage(20, BRUTE, BODY_ZONE_HEAD)
+			user.deal_damage(20, BRUTE, BODY_ZONE_HEAD, MELEE, attack_type = LEAP_ATTACK)
 			user.gain_trauma(/datum/brain_trauma/mild/concussion)
 			user.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 3, 10 SECONDS)
 

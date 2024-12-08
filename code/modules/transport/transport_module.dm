@@ -332,7 +332,7 @@
 				else
 					// Less violent landing simply crushes every bone in your body.
 					crushed.Paralyze(30 SECONDS, ignore_canstun = TRUE)
-					crushed.apply_damage(30, BRUTE, BODY_ZONE_CHEST, wound_bonus = 30)
+					crushed.apply_damage(30, BRUTE, BODY_ZONE_CHEST, wound_bonus = 30) // Elevators are like tram, a force of nature, your armor won't save you here traveller
 					crushed.apply_damage(20, BRUTE, BODY_ZONE_HEAD, wound_bonus = 25)
 					crushed.apply_damage(15, BRUTE, BODY_ZONE_L_LEG, wound_bonus = 15)
 					crushed.apply_damage(15, BRUTE, BODY_ZONE_R_LEG, wound_bonus = 15)
@@ -418,11 +418,15 @@
 
 				if(transport_controller_datum.ignored_smashthroughs[victim_living.type])
 					continue
+
 				to_chat(victim_living, span_userdanger("[src] collides into you!"))
 				playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+
+
 				var/damage = 0
-				switch(extra_ouch)
-					if(TRUE)
+				var/armor = victim_living.run_armor_check(BODY_ZONE_CHEST, MELEE, attack_type = ENVIRONMENTAL_ATTACK)
+				if (armor < 100) // If you're immune to all melee impacts, its only fair
+					if (extra_ouch)
 						playsound(src, 'sound/effects/grillehit.ogg', 50, TRUE)
 						var/obj/item/bodypart/head/head = victim_living.get_bodypart("head")
 						if(head)
@@ -431,14 +435,13 @@
 							victim_living.regenerate_icons()
 							add_overlay(mutable_appearance(icon, "blood_overlay"))
 							register_collision(points = 3)
-
-					if(FALSE)
+					else
 						log_combat(src, victim_living, "collided with")
 						if(prob(15)) //sorry buddy, luck wasn't on your side
 							damage = 29 * collision_lethality * damage_multiplier
 						else
 							damage = rand(7, 21) * collision_lethality * damage_multiplier
-						victim_living.apply_damage(2 * damage, BRUTE, BODY_ZONE_HEAD, wound_bonus = 7)
+						victim_living.apply_damage(2 * damage, BRUTE, BODY_ZONE_HEAD, wound_bonus = 7) // Tram is a force of nature, your armor won't save you here traveller
 						victim_living.apply_damage(3 * damage, BRUTE, BODY_ZONE_CHEST, wound_bonus = 21)
 						victim_living.apply_damage(0.5 * damage, BRUTE, BODY_ZONE_L_LEG, wound_bonus = 14)
 						victim_living.apply_damage(0.5 * damage, BRUTE, BODY_ZONE_R_LEG, wound_bonus = 14)
@@ -447,11 +450,13 @@
 
 				if(QDELETED(victim_living)) //in case it was a mob that dels on death
 					continue
+
 				if(!throw_target)
 					throw_target = get_edge_target_turf(src, turn(travel_direction, pick(45, -45)))
 
-				var/turf/turf_to_bloody = get_turf(victim_living)
-				turf_to_bloody.add_mob_blood(victim_living)
+				if (armor < 100)
+					var/turf/turf_to_bloody = get_turf(victim_living)
+					turf_to_bloody.add_mob_blood(victim_living)
 
 				victim_living.throw_at()
 				//if travel_direction EAST, will turn to the NORTHEAST or SOUTHEAST and throw the ran over guy away

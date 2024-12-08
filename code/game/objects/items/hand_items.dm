@@ -185,7 +185,7 @@
 		target.emote("scream")
 
 	log_combat(user, target, "given a noogie to", addition = "([damage] brute before armor)")
-	target.apply_damage(damage, BRUTE, BODY_ZONE_HEAD)
+	target.deal_damage(damage, BRUTE, BODY_ZONE_HEAD, MELEE, attack_type = UNARMED_ATTACK)
 	user.adjustStaminaLoss(iteration + 5)
 	playsound(get_turf(user), SFX_RUSTLE, 50)
 

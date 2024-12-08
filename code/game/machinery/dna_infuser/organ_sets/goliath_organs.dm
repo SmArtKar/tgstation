@@ -149,7 +149,7 @@
 	nemesis_effects(user, fresh_pancake)
 
 	// Target is a nemesis, and so now we do the extra big damage and go on cooldown
-	fresh_pancake.apply_damage(mining_bonus_force, damtype) //smush
+	fresh_pancake.deal_damage(mining_bonus_force, damtype, null, MELEE, attack_type = MELEE_ATTACK) //smush
 	COOLDOWN_START(src, tendril_hammer_cd, 2 SECONDS)
 
 /obj/item/goliath_infuser_hammer/proc/nemesis_effects(mob/living/user, mob/living/target)

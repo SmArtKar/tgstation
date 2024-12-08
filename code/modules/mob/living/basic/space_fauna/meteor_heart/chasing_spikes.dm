@@ -73,7 +73,7 @@
 			continue
 		hit_someone = TRUE
 		var/target_zone = victim.resting ? BODY_ZONE_CHEST : pick_weight(standing_damage_zones)
-		victim.apply_damage(impale_damage, damagetype = BRUTE, def_zone = target_zone, sharpness = SHARP_POINTY)
+		victim.deal_damage(impale_damage, BRUTE, target_zone, MELEE, sharpness = SHARP_POINTY, attack_type = ENVIRONMENTAL_ATTACK)
 	if (hit_someone)
 		playsound(src, 'sound/items/weapons/slice.ogg', vol = 50, vary = TRUE, pressure_affected = FALSE)
 	else

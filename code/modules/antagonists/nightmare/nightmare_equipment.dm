@@ -60,7 +60,7 @@
 		target.Paralyze(issilicon(target) ? 2 SECONDS : 1 SECONDS)
 	else
 		user.visible_message(span_boldwarning("[user] gores [target] with [src], ripping into them!"), span_userdanger("You gore [target] with [src], ripping into them!"))
-		target.apply_damage(damage = force, forced = TRUE)
+		target.deal_damage(force, BRUTE, user.zone_selected, MELEE, forced = TRUE, armour_penetration = 100, attack_type = MELEE_ATTACK)
 	remove_crit()
 
 /obj/item/light_eater/proc/prepare_crit_timer()
