@@ -165,7 +165,7 @@
 		return
 	// We're officially behind them, apply effects
 	living_target.AdjustParalyzed(1.5 SECONDS)
-	living_target.deal_damage(10, BRUTE, user.zone_selected, MELEE, wound_bonus = CANT_WOUND, armour_penetration = 100, attack_type = MELEE_ATTACK | MAGIC_ATTACK)
+	living_target.deal_damage(10, BRUTE, user.zone_selected, MELEE, wound_bonus = CANT_WOUND, armour_penetration = 100, attack_type = MELEE_ATTACK|MAGIC_ATTACK)
 	living_target.balloon_alert(user, "backstab!")
 	playsound(living_target, 'sound/items/weapons/guillotine.ogg', 100, TRUE)
 

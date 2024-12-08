@@ -1092,7 +1092,7 @@
 		user.do_attack_animation(turf, ATTACK_EFFECT_SLASH)
 		for(var/mob/living/additional_target in turf)
 			if(user.Adjacent(additional_target) && additional_target.density)
-				additional_target.apply_damage(15, BRUTE, null, MELEE, sharpness = SHARP_EDGED, bare_wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
+				additional_target.deal_damage(15, BRUTE, null, MELEE, sharpness = SHARP_EDGED, bare_wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 				to_chat(additional_target, span_userdanger("You've been sliced by [user]!"))
 	target.deal_damage(5, BRUTE, null, MELEE, sharpness = SHARP_EDGED, wound_bonus = 10, armour_penetration = armour_penetration, attack_type = MELEE_ATTACK)
 

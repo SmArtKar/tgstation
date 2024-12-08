@@ -107,7 +107,7 @@
 		var/obj/item/parent_item = parent
 		var/sharp = parent_item.get_sharpness()
 		var/msg = "[user] [sharp ? "impales" : "slams into"] [target] [sharp ? "on" : "with"] their [parent]"
-		target.deal_damage((damage_boost_per_tile * usable_charge), BRUTE, user.zone_selected, MELEE, attack_type = MELEE)
+		target.deal_damage((damage_boost_per_tile * usable_charge), BRUTE, user.zone_selected, MELEE, attack_type = MELEE_ATTACK)
 		if(prob(knockdown_chance_per_tile * usable_charge))
 			msg += " and knocks [target] [target.buckled ? "off of [target.buckled]" : "down"]"
 			if(target.buckled)

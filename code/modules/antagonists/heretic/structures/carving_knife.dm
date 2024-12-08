@@ -224,10 +224,11 @@
 	if(!iscarbon(victim))
 		return
 	var/mob/living/carbon/carbon_victim = victim
-	carbon_victim.Paralyze(5 SECONDS)
-	carbon_victim.deal_damage(20, BRUTE, BODY_ZONE_R_LEG, MELEE, armour_penetration = 100, attack_type = MAGIC_ATTACK)
-	carbon_victim.deal_damage(20, BRUTE, BODY_ZONE_L_LEG, MELEE, armour_penetration = 100, attack_type = MAGIC_ATTACK)
+	var/hit_result = carbon_victim.deal_damage(20, BRUTE, BODY_ZONE_R_LEG, MELEE, armour_penetration = 100, attack_type = MAGIC_ATTACK)
+	hit_result += carbon_victim.deal_damage(20, BRUTE, BODY_ZONE_L_LEG, MELEE, armour_penetration = 100, attack_type = MAGIC_ATTACK)
 	playsound(src, 'sound/effects/magic/demon_attack1.ogg', 75, TRUE)
+	if (hit_result)
+		carbon_victim.Paralyze(5 SECONDS)
 
 /obj/structure/trap/eldritch/mad
 	name = "mad carving"

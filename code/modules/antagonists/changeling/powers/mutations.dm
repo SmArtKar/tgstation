@@ -381,9 +381,10 @@
 	for(var/obj/item/weapon in user.held_items)
 		if(weapon.get_sharpness())
 			victim.visible_message(span_danger("[user] impales [victim] with [user.p_their()] [weapon.name]!"), span_userdanger("[user] impales you with [user.p_their()] [weapon.name]!"))
-			victim.deal_damage(weapon.force, weapon.damtype, BODY_ZONE_CHEST, MELEE, attacking_item = weapon, armour_penetration = weapon.armour_penetration, attack_type = MELEE_ATTACK)
+			var/hit_result = victim.deal_damage(weapon.force, weapon.damtype, BODY_ZONE_CHEST, MELEE, attacking_item = weapon, armour_penetration = weapon.armour_penetration, attack_type = MELEE_ATTACK)
 			user.do_item_attack_animation(victim, used_item = weapon, animation_type = ATTACK_ANIMATION_PIERCE)
-			user.add_mob_blood(victim)
+			if (hit_result)
+				user.add_mob_blood(victim)
 			playsound(get_turf(user),weapon.hitsound,75,TRUE)
 			return
 

@@ -81,8 +81,8 @@ at the cost of risking a vicious bite.**/
 	if(critter_infested && prob(50) && iscarbon(user))
 		var/mob/living/carbon/bite_victim = user
 		var/obj/item/bodypart/affecting = bite_victim.get_active_hand()
-		to_chat(user, span_danger("You feel a sharp pain as an unseen creature sinks its [pick("fangs", "beak", "proboscis")] into your [affecting.plaintext_zone]!"))
-		bite_victim.deal_damage(30, BRUTE, affecting, MELEE, attack_type = MELEE_ATTACK)
+		var/hit_result = bite_victim.deal_damage(30, BRUTE, affecting, MELEE, attack_type = MELEE_ATTACK)
+		to_chat(user, span_danger("[hit_result ? "You feel a sharp pain as an u" : "U"]nseen creature sinks its [pick("fangs", "beak", "proboscis")] into your [affecting.plaintext_zone]!"))
 		playsound(src,'sound/items/weapons/bite.ogg', 70, TRUE)
 		return
 	to_chat(user, span_warning("You find nothing of value..."))

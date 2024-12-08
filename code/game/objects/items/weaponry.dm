@@ -1291,9 +1291,9 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	playsound(src, 'sound/items/weapons/zapbang.ogg', 50, vary = TRUE)
 	if(isliving(target))
 		var/mob/living/living_target = target
-		living_target.deal_damage(force * damage_mod, BRUTE, user.zone_selected, MELEE, sharpness = SHARP_EDGED, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, armour_penetration = 100, attack_type = MELEE_ATTACK)
+		var/hit_result = living_target.deal_damage(force * damage_mod, BRUTE, user.zone_selected, MELEE, sharpness = SHARP_EDGED, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, armour_penetration = 100, attack_type = MELEE_ATTACK)
 		log_combat(user, living_target, "slashed", src)
-		if(living_target.stat == DEAD && prob(force*damage_mod*0.5))
+		if(hit_result && living_target.stat == DEAD && prob(force*damage_mod*0.5))
 			living_target.visible_message(span_danger("[living_target] explodes in a shower of gore!"), blind_message = span_hear("You hear organic matter ripping and tearing!"))
 			living_target.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
 			living_target.gib(DROP_ALL_REMAINS)

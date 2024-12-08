@@ -828,8 +828,8 @@
 			if(!istype(H.head, /obj/item/clothing/head/helmet))
 				H.visible_message(span_danger("[user] headbutts the airlock."), \
 									span_userdanger("You headbutt the airlock!"))
-				H.Paralyze(100)
-				H.deal_damage(10, BRUTE, BODY_ZONE_HEAD, MELEE, attack_type = ENVIRONMENTAL_ATTACK)
+				if (H.deal_damage(10, BRUTE, BODY_ZONE_HEAD, MELEE, attack_type = ENVIRONMENTAL_ATTACK))
+					H.Paralyze(100)
 			else
 				visible_message(span_danger("[user] headbutts the airlock. Good thing [user.p_theyre()] wearing a helmet."))
 

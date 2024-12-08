@@ -271,5 +271,5 @@
 	damage = round(damage * fishe.weight * 0.0005)
 	if(damage)
 		var/body_zone = pick(BODY_ZONE_R_ARM, BODY_ZONE_L_ARM)
-		user.deal_damage(damage, BRUTE, body_zone, MELEE, attack_type = MELEE_ATTACK)
+		user.deal_damage(damage, BRUTE, body_zone, MELEE, attack_type = MELEE_ATTACK|UNBLOCKABLE_ATTACK)
 		playsound(src,'sound/items/weapons/bite.ogg', damage * 2, TRUE)

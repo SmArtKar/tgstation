@@ -95,8 +95,8 @@
 				span_warning("\A [new_wall] [rises_message] and slams into [living_mob]!"),
 				span_userdanger("\A [new_wall] [rises_message] beneath your feet and slams into you!"),
 			)
-			living_mob.deal_damage(10, BRUTE, null, MELEE, wound_bonus = 10, attack_type = ENVIRONMENTAL_ATTACK)
-			living_mob.Knockdown(5 SECONDS)
+			if (living_mob.deal_damage(10, BRUTE, null, MELEE, wound_bonus = 10, attack_type = ENVIRONMENTAL_ATTACK|SLAM_ATTACK))
+				living_mob.Knockdown(5 SECONDS)
 		living_mob.SpinAnimation(5, 1)
 
 		// If we're a multiz map send them to the next floor

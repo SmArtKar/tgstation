@@ -150,6 +150,12 @@ DEFINE_BITFIELD(status_flags, list(
 #define REAGENT_ATTACK (1<<8)
 /// Blob is attacking us
 #define BLOB_ATTACK (1<<9)
+/// We caused this damage to ourselves
+#define SELF_ATTACK (1<<10)
+/// This is a special snowflaky case which should never be blocked by additional sources
+#define UNBLOCKABLE_ATTACK (1<<11)
+/// This attack is from something forcefully slamming into us
+#define SLAM_ATTACK (1<<12)
 
 // Attack range helpers
 /// Checks if an attack is performed in melee

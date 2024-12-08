@@ -55,7 +55,7 @@
 
 	// We're officially behind them, apply effects
 	target.AdjustParalyzed(1.5 SECONDS)
-	target.deal_damage(10, BRUTE, source.zone_selected, MELEE, wound_bonus = CANT_WOUND, armour_penetration = 100, attack_type = MELEE_ATTACK | MAGIC_ATTACK)
+	target.deal_damage(10, BRUTE, source.zone_selected, MELEE, wound_bonus = CANT_WOUND, armour_penetration = 100, attack_type = MELEE_ATTACK|MAGIC_ATTACK)
 	target.balloon_alert(source, "backstab!")
 	playsound(target, 'sound/items/weapons/guillotine.ogg', 100, TRUE)
 
@@ -424,7 +424,7 @@
 	// Turns your heretic blades into eswords, pretty much.
 	var/bonus_damage = clamp(30 - blade.force, 0, 12)
 
-	target.deal_damage(
+	if (!target.deal_damage(
 		damage = bonus_damage,
 		damagetype = BRUTE,
 		attack_flag = MELEE,
@@ -433,8 +433,9 @@
 		sharpness = SHARP_EDGED,
 		attack_direction = get_dir(source, target),
 		armour_penetration = 100,
-		attack_type = MELEE_ATTACK | MAGIC_ATTACK,
-	)
+		attack_type = MELEE_ATTACK|MAGIC_ATTACK,
+	))
+		return
 
 	if(target.stat != DEAD)
 		// And! Get some free healing for a portion of the bonus damage dealt.
