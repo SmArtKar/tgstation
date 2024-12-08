@@ -456,9 +456,9 @@
 	var/message_verb_simple = "attack"
 	var/message_hit_area = get_hit_area_message(hit_area)
 	// Sanity in case one is... longer than the other?
-	if (length(weapon.attack_verb_continuous) >= picked_index)
+	if (picked_index && length(weapon.attack_verb_continuous) >= picked_index)
 		message_verb_continuous = weapon.attack_verb_continuous[picked_index]
-	if (length(weapon.attack_verb_simple) >= picked_index)
+	if (picked_index && length(weapon.attack_verb_simple) >= picked_index)
 		message_verb_simple = weapon.attack_verb_simple[picked_index]
 
 	var/attack_message_spectator = "[src] [message_verb_continuous][message_hit_area] with [weapon]!"
