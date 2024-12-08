@@ -620,7 +620,7 @@
 		user.visible_message(span_danger("[user] smacks into [window] like a bug!"), span_userdanger("You smacks into [window] like a bug!"))
 		user.Paralyze(1 SECONDS)
 		user.Knockdown(3 SECONDS)
-		window.take_damage(30 * speed)
+		window.take_damage(30 * speed, attack_type = LEAP_ATTACK)
 		user.adjustStaminaLoss(10 * speed, updating_stamina=FALSE)
 		user.adjustBruteLoss(5 * speed)
 
