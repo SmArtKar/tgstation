@@ -54,7 +54,7 @@
 	if(flying_speed < EMBED_THROWSPEED_THRESHOLD && !weapon.get_embed().ignore_throwspeed_threshold)
 		return FALSE
 
-	if(!roll_embed_chance(weapon, victim, hit_zone, throwingdatum))
+	if(!roll_embed_chance(weapon, victim, hit_zone, throwingdatum, THROWN_PROJECTILE_ATTACK))
 		return FALSE
 
 	embed_object(weapon, victim, hit_zone, throwingdatum)
@@ -153,7 +153,7 @@
 		hit_zone = limb.body_zone
 		victim = limb.owner
 
-	if(!forced && !roll_embed_chance(embedding_item, victim, hit_zone, attack_type))
+	if(!forced && !roll_embed_chance(embedding_item, victim, hit_zone, attack_type = attack_type))
 		return
 
 	return check_embed(embedding_item, victim, hit_zone, forced=TRUE) // Don't repeat the embed roll, we already did it

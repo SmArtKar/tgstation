@@ -78,9 +78,9 @@ GLOBAL_LIST_EMPTY(objects_by_id_tag)
 	var/message_verb_continuous = "attacks"
 	var/message_verb_simple = "attack"
 	// Sanity in case one is... longer than the other?
-	if (length(attacking_item.attack_verb_continuous) >= picked_index)
+	if (picked_index && length(attacking_item.attack_verb_continuous) >= picked_index)
 		message_verb_continuous = attacking_item.attack_verb_continuous[picked_index]
-	if (length(attacking_item.attack_verb_simple) >= picked_index)
+	if (picked_index && length(attacking_item.attack_verb_simple) >= picked_index)
 		message_verb_simple = attacking_item.attack_verb_simple[picked_index]
 
 	if(attacking_item.demolition_mod > 1 && prob(damage * 5))
