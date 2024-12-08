@@ -173,7 +173,6 @@
 			brute = (curse_count * ticked_coefficient),
 			burn = (curse_count * ticked_coefficient),
 			oxy = (curse_count * ticked_coefficient),
-			attack_type = MAGIC_ATTACK,
 		)
 
 /atom/movable/screen/alert/status_effect/cursed
