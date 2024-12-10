@@ -304,55 +304,57 @@
 /mob/get_spacemove_backup(moving_direction, continuous_move)
 	var/atom/secondary_backup
 	var/list/priority_dirs = (moving_direction in GLOB.cardinals) ? GLOB.cardinals : GLOB.diagonals
-	for(var/atom/pushover as anything in range(1, get_turf(src)))
-		if(pushover == src)
-			continue
-		if(isarea(pushover))
-			continue
-		if(isturf(pushover))
-			var/turf/turf = pushover
-			if(isspaceturf(turf))
-				continue
-			if(!turf.density && !mob_negates_gravity())
-				continue
-			if (get_dir(src, pushover) in priority_dirs)
-				return pushover
-			secondary_backup = pushover
-			continue
+	var/list/secondary_dirs = (moving_direction in GLOB.cardinals) ? GLOB.diagonals : GLOB.cardinals
+	var/list/turf_list = list()
+	// We're trying to order our look order here
+	var/turf/look_turf = get_step(src, moving_direction)
+	if (!isnull(look_turf))
+		turf_list += look_turf
+		priority_dirs = priority_dirs.Copy() - moving_direction
 
-		var/atom/movable/rebound = pushover
-		if(rebound == buckled)
-			continue
-		if(ismob(rebound))
-			var/mob/lover = rebound
-			if(lover.buckled)
+	for (var/step_dir in priority_dirs + secondary_dirs)
+		look_turf = get_step(src, step_dir)
+		if (!isnull(look_turf))
+			turf_list += look_turf
+
+	for (var/turf/target_turf as anything in turf_list)
+		if(!isspaceturf(target_turf))
+			if(target_turf.density || mob_negates_gravity())
+				return target_turf
+
+		for (var/atom/movable/rebound as anything in target_turf)
+			if(rebound == src || rebound == buckled)
 				continue
 
-		var/pass_allowed = rebound.CanPass(src, get_dir(rebound, src))
-		if(!rebound.density && pass_allowed && !istype(rebound, /obj/structure/lattice))
-			continue
-		//Sometime this tick, this pushed off something. Doesn't count as a valid pushoff target
-		if(rebound.last_pushoff == world.time)
-			continue
-		if(continuous_move && !pass_allowed)
-			var/datum/move_loop/smooth_move/rebound_engine = GLOB.move_manager.processing_on(rebound, SSnewtonian_movement)
-			// If you're moving toward it and you're both going the same direction, stop
-			if(moving_direction == get_dir(src, pushover) && rebound_engine && moving_direction == angle2dir(rebound_engine.angle))
+			if(ismob(rebound))
+				var/mob/lover = rebound
+				if(lover.buckled)
+					continue
+
+			var/pass_allowed = rebound.CanPass(src, get_dir(rebound, src))
+			if(!rebound.density && pass_allowed && !istype(rebound, /obj/structure/lattice))
 				continue
-		else if(!pass_allowed)
-			if(moving_direction == get_dir(src, pushover)) // Can't push "off" of something that you're walking into
+
+			// Sometime this tick, this pushed off something. Doesn't count as a valid pushoff target
+			if(rebound.last_pushoff == world.time)
 				continue
-		if(rebound.anchored)
-			if (get_dir(src, rebound) in priority_dirs)
+
+			if(!pass_allowed)
+				if (continuous_move)
+					var/datum/move_loop/smooth_move/rebound_engine = GLOB.move_manager.processing_on(rebound, SSnewtonian_movement)
+					// If you're moving toward it and you're both going the same direction, stop
+					if(moving_direction == get_dir(src, target_turf) && rebound_engine && moving_direction == angle2dir(rebound_engine.angle))
+						continue
+				else if(moving_direction == get_dir(src, target_turf)) // Can't push "off" of something that you're trying to walk into
+					continue
+
+			if(rebound.anchored)
 				return rebound
-			secondary_backup = rebound
-			continue
-		if(pulling == rebound)
-			continue
-		if (get_dir(src, rebound) in priority_dirs)
+
+			if(pulling == rebound)
+				continue
+
 			return rebound
-		secondary_backup = rebound
-	return secondary_backup
 
 /mob/has_gravity(turf/gravity_turf)
 	return mob_negates_gravity() || ..()
