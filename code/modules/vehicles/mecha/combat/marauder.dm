@@ -40,9 +40,9 @@
 
 /obj/vehicle/sealed/mecha/marauder/loaded
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/energy/pulse,
-		MECHA_R_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/radio, /obj/item/mecha_parts/mecha_equipment/air_tank/full, /obj/item/mecha_parts/mecha_equipment/thrusters/ion),
+		MECHA_L_ARM = /obj/item/mecha_equipment/weapon/energy/pulse,
+		MECHA_R_ARM = /obj/item/mecha_equipment/weapon/ballistic/missile_rack,
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/radio, /obj/item/mecha_equipment/air_tank/full, /obj/item/mecha_equipment/thrusters/ion),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -103,9 +103,9 @@
 		MECHA_ARMOR = 0,
 	)
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/energy/pulse,
-		MECHA_R_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/radio, /obj/item/mecha_parts/mecha_equipment/air_tank/full, /obj/item/mecha_parts/mecha_equipment/thrusters/ion),
+		MECHA_L_ARM = /obj/item/mecha_equipment/weapon/energy/pulse,
+		MECHA_R_ARM = /obj/item/mecha_equipment/weapon/ballistic/missile_rack,
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/radio, /obj/item/mecha_equipment/air_tank/full, /obj/item/mecha_equipment/thrusters/ion),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -140,7 +140,7 @@
 	equip_by_category = list(
 		MECHA_L_ARM = null,
 		MECHA_R_ARM = null,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/radio, /obj/item/mecha_parts/mecha_equipment/air_tank/full, /obj/item/mecha_parts/mecha_equipment/thrusters/ion),
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/radio, /obj/item/mecha_equipment/air_tank/full, /obj/item/mecha_equipment/thrusters/ion),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -157,9 +157,9 @@
 
 /obj/vehicle/sealed/mecha/marauder/mauler/loaded
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/lmg,
-		MECHA_R_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/radio, /obj/item/mecha_parts/mecha_equipment/air_tank/full, /obj/item/mecha_parts/mecha_equipment/thrusters/ion),
+		MECHA_L_ARM = /obj/item/mecha_equipment/weapon/ballistic/lmg,
+		MECHA_R_ARM = /obj/item/mecha_equipment/weapon/ballistic/missile_rack,
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/radio, /obj/item/mecha_equipment/air_tank/full, /obj/item/mecha_equipment/thrusters/ion),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)

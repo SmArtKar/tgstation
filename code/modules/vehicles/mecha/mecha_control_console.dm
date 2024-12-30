@@ -102,7 +102,7 @@
 				<b>Pilot:</b> [english_list(chassis.return_drivers(), nothing_text = "None")]<br>
 				<b>Location:</b> [get_area_name(chassis, TRUE) || "Unknown"]"}
 	if(istype(chassis, /obj/vehicle/sealed/mecha/ripley))
-		var/obj/item/mecha_parts/mecha_equipment/ejector/cargo_holder = locate(/obj/item/mecha_parts/mecha_equipment/ejector) in chassis.equip_by_category[MECHA_UTILITY]
+		var/obj/item/mecha_equipment/ejector/cargo_holder = locate(/obj/item/mecha_equipment/ejector) in chassis.equip_by_category[MECHA_UTILITY]
 		answer += "<br><b>Used Cargo Space:</b> [round((cargo_holder.contents.len / cargo_holder.cargo_capacity * 100), 0.01)]%"
 
 	return answer

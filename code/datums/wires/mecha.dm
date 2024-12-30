@@ -75,12 +75,12 @@
 	var/obj/vehicle/sealed/mecha/mecha = holder
 	if(mecha.occupant_amount()) //no powergamers sorry
 		return
-	var/list/obj/item/mecha_parts/mecha_equipment/armaments = list()
+	var/list/obj/item/mecha_equipment/armaments = list()
 	if(!isnull(mecha.equip_by_category[MECHA_R_ARM]))
 		armaments += mecha.equip_by_category[MECHA_R_ARM]
 	if(!isnull(mecha.equip_by_category[MECHA_L_ARM]))
 		armaments += mecha.equip_by_category[MECHA_L_ARM]
-	var/obj/item/mecha_parts/mecha_equipment/armament = length(armaments) ? pick(armaments) : null //null makes a melee attack
+	var/obj/item/mecha_equipment/armament = length(armaments) ? pick(armaments) : null //null makes a melee attack
 	if(isnull(target))
 		target = locate() in view(length(armaments) ? 5 : 1, mecha)
 		if(isnull(target)) // still no target
@@ -89,7 +89,7 @@
 	var/disabled = mecha.equipment_disabled
 	if(!isnull(armament) && armament.range & MECHA_RANGED)
 		mecha.equipment_disabled = FALSE // honestly just avoid this wire
-		INVOKE_ASYNC(armament, TYPE_PROC_REF(/obj/item/mecha_parts/mecha_equipment, action), mecha, target)
+		INVOKE_ASYNC(armament, TYPE_PROC_REF(/obj/item/mecha_equipment, action), mecha, target)
 		mecha.equipment_disabled = disabled
 		return
 	if(mecha.Adjacent(target) && !TIMER_COOLDOWN_RUNNING(mecha, COOLDOWN_MECHA_MELEE_ATTACK) && target.mech_melee_attack(mecha))

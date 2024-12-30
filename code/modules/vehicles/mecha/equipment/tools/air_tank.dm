@@ -1,5 +1,5 @@
 ///Mech air tank module
-/obj/item/mecha_parts/mecha_equipment/air_tank
+/obj/item/mecha_equipment/air_tank
 	name = "mounted air tank"
 	desc = "An internal air tank used to pressurize mech cabin, scrub CO2 and power RCS thrusters. Comes with a pump and a set of sensors."
 	icon_state = "mecha_air_tank"
@@ -25,7 +25,7 @@
 	///Target pressure of the pump
 	var/tank_pump_pressure = ONE_ATMOSPHERE
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/Initialize(mapload)
+/obj/item/mecha_equipment/air_tank/Initialize(mapload)
 	. = ..()
 	internal_tank = new(src)
 	internal_tank.air_contents.volume = volume
@@ -35,19 +35,19 @@
 		internal_tank.air_contents.add_gases(/datum/gas/oxygen)
 		internal_tank.air_contents.gases[/datum/gas/oxygen][MOLES] = maximum_pressure * volume / (R_IDEAL_GAS_EQUATION * internal_tank.air_contents.temperature)
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/Destroy()
+/obj/item/mecha_equipment/air_tank/Destroy()
 	if(chassis)
 		UnregisterSignal(chassis, COMSIG_MOVABLE_PRE_MOVE)
 	STOP_PROCESSING(SSobj, src)
 	qdel(internal_tank)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
+/obj/item/mecha_equipment/air_tank/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 	RegisterSignal(new_mecha, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(disconnect_air))
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/detach(atom/moveto)
+/obj/item/mecha_equipment/air_tank/detach(atom/moveto)
 	disconnect_air()
 	if(tank_pump_active)
 		tank_pump_active = FALSE
@@ -55,7 +55,7 @@
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/set_active(active)
+/obj/item/mecha_equipment/air_tank/set_active(active)
 	. = ..()
 	if(active)
 		var/datum/action/action = locate(/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal) in usr.actions
@@ -66,13 +66,13 @@
 		action.button_icon_state = "mech_cabin_[chassis.cabin_sealed ? "closed" : "open"]"
 		action.build_all_button_icons()
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/process(seconds_per_tick)
+/obj/item/mecha_equipment/air_tank/process(seconds_per_tick)
 	if(!chassis)
 		return
 	process_cabin_pressure()
 	process_pump()
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/proc/process_cabin_pressure(seconds_per_tick)
+/obj/item/mecha_equipment/air_tank/proc/process_cabin_pressure(seconds_per_tick)
 	if(!chassis.cabin_sealed || !active)
 		return
 	var/datum/gas_mixture/external_air = chassis.loc.return_air()
@@ -84,7 +84,7 @@
 	if(cabin_air.has_gas(/datum/gas/carbon_dioxide))
 		cabin_air.pump_gas_to(external_air, PUMP_MAX_PRESSURE, /datum/gas/carbon_dioxide)
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/proc/process_pump(seconds_per_tick)
+/obj/item/mecha_equipment/air_tank/proc/process_pump(seconds_per_tick)
 	if(!tank_pump_active)
 		return
 	var/turf/local_turf = get_turf(chassis)
@@ -93,13 +93,13 @@
 	if(sending.pump_gas_to(receiving, tank_pump_pressure))
 		air_update_turf(FALSE, FALSE)
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/proc/disconnect_air()
+/obj/item/mecha_equipment/air_tank/proc/disconnect_air()
 	SIGNAL_HANDLER
 	if(connected_port && internal_tank.disconnect())
 		to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_warning("Air port connection has been severed!")]")
 		log_message("Lost connection to gas port.", LOG_MECHA)
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/get_snowflake_data()
+/obj/item/mecha_equipment/air_tank/get_snowflake_data()
 	var/datum/gas_mixture/tank_air = internal_tank.return_air()
 	return list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_AIR_TANK,
@@ -117,7 +117,7 @@
 		"cabin_air" = gas_mixture_parser(chassis.cabin_air, "cabin"),
 	)
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/air_tank/handle_ui_act(action, list/params)
 	switch(action)
 		if("set_cabin_pressure")
 			var/new_pressure = text2num(params["new_pressure"])
@@ -153,5 +153,5 @@
 			return TRUE
 	return FALSE
 
-/obj/item/mecha_parts/mecha_equipment/air_tank/full
+/obj/item/mecha_equipment/air_tank/full
 	start_full = TRUE

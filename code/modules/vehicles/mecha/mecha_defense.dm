@@ -183,7 +183,7 @@
 		return ITEM_INTERACT_SUCCESS
 
 	if(istype(tool, /obj/item/mecha_parts))
-		var/obj/item/mecha_parts/part = tool
+		var/obj/item/mecha_parts = tool
 		part.try_attach_part(user, src, modifiers[RIGHT_CLICK])
 		return ITEM_INTERACT_SUCCESS
 

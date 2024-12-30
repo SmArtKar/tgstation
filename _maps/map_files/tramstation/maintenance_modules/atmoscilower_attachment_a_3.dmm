@@ -159,11 +159,11 @@
 "K" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/item/mecha_parts/chassis/ripley,
-/obj/item/mecha_parts/part/ripley_left_arm{
+/obj/item/mecha_parts/ripley_left_arm{
 	pixel_y = -2;
 	pixel_x = -9
 	},
-/obj/item/mecha_parts/part/ripley_right_leg{
+/obj/item/mecha_parts/ripley_right_leg{
 	pixel_x = 7;
 	pixel_y = -5
 	},

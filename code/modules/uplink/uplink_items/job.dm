@@ -325,7 +325,7 @@
 			Alternatively, you can attach the bay to an empty equipment slot, but the bay will not be concealed. Once the bay is \
 			attached, an exosuit weapon can be fitted inside."
 	progression_minimum = 30 MINUTES
-	item = /obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay
+	item = /obj/item/mecha_equipment/concealed_weapon_bay
 	cost = 3
 	restricted_roles = list(JOB_ROBOTICIST, JOB_RESEARCH_DIRECTOR)
 	surplus = 15

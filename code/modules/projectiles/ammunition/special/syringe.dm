@@ -21,8 +21,8 @@
 		D.inject_flags = S.inject_flags
 		SG.syringes.Remove(S)
 		qdel(S)
-	else if(istype(loc, /obj/item/mecha_parts/mecha_equipment/medical/syringe_gun))
-		var/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/syringe_gun = loc
+	else if(istype(loc, /obj/item/mecha_equipment/medical/syringe_gun))
+		var/obj/item/mecha_equipment/medical/syringe_gun/syringe_gun = loc
 		var/obj/item/reagent_containers/syringe/loaded_syringe = syringe_gun.syringes[1]
 		var/obj/projectile/bullet/dart/shot_dart = loaded_projectile
 		syringe_gun.reagents.trans_to(shot_dart, min(loaded_syringe.volume, syringe_gun.reagents.total_volume), transferred_by = user)

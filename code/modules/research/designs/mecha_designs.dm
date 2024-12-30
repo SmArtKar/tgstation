@@ -224,7 +224,7 @@
 	desc = "Allows for the construction of LBX AC 10."
 	id = "mech_scattershot"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/scattershot
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/scattershot
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -260,7 +260,7 @@
 	desc = "Allows for the construction of FNX-99 \"Hades\" Carbine."
 	id = "mech_carbine"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/carbine
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/carbine
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -296,7 +296,7 @@
 	desc = "Allows for the construction of MKIV Ion Heavy Cannon."
 	id = "mech_ion"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/ion
+	build_path = /obj/item/mecha_equipment/weapon/energy/ion
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,/datum/material/silver=SHEET_MATERIAL_AMOUNT*3,/datum/material/uranium=SHEET_MATERIAL_AMOUNT)
 	construction_time = 10 SECONDS
 	category = list(
@@ -314,7 +314,7 @@
 	desc = "Allows for the construction of MKI Tesla Cannon."
 	id = "mech_tesla"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/tesla
+	build_path = /obj/item/mecha_equipment/weapon/energy/tesla
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,/datum/material/silver=SHEET_MATERIAL_AMOUNT*4)
 	construction_time = 10 SECONDS
 	category = list(
@@ -332,7 +332,7 @@
 	desc = "Allows for the construction of CH-PS Laser."
 	id = "mech_laser"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/laser
+	build_path = /obj/item/mecha_equipment/weapon/energy/laser
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -350,7 +350,7 @@
 	desc = "Allows for the construction of CH-LC Laser Cannon."
 	id = "mech_laser_heavy"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/laser/heavy
+	build_path = /obj/item/mecha_equipment/weapon/energy/laser/heavy
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -368,7 +368,7 @@
 	desc = "Allows for the construction of CH-DS Disabler."
 	id = "mech_disabler"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/disabler
+	build_path = /obj/item/mecha_equipment/weapon/energy/disabler
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -386,7 +386,7 @@
 	desc = "Allows for the construction of SGL-6 Grenade Launcher."
 	id = "mech_grenade_launcher"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/flashbang
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/launcher/flashbang
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*11,/datum/material/gold=SHEET_MATERIAL_AMOUNT*3,/datum/material/silver=SHEET_MATERIAL_AMOUNT*4)
 	construction_time = 10 SECONDS
 	category = list(
@@ -422,7 +422,7 @@
 	desc = "Allows for the construction of an PEP-6 Breaching Missile Rack."
 	id = "mech_missile_rack"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack/breaching
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/missile_rack/breaching
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*11,/datum/material/gold=SHEET_MATERIAL_AMOUNT*3,/datum/material/silver=SHEET_MATERIAL_AMOUNT*4)
 	construction_time = 10 SECONDS
 	category = list(
@@ -458,7 +458,7 @@
 	desc = "A weapon that violates the Geneva Convention at 3 rounds per minute."
 	id = "clusterbang_launcher"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/flashbang/clusterbang
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/launcher/flashbang/clusterbang
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,/datum/material/gold=SHEET_MATERIAL_AMOUNT*5,/datum/material/uranium=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -494,7 +494,7 @@
 	desc = "An exosuit module that allows generating of small quasi-stable wormholes."
 	id = "mech_wormhole_gen"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/wormhole_generator
+	build_path = /obj/item/mecha_equipment/wormhole_generator
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -515,7 +515,7 @@
 	desc = "An exosuit module that allows exosuits to teleport to any position in view."
 	id = "mech_teleporter"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/teleporter
+	build_path = /obj/item/mecha_equipment/teleporter
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,/datum/material/diamond=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -536,7 +536,7 @@
 	desc = "An exosuit-mounted Rapid Construction Device."
 	id = "mech_rcd"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/rcd
+	build_path = /obj/item/mecha_equipment/rcd
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*15,/datum/material/gold=SHEET_MATERIAL_AMOUNT*10,/datum/material/plasma=SHEET_MATERIAL_AMOUNT*12.5,/datum/material/silver=SHEET_MATERIAL_AMOUNT*10)
 	construction_time = 2 MINUTES
 	category = list(
@@ -557,7 +557,7 @@
 	desc = "A thruster package for exosuits. Expells gas from the internal life-support air tank to generate thrust."
 	id = "mech_thrusters"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/thrusters/gas
+	build_path = /obj/item/mecha_equipment/thrusters/gas
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*12.5,/datum/material/titanium=SHEET_MATERIAL_AMOUNT * 2.5,/datum/material/silver=SHEET_MATERIAL_AMOUNT*1.5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -577,7 +577,7 @@
 	desc = "An exosuit mounted Gravitational Catapult."
 	id = "mech_gravcatapult"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/gravcatapult
+	build_path = /obj/item/mecha_equipment/gravcatapult
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -598,7 +598,7 @@
 	desc = "Automated Repair Droid. BEEP BOOP"
 	id = "mech_repair_droid"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/repair_droid
+	build_path = /obj/item/mecha_equipment/repair_droid
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,/datum/material/glass =SHEET_MATERIAL_AMOUNT * 2.5,/datum/material/gold=HALF_SHEET_MATERIAL_AMOUNT,/datum/material/silver=SHEET_MATERIAL_AMOUNT)
 	construction_time = 10 SECONDS
 	category = list(
@@ -619,7 +619,7 @@
 	desc = "Exosuit-mounted melee armor booster."
 	id = "mech_ccw_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/armor/anticcw_armor_booster
+	build_path = /obj/item/mecha_equipment/armor/anticcw_armor_booster
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,/datum/material/silver=SHEET_MATERIAL_AMOUNT * 2.5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -640,7 +640,7 @@
 	desc = "Exosuit-mounted ranged armor booster."
 	id = "mech_proj_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/armor/antiproj_armor_booster
+	build_path = /obj/item/mecha_equipment/armor/antiproj_armor_booster
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,/datum/material/gold=SHEET_MATERIAL_AMOUNT * 2.5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -661,7 +661,7 @@
 	desc = "An upgraded version of the standard drill."
 	id = "mech_diamond_drill"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/drill/diamonddrill
+	build_path = /obj/item/mecha_equipment/drill/diamonddrill
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,/datum/material/diamond=SHEET_MATERIAL_AMOUNT*3.25)
 	construction_time = 10 SECONDS
 	category = list(
@@ -676,7 +676,7 @@
 	desc = "A device that shoots resonant plasma bursts at extreme velocity. The blasts are capable of crushing rock and demolishing solid obstacles."
 	id = "mech_plasma_cutter"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/plasma
+	build_path = /obj/item/mecha_equipment/weapon/energy/plasma
 	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*4, /datum/material/glass =HALF_SHEET_MATERIAL_AMOUNT, /datum/material/plasma =SHEET_MATERIAL_AMOUNT)
 	construction_time = 10 SECONDS
 	category = list(
@@ -696,7 +696,7 @@
 	desc = "An exosuit-mounted mining tool that does increased damage in low pressure. Drawing from an onboard power source allows it to project further than the handheld version."
 	id = "mecha_kineticgun"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/mecha_kineticgun
+	build_path = /obj/item/mecha_equipment/weapon/energy/mecha_kineticgun
 	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*4, /datum/material/glass =HALF_SHEET_MATERIAL_AMOUNT)
 	construction_time = 10 SECONDS
 	category = list(
@@ -716,7 +716,7 @@
 	desc = "A weapon for combat exosuits. Shoots a rapid, three shot burst."
 	id = "mech_lmg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/lmg
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/lmg
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -750,7 +750,7 @@
 	desc = "Equipment for medical exosuits. A mounted sleeper that stabilizes patients and can inject reagents in the exosuit's reserves."
 	id = "mech_sleeper"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/sleeper/medical
+	build_path = /obj/item/mecha_equipment/sleeper/medical
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT * 2.5, /datum/material/glass = SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -764,7 +764,7 @@
 	desc = "Equipment for medical exosuits. A chem synthesizer with syringe gun. Reagents inside are held in stasis, so no reactions will occur."
 	id = "mech_syringe_gun"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/medical/syringe_gun
+	build_path = /obj/item/mecha_equipment/medical/syringe_gun
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*1.5, /datum/material/glass =SHEET_MATERIAL_AMOUNT)
 	construction_time = 20 SECONDS
 	category = list(
@@ -780,7 +780,7 @@
 	build_type = MECHFAB
 	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*7.5, /datum/material/glass = SHEET_MATERIAL_AMOUNT*4, /datum/material/plasma =SHEET_MATERIAL_AMOUNT*1.5, /datum/material/gold = SHEET_MATERIAL_AMOUNT*4, /datum/material/diamond =SHEET_MATERIAL_AMOUNT)
 	construction_time = 25 SECONDS
-	build_path = /obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam
+	build_path = /obj/item/mecha_equipment/medical/mechmedbeam
 	category = list(
 		RND_CATEGORY_MECHFAB_EQUIPMENT + RND_SUBCATEGORY_MECHFAB_EQUIPMENT_MEDICAL,
 		RND_CATEGORY_MECHFAB_ODYSSEUS + RND_SUBCATEGORY_MECHFAB_SUPPORTED_EQUIPMENT

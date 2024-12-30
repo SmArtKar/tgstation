@@ -71020,7 +71020,7 @@
 /area/station/ai_monitored/turret_protected/aisat_interior)
 "uzd" = (
 /obj/structure/rack,
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp{
+/obj/item/mecha_equipment/hydraulic_clamp{
 	pixel_y = 4
 	},
 /turf/open/floor/iron/smooth,
@@ -82061,7 +82061,7 @@
 /area/station/command/heads_quarters/captain)
 "xLJ" = (
 /obj/structure/rack,
-/obj/item/mecha_parts/mecha_equipment/drill,
+/obj/item/mecha_equipment/drill,
 /turf/open/floor/iron/smooth,
 /area/mine/mechbay)
 "xLK" = (

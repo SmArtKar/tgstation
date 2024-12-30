@@ -1,21 +1,21 @@
 // Sleeper, Medical Beam, and Syringe gun
 
-/obj/item/mecha_parts/mecha_equipment/medical
+/obj/item/mecha_equipment/medical
 	mech_flags = EXOSUIT_MODULE_MEDICAL
 
-/obj/item/mecha_parts/mecha_equipment/medical/attach(obj/vehicle/sealed/mecha/new_mecha)
+/obj/item/mecha_equipment/medical/attach(obj/vehicle/sealed/mecha/new_mecha)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam/detach(atom/moveto)
+/obj/item/mecha_equipment/medical/mechmedbeam/detach(atom/moveto)
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/medical/process()
+/obj/item/mecha_equipment/medical/process()
 	if(!chassis)
 		return PROCESS_KILL
 
-/obj/item/mecha_parts/mecha_equipment/proc/get_reagent_data(list/datum/reagent/reagent_list)
+/obj/item/mecha_equipment/proc/get_reagent_data(list/datum/reagent/reagent_list)
 	var/list/contained_reagents = list()
 	if(length(reagent_list))
 		for(var/datum/reagent/reagent as anything in reagent_list)
@@ -23,7 +23,7 @@
 	return contained_reagents
 
 //---- Mecha sleeper, medical subtype has the chemical functionality
-/obj/item/mecha_parts/mecha_equipment/sleeper
+/obj/item/mecha_equipment/sleeper
 	name = "mounted sleeper"
 	desc = "A mounted sleeper that stabilizes patients."
 	icon_state = "mecha_sleeper_miner"
@@ -33,15 +33,15 @@
 	/// ref to the patient loaded in the sleeper
 	var/mob/living/carbon/patient
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/Destroy()
+/obj/item/mecha_equipment/sleeper/Destroy()
 	for(var/atom/movable/content as anything in src)
 		content.forceMove(get_turf(src))
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/container_resist_act(mob/living/user)
+/obj/item/mecha_equipment/sleeper/container_resist_act(mob/living/user)
 	go_out()
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/action(mob/source, atom/atomtarget, list/modifiers)
+/obj/item/mecha_equipment/sleeper/action(mob/source, atom/atomtarget, list/modifiers)
 	if(!action_checks(atomtarget))
 		return
 	if(!iscarbon(atomtarget))
@@ -63,7 +63,7 @@
 	log_message("[target] loaded. Life support functions engaged.", LOG_MECHA)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/proc/patient_insertion_check(mob/living/carbon/target, mob/user)
+/obj/item/mecha_equipment/sleeper/proc/patient_insertion_check(mob/living/carbon/target, mob/user)
 	if(!isnull(target.buckled))
 		to_chat(user, "[icon2html(src, user)][span_warning("[target] will not fit into the sleeper because [target.p_theyre()] buckled to [target.buckled]!")]")
 		return FALSE
@@ -75,7 +75,7 @@
 		return FALSE
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/proc/go_out()
+/obj/item/mecha_equipment/sleeper/proc/go_out()
 	if(!patient)
 		return
 	patient.forceMove(get_turf(src))
@@ -84,14 +84,14 @@
 	STOP_PROCESSING(SSobj, src)
 	patient = null
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/detach()
+/obj/item/mecha_equipment/sleeper/detach()
 	if(patient)
 		to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_warning("Unable to detach [src] - equipment occupied!")]")
 		return
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/get_snowflake_data()
+/obj/item/mecha_equipment/sleeper/get_snowflake_data()
 	var/list/data = list("snowflake_id" = MECHA_SNOWFLAKE_ID_SLEEPER)
 	if(isnull(patient))
 		return data
@@ -127,13 +127,13 @@
 
 	return data
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/sleeper/handle_ui_act(action, list/params)
 	if(action == "eject")
 		go_out()
 		return TRUE
 	return FALSE
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/process(seconds_per_tick)
+/obj/item/mecha_equipment/sleeper/process(seconds_per_tick)
 	if(!chassis.has_charge(energy_drain))
 		log_message("Deactivated.", LOG_MECHA)
 		to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_warning("[src] deactivated - no power.")]")
@@ -162,7 +162,7 @@
 	chassis.use_energy(energy_drain)
 
 //Medical subtype with the chems
-/obj/item/mecha_parts/mecha_equipment/sleeper/medical
+/obj/item/mecha_equipment/sleeper/medical
 	name = "mounted sleeper"
 	desc = "Equipment for medical exosuits. A mounted sleeper that stabilizes patients and can inject reagents from a equipped exosuit syringe gun."
 	icon_state = "mecha_sleeper"
@@ -170,27 +170,27 @@
 	/// amount of chems to inject into patient from other hands syringe gun
 	var/inject_amount = 10
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/medical/get_snowflake_data()
+/obj/item/mecha_equipment/sleeper/medical/get_snowflake_data()
 	var/list/data = ..()
 	if(isnull(patient))
 		return data
-	var/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/shooter = locate(/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun) in chassis
+	var/obj/item/mecha_equipment/medical/syringe_gun/shooter = locate(/obj/item/mecha_equipment/medical/syringe_gun) in chassis
 	if(shooter)
 		data["injectible_reagents"] = get_reagent_data(shooter.reagents.reagent_list)
 	return data
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/medical/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/sleeper/medical/handle_ui_act(action, list/params)
 	. = ..()
 	if(.)
 		return TRUE
-	var/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/shooter = locate() in chassis
+	var/obj/item/mecha_equipment/medical/syringe_gun/shooter = locate() in chassis
 	if(shooter)
 		for(var/datum/reagent/medication as anything in shooter.reagents.reagent_list)
 			if(action == ("inject_reagent_" + medication.name))
 				inject_reagent(medication, shooter)
 				break // or maybe return TRUE? i'm not certain
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/medical/proc/inject_reagent(datum/reagent/reagent_to_inject, obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/SG)
+/obj/item/mecha_equipment/sleeper/medical/proc/inject_reagent(datum/reagent/reagent_to_inject, obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/SG)
 	if(!reagent_to_inject || !patient || !SG || !(SG in chassis.flat_equipment))
 		return
 	var/to_inject = min(reagent_to_inject.volume, inject_amount)
@@ -206,7 +206,7 @@
 #define FIRE_SYRINGE_MODE 0
 #define ANALYZE_SYRINGE_MODE 1
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun
+/obj/item/mecha_equipment/medical/syringe_gun
 	name = "exosuit syringe gun"
 	desc = "Equipment for medical exosuits. A chem synthesizer with syringe gun. Reagents inside are held in stasis, so no reactions will occur."
 	icon_state = "mecha_syringegun"
@@ -228,26 +228,26 @@
 	///Chooses what kind of action we should perform when clicking
 	var/mode = FIRE_SYRINGE_MODE // fire syringe or analyze reagents.
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/Initialize(mapload)
+/obj/item/mecha_equipment/medical/syringe_gun/Initialize(mapload)
 	. = ..()
 	create_reagents(max_volume, NO_REACT)
 	known_reagents = list(/datum/reagent/medicine/epinephrine="Epinephrine",/datum/reagent/medicine/c2/multiver="Multiver")
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/Destroy()
+/obj/item/mecha_equipment/medical/syringe_gun/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
 /// Handles detaching signal hooks incase someone is crazy enough to make this edible.
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/proc/on_reagents_del(datum/reagents/reagents)
+/obj/item/mecha_equipment/medical/syringe_gun/proc/on_reagents_del(datum/reagents/reagents)
 	SIGNAL_HANDLER
 	UnregisterSignal(reagents, list(COMSIG_REAGENTS_NEW_REAGENT, COMSIG_REAGENTS_ADD_REAGENT, COMSIG_REAGENTS_DEL_REAGENT, COMSIG_REAGENTS_REM_REAGENT, COMSIG_QDELETING))
 	return NONE
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/detach()
+/obj/item/mecha_equipment/medical/syringe_gun/detach()
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/get_snowflake_data()
+/obj/item/mecha_equipment/medical/syringe_gun/get_snowflake_data()
 	var/list/analyzed_reagents = list() // we need to make this list because .tsk wont map over an indexed array
 	for(var/i=1 to known_reagents.len)
 		var/enabled = FALSE
@@ -267,7 +267,7 @@
 	data["contained_reagents"] = get_reagent_data(reagents.reagent_list)
 	return data
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/medical/syringe_gun/handle_ui_act(action, list/params)
 	if(action == "change_mode")
 		mode = !mode
 		return TRUE
@@ -281,7 +281,7 @@
 			else if(action == ("toggle_reagent_" + known_reagents[i].name))
 				synthesize(reagent_id)
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/proc/synthesize(reagent)
+/obj/item/mecha_equipment/medical/syringe_gun/proc/synthesize(reagent)
 	if(reagent in processed_reagents)
 		LAZYREMOVE(processed_reagents, reagent)
 		return
@@ -296,7 +296,7 @@
 	to_chat(usr, "[icon2html(src, usr)][span_notice("Reagent processing started.")]")
 	log_message("Reagent processing started.", LOG_MECHA)
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/action(mob/source, atom/target, list/modifiers)
+/obj/item/mecha_equipment/medical/syringe_gun/action(mob/source, atom/target, list/modifiers)
 	if(!action_checks(target))
 		return
 	if(istype(target, /obj/item/reagent_containers/syringe))
@@ -322,7 +322,7 @@
 	chambered.fire_casing(target, source, null, 0, 0, null, 0, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/proc/load_syringe(obj/item/reagent_containers/syringe/S, mob/user)
+/obj/item/mecha_equipment/medical/syringe_gun/proc/load_syringe(obj/item/reagent_containers/syringe/S, mob/user)
 	if(LAZYLEN(syringes) >= max_syringes)
 		to_chat(user, "[icon2html(src, user)][span_warning("[src]'s syringe chamber is full!")]")
 		return FALSE
@@ -335,7 +335,7 @@
 	to_chat(user, "[icon2html(src, user)][span_notice("Syringe loaded.")]")
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/proc/analyze_reagents(atom/A, mob/user)
+/obj/item/mecha_equipment/medical/syringe_gun/proc/analyze_reagents(atom/A, mob/user)
 	if(get_dist(src,A) >= 4)
 		to_chat(user, "[icon2html(src, user)][span_notice("The object is too far away!")]")
 		return FALSE
@@ -349,14 +349,14 @@
 	to_chat(user, "[icon2html(src, user)][span_notice("Analysis complete.")]")
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/proc/add_known_reagent(r_id,r_name)
+/obj/item/mecha_equipment/medical/syringe_gun/proc/add_known_reagent(r_id,r_name)
 	if(r_id in known_reagents)
 		return FALSE
 	known_reagents += r_id
 	known_reagents[r_id] = r_name
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/medical/syringe_gun/process(seconds_per_tick)
+/obj/item/mecha_equipment/medical/syringe_gun/process(seconds_per_tick)
 	. = ..()
 	if(.)
 		return
@@ -374,7 +374,7 @@
 
 ///////////////////////////////// Medical Beam ///////////////////////////////////////////////////////////////
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam
+/obj/item/mecha_equipment/medical/mechmedbeam
 	name = "exosuit medical beamgun"
 	desc = "Equipment for medical exosuits. Generates a focused beam of medical nanites."
 	icon_state = "mecha_medigun"
@@ -385,15 +385,15 @@
 	var/obj/item/gun/medbeam/mech/medigun
 	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT*7.5, /datum/material/glass = SHEET_MATERIAL_AMOUNT*4, /datum/material/plasma = SHEET_MATERIAL_AMOUNT*1.5, /datum/material/gold = SHEET_MATERIAL_AMOUNT*4, /datum/material/diamond =SHEET_MATERIAL_AMOUNT)
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam/Initialize(mapload)
+/obj/item/mecha_equipment/medical/mechmedbeam/Initialize(mapload)
 	. = ..()
 	medigun = new(src)
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam/Destroy()
+/obj/item/mecha_equipment/medical/mechmedbeam/Destroy()
 	QDEL_NULL(medigun)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam/process(deltatime)
+/obj/item/mecha_equipment/medical/mechmedbeam/process(deltatime)
 	. = ..()
 	if(.)
 		return
@@ -401,10 +401,10 @@
 		medigun.LoseTarget()
 	medigun.process(SSOBJ_DT)
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam/action(mob/source, atom/movable/target, list/modifiers)
+/obj/item/mecha_equipment/medical/mechmedbeam/action(mob/source, atom/movable/target, list/modifiers)
 	medigun.process_fire(target, loc)
 
-/obj/item/mecha_parts/mecha_equipment/medical/mechmedbeam/detach()
+/obj/item/mecha_equipment/medical/mechmedbeam/detach()
 	STOP_PROCESSING(SSobj, src)
 	medigun.LoseTarget()
 	return ..()

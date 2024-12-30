@@ -329,11 +329,11 @@
 /datum/component/construction/unordered/mecha_chassis/ripley
 	result = /datum/component/construction/mecha/ripley
 	steps = list(
-		/obj/item/mecha_parts/part/ripley_torso,
-		/obj/item/mecha_parts/part/ripley_left_arm,
-		/obj/item/mecha_parts/part/ripley_right_arm,
-		/obj/item/mecha_parts/part/ripley_left_leg,
-		/obj/item/mecha_parts/part/ripley_right_leg
+		/obj/item/mecha_parts/ripley_torso,
+		/obj/item/mecha_parts/ripley_left_arm,
+		/obj/item/mecha_parts/ripley_right_arm,
+		/obj/item/mecha_parts/ripley_left_leg,
+		/obj/item/mecha_parts/ripley_right_leg
 	)
 
 /datum/component/construction/mecha/ripley
@@ -372,12 +372,12 @@
 /datum/component/construction/unordered/mecha_chassis/gygax
 	result = /datum/component/construction/mecha/gygax
 	steps = list(
-		/obj/item/mecha_parts/part/gygax_torso,
-		/obj/item/mecha_parts/part/gygax_left_arm,
-		/obj/item/mecha_parts/part/gygax_right_arm,
-		/obj/item/mecha_parts/part/gygax_left_leg,
-		/obj/item/mecha_parts/part/gygax_right_leg,
-		/obj/item/mecha_parts/part/gygax_head
+		/obj/item/mecha_parts/gygax_torso,
+		/obj/item/mecha_parts/gygax_left_arm,
+		/obj/item/mecha_parts/gygax_right_arm,
+		/obj/item/mecha_parts/gygax_left_leg,
+		/obj/item/mecha_parts/gygax_right_leg,
+		/obj/item/mecha_parts/gygax_head
 	)
 
 /datum/component/construction/mecha/gygax
@@ -391,7 +391,7 @@
 	inner_plating = /obj/item/stack/sheet/iron
 	inner_plating_amount = 5
 
-	outer_plating=/obj/item/mecha_parts/part/gygax_armor
+	outer_plating=/obj/item/mecha_parts/gygax_armor
 	outer_plating_amount=1
 
 /datum/component/construction/mecha/gygax/action(datum/source, atom/used_atom, mob/user)
@@ -403,10 +403,10 @@
 /datum/component/construction/unordered/mecha_chassis/clarke
 	result = /datum/component/construction/mecha/clarke
 	steps = list(
-		/obj/item/mecha_parts/part/clarke_torso,
-		/obj/item/mecha_parts/part/clarke_left_arm,
-		/obj/item/mecha_parts/part/clarke_right_arm,
-		/obj/item/mecha_parts/part/clarke_head
+		/obj/item/mecha_parts/clarke_torso,
+		/obj/item/mecha_parts/clarke_left_arm,
+		/obj/item/mecha_parts/clarke_right_arm,
+		/obj/item/mecha_parts/clarke_head
 	)
 
 /datum/component/construction/mecha/clarke
@@ -465,12 +465,12 @@
 /datum/component/construction/unordered/mecha_chassis/honker
 	result = /datum/component/construction/mecha/honker
 	steps = list(
-		/obj/item/mecha_parts/part/honker_torso,
-		/obj/item/mecha_parts/part/honker_left_arm,
-		/obj/item/mecha_parts/part/honker_right_arm,
-		/obj/item/mecha_parts/part/honker_left_leg,
-		/obj/item/mecha_parts/part/honker_right_leg,
-		/obj/item/mecha_parts/part/honker_head
+		/obj/item/mecha_parts/honker_torso,
+		/obj/item/mecha_parts/honker_left_arm,
+		/obj/item/mecha_parts/honker_right_arm,
+		/obj/item/mecha_parts/honker_left_leg,
+		/obj/item/mecha_parts/honker_right_leg,
+		/obj/item/mecha_parts/honker_head
 	)
 
 /datum/component/construction/mecha/honker
@@ -596,12 +596,12 @@
 /datum/component/construction/unordered/mecha_chassis/durand
 	result = /datum/component/construction/mecha/durand
 	steps = list(
-		/obj/item/mecha_parts/part/durand_torso,
-		/obj/item/mecha_parts/part/durand_left_arm,
-		/obj/item/mecha_parts/part/durand_right_arm,
-		/obj/item/mecha_parts/part/durand_left_leg,
-		/obj/item/mecha_parts/part/durand_right_leg,
-		/obj/item/mecha_parts/part/durand_head
+		/obj/item/mecha_parts/durand_torso,
+		/obj/item/mecha_parts/durand_left_arm,
+		/obj/item/mecha_parts/durand_right_arm,
+		/obj/item/mecha_parts/durand_left_leg,
+		/obj/item/mecha_parts/durand_right_leg,
+		/obj/item/mecha_parts/durand_head
 	)
 
 /datum/component/construction/mecha/durand
@@ -615,19 +615,19 @@
 	inner_plating = /obj/item/stack/sheet/iron
 	inner_plating_amount = 5
 
-	outer_plating = /obj/item/mecha_parts/part/durand_armor
+	outer_plating = /obj/item/mecha_parts/durand_armor
 	outer_plating_amount = 1
 
 //PHAZON
 /datum/component/construction/unordered/mecha_chassis/phazon
 	result = /datum/component/construction/mecha/phazon
 	steps = list(
-		/obj/item/mecha_parts/part/phazon_torso,
-		/obj/item/mecha_parts/part/phazon_left_arm,
-		/obj/item/mecha_parts/part/phazon_right_arm,
-		/obj/item/mecha_parts/part/phazon_left_leg,
-		/obj/item/mecha_parts/part/phazon_right_leg,
-		/obj/item/mecha_parts/part/phazon_head
+		/obj/item/mecha_parts/phazon_torso,
+		/obj/item/mecha_parts/phazon_left_arm,
+		/obj/item/mecha_parts/phazon_right_arm,
+		/obj/item/mecha_parts/phazon_left_leg,
+		/obj/item/mecha_parts/phazon_right_leg,
+		/obj/item/mecha_parts/phazon_head
 	)
 
 /datum/component/construction/mecha/phazon
@@ -641,7 +641,7 @@
 	inner_plating = /obj/item/stack/sheet/plasteel
 	inner_plating_amount = 5
 
-	outer_plating = /obj/item/mecha_parts/part/phazon_armor
+	outer_plating = /obj/item/mecha_parts/phazon_armor
 	outer_plating_amount = 1
 
 /datum/component/construction/mecha/phazon/get_stockpart_steps()
@@ -773,12 +773,12 @@
 /datum/component/construction/unordered/mecha_chassis/savannah_ivanov
 	result = /datum/component/construction/mecha/savannah_ivanov
 	steps = list(
-		/obj/item/mecha_parts/part/savannah_ivanov_torso,
-		/obj/item/mecha_parts/part/savannah_ivanov_head,
-		/obj/item/mecha_parts/part/savannah_ivanov_left_arm,
-		/obj/item/mecha_parts/part/savannah_ivanov_right_arm,
-		/obj/item/mecha_parts/part/savannah_ivanov_left_leg,
-		/obj/item/mecha_parts/part/savannah_ivanov_right_leg
+		/obj/item/mecha_parts/savannah_ivanov_torso,
+		/obj/item/mecha_parts/savannah_ivanov_head,
+		/obj/item/mecha_parts/savannah_ivanov_left_arm,
+		/obj/item/mecha_parts/savannah_ivanov_right_arm,
+		/obj/item/mecha_parts/savannah_ivanov_left_leg,
+		/obj/item/mecha_parts/savannah_ivanov_right_leg
 	)
 
 /datum/component/construction/mecha/savannah_ivanov
@@ -792,19 +792,19 @@
 	inner_plating = /obj/item/stack/sheet/plasteel
 	inner_plating_amount = 10
 
-	outer_plating = /obj/item/mecha_parts/part/savannah_ivanov_armor
+	outer_plating = /obj/item/mecha_parts/savannah_ivanov_armor
 	outer_plating_amount = 1
 
 //ODYSSEUS
 /datum/component/construction/unordered/mecha_chassis/odysseus
 	result = /datum/component/construction/mecha/odysseus
 	steps = list(
-		/obj/item/mecha_parts/part/odysseus_torso,
-		/obj/item/mecha_parts/part/odysseus_head,
-		/obj/item/mecha_parts/part/odysseus_left_arm,
-		/obj/item/mecha_parts/part/odysseus_right_arm,
-		/obj/item/mecha_parts/part/odysseus_left_leg,
-		/obj/item/mecha_parts/part/odysseus_right_leg
+		/obj/item/mecha_parts/odysseus_torso,
+		/obj/item/mecha_parts/odysseus_head,
+		/obj/item/mecha_parts/odysseus_left_arm,
+		/obj/item/mecha_parts/odysseus_right_arm,
+		/obj/item/mecha_parts/odysseus_left_leg,
+		/obj/item/mecha_parts/odysseus_right_leg
 	)
 
 /datum/component/construction/mecha/odysseus
@@ -824,11 +824,11 @@
 /datum/component/construction/unordered/mecha_chassis/justice
 	result = /datum/component/construction/mecha/justice
 	steps = list(
-		/obj/item/mecha_parts/part/justice_torso,
-		/obj/item/mecha_parts/part/justice_left_arm,
-		/obj/item/mecha_parts/part/justice_right_arm,
-		/obj/item/mecha_parts/part/justice_left_leg,
-		/obj/item/mecha_parts/part/justice_right_leg
+		/obj/item/mecha_parts/justice_torso,
+		/obj/item/mecha_parts/justice_left_arm,
+		/obj/item/mecha_parts/justice_right_arm,
+		/obj/item/mecha_parts/justice_left_leg,
+		/obj/item/mecha_parts/justice_right_leg
 	)
 
 /datum/component/construction/mecha/justice
@@ -838,7 +838,7 @@
 	inner_plating = /obj/item/stack/telecrystal
 	inner_plating_amount = 8
 
-	outer_plating = /obj/item/mecha_parts/part/justice_armor
+	outer_plating = /obj/item/mecha_parts/justice_armor
 	outer_plating_amount = 1
 
 /datum/component/construction/mecha/justice/get_circuit_steps()

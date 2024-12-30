@@ -1122,7 +1122,7 @@
 /area/awaymission/caves/bmp_asteroid)
 "gH" = (
 /obj/structure/table,
-/obj/item/mecha_parts/mecha_equipment/drill/diamonddrill,
+/obj/item/mecha_equipment/drill/diamonddrill,
 /obj/item/paper/fluff/awaymissions/caves/mech_notice,
 /turf/open/floor/plating,
 /area/awaymission/caves/bmp_asteroid)

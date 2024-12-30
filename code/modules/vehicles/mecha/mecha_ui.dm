@@ -123,7 +123,7 @@
 					if(ui_selected_module_index == module_index)
 						ui_selected_module_index = null
 				else
-					var/obj/item/mecha_parts/mecha_equipment/module = islist(equipment) ? equipment[i] : equipment
+					var/obj/item/mecha_equipment/module = islist(equipment) ? equipment[i] : equipment
 					data += list(list(
 						"slot" = category,
 						"icon" = module.icon_state,
@@ -220,7 +220,7 @@
 			try_repair_int_damage(usr, params["flag"])
 			return FALSE
 		if("equip_act")
-			var/obj/item/mecha_parts/mecha_equipment/gear = locate(params["ref"]) in flat_equipment
+			var/obj/item/mecha_equipment/gear = locate(params["ref"]) in flat_equipment
 			return gear?.ui_act(params["gear_action"], params, ui, state)
 	return TRUE
 

@@ -154,7 +154,7 @@
 	name = "Exosuit Torso (APLU \"Ripley\")"
 	id = "ripley_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/ripley_torso
+	build_path = /obj/item/mecha_parts/ripley_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*3.75,
@@ -168,7 +168,7 @@
 	name = "Exosuit Left Arm (APLU \"Ripley\")"
 	id = "ripley_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/ripley_left_arm
+	build_path = /obj/item/mecha_parts/ripley_left_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -179,7 +179,7 @@
 	name = "Exosuit Right Arm (APLU \"Ripley\")"
 	id = "ripley_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/ripley_right_arm
+	build_path = /obj/item/mecha_parts/ripley_right_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -190,7 +190,7 @@
 	name = "Exosuit Left Leg (APLU \"Ripley\")"
 	id = "ripley_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/ripley_left_leg
+	build_path = /obj/item/mecha_parts/ripley_left_leg
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -201,7 +201,7 @@
 	name = "Exosuit Right Leg (APLU \"Ripley\")"
 	id = "ripley_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/ripley_right_leg
+	build_path = /obj/item/mecha_parts/ripley_right_leg
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -224,7 +224,7 @@
 	name = "Exosuit Torso (\"Odysseus\")"
 	id = "odysseus_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/odysseus_torso
+	build_path = /obj/item/mecha_parts/odysseus_torso
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*6)
 	construction_time = 18 SECONDS
 	category = list(
@@ -235,7 +235,7 @@
 	name = "Exosuit Head (\"Odysseus\")"
 	id = "odysseus_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/odysseus_head
+	build_path = /obj/item/mecha_parts/odysseus_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*3,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5
@@ -249,7 +249,7 @@
 	name = "Exosuit Left Arm (\"Odysseus\")"
 	id = "odysseus_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/odysseus_left_arm
+	build_path = /obj/item/mecha_parts/odysseus_left_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*3)
 	construction_time = 12 SECONDS
 	category = list(
@@ -260,7 +260,7 @@
 	name = "Exosuit Right Arm (\"Odysseus\")"
 	id = "odysseus_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/odysseus_right_arm
+	build_path = /obj/item/mecha_parts/odysseus_right_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*3)
 	construction_time = 12 SECONDS
 	category = list(
@@ -271,7 +271,7 @@
 	name = "Exosuit Left Leg (\"Odysseus\")"
 	id = "odysseus_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/odysseus_left_leg
+	build_path = /obj/item/mecha_parts/odysseus_left_leg
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*3.5)
 	construction_time = 13 SECONDS
 	category = list(
@@ -282,7 +282,7 @@
 	name = "Exosuit Right Leg (\"Odysseus\")"
 	id = "odysseus_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/odysseus_right_leg
+	build_path = /obj/item/mecha_parts/odysseus_right_leg
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*3.5)
 	construction_time = 13 SECONDS
 	category = list(
@@ -305,7 +305,7 @@
 	name = "Exosuit Torso (\"Gygax\")"
 	id = "gygax_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_torso
+	build_path = /obj/item/mecha_parts/gygax_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -321,7 +321,7 @@
 	name = "Exosuit Head (\"Gygax\")"
 	id = "gygax_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_head
+	build_path = /obj/item/mecha_parts/gygax_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT * 2.5,
@@ -337,7 +337,7 @@
 	name = "Exosuit Left Arm (\"Gygax\")"
 	id = "gygax_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_left_arm
+	build_path = /obj/item/mecha_parts/gygax_left_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/gold=HALF_SHEET_MATERIAL_AMOUNT,
@@ -352,7 +352,7 @@
 	name = "Exosuit Right Arm (\"Gygax\")"
 	id = "gygax_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_right_arm
+	build_path = /obj/item/mecha_parts/gygax_right_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/gold=HALF_SHEET_MATERIAL_AMOUNT,
@@ -367,7 +367,7 @@
 	name = "Exosuit Left Leg (\"Gygax\")"
 	id = "gygax_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_left_leg
+	build_path = /obj/item/mecha_parts/gygax_left_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/gold=HALF_SHEET_MATERIAL_AMOUNT,
@@ -382,7 +382,7 @@
 	name = "Exosuit Right Leg (\"Gygax\")"
 	id = "gygax_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_right_leg
+	build_path = /obj/item/mecha_parts/gygax_right_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/gold=HALF_SHEET_MATERIAL_AMOUNT,
@@ -397,7 +397,7 @@
 	name = "Exosuit Armor (\"Gygax\")"
 	id = "gygax_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/gygax_armor
+	build_path = /obj/item/mecha_parts/gygax_armor
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/gold=SHEET_MATERIAL_AMOUNT*5,
@@ -425,7 +425,7 @@
 	name = "Exosuit Torso (\"Durand\")"
 	id = "durand_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_torso
+	build_path = /obj/item/mecha_parts/durand_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*12.5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -440,7 +440,7 @@
 	name = "Exosuit Head (\"Durand\")"
 	id = "durand_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_head
+	build_path = /obj/item/mecha_parts/durand_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*7.5,
@@ -455,7 +455,7 @@
 	name = "Exosuit Left Arm (\"Durand\")"
 	id = "durand_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_left_arm
+	build_path = /obj/item/mecha_parts/durand_left_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -469,7 +469,7 @@
 	name = "Exosuit Right Arm (\"Durand\")"
 	id = "durand_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_right_arm
+	build_path = /obj/item/mecha_parts/durand_right_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -483,7 +483,7 @@
 	name = "Exosuit Left Leg (\"Durand\")"
 	id = "durand_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_left_leg
+	build_path = /obj/item/mecha_parts/durand_left_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -497,7 +497,7 @@
 	name = "Exosuit Right Leg (\"Durand\")"
 	id = "durand_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_right_leg
+	build_path = /obj/item/mecha_parts/durand_right_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -511,7 +511,7 @@
 	name = "Exosuit Armor (\"Durand\")"
 	id = "durand_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/durand_armor
+	build_path = /obj/item/mecha_parts/durand_armor
 	materials = list(
 		/datum/material/iron=SMALL_MATERIAL_AMOUNT * 300,
 		/datum/material/uranium=SHEET_MATERIAL_AMOUNT*12.5,
@@ -538,7 +538,7 @@
 	name = "Exosuit Torso (\"H.O.N.K\")"
 	id = "honk_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/honker_torso
+	build_path = /obj/item/mecha_parts/honker_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -553,7 +553,7 @@
 	name = "Exosuit Head (\"H.O.N.K\")"
 	id = "honk_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/honker_head
+	build_path = /obj/item/mecha_parts/honker_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT * 2.5,
@@ -568,7 +568,7 @@
 	name = "Exosuit Left Arm (\"H.O.N.K\")"
 	id = "honk_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/honker_left_arm
+	build_path = /obj/item/mecha_parts/honker_left_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT * 2.5,
@@ -582,7 +582,7 @@
 	name = "Exosuit Right Arm (\"H.O.N.K\")"
 	id = "honk_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/honker_right_arm
+	build_path = /obj/item/mecha_parts/honker_right_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT * 2.5,
@@ -596,7 +596,7 @@
 	name = "Exosuit Left Leg (\"H.O.N.K\")"
 	id = "honk_left_leg"
 	build_type = MECHFAB
-	build_path =/obj/item/mecha_parts/part/honker_left_leg
+	build_path =/obj/item/mecha_parts/honker_left_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT * 2.5,
@@ -610,7 +610,7 @@
 	name = "Exosuit Right Leg (\"H.O.N.K\")"
 	id = "honk_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/honker_right_leg
+	build_path = /obj/item/mecha_parts/honker_right_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT * 2.5,
@@ -636,7 +636,7 @@
 	name = "Exosuit Torso (\"Phazon\")"
 	id = "phazon_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_torso
+	build_path = /obj/item/mecha_parts/phazon_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*17.5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -651,7 +651,7 @@
 	name = "Exosuit Head (\"Phazon\")"
 	id = "phazon_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_head
+	build_path = /obj/item/mecha_parts/phazon_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT * 2.5,
@@ -666,7 +666,7 @@
 	name = "Exosuit Left Arm (\"Phazon\")"
 	id = "phazon_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_left_arm
+	build_path = /obj/item/mecha_parts/phazon_left_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/plasma=SHEET_MATERIAL_AMOUNT*5,
@@ -680,7 +680,7 @@
 	name = "Exosuit Right Arm (\"Phazon\")"
 	id = "phazon_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_right_arm
+	build_path = /obj/item/mecha_parts/phazon_right_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/plasma=SHEET_MATERIAL_AMOUNT*5,
@@ -694,7 +694,7 @@
 	name = "Exosuit Left Leg (\"Phazon\")"
 	id = "phazon_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_left_leg
+	build_path = /obj/item/mecha_parts/phazon_left_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/plasma=SHEET_MATERIAL_AMOUNT*5,
@@ -708,7 +708,7 @@
 	name = "Exosuit Right Leg (\"Phazon\")"
 	id = "phazon_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_right_leg
+	build_path = /obj/item/mecha_parts/phazon_right_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/plasma=SHEET_MATERIAL_AMOUNT*5,
@@ -722,7 +722,7 @@
 	name = "Exosuit Armor (\"Phazon\")"
 	id = "phazon_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/phazon_armor
+	build_path = /obj/item/mecha_parts/phazon_armor
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*12.5,
 		/datum/material/plasma=SHEET_MATERIAL_AMOUNT*10,
@@ -749,7 +749,7 @@
 	name = "Exosuit Torso (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_torso
+	build_path = /obj/item/mecha_parts/savannah_ivanov_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*3.75,
@@ -763,7 +763,7 @@
 	name = "Exosuit Head (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_head
+	build_path = /obj/item/mecha_parts/savannah_ivanov_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*3,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -777,7 +777,7 @@
 	name = "Exosuit Left Arm (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_left_arm
+	build_path = /obj/item/mecha_parts/savannah_ivanov_left_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -788,7 +788,7 @@
 	name = "Exosuit Right Arm (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_right_arm
+	build_path = /obj/item/mecha_parts/savannah_ivanov_right_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -810,7 +810,7 @@
 	name = "Exosuit Torso (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_torso
+	build_path = /obj/item/mecha_parts/savannah_ivanov_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*12.5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -825,7 +825,7 @@
 	name = "Exosuit Head (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_head
+	build_path = /obj/item/mecha_parts/savannah_ivanov_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*7.5,
@@ -840,7 +840,7 @@
 	name = "Exosuit Left Arm (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_left_arm
+	build_path = /obj/item/mecha_parts/savannah_ivanov_left_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -854,7 +854,7 @@
 	name = "Exosuit Right Arm (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_right_arm
+	build_path = /obj/item/mecha_parts/savannah_ivanov_right_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -868,7 +868,7 @@
 	name = "Exosuit Left Leg (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_left_leg
+	build_path = /obj/item/mecha_parts/savannah_ivanov_left_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -882,7 +882,7 @@
 	name = "Exosuit Right Leg (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_right_leg
+	build_path = /obj/item/mecha_parts/savannah_ivanov_right_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -896,7 +896,7 @@
 	name = "Exosuit Armor (\"Savannah-Ivanov\")"
 	id = "savannah_ivanov_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/savannah_ivanov_armor
+	build_path = /obj/item/mecha_parts/savannah_ivanov_armor
 	materials = list(
 		/datum/material/iron=SMALL_MATERIAL_AMOUNT * 300,
 		/datum/material/uranium=SHEET_MATERIAL_AMOUNT*12.5,
@@ -923,7 +923,7 @@
 	name = "Exosuit Torso (\"Justice\")"
 	id = "justice_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/justice_torso
+	build_path = /obj/item/mecha_parts/justice_torso
 	materials = list(
 		/datum/material/iron = SHEET_MATERIAL_AMOUNT * 50,
 		/datum/material/silver = SHEET_MATERIAL_AMOUNT * 5,
@@ -937,7 +937,7 @@
 	name = "Exosuit Left Arm (\"Justice\")"
 	id = "justice_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/justice_left_arm
+	build_path = /obj/item/mecha_parts/justice_left_arm
 	materials = list(
 		/datum/material/iron = SHEET_MATERIAL_AMOUNT * 5,
 		/datum/material/silver = SHEET_MATERIAL_AMOUNT * 2,
@@ -951,7 +951,7 @@
 	name = "Exosuit Right Arm (\"Justice\")"
 	id = "justice_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/justice_right_arm
+	build_path = /obj/item/mecha_parts/justice_right_arm
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*2,
@@ -965,7 +965,7 @@
 	name = "Exosuit Left Leg (\"Justice\")"
 	id = "justice_left_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/justice_left_leg
+	build_path = /obj/item/mecha_parts/justice_left_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/titanium=SHEET_MATERIAL_AMOUNT*2,
@@ -979,7 +979,7 @@
 	name = "Exosuit Right Leg (\"Justice\")"
 	id = "justice_right_leg"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/justice_right_leg
+	build_path = /obj/item/mecha_parts/justice_right_leg
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/titanium=SHEET_MATERIAL_AMOUNT*2,
@@ -993,7 +993,7 @@
 	name = "Exosuit Armor (\"Justice\")"
 	id = "justice_armor"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/justice_armor
+	build_path = /obj/item/mecha_parts/justice_armor
 	materials = list(
 		/datum/material/silver=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/titanium=SHEET_MATERIAL_AMOUNT*10,
@@ -1021,7 +1021,7 @@
 	name = "Exosuit Torso (\"Clarke\")"
 	id = "clarke_torso"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/clarke_torso
+	build_path = /obj/item/mecha_parts/clarke_torso
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*3.75,
@@ -1035,7 +1035,7 @@
 	name = "Exosuit Head (\"Clarke\")"
 	id = "clarke_head"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/clarke_head
+	build_path = /obj/item/mecha_parts/clarke_head
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*3,
 		/datum/material/glass =SHEET_MATERIAL_AMOUNT*5,
@@ -1049,7 +1049,7 @@
 	name = "Exosuit Left Arm (\"Clarke\")"
 	id = "clarke_left_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/clarke_left_arm
+	build_path = /obj/item/mecha_parts/clarke_left_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -1060,7 +1060,7 @@
 	name = "Exosuit Right Arm (\"Clarke\")"
 	id = "clarke_right_arm"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/part/clarke_right_arm
+	build_path = /obj/item/mecha_parts/clarke_right_arm
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*7.5)
 	construction_time = 15 SECONDS
 	category = list(
@@ -1072,7 +1072,7 @@
 	name = "Ripley MK-I to MK-II Conversion Kit"
 	id = "ripleyupgrade"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/ripleyupgrade
+	build_path = /obj/item/mecha_equipment/ripleyupgrade
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/plasma=SHEET_MATERIAL_AMOUNT*5,
@@ -1087,7 +1087,7 @@
 	name = "Ripley MK-I to Paddy Conversion Kit"
 	id = "paddyupgrade"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/ripleyupgrade/paddy
+	build_path = /obj/item/mecha_equipment/ripleyupgrade/paddy
 	materials = list(
 		/datum/material/iron = SHEET_MATERIAL_AMOUNT * 10,
 		/datum/material/glass = SHEET_MATERIAL_AMOUNT * 5,
@@ -1103,7 +1103,7 @@
 	name = "Hydraulic Clamp"
 	id = "mech_hydraulic_clamp"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/hydraulic_clamp
+	build_path = /obj/item/mecha_equipment/hydraulic_clamp
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -1115,7 +1115,7 @@
 	name = "Hydraulic Claw"
 	id = "mech_hydraulic_claw"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/paddy_claw
+	build_path = /obj/item/mecha_equipment/weapon/paddy_claw
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -1127,7 +1127,7 @@
 	name = "Mining Drill"
 	id = "mech_drill"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/drill
+	build_path = /obj/item/mecha_equipment/drill
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -1145,7 +1145,7 @@
 	name = "Mining Scanner"
 	id = "mech_mscanner"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/mining_scanner
+	build_path = /obj/item/mecha_equipment/mining_scanner
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT * 2.5,
 		/datum/material/glass = SHEET_MATERIAL_AMOUNT *1.25,
@@ -1161,7 +1161,7 @@
 	name = "Extinguisher"
 	id = "mech_extinguisher"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/extinguisher
+	build_path = /obj/item/mecha_equipment/extinguisher
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -1174,7 +1174,7 @@
 	name = "Plasma Generator"
 	id = "mech_generator"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/generator
+	build_path = /obj/item/mecha_equipment/generator
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*5,
 		/datum/material/glass =HALF_SHEET_MATERIAL_AMOUNT,
@@ -1197,7 +1197,7 @@
 	name = "Mousetrap Mortar"
 	id = "mech_mousetrap_mortar"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/mousetrap_mortar
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/launcher/mousetrap_mortar
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT * 2.5,
@@ -1213,7 +1213,7 @@
 	name = "Banana Mortar"
 	id = "mech_banana_mortar"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/banana_mortar
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/launcher/banana_mortar
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT * 2.5,
@@ -1229,7 +1229,7 @@
 	name = "HoNkER BlAsT 5000"
 	id = "mech_honker"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/honker
+	build_path = /obj/item/mecha_equipment/weapon/honker
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT*5,
@@ -1245,7 +1245,7 @@
 	name = "Oingo Boingo Punch-face"
 	id = "mech_punching_face"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/punching_glove
+	build_path = /obj/item/mecha_equipment/weapon/ballistic/launcher/punching_glove
 	materials = list(
 		/datum/material/iron=SHEET_MATERIAL_AMOUNT*10,
 		/datum/material/bananium=SHEET_MATERIAL_AMOUNT*3.75,
@@ -1261,7 +1261,7 @@
 	name = "Mech Radio"
 	id = "mech_radio"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/radio
+	build_path = /obj/item/mecha_equipment/radio
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*2.5)
 	construction_time = 10 SECONDS
 	category = list(
@@ -1279,7 +1279,7 @@
 	name = "Mech Air Tank"
 	id = "mech_air_tank"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_equipment/air_tank
+	build_path = /obj/item/mecha_equipment/air_tank
 	materials = list(/datum/material/iron=SHEET_MATERIAL_AMOUNT*5)
 	construction_time = 10 SECONDS
 	category = list(

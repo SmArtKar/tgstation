@@ -4,7 +4,7 @@
 
 ////////////////////////////////////////////// TELEPORTER ///////////////////////////////////////////////
 
-/obj/item/mecha_parts/mecha_equipment/teleporter
+/obj/item/mecha_equipment/teleporter
 	name = "mounted teleporter"
 	desc = "An exosuit module that allows exosuits to teleport to any position in view."
 	icon_state = "mecha_teleport"
@@ -13,7 +13,7 @@
 	range = MECHA_RANGED
 	var/teleport_range = 7
 
-/obj/item/mecha_parts/mecha_equipment/teleporter/action(mob/source, atom/target, list/modifiers)
+/obj/item/mecha_equipment/teleporter/action(mob/source, atom/target, list/modifiers)
 	var/area/ourarea = get_area(src)
 	if(!action_checks(target) || ourarea.area_flags & NOTELEPORT)
 		return
@@ -26,7 +26,7 @@
 
 ////////////////////////////////////////////// WORMHOLE GENERATOR //////////////////////////////////////////
 
-/obj/item/mecha_parts/mecha_equipment/wormhole_generator
+/obj/item/mecha_equipment/wormhole_generator
 	name = "mounted wormhole generator"
 	desc = "An exosuit module that allows generating of small quasi-stable wormholes, allowing for long-range inneacurate teleportation."
 	icon_state = "mecha_wholegen"
@@ -35,7 +35,7 @@
 	range = MECHA_RANGED
 
 
-/obj/item/mecha_parts/mecha_equipment/wormhole_generator/action(mob/source, atom/target, list/modifiers)
+/obj/item/mecha_equipment/wormhole_generator/action(mob/source, atom/target, list/modifiers)
 	var/area/ourarea = get_area(src)
 	if(!action_checks(target) || ourarea.area_flags & NOTELEPORT)
 		return
@@ -68,7 +68,7 @@
 #define GRAVSLING_MODE 1
 #define GRAVPUSH_MODE 2
 
-/obj/item/mecha_parts/mecha_equipment/gravcatapult
+/obj/item/mecha_equipment/gravcatapult
 	name = "mounted gravitational catapult"
 	desc = "An exosuit mounted Gravitational Catapult."
 	icon_state = "mecha_teleport"
@@ -81,7 +81,7 @@
 	var/mode = GRAVSLING_MODE
 
 
-/obj/item/mecha_parts/mecha_equipment/gravcatapult/action(mob/source, atom/movable/target, list/modifiers)
+/obj/item/mecha_equipment/gravcatapult/action(mob/source, atom/movable/target, list/modifiers)
 	if(!action_checks(target))
 		return
 	switch(mode)
@@ -126,19 +126,19 @@
 			source.log_message("used a Gravitational Catapult repulse wave on [AREACOORD(targetturf)].", LOG_GAME)
 			return ..()
 
-/obj/item/mecha_parts/mecha_equipment/gravcatapult/proc/do_scatter(atom/movable/scatter, atom/movable/target)
+/obj/item/mecha_equipment/gravcatapult/proc/do_scatter(atom/movable/scatter, atom/movable/target)
 	var/dist = 5 - get_dist(scatter, target)
 	var/delay = 2
 	GLOB.move_manager.move_away(scatter, target, delay = delay, timeout = delay * dist, flags = MOVEMENT_LOOP_START_FAST, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
 
-/obj/item/mecha_parts/mecha_equipment/gravcatapult/get_snowflake_data()
+/obj/item/mecha_equipment/gravcatapult/get_snowflake_data()
 	return list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_MODE,
 		"mode" = mode == GRAVPUSH_MODE ? "Push" : "Sling",
 		"mode_label" = "Gravity Catapult",
 	)
 
-/obj/item/mecha_parts/mecha_equipment/gravcatapult/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/gravcatapult/handle_ui_act(action, list/params)
 	if(action == "change_mode")
 		mode++
 		if(mode > GRAVPUSH_MODE)
@@ -149,7 +149,7 @@
 #undef GRAVPUSH_MODE
 
 //////////////////////////// ARMOR BOOSTER MODULES //////////////////////////////////////////////////////////
-/obj/item/mecha_parts/mecha_equipment/armor
+/obj/item/mecha_equipment/armor
 	equipment_slot = MECHA_ARMOR
 	///short protection name to display in the UI
 	var/protect_name = "you're mome"
@@ -158,15 +158,15 @@
 	//how much the armor of the mech is modified by
 	var/datum/armor/armor_mod
 
-/obj/item/mecha_parts/mecha_equipment/armor/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
+/obj/item/mecha_equipment/armor/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
 	. = ..()
 	chassis.set_armor(chassis.get_armor().add_other_armor(armor_mod))
 
-/obj/item/mecha_parts/mecha_equipment/armor/detach(atom/moveto)
+/obj/item/mecha_equipment/armor/detach(atom/moveto)
 	chassis.set_armor(chassis.get_armor().subtract_other_armor(armor_mod))
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/armor/anticcw_armor_booster
+/obj/item/mecha_equipment/armor/anticcw_armor_booster
 	name = "Impact Cushion Plates"
 	desc = "Boosts exosuit armor against melee attacks"
 	icon_state = "mecha_abooster_ccw"
@@ -177,7 +177,7 @@
 /datum/armor/mecha_equipment_ccw_boost
 	melee = 15
 
-/obj/item/mecha_parts/mecha_equipment/armor/antiproj_armor_booster
+/obj/item/mecha_equipment/armor/antiproj_armor_booster
 	name = "Projectile Shielding"
 	desc = "Boosts exosuit armor against ranged kinetic and energy projectiles. Completely blocks taser shots."
 	icon_state = "mecha_abooster_proj"
@@ -192,7 +192,7 @@
 ////////////////////////////////// REPAIR DROID //////////////////////////////////////////////////
 
 
-/obj/item/mecha_parts/mecha_equipment/repair_droid
+/obj/item/mecha_equipment/repair_droid
 	name = "exosuit repair droid"
 	desc = "An automated repair droid for exosuits. Scans for damage and repairs it. Can fix almost all types of external or internal damage."
 	icon_state = "repair_droid"
@@ -206,22 +206,22 @@
 	var/icon/droid_overlay
 	var/list/repairable_damage = list(MECHA_INT_TEMP_CONTROL,MECHA_CABIN_AIR_BREACH)
 
-/obj/item/mecha_parts/mecha_equipment/repair_droid/Destroy()
+/obj/item/mecha_equipment/repair_droid/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	chassis?.cut_overlay(droid_overlay)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/repair_droid/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right = FALSE)
+/obj/item/mecha_equipment/repair_droid/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right = FALSE)
 	. = ..()
 	droid_overlay = new(src.icon, icon_state = "repair_droid")
 	new_mecha.add_overlay(droid_overlay)
 
-/obj/item/mecha_parts/mecha_equipment/repair_droid/detach()
+/obj/item/mecha_equipment/repair_droid/detach()
 	chassis.cut_overlay(droid_overlay)
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/repair_droid/handle_ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+/obj/item/mecha_equipment/repair_droid/handle_ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	if(action != "toggle")
 		return
 	chassis.cut_overlay(droid_overlay)
@@ -236,7 +236,7 @@
 	chassis.add_overlay(droid_overlay)
 
 
-/obj/item/mecha_parts/mecha_equipment/repair_droid/process(seconds_per_tick)
+/obj/item/mecha_equipment/repair_droid/process(seconds_per_tick)
 	if(!chassis)
 		return PROCESS_KILL
 	var/h_boost = health_boost * seconds_per_tick
@@ -268,7 +268,7 @@
 /////////////////////////////////////////// GENERATOR /////////////////////////////////////////////
 
 
-/obj/item/mecha_parts/mecha_equipment/generator
+/obj/item/mecha_equipment/generator
 	name = "plasma engine"
 	desc = "An exosuit module that generates power using solid plasma as fuel."
 	icon_state = "tesla"
@@ -287,26 +287,26 @@
 	///Energy recharged per second
 	var/rechargerate = 0.05 * STANDARD_CELL_RATE
 
-/obj/item/mecha_parts/mecha_equipment/generator/Initialize(mapload)
+/obj/item/mecha_equipment/generator/Initialize(mapload)
 	. = ..()
 	generator_init()
 
-/obj/item/mecha_parts/mecha_equipment/generator/Destroy()
+/obj/item/mecha_equipment/generator/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/generator/detach()
+/obj/item/mecha_equipment/generator/detach()
 	STOP_PROCESSING(SSobj, src)
 	active = FALSE
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/generator/get_snowflake_data()
+/obj/item/mecha_equipment/generator/get_snowflake_data()
 	return list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_GENERATOR,
 		"fuel" = fuel.amount,
 	)
 
-/obj/item/mecha_parts/mecha_equipment/generator/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/generator/handle_ui_act(action, list/params)
 	if(action == "toggle")
 		if(active)
 			to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_warning("Power generation enabled.")]")
@@ -318,13 +318,13 @@
 			log_message("Deactivated.", LOG_MECHA)
 		return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/generator/attackby(obj/item/weapon, mob/user, params)
+/obj/item/mecha_equipment/generator/attackby(obj/item/weapon, mob/user, params)
 	. = ..()
 	if(!istype(weapon, fuel))
 		return FALSE
 	load_fuel(weapon, user)
 
-/obj/item/mecha_parts/mecha_equipment/generator/process(seconds_per_tick)
+/obj/item/mecha_equipment/generator/process(seconds_per_tick)
 	if(!chassis)
 		active = FALSE
 		return PROCESS_KILL
@@ -347,7 +347,7 @@
 	fuel.amount -= min(seconds_per_tick * fuel_usage_rate / SHEET_MATERIAL_AMOUNT, fuel.amount)
 
 ///Try to insert more fuel into the generator
-/obj/item/mecha_parts/mecha_equipment/generator/proc/load_fuel(obj/item/stack/sheet/inserted_fuel, mob/user)
+/obj/item/mecha_equipment/generator/proc/load_fuel(obj/item/stack/sheet/inserted_fuel, mob/user)
 	if(inserted_fuel.amount == 0) //if we somehow have a sheet of 0 fuel
 		to_chat(user, "[icon2html(src, user)][span_warning("[fuel] traces in target minimal! [inserted_fuel] cannot be used as fuel.")]")
 		return
@@ -363,12 +363,12 @@
 	to_chat(user, "[icon2html(src, user)][span_notice("[fuel_to_load] unit\s of [fuel] successfully loaded.")]")
 
 ///Introduces the actual fuel type to be used, as well as the starting amount of said fuel
-/obj/item/mecha_parts/mecha_equipment/generator/proc/generator_init()
+/obj/item/mecha_equipment/generator/proc/generator_init()
 	fuel = new /obj/item/stack/sheet/mineral/plasma(src, 0)
 
 /////////////////////////////////////////// THRUSTERS /////////////////////////////////////////////
 
-/obj/item/mecha_parts/mecha_equipment/thrusters
+/obj/item/mecha_equipment/thrusters
 	name = "generic exosuit thrusters" //parent object, in-game sources will be a child object
 	desc = "A generic set of thrusters, from an unknown source. Uses not-understood methods to propel exosuits seemingly for free."
 	icon_state = "thrusters"
@@ -377,23 +377,23 @@
 	active_label = "Thrusters"
 	var/effect_type = /obj/effect/particle_effect/sparks
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right)
+/obj/item/mecha_equipment/thrusters/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right)
 	for(var/obj/item/I in M.equip_by_category[MECHA_UTILITY])
 		if(istype(I, src))
 			to_chat(user, span_warning("[M] already has this thruster package!"))
 			return FALSE
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right = FALSE)
+/obj/item/mecha_equipment/thrusters/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right = FALSE)
 	new_mecha.active_thrusters = src //Enable by default
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/detach(atom/moveto)
+/obj/item/mecha_equipment/thrusters/detach(atom/moveto)
 	if(chassis.active_thrusters == src)
 		chassis.active_thrusters = null
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/set_active(active)
+/obj/item/mecha_equipment/thrusters/set_active(active)
 	. = ..()
 	if(active)
 		START_PROCESSING(SSobj, src)
@@ -404,37 +404,37 @@
 		disable()
 		log_message("Deactivated.", LOG_MECHA)
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/proc/enable()
+/obj/item/mecha_equipment/thrusters/proc/enable()
 	if (chassis.active_thrusters == src)
 		return
 	chassis.active_thrusters = src
 	to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_notice("[src] enabled.")]")
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/proc/disable()
+/obj/item/mecha_equipment/thrusters/proc/disable()
 	if(chassis.active_thrusters != src)
 		return
 	chassis.active_thrusters = null
 	to_chat(chassis.occupants, "[icon2html(src, chassis.occupants)][span_notice("[src] disabled.")]")
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/proc/thrust(movement_dir)
+/obj/item/mecha_equipment/thrusters/proc/thrust(movement_dir)
 	if(!chassis)
 		return FALSE
 	generate_effect(movement_dir)
 	return TRUE //This parent should never exist in-game outside admeme use, so why not let it be a creative thruster?
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/proc/generate_effect(movement_dir)
+/obj/item/mecha_equipment/thrusters/proc/generate_effect(movement_dir)
 	var/obj/effect/particle_effect/E = new effect_type(get_turf(chassis))
 	E.dir = REVERSE_DIR(movement_dir)
 	step(E, REVERSE_DIR(movement_dir))
 	QDEL_IN(E, 5)
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/gas
+/obj/item/mecha_equipment/thrusters/gas
 	name = "RCS thruster package"
 	desc = "A set of thrusters that allow for exosuit movement in zero-gravity environments, by expelling gas from the internal life support tank."
 	effect_type = /obj/effect/particle_effect/fluid/smoke
 	var/move_cost = 0.05 //moles per step (5 times more than human jetpacks)
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/gas/thrust(movement_dir)
+/obj/item/mecha_equipment/thrusters/gas/thrust(movement_dir)
 	if(!chassis)
 		return FALSE
 	var/obj/machinery/portable_atmospherics/canister/internal_tank = chassis.get_internal_tank()
@@ -449,13 +449,13 @@
 	generate_effect(movement_dir)
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/ion //for mechs with built-in thrusters, should never really exist un-attached to a mech
+/obj/item/mecha_equipment/thrusters/ion //for mechs with built-in thrusters, should never really exist un-attached to a mech
 	name = "Ion thruster package"
 	desc = "A set of thrusters that allow for exosuit movement in zero-gravity environments."
 	detachable = FALSE
 	effect_type = /obj/effect/particle_effect/ion_trails
 
-/obj/item/mecha_parts/mecha_equipment/thrusters/ion/thrust(movement_dir)
+/obj/item/mecha_equipment/thrusters/ion/thrust(movement_dir)
 	if(!chassis)
 		return FALSE
 	if(chassis.use_energy(chassis.step_energy_drain))
@@ -465,25 +465,25 @@
 
 ///////////////////////////////////// CONCEALED WEAPON BAY ////////////////////////////////////////
 
-/obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay
+/obj/item/mecha_equipment/concealed_weapon_bay
 	name = "concealed weapon bay"
 	desc = "A compartment that allows a non-combat mecha to equip one weapon while hiding the weapon from plain sight."
 	icon_state = "mecha_weapon_bay"
 
-/obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay/Initialize(mapload)
+/obj/item/mecha_equipment/concealed_weapon_bay/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_HIDDEN_MECH_EQUIPMENT, INNATE_TRAIT)
 
-/obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M)
+/obj/item/mecha_equipment/concealed_weapon_bay/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M)
 	if(M.mech_type & EXOSUIT_MODULE_COMBAT)
 		to_chat(user, span_warning("[M] does not have the correct bolt configuration!"))
 		return
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay/special_attaching_interaction(attach_right = FALSE, obj/vehicle/sealed/mecha/mech, mob/user, checkonly = FALSE)
+/obj/item/mecha_equipment/concealed_weapon_bay/special_attaching_interaction(attach_right = FALSE, obj/vehicle/sealed/mecha/mech, mob/user, checkonly = FALSE)
 	if(checkonly)
 		return TRUE
-	var/obj/item/mecha_parts/mecha_equipment/existing_equip
+	var/obj/item/mecha_equipment/existing_equip
 	if(attach_right)
 		existing_equip = mech.equip_by_category[MECHA_R_ARM]
 	else
@@ -500,13 +500,13 @@
 	mech.mech_type |= EXOSUIT_MODULE_CONCEALED_WEP_BAY
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay/detach(atom/moveto)
+/obj/item/mecha_equipment/concealed_weapon_bay/detach(atom/moveto)
 	var/obj/vehicle/sealed/mecha/mech = chassis
 	. = ..()
 	name = initial(name)
 	icon = initial(icon)
 	icon_state = initial(icon_state)
-	if(!locate(/obj/item/mecha_parts/mecha_equipment/concealed_weapon_bay) in mech.contents) //if no others exist
+	if(!locate(/obj/item/mecha_equipment/concealed_weapon_bay) in mech.contents) //if no others exist
 		mech.mech_type &= ~EXOSUIT_MODULE_CONCEALED_WEP_BAY
 
 /obj/item/mecha_parts/camera_kit

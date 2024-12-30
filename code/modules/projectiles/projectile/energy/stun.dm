@@ -148,8 +148,8 @@
 			return FALSE
 		return TRUE
 
-	if(istype(taser, /obj/item/mecha_parts/mecha_equipment))
-		var/obj/item/mecha_parts/mecha_equipment/taser_equipment = taser
+	if(istype(taser, /obj/item/mecha_equipment))
+		var/obj/item/mecha_equipment/taser_equipment = taser
 		if(!taser_equipment.chassis \
 			|| !taser_equipment.active \
 			|| taser_equipment.get_integrity() <= 1 \

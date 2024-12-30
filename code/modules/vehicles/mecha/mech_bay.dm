@@ -1,4 +1,4 @@
-/*
+
 /obj/machinery/mech_bay_recharge_port
 	name = "mech bay power port"
 	desc = "This port recharges a mech's internal power cell."
@@ -8,19 +8,18 @@
 	dir = EAST
 	active_power_usage = BASE_MACHINE_ACTIVE_CONSUMPTION * 0.1
 	circuit = /obj/item/circuitboard/machine/mech_recharger
-	///Weakref to currently recharging mech on our recharging_turf
-	var/datum/weakref/recharging_mech_ref
-	///Ref to charge console for seeing charge for this port, cyclical reference
+	/// Ref to charge console for seeing charge for this port, cyclical reference
 	var/obj/machinery/computer/mech_bay_power_console/recharge_console
-	///Power unit per second to charge by
-	var/recharge_power = 0.025 * STANDARD_CELL_RATE
-	///turf that will be checked when a mech wants to charge. directly one turf in the direction it is facing
+	/// Turf we're facing, cached for performance
 	var/turf/recharging_turf
+	/// Power given to mech batteries per second
+	var/power_usage = 0.05 * STANDARD_BATTERY_VALUE
+	/// Weakref to currently recharging mech on our recharging_turf
+	var/datum/weakref/recharging_mech_ref
 
 /obj/machinery/mech_bay_recharge_port/Initialize(mapload)
 	. = ..()
 	recharging_turf = get_step(loc, dir)
-
 	if(!mapload)
 		return
 
@@ -29,65 +28,73 @@
 		return
 
 	var/area_name = get_area_name(src, format_text = TRUE)
-	if(area_name in GLOB.roundstart_station_mechcharger_areas)
-		return
-	GLOB.roundstart_station_mechcharger_areas += area_name
+	if(!(area_name in GLOB.roundstart_station_mechcharger_areas))
+		GLOB.roundstart_station_mechcharger_areas += area_name
 
 /obj/machinery/mech_bay_recharge_port/Destroy()
 	if (recharge_console?.recharge_port == src)
 		recharge_console.recharge_port = null
+	recharge_console = null
 	return ..()
 
 /obj/machinery/mech_bay_recharge_port/setDir(new_dir)
 	. = ..()
 	recharging_turf = get_step(loc, dir)
 
+/obj/machinery/mech_bay_recharge_port/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change)
+	. = ..()
+	recharging_turf = get_step(loc, dir)
+
 /obj/machinery/mech_bay_recharge_port/RefreshParts()
 	. = ..()
 	var/total_rating = 0
-	for(var/datum/stock_part/capacitor/capacitor in component_parts)
+	for (var/datum/stock_part/capacitor/capacitor in component_parts)
 		total_rating += capacitor.tier
-	recharge_power = total_rating * 0.0125 * STANDARD_CELL_RATE
+	power_usage = total_rating * 0.0125 * STANDARD_BATTERY_VALUE
+	update_mode_power_usage(ACTIVE_POWER_USE, BASE_MACHINE_ACTIVE_CONSUMPTION * 0.025 * total_rating)
 
 /obj/machinery/mech_bay_recharge_port/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: Recharge power <b>[siunit(recharge_power, "W", 1)]</b>.")
+	if (in_range(user, src) || isobserver(user))
+		. += span_notice("The status display reads: Recharge power <b>[siunit(power_usage, "W", 1)]</b>.")
+
+/obj/machinery/mech_bay_recharge_port/screwdriver_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if (!.)
+		return default_deconstruction_screwdriver(user, "recharge_port-o", "recharge_port", tool)
+
+/obj/machinery/mech_bay_recharge_port/wrench_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if (!.)
+		return default_change_direction_wrench(user, tool)
+
+/obj/machinery/mech_bay_recharge_port/crowbar_act(mob/living/user, obj/item/tool)
+	. = ..()
+	if(!.)
+		return default_deconstruction_crowbar(tool)
 
 /obj/machinery/mech_bay_recharge_port/process(seconds_per_tick)
-	if(machine_stat & NOPOWER || !recharge_console)
+	if ((machine_stat & (BROKEN|NOPOWER)) || !recharge_console)
 		return
+
 	var/obj/vehicle/sealed/mecha/recharging_mech = recharging_mech_ref?.resolve()
-	if(!recharging_mech)
+
+	if (!recharging_mech)
 		recharging_mech = locate(/obj/vehicle/sealed/mecha) in recharging_turf
 		if(recharging_mech)
 			recharging_mech_ref = WEAKREF(recharging_mech)
 			recharge_console.update_appearance()
-	if(!recharging_mech?.cell)
-		return
-	if(recharging_mech.cell.used_charge())
-		//charge cell, account for heat loss given from work done
-		var/charge_given = charge_cell(recharge_power * seconds_per_tick, recharging_mech.cell, grid_only = TRUE)
-		if(charge_given)
-			use_energy((charge_given + active_power_usage) * 0.01)
-	else
-		recharge_console.update_appearance()
-	if(recharging_mech.loc != recharging_turf)
+	else if(recharging_mech.loc != recharging_turf)
 		recharging_mech_ref = null
 		recharge_console.update_appearance()
-
-
-/obj/machinery/mech_bay_recharge_port/attackby(obj/item/I, mob/user, params)
-	if(default_deconstruction_screwdriver(user, "recharge_port-o", "recharge_port", I))
 		return
 
-	if(default_change_direction_wrench(user, I))
-		recharging_turf = get_step(loc, dir)
+	if (!recharging_mech?.cell || !recharging_mech.cell.used_charge())
 		return
 
-	if(default_deconstruction_crowbar(I))
-		return
-	return ..()
+	var/charge_given = charge_cell(power_usage, recharging_mech.cell, grid_only = TRUE)
+	if (!recharging_mech.cell.used_charge())
+		recharge_console.update_appearance()
 
 /obj/machinery/computer/mech_bay_power_console
 	name = "mech bay power control console"
@@ -106,6 +113,7 @@
 /obj/machinery/computer/mech_bay_power_console/Destroy()
 	if (recharge_port?.recharge_console == src)
 		recharge_port.recharge_console = null
+	recharge_port = null
 	return ..()
 
 /obj/machinery/computer/mech_bay_power_console/ui_interact(mob/user, datum/tgui/ui)
@@ -152,8 +160,7 @@
 	recharge_port = locate(/obj/machinery/mech_bay_recharge_port) in range(1, src)
 	if(!recharge_port)
 		for(var/direction in GLOB.cardinals)
-			var/turf/target = get_step(src, direction)
-			target = get_step(target, direction)
+			var/turf/target = get_step(get_step(src, direction), direction)
 			recharge_port = locate(/obj/machinery/mech_bay_recharge_port) in target
 			if(recharge_port)
 				break
@@ -169,10 +176,7 @@
 	if(machine_stat & (NOPOWER|BROKEN))
 		return
 	var/obj/vehicle/sealed/mecha/recharging_mech = recharge_port?.recharging_mech_ref?.resolve()
-
 	if(!recharging_mech?.cell)
 		return
-	if(recharging_mech.cell.charge >= recharging_mech.cell.maxcharge)
-		return
-	. += "recharge_comp_on"
-*/
+	if(recharging_mech.cell.used_charge())
+		. += "recharge_comp_on"

@@ -1032,7 +1032,7 @@
 	build_path = /obj/machinery/mech_bay_recharge_port
 	req_components = list(
 		/obj/item/stack/cable_coil = 2,
-		/datum/stock_part/capacitor = 5)
+		/datum/stock_part/capacitor = 4)
 
 /obj/item/circuitboard/machine/mechfab
 	name = "Exosuit Fabricator"

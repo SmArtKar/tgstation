@@ -18,18 +18,18 @@
 	cost = CARGO_CRATE_VALUE * 10
 	access_view = ACCESS_ROBOTICS
 	contains = list(/obj/item/mecha_parts/chassis/ripley,
-					/obj/item/mecha_parts/part/ripley_torso,
-					/obj/item/mecha_parts/part/ripley_right_arm,
-					/obj/item/mecha_parts/part/ripley_left_arm,
-					/obj/item/mecha_parts/part/ripley_right_leg,
-					/obj/item/mecha_parts/part/ripley_left_leg,
+					/obj/item/mecha_parts/ripley_torso,
+					/obj/item/mecha_parts/ripley_right_arm,
+					/obj/item/mecha_parts/ripley_left_arm,
+					/obj/item/mecha_parts/ripley_right_leg,
+					/obj/item/mecha_parts/ripley_left_leg,
 					/obj/item/stock_parts/capacitor,
 					/obj/item/stock_parts/scanning_module,
 					/obj/item/stock_parts/servo,
 					/obj/item/circuitboard/mecha/ripley/main,
 					/obj/item/circuitboard/mecha/ripley/peripherals,
-					/obj/item/mecha_parts/mecha_equipment/drill,
-					/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp,
+					/obj/item/mecha_equipment/drill,
+					/obj/item/mecha_equipment/hydraulic_clamp,
 				)
 	crate_name= "\improper APLU MK-I kit"
 	crate_type = /obj/structure/closet/crate/science/robo

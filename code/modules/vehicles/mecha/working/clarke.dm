@@ -15,7 +15,7 @@
 	equip_by_category = list(
 		MECHA_L_ARM = null,
 		MECHA_R_ARM = null,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/orebox_manager, /obj/item/mecha_parts/mecha_equipment/sleeper/clarke),
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/orebox_manager, /obj/item/mecha_equipment/sleeper/clarke),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -60,22 +60,22 @@
 //Ore Box Controls
 
 ///Special equipment for the Clarke mech, handles moving ore without giving the mech a hydraulic clamp and cargo compartment.
-/obj/item/mecha_parts/mecha_equipment/orebox_manager
+/obj/item/mecha_equipment/orebox_manager
 	name = "ore storage module"
 	desc = "An automated ore box management device, complete with a built-in boulder processor."
 	icon_state = "mecha_bin"
 	equipment_slot = MECHA_UTILITY
 	detachable = FALSE
 
-/obj/item/mecha_parts/mecha_equipment/orebox_manager/attach(obj/vehicle/sealed/mecha/mecha, attach_right = FALSE)
+/obj/item/mecha_equipment/orebox_manager/attach(obj/vehicle/sealed/mecha/mecha, attach_right = FALSE)
 	. = ..()
 	ADD_TRAIT(chassis, TRAIT_OREBOX_FUNCTIONAL, TRAIT_MECH_EQUIPMENT(type))
 
-/obj/item/mecha_parts/mecha_equipment/orebox_manager/detach(atom/moveto)
+/obj/item/mecha_equipment/orebox_manager/detach(atom/moveto)
 	REMOVE_TRAIT(chassis, TRAIT_OREBOX_FUNCTIONAL, TRAIT_MECH_EQUIPMENT(type))
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/orebox_manager/get_snowflake_data()
+/obj/item/mecha_equipment/orebox_manager/get_snowflake_data()
 	var/list/contents = chassis.ore_box?.contents
 	var/list/contents_grouped = list()
 	for(var/atom/movable/item as anything in contents)
@@ -97,7 +97,7 @@
 		)
 	return data
 
-/obj/item/mecha_parts/mecha_equipment/orebox_manager/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+/obj/item/mecha_equipment/orebox_manager/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return TRUE
@@ -110,7 +110,7 @@
 		log_message("Dumped [cached_ore_box].", LOG_MECHA)
 		return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/sleeper/clarke //The Clarke subtype of the sleeper is a built-in utility module
+/obj/item/mecha_equipment/sleeper/clarke //The Clarke subtype of the sleeper is a built-in utility module
 	equipment_slot = MECHA_UTILITY
 	detachable = FALSE
 
@@ -121,7 +121,7 @@
 	button_icon_state = "mecha_sleeper_miner"
 
 /datum/action/vehicle/sealed/mecha/clarke_scoop_body/Trigger(trigger_flags)
-	var/obj/item/mecha_parts/mecha_equipment/sleeper/clarke/sleeper = locate() in chassis
+	var/obj/item/mecha_equipment/sleeper/clarke/sleeper = locate() in chassis
 	var/mob/living/carbon/human/human_target
 	for(var/mob/living/carbon/human/body in range(1, chassis))
 		if(chassis.is_driver(body) || !ishuman(body) || !chassis.Adjacent(body))

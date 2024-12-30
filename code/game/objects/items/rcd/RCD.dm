@@ -569,7 +569,7 @@
 	if(delay <= 0)
 		return TRUE
 
-	var/obj/item/mecha_parts/mecha_equipment/rcd/module = loc
+	var/obj/item/mecha_equipment/rcd/module = loc
 
 	//deconstruction can't be cancelled by ui changes
 	if(mode != RCD_DECONSTRUCT)

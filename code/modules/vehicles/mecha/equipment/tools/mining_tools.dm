@@ -5,7 +5,7 @@
 #define DRILL_HARDENED 2
 
 
-/obj/item/mecha_parts/mecha_equipment/drill
+/obj/item/mecha_equipment/drill
 	name = "exosuit drill"
 	desc = "Equipment for engineering and combat exosuits. This is the drill that'll pierce the heavens!"
 	icon_state = "mecha_drill"
@@ -22,7 +22,7 @@
 	var/drill_delay = 7
 	var/drill_level = DRILL_BASIC
 
-/obj/item/mecha_parts/mecha_equipment/drill/Initialize(mapload)
+/obj/item/mecha_equipment/drill/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/butchering/mecha, \
 	speed = 5 SECONDS, \
@@ -34,7 +34,7 @@
 	ADD_TRAIT(src, TRAIT_INSTANTLY_PROCESSES_BOULDERS, INNATE_TRAIT)
 	ADD_TRAIT(src, TRAIT_BOULDER_BREAKER, INNATE_TRAIT)
 
-/obj/item/mecha_parts/mecha_equipment/drill/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/drill/handle_ui_act(action, list/params)
 	if(action != "toggle")
 		return
 	if(active)
@@ -45,21 +45,21 @@
 		log_message("Deactivated.", LOG_MECHA)
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/drill/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
+/obj/item/mecha_equipment/drill/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
 	. = ..()
 	RegisterSignal(chassis, COMSIG_MOVABLE_BUMP, PROC_REF(bump_mine))
 
-/obj/item/mecha_parts/mecha_equipment/drill/detach(atom/moveto)
+/obj/item/mecha_equipment/drill/detach(atom/moveto)
 	UnregisterSignal(chassis, COMSIG_MOVABLE_BUMP)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/drill/Destroy()
+/obj/item/mecha_equipment/drill/Destroy()
 	if(chassis)
 		UnregisterSignal(chassis, COMSIG_MOVABLE_BUMP)
 	return ..()
 
 ///Called whenever the mech bumps into something; action() handles checking if it is a mineable turf
-/obj/item/mecha_parts/mecha_equipment/drill/proc/bump_mine(obj/vehicle/sealed/mecha/bumper, atom/bumped_into)
+/obj/item/mecha_equipment/drill/proc/bump_mine(obj/vehicle/sealed/mecha/bumper, atom/bumped_into)
 	SIGNAL_HANDLER
 	var/list/drivers = chassis.return_drivers()
 	if(!LAZYLEN(drivers))	//I don't know if this is possible but just in case
@@ -68,7 +68,7 @@
 	//Just use the first one /shrug
 	INVOKE_ASYNC(src, PROC_REF(action), drivers[1], bumped_into, null, TRUE)
 
-/obj/item/mecha_parts/mecha_equipment/drill/do_after_checks(atom/target)
+/obj/item/mecha_equipment/drill/do_after_checks(atom/target)
 	// Gotta be close to the target
 	if(!loc.Adjacent(target))
 		return FALSE
@@ -78,14 +78,14 @@
 	return ..()
 
 ///Redirects clicks to use the drill if possible when enabled
-/obj/item/mecha_parts/mecha_equipment/drill/proc/on_mech_click(atom/mech, mob/source, atom/target, on_cooldown, adjacent)
+/obj/item/mecha_equipment/drill/proc/on_mech_click(atom/mech, mob/source, atom/target, on_cooldown, adjacent)
 	SIGNAL_HANDLER
 	if(on_cooldown || !adjacent)
 		return
 	INVOKE_ASYNC(src, PROC_REF(action), source, target, null, FALSE)
 	return COMPONENT_CANCEL_MELEE_CLICK
 
-/obj/item/mecha_parts/mecha_equipment/drill/action(mob/source, atom/target, list/modifiers, bumped)
+/obj/item/mecha_equipment/drill/action(mob/source, atom/target, list/modifiers, bumped)
 	//If bumped, only bother drilling mineral turfs
 	if(bumped)
 		if(!ismineralturf(target))
@@ -183,10 +183,10 @@
 	drill.log_message("Drilled through [src]", LOG_MECHA)
 	drill.move_ores()
 
-/obj/item/mecha_parts/mecha_equipment/drill/proc/move_ores()
+/obj/item/mecha_equipment/drill/proc/move_ores()
 	chassis.collect_ore()
 
-/obj/item/mecha_parts/mecha_equipment/drill/proc/drill_mob(mob/living/target, mob/living/user)
+/obj/item/mecha_equipment/drill/proc/drill_mob(mob/living/target, mob/living/user)
 	target.visible_message(span_danger("[chassis] is drilling [target] with [src]!"), \
 						span_userdanger("[chassis] is drilling you with [src]!"))
 	log_combat(user, target, "drilled", "[name]", "Combat mode: [user.combat_mode ? "On" : "Off"])(DAMTYPE: [uppertext(damtype)])")
@@ -212,7 +212,7 @@
 	if(target_part && blocked < 100 && prob(10 * drill_level))
 		target_part.dismember(BRUTE)
 
-/obj/item/mecha_parts/mecha_equipment/drill/diamonddrill
+/obj/item/mecha_equipment/drill/diamonddrill
 	name = "diamond-tipped exosuit drill"
 	desc = "Equipment for engineering and combat exosuits. This is an upgraded version of the drill that'll pierce the heavens!"
 	icon_state = "mecha_diamond_drill"
@@ -222,7 +222,7 @@
 	force = 15
 	toolspeed = 0.7
 
-/obj/item/mecha_parts/mecha_equipment/mining_scanner
+/obj/item/mecha_equipment/mining_scanner
 	name = "exosuit mining scanner"
 	desc = "Equipment for working exosuits. It will automatically check surrounding rock for useful minerals."
 	icon_state = "mecha_analyzer"
@@ -232,11 +232,11 @@
 	var/scanning_time = 0
 	COOLDOWN_DECLARE(area_scan_cooldown)
 
-/obj/item/mecha_parts/mecha_equipment/mining_scanner/Initialize(mapload)
+/obj/item/mecha_equipment/mining_scanner/Initialize(mapload)
 	. = ..()
 	START_PROCESSING(SSfastprocess, src)
 
-/obj/item/mecha_parts/mecha_equipment/mining_scanner/process()
+/obj/item/mecha_equipment/mining_scanner/process()
 	if(!loc)
 		STOP_PROCESSING(SSfastprocess, src)
 		qdel(src)
@@ -249,13 +249,13 @@
 	scanning_time = world.time + equip_cooldown
 	mineral_scan_pulse(get_turf(src), scanner = src)
 
-/obj/item/mecha_parts/mecha_equipment/mining_scanner/get_snowflake_data()
+/obj/item/mecha_equipment/mining_scanner/get_snowflake_data()
 	return list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_ORE_SCANNER,
 		"cooldown" = COOLDOWN_TIMELEFT(src, area_scan_cooldown),
 	)
 
-/obj/item/mecha_parts/mecha_equipment/mining_scanner/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/mining_scanner/handle_ui_act(action, list/params)
 	switch(action)
 		if("area_scan")
 			if(!COOLDOWN_FINISHED(src, area_scan_cooldown))

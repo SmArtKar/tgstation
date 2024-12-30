@@ -33123,7 +33123,7 @@
 /obj/structure/rack,
 /obj/item/pushbroom,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp,
+/obj/item/mecha_equipment/hydraulic_clamp,
 /obj/machinery/light_switch/directional/north,
 /turf/open/floor/iron,
 /area/station/cargo/warehouse)

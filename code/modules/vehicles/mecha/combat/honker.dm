@@ -62,9 +62,9 @@
 
 /obj/vehicle/sealed/mecha/honker/dark/loaded
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/honker,
-		MECHA_R_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/launcher/banana_mortar/bombanana,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/radio, /obj/item/mecha_parts/mecha_equipment/air_tank/full, /obj/item/mecha_parts/mecha_equipment/thrusters/ion),
+		MECHA_L_ARM = /obj/item/mecha_equipment/weapon/honker,
+		MECHA_R_ARM = /obj/item/mecha_equipment/weapon/ballistic/launcher/banana_mortar/bombanana,
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/radio, /obj/item/mecha_equipment/air_tank/full, /obj/item/mecha_equipment/thrusters/ion),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)

@@ -2,7 +2,7 @@
 //Hydraulic clamp, Kill clamp, Extinguisher, RCD, Cable layer.
 
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp
+/obj/item/mecha_equipment/hydraulic_clamp
 	name = "hydraulic clamp"
 	desc = "Equipment for engineering exosuits. Lifts objects and loads them into cargo."
 	icon_state = "mecha_clamp"
@@ -22,26 +22,26 @@
 	///Chassis but typed for the cargo_hold var
 	var/obj/vehicle/sealed/mecha/ripley/workmech
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/attach(obj/vehicle/sealed/mecha/new_mecha)
+/obj/item/mecha_equipment/hydraulic_clamp/attach(obj/vehicle/sealed/mecha/new_mecha)
 	. = ..()
 	workmech = chassis
 	ADD_TRAIT(chassis, TRAIT_OREBOX_FUNCTIONAL, TRAIT_MECH_EQUIPMENT(type))
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/detach(atom/moveto)
+/obj/item/mecha_equipment/hydraulic_clamp/detach(atom/moveto)
 	REMOVE_TRAIT(chassis, TRAIT_OREBOX_FUNCTIONAL, TRAIT_MECH_EQUIPMENT(type))
 	workmech = null
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/use_tool(atom/target, mob/living/user, delay, amount, volume, datum/callback/extra_checks)
+/obj/item/mecha_equipment/hydraulic_clamp/use_tool(atom/target, mob/living/user, delay, amount, volume, datum/callback/extra_checks)
 	return do_after_mecha(target, user, delay)
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/do_after_checks(atom/target)
+/obj/item/mecha_equipment/hydraulic_clamp/do_after_checks(atom/target)
 	// Gotta be close to the target
 	if(!loc.Adjacent(target))
 		return FALSE
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/action(mob/living/source, atom/target, list/modifiers)
+/obj/item/mecha_equipment/hydraulic_clamp/action(mob/living/source, atom/target, list/modifiers)
 	if(!action_checks(target))
 		return
 	if(!workmech.cargo_hold)
@@ -136,18 +136,18 @@
 	return ..()
 
 //This is pretty much just for the death-ripley
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/kill
+/obj/item/mecha_equipment/hydraulic_clamp/kill
 	name = "\improper KILL CLAMP"
 	desc = "They won't know what clamped them! This time for real!"
 	killer_clamp = TRUE
 
-/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/kill/fake//harmless fake for pranks
+/obj/item/mecha_equipment/hydraulic_clamp/kill/fake//harmless fake for pranks
 	desc = "They won't know what clamped them!"
 	energy_drain = 0
 	clamp_damage = 0
 	killer_clamp = FALSE
 
-/obj/item/mecha_parts/mecha_equipment/extinguisher
+/obj/item/mecha_equipment/extinguisher
 	name = "exosuit extinguisher"
 	desc = "Equipment for engineering exosuits. A rapid-firing high capacity fire extinguisher."
 	icon_state = "mecha_exting"
@@ -159,12 +159,12 @@
 	///Minimum amount of reagent needed to activate.
 	var/required_amount = 80
 
-/obj/item/mecha_parts/mecha_equipment/extinguisher/Initialize(mapload)
+/obj/item/mecha_equipment/extinguisher/Initialize(mapload)
 	. = ..()
 	create_reagents(400)
 	reagents.add_reagent(/datum/reagent/water, 400)
 
-/obj/item/mecha_parts/mecha_equipment/extinguisher/proc/spray_extinguisher(mob/user)
+/obj/item/mecha_equipment/extinguisher/proc/spray_extinguisher(mob/user)
 	if(reagents.total_volume < required_amount)
 		return
 
@@ -185,7 +185,7 @@
  * The mech can only refill an extinguisher that is in front of it.
  * Only water tank objects can be used.
  */
-/obj/item/mecha_parts/mecha_equipment/extinguisher/proc/attempt_refill(mob/user)
+/obj/item/mecha_equipment/extinguisher/proc/attempt_refill(mob/user)
 	if(reagents.maximum_volume == reagents.total_volume)
 		return
 	var/turf/in_front = get_step(chassis, chassis.dir)
@@ -200,7 +200,7 @@
 	refill_source.reagents.trans_to(src, reagents.maximum_volume)
 	playsound(chassis, 'sound/effects/refill.ogg', 50, TRUE, -6)
 
-/obj/item/mecha_parts/mecha_equipment/extinguisher/get_snowflake_data()
+/obj/item/mecha_equipment/extinguisher/get_snowflake_data()
 	return list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_EXTINGUISHER,
 		"reagents" = reagents.total_volume,
@@ -208,7 +208,7 @@
 		"reagents_required" = required_amount,
 	)
 
-/obj/item/mecha_parts/mecha_equipment/extinguisher/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/extinguisher/handle_ui_act(action, list/params)
 	switch(action)
 		if("activate")
 			spray_extinguisher(usr)
@@ -220,7 +220,7 @@
 ///Maximum range the RCD can construct at.
 #define RCD_RANGE 3
 
-/obj/item/mecha_parts/mecha_equipment/rcd
+/obj/item/mecha_equipment/rcd
 	name = "mounted RCD"
 	desc = "An exosuit-mounted Rapid Construction Device."
 	icon_state = "mecha_rcd"
@@ -236,16 +236,16 @@
 	///The internal RCD item used by this equipment.
 	var/obj/item/construction/rcd/exosuit/internal_rcd
 
-/obj/item/mecha_parts/mecha_equipment/rcd/Initialize(mapload)
+/obj/item/mecha_equipment/rcd/Initialize(mapload)
 	. = ..()
 	internal_rcd = new(src)
 
-/obj/item/mecha_parts/mecha_equipment/rcd/Destroy()
+/obj/item/mecha_equipment/rcd/Destroy()
 	initial_location = null
 	QDEL_NULL(internal_rcd)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/rcd/get_snowflake_data()
+/obj/item/mecha_equipment/rcd/get_snowflake_data()
 	return list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_RCD,
 		"scan_ready" = COOLDOWN_FINISHED(internal_rcd, destructive_scan_cooldown),
@@ -254,15 +254,15 @@
 	)
 
 /// Set the RCD's owner when attaching and detaching it
-/obj/item/mecha_parts/mecha_equipment/rcd/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
+/obj/item/mecha_equipment/rcd/attach(obj/vehicle/sealed/mecha/new_mecha, attach_right)
 	internal_rcd.owner = new_mecha
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/rcd/detach(atom/moveto)
+/obj/item/mecha_equipment/rcd/detach(atom/moveto)
 	internal_rcd.owner = null
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/rcd/handle_ui_act(action, list/params)
+/obj/item/mecha_equipment/rcd/handle_ui_act(action, list/params)
 	switch(action)
 		if("rcd_scan")
 			if(!COOLDOWN_FINISHED(internal_rcd, destructive_scan_cooldown))
@@ -279,7 +279,7 @@
 			return TRUE
 
 
-/obj/item/mecha_parts/mecha_equipment/rcd/do_after_checks(atom/target)
+/obj/item/mecha_equipment/rcd/do_after_checks(atom/target)
 	// Checks if mech moved during operation
 	if(chassis.loc != initial_location)
 		return FALSE
@@ -290,7 +290,7 @@
 
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/rcd/action(mob/source, atom/target, list/modifiers)
+/obj/item/mecha_equipment/rcd/action(mob/source, atom/target, list/modifiers)
 	if(!action_checks(target))
 		return
 	// No meson action!
@@ -310,7 +310,7 @@
 	internal_rcd.mode = construction_mode
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/rcd/interact_with_atom(obj/item/attacking_item, mob/living/user, list/modifiers)
+/obj/item/mecha_equipment/rcd/interact_with_atom(obj/item/attacking_item, mob/living/user, list/modifiers)
 	. = NONE
 	if(istype(attacking_item, /obj/item/rcd_upgrade))
 		internal_rcd.install_upgrade(attacking_item, user)
@@ -319,14 +319,14 @@
 #undef RCD_RANGE
 
 //Dunno where else to put this so shrug
-/obj/item/mecha_parts/mecha_equipment/ripleyupgrade
+/obj/item/mecha_equipment/ripleyupgrade
 	name = "Ripley MK-II Conversion Kit"
 	desc = "A pressurized canopy attachment kit for an Autonomous Power Loader Unit \"Ripley\" MK-I exosuit, to convert it to the slower, but space-worthy MK-II design. This kit cannot be removed, once applied."
 	icon_state = "ripleyupgrade"
 	mech_flags = EXOSUIT_MODULE_RIPLEY
 	var/result = /obj/vehicle/sealed/mecha/ripley/mk2
 
-/obj/item/mecha_parts/mecha_equipment/ripleyupgrade/can_attach(obj/vehicle/sealed/mecha/ripley/mecha, attach_right = FALSE, mob/user)
+/obj/item/mecha_equipment/ripleyupgrade/can_attach(obj/vehicle/sealed/mecha/ripley/mecha, attach_right = FALSE, mob/user)
 	if(mecha.type != /obj/vehicle/sealed/mecha/ripley)
 		to_chat(user, span_warning("This conversion kit can only be applied to APLU MK-I models."))
 		return FALSE
@@ -345,7 +345,7 @@
 		return FALSE
 	return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/ripleyupgrade/attach(obj/vehicle/sealed/mecha/markone, attach_right = FALSE)
+/obj/item/mecha_equipment/ripleyupgrade/attach(obj/vehicle/sealed/mecha/markone, attach_right = FALSE)
 	var/obj/vehicle/sealed/mecha/newmech = new result(get_turf(markone),1)
 	if(!newmech)
 		return
@@ -370,8 +370,8 @@
 		markone.servo.forceMove(newmech)
 		markone.servo = null
 	newmech.update_part_values()
-	for(var/obj/item/mecha_parts/mecha_equipment/equipment in markone.flat_equipment) //Move the equipment over...
-		if(istype(equipment, /obj/item/mecha_parts/mecha_equipment/ejector))
+	for(var/obj/item/mecha_equipment/equipment in markone.flat_equipment) //Move the equipment over...
+		if(istype(equipment, /obj/item/mecha_equipment/ejector))
 			continue //the new mech already has one.
 		var/righthandgun = markone.equip_by_category[MECHA_R_ARM] == equipment
 		equipment.detach(newmech)
@@ -390,14 +390,14 @@
 	qdel(markone)
 	playsound(get_turf(newmech),'sound/items/tools/ratchet.ogg',50,TRUE)
 
-/obj/item/mecha_parts/mecha_equipment/ripleyupgrade/paddy
+/obj/item/mecha_equipment/ripleyupgrade/paddy
 	name = "Paddy Conversion Kit"
 	desc = "A hardpoint modification kit for an Autonomous Power Loader Unit \"Ripley\" MK-I exosuit, to convert it to the Paddy lightweight security design. This kit cannot be removed, once applied."
 	icon_state = "paddyupgrade"
 	mech_flags = EXOSUIT_MODULE_RIPLEY
 	result = /obj/vehicle/sealed/mecha/ripley/paddy
 
-/obj/item/mecha_parts/mecha_equipment/ripleyupgrade/paddy/can_attach(obj/vehicle/sealed/mecha/ripley/mecha, attach_right = FALSE, mob/user)
+/obj/item/mecha_equipment/ripleyupgrade/paddy/can_attach(obj/vehicle/sealed/mecha/ripley/mecha, attach_right = FALSE, mob/user)
 	if(mecha.equip_by_category[MECHA_L_ARM] || mecha.equip_by_category[MECHA_R_ARM]) //Paddys can't use RIPLEY-type equipment
 		to_chat(user, span_warning("This kit cannot be applied with hardpoint equipment attached."))
 		return FALSE

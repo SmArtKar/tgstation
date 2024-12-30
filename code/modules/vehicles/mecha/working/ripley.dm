@@ -30,14 +30,14 @@
 	equip_by_category = list(
 		MECHA_L_ARM = null,
 		MECHA_R_ARM = null,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/ejector),
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/ejector),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
 	/// Amount of Goliath hides attached to the mech
 	var/hides = 0
 	/// Reference to the Cargo Hold equipment.
-	var/obj/item/mecha_parts/mecha_equipment/ejector/cargo_hold
+	var/obj/item/mecha_equipment/ejector/cargo_hold
 	/// How fast the mech is in low pressure
 	var/fast_pressure_step_in = 1.5
 	/// How fast the mech is in normal pressure
@@ -107,7 +107,7 @@
 	equip_by_category = list(
 		MECHA_L_ARM = null,
 		MECHA_R_ARM = null,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/ejector/seccage),
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/ejector/seccage),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -137,7 +137,7 @@
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/siren)
 
 /obj/vehicle/sealed/mecha/ripley/paddy/mob_exit(mob/M, silent = FALSE, randomstep = FALSE, forced = FALSE)
-	var/obj/item/mecha_parts/mecha_equipment/ejector/seccage/cargo_holder = locate(/obj/item/mecha_parts/mecha_equipment/ejector/seccage) in equip_by_category[MECHA_UTILITY]
+	var/obj/item/mecha_equipment/ejector/seccage/cargo_holder = locate(/obj/item/mecha_equipment/ejector/seccage) in equip_by_category[MECHA_UTILITY]
 	for(var/mob/contained in cargo_holder)
 		cargo_holder.cheese_it(contained)
 	togglesiren(force_off = TRUE)
@@ -188,9 +188,9 @@
 	accesses = list(ACCESS_SECURITY)
 	mecha_flags = CAN_STRAFE | HAS_LIGHTS | MMI_COMPATIBLE | ID_LOCK_ON
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/energy/disabler,
-		MECHA_R_ARM = /obj/item/mecha_parts/mecha_equipment/weapon/paddy_claw,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/ejector/seccage),
+		MECHA_L_ARM = /obj/item/mecha_equipment/weapon/energy/disabler,
+		MECHA_R_ARM = /obj/item/mecha_equipment/weapon/paddy_claw,
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/ejector/seccage),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -210,9 +210,9 @@
 	enter_delay = 40
 	silicon_icon_state = null
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/kill/fake,
+		MECHA_L_ARM = /obj/item/mecha_equipment/hydraulic_clamp/kill/fake,
 		MECHA_R_ARM = null,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/ejector),
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/ejector),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -220,9 +220,9 @@
 /obj/vehicle/sealed/mecha/ripley/deathripley/real
 	desc = "OH SHIT IT'S THE DEATHSQUAD WE'RE ALL GONNA DIE. FOR REAL"
 	equip_by_category = list(
-		MECHA_L_ARM = /obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/kill,
+		MECHA_L_ARM = /obj/item/mecha_equipment/hydraulic_clamp/kill,
 		MECHA_R_ARM = null,
-		MECHA_UTILITY = list(/obj/item/mecha_parts/mecha_equipment/ejector),
+		MECHA_UTILITY = list(/obj/item/mecha_equipment/ejector),
 		MECHA_POWER = list(),
 		MECHA_ARMOR = list(),
 	)
@@ -238,20 +238,20 @@
 		cell.charge = FLOOR(cell.charge * 0.25, 1) //Starts at very low charge
 	if(prob(70)) //Maybe add a drill
 		if(prob(15)) //Possible diamond drill... Feeling lucky?
-			var/obj/item/mecha_parts/mecha_equipment/drill/diamonddrill/D = new
+			var/obj/item/mecha_equipment/drill/diamonddrill/D = new
 			D.attach(src)
 		else
-			var/obj/item/mecha_parts/mecha_equipment/drill/D = new
+			var/obj/item/mecha_equipment/drill/D = new
 			D.attach(src)
 
 	else //Add plasma cutter if no drill
-		var/obj/item/mecha_parts/mecha_equipment/weapon/energy/plasma/P = new
+		var/obj/item/mecha_equipment/weapon/energy/plasma/P = new
 		P.attach(src)
 
 	//Attach hydraulic clamp
-	var/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/HC = new
+	var/obj/item/mecha_equipment/hydraulic_clamp/HC = new
 	HC.attach(src, TRUE)
-	var/obj/item/mecha_parts/mecha_equipment/mining_scanner/scanner = new
+	var/obj/item/mecha_equipment/mining_scanner/scanner = new
 	scanner.attach(src)
 
 GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
@@ -267,7 +267,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 	. = ..()
 
 	//Attach hydraulic clamp ONLY
-	var/obj/item/mecha_parts/mecha_equipment/hydraulic_clamp/HC = new
+	var/obj/item/mecha_equipment/hydraulic_clamp/HC = new
 	HC.attach(src)
 
 	take_damage(max_integrity * 0.5, sound_effect=FALSE) //Low starting health
@@ -287,7 +287,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 	servo = new /obj/item/stock_parts/servo(src)
 	update_part_values()
 
-/obj/item/mecha_parts/mecha_equipment/ejector
+/obj/item/mecha_equipment/ejector
 	name = "cargo compartment"
 	desc = "Holds cargo loaded with a hydraulic clamp."
 	icon_state = "mecha_bin"
@@ -296,29 +296,29 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 	///Number of atoms we can store
 	var/cargo_capacity = 15
 
-/obj/item/mecha_parts/mecha_equipment/ejector/attach()
+/obj/item/mecha_equipment/ejector/attach()
 	. = ..()
 	var/obj/vehicle/sealed/mecha/ripley/workmech = chassis
 	workmech.cargo_hold = src
 
-/obj/item/mecha_parts/mecha_equipment/ejector/detach()
+/obj/item/mecha_equipment/ejector/detach()
 	var/obj/vehicle/sealed/mecha/ripley/workmech = chassis
 	workmech.cargo_hold = null
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/Destroy()
+/obj/item/mecha_equipment/ejector/Destroy()
 	for(var/atom/stored in contents)
 		forceMove(stored, drop_location())
 		step_rand(stored)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/contents_explosion(severity, target)
+/obj/item/mecha_equipment/ejector/contents_explosion(severity, target)
 	for(var/obj/stored in contents)
 		if(prob(10 * severity))
 			stored.forceMove(drop_location())
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/relay_container_resist_act(mob/living/user, obj/container)
+/obj/item/mecha_equipment/ejector/relay_container_resist_act(mob/living/user, obj/container)
 	to_chat(user, span_notice("You lean on the back of [container] and start pushing so it falls out of [src]."))
 	if(do_after(user, 30 SECONDS, target = container))
 		if(!user || user.stat != CONSCIOUS || user.loc != src || container.loc != src )
@@ -329,7 +329,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 		if(user.loc == src) //so we don't get the message if we resisted multiple times and succeeded.
 			to_chat(user, span_warning("You fail to push [container] out of [src]!"))
 
-/obj/item/mecha_parts/mecha_equipment/ejector/get_snowflake_data()
+/obj/item/mecha_equipment/ejector/get_snowflake_data()
 	var/list/data = list(
 		"snowflake_id" = MECHA_SNOWFLAKE_ID_EJECTOR,
 		"cargo_capacity" = cargo_capacity,
@@ -342,7 +342,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 		))
 	return data
 
-/obj/item/mecha_parts/mecha_equipment/ejector/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+/obj/item/mecha_equipment/ejector/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return TRUE
@@ -358,35 +358,35 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 		log_message("Unloaded [crate]. Cargo compartment capacity: [cargo_capacity - contents.len]", LOG_MECHA)
 		return TRUE
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage
+/obj/item/mecha_equipment/ejector/seccage
 	name = "holding cell"
 	desc = "Holds suspects loaded with a hydraulic claw."
 	cargo_capacity = 4
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/Initialize(mapload)
+/obj/item/mecha_equipment/ejector/seccage/Initialize(mapload)
 	. = ..()
 	RegisterSignal(src, COMSIG_MOB_REMOVING_CUFFS, PROC_REF(stop_cuff_removal))
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/Destroy()
+/obj/item/mecha_equipment/ejector/seccage/Destroy()
 	UnregisterSignal(src, COMSIG_MOB_REMOVING_CUFFS)
 	for(var/mob/freebird in contents) //Let's not qdel people iside the mech kthx
 		cheese_it(freebird)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
+/obj/item/mecha_equipment/ejector/seccage/Entered(atom/movable/arrived, atom/old_loc, list/atom/old_locs)
 	RegisterSignal(arrived, COMSIG_MOB_REMOVING_CUFFS, PROC_REF(stop_cuff_removal))
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/Exited(atom/movable/gone, direction)
+/obj/item/mecha_equipment/ejector/seccage/Exited(atom/movable/gone, direction)
 	UnregisterSignal(gone, COMSIG_MOB_REMOVING_CUFFS)
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/proc/stop_cuff_removal(datum/source, obj/item/cuffs)
+/obj/item/mecha_equipment/ejector/seccage/proc/stop_cuff_removal(datum/source, obj/item/cuffs)
 	SIGNAL_HANDLER
 	to_chat(source, span_warning("You don't have the room to remove [cuffs]!"))
 	return COMSIG_MOB_BLOCK_CUFF_REMOVAL
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+/obj/item/mecha_equipment/ejector/seccage/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	if(action == "eject")
 		var/mob/passenger = locate(params["cargoref"]) in contents
 		if(!passenger)
@@ -399,7 +399,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 		return TRUE
 	return ..()
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/container_resist_act(mob/living/user)
+/obj/item/mecha_equipment/ejector/seccage/container_resist_act(mob/living/user)
 	var/breakout_time = 1 MINUTES
 
 	if (user.mob_size > MOB_SIZE_HUMAN)
@@ -416,7 +416,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 			to_chat(freebird, span_warning("[user] has managed to open the hatch, and you fall out with him. You're free!"))
 			cheese_it(freebird)
 
-/obj/item/mecha_parts/mecha_equipment/ejector/seccage/proc/cheese_it(mob/living/escapee)
+/obj/item/mecha_equipment/ejector/seccage/proc/cheese_it(mob/living/escapee)
 	var/range = rand(1, 3)
 	var/variance = rand(-45, 45)
 	var/angle = 180
@@ -446,10 +446,10 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 
 	if(lavaland_equipment_pressure_check(T))
 		movedelay = !overclock_mode ? fast_pressure_step_in : fast_pressure_step_in / overclock_coeff
-		for(var/obj/item/mecha_parts/mecha_equipment/drill/drill in flat_equipment)
+		for(var/obj/item/mecha_equipment/drill/drill in flat_equipment)
 			drill.equip_cooldown = initial(drill.equip_cooldown) * 0.5
 
 	else
 		movedelay = !overclock_mode ? slow_pressure_step_in : slow_pressure_step_in / overclock_coeff
-		for(var/obj/item/mecha_parts/mecha_equipment/drill/drill in flat_equipment)
+		for(var/obj/item/mecha_equipment/drill/drill in flat_equipment)
 			drill.equip_cooldown = initial(drill.equip_cooldown)
