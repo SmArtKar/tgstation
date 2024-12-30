@@ -20,9 +20,10 @@
 	update_diag_health()
 	if (prob(damage_amount * 5))
 		spark_system?.start()
-	if(damage_taken >= 5)
+	if(damage_amount >= 5 && TIMER_COOLDOWN_FINISHED(src, COOLDOWN_MECHA_MESSAGE))
 		to_chat(occupants, "[icon2html(src, occupants)][span_userdanger("Taking damage!")]")
-	log_message("Took [damage_taken] points of damage. Damage type: [damage_type]", LOG_MECHA)
+		TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
+	log_message("Took [damage_amount] points of damage. Damage type: [damage_type]", LOG_MECHA)
 
 /obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armour_penetration)
 	return ..() * get_dir_damage_multiplier(attack_dir)
@@ -125,7 +126,7 @@
 	. = ..()
 	log_message("Hit by projectile. Type: [hitting_projectile]([hitting_projectile.damage_type]).", LOG_MECHA, color="red")
 	// Or if its a piercing hit and we failed to block the projectile
-	if (. != BULLET_ACT_BLOCK && blocked < 100 && piercing_hit && PROB(MECHA_DRIVER_PIERCE_HIT_CHANCE))
+	if (. != BULLET_ACT_BLOCK && blocked < 100 && piercing_hit && prob(MECHA_DRIVER_PIERCE_HIT_CHANCE))
 		var/mob/living/hitmob = pick(occupants)
 		var/hit_result = hitmob.projectile_hit(hitting_projectile, def_zone, piercing_hit)
 		// Don't transfer FORCE_PIERCE over if it didn't FORCE_PIERCE us
@@ -137,6 +138,7 @@
 	if (. & EMP_PROTECT_SELF)
 		return
 
+	do_sparks(3, TRUE, src)
 	log_message("Hit by an EMP", LOG_MECHA, color="red")
 	if(get_charge())
 		use_energy(MECHA_EMP_CHARGE_DRAIN * cell.charge / severity)
@@ -182,9 +184,9 @@
 		balloon_alert(user, "[mecha_flags & ID_LOCK_ON ? "enabled" : "disabled"] id lock!")
 		return ITEM_INTERACT_SUCCESS
 
-	if(istype(tool, /obj/item/mecha_parts))
-		var/obj/item/mecha_parts = tool
-		part.try_attach_part(user, src, modifiers[RIGHT_CLICK])
+	if(istype(tool, /obj/item/mecha_equipment))
+		var/obj/item/mecha_equipment/equipment = tool
+		equipment.try_attach_part(user, src, modifiers[RIGHT_CLICK])
 		return ITEM_INTERACT_SUCCESS
 
 	if(is_wire_tool(tool) && (mecha_flags & PANEL_OPEN))
@@ -375,7 +377,7 @@
 		visible_message(span_danger("[src]'s lights burn out!"))
 		mecha_flags &= ~HAS_LIGHTS
 	set_light_on(FALSE)
-	for (var/occupant in occupants)
+	for (var/mob/occupant as anything in occupants)
 		remove_action_type_from_mob(/datum/action/vehicle/sealed/mecha/mech_toggle_lights, occupant)
 	return COMPONENT_BLOCK_LIGHT_EATER
 

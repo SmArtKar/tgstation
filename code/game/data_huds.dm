@@ -405,17 +405,17 @@ Diagnostic HUDs!
 /*~~~~~~~~~~~~~~~~~~~~
 	BIG STOMPY MECHS
 ~~~~~~~~~~~~~~~~~~~~~*/
-/obj/vehicle/sealed/mecha/proc/diag_hud_set_mechhealth()
+/obj/vehicle/sealed/mecha/proc/update_diag_health()
 	set_hud_image_state(DIAG_MECH_HUD, "huddiag[RoundDiagBar(atom_integrity/max_integrity)]")
 
-/obj/vehicle/sealed/mecha/proc/diag_hud_set_mechcell()
+/obj/vehicle/sealed/mecha/proc/update_diag_cell()
 	if(cell)
 		var/chargelvl = cell.charge/cell.maxcharge
 		set_hud_image_state(DIAG_BATT_HUD, "hudbatt[RoundDiagBar(chargelvl)]")
 	else
 		set_hud_image_state(DIAG_BATT_HUD, "hudnobatt")
 
-/obj/vehicle/sealed/mecha/proc/diag_hud_set_mechstat()
+/obj/vehicle/sealed/mecha/proc/update_diag_stat()
 	if(!internal_damage)
 		set_hud_image_inactive(DIAG_STAT_HUD)
 		return

@@ -1,7 +1,7 @@
 /////////////////////////
 ////// Mecha Parts //////
 /////////////////////////
-/*
+
 /obj/item/mecha_parts
 	name = "mecha part"
 	icon = 'icons/mob/rideables/mech_construct.dmi'
@@ -9,18 +9,8 @@
 	w_class = WEIGHT_CLASS_GIGANTIC
 	obj_flags = CONDUCTS_ELECTRICITY
 
-/obj/item/mecha_parts/proc/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE) //For attaching parts to a finished mech
-	if(!user.transferItemToLoc(src, M))
-		to_chat(user, span_warning("\The [src] is stuck to your hand, you cannot put it in \the [M]!"))
-		return FALSE
-	user.visible_message(span_notice("[user] attaches [src] to [M]."), span_notice("You attach [src] to [M]."))
-	return TRUE
-
-/obj/item/mecha_parts/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
-	return
-
 /obj/item/mecha_parts/chassis
-	name = "Mecha Chassis"
+	name = "mecha chassis"
 	icon_state = "backbone"
 	interaction_flags_item = NONE //Don't pick us up!!
 	var/construct_type
@@ -251,10 +241,10 @@
 	name = "\improper Phazon chassis"
 	construct_type = /datum/component/construction/unordered/mecha_chassis/phazon
 
-/obj/item/mecha_parts/chassis/phazon/attackby(obj/item/I, mob/user, params)
+/obj/item/mecha_parts/chassis/phazon/attackby(obj/item/tool, mob/user, params)
 	. = ..()
-	if(istype(I, /obj/item/assembly/signaler/anomaly) && !istype(I, /obj/item/assembly/signaler/anomaly/ectoplasm))
-		to_chat(user, "The anomaly core socket only accepts ectoplasm anomaly cores!")
+	if(istype(tool, /obj/item/assembly/signaler/anomaly) && !istype(tool, /obj/item/assembly/signaler/anomaly/ectoplasm))
+		balloon_alert(user, "requires ectoplasm core!")
 
 /obj/item/mecha_parts/phazon_torso
 	name="\improper Phazon torso"
@@ -467,4 +457,4 @@
 /obj/item/circuitboard/mecha/savannah_ivanov/main
 	name = "Savannah-Ivanov Combination Control Lock module (Exosuit Board)"
 	icon_state = "mainboard"
-*/
+

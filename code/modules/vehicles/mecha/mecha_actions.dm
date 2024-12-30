@@ -1,5 +1,3 @@
-/***************** MECHA ACTIONS *****************/
-/*
 /obj/vehicle/sealed/mecha/generate_action_type()
 	. = ..()
 	if(istype(., /datum/action/vehicle/sealed/mecha))
@@ -14,28 +12,29 @@
 	chassis = null
 	return ..()
 
-///Sets the chassis var of our mecha action to the referenced mecha. Used during actions generation in
-///generate_action_type() chain.
+///Sets the chassis var of our mecha action to the referenced mecha. Used during actions generation in generate_action_type() chain
 /datum/action/vehicle/sealed/mecha/proc/set_chassis(passed_chassis)
 	chassis = passed_chassis
 
-/datum/action/vehicle/sealed/mecha/mech_eject
+/datum/action/vehicle/sealed/mecha/eject
 	name = "Eject From Mech"
 	button_icon_state = "mech_eject"
 
-/datum/action/vehicle/sealed/mecha/mech_eject/Trigger(trigger_flags)
-	if(!owner)
-		return
-	if(!chassis || !(owner in chassis.occupants))
+/datum/action/vehicle/sealed/mecha/eject/Trigger(trigger_flags)
+	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.container_resist_act(owner)
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal
+/datum/action/vehicle/sealed/mecha/cabin_seal
 	name = "Toggle Cabin Airtight"
 	button_icon_state = "mech_cabin_open"
 	desc = "Airtight cabin preserves internal air and can be pressurized with a mounted air tank."
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal/Trigger(trigger_flags)
+/datum/action/vehicle/sealed/mecha/cabin_seal/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+	button_icon_state = "mech_cabin_[chassis.cabin_sealed ? "pressurized" : "open"]"
+	return ..()
+
+/datum/action/vehicle/sealed/mecha/cabin_seal/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.set_cabin_seal(owner, !chassis.cabin_sealed)
@@ -44,54 +43,59 @@
 	name = "Toggle Lights"
 	button_icon_state = "mech_lights_off"
 
+/datum/action/vehicle/sealed/mecha/toggle_lights/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+	button_icon_state = "mech_lights_[chassis.light_on ? "on" : "off"]"
+	return ..()
+
 /datum/action/vehicle/sealed/mecha/toggle_lights/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
-	chassis.toggle_lights(user = owner)
+	chassis.toggle_lights(owner, !chassis.light_on)
 
-/datum/action/vehicle/sealed/mecha/mech_view_stats
+/datum/action/vehicle/sealed/mecha/view_stats
 	name = "View Stats"
 	button_icon_state = "mech_view_stats"
 
-/datum/action/vehicle/sealed/mecha/mech_view_stats/Trigger(trigger_flags)
+/datum/action/vehicle/sealed/mecha/view_stats/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
-
 	chassis.ui_interact(owner)
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_safeties
+/datum/action/vehicle/sealed/mecha/toggle_safeties
 	name = "Toggle Equipment Safeties"
 	button_icon_state = "mech_safeties_off"
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_safeties/set_chassis(passed_chassis)
+/datum/action/vehicle/sealed/mecha/toggle_safeties/set_chassis(passed_chassis)
 	. = ..()
 	RegisterSignal(chassis, COMSIG_MECHA_SAFETIES_TOGGLE, PROC_REF(update_action_icon))
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_safeties/Trigger(trigger_flags)
+/datum/action/vehicle/sealed/mecha/toggle_safeties/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
-
 	chassis.set_safety(owner)
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_safeties/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+/datum/action/vehicle/sealed/mecha/toggle_safeties/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
 	button_icon_state = "mech_safeties_[chassis.weapons_safety ? "on" : "off"]"
 	return ..()
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_safeties/proc/update_action_icon()
+/datum/action/vehicle/sealed/mecha/toggle_safeties/proc/update_action_icon()
 	SIGNAL_HANDLER
 	build_all_button_icons()
 
-/datum/action/vehicle/sealed/mecha/strafe
-	name = "Toggle Strafing. Disabled when Alt is held."
-	button_icon_state = "strafe"
+/datum/action/vehicle/sealed/mecha/toggle_strafe
+	name = "Toggle Strafing"
+	button_icon_state = "strafe_off"
 
-/datum/action/vehicle/sealed/mecha/strafe/Trigger(trigger_flags)
+/datum/action/vehicle/sealed/mecha/toggle_safeties/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+	button_icon_state = "mech_strafe_[chassis.strafing ? "on" : "off"]"
+	return ..()
+
+/datum/action/vehicle/sealed/mecha/toggle_strafe/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
-
 	chassis.toggle_strafe()
 
-
+/*
 
 ///swap seats, for two person mecha
 /datum/action/vehicle/sealed/mecha/swap_seat
@@ -123,14 +127,15 @@
 		chassis.add_control_flags(owner, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_SETTINGS)
 	chassis.update_icon_state()
 
-/datum/action/vehicle/sealed/mecha/mech_overclock
+/datum/action/vehicle/sealed/mecha/overclock
 	name = "Toggle overclocking"
 	button_icon_state = "mech_overload_off"
 
-/datum/action/vehicle/sealed/mecha/mech_overclock/Trigger(trigger_flags, forced_state = null)
+/datum/action/vehicle/sealed/mecha/overclock/Trigger(trigger_flags, forced_state = null)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.toggle_overclock(forced_state)
 	button_icon_state = "mech_overload_[chassis.overclock_mode ? "on" : "off"]"
 	build_all_button_icons()
+
 */

@@ -13,7 +13,7 @@
 	var/salvage_num = 5
 	var/list/crowbar_salvage = list()
 	var/wires_removed = FALSE
-	var/mob/living/silicon/ai/pilot //AI to be salvaged
+	var/mob/living/silicon/ai/former_pilot //AI to be salvaged
 	var/list/parts
 
 /obj/structure/mecha_wreckage/Initialize(mapload, mob/living/silicon/ai/unfortunate_ai)
@@ -29,23 +29,23 @@
 		parts = null
 	if(!unfortunate_ai)
 		return
-	pilot = unfortunate_ai
-	pilot.apply_damage(150, BURN) //Give the AI a bit of damage from the "shock" of being suddenly shut down
-	INVOKE_ASYNC(pilot, TYPE_PROC_REF(/mob/living/silicon, death)) //The damage is not enough to kill the AI, but to be 'corrupted files' in need of repair.
-	pilot.forceMove(src) //Put the dead AI inside the wreckage for recovery
+	former_pilot = unfortunate_ai
+	former_pilot.apply_damage(150, BURN) //Give the AI a bit of damage from the "shock" of being suddenly shut down
+	INVOKE_ASYNC(former_pilot, TYPE_PROC_REF(/mob/living/silicon, death)) //The damage is not enough to kill the AI, but to be 'corrupted files' in need of repair.
+	former_pilot.forceMove(src) //Put the dead AI inside the wreckage for recovery
 	add_overlay(mutable_appearance('icons/obj/weapons/guns/projectiles.dmi', "green_laser")) //Overlay for the recovery beacon
-	pilot.controlled_equipment = null
-	pilot.remote_control = null
+	former_pilot.controlled_equipment = null
+	former_pilot.remote_control = null
 
 /obj/structure/mecha_wreckage/Destroy()
-	if(pilot)
-		QDEL_NULL(pilot)
+	if(former_pilot)
+		QDEL_NULL(former_pilot)
 	QDEL_LIST(crowbar_salvage)
 	return ..()
 
 /obj/structure/mecha_wreckage/examine(mob/user)
 	. = ..()
-	if(AI)
+	if(former_pilot)
 		. += span_notice("The AI recovery beacon is active.")
 
 /obj/structure/mecha_wreckage/welder_act(mob/living/user, obj/item/tool)
@@ -93,18 +93,18 @@
 	//Proc called on the wreck by the AI card.
 	if(interaction != AI_TRANS_TO_CARD) //AIs can only be transferred in one direction, from the wreck to the card.
 		return
-	if(!pilot) //No AI in the wreck
+	if(!former_pilot) //No AI in the wreck
 		to_chat(user, span_warning("No AI backups found."))
 		return
 	cut_overlays() //Remove the recovery beacon overlay
-	pilot.forceMove(card) //Move the dead AI to the card.
-	card.AI = pilot
-	if(pilot.client) //AI player is still in the dead AI and is connected
-		to_chat(pilot, span_notice("The remains of your file system have been recovered on a mobile storage device."))
+	former_pilot.forceMove(card) //Move the dead AI to the card.
+	card.AI = former_pilot
+	if(former_pilot.client) //AI player is still in the dead AI and is connected
+		to_chat(former_pilot, span_notice("The remains of your file system have been recovered on a mobile storage device."))
 	else //Give the AI a heads-up that it is probably going to get fixed.
-		pilot.notify_revival("You have been recovered from the wreckage!", source = card)
-	to_chat(user, "[span_boldnotice("Backup files recovered")]: [pilot.name] ([rand(1000,9999)].exe) salvaged from [name] and stored within local memory.")
-	pilot = null
+		former_pilot.notify_revival("You have been recovered from the wreckage!", source = card)
+	to_chat(user, "[span_boldnotice("Backup files recovered")]: [former_pilot.name] ([rand(1000,9999)].exe) salvaged from [name] and stored within local memory.")
+	former_pilot = null
 
 /obj/structure/mecha_wreckage/gygax
 	name = "\improper Gygax wreckage"

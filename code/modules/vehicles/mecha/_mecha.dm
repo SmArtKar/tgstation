@@ -139,16 +139,22 @@
 	/// Overclocking increases movement and melee speed, but makes movement produce heat and increases all other heat generation
 	/// Mech also doesn't automatically dump heat when overclocking, but additional heat will be converted into cabin temperature and damage!
 	var/overclock_active = FALSE
+	/// Multiplier for heat production during overclocking
+	var/overclock_heat_mult = 1.5
 	/// Speed multiplier for movement when overclocked
-	var/overclock_speed_mult = 1.5
+	var/overclock_speed_mult = 1.25
 	/// Melee cooldown multiplier when overclocked
-	var/overclock_melee_mult = 0.66
+	var/overclock_melee_mult = 0.75
 	/// How much additional heat can the mech sustain before blowing up?
 	var/overclock_maximum_temp_mult = 2
 	/// Whether the mech has an option to enable safe overclocking
 	var/overclock_safety_available = FALSE
 	/// Safely overclocked mechs will dump heat upon reaching the safe limit
 	var/overclock_safety = FALSE
+	/// How much heat is produced for every melee attack
+	var/melee_heat_production = 5
+	/// How much heat is produced for every step while overclocking, ignores overclock_heat_mult
+	var/step_heat_production = 2
 
 	// ----- Effects-related -----
 	/// Type of footsteps we play when moving. Can be null to prevent footsteps from playing
@@ -505,7 +511,7 @@
 	for(var/mob/occupant as anything in occupants)
 		balloon_alert(occupant, "strafing [strafing ? "on" : "off"]")
 		occupant.playsound_local(src, 'sound/machines/terminal/terminal_eject.ogg', 50, TRUE)
-		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/strafe)
+		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_strafe)
 		action?.build_all_button_icons()
 
 	log_message("Toggled strafing mode [strafing ? "on" : "off"].", LOG_MECHA)
@@ -513,15 +519,15 @@
 /*
 
 /obj/vehicle/sealed/mecha/generate_actions()
-	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_eject)
+	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/eject)
 	if(mecha_flags & IS_ENCLOSED)
-		initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal, VEHICLE_CONTROL_SETTINGS)
+		initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_cabin_seal, VEHICLE_CONTROL_SETTINGS)
 	if(can_use_overclock)
-		initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_overclock)
-	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_lights, VEHICLE_CONTROL_SETTINGS)
-	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_safeties, VEHICLE_CONTROL_SETTINGS)
-	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/mech_view_stats, VEHICLE_CONTROL_SETTINGS)
-	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/strafe, VEHICLE_CONTROL_DRIVE)
+		initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/overclock)
+	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_lights, VEHICLE_CONTROL_SETTINGS)
+	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_safeties, VEHICLE_CONTROL_SETTINGS)
+	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/view_stats, VEHICLE_CONTROL_SETTINGS)
+	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_strafe, VEHICLE_CONTROL_DRIVE)
 
 /obj/vehicle/sealed/mecha/proc/update_part_values() ///Updates the values given by scanning module and capacitor tier, called when a part is removed or inserted.
 	update_energy_drain()

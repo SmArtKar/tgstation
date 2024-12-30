@@ -157,7 +157,7 @@
 	if (user)
 		to_chat(user, span_danger("You [attack_verb] [src]!"))
 	..()
-	take_damage(mecha_attacker.force * mecha_attacker.demolition_mod, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), armour_penetration)
+	take_damage(mecha_attacker.force * mecha_attacker.demolition_mod, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), mecha_attacker.armour_penetration)
 	return TRUE
 
 /obj/machinery/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
@@ -171,7 +171,7 @@
 	if (user)
 		to_chat(user, span_danger("You [attack_verb] [src]!"))
 	..()
-	take_damage(mecha_attacker.force * mecha_attacker.demolition_mod, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), armour_penetration)
+	take_damage(mecha_attacker.force * mecha_attacker.demolition_mod, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), mecha_attacker.armour_penetration)
 	return TRUE
 
 /obj/structure/window/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
@@ -191,7 +191,7 @@
 		to_chat(user, span_danger("You [attack_verb] [src]!"))
 	..()
 	// No demolition mod as this also applies in mech to mech combat
-	take_damage(mecha_attacker.force, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), armour_penetration)
+	take_damage(mecha_attacker.force, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), mecha_attacker.armour_penetration)
 	return TRUE
 
 /mob/living/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
@@ -212,6 +212,7 @@
 		to_chat(user, span_warning("You don't want to harm other living beings!"))
 		return
 
+	. = ..()
 	mecha_attacker.do_attack_animation(src)
 	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
 	var/attack_verb = pick(mecha_attacker.attack_verbs)
@@ -226,25 +227,25 @@
 			reagents.add_reagent(/datum/reagent/cryptobiolin, mecha_attacker.force / 2 * bio_armor)
 		if(reagents.get_reagent_amount(/datum/reagent/toxin) < mecha_attacker.force)
 			reagents.add_reagent(/datum/reagent/toxin, mecha_attacker.force / 2 * bio_armor)
-	else
-		var/def_zone = get_random_valid_zone(user?.zone_selected, even_weights = TRUE)
-		var/zone_readable = parse_zone_with_bodypart(def_zone)
-		apply_damage(damage, mecha_attacker.damtype, def_zone, run_armor_check(
-			def_zone = def_zone,
-			attack_flag = MELEE,
-			absorb_text = span_notice("Your armor has protected your [zone_readable]!"),
-			soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!"),
-			armour_penetration = mecha_attacker.armour_penetration,
-		))
+		return TRUE
 
-		mecha_attacker.melee_attack_effect(src, damage_dealt)
+	var/def_zone = get_random_valid_zone(user?.zone_selected, even_weights = TRUE)
+	var/zone_readable = parse_zone_with_bodypart(def_zone)
+	var/damage_dealt = apply_damage(mecha_attacker.force, mecha_attacker.damtype, def_zone, run_armor_check(
+		def_zone = def_zone,
+		attack_flag = MELEE,
+		absorb_text = span_notice("Your armor has protected your [zone_readable]!"),
+		soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!"),
+		armour_penetration = mecha_attacker.armour_penetration,
+	))
+	mecha_attacker.melee_attack_effect(src, damage_dealt, user)
 	return TRUE
 
-/obj/vehicle/sealed/mecha/proc/melee_attack_effect(mob/living/victim, damage_dealt)
+/obj/vehicle/sealed/mecha/proc/melee_attack_effect(mob/living/victim, damage_dealt, mob/living/user)
 	if (damage_dealt >= MECHA_MELEE_THROW_DAMAGE)
-		throw_at(get_edge_target_turf(src, get_dir(mecha_attacker, src)), 2, 1, user)
+		throw_at(get_edge_target_turf(victim, get_dir(src, victim)), 2, 1, user)
 	else if (damage_dealt >= MECHA_MELEE_PUSH_DAMAGE)
-		step_away(src, mecha_attacker, 15)
+		step_away(victim, src, 15)
 
 	if(damage_dealt > MECHA_MELEE_KNOCKOUT_DAMAGE)
 		victim.Unconscious(2 SECONDS)
