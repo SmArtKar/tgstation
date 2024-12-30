@@ -62,10 +62,18 @@
 #define MECHA_EQUIPMENT_DESTRUCTION_PROB 70
 /// Chance of open-cabin mechs redirecting projectiles at their driver
 #define MECHA_OPEN_CABIN_DRIVER_HIT_CHANCE 75
+/// Chance of closed-cabin mech drivers getting hit by piercing projectiles
+#define MECHA_DRIVER_PIERCE_HIT_CHANCE 25
 /// Percentage of charge deducted when a mech is hit by an EMP
 #define MECHA_EMP_CHARGE_DRAIN 0.15
 /// How long does it take for a mech to gain back control of its' equipment after being EMPd?
 #define MECHA_EMP_EQUIPMENT_REBOOT_TIME 3 SECONDS
 
+/// Melee damage over which living mobs get pushed away from the mech
+#define MECHA_MELEE_PUSH_DAMAGE 10
 /// Melee damage over which living mobs get thrown away from the mech
-#define MECHA_MELEE_THROW_DAMAGE 15
+#define MECHA_MELEE_THROW_DAMAGE 25
+/// Melee damage over which living mobs get knocked unconscious
+#define MECHA_MELEE_KNOCKOUT_DAMAGE 35
+/// Melee damage over which living mobs get knocked down
+#define MECHA_MELEE_KNOCKDOWN_DAMAGE 20

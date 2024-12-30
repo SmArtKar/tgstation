@@ -44,15 +44,15 @@
 
 	// ----- Generic mech info -----
 	/// Single flag for the type of this mech, determines what kind of equipment can be attached to it
-	var/mech_type
+	var/mech_type = NONE
 	/// Typepath for the wreckage it spawns when destroyed
-	var/wreck_type
+	var/wreck_type = null
 	/// Mech capability flags
-	var/mech_flags = CAN_STRAFE | IS_ENCLOSED | HAS_LIGHTS | MMI_COMPATIBLE | CAN_MOVE_DIAGONALLY
+	var/mecha_flags = CAN_STRAFE | IS_ENCLOSED | HAS_LIGHTS | MMI_COMPATIBLE | CAN_MOVE_DIAGONALLY
 	/// Maximum cabin (or outside air, for open cabin mechs) temperature before mech starts taking damage
 	var/max_temperature = 25000
 	/// DNA ensymes of mech's owner
-	var/dna_lock
+	var/dna_lock = null
 	/// A list of all granted accesses
 	var/list/accesses = list()
 	/// If the mech should require ALL or only ONE of the listed accesses
@@ -63,12 +63,14 @@
 	var/blowout_pilot_knockout = 2 SECONDS
 	/// Separate icon_state for when the mech does not have a human pilot but is controlled by an AI or a COMP unit
 	var/silicon_icon_state
-	/// If we're currently in strafe movement mode
-	var/strafe = FALSE
+	/// If we're currently in strafing movement mode
+	var/strafing = FALSE
 	/// Currently ejecting, and unable to do things
-	var/is_currently_ejecting = FALSE
+	var/currently_ejecting = FALSE
 	/// What wires datum we use
 	var/wires_type = /datum/wires/mecha
+	/// Special state which is preventing us from attacking or using equipment, for printing out to players
+	var/blocking_state = null
 
 	// ----- Equipment-related -----
 	/// Currently installed equipment
@@ -291,7 +293,7 @@
 		if(!isAI(occupant))
 			mob_exit(occupant, forced = TRUE)
 			if(!isbrain(occupant))
-				occupant.SetSleeping(destruction_sleep_duration)
+				occupant.SetSleeping(blowout_pilot_knockout)
 			occupant.throw_at(get_edge_target_turf(cur_turf, pick(GLOB.alldirs)), 1, 1)
 			continue
 
@@ -307,7 +309,7 @@
 	if (light_ex_range >= 0 || flame_ex_range >= 0)
 		explosion(loc, light_impact_range = light_ex_range, flame_range = flame_ex_range)
 
-	if (!wreckage)
+	if (!wreck_type)
 		return ..()
 
 	var/obj/structure/mecha_wreckage/wreckage = new wreck_type(loc, unlucky_ai)
@@ -372,9 +374,9 @@
 	safety_enabled = !safety_enabled
 	if(safety_sound)
 		SEND_SOUND(user, sound(safety_sound, volume = 25))
-	balloon_alert(user, "equipment [weapons_safety ? "stowed" : "ready"]")
+	balloon_alert(user, "equipment [safety_enabled ? "stowed" : "ready"]")
 	set_mouse_pointer()
-	SEND_SIGNAL(src, COMSIG_MECHA_SAFETIES_TOGGLE, user, weapons_safety)
+	SEND_SIGNAL(src, COMSIG_MECHA_SAFETIES_TOGGLE, user, safety_enabled)
 
 /obj/vehicle/sealed/mecha/proc/restore_equipment()
 	equipment_disabled = FALSE
@@ -413,36 +415,101 @@
 	. = ..()
 	if(LAZYLEN(flat_equipment))
 		. += span_notice("It's equipped with:")
-		for(var/obj/item/mecha_equipment/equipment as anything in flat_equipment)
-			if(!HAS_TRAIT(equipment, TRAIT_HIDDEN_MECH_EQUIPMENT))
+		for (var/obj/item/mecha_equipment/equipment as anything in flat_equipment)
+			if (!HAS_TRAIT(equipment, TRAIT_HIDDEN_MECH_EQUIPMENT))
 				. += span_notice("[icon2html(equipment, user)] \A [equipment].")
 
-	if(mecha_flags & PANEL_OPEN)
+	if (mecha_flags & PANEL_OPEN)
 		. += span_notice("The panel is open. You could use a <b>crowbar</b> to eject parts or lock the panel back with a <b>screwdriver</b>.")
-		if(!capacitor)
+		if (!capacitor)
 			. += span_warning("It's missing a capacitor.")
 		else if (capacitor.rating > 1)
 			. += span_notice("[servo] is increasing maximum heat capacity by [(capacitor.rating - 1) * 5]%.")
-		if(!servo)
+		if (!servo)
 			. += span_warning("It's missing a servo.")
 		else if (servo.rating > 1)
 			. += span_notice("[servo] is reducing overload heat generation by [(servo.rating - 1) * 10]%")
-		if(!scanner)
+		if (!scanner)
 			. += span_warning("It's missing a scanning module.")
 		else if (scanner.rating > 1)
 			. += span_notice("[scanner] is increasing maximum structural complexity by [scanner.rating - 1] units.")
 	else
 		. += span_notice("You could unlock the maintenance cover with a <b>screwdriver</b>.")
 
-	if(mecha_flags & IS_ENCLOSED)
+	if (mecha_flags & IS_ENCLOSED)
 		return
 
-	if(mecha_flags & SILICON_PILOT)
+	if (mecha_flags & SILICON_PILOT)
 		. += span_notice("[src] appears to be piloting itself.")
 		return
 
-	for(var/occupant in occupants)
+	for (var/occupant in occupants)
 		. += span_notice("You can see [occupant] inside.")
+
+/obj/vehicle/sealed/mecha/proc/has_charge(amount)
+	return get_charge() >= amount
+
+/obj/vehicle/sealed/mecha/proc/get_charge()
+	return cell?.charge
+
+/obj/vehicle/sealed/mecha/proc/use_energy(amount)
+	var/output = cell.use(amount)
+	if (output)
+		update_diag_cell()
+	return output
+
+/obj/vehicle/sealed/mecha/proc/give_power(amount)
+	return cell?.give(amount)
+
+/// Displays a special speech bubble when someone inside the mecha speaks
+/obj/vehicle/sealed/mecha/proc/display_speech_bubble(datum/source, list/speech_args)
+	SIGNAL_HANDLER
+	var/list/speech_bubble_recipients = list()
+	for(var/mob/listener in get_hearers_in_view(7, src))
+		if(listener.client)
+			speech_bubble_recipients += listener.client
+
+	var/image/mech_speech = image('icons/mob/effects/talk.dmi', src, "machine[say_test(speech_args[SPEECH_MESSAGE])]", MOB_LAYER+1)
+	mech_speech.pixel_x += (get_cached_width(src) - ICON_SIZE_X) / 2
+	mech_speech.pixel_y += get_cached_height(src) - ICON_SIZE_Y
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(flick_overlay_global), mech_speech, speech_bubble_recipients, 3 SECONDS)
+
+/// Toggles lights on/off
+/obj/vehicle/sealed/mecha/proc/toggle_lights(mob/user, new_state = FALSE)
+	if(!(mecha_flags & HAS_LIGHTS))
+		if(user)
+			balloon_alert(user, "no lights!")
+		return
+
+	if(!light_on && new_state && get_charge() < power_to_energy(light_power_drain, scheduler = SSobj))
+		if(user)
+			balloon_alert(user, "no power!")
+		return
+
+	set_light_on(!light_on)
+	playsound(src,'sound/machines/clockcult/brass_skewer.ogg', 40, TRUE)
+	log_message("Toggled lights [light_on ? "on": "off"].", LOG_MECHA)
+
+	for(var/mob/occupant as anything in occupants)
+		balloon_alert(occupant, "lights [light_on ? "on": "off"]")
+		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_lights)
+		action?.build_all_button_icons()
+
+/// Toggles strafing on and off
+/obj/vehicle/sealed/mecha/proc/toggle_strafe(mob/user)
+	if(!(mecha_flags & CAN_STRAFE))
+		balloon_alert(user, "cannot strafe!")
+		return
+
+	strafing = !strafing
+	for(var/mob/occupant as anything in occupants)
+		balloon_alert(occupant, "strafing [strafing ? "on" : "off"]")
+		occupant.playsound_local(src, 'sound/machines/terminal/terminal_eject.ogg', 50, TRUE)
+		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/strafe)
+		action?.build_all_button_icons()
+
+	log_message("Toggled strafing mode [strafing ? "on" : "off"].", LOG_MECHA)
+
 /*
 
 /obj/vehicle/sealed/mecha/generate_actions()
@@ -594,118 +661,6 @@
 		playsound(src,'sound/machines/clockcult/brass_skewer.ogg', 40, TRUE)
 		log_message("Toggled lights off due to the lack of power.", LOG_MECHA)
 
-///Called when a driver clicks somewhere. Handles everything like equipment, punches, etc.
-/obj/vehicle/sealed/mecha/proc/on_mouseclick(mob/user, atom/target, list/modifiers)
-	SIGNAL_HANDLER
-	if(LAZYACCESS(modifiers, MIDDLE_CLICK))
-		set_safety(user)
-		return COMSIG_MOB_CANCEL_CLICKON
-	if(weapons_safety)
-		return
-	if(isAI(user)) //For AIs: If safeties are off, use mech functions. If safeties are on, use AI functions.
-		. = COMSIG_MOB_CANCEL_CLICKON
-	if(modifiers[SHIFT_CLICK]) //Allows things to be examined.
-		return
-	if(!isturf(target) && !isturf(target.loc)) // Prevents inventory from being drilled
-		return
-	if(completely_disabled || is_currently_ejecting || (mecha_flags & CANNOT_INTERACT))
-		return
-	if(phasing)
-		balloon_alert(user, "not while [phasing]!")
-		return
-	if(user.incapacitated)
-		return
-	if(!get_charge())
-		return
-	if(src == target)
-		return
-	var/dir_to_target = get_dir(src,target)
-	if(!(mecha_flags & OMNIDIRECTIONAL_ATTACKS) && dir_to_target && !(dir_to_target & dir))//wrong direction
-		return
-	if(internal_damage & MECHA_INT_CONTROL_LOST)
-		target = pick(view(3,target))
-	var/mob/living/livinguser = user
-	if(!(livinguser in return_controllers_with_flag(VEHICLE_CONTROL_EQUIPMENT)))
-		balloon_alert(user, "wrong seat for equipment!")
-		return
-	var/obj/item/mecha_equipment/selected
-	if(modifiers[BUTTON] == RIGHT_CLICK)
-		selected = equip_by_category[MECHA_R_ARM]
-	else
-		selected = equip_by_category[MECHA_L_ARM]
-	if(selected)
-		if(!Adjacent(target) && (selected.range & MECHA_RANGED))
-			if(HAS_TRAIT(livinguser, TRAIT_PACIFISM) && selected.harmful)
-				to_chat(livinguser, span_warning("You don't want to harm other living beings!"))
-				return
-			if(SEND_SIGNAL(src, COMSIG_MECHA_EQUIPMENT_CLICK, livinguser, target) & COMPONENT_CANCEL_EQUIPMENT_CLICK)
-				return
-			INVOKE_ASYNC(selected, TYPE_PROC_REF(/obj/item/mecha_equipment, action), user, target, modifiers)
-			return
-		if(Adjacent(target) && (selected.range & MECHA_MELEE))
-			if(isliving(target) && selected.harmful && HAS_TRAIT(livinguser, TRAIT_PACIFISM))
-				to_chat(livinguser, span_warning("You don't want to harm other living beings!"))
-				return
-			if(SEND_SIGNAL(src, COMSIG_MECHA_EQUIPMENT_CLICK, livinguser, target) & COMPONENT_CANCEL_EQUIPMENT_CLICK)
-				return
-			INVOKE_ASYNC(selected, TYPE_PROC_REF(/obj/item/mecha_equipment, action), user, target, modifiers)
-			return
-	if(!(livinguser in return_controllers_with_flag(VEHICLE_CONTROL_MELEE)))
-		to_chat(livinguser, span_warning("You're in the wrong seat to interact with your hands."))
-		return
-	var/on_cooldown = TIMER_COOLDOWN_RUNNING(src, COOLDOWN_MECHA_MELEE_ATTACK)
-	var/adjacent = Adjacent(target)
-	if(SEND_SIGNAL(src, COMSIG_MECHA_MELEE_CLICK, livinguser, target, on_cooldown, adjacent) & COMPONENT_CANCEL_MELEE_CLICK)
-		return
-	if(on_cooldown || !adjacent)
-		return
-	if(internal_damage & MECHA_INT_CONTROL_LOST)
-		target = pick(oview(1,src))
-
-	if(!has_charge(melee_energy_drain))
-		return
-	use_energy(melee_energy_drain)
-
-	SEND_SIGNAL(user, COMSIG_MOB_USED_CLICK_MECH_MELEE, src)
-	if(target.mech_melee_attack(src, user))
-		TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MELEE_ATTACK, melee_cooldown)
-
-/// Driver alt clicks anything while in mech
-/obj/vehicle/sealed/mecha/proc/on_click_alt(mob/user, atom/target, params)
-	SIGNAL_HANDLER
-
-	. = COMSIG_MOB_CANCEL_CLICKON // Cancel base_click_alt
-
-	if(target != src)
-		return
-
-	if(!(user in occupants))
-		return
-
-	if(!(user in return_controllers_with_flag(VEHICLE_CONTROL_DRIVE)))
-		to_chat(user, span_warning("You're in the wrong seat to control movement."))
-		return
-
-	toggle_strafe()
-
-
-/// middle mouse click signal wrapper for AI users
-/obj/vehicle/sealed/mecha/proc/on_middlemouseclick(mob/user, atom/target, params)
-	SIGNAL_HANDLER
-	if(isAI(user))
-		on_mouseclick(user, target, params)
-
-///Displays a special speech bubble when someone inside the mecha speaks
-/obj/vehicle/sealed/mecha/proc/display_speech_bubble(datum/source, list/speech_args)
-	SIGNAL_HANDLER
-	var/list/speech_bubble_recipients = list()
-	for(var/mob/listener in get_hearers_in_view(7, src))
-		if(listener.client)
-			speech_bubble_recipients += listener.client
-
-	var/image/mech_speech = image('icons/mob/effects/talk.dmi', src, "machine[say_test(speech_args[SPEECH_MESSAGE])]",MOB_LAYER+1)
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(flick_overlay_global), mech_speech, speech_bubble_recipients, 3 SECONDS)
-
 ///makes cabin unsealed, dumping cabin air outside or airtight filling the cabin with external air mix
 /obj/vehicle/sealed/mecha/proc/set_cabin_seal(mob/user, seal_state)
 	if(!(mecha_flags & IS_ENCLOSED))
@@ -794,32 +749,4 @@
 		melee_energy_drain = initial(melee_energy_drain)
 		light_power_drain = initial(light_power_drain)
 
-/// Toggle lights on/off
-/obj/vehicle/sealed/mecha/proc/toggle_lights(forced_state = null, mob/user)
-	if(!(mecha_flags & HAS_LIGHTS))
-		if(user)
-			balloon_alert(user, "mech has no lights!")
-		return
-	if((!(mecha_flags & LIGHTS_ON) && forced_state != FALSE) && get_charge() < power_to_energy(light_power_drain, scheduler = SSobj))
-		if(user)
-			balloon_alert(user, "no power for lights!")
-		return
-	mecha_flags ^= LIGHTS_ON
-	set_light_on(mecha_flags & LIGHTS_ON)
-	playsound(src,'sound/machines/clockcult/brass_skewer.ogg', 40, TRUE)
-	log_message("Toggled lights [(mecha_flags & LIGHTS_ON)?"on":"off"].", LOG_MECHA)
-	for(var/mob/occupant as anything in occupants)
-		var/datum/action/act = locate(/datum/action/vehicle/sealed/mecha/mech_toggle_lights) in occupant.actions
-		if(mecha_flags & LIGHTS_ON)
-			act.button_icon_state = "mech_lights_on"
-		else
-			act.button_icon_state = "mech_lights_off"
-		balloon_alert(occupant, "lights [mecha_flags & LIGHTS_ON ? "on":"off"]")
-		act.build_all_button_icons()
-
-/obj/vehicle/sealed/mecha/proc/melee_attack_effect(mob/living/victim, heavy)
-	if(heavy)
-		victim.Unconscious(2 SECONDS)
-	else
-		victim.Knockdown(4 SECONDS)
 */

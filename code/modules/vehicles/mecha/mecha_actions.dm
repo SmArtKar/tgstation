@@ -40,11 +40,11 @@
 		return
 	chassis.set_cabin_seal(owner, !chassis.cabin_sealed)
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_lights
+/datum/action/vehicle/sealed/mecha/toggle_lights
 	name = "Toggle Lights"
 	button_icon_state = "mech_lights_off"
 
-/datum/action/vehicle/sealed/mecha/mech_toggle_lights/Trigger(trigger_flags)
+/datum/action/vehicle/sealed/mecha/toggle_lights/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.toggle_lights(user = owner)
@@ -92,21 +92,6 @@
 	chassis.toggle_strafe()
 
 
-/obj/vehicle/sealed/mecha/proc/toggle_strafe()
-	if(!(mecha_flags & CAN_STRAFE))
-		to_chat(occupants, "this mecha doesn't support strafing!")
-		return
-
-	strafe = !strafe
-
-	for(var/mob/occupant in occupants)
-		balloon_alert(occupant, "strafing [strafe?"on":"off"]")
-		occupant.playsound_local(src, 'sound/machines/terminal/terminal_eject.ogg', 50, TRUE)
-	log_message("Toggled strafing mode [strafe?"on":"off"].", LOG_MECHA)
-
-	for(var/occupant in occupants)
-		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/strafe)
-		action?.build_all_button_icons()
 
 ///swap seats, for two person mecha
 /datum/action/vehicle/sealed/mecha/swap_seat

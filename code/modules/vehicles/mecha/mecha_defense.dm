@@ -112,7 +112,7 @@
 	attack_generic(user, animal_damage, user.melee_damage_type, MELEE, play_soundeffect)
 
 /obj/vehicle/sealed/mecha/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit, blocked = 0) //wrapper
-	//allows bullets to hit the pilot of open-canopy mechs
+	// Allows bullets to hit the pilot of open-canopy mechs
 	if(!(mecha_flags & IS_ENCLOSED)\
 		&& LAZYLEN(occupants)\
 		&& prob(MECHA_OPEN_CABIN_DRIVER_HIT_CHANCE)\
@@ -124,6 +124,13 @@
 
 	. = ..()
 	log_message("Hit by projectile. Type: [hitting_projectile]([hitting_projectile.damage_type]).", LOG_MECHA, color="red")
+	// Or if its a piercing hit and we failed to block the projectile
+	if (. != BULLET_ACT_BLOCK && blocked < 100 && piercing_hit && PROB(MECHA_DRIVER_PIERCE_HIT_CHANCE))
+		var/mob/living/hitmob = pick(occupants)
+		var/hit_result = hitmob.projectile_hit(hitting_projectile, def_zone, piercing_hit)
+		// Don't transfer FORCE_PIERCE over if it didn't FORCE_PIERCE us
+		if (hit_result != BULLET_ACT_FORCE_PIERCE)
+			return hit_result
 
 /obj/vehicle/sealed/mecha/emp_act(severity)
 	. = ..()
@@ -138,7 +145,7 @@
 	if (!equipment_disabled)
 		for (var/mob/occupant as anything in occupants)
 			balloon_alert(occupant, "equipment disabled!")
-			SEND_SOUND(user, sound('sound/items/weapons/jammed.ogg', volume = 75)) // Audio feedback cuz this's important
+			SEND_SOUND(occupant, sound('sound/items/weapons/jammed.ogg', volume = 75)) // Audio feedback cuz this's important
 
 	equipment_disabled = TRUE
 	set_mouse_pointer()
@@ -184,7 +191,7 @@
 		wires.interact(user)
 		return ITEM_INTERACT_SUCCESS
 
-	if(istype(tool, /obj/item/stock_parts) && try_insert_part(weapon, user))
+	if(istype(tool, /obj/item/stock_parts) && try_insert_part(tool, user))
 		return ITEM_INTERACT_SUCCESS
 
 /obj/vehicle/sealed/mecha/attacked_by(obj/item/attacking_item, mob/living/user)
@@ -216,7 +223,7 @@
 	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), \
 		span_danger("You [message_verb_simple] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "attacked", attacking_item)
-	log_message("Attacked by [user]. Item - [attacking_item], Damage - [damage_taken]", LOG_MECHA)
+	log_message("Attacked by [user]. Item - [attacking_item], Damage - [damage]", LOG_MECHA)
 
 /obj/vehicle/sealed/mecha/screwdriver_act(mob/living/user, obj/item/tool)
 	..()
@@ -267,6 +274,7 @@
 	var/obj/item/stock_parts/part_to_remove = show_radial_menu(user, src, stock_parts, require_near = TRUE)
 	if(!(locate(part_to_remove) in contents))
 		return
+
 	user.put_in_hands(part_to_remove)
 	CheckParts()
 	update_diag_cell()
@@ -306,15 +314,15 @@
 
 /// Try to insert a stock part into the mech
 /obj/vehicle/sealed/mecha/proc/try_insert_part(obj/item/stock_parts/weapon, mob/living/user)
-	if(!(mecha_flags & PANEL_OPEN))
+	if (!(mecha_flags & PANEL_OPEN))
 		balloon_alert(user, "open the panel first!")
 		return TRUE
 
-	if(istype(weapon, /obj/item/stock_parts/power_store/battery))
-		if(cell)
+	if (istype(weapon, /obj/item/stock_parts/power_store/battery))
+		if (cell)
 			balloon_alert(user, "already installed!")
 			return TRUE
-		if(!user.transferItemToLoc(weapon, src, silent = FALSE))
+		if (!user.transferItemToLoc(weapon, src, silent = FALSE))
 			return TRUE
 		cell = weapon
 		balloon_alert(user, "installed power cell")
@@ -323,23 +331,23 @@
 		log_message("Power cell installed", LOG_MECHA)
 		return TRUE
 
-	if(istype(weapon, /obj/item/stock_parts/scanning_module))
-		if(scanmod)
+	if (istype(weapon, /obj/item/stock_parts/scanning_module))
+		if (scanner)
 			balloon_alert(user, "already installed!")
 			return TRUE
-		if(!user.transferItemToLoc(weapon, src, silent = FALSE))
+		if (!user.transferItemToLoc(weapon, src, silent = FALSE))
 			return TRUE
-		scanmod = weapon
+		scanner = weapon
 		balloon_alert(user, "installed scanning module")
 		playsound(src, 'sound/items/tools/screwdriver2.ogg', 50, FALSE)
 		log_message("[weapon] installed", LOG_MECHA)
 		return TRUE
 
-	if(istype(weapon, /obj/item/stock_parts/capacitor))
-		if(capacitor)
+	if (istype(weapon, /obj/item/stock_parts/capacitor))
+		if (capacitor)
 			balloon_alert(user, "already installed!")
 			return TRUE
-		if(!user.transferItemToLoc(weapon, src, silent = FALSE))
+		if (!user.transferItemToLoc(weapon, src, silent = FALSE))
 			return TRUE
 		capacitor = weapon
 		balloon_alert(user, "installed capacitor")
@@ -347,11 +355,11 @@
 		log_message("[weapon] installed", LOG_MECHA)
 		return TRUE
 
-	if(istype(weapon, /obj/item/stock_parts/servo))
-		if(!servo)
+	if (istype(weapon, /obj/item/stock_parts/servo))
+		if (!servo)
 			balloon_alert(user, "already installed!")
 			return TRUE
-		if(!user.transferItemToLoc(weapon, src, silent = FALSE))
+		if (!user.transferItemToLoc(weapon, src, silent = FALSE))
 			return TRUE
 		servo = weapon
 		balloon_alert(user, "installed servo")
@@ -363,17 +371,17 @@
 /// Special light eater handling
 /obj/vehicle/sealed/mecha/proc/on_light_eater(obj/vehicle/sealed/source, datum/light_eater)
 	SIGNAL_HANDLER
-	if(mecha_flags & HAS_LIGHTS)
+	if (mecha_flags & HAS_LIGHTS)
 		visible_message(span_danger("[src]'s lights burn out!"))
 		mecha_flags &= ~HAS_LIGHTS
 	set_light_on(FALSE)
-	for(var/occupant in occupants)
+	for (var/occupant in occupants)
 		remove_action_type_from_mob(/datum/action/vehicle/sealed/mecha/mech_toggle_lights, occupant)
 	return COMPONENT_BLOCK_LIGHT_EATER
 
 /obj/vehicle/sealed/mecha/on_saboteur(datum/source, disrupt_duration)
 	. = ..()
-	if((mecha_flags & HAS_LIGHTS) && light_on)
+	if ((mecha_flags & HAS_LIGHTS) && light_on)
 		set_light_on(FALSE)
 		return TRUE
 
@@ -382,12 +390,12 @@
 /////////////////////////////////////
 
 /obj/vehicle/sealed/mecha/remove_air(amount)
-	if((mecha_flags & IS_ENCLOSED) && cabin_sealed)
+	if ((mecha_flags & IS_ENCLOSED) && cabin_sealed)
 		return cabin_air.remove(amount)
 	return ..()
 
 /obj/vehicle/sealed/mecha/return_air()
-	if((mecha_flags & IS_ENCLOSED) && cabin_sealed)
+	if ((mecha_flags & IS_ENCLOSED) && cabin_sealed)
 		return cabin_air
 	return ..()
 
@@ -411,12 +419,23 @@
 
 /obj/vehicle/sealed/mecha/fire_act() //Check if we should ignite the pilot of an open-canopy mech
 	. = ..()
-	if(mecha_flags & IS_ENCLOSED || mecha_flags & SILICON_PILOT)
+	if (mecha_flags & IS_ENCLOSED || mecha_flags & SILICON_PILOT)
 		return
-	for(var/mob/living/cookedalive as anything in occupants)
-		if(cookedalive.fire_stacks < 5)
+	for (var/mob/living/cookedalive as anything in occupants)
+		if (cookedalive.fire_stacks < 5)
 			cookedalive.adjust_fire_stacks(1)
 			cookedalive.ignite_mob()
+
+/// Upgrades any attached RCD equipment, unless the disk has anti-distruption upgrade. That doesn't fly with us.
+/obj/vehicle/sealed/mecha/proc/upgrade_rcd(obj/item/rcd_upgrade/rcd_upgrade, mob/user)
+	if (rcd_upgrade.upgrade & RCD_UPGRADE_ANTI_INTERRUPT)
+		balloon_alert(user, "invalid upgrade!")
+		playsound(src, 'sound/machines/buzz/buzz-sigh.ogg', 50, FALSE)
+		return
+
+	for (var/obj/item/mecha_equipment/rcd/rcd_equip in flat_equipment)
+		if (rcd_equip.internal_rcd.install_upgrade(rcd_upgrade, user))
+			return
 
 /*
 
@@ -497,12 +516,6 @@
 		else
 			balloon_alert(user, "can't use this ammo!")
 	return FALSE
-
-///Upgrades any attached RCD equipment.
-/obj/vehicle/sealed/mecha/proc/upgrade_rcd(obj/item/rcd_upgrade/rcd_upgrade, mob/user)
-	for(var/obj/item/mecha_equipment/rcd/rcd_equip in flat_equipment)
-		if(rcd_equip.internal_rcd.install_upgrade(rcd_upgrade, user))
-			return
 
 ///tries to deal internal damaget depending on the damage amount
 /obj/vehicle/sealed/mecha/proc/try_deal_internal_damage(damage)

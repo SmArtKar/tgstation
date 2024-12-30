@@ -19,10 +19,20 @@
 #define COMSIG_MECHA_MELEE_CLICK "mecha_action_melee_click"
 	/// Prevents click from happening.
 	#define COMPONENT_CANCEL_MELEE_CLICK (1<<0)
+	/// Picks a random target in 3 tile range of intended one
+	#define COMPONENT_RANDOMIZE_MELEE_CLICK (1<<1)
+
 ///sent from clicking while you have equipment selected.
 #define COMSIG_MECHA_EQUIPMENT_CLICK "mecha_action_equipment_click"
 	/// Prevents click from happening.
 	#define COMPONENT_CANCEL_EQUIPMENT_CLICK (1<<0)
+	/// Picks a random target in 3 tile range of intended one
+	#define COMPONENT_RANDOMIZE_EQUIPMENT_CLICK (1<<1)
+
+/// From /obj/vehicle/sealed/mecha/vehicle_move(direction): (direction)
+#define COMSIG_MECHA_TRY_MOVE "mecha_action_try_move"
+	#define COMPONENT_CANCEL_MECHA_MOVE (1<<0)
+	#define COMPONENT_RANDOMIZE_MECHA_MOVE (1<<1)
 
 /// From /obj/vehicle/sealed/mecha/proc/set_safety(mob/user): (mob/user)
 #define COMSIG_MECHA_SAFETIES_TOGGLE "mecha_safeties_toggle"
