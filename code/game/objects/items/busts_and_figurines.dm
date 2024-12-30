@@ -129,7 +129,7 @@
 	. = ..()
 	//Not compatible with greyscale configs because it's animated.
 	color = pick_weight(list(COLOR_WHITE = 3, COLOR_GOLD = 2, COLOR_DARK = 1))
-	var/mutable_appearance/neko_overlay = mutable_appearance(icon, "maneki-neko-overlay", appearance_flags = RESET_COLOR)
+	var/mutable_appearance/neko_overlay = mutable_appearance(icon, "maneki-neko-overlay", appearance_flags = KEEP_APART|RESET_COLOR)
 	add_overlay(neko_overlay)
 	AddElement(/datum/element/art, GOOD_ART)
 	AddElement(/datum/element/beauty, 800)

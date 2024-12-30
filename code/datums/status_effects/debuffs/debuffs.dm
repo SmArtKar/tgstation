@@ -388,7 +388,7 @@
 	name = "Crusher mark underlay"
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "shield"
-	appearance_flags = TILE_BOUND|LONG_GLIDE|RESET_COLOR
+	appearance_flags = KEEP_APART|TILE_BOUND|LONG_GLIDE|RESET_COLOR
 	vis_flags = VIS_UNDERLAY
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	color = list(

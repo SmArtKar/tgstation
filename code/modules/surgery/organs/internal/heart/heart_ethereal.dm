@@ -223,7 +223,7 @@
 	. = ..()
 	if(!being_built)
 		var/mutable_appearance/shine = mutable_appearance(icon, icon_state = "[icon_state]_shine")
-		shine.appearance_flags = RESET_COLOR //No color on this, just pure white
+		shine.appearance_flags = KEEP_APART|RESET_COLOR //No color on this, just pure white
 		. += shine
 
 /obj/structure/ethereal_crystal/proc/heal_ethereal()

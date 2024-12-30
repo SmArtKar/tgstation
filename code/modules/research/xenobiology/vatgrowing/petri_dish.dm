@@ -40,7 +40,7 @@
 		return
 	var/reagentcolor = sample.sample_color
 	var/mutable_appearance/base_overlay = mutable_appearance(icon, "petri_dish_overlay")
-	base_overlay.appearance_flags = RESET_COLOR
+	base_overlay.appearance_flags = KEEP_APART|RESET_COLOR
 	base_overlay.color = reagentcolor
 	. += base_overlay
 	var/mutable_appearance/overlay2 = mutable_appearance(icon, "petri_dish_overlay2")

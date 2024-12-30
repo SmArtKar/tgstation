@@ -224,7 +224,7 @@ GLOBAL_LIST_EMPTY(virtual_pets_list)
 		if(spec_hat)
 			hat_preview.pixel_w += spec_hat[1]
 			hat_preview.pixel_z += spec_hat[2]
-		hat_preview.appearance_flags = RESET_COLOR
+		hat_preview.appearance_flags = KEEP_APART|RESET_COLOR
 		pet_preview.add_overlay(hat_preview)
 
 	profile_picture = getFlatIcon(pet_preview, no_anim = TRUE)
@@ -503,7 +503,7 @@ GLOBAL_LIST_EMPTY(virtual_pets_list)
 				else
 					selected_hat["type"] = chosen_type
 					var/state_to_use = initial(chosen_type.worn_icon_state) || initial(chosen_type.icon_state)
-					var/mutable_appearance/selected_hat_appearance = mutable_appearance(initial(chosen_type.worn_icon), state_to_use, appearance_flags = RESET_COLOR)
+					var/mutable_appearance/selected_hat_appearance = mutable_appearance(initial(chosen_type.worn_icon), state_to_use, appearance_flags = KEEP_APART|RESET_COLOR)
 					selected_hat["worn_offset"] = initial(chosen_type.worn_y_offset)
 					var/list/scale_list = special_hat_placement[chosen_type]?["scale"]
 					if(scale_list)

@@ -163,7 +163,7 @@
 	RegisterSignal(grabbed_atom, COMSIG_MOVABLE_SET_ANCHORED, PROC_REF(on_setanchored))
 	playsound(grabbed_atom, 'sound/items/weapons/contractor_baton/contractorbatonhit.ogg', 75, TRUE)
 	kinesis_icon = mutable_appearance(icon = 'icons/effects/effects.dmi', icon_state = "kinesis", layer = grabbed_atom.layer - 0.1)
-	kinesis_icon.appearance_flags = RESET_ALPHA|RESET_COLOR|RESET_TRANSFORM
+	kinesis_icon.appearance_flags = KEEP_APART|RESET_ALPHA|RESET_COLOR|RESET_TRANSFORM
 	kinesis_icon.overlays += emissive_appearance(icon = 'icons/effects/effects.dmi', icon_state = "kinesis", offset_spokesman = grabbed_atom)
 	grabbed_atom.add_overlay(kinesis_icon)
 	kinesis_beam = mod.wearer.Beam(grabbed_atom, "kinesis")

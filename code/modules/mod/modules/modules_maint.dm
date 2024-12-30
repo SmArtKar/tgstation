@@ -134,7 +134,7 @@
 	if (!active)
 		return list()
 	var/mutable_appearance/visor_overlay = mod.get_visor_overlay(standing)
-	visor_overlay.appearance_flags |= RESET_COLOR
+	visor_overlay.appearance_flags |= KEEP_APART|RESET_COLOR
 	if (!isnull(music_player.active_song_sound))
 		visor_overlay.color = rainbow_order[rave_number]
 	return list(visor_overlay)

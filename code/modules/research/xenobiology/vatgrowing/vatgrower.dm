@@ -157,7 +157,7 @@
 		return
 	var/reagentcolor = mix_color_from_reagents(reagents.reagent_list)
 	var/mutable_appearance/base_overlay = mutable_appearance(icon, "vat_reagent")
-	base_overlay.appearance_flags = RESET_COLOR
+	base_overlay.appearance_flags = KEEP_APART|RESET_COLOR
 	base_overlay.color = reagentcolor
 	. += base_overlay
 	if(biological_sample && is_operational)

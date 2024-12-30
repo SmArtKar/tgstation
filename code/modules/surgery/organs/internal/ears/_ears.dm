@@ -187,7 +187,7 @@
 	// Construct image of inner ears, apply to base ears as an overlay
 	feature_key += "inner"
 	var/mutable_appearance/inner_ears = ..()
-	inner_ears.appearance_flags = RESET_COLOR
+	inner_ears.appearance_flags = KEEP_APART|RESET_COLOR
 	feature_key = initial(feature_key)
 
 	base_ears.overlays += inner_ears

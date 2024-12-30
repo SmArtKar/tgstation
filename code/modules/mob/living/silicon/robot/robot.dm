@@ -1045,7 +1045,7 @@
 			'icons/mob/effects/onfire.dmi',
 			fire_icon,
 			-HIGHEST_LAYER,
-			appearance_flags = RESET_COLOR,
+			appearance_flags = KEEP_APART|RESET_COLOR,
 		)
 		GLOB.fire_appearances[fire_icon] = new_fire_overlay
 

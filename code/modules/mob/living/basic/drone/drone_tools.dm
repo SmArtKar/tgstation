@@ -53,7 +53,7 @@
 		return
 
 	var/mutable_appearance/head = mutable_appearance(icon_file, "screwdriver_head")
-	head.appearance_flags = RESET_COLOR
+	head.appearance_flags = KEEP_APART|RESET_COLOR
 	. += head
 
 /obj/item/wrench/drone

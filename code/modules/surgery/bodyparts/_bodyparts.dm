@@ -1091,7 +1091,7 @@
 	if(draw_blood)
 		var/mutable_appearance/husk_blood = mutable_appearance(icon_husk, "[husk_type]_husk_[body_zone]")
 		husk_blood.blend_mode = BLEND_INSET_OVERLAY
-		husk_blood.appearance_flags |= RESET_COLOR
+		husk_blood.appearance_flags |= KEEP_APART|RESET_COLOR
 		husk_blood.dir = thing_to_husk.dir
 		thing_to_husk.add_overlay(husk_blood)
 

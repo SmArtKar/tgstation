@@ -83,11 +83,11 @@
 		underlays += new_underlays
 
 	var/mutable_appearance/features = mutable_appearance(icon, "[icon_state]_features")
-	features.appearance_flags = RESET_COLOR
+	features.appearance_flags = KEEP_APART|RESET_COLOR
 	. += features
 
 	var/mutable_appearance/clothes = mutable_appearance(icon, clothes_set)
-	clothes.appearance_flags = RESET_COLOR
+	clothes.appearance_flags = KEEP_APART|RESET_COLOR
 	. += clothes
 
 	var/bonus_overlays = customer_info.get_overlays(src)

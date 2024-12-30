@@ -221,9 +221,9 @@
 /obj/item/bot_assembly/repairbot/update_overlays()
 	. = ..()
 	if(build_step >= ASSEMBLY_FIRST_STEP)
-		. += mutable_appearance(icon, "repairbot_base_sensor", appearance_flags = RESET_COLOR)
+		. += mutable_appearance(icon, "repairbot_base_sensor", appearance_flags = KEEP_APART|RESET_COLOR)
 	if(build_step >= ASSEMBLY_SECOND_STEP)
-		. += mutable_appearance(icon, "repairbot_base_arms", appearance_flags = RESET_COLOR)
+		. += mutable_appearance(icon, "repairbot_base_arms", appearance_flags = KEEP_APART|RESET_COLOR)
 
 /obj/item/bot_assembly/repairbot/attackby(obj/item/item, mob/user, params)
 	..()

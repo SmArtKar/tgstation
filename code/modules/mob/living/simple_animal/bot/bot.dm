@@ -1160,7 +1160,7 @@ Pass a positive integer as an argument to override a bot's default speed.
 		path_image.icon = path_image_icon
 		path_image.icon_state = path_image_icon_state
 		path_image.layer = BOT_PATH_LAYER
-		path_image.appearance_flags = RESET_COLOR|RESET_TRANSFORM
+		path_image.appearance_flags = KEEP_APART|RESET_COLOR|RESET_TRANSFORM
 		path_image.color = path_image_color
 		for(var/i in 1 to newpath.len)
 			var/turf/T = newpath[i]

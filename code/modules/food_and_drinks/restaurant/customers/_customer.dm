@@ -184,7 +184,7 @@
 /datum/customer_data/french/get_overlays(mob/living/basic/robot_customer/customer)
 	if(customer.ai_controller.blackboard[BB_CUSTOMER_LEAVING])
 		var/mutable_appearance/flag = mutable_appearance(customer.icon, "french_flag")
-		flag.appearance_flags = RESET_COLOR
+		flag.appearance_flags = KEEP_APART|RESET_COLOR
 		return flag
 
 
@@ -232,7 +232,7 @@
 	//leaving and eaten
 	if(type == /datum/customer_data/japanese && customer.ai_controller.blackboard[BB_CUSTOMER_LEAVING] && customer.ai_controller.blackboard[BB_CUSTOMER_EATING])
 		var/mutable_appearance/you_won_my_heart = mutable_appearance('icons/effects/effects.dmi', "love_hearts")
-		you_won_my_heart.appearance_flags = RESET_COLOR
+		you_won_my_heart.appearance_flags = KEEP_APART|RESET_COLOR
 		return you_won_my_heart
 
 /datum/customer_data/japanese/salaryman
@@ -319,7 +319,7 @@
 	var/datum/sprite_accessory/moth_wings/wings = get_wings(customer)
 
 	var/mutable_appearance/wings_behind = mutable_appearance(icon = 'icons/mob/human/species/moth/moth_wings.dmi', icon_state = "m_moth_wings_[wings.icon_state]_BEHIND")
-	wings_behind.appearance_flags = RESET_COLOR
+	wings_behind.appearance_flags = KEEP_APART|RESET_COLOR
 	underlays += wings_behind
 
 	return underlays
@@ -330,11 +330,11 @@
 	var/datum/sprite_accessory/moth_wings/wings = get_wings(customer)
 
 	var/mutable_appearance/wings_front = mutable_appearance(icon = 'icons/mob/human/species/moth/moth_wings.dmi', icon_state = "m_moth_wings_[wings.icon_state]_FRONT")
-	wings_front.appearance_flags = RESET_COLOR
+	wings_front.appearance_flags = KEEP_APART|RESET_COLOR
 	overlays += wings_front
 
 	var/mutable_appearance/jetpack = mutable_appearance(icon = customer.icon, icon_state = "mothbot_jetpack")
-	jetpack.appearance_flags = RESET_COLOR
+	jetpack.appearance_flags = KEEP_APART|RESET_COLOR
 	overlays += jetpack
 
 	return overlays

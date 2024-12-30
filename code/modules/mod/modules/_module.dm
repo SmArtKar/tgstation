@@ -353,7 +353,7 @@
 	else
 		module_icon = mutable_appearance(overlay_icon_file, used_overlay, layer = standing.layer + 0.1)
 	if(!use_mod_colors)
-		module_icon.appearance_flags |= RESET_COLOR
+		module_icon.appearance_flags |= KEEP_APART|RESET_COLOR
 
 	. += module_icon
 	SEND_SIGNAL(src, COMSIG_MODULE_GENERATE_WORN_OVERLAY, ., standing)

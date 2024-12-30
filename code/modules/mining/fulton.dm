@@ -113,7 +113,7 @@ GLOBAL_LIST_EMPTY(total_extraction_beacons)
 	thing.forceMove(holder_obj)
 	var/mutable_appearance/balloon2 = mutable_appearance('icons/effects/fulton_balloon.dmi', "fulton_expand", layer = VEHICLE_LAYER)
 	balloon2.pixel_y = 10
-	balloon2.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	balloon2.appearance_flags = KEEP_APART | RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
 	holder_obj.add_overlay(balloon2)
 	addtimer(CALLBACK(src, PROC_REF(create_balloon), thing, user, holder_obj, balloon2), 0.4 SECONDS)
 	return ITEM_INTERACT_SUCCESS
@@ -121,7 +121,7 @@ GLOBAL_LIST_EMPTY(total_extraction_beacons)
 /obj/item/extraction_pack/proc/create_balloon(atom/movable/thing, mob/living/user, obj/effect/extraction_holder/holder_obj, mutable_appearance/balloon2)
 	var/mutable_appearance/balloon = mutable_appearance('icons/effects/fulton_balloon.dmi', "fulton_balloon", layer = VEHICLE_LAYER)
 	balloon.pixel_y = 10
-	balloon.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	balloon.appearance_flags = KEEP_APART | RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
 	holder_obj.cut_overlay(balloon2)
 	holder_obj.add_overlay(balloon)
 	playsound(holder_obj.loc, 'sound/items/fulton/fultext_deploy.ogg', vol = 50, vary = TRUE, extrarange = -3)

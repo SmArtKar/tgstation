@@ -14,7 +14,7 @@
 			return INITIALIZE_HINT_QDEL
 		var/image/I = image(icon = 'icons/effects/effects.dmi', icon_state = "blessed", layer = ABOVE_NORMAL_TURF_LAYER, loc = src)
 		I.alpha = 64
-		I.appearance_flags = RESET_ALPHA
+		I.appearance_flags = KEEP_APART | RESET_ALPHA
 		add_alt_appearance(/datum/atom_hud/alternate_appearance/basic/blessed_aware, "blessing", I)
 	RegisterSignal(loc, COMSIG_ATOM_INTERCEPT_TELEPORTING, PROC_REF(block_cult_teleport))
 

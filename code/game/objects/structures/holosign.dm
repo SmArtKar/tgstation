@@ -61,7 +61,7 @@
 	if(use_vis_overlay)
 		alpha = 0
 		SSvis_overlays.remove_vis_overlay(src, managed_vis_overlays)
-		SSvis_overlays.add_vis_overlay(src, icon, icon_state, ABOVE_MOB_LAYER, MUTATE_PLANE(GAME_PLANE, our_turf), dir, add_appearance_flags = RESET_ALPHA) //you see mobs under it, but you hit them like they are above it
+		SSvis_overlays.add_vis_overlay(src, icon, icon_state, ABOVE_MOB_LAYER, MUTATE_PLANE(GAME_PLANE, our_turf), dir, add_appearance_flags = KEEP_APART|RESET_ALPHA) //you see mobs under it, but you hit them like they are above it
 
 /obj/structure/holosign/wetsign
 	name = "wet floor sign"

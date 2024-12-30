@@ -170,7 +170,7 @@
 		overlay_state = "overlay_gust"
 
 	var/mutable_appearance/overlay = mutable_appearance(icon, "[icon_living]_[overlay_state]")
-	overlay.appearance_flags = RESET_COLOR
+	overlay.appearance_flags = KEEP_APART|RESET_COLOR|RESET_ALPHA
 	. += overlay
 
 /mob/living/basic/space_dragon/melee_attack(obj/vehicle/sealed/mecha/target, list/modifiers, ignore_cooldown)
