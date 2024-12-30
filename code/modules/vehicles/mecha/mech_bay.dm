@@ -1,3 +1,4 @@
+/*
 /obj/machinery/mech_bay_recharge_port
 	name = "mech bay power port"
 	desc = "This port recharges a mech's internal power cell."
@@ -174,3 +175,4 @@
 	if(recharging_mech.cell.charge >= recharging_mech.cell.maxcharge)
 		return
 	. += "recharge_comp_on"
+*/

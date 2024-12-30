@@ -93,7 +93,7 @@
 	playsound(start_turf, teleport_sound, 90, extrarange = MEDIUM_RANGE_SOUND_EXTRARANGE)
 	playsound(user, teleport_sound, 90, extrarange = MEDIUM_RANGE_SOUND_EXTRARANGE)
 	// Some extra delay to prevent accidental double clicks
-	user.changeNext_move(CLICK_CD_SLOW * 1.2)
+	user.changeNext_move(CLICK_CD_SNAIL)
 
 	if(!apply_debuffs)
 		return .

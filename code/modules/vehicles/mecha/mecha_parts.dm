@@ -1,7 +1,7 @@
 /////////////////////////
 ////// Mecha Parts //////
 /////////////////////////
-
+/*
 /obj/item/mecha_parts
 	name = "mecha part"
 	icon = 'icons/mob/rideables/mech_construct.dmi'
@@ -467,3 +467,4 @@
 /obj/item/circuitboard/mecha/savannah_ivanov/main
 	name = "Savannah-Ivanov Combination Control Lock module (Exosuit Board)"
 	icon_state = "mainboard"
+*/

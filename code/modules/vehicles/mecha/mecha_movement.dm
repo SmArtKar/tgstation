@@ -1,3 +1,4 @@
+/*
 /// Sets the direction of the mecha and all of its occcupents, required for FOV. Alternatively one could make a recursive contents registration and register topmost direction changes in the fov component
 /obj/vehicle/sealed/mecha/setDir(newdir)
 	. = ..()
@@ -208,3 +209,4 @@
 		GLOB.cameranet.updatePortableCamera(chassis_camera, MECH_CAMERA_BUFFER)
 	updating = FALSE
 #undef MECH_CAMERA_BUFFER
+*/

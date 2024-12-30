@@ -1,5 +1,5 @@
 /***************** MECHA ACTIONS *****************/
-
+/*
 /obj/vehicle/sealed/mecha/generate_action_type()
 	. = ..()
 	if(istype(., /datum/action/vehicle/sealed/mecha))
@@ -65,7 +65,7 @@
 
 /datum/action/vehicle/sealed/mecha/mech_toggle_safeties/set_chassis(passed_chassis)
 	. = ..()
-	RegisterSignal(chassis, COMSIG_MECH_SAFETIES_TOGGLE, PROC_REF(update_action_icon))
+	RegisterSignal(chassis, COMSIG_MECHA_SAFETIES_TOGGLE, PROC_REF(update_action_icon))
 
 /datum/action/vehicle/sealed/mecha/mech_toggle_safeties/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
@@ -148,3 +148,4 @@
 	chassis.toggle_overclock(forced_state)
 	button_icon_state = "mech_overload_[chassis.overclock_mode ? "on" : "off"]"
 	build_all_button_icons()
+*/

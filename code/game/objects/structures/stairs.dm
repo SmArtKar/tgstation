@@ -212,13 +212,13 @@
 /obj/structure/stairs_frame/atom_deconstruct(disassembled = TRUE)
 	new frame_stack(get_turf(src), frame_stack_amount)
 
-/obj/structure/stairs_frame/attackby(obj/item/attacked_by, mob/user, params)
-	if(!isstack(attacked_by))
+/obj/structure/stairs_frame/attackby(obj/item/tool, mob/user, params)
+	if(!isstack(tool))
 		return ..()
 	if(!anchored)
 		user.balloon_alert(user, "secure frame first")
 		return TRUE
-	var/obj/item/stack/material = attacked_by
+	var/obj/item/stack/material = tool
 	if(material.stairs_type)
 		if(material.get_amount() < 10)
 			to_chat(user, span_warning("You need ten [material.name] sheets to do this!"))

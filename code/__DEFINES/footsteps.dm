@@ -28,6 +28,8 @@
 #define FOOTSTEP_MOB_RUST "footstep_rust"
 #define FOOTSTEP_OBJ_MACHINE "footstep_machine"
 #define FOOTSTEP_OBJ_ROBOT "footstep_robot"
+#define FOOTSTEP_OBJ_MECHA "footstep_mecha"
+#define FOOTSTEP_OBJ_RIPLEY "footstep_ripley"
 
 //priority defines for the footstep_override element
 #define STEP_SOUND_NO_PRIORITY 0

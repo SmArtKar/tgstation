@@ -2,7 +2,7 @@
 ////////  Mecha wreckage   ////////
 ///////////////////////////////////
 
-
+/*
 /obj/structure/mecha_wreckage
 	name = "exosuit wreckage"
 	desc = "Remains of some unfortunate mecha. Completely irreparable, but perhaps something can be salvaged."
@@ -250,3 +250,4 @@
 	name = "\improper Justice wreckage"
 	icon_state = "justice-broken"
 	welder_salvage = list(/obj/item/stack/sheet/iron, /obj/item/stack/rods)
+*/

@@ -1,3 +1,4 @@
+/*
 /obj/vehicle/sealed/mecha/ui_close(mob/user)
 	. = ..()
 	ui_view.hide_from(user)
@@ -223,3 +224,4 @@
 			return gear?.ui_act(params["gear_action"], params, ui, state)
 	return TRUE
 
+*/

@@ -1,3 +1,4 @@
+/*
 /obj/machinery/computer/mecha
 	name = "exosuit control console"
 	desc = "Used to remotely locate or lockdown exosuits."
@@ -159,3 +160,4 @@
 	new /obj/item/mecha_parts/mecha_tracking(src)
 	new /obj/item/mecha_parts/mecha_tracking(src)
 	new /obj/item/mecha_parts/mecha_tracking(src)
+*/

@@ -1,3 +1,4 @@
+/*
 ///////////////////////
 ///// Power stuff /////
 ///////////////////////
@@ -29,3 +30,4 @@
 		if(istype(I, /obj/item/mecha_parts/mecha_equipment/weapon/ballistic))
 			var/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/gun = I
 			gun.projectiles_cache = gun.projectiles_cache_max
+*/

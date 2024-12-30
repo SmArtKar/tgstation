@@ -206,13 +206,13 @@
 		return
 	cell.use(0.02 * STANDARD_CELL_RATE * seconds_per_tick, force = TRUE)
 
-/obj/item/clothing/neck/link_scryer/attackby(obj/item/attacked_by, mob/user, params)
+/obj/item/clothing/neck/link_scryer/attackby(obj/item/tool, mob/user, params)
 	. = ..()
-	if(cell || !istype(attacked_by, /obj/item/stock_parts/power_store/cell))
+	if(cell || !istype(tool, /obj/item/stock_parts/power_store/cell))
 		return
-	if(!user.transferItemToLoc(attacked_by, src))
+	if(!user.transferItemToLoc(tool, src))
 		return
-	cell = attacked_by
+	cell = tool
 	balloon_alert(user, "cell installed")
 
 /obj/item/clothing/neck/link_scryer/update_name(updates)

@@ -15,7 +15,7 @@
 	///Whether or not to add variation to the sounds played
 	var/sound_vary = FALSE
 
-/datum/element/footstep/Attach(datum/target, footstep_type = FOOTSTEP_MOB_BAREFOOT, volume = 0.5, e_range = -8, sound_vary = FALSE)
+/datum/element/footstep/Attach(datum/target, footstep_type = FOOTSTEP_MOB_BAREFOOT, volume = 0.5, e_range = -8, sound_vary = FALSE, simplesteps = FALSE)
 	. = ..()
 	if(!ismovable(target))
 		return ELEMENT_INCOMPATIBLE
@@ -44,12 +44,15 @@
 			footstep_sounds = 'sound/effects/footstep/slime1.ogg'
 		if(FOOTSTEP_OBJ_MACHINE)
 			footstep_sounds = 'sound/effects/bang.ogg'
-			RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(play_simplestep_machine))
-			return
 		if(FOOTSTEP_OBJ_ROBOT)
 			footstep_sounds = 'sound/effects/tank_treads.ogg'
-			RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(play_simplestep_machine))
-			return
+		if(FOOTSTEP_OBJ_MECHA)
+			footstep_sounds = 'sound/vehicles/mecha/mechstep.ogg'
+		if(FOOTSTEP_OBJ_RIPLEY)
+			footstep_sounds = 'sound/vehicles/mecha/powerloader_step.ogg'
+	if (simplesteps)
+		RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(play_simplestep_machine))
+		return
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(play_simplestep))
 	steps_for_living[target] = 0
 

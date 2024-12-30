@@ -1,3 +1,4 @@
+/*
 /obj/vehicle/sealed/mecha/mob_try_enter(mob/M)
 	if(!ishuman(M)) // no silicons or drones in mechas.
 		return
@@ -220,3 +221,4 @@
 	else
 		to_chat(user, span_notice("You stop exiting the mech. Weapons are enabled again."))
 	is_currently_ejecting = FALSE
+*/

@@ -1,3 +1,14 @@
+/*
+
+/obj/vehicle/sealed/mecha/do_attack_animation(atom/A, visual_effect_icon, obj/item/used_item, no_effect)
+	if(!no_effect && !visual_effect_icon)
+		visual_effect_icon = ATTACK_EFFECT_SMASH
+		if(damtype == BURN)
+			visual_effect_icon = ATTACK_EFFECT_MECHFIRE
+		else if(damtype == TOX)
+			visual_effect_icon = ATTACK_EFFECT_MECHTOXIN
+	..()
+
 /**
  * ## Mech melee attack
  * Called when a mech melees a target with fists
@@ -138,3 +149,4 @@
 	to_chat(mecha_attacker, span_danger("You [mecha_attacker.attack_verbs[1]] [src]!"))
 	..()
 	return damage
+*/

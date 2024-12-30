@@ -1,38 +1,37 @@
-#define MECHA_INT_FIRE (1<<0)
-#define MECHA_INT_TEMP_CONTROL (1<<1)
-#define MECHA_INT_SHORT_CIRCUIT (1<<2)
-#define MECHA_CABIN_AIR_BREACH (1<<3)
-#define MECHA_INT_CONTROL_LOST (1<<4)
-
 #define PANEL_OPEN (1<<0)
 #define ID_LOCK_ON (1<<1)
 #define CAN_STRAFE (1<<2)
-#define LIGHTS_ON (1<<3)
+/// Can move in diagonals
+#define CAN_MOVE_DIAGONALLY (1<<3)
+/// Piloted by an AI or a COMP unit
 #define SILICON_PILOT (1<<4)
+/// Allows the cockpit to be sealed, and the pilot cannot be hit by projectiles or bombs
 #define IS_ENCLOSED (1<<5)
 #define HAS_LIGHTS (1<<6)
 #define QUIET_STEPS (1<<7)
 #define QUIET_TURNS (1<<8)
-///blocks using equipment and melee attacking.
-#define CANNOT_INTERACT (1<<9)
-/// posibrains can drive this mecha
+/// Completely disables all mouseclicks, such as melee or utilities.
+#define MECH_ACTIONS_DISABLED (1<<9)
+/// MMIs and posibrains can be inserted into this mech as a COMP unit
 #define MMI_COMPATIBLE (1<<10)
 /// Can click from any direction and perform stuff
 #define OMNIDIRECTIONAL_ATTACKS (1<<11)
+/// This mech turns and moves at the same time
+#define RAPID_TURNING (1<<12)
+/// We break though walls like Kool-Aid man when running into them
+#define BUMP_SMASH (1<<13)
 
-#define MECHA_MELEE (1 << 0)
-#define MECHA_RANGED (1 << 1)
+// Mech armor modifiers
+/// Multiplier for damage taken from the front, or adjacent diagonals
+#define MECHA_FRONT_ARMOUR "mecha_front"
+#define MECHA_SIDE_ARMOUR "mecha_side"
+#define MECHA_BACK_ARMOUR "mecha_back"
 
-#define MECHA_FRONT_ARMOUR "mechafront"
-#define MECHA_SIDE_ARMOUR "mechaside"
-#define MECHA_BACK_ARMOUR "mechaback"
-
-#define MECHA_WEAPON "mecha_weapon" //l and r arm weapon type
-#define MECHA_L_ARM "mecha_l_arm"
-#define MECHA_R_ARM "mecha_r_arm"
-#define MECHA_UTILITY "mecha_utility"
-#define MECHA_POWER "mecha_power"
-#define MECHA_ARMOR "mecha_armor"
+/// Slots in which this module can be installed
+#define MECHA_ARMS_SLOT "arms_slot"
+#define MECHA_ARM_LEFT_SLOT "arm_left_slot"
+#define MECHA_ARM_RIGHT_SLOT "arm_right_slot"
+#define MECHA_UTILITY_SLOT "utility_slot"
 
 // Some mechs must (at least for now) use snowflake handling of their UI elements, these defines are for that
 // when changing MUST update the same-named tsx file constants
@@ -60,3 +59,12 @@
 #define MECHA_AMMO_PUNCHING_GLOVE "Punching glove"
 #define MECHA_AMMO_BANANA_PEEL "Banana peel"
 #define MECHA_AMMO_MOUSETRAP "Mousetrap"
+
+/// Chance of equipment getting destroyed with the mech
+#define MECHA_EQUIPMENT_DESTRUCTION_PROB 70
+/// Chance of open-cabin mechs redirecting projectiles at their driver
+#define MECHA_OPEN_CABIN_DRIVER_HIT_CHANCE 75
+/// Percentage of charge deducted when a mech is hit by an EMP
+#define MECHA_EMP_CHARGE_DRAIN 0.15
+/// How long does it take for a mech to gain back control of its' equipment after being EMPd?
+#define MECHA_EMP_EQUIPMENT_REBOOT_TIME 3 SECONDS
