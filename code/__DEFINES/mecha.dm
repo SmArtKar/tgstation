@@ -8,18 +8,16 @@
 /// Allows the cockpit to be sealed, and the pilot cannot be hit by projectiles or bombs
 #define IS_ENCLOSED (1<<5)
 #define HAS_LIGHTS (1<<6)
-#define QUIET_STEPS (1<<7)
-#define QUIET_TURNS (1<<8)
 /// Completely disables all mouseclicks, such as melee or utilities.
-#define MECH_ACTIONS_DISABLED (1<<9)
+#define MECH_ACTIONS_DISABLED (1<<7)
 /// MMIs and posibrains can be inserted into this mech as a COMP unit
-#define MMI_COMPATIBLE (1<<10)
+#define MMI_COMPATIBLE (1<<8)
 /// Can click from any direction and perform stuff
-#define OMNIDIRECTIONAL_ATTACKS (1<<11)
+#define OMNIDIRECTIONAL_ATTACKS (1<<9)
 /// This mech turns and moves at the same time
-#define RAPID_TURNING (1<<12)
+#define RAPID_TURNING (1<<10)
 /// We break though walls like Kool-Aid man when running into them
-#define BUMP_SMASH (1<<13)
+#define BUMP_SMASH (1<<11)
 
 // Mech armor modifiers
 /// Multiplier for damage taken from the front, or adjacent diagonals
@@ -68,3 +66,6 @@
 #define MECHA_EMP_CHARGE_DRAIN 0.15
 /// How long does it take for a mech to gain back control of its' equipment after being EMPd?
 #define MECHA_EMP_EQUIPMENT_REBOOT_TIME 3 SECONDS
+
+/// Melee damage over which living mobs get thrown away from the mech
+#define MECHA_MELEE_THROW_DAMAGE 15

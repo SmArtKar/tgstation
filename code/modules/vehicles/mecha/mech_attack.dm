@@ -1,23 +1,14 @@
-/*
-
 /obj/vehicle/sealed/mecha/do_attack_animation(atom/A, visual_effect_icon, obj/item/used_item, no_effect)
 	if(!no_effect && !visual_effect_icon)
-		visual_effect_icon = ATTACK_EFFECT_SMASH
-		if(damtype == BURN)
-			visual_effect_icon = ATTACK_EFFECT_MECHFIRE
-		else if(damtype == TOX)
-			visual_effect_icon = ATTACK_EFFECT_MECHTOXIN
+		switch (damtype)
+			if (BURN)
+				visual_effect_icon = ATTACK_EFFECT_MECHFIRE
+			if(TOX)
+				visual_effect_icon = ATTACK_EFFECT_MECHTOXIN
+			else
+				visual_effect_icon = ATTACK_EFFECT_SMASH
 	..()
 
-/**
- * ## Mech melee attack
- * Called when a mech melees a target with fists
- * Handles damaging the target & associated effects
- * return value is number of damage dealt. returning a value puts our mech onto attack cooldown.
- * Arguments:
- * * mecha_attacker: Mech attacking this target
- * * user: mob that initiated the attack from inside the mech as a controller
- */
 /atom/proc/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	SHOULD_CALL_PARENT(TRUE)
 	SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_MECH, mecha_attacker, user)
@@ -30,16 +21,15 @@
 		return
 
 	mecha_attacker.do_attack_animation(src)
-	switch(mecha_attacker.damtype)
-		if(BRUTE)
-			playsound(src, mecha_attacker.brute_attack_sound, 50, TRUE)
-		if(BURN)
-			playsound(src, mecha_attacker.burn_attack_sound, 50, TRUE)
-		else
-			return
-	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
+	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
+	var/attack_verb = pick(mecha_attacker.attack_verbs)
+	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = mecha_attacker.return_drivers())
+	// COMP units also get the message
+	for (var/mob/living/driver as anything in mecha_attacker.return_drivers())
+		to_chat(driver, span_danger("You [attack_verb] [src]!"))
+
 	if(prob(hardness + mecha_attacker.force) && mecha_attacker.force > 20)
-		dismantle_wall(1)
+		dismantle_wall(TRUE)
 		playsound(src, mecha_attacker.destroy_wall_sound, 100, TRUE)
 	else
 		add_dent(WALL_DENT_HIT)
@@ -48,70 +38,82 @@
 
 /obj/structure/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!user.combat_mode)
-		return 0
+		return
 
 	mecha_attacker.do_attack_animation(src)
-	switch(mecha_attacker.damtype)
-		if(BRUTE)
-			playsound(src, 'sound/items/weapons/punch4.ogg', 50, TRUE)
-		if(BURN)
-			playsound(src, 'sound/items/tools/welder.ogg', 50, TRUE)
-		else
-			return
-	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
+	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
+	var/attack_verb = pick(mecha_attacker.attack_verbs)
+	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
+	if (user)
+		to_chat(user, span_danger("You [attack_verb] [src]!"))
 	..()
-	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	return take_damage(mecha_attacker.force * mecha_attacker.demolition_mod, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), armour_penetration)
 
 /obj/machinery/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!user.combat_mode)
 		return
 
 	mecha_attacker.do_attack_animation(src)
-	switch(mecha_attacker.damtype)
-		if(BRUTE)
-			playsound(src, mecha_attacker.brute_attack_sound, 50, TRUE)
-		if(BURN)
-			playsound(src, mecha_attacker.burn_attack_sound, 50, TRUE)
-		else
-			return
-	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
+	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
+	var/attack_verb = pick(mecha_attacker.attack_verbs)
+	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
+	if (user)
+		to_chat(user, span_danger("You [attack_verb] [src]!"))
 	..()
-	return take_damage(mecha_attacker.force * 3, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker)) // multiplied by 3 so we can hit objs hard but not be overpowered against mobs.
+	return take_damage(mecha_attacker.force * mecha_attacker.demolition_mod, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), armour_penetration)
 
 /obj/structure/window/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!can_be_reached())
 		return
 	return ..()
 
-/obj/vehicle/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
+/obj/machinery/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(!user.combat_mode)
-		return FALSE
+		return
 
 	mecha_attacker.do_attack_animation(src)
-	switch(mecha_attacker.damtype)
-		if(BRUTE)
-			playsound(src, 'sound/items/weapons/punch4.ogg', 50, TRUE)
-		if(BURN)
-			playsound(src, 'sound/items/tools/welder.ogg', 50, TRUE)
-		else
-			return
-	mecha_attacker.visible_message(span_danger("[mecha_attacker] hits [src]!"), span_danger("You hit [src]!"), null, COMBAT_MESSAGE_RANGE)
+	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
+	var/attack_verb = pick(mecha_attacker.attack_verbs)
+	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
+	if (user)
+		to_chat(user, span_danger("You [attack_verb] [src]!"))
 	..()
-	return take_damage(mecha_attacker.force, mecha_attacker.damtype, "melee", FALSE, get_dir(src, mecha_attacker))
+	// No demolition mod as this also applies in mech to mech combat
+	return take_damage(mecha_attacker.force, mecha_attacker.damtype, MELEE, FALSE, get_dir(src, mecha_attacker), armour_penetration)
 
 /mob/living/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
 	if(istype(user) && !user.combat_mode)
-		step_away(src, mecha_attacker)
 		log_combat(user, src, "pushed", mecha_attacker)
-		visible_message(span_warning("[mecha_attacker] pushes [src] out of the way."), \
-						span_warning("[mecha_attacker] pushes you out of the way."), span_hear("You hear aggressive shuffling!"), 5, list(mecha_attacker))
-		to_chat(mecha_attacker, span_danger("You push [src] out of the way."))
+		if (!step_away(src, mecha_attacker))
+			return
+		visible_message(span_warning("[mecha_attacker] pushes [src] out of the way."),\
+			span_warning("[mecha_attacker] pushes you out of the way!"),\
+			span_hear("You hear aggressive shuffling!"),\
+			vision_distance = COMBAT_MESSAGE_RANGE,\
+			ignored_mobs = user)
+		if (user)
+			to_chat(user, span_danger("You push [src] out of your way."))
 		return
 
 	if(!isnull(user) && HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("You don't want to harm other living beings!"))
 		return
+
 	mecha_attacker.do_attack_animation(src)
+	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
+	var/attack_verb = pick(mecha_attacker.attack_verbs)
+	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
+	if (user)
+		to_chat(user, span_danger("You [attack_verb] [src]!"))
+
+	// Snowflake toxin damage into reagents
+	if (mecha_attacker.damtype == TOX)
+		var/bio_armor = (100 - run_armor_check(def_zone attack_flag = BIO)) / 100
+		if(reagents.get_reagent_amount(/datum/reagent/cryptobiolin) < mecha_attacker.force * 2)
+			reagents.add_reagent(/datum/reagent/cryptobiolin, mecha_attacker.force / 2 * bio_armor)
+		if((reagents.get_reagent_amount(/datum/reagent/toxin) + mecha_attacker.force) < mecha_attacker.force * 2)
+			reagents.add_reagent(/datum/reagent/toxin, mecha_attacker.force / 2.5 * bio_armor)
+/*
 	if(mecha_attacker.damtype == BRUTE)
 		step_away(src, mecha_attacker, 15)
 	switch(mecha_attacker.damtype)

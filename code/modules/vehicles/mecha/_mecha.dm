@@ -24,7 +24,6 @@
 	desc = "Exosuit"
 	icon = 'icons/mob/rideables/mecha.dmi'
 
-	force = 5
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	max_integrity = 300
 	armor_type = /datum/armor/sealed_mecha
@@ -98,6 +97,12 @@
 	// ----- Combat-related -----
 	/// Melee attack verbs
 	var/list/attack_verbs = list("hit", "pommel", "smash")
+	/// Force with which the mech punches stuff
+	force = 5
+	/// Damage multiplier against structures and machinery, so that we break structures but don't oneshot mobs
+	demolition_mod = 3
+	/// Armor penetration of our punches
+	var/armour_penetration = 0
 	/// Cooldown between melee attacks
 	var/melee_cooldown = CLICK_CD_SNAIL
 	/// Whenever weapon safety is enabled. Can be toggled with middle click
@@ -215,6 +220,8 @@
 	become_hearing_sensitive(trait_source = ROUNDSTART_TRAIT)
 	AddElement(/datum/element/falling_hazard, damage = 80, wound_bonus = 10, hardhat_safety = FALSE, crushes = TRUE)
 	AddElement(/datum/element/hostile_machine)
+	if (step_sound)
+		AddElement(/datum/element/footstep, FOOTSTEP_OBJ_MECHA, 1, -4, sound_vary = TRUE, simplesteps = TRUE)
 
 	if (mecha_flags & IS_ENCLOSED)
 		add_traits(list(TRAIT_ASHSTORM_IMMUNE, TRAIT_SNOWSTORM_IMMUNE), ROUNDSTART_TRAIT)
