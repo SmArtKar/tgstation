@@ -3,7 +3,8 @@
 	if(!ishuman(new_pilot)) // no silicons or drones in mechas.
 		return
 
-	if(HAS_TRAIT(new_pilot, TRAIT_PRIMITIVE) && !ISADVANCEDTOOLUSER(new_pilot)) //no lavalizards either.
+	// No lavalizards or monkeys in mechs
+	if(HAS_TRAIT(new_pilot, TRAIT_PRIMITIVE) && !ISADVANCEDTOOLUSER(new_pilot))
 		to_chat(new_pilot, span_warning("The knowledge to use this device eludes you!"))
 		return
 
@@ -25,40 +26,53 @@
 	if(.)
 		moved_inside(new_pilot)
 
-/*
-/obj/vehicle/sealed/mecha/enter_checks(mob/M)
-	if(M.incapacitated)
+/obj/vehicle/sealed/mecha/enter_checks(mob/living/new_pilot)
+	if(new_pilot.incapacitated)
 		return FALSE
-	if(atom_integrity <= 0)
-		to_chat(M, span_warning("You cannot get in the [src], it has been destroyed!"))
+
+	if(atom_integrity <= 0) // somehow?
+		to_chat(new_pilot, span_warning("[src] has been destroyed!"))
 		return FALSE
-	if(M.buckled)
-		to_chat(M, span_warning("You can't enter the exosuit while buckled."))
-		log_message("Permission denied (Buckled).", LOG_MECHA)
+
+	if(new_pilot.buckled)
+		to_chat(new_pilot, span_warning("You can't enter the exosuit while buckled to [new_pilot.buckled]."))
 		return FALSE
-	if(M.has_buckled_mobs())
-		to_chat(M, span_warning("You can't enter the exosuit with other creatures attached to you!"))
-		log_message("Permission denied (Attached mobs).", LOG_MECHA)
+
+	if(new_pilot.has_buckled_mobs())
+		to_chat(new_pilot, span_warning("You can't enter the exosuit with other creatures attached to you!"))
 		return FALSE
 	return ..()
 
-///proc called when a new non-mmi mob enters this mech
-/obj/vehicle/sealed/mecha/proc/moved_inside(mob/living/newoccupant)
-	if(!(newoccupant?.client))
-		return FALSE
-	if(ishuman(newoccupant) && !Adjacent(newoccupant))
-		return FALSE
+/obj/vehicle/sealed/mecha/add_occupant(mob/driver, control_flags)
+	RegisterSignal(driver, COMSIG_MOB_CLICKON, PROC_REF(on_mouseclick))
+	RegisterSignal(driver, COMSIG_MOB_SAY, PROC_REF(display_speech_bubble))
+	RegisterSignal(driver, COMSIG_MOVABLE_KEYBIND_FACE_DIR, PROC_REF(on_turn))
+	RegisterSignal(driver, COMSIG_MOB_ALTCLICKON, PROC_REF(on_click_alt))
+	. = ..()
+	update_appearance()
+
+/obj/vehicle/sealed/mecha/remove_occupant(mob/driver)
+	UnregisterSignal(driver, list(
+		COMSIG_MOB_CLICKON,
+		COMSIG_MOB_SAY,
+		COMSIG_MOVABLE_KEYBIND_FACE_DIR,
+		COMSIG_MOB_ALTCLICKON,
+	))
+	driver.update_mouse_pointer()
+	. = ..()
+	update_appearance()
+
+/// Proc called whenever a new pilot enters a mech
+/obj/vehicle/sealed/mecha/proc/moved_inside(mob/living/new_pilot)
 	mecha_flags &= ~PANEL_OPEN //Close panel if open
-	newoccupant.forceMove(src)
-	newoccupant.update_mouse_pointer()
-	add_fingerprint(newoccupant)
-	log_message("[newoccupant] moved in as pilot.", LOG_MECHA)
+	add_fingerprint(new_pilot)
+	log_message("[new_pilot] moved in as pilot.", LOG_MECHA)
 	setDir(SOUTH)
 	playsound(src, 'sound/machines/windowdoor.ogg', 50, TRUE)
 	set_mouse_pointer()
-	if(!internal_damage)
-		SEND_SOUND(newoccupant, sound('sound/vehicles/mecha/nominal.ogg',volume=50))
-	return TRUE
+	SEND_SOUND(new_pilot, sound('sound/vehicles/mecha/nominal.ogg', volume = 50))
+
+/*
 
 ///proc called when a new mmi mob tries to enter this mech
 /obj/vehicle/sealed/mecha/proc/mmi_move_inside(obj/item/mmi/brain_obj, mob/user)
@@ -176,30 +190,6 @@
 	setDir(SOUTH)
 	return ..()
 
-/obj/vehicle/sealed/mecha/add_occupant(mob/driver, control_flags)
-	RegisterSignal(driver, COMSIG_MOB_CLICKON, PROC_REF(on_mouseclick), TRUE)
-	RegisterSignal(driver, COMSIG_MOB_SAY, PROC_REF(display_speech_bubble), TRUE)
-	RegisterSignal(driver, COMSIG_MOVABLE_KEYBIND_FACE_DIR, PROC_REF(on_turn), TRUE)
-	RegisterSignal(driver, COMSIG_MOB_ALTCLICKON, PROC_REF(on_click_alt))
-	. = ..()
-	update_appearance()
-
-/obj/vehicle/sealed/mecha/remove_occupant(mob/driver)
-	UnregisterSignal(driver, list(
-		COMSIG_MOB_CLICKON,
-		COMSIG_MOB_SAY,
-		COMSIG_MOVABLE_KEYBIND_FACE_DIR,
-		COMSIG_MOB_ALTCLICKON,
-	))
-	driver.clear_alert(ALERT_CHARGE)
-	driver.clear_alert(ALERT_MECH_DAMAGE)
-	if(driver.client)
-		driver.update_mouse_pointer()
-		driver.client.view_size.resetToDefault()
-		zoom_mode = FALSE
-	. = ..()
-	update_appearance()
-
 /obj/vehicle/sealed/mecha/container_resist_act(mob/living/user)
 	if(isAI(user))
 		var/mob/living/silicon/ai/AI = user
@@ -227,4 +217,11 @@
 	else
 		to_chat(user, span_notice("You stop exiting the mech. Weapons are enabled again."))
 	is_currently_ejecting = FALSE
+
+/obj/vehicle/sealed/mecha/remove_occupant(mob/driver)
+	driver.clear_alert(ALERT_CHARGE)
+	driver.clear_alert(ALERT_MECH_DAMAGE)
+	if(driver.client)
+		driver.client.view_size.resetToDefault()
+		zoom_mode = FALSE
 */
