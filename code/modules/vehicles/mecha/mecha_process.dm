@@ -6,7 +6,7 @@
 
 /// Adds heat to our mech
 /// direct prevents heat multipliers, such as overclocking, from affecting how much heat we gain
-/// prevent_overheat will ensure that the mech won't dump heat even outside of overclocking
+/// prevent_overheat will ensure that the mech won't dump the heat even when not overclocking
 /obj/vehicle/sealed/mecha/proc/gain_heat(added_heat, direct = FALSE, prevent_overheat = FALSE)
 	var/heat_mult = list()
 	if (SEND_SIGNAL(src, COMSIG_MECHA_GAINED_HEAT, added_heat, direct, prevent_overheat, heat_mult) & COMPONENT_CANCEL_MECH_HEAT_GAIN)
@@ -20,16 +20,20 @@
 
 	var/old_heat = current_heat
 	current_heat += added_heat
-	if (added_heat > 0 && current_heat > maximum_heat && !prevent_overheat && (!overclock_active || overclock_safety))
+
+	if (added_heat <= 0)
+		update_heat_effects(old_heat)
+		return
+
+	if (current_heat > maximum_heat && !prevent_overheat && (!overclock_active || overclock_safety))
 		overheat()
 		return
 
-	if (added_heat > 0 && current_heat > maximum_heat * overclock_maximum_temp_mult)
-		blow_up()
+	if (current_heat > maximum_heat * overclock_maximum_temp_mult)
+		start_blowing_up()
 		return
 
 	update_heat_effects(old_heat)
-
 
 /// Handles all heat-related visuals, UI and SFX
 /obj/vehicle/sealed/mecha/proc/update_heat_effects(old_heat)
@@ -61,9 +65,7 @@
 		remove_filter("mecha_heat_outline")
 
 	if (current_percentage > MECHA_HEAT_OUTLINE_THRESHOLD)
-		var/outline = add_filter("mecha_heat_outline", 1, outline_filter(color = COLOR_LIGHT_ORANGE, size = 1))
-		animate(outline, alpha = 128, time = 0.5 SECONDS, easing = CUBIC_EASING, loop = -1)
-		animate(alpha = 255, time = 0.5 SECONDS, easing = CUBIC_EASING)
+		add_filter("mecha_heat_outline", 1, outline_filter(color = "#ffc44dc4", size = 1))
 
 	if (old_percentage >= MECHA_HEAT_BLUR_THRESHOLD && current_percentage < MECHA_HEAT_BLUR_THRESHOLD)
 		remove_filter("mecha_heat_blur")
@@ -75,6 +77,8 @@
 /obj/vehicle/sealed/mecha/proc/overheat()
 	var/old_heat = current_heat
 	current_heat = -= maximum_heat
+	playsound(src, 'sound/effects/gas_release.ogg', 70, TRUE)
+	playsound(src, 'sound/effects/bamf.ogg', 100, TRUE)
 	update_heat_effects(old_heat)
 
 	// Creates a burst of smoke and sparks when overheating
@@ -87,8 +91,11 @@
 	QDEL_IN(spark_particles, 2.7 SECONDS)
 
 /// Blows the mech up alongside all of its drivers due to overheating
-/obj/vehicle/sealed/mecha/proc/blow_up()
-	return
+/obj/vehicle/sealed/mecha/proc/start_blowing_up()
+	animate(src, color = COLOR_RED, time = 0.25 SECONDS, loop = 3)
+	animate(color = COLOR_SOFT_RED, time = 0.25 SECONDS)
+	playsound(src, SFX_SM_DELAM, 50, FALSE) // Surprisingly fits, huh
+	addtimer(CALLBACK(src, PROC_REF(blow_up)), 1.5 SECONDS)
 
 /particles/smoke/mech
 	position = generator(GEN_CIRCLE, list(), 8, NORMAL_RAND)
