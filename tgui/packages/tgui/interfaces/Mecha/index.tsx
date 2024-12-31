@@ -39,7 +39,7 @@ export const Content = (props) => {
     regions,
     accesses,
   } = data;
-  const id_lock = mecha_flags & mechflag_keys['ID_LOCK_ON'];
+  const id_lock = mecha_flags & mechflag_keys['ACCESS_LOCK_ON'];
   return (
     <Stack fill>
       <Stack.Item grow={1}>

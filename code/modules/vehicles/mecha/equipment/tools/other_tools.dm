@@ -377,7 +377,7 @@
 	active_label = "Thrusters"
 	var/effect_type = /obj/effect/particle_effect/sparks
 
-/obj/item/mecha_equipment/thrusters/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right)
+/obj/item/mecha_equipment/thrusters/try_attach(mob/user, obj/vehicle/sealed/mecha/M, attach_right)
 	for(var/obj/item/I in M.equip_by_category[MECHA_UTILITY])
 		if(istype(I, src))
 			to_chat(user, span_warning("[M] already has this thruster package!"))
@@ -474,7 +474,7 @@
 	. = ..()
 	ADD_TRAIT(src, TRAIT_HIDDEN_MECH_EQUIPMENT, INNATE_TRAIT)
 
-/obj/item/mecha_equipment/concealed_weapon_bay/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M)
+/obj/item/mecha_equipment/concealed_weapon_bay/try_attach(mob/user, obj/vehicle/sealed/mecha/M)
 	if(M.mech_type & EXOSUIT_MODULE_COMBAT)
 		to_chat(user, span_warning("[M] does not have the correct bolt configuration!"))
 		return
@@ -516,7 +516,7 @@
 	icon_state = "mecha_camera"
 	w_class = WEIGHT_CLASS_SMALL
 
-/obj/item/mecha_parts/camera_kit/try_attach_part(mob/user, obj/vehicle/sealed/mecha/mech, attach_right)
+/obj/item/mecha_parts/camera_kit/try_attach(mob/user, obj/vehicle/sealed/mecha/mech, attach_right)
 	if(mech.chassis_camera)
 		balloon_alert(user, "already has a camera!")
 		return FALSE
@@ -573,7 +573,7 @@
 	chassis = null
 	return ..()
 
-/obj/item/mecha_parts/mecha_tracking/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
+/obj/item/mecha_parts/mecha_tracking/try_attach(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
 	if(!..())
 		return
 	M.trackers += src

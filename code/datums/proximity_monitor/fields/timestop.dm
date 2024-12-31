@@ -164,11 +164,13 @@
 	global_frozen_atoms -= A
 
 
-/datum/proximity_monitor/advanced/timestop/proc/freeze_mecha(obj/vehicle/sealed/mecha/M)
-	M.completely_disabled = TRUE
+/datum/proximity_monitor/advanced/timestop/proc/freeze_mecha(obj/vehicle/sealed/mecha/mecha)
+	ADD_TRAIT(mecha, TRAIT_MECHA_ACTIONS_DISABLED, TIMESTOP_TRAIT)
+	ADD_TRAIT(mecha, TRAIT_MECHA_MOVEMENT_DISABLED, TIMESTOP_TRAIT)
 
-/datum/proximity_monitor/advanced/timestop/proc/unfreeze_mecha(obj/vehicle/sealed/mecha/M)
-	M.completely_disabled = FALSE
+/datum/proximity_monitor/advanced/timestop/proc/unfreeze_mecha(obj/vehicle/sealed/mecha/mecha)
+	REMOVE_TRAIT(mecha, TRAIT_MECHA_ACTIONS_DISABLED, TIMESTOP_TRAIT)
+	REMOVE_TRAIT(mecha, TRAIT_MECHA_MOVEMENT_DISABLED, TIMESTOP_TRAIT)
 
 /datum/proximity_monitor/advanced/timestop/proc/freeze_throwing(atom/movable/AM)
 	var/datum/thrownthing/T = AM.throwing

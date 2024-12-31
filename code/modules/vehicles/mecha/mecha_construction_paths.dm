@@ -855,4 +855,3 @@
 			"backward_message" = "unsecured power cell"
 		)
 	)
-*/

@@ -186,7 +186,7 @@
 
 /obj/vehicle/sealed/mecha/ripley/paddy/preset
 	accesses = list(ACCESS_SECURITY)
-	mecha_flags = CAN_STRAFE | HAS_LIGHTS | MMI_COMPATIBLE | ID_LOCK_ON
+	mecha_flags = CAN_STRAFE | HAS_LIGHTS | MMI_COMPATIBLE | ACCESS_LOCK_ON
 	equip_by_category = list(
 		MECHA_L_ARM = /obj/item/mecha_equipment/weapon/energy/disabler,
 		MECHA_R_ARM = /obj/item/mecha_equipment/weapon/paddy_claw,

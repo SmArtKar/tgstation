@@ -75,7 +75,7 @@
 	chassis.set_safety(owner)
 
 /datum/action/vehicle/sealed/mecha/toggle_safeties/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
-	button_icon_state = "mech_safeties_[chassis.weapons_safety ? "on" : "off"]"
+	button_icon_state = "mech_safeties_[chassis.safety_enabled ? "on" : "off"]"
 	return ..()
 
 /datum/action/vehicle/sealed/mecha/toggle_safeties/proc/update_action_icon()
@@ -94,6 +94,19 @@
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.toggle_strafe()
+
+/datum/action/vehicle/sealed/mecha/toggle_overclock
+	name = "Toggle overclocking"
+	button_icon_state = "mech_overload_off"
+
+/datum/action/vehicle/sealed/mecha/toggle_overclock/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+	button_icon_state = "mech_overload_[chassis.overclock_mode ? "on" : "off"]"
+	return ..()
+
+/datum/action/vehicle/sealed/mecha/toggle_overclock/Trigger(trigger_flags, forced_state = null)
+	if(!owner || !chassis || !(owner in chassis.occupants))
+		return
+	chassis.toggle_overclock(forced_state)
 
 /*
 
@@ -126,16 +139,5 @@
 		chassis.remove_control_flags(owner, VEHICLE_CONTROL_MELEE|VEHICLE_CONTROL_EQUIPMENT)
 		chassis.add_control_flags(owner, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_SETTINGS)
 	chassis.update_icon_state()
-
-/datum/action/vehicle/sealed/mecha/overclock
-	name = "Toggle overclocking"
-	button_icon_state = "mech_overload_off"
-
-/datum/action/vehicle/sealed/mecha/overclock/Trigger(trigger_flags, forced_state = null)
-	if(!owner || !chassis || !(owner in chassis.occupants))
-		return
-	chassis.toggle_overclock(forced_state)
-	button_icon_state = "mech_overload_[chassis.overclock_mode ? "on" : "off"]"
-	build_all_button_icons()
 
 */

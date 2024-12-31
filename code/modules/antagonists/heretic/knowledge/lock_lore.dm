@@ -64,7 +64,7 @@
 	if(ismecha(target))
 		var/obj/vehicle/sealed/mecha/mecha = target
 		mecha.dna_lock = null
-		mecha.mecha_flags &= ~ID_LOCK_ON
+		mecha.mecha_flags &= ~ACCESS_LOCK_ON
 		for(var/mob/living/occupant as anything in mecha.occupants)
 			if(isAI(occupant))
 				continue

@@ -23,11 +23,7 @@
 	if (!isturf(target) || !isturf(target.loc))
 		return
 
-	if (currently_ejecting || (mecha_flags & MECH_ACTIONS_DISABLED))
-		return
-
-	if (blocking_state)
-		balloon_alert(user, "not while [blocking_state]!")
+	if (currently_ejecting || HAS_TRAIT(src, TRAIT_MECHA_ACTIONS_DISABLED))
 		return
 
 	if(user.incapacitated)
@@ -45,7 +41,7 @@
 				return
 
 	var/obj/item/mecha_equipment/selected
-	if(modifiers[RIGHT_CLICK])
+	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		selected = equip_by_category[MECHA_ARM_LEFT_SLOT]
 	else
 		selected = equip_by_category[MECHA_ARM_RIGHT_SLOT]
@@ -56,7 +52,7 @@
 				to_chat(user, span_warning("You don't want to harm other living beings!"))
 				return
 
-			var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_EQUIPMENT_CLICK, user, target)
+			var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_EQUIPMENT_CLICK, user, target, selected)
 			if(signal_result & COMPONENT_CANCEL_EQUIPMENT_CLICK)
 				return
 
@@ -70,9 +66,13 @@
 		balloon_alert(user, "no control!")
 		return
 
+	melee_attack(user, target, modifiers)
+
+/// Punches the target, hopefully into the stratosphere
+/obj/vehicle/sealed/mecha/proc/melee_attack(mob/living/user, atom/target, list/modifiers)
 	var/on_cooldown = TIMER_COOLDOWN_RUNNING(src, COOLDOWN_MECHA_MELEE_ATTACK)
 	var/adjacent = Adjacent(target)
-	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_MELEE_CLICK, user, target, on_cooldown, adjacent)
+	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_MELEE_CLICK, user, target, on_cooldown, adjacent, modifiers)
 
 	if(signal_result & COMPONENT_CANCEL_MELEE_CLICK)
 		return
@@ -88,7 +88,9 @@
 
 	use_energy(melee_energy_drain)
 
-	SEND_SIGNAL(user, COMSIG_MOB_USED_CLICK_MECH_MELEE, src)
+	if (user)
+		SEND_SIGNAL(user, COMSIG_MOB_USED_CLICK_MECH_MELEE, src)
+
 	if(target.mech_melee_attack(src, user))
 		TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MELEE_ATTACK, melee_cooldown)
 
@@ -127,16 +129,15 @@
 	return
 
 /turf/closed/wall/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
-	if(!user.combat_mode)
+	if(user && !user.combat_mode)
 		return
 
 	mecha_attacker.do_attack_animation(src)
 	playsound(src, mecha_attacker.melee_sound, 50, TRUE)
 	var/attack_verb = pick(mecha_attacker.attack_verbs)
-	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = mecha_attacker.return_drivers())
-	// COMP units also get the message
-	for (var/mob/living/driver as anything in mecha_attacker.return_drivers())
-		to_chat(driver, span_danger("You [attack_verb] [src]!"))
+	mecha_attacker.visible_message(span_danger("[mecha_attacker] [attack_verb]s [src]!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
+	if (user)
+		to_chat(user, span_danger("You [attack_verb] [src]!"))
 
 	if(prob(hardness + mecha_attacker.force) && mecha_attacker.force > 20)
 		dismantle_wall(TRUE)
@@ -147,7 +148,7 @@
 	return TRUE
 
 /obj/structure/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
-	if(!user.combat_mode)
+	if(user && !user.combat_mode)
 		return
 
 	mecha_attacker.do_attack_animation(src)
@@ -161,7 +162,7 @@
 	return TRUE
 
 /obj/machinery/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
-	if(!user.combat_mode)
+	if(user && !user.combat_mode)
 		return
 
 	mecha_attacker.do_attack_animation(src)
@@ -180,7 +181,7 @@
 	return ..()
 
 /obj/machinery/mech_melee_attack(obj/vehicle/sealed/mecha/mecha_attacker, mob/living/user)
-	if(!user.combat_mode)
+	if(user && !user.combat_mode)
 		return
 
 	mecha_attacker.do_attack_animation(src)
@@ -204,8 +205,7 @@
 			span_hear("You hear aggressive shuffling!"),\
 			vision_distance = COMBAT_MESSAGE_RANGE,\
 			ignored_mobs = user)
-		if (user)
-			to_chat(user, span_danger("You push [src] out of your way."))
+		to_chat(user, span_danger("You push [src] out of your way."))
 		return
 
 	if(!isnull(user) && HAS_TRAIT(user, TRAIT_PACIFISM))

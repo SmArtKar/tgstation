@@ -1028,6 +1028,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 ///A trait for mechs that were created through the normal construction process, and not spawned by map or other effects.
 #define TRAIT_MECHA_CREATED_NORMALLY "trait_mecha_created_normally"
 
+/// Trait preventing mechs from using their equipment or melees
+#define TRAIT_MECHA_ACTIONS_DISABLED "mecha_actions_disabled"
+
+/// Trait preventing mechs from moving normally
+#define TRAIT_MECHA_MOVEMENT_DISABLED "mecha_movement_disabled"
+
 /// Stops a movable from being removed from the mob it's in by the content_barfer component.
 #define TRAIT_NOT_BARFABLE "not_barfable"
 

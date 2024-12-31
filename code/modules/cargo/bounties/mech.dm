@@ -7,7 +7,7 @@
 	if(!.)
 		return
 	var/obj/vehicle/sealed/mecha/mecha = shipped
-	mecha.wreckage = null // So the mech doesn't explode.
+	mecha.wreck_type = null // So the mech doesn't explode.
 
 /datum/bounty/item/mech/ripleymk2
 	name = "APLU MK-II \"Ripley\""

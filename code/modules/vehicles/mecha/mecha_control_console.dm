@@ -71,7 +71,7 @@
 			if(!mecha)
 				return
 			mecha.emp_act(EMP_LIGHT)
-			usr.log_message("has activated remote EMP on exosuit [M], located at [loc_name(M)], which is currently [LAZYLEN(M.occupants) ? "occupied by [M.occupants.Join(", ")]." : "without a pilot."]", LOG_ATTACK)
-			usr.log_message("has activated remote EMP on exosuit [M], located at [loc_name(M)], which is currently [LAZYLEN(M.occupants) ? "occupied by [M.occupants.Join(", ")]." : "without a pilot."]", LOG_GAME, log_globally = FALSE)
-			message_admins("[key_name_admin(usr)][ADMIN_FLW(usr)] has activated remote EMP on exosuit [M][ADMIN_JMP(M)], which is currently [LAZYLEN(M.occupants) ? "occupied by [M.occupants.Join(",")][ADMIN_FLW(M)]." : "without a pilot."]")
+			usr.log_message("has activated remote EMP on exosuit [mecha], located at [loc_name(mecha)], which is currently [LAZYLEN(mecha.occupants) ? "occupied by [mecha.occupants.Join(", ")]." : "without a pilot."]", LOG_ATTACK)
+			usr.log_message("has activated remote EMP on exosuit [mecha], located at [loc_name(mecha)], which is currently [LAZYLEN(mecha.occupants) ? "occupied by [mecha.occupants.Join(", ")]." : "without a pilot."]", LOG_GAME, log_globally = FALSE)
+			message_admins("[key_name_admin(usr)][ADMIN_FLW(usr)] has activated remote EMP on exosuit [mecha][ADMIN_JMP(mecha)], which is currently [LAZYLEN(mecha.occupants) ? "occupied by [mecha.occupants.Join(",")][ADMIN_FLW(mecha)]." : "without a pilot."]")
 			return TRUE

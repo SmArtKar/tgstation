@@ -1,25 +1,31 @@
-/*
-/obj/vehicle/sealed/mecha/mob_try_enter(mob/M)
-	if(!ishuman(M)) // no silicons or drones in mechas.
+
+/obj/vehicle/sealed/mecha/mob_try_enter(mob/living/new_pilot)
+	if(!ishuman(new_pilot)) // no silicons or drones in mechas.
 		return
-	if(HAS_TRAIT(M, TRAIT_PRIMITIVE)) //no lavalizards either.
-		to_chat(M, span_warning("The knowledge to use this device eludes you!"))
+
+	if(HAS_TRAIT(new_pilot, TRAIT_PRIMITIVE) && !ISADVANCEDTOOLUSER(new_pilot)) //no lavalizards either.
+		to_chat(new_pilot, span_warning("The knowledge to use this device eludes you!"))
 		return
-	log_message("[M] tried to move into [src].", LOG_MECHA)
-	if(dna_lock && M.has_dna())
-		var/mob/living/carbon/entering_carbon = M
+
+	log_message("[new_pilot] tried to move into [src].", LOG_MECHA)
+
+	if(dna_lock && new_pilot.has_dna())
+		var/mob/living/carbon/entering_carbon = new_pilot
 		if(entering_carbon.dna.unique_enzymes != dna_lock)
-			to_chat(M, span_warning("Access denied. [name] is secured with a DNA lock."))
+			to_chat(new_pilot, span_warning("Access denied. [name] is secured with a DNA lock."))
 			log_message("Permission denied (DNA LOCK).", LOG_MECHA)
 			return
-	if((mecha_flags & ID_LOCK_ON) && !allowed(M))
-		to_chat(M, span_warning("Access denied. Insufficient operation keycodes."))
+
+	if((mecha_flags & ACCESS_LOCK_ON) && !allowed(new_pilot))
+		to_chat(new_pilot, span_warning("Access denied. Insufficient operation keycodes."))
 		log_message("Permission denied (No keycode).", LOG_MECHA)
 		return
+
 	. = ..()
 	if(.)
-		moved_inside(M)
+		moved_inside(new_pilot)
 
+/*
 /obj/vehicle/sealed/mecha/enter_checks(mob/M)
 	if(M.incapacitated)
 		return FALSE

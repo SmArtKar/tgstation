@@ -11,7 +11,7 @@
 
 /obj/vehicle/sealed/mecha/relaymove(mob/living/user, direction)
 	. = TRUE
-	if(!canmove || !(user in return_drivers()))
+	if(!canmove || HAS_TRAIT(src, TRAIT_MECHA_MOVEMENT_DISABLED) || !(user in return_drivers()))
 		return
 	if (!vehicle_move(direction))
 		return
@@ -80,7 +80,7 @@
 			TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
 		return FALSE
 
-	var/signal_result = SEND_SIGNAL(src, COMPONENT_CANCEL_MECHA_MOVE, direction)
+	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_TRY_MOVE, direction)
 	if (signal_result & COMPONENT_CANCEL_MECHA_MOVE)
 		return
 	if (signal_result & COMPONENT_RANDOMIZE_MECHA_MOVE)

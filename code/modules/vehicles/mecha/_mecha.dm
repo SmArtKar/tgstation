@@ -69,8 +69,6 @@
 	var/currently_ejecting = FALSE
 	/// What wires datum we use
 	var/wires_type = /datum/wires/mecha
-	/// Special state which is preventing us from attacking or using equipment, for printing out to players
-	var/blocking_state = null
 
 	// ----- Equipment-related -----
 	/// Currently installed equipment
@@ -205,7 +203,7 @@
 	ui_view.generate_view("mech_view_[REF(src)]")
 	RegisterSignal(src, COMSIG_LIGHT_EATER_ACT, PROC_REF(on_light_eater))
 
-	spark_system = new
+	spark_system = new()
 	spark_system.set_up(2, 0, src)
 	spark_system.attach(src)
 
@@ -235,11 +233,13 @@
 		add_traits(list(TRAIT_ASHSTORM_IMMUNE, TRAIT_SNOWSTORM_IMMUNE), ROUNDSTART_TRAIT)
 
 	if (ispath(equip_by_category[MECHA_ARM_LEFT_SLOT]))
-		var/obj/item/mecha_equipment/left_arm = new path(loc)
+		var/equip_path = equip_by_category[MECHA_ARM_LEFT_SLOT]
+		var/obj/item/mecha_equipment/left_arm = new equip_path(loc)
 		left_arm.attach(src, MECHA_ARM_LEFT_SLOT)
 
 	if (ispath(equip_by_category[MECHA_ARM_RIGHT_SLOT]))
-		var/obj/item/mecha_equipment/right_arm = new path(loc)
+		var/equip_path = equip_by_category[MECHA_ARM_RIGHT_SLOT]
+		var/obj/item/mecha_equipment/right_arm = new equip_path(loc)
 		right_arm.attach(src, MECHA_ARM_RIGHT_SLOT)
 
 	for (var/utility_thing in equip_by_category[MECHA_UTILITY_SLOT])
@@ -523,7 +523,7 @@
 	if(mecha_flags & IS_ENCLOSED)
 		initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_cabin_seal, VEHICLE_CONTROL_SETTINGS)
 	if(can_use_overclock)
-		initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/overclock)
+		initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/toggle_overclock)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_lights, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_safeties, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/view_stats, VEHICLE_CONTROL_SETTINGS)

@@ -1,5 +1,5 @@
 #define PANEL_OPEN (1<<0)
-#define ID_LOCK_ON (1<<1)
+#define ACCESS_LOCK_ON (1<<1)
 #define CAN_STRAFE (1<<2)
 /// Can move in diagonals
 #define CAN_MOVE_DIAGONALLY (1<<3)
@@ -8,16 +8,14 @@
 /// Allows the cockpit to be sealed, and the pilot cannot be hit by projectiles or bombs
 #define IS_ENCLOSED (1<<5)
 #define HAS_LIGHTS (1<<6)
-/// Completely disables all mouseclicks, such as melee or utilities.
-#define MECH_ACTIONS_DISABLED (1<<7)
 /// MMIs and posibrains can be inserted into this mech as a COMP unit
-#define MMI_COMPATIBLE (1<<8)
+#define MMI_COMPATIBLE (1<<7)
 /// Can click from any direction and perform stuff
-#define OMNIDIRECTIONAL_ATTACKS (1<<9)
+#define OMNIDIRECTIONAL_ATTACKS (1<<8)
 /// This mech turns and moves at the same time
-#define RAPID_TURNING (1<<10)
+#define RAPID_TURNING (1<<9)
 /// We break though walls like Kool-Aid man when running into them
-#define BUMP_SMASH (1<<11)
+#define BUMP_SMASH (1<<10)
 
 // Mech armor modifiers
 /// Multiplier for damage taken from the front, or adjacent diagonals

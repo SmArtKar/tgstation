@@ -66,6 +66,10 @@
 #define WIRE_OVERCLOCK "Overclock"
 #define WIRE_EQUIPMENT "Equipment"
 #define WIRE_ENVIRONMENT "Environment"
+#define WIRE_LEFT_ARM "Left Arm"
+#define WIRE_RIGHT_ARM "Right Arm"
+#define WIRE_ACTUATORS "Actuators"
+#define WIRE_TARGETING "Targeting"
 
 // Wire states for the AI
 #define AI_WIRE_NORMAL 0

@@ -45,7 +45,7 @@
 		chassis = null
 	return ..()
 
-/obj/item/mecha_equipment/try_attach_part(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
+/obj/item/mecha_equipment/proc/try_attach(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
 	if(can_attach(M, attach_right, user))
 		if(!user.temporarilyRemoveItemFromInventory(src))
 			return FALSE

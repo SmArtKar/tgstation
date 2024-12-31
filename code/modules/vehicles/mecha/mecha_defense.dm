@@ -174,19 +174,19 @@
 
 	if(tool.GetID())
 		if(!allowed(user))
-			if(mecha_flags & ID_LOCK_ON)
+			if(mecha_flags & ACCESS_LOCK_ON)
 				balloon_alert(user, "access denied!")
 			else
-				balloon_alert(user, "unable to set id lock!")
+				balloon_alert(user, "unable to set access lock!")
 			return ITEM_INTERACT_BLOCKING
 
-		mecha_flags ^= ID_LOCK_ON
-		balloon_alert(user, "[mecha_flags & ID_LOCK_ON ? "enabled" : "disabled"] id lock!")
+		mecha_flags ^= ACCESS_LOCK_ON
+		balloon_alert(user, "[mecha_flags & ACCESS_LOCK_ON ? "enabled" : "disabled"] access lock!")
 		return ITEM_INTERACT_SUCCESS
 
 	if(istype(tool, /obj/item/mecha_equipment))
 		var/obj/item/mecha_equipment/equipment = tool
-		equipment.try_attach_part(user, src, modifiers[RIGHT_CLICK])
+		equipment.try_attach(user, src, LAZYACCESS(modifiers, RIGHT_CLICK) ? MECHA_ARM_RIGHT_SLOT : MECHA_ARM_LEFT_SLOT)
 		return ITEM_INTERACT_SUCCESS
 
 	if(is_wire_tool(tool) && (mecha_flags & PANEL_OPEN))
@@ -256,7 +256,7 @@
 			balloon_alert(user, "access denied!")
 			return
 
-	if((mecha_flags & ID_LOCK_ON) && !allowed(user))
+	if((mecha_flags & ACCESS_LOCK_ON) && !allowed(user))
 		balloon_alert(user, "access denied!")
 		return
 
@@ -272,8 +272,19 @@
 
 	if(!length(stock_parts))
 		balloon_alert(user, "no parts!")
+		return
 
 	var/obj/item/stock_parts/part_to_remove = show_radial_menu(user, src, stock_parts, require_near = TRUE)
+	if (part_to_remove == cell && wires.is_all_cut())
+		balloon_alert("wires are in the way!")
+		return
+
+	// Cell first, then capacitor
+	if (part_to_remove == capacitor && get_charge())
+		if (shock(user))
+			to_chat(user, span_userdanger("You are electrocuted by an arc discharge from [src]'s [cell]!"))
+			return
+
 	if(!(locate(part_to_remove) in contents))
 		return
 
@@ -378,7 +389,7 @@
 		mecha_flags &= ~HAS_LIGHTS
 	set_light_on(FALSE)
 	for (var/mob/occupant as anything in occupants)
-		remove_action_type_from_mob(/datum/action/vehicle/sealed/mecha/mech_toggle_lights, occupant)
+		remove_action_type_from_mob(/datum/action/vehicle/sealed/mecha/toggle_lights, occupant)
 	return COMPONENT_BLOCK_LIGHT_EATER
 
 /obj/vehicle/sealed/mecha/on_saboteur(datum/source, disrupt_duration)

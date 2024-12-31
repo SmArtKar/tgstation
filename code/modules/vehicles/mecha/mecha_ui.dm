@@ -46,7 +46,7 @@
 	data["sheet_material_amount"] = SHEET_MATERIAL_AMOUNT
 	//map of relevant flags to check tgui side, not every flag needs to be here
 	data["mechflag_keys"] = list(
-		"ID_LOCK_ON" = ID_LOCK_ON,
+		"ACCESS_LOCK_ON" = ACCESS_LOCK_ON,
 		"LIGHTS_ON" = LIGHTS_ON,
 		"HAS_LIGHTS" = HAS_LIGHTS,
 	)
@@ -209,7 +209,7 @@
 		if("toggle_cabin_seal")
 			set_cabin_seal(usr, !cabin_sealed)
 		if("toggle_id_lock")
-			mecha_flags ^= ID_LOCK_ON
+			mecha_flags ^= ACCESS_LOCK_ON
 		if("toggle_lights")
 			toggle_lights(user = usr)
 		if("toggle_overclock")
