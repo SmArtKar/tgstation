@@ -1862,7 +1862,7 @@
 	name = "Exosuit Tracking Beacon"
 	id = "mecha_tracking"
 	build_type = MECHFAB
-	build_path =/obj/item/mecha_parts/mecha_tracking
+	build_path =/obj/item/mecha_equipment/tracker
 	materials = list(/datum/material/iron=SMALL_MATERIAL_AMOUNT*5)
 	construction_time = 5 SECONDS
 	category = list(
@@ -1880,7 +1880,7 @@
 	name = "AI Control Beacon"
 	id = "mecha_tracking_ai_control"
 	build_type = MECHFAB
-	build_path = /obj/item/mecha_parts/mecha_tracking/ai_control
+	build_path = /obj/item/mecha_equipment/tracker/ai_control
 	materials = list(
 		/datum/material/iron =HALF_SHEET_MATERIAL_AMOUNT,
 		/datum/material/glass =SMALL_MATERIAL_AMOUNT*5,

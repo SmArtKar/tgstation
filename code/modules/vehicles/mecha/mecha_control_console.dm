@@ -17,12 +17,12 @@
 	var/list/data = list()
 
 	var/list/trackerlist = list()
-	for(var/obj/vehicle/sealed/mecha/mecha in GLOB.mechas_list)
+	for(var/obj/vehicle/sealed/mecha/mecha as anything in GLOB.mechas_list)
 		for (var/obj/item/mecha_equipment/tracker/tracker in mecha.flat_equipment)
 			trackerlist += tracker
 
 	data["mechs"] = list()
-	for(var/obj/item/mecha_parts/mecha_tracking/tracker in trackerlist)
+	for (var/obj/item/mecha_equipment/tracker/tracker as anything in trackerlist)
 		if(!tracker.chassis)
 			continue
 		var/obj/vehicle/sealed/mecha/mecha = tracker.chassis
@@ -36,11 +36,13 @@
 			emp_recharging = tracker.recharging,
 			tracker_ref = REF(tracker)
 		)
+		/* SMARTKAR TODO
 		if(istype(mecha, /obj/vehicle/sealed/mecha/ripley))
 			var/obj/vehicle/sealed/mecha/ripley/workmech = mecha
 			mech_data += list(
 				cargo_space = round(workmech.cargo_hold.contents.len / workmech.cargo_hold.cargo_capacity * 100)
 		)
+		*/
 
 		data["mechs"] += list(mech_data)
 
@@ -53,7 +55,7 @@
 
 	switch(action)
 		if("send_message")
-			var/obj/item/mecha_parts/mecha_tracking/tracker = locate(params["tracker_ref"])
+			var/obj/item/mecha_equipment/tracker/tracker = locate(params["tracker_ref"])
 			if(!istype(tracker))
 				return
 			var/message = tgui_input_text(usr, "Input message", "Transmit message", max_length = MAX_MESSAGE_LEN)
@@ -64,7 +66,7 @@
 				return TRUE
 
 		if("shock")
-			var/obj/item/mecha_parts/mecha_tracking/tracker = locate(params["tracker_ref"])
+			var/obj/item/mecha_equipment/tracker/tracker = locate(params["tracker_ref"])
 			if(!istype(tracker))
 				return
 			var/obj/vehicle/sealed/mecha/mecha = tracker.chassis

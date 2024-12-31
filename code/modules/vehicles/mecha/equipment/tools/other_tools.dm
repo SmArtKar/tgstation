@@ -528,7 +528,7 @@
 	mech.diag_hud_set_camera()
 
 
-/obj/item/mecha_parts/mecha_tracking
+/obj/item/mecha_equipment/tracker
 	name = "exosuit tracking beacon"
 	desc = "Device used to transmit exosuit data."
 	icon = 'icons/obj/devices/new_assemblies.dmi'
@@ -544,7 +544,7 @@
 /**
  * Returns a html formatted string describing attached mech status
  */
-/obj/item/mecha_parts/mecha_tracking/proc/get_mecha_info()
+/obj/item/mecha_equipment/tracker/proc/get_mecha_info()
 	if(!chassis)
 		return FALSE
 
@@ -561,19 +561,19 @@
 
 	return answer
 
-/obj/item/mecha_parts/mecha_tracking/emp_act(severity)
+/obj/item/mecha_equipment/tracker/emp_act(severity)
 	. = ..()
 	if(!(. & EMP_PROTECT_SELF))
 		qdel(src)
 
-/obj/item/mecha_parts/mecha_tracking/Destroy()
+/obj/item/mecha_equipment/tracker/Destroy()
 	if(chassis)
 		if(src in chassis.trackers)
 			chassis.trackers -= src
 	chassis = null
 	return ..()
 
-/obj/item/mecha_parts/mecha_tracking/try_attach(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
+/obj/item/mecha_equipment/tracker/try_attach(mob/user, obj/vehicle/sealed/mecha/M, attach_right = FALSE)
 	if(!..())
 		return
 	M.trackers += src
@@ -583,21 +583,21 @@
 /**
  * Attempts to EMP mech that the tracker is attached to, if there is one and tracker is not on cooldown
  */
-/obj/item/mecha_parts/mecha_tracking/proc/shock()
+/obj/item/mecha_equipment/tracker/proc/shock()
 	if(recharging)
 		return
 	if(chassis)
 		chassis.emp_act(EMP_HEAVY)
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/mecha_parts/mecha_tracking, recharge)), 5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/item/mecha_equipment/tracker, recharge)), 5 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 		recharging = TRUE
 
 /**
  * Resets recharge variable, allowing tracker to be EMP pulsed again
  */
-/obj/item/mecha_parts/mecha_tracking/proc/recharge()
+/obj/item/mecha_equipment/tracker/proc/recharge()
 	recharging = FALSE
 
-/obj/item/mecha_parts/mecha_tracking/ai_control
+/obj/item/mecha_equipment/tracker/ai_control
 	name = "exosuit AI control beacon"
 	desc = "A device used to transmit exosuit data. Also allows active AI units to take control of said exosuit."
 	ai_beacon = TRUE
@@ -607,10 +607,10 @@
 
 /obj/item/storage/box/mechabeacons/PopulateContents()
 	..()
-	new /obj/item/mecha_parts/mecha_tracking(src)
-	new /obj/item/mecha_parts/mecha_tracking(src)
-	new /obj/item/mecha_parts/mecha_tracking(src)
-	new /obj/item/mecha_parts/mecha_tracking(src)
-	new /obj/item/mecha_parts/mecha_tracking(src)
-	new /obj/item/mecha_parts/mecha_tracking(src)
-	new /obj/item/mecha_parts/mecha_tracking(src)
+	new /obj/item/mecha_equipment/tracker(src)
+	new /obj/item/mecha_equipment/tracker(src)
+	new /obj/item/mecha_equipment/tracker(src)
+	new /obj/item/mecha_equipment/tracker(src)
+	new /obj/item/mecha_equipment/tracker(src)
+	new /obj/item/mecha_equipment/tracker(src)
+	new /obj/item/mecha_equipment/tracker(src)

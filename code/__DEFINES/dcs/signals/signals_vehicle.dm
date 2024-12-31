@@ -36,3 +36,7 @@
 
 /// From /obj/vehicle/sealed/mecha/proc/set_safety(mob/user): (mob/user)
 #define COMSIG_MECHA_SAFETIES_TOGGLE "mecha_safeties_toggle"
+
+/// From /obj/vehicle/sealed/mecha/proc/gain_heat(added_heat, direct, prevent_overheat): (added_heat, direct, prevent_overheat, list/heat_mult)
+#define COMSIG_MECHA_GAINED_HEAT "mecha_gained_heat"
+	#define COMPONENT_CANCEL_MECH_HEAT_GAIN (1<<0)

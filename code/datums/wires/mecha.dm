@@ -7,8 +7,9 @@
 	var/obj/vehicle/sealed/mecha/mecha = holder
 	if (mecha.mecha_flags & HAS_LIGHTS)
 		wires += WIRE_LIGHT
-	else
 		add_duds(1)
+	else
+		add_duds(2)
 	RegisterSignal(mecha, COMSIG_MECHA_EQUIPMENT_CLICK, PROC_REF(equipment_click))
 	RegisterSignal(mecha, COMSIG_MECHA_MELEE_CLICK, PROC_REF(melee_click))
 	RegisterSignal(mecha, COMSIG_MECHA_TRY_MOVE, PROC_REF(try_move))
@@ -41,9 +42,12 @@
 
 	. += "The red light is [mecha.overclock_active ? "blinking" : "off"]."
 	. += "The blue light is [mecha.canmove || is_cut(WIRE_ACTUATORS) ? "on" : "off"]."
+	. += "The purple light is [is_cut(WIRE_TARGETING) ? "blinking": "on"]."
 
 	if(mecha.mecha_flags & HAS_LIGHTS)
 		. += "The yellow light is [mecha.light_on ? "on" : "off"]."
+
+	. += "The heat gauge is [mecha.current_heat > mecha.maximum_heat ? "blinking rapidly!" : "[round(mecha.current_heat / mecha.maximum_heat * 100, 5)]% full."]"
 
 /datum/wires/mecha/proc/equipment_click(obj/vehicle/sealed/mecha/mecha, mob/living/user, atom/target, obj/item/mecha_equipment/selected)
 	SIGNAL_HANDLER

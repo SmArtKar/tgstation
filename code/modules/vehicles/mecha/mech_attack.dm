@@ -72,6 +72,10 @@
 /obj/vehicle/sealed/mecha/proc/melee_attack(mob/living/user, atom/target, list/modifiers)
 	var/on_cooldown = TIMER_COOLDOWN_RUNNING(src, COOLDOWN_MECHA_MELEE_ATTACK)
 	var/adjacent = Adjacent(target)
+
+	if(on_cooldown || !adjacent)
+		return
+
 	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_MELEE_CLICK, user, target, on_cooldown, adjacent, modifiers)
 
 	if(signal_result & COMPONENT_CANCEL_MELEE_CLICK)
@@ -79,9 +83,6 @@
 
 	if (signal_result & COMPONENT_RANDOMIZE_MELEE_CLICK)
 		target = pick(oview(1, src)) || target
-
-	if(on_cooldown || !adjacent)
-		return
 
 	if(!has_charge(melee_energy_drain))
 		return
@@ -91,8 +92,14 @@
 	if (user)
 		SEND_SIGNAL(user, COMSIG_MOB_USED_CLICK_MECH_MELEE, src)
 
-	if(target.mech_melee_attack(src, user))
-		TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MELEE_ATTACK, melee_cooldown)
+	if(!target.mech_melee_attack(src, user))
+		return
+
+	add_heat(melee_heat_production)
+	var/melee_cd = melee_cooldown
+	if (overclock_active)
+		melee_cd *= overclock_melee_mult
+	TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MELEE_ATTACK, melee_cd)
 
 /// Alt clicking toggles strafing
 /obj/vehicle/sealed/mecha/proc/on_click_alt(mob/user, atom/target, params)

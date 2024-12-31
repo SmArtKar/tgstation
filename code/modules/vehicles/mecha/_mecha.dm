@@ -471,8 +471,8 @@
 /obj/vehicle/sealed/mecha/proc/display_speech_bubble(datum/source, list/speech_args)
 	SIGNAL_HANDLER
 	var/list/speech_bubble_recipients = list()
-	for(var/mob/listener in get_hearers_in_view(7, src))
-		if(listener.client)
+	for (var/mob/listener in get_hearers_in_view(7, src))
+		if (listener.client)
 			speech_bubble_recipients += listener.client
 
 	var/image/mech_speech = image('icons/mob/effects/talk.dmi', src, "machine[say_test(speech_args[SPEECH_MESSAGE])]", MOB_LAYER+1)
@@ -482,13 +482,18 @@
 
 /// Toggles lights on/off
 /obj/vehicle/sealed/mecha/proc/toggle_lights(mob/user, new_state = FALSE)
-	if(!(mecha_flags & HAS_LIGHTS))
-		if(user)
+	if (!(mecha_flags & HAS_LIGHTS))
+		if (user)
 			balloon_alert(user, "no lights!")
 		return
 
-	if(!light_on && new_state && get_charge() < power_to_energy(light_power_drain, scheduler = SSobj))
-		if(user)
+	if (mecha_flags & DESTROYED_LIGHTS)
+		if (user)
+			balloon_alert(user, "lights unresponsive!")
+		return
+
+	if (!light_on && new_state && get_charge() < power_to_energy(light_power_drain, scheduler = SSobj))
+		if (user)
 			balloon_alert(user, "no power!")
 		return
 
@@ -496,19 +501,19 @@
 	playsound(src,'sound/machines/clockcult/brass_skewer.ogg', 40, TRUE)
 	log_message("Toggled lights [light_on ? "on": "off"].", LOG_MECHA)
 
-	for(var/mob/occupant as anything in occupants)
+	for (var/mob/occupant as anything in occupants)
 		balloon_alert(occupant, "lights [light_on ? "on": "off"]")
 		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_lights)
 		action?.build_all_button_icons()
 
 /// Toggles strafing on and off
 /obj/vehicle/sealed/mecha/proc/toggle_strafe(mob/user)
-	if(!(mecha_flags & CAN_STRAFE))
+	if (!(mecha_flags & CAN_STRAFE))
 		balloon_alert(user, "cannot strafe!")
 		return
 
 	strafing = !strafing
-	for(var/mob/occupant as anything in occupants)
+	for (var/mob/occupant as anything in occupants)
 		balloon_alert(occupant, "strafing [strafing ? "on" : "off"]")
 		occupant.playsound_local(src, 'sound/machines/terminal/terminal_eject.ogg', 50, TRUE)
 		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_strafe)
@@ -516,18 +521,67 @@
 
 	log_message("Toggled strafing mode [strafing ? "on" : "off"].", LOG_MECHA)
 
-/*
+/// Seals or unseals the cabin, either filling it with external air or dumping the air outside
+/obj/vehicle/sealed/mecha/proc/set_cabin_seal(mob/user, seal_state)
+	if (!(mecha_flags & IS_ENCLOSED))
+		balloon_alert(user, "cabin can't be sealed!")
+		return
+
+	if (TIMER_COOLDOWN_RUNNING(src, COOLDOWN_MECHA_CABIN_SEAL))
+		balloon_alert(user, "on cooldown!")
+		return
+
+	TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_CABIN_SEAL, 1 SECONDS)
+	cabin_sealed = seal_state
+
+	var/datum/gas_mixture/environment_air = loc?.return_air()
+	if (!isnull(environment_air))
+		if (cabin_sealed)
+			// Fill cabin with air
+			environment_air.pump_gas_to(cabin_air, environment_air.return_pressure())
+		else
+			// Dump cabin air
+			var/datum/gas_mixture/removed_gases = cabin_air.remove_ratio(1)
+			if (loc)
+				loc.assume_air(removed_gases)
+			else
+				qdel(removed_gases)
+
+	log_message("Cabin [cabin_sealed ? "sealed" : "unsealed"].", LOG_MECHA)
+	if (cabin_sealed)
+		playsound(src, 'sound/items/internals/internals_on.ogg', 50, TRUE)
+	else
+		playsound(src, 'sound/items/internals/internals_off.ogg', 50, TRUE)
+
+	for (var/mob/occupant as anything in occupants)
+		balloon_alert(occupant, "cabin [cabin_sealed ? "sealed" : "unsealed"]")
+		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_cabin_seal)
+		action?.build_all_button_icons()
+	/*
+
+	var/obj/item/mecha_equipment/air_tank/tank = locate(/obj/item/mecha_equipment/air_tank) in equip_by_category[MECHA_UTILITY]
+	for(var/mob/occupant as anything in occupants)
+		var/datum/action/action = locate(/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal) in occupant.actions
+		if(!isnull(tank) && cabin_sealed && tank.auto_pressurize_on_seal)
+			if(!tank.active)
+				tank.set_active(TRUE)
+			else
+				action.button_icon_state = "mech_cabin_pressurized"
+				action.build_all_button_icons()
+	*/
 
 /obj/vehicle/sealed/mecha/generate_actions()
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/eject)
-	if(mecha_flags & IS_ENCLOSED)
+	if (mecha_flags & IS_ENCLOSED)
 		initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_cabin_seal, VEHICLE_CONTROL_SETTINGS)
-	if(can_use_overclock)
-		initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/toggle_overclock)
-	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_lights, VEHICLE_CONTROL_SETTINGS)
+	if (mecha_flags & HAS_LIGHTS)
+		initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_lights, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_safeties, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/view_stats, VEHICLE_CONTROL_SETTINGS)
+	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/toggle_overclock, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_strafe, VEHICLE_CONTROL_DRIVE)
+
+/*
 
 /obj/vehicle/sealed/mecha/proc/update_part_values() ///Updates the values given by scanning module and capacitor tier, called when a part is removed or inserted.
 	update_energy_drain()
@@ -666,50 +720,6 @@
 		set_light_on(mecha_flags & LIGHTS_ON)
 		playsound(src,'sound/machines/clockcult/brass_skewer.ogg', 40, TRUE)
 		log_message("Toggled lights off due to the lack of power.", LOG_MECHA)
-
-///makes cabin unsealed, dumping cabin air outside or airtight filling the cabin with external air mix
-/obj/vehicle/sealed/mecha/proc/set_cabin_seal(mob/user, seal_state)
-	if(!(mecha_flags & IS_ENCLOSED))
-		balloon_alert(user, "cabin can't be sealed!")
-		log_message("Tried to seal cabin. This mech can't be airtight.", LOG_MECHA)
-		return
-
-	if(TIMER_COOLDOWN_RUNNING(src, COOLDOWN_MECHA_CABIN_SEAL))
-		balloon_alert(user, "on cooldown!")
-		return
-
-	TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_CABIN_SEAL, 1 SECONDS)
-	cabin_sealed = seal_state
-
-	var/datum/gas_mixture/environment_air = loc.return_air()
-	if(!isnull(environment_air))
-		if(cabin_sealed)
-			// Fill cabin with air
-			environment_air.pump_gas_to(cabin_air, environment_air.return_pressure())
-		else
-			// Dump cabin air
-			var/datum/gas_mixture/removed_gases = cabin_air.remove_ratio(1)
-			if(loc)
-				loc.assume_air(removed_gases)
-			else
-				qdel(removed_gases)
-
-	var/obj/item/mecha_equipment/air_tank/tank = locate(/obj/item/mecha_equipment/air_tank) in equip_by_category[MECHA_UTILITY]
-	for(var/mob/occupant as anything in occupants)
-		var/datum/action/action = locate(/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal) in occupant.actions
-		if(!isnull(tank) && cabin_sealed && tank.auto_pressurize_on_seal)
-			if(!tank.active)
-				tank.set_active(TRUE)
-			else
-				action.button_icon_state = "mech_cabin_pressurized"
-				action.build_all_button_icons()
-		else
-			action.button_icon_state = "mech_cabin_[cabin_sealed ? "closed" : "open"]"
-			action.build_all_button_icons()
-
-		balloon_alert(occupant, "cabin [cabin_sealed ? "sealed" : "unsealed"]")
-	log_message("Cabin [cabin_sealed ? "sealed" : "unsealed"].", LOG_MECHA)
-	playsound(src, 'sound/machines/airlock/airlock.ogg', 50, TRUE)
 
 /// Toggle mech overclock with a button or by hacking
 /obj/vehicle/sealed/mecha/proc/toggle_overclock(forced_state = null)

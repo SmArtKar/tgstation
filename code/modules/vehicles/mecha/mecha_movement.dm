@@ -47,7 +47,11 @@
 	if(!COOLDOWN_FINISHED(src, cooldown_vehicle_move))
 		return FALSE
 
-	COOLDOWN_START(src, cooldown_vehicle_move, movedelay)
+	var/move_cd = movedelay
+	if (overclock_active)
+		move_cd /= overclock_speed_mult
+
+	COOLDOWN_START(src, cooldown_vehicle_move, move_cd)
 	if(!direction)
 		return FALSE
 
@@ -105,8 +109,10 @@
 		if (keyheld || !(mecha_flags & RAPID_TURNING))
 			return TRUE
 
-	set_glide_size(DELAY_TO_GLIDE_SIZE(movedelay))
+	set_glide_size(DELAY_TO_GLIDE_SIZE(move_cd))
 	. = try_step_multiz(direction)
+	if (overclock_active)
+		add_heat(step_heat_production, direct = TRUE)
 	// If we're strafing, turn back to where we were facing
 	if(strafing)
 		setDir(old_dir)

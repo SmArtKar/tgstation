@@ -92,7 +92,7 @@
 	if (!recharging_mech?.cell || !recharging_mech.cell.used_charge())
 		return
 
-	var/charge_given = charge_cell(power_usage, recharging_mech.cell, grid_only = TRUE)
+	charge_cell(power_usage, recharging_mech.cell, grid_only = TRUE)
 	if (!recharging_mech.cell.used_charge())
 		recharge_console.update_appearance()
 

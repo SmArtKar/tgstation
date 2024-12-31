@@ -16,6 +16,8 @@
 #define RAPID_TURNING (1<<9)
 /// We break though walls like Kool-Aid man when running into them
 #define BUMP_SMASH (1<<10)
+/// Mech lights got destroyed by a light eater or a precisely thrown spear
+#define DESTROYED_LIGHTS (1<<11)
 
 // Mech armor modifiers
 /// Multiplier for damage taken from the front, or adjacent diagonals

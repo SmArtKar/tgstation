@@ -5,7 +5,7 @@
 	//Allows the Malf to scan a mech's status and loadout, helping it to decide if it is a worthy chariot.
 	if(user.can_dominate_mechs)
 		examine(user) //Get diagnostic information!
-		for(var/obj/item/mecha_parts/mecha_tracking/B in trackers)
+		for(var/obj/item/mecha_equipment/tracker/B in trackers)
 			to_chat(user, span_danger("Warning: Tracking Beacon detected. Enter at your own risk. Beacon Data:"))
 			to_chat(user, "[B.get_mecha_info()]")
 			break
@@ -17,7 +17,7 @@
 		to_chat(user, span_warning("This exosuit has a pilot and cannot be controlled."))
 		return
 	var/can_control_mech = FALSE
-	for(var/obj/item/mecha_parts/mecha_tracking/ai_control/A in trackers)
+	for(var/obj/item/mecha_equipment/tracker/ai_control/A in trackers)
 		can_control_mech = TRUE
 		to_chat(user, "[span_notice("[icon2html(src, user)] Status of [name]:")]\n[A.get_mecha_info()]")
 		break

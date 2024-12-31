@@ -426,7 +426,7 @@ Diagnostic HUDs!
 ///Shows tracking beacons on the mech
 /obj/vehicle/sealed/mecha/proc/diag_hud_set_mechtracking()
 	var/new_icon_state //This var exists so that the holder's icon state is set only once in the event of multiple mech beacons.
-	for(var/obj/item/mecha_parts/mecha_tracking/tracker in trackers)
+	for(var/obj/item/mecha_equipment/tracker/tracker in trackers)
 		if(tracker.ai_beacon) //Beacon with AI uplink
 			new_icon_state = "hudtrackingai"
 			break //Immediately terminate upon finding an AI beacon to ensure it is always shown over the normal one, as mechs can have several trackers.

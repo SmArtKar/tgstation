@@ -533,7 +533,7 @@
 			return
 
 		var/mech_has_controlbeacon = FALSE
-		for(var/obj/item/mecha_parts/mecha_tracking/ai_control/A in M.trackers)
+		for(var/obj/item/mecha_equipment/tracker/ai_control/A in M.trackers)
 			mech_has_controlbeacon = TRUE
 			break
 		if(!can_dominate_mechs && !mech_has_controlbeacon)

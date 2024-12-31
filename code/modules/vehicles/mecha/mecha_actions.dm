@@ -25,16 +25,16 @@
 		return
 	chassis.container_resist_act(owner)
 
-/datum/action/vehicle/sealed/mecha/cabin_seal
+/datum/action/vehicle/sealed/mecha/toggle_cabin_seal
 	name = "Toggle Cabin Airtight"
 	button_icon_state = "mech_cabin_open"
 	desc = "Airtight cabin preserves internal air and can be pressurized with a mounted air tank."
 
-/datum/action/vehicle/sealed/mecha/cabin_seal/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
+/datum/action/vehicle/sealed/mecha/toggle_cabin_seal/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
 	button_icon_state = "mech_cabin_[chassis.cabin_sealed ? "pressurized" : "open"]"
 	return ..()
 
-/datum/action/vehicle/sealed/mecha/cabin_seal/Trigger(trigger_flags)
+/datum/action/vehicle/sealed/mecha/toggle_cabin_seal/Trigger(trigger_flags)
 	if(!owner || !chassis || !(owner in chassis.occupants))
 		return
 	chassis.set_cabin_seal(owner, !chassis.cabin_sealed)
@@ -100,7 +100,7 @@
 	button_icon_state = "mech_overload_off"
 
 /datum/action/vehicle/sealed/mecha/toggle_overclock/apply_button_icon(atom/movable/screen/movable/action_button/current_button, force)
-	button_icon_state = "mech_overload_[chassis.overclock_mode ? "on" : "off"]"
+	button_icon_state = "mech_overload_[chassis.overclock_active ? "on" : "off"]"
 	return ..()
 
 /datum/action/vehicle/sealed/mecha/toggle_overclock/Trigger(trigger_flags, forced_state = null)

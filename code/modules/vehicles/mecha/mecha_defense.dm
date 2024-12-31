@@ -384,12 +384,10 @@
 /// Special light eater handling
 /obj/vehicle/sealed/mecha/proc/on_light_eater(obj/vehicle/sealed/source, datum/light_eater)
 	SIGNAL_HANDLER
-	if (mecha_flags & HAS_LIGHTS)
+	if ((mecha_flags & HAS_LIGHTS) && !(mecha_flags & DESTROYED_LIGHTS))
 		visible_message(span_danger("[src]'s lights burn out!"))
-		mecha_flags &= ~HAS_LIGHTS
+		mecha_flags |= DESTROYED_LIGHTS
 	set_light_on(FALSE)
-	for (var/mob/occupant as anything in occupants)
-		remove_action_type_from_mob(/datum/action/vehicle/sealed/mecha/toggle_lights, occupant)
 	return COMPONENT_BLOCK_LIGHT_EATER
 
 /obj/vehicle/sealed/mecha/on_saboteur(datum/source, disrupt_duration)
