@@ -403,7 +403,7 @@ DEFINE_BITFIELD(turret_flags, list(
 		set_disabled(rand(6 SECONDS, 20 SECONDS))
 		remove_control()
 
-/obj/machinery/porta_turret/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/machinery/porta_turret/take_damage(damage_amount, damage_type = BRUTE, damage_flag = null, sound_effect = TRUE, attack_dir, armour_penetration = 0)
 	. = ..()
 	if(. && atom_integrity > 0) //damage received
 		if(prob(30))

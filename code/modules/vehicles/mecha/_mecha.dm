@@ -137,8 +137,6 @@
 	/// Overclocking increases movement and melee speed, but makes movement produce heat and increases all other heat generation
 	/// Mech also doesn't automatically dump heat when overclocking, but additional heat will be converted into cabin temperature and damage!
 	var/overclock_active = FALSE
-	/// Multiplier for heat production during overclocking
-	var/overclock_heat_mult = 1.5
 	/// Speed multiplier for movement when overclocked
 	var/overclock_speed_mult = 1.25
 	/// Melee cooldown multiplier when overclocked
@@ -149,10 +147,19 @@
 	var/overclock_safety_available = FALSE
 	/// Safely overclocked mechs will dump heat upon reaching the safe limit
 	var/overclock_safety = FALSE
-	/// How much heat is produced for every melee attack
+	/// How much heat is produced for every melee attack, double that when overclocking (but reduced by better servos!)
 	var/melee_heat_production = 5
-	/// How much heat is produced for every step while overclocking, ignores overclock_heat_mult
+	/// How much heat is produced for every step while overclocking
 	var/step_heat_production = 2
+	/// Percentage of mech's health dealt as damage when it overheats
+	/// If current health is below that amount, the mech will detonate instead!
+	var/overheat_damage_percentage = 10
+	/// Last tick when we increased our temperature
+	var/last_heat_tick = 0
+	/// Delay before the mech starts losing heat
+	var/cooling_cooldown = 1 SECONDS
+	/// How much heat is lost per second
+	var/cooling_efficiency = 5
 
 	// ----- Effects-related -----
 	/// Type of footsteps we play when moving. Can be null to prevent footsteps from playing
@@ -165,7 +172,9 @@
 	var/destroy_wall_sound = 'sound/effects/meteorimpact.ogg'
 	/// Mech's cached spark system
 	var/datum/effect_system/spark_spread/spark_system
-	/// Radius of explosion upon our destruction
+	/// Radius of heavy explosion upon our destruction
+	var/heavy_ex_range = -1
+	/// Radius of light explosion upon our destruction
 	var/light_ex_range = 0
 	/// Radius of flames upon our destruction
 	var/flame_ex_range = 1
@@ -312,8 +321,8 @@
 		ai.investigate_log("has been gibbed by having their mech destroyed.", INVESTIGATE_DEATHS)
 		ai.gib(DROP_ALL_REMAINS) // No wreck, no AI to recover
 
-	if (light_ex_range >= 0 || flame_ex_range >= 0)
-		explosion(loc, light_impact_range = light_ex_range, flame_range = flame_ex_range)
+	if (heavy_ex_range >= 0 || light_ex_range >= 0 || flame_ex_range >= 0)
+		explosion(loc, heavy_impact_range = heavy_ex_range, light_impact_range = light_ex_range, flame_range = flame_ex_range)
 
 	if (!wreck_type)
 		return ..()
@@ -412,7 +421,7 @@
 
 /// Electrocute user from power cell
 /obj/vehicle/sealed/mecha/proc/shock(mob/living/user)
-	if(!istype(user) || get_charge() < 1)
+	if(!istype(user) || !get_charge())
 		return FALSE
 	do_sparks(5, TRUE, src)
 	return electrocute_mob(user, cell, src, 0.7, TRUE)
@@ -430,11 +439,11 @@
 		if (!capacitor)
 			. += span_warning("It's missing a capacitor.")
 		else if (capacitor.rating > 1)
-			. += span_notice("[servo] is increasing maximum heat capacity by [(capacitor.rating - 1) * 5]%.")
+			. += span_notice("[capacitor] is increasing maximum overdrive heat capacity by [(capacitor.rating - 1) * 10]%.")
 		if (!servo)
 			. += span_warning("It's missing a servo.")
 		else if (servo.rating > 1)
-			. += span_notice("[servo] is reducing overload heat generation by [(servo.rating - 1) * 10]%")
+			. += span_notice("[servo] is reducing overclock heat generation by [(servo.rating - 1) * 10]%")
 		if (!scanner)
 			. += span_warning("It's missing a scanning module.")
 		else if (scanner.rating > 1)
@@ -583,33 +592,10 @@
 
 /*
 
-/obj/vehicle/sealed/mecha/proc/update_part_values() ///Updates the values given by scanning module and capacitor tier, called when a part is removed or inserted.
-	update_energy_drain()
-
-	if(capacitor)
-		var/datum/armor/stock_armor = get_armor_by_type(armor_type)
-		var/initial_energy = stock_armor.get_rating(ENERGY)
-		set_armor_rating(ENERGY, initial_energy + (capacitor.rating * 5))
-		overclock_temp_danger = initial(overclock_temp_danger) * capacitor.rating
-	else
-		overclock_temp_danger = initial(overclock_temp_danger)
-
 ///Locate an internal tack in the utility modules
 /obj/vehicle/sealed/mecha/proc/get_internal_tank()
 	var/obj/item/mecha_equipment/air_tank/module = locate(/obj/item/mecha_equipment/air_tank) in equip_by_category[MECHA_UTILITY]
 	return module?.internal_tank
-
-//processing internal damage, temperature, air regulation, alert updates, lights power use.
-/obj/vehicle/sealed/mecha/process(seconds_per_tick)
-	if(overclock_mode || overclock_temp > 0)
-		process_overclock_effects(seconds_per_tick)
-	if(internal_damage)
-		process_internal_damage_effects(seconds_per_tick)
-	if(cabin_sealed)
-		process_cabin_air(seconds_per_tick)
-	if(length(occupants))
-		process_occupants(seconds_per_tick)
-	process_constant_power_usage(seconds_per_tick)
 
 /obj/vehicle/sealed/mecha/proc/process_overclock_effects(seconds_per_tick)
 	if(!overclock_mode && overclock_temp > 0)
@@ -636,8 +622,6 @@
 			if(cabin_air.return_pressure() > (PUMP_DEFAULT_PRESSURE * 30) && !(internal_damage & MECHA_CABIN_AIR_BREACH))
 				set_internal_damage(MECHA_CABIN_AIR_BREACH)
 			cabin_air.temperature = min(6000+T0C, cabin_air.temperature+rand(5,7.5)*seconds_per_tick)
-			if(cabin_air.return_temperature() > max_temperature/2)
-				take_damage(seconds_per_tick*2/round(max_temperature/cabin_air.return_temperature(),0.1), BURN, 0, 0)
 
 	if(internal_damage & MECHA_CABIN_AIR_BREACH && cabin_air && cabin_sealed) //remove some air from cabin_air
 		var/datum/gas_mixture/leaked_gas = cabin_air.remove_ratio(SPT_PROB_RATE(0.05, seconds_per_tick))
@@ -651,20 +635,6 @@
 		var/damage_energy_consumption = 0.005 * STANDARD_CELL_CHARGE * seconds_per_tick
 		use_energy(damage_energy_consumption)
 		cell.maxcharge -= min(damage_energy_consumption, cell.maxcharge)
-
-/obj/vehicle/sealed/mecha/proc/process_cabin_air(seconds_per_tick)
-	if(!(internal_damage & MECHA_INT_TEMP_CONTROL) && cabin_air && cabin_air.return_volume() > 0)
-		var/heat_capacity = cabin_air.heat_capacity()
-		var/required_energy = abs(T20C - cabin_air.temperature) * heat_capacity
-		required_energy = min(required_energy, 1000)
-		if(required_energy < 1)
-			return
-		var/delta_temperature = required_energy / heat_capacity
-		if(delta_temperature)
-			if(cabin_air.temperature < T20C)
-				cabin_air.temperature += delta_temperature
-			else
-				cabin_air.temperature -= delta_temperature
 
 /obj/vehicle/sealed/mecha/proc/process_occupants(seconds_per_tick)
 	for(var/mob/living/occupant as anything in occupants)
@@ -714,13 +684,6 @@
 	diag_hud_set_mechcell()
 	diag_hud_set_mechstat()
 
-/obj/vehicle/sealed/mecha/proc/process_constant_power_usage(seconds_per_tick)
-	if(mecha_flags & LIGHTS_ON && !use_energy(light_power_drain * seconds_per_tick))
-		mecha_flags &= ~LIGHTS_ON
-		set_light_on(mecha_flags & LIGHTS_ON)
-		playsound(src,'sound/machines/clockcult/brass_skewer.ogg', 40, TRUE)
-		log_message("Toggled lights off due to the lack of power.", LOG_MECHA)
-
 /// Toggle mech overclock with a button or by hacking
 /obj/vehicle/sealed/mecha/proc/toggle_overclock(forced_state = null)
 	if(!isnull(forced_state))
@@ -746,23 +709,5 @@
 		movedelay = initial(movedelay)
 		visible_message(span_notice("[src] cools down and the humming stops."))
 	update_energy_drain()
-
-/// Update the energy drain according to parts and status
-/obj/vehicle/sealed/mecha/proc/update_energy_drain()
-	if(servo)
-		step_energy_drain = initial(step_energy_drain) / servo.rating
-	else
-		step_energy_drain = 2 * initial(step_energy_drain)
-	if(overclock_mode)
-		step_energy_drain *= overclock_coeff
-
-	if(capacitor)
-		phasing_energy_drain = initial(phasing_energy_drain) / capacitor.rating
-		melee_energy_drain = initial(melee_energy_drain) / capacitor.rating
-		light_power_drain = initial(light_power_drain) / capacitor.rating
-	else
-		phasing_energy_drain = initial(phasing_energy_drain)
-		melee_energy_drain = initial(melee_energy_drain)
-		light_power_drain = initial(light_power_drain)
 
 */

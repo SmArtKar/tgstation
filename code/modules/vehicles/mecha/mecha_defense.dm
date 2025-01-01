@@ -12,7 +12,7 @@
 /obj/vehicle/sealed/mecha/rust_heretic_act()
 	take_damage(500, BRUTE, MELEE, armour_penetration = 100)
 
-/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = null, sound_effect = TRUE, attack_dir, armour_penetration = 0)
 	. = ..()
 	if(. <= 0 || atom_integrity < 0)
 		return

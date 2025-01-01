@@ -315,3 +315,6 @@
 
 /// Trait aquired from being painted a certain color
 #define ATOM_COLOR_TRAIT "atom_color"
+
+/// Trait aquired from mech overheat
+#define MECHA_OVERHEAT_TRAIT "mecha_overheat"

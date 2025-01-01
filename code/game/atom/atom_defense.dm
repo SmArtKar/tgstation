@@ -14,7 +14,7 @@
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
 /// The essential proc to call when an atom must receive damage of any kind.
-/atom/proc/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/atom/proc/take_damage(damage_amount, damage_type = BRUTE, damage_flag = null, sound_effect = TRUE, attack_dir, armour_penetration = 0)
 	if(!uses_integrity)
 		CRASH("[src] had /atom/proc/take_damage() called on it without it being a type that has uses_integrity = TRUE!")
 	if(QDELETED(src))

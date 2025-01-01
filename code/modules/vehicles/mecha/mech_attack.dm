@@ -76,6 +76,9 @@
 	if(on_cooldown || !adjacent)
 		return
 
+	if(isnull(servo))
+		return
+
 	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_MELEE_CLICK, user, target, on_cooldown, adjacent, modifiers)
 
 	if(signal_result & COMPONENT_CANCEL_MELEE_CLICK)
@@ -95,7 +98,10 @@
 	if(!target.mech_melee_attack(src, user))
 		return
 
-	add_heat(melee_heat_production)
+	var/heat_mult = 1
+	if (overclock_active)
+		heat_mult = 2 * (1 - (servo.rating - 1) * 0.1)
+	gain_heat(melee_heat_production * heat_mult, direct = TRUE)
 	var/melee_cd = melee_cooldown
 	if (overclock_active)
 		melee_cd *= overclock_melee_mult

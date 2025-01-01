@@ -111,8 +111,9 @@
 
 	set_glide_size(DELAY_TO_GLIDE_SIZE(move_cd))
 	. = try_step_multiz(direction)
+
 	if (overclock_active)
-		add_heat(step_heat_production, direct = TRUE)
+		gain_heat(step_heat_production * (1 - (servo.rating - 1) * 0.1), direct = TRUE)
 	// If we're strafing, turn back to where we were facing
 	if(strafing)
 		setDir(old_dir)

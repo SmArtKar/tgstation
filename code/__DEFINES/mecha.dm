@@ -77,3 +77,5 @@
 #define MECHA_MELEE_KNOCKOUT_DAMAGE 35
 /// Melee damage over which living mobs get knocked down
 #define MECHA_MELEE_KNOCKDOWN_DAMAGE 20
+/// How much excess heat is dumped into mech's cabin? Account for heat capacity of the cabin, ~175u by default
+#define MECHA_CABIN_HEAT_DUMP_COEFFICIENT 1.75
