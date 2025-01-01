@@ -153,7 +153,7 @@
 		if(!taser_equipment.chassis \
 			|| !taser_equipment.active \
 			|| taser_equipment.get_integrity() <= 1 \
-			|| taser_equipment.chassis.is_currently_ejecting \
+			|| taser_equipment.chassis.currently_ejecting \
 			|| taser_equipment.chassis.equipment_disabled \
 			|| !taser_equipment.chassis.use_energy(energy_drain * seconds_between_ticks))
 			return FALSE

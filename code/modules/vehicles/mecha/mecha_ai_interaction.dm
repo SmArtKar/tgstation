@@ -64,8 +64,8 @@
 			to_chat(user, span_warning("[new_pilot.name] is currently unresponsive, and cannot be uploaded."))
 			return
 
-		if((LAZYLEN(occupants) >= max_occupants) || dna_lock) //Normal AIs cannot steal mechs!
-			to_chat(user, span_warning("Access denied. [name] is [LAZYLEN(occupants) >= max_occupants ? "currently fully occupied" : "secured with a DNA lock"]."))
+		if((driver_amount() >= max_drivers) || dna_lock) //Normal AIs cannot steal mechs!
+			to_chat(user, span_warning("Access denied. [name] is [(driver_amount() >= max_drivers) ? "currently fully occupied" : "secured with a DNA lock"]."))
 			return
 
 		new_pilot.control_disabled = FALSE

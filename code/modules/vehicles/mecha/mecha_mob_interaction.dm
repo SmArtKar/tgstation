@@ -69,6 +69,22 @@
 	. = ..()
 	update_appearance()
 
+/obj/vehicle/sealed/mecha/after_add_occupant(mob/living/new_occupant)
+	. = ..()
+	// Update COMP unit flags when someone enters in case we need to revoke their driver's license
+	for (var/mob/living/brain/comp_unit in occupants)
+		if (comp_unit == new_occupant)
+			continue
+		remove_control_flags(comp_unit, ALL)
+		auto_assign_occupant_flags(comp_unit)
+
+/obj/vehicle/sealed/mecha/after_remove_occupant(mob/living/former_occupant)
+	. = ..()
+	// Update COMP unit flags when someone exits in case they need to be given driver persmissions
+	for (var/mob/living/brain/comp_unit in occupants)
+		remove_control_flags(comp_unit, ALL)
+		auto_assign_occupant_flags(comp_unit)
+
 /// Proc called whenever a new pilot enters a mech
 /obj/vehicle/sealed/mecha/proc/moved_inside(mob/living/new_pilot)
 	mecha_flags &= ~PANEL_OPEN //Close panel if open
@@ -129,35 +145,38 @@
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(empulse), get_turf(sillycone), 10,  20), 10 SECONDS)
 	return ..()
 
-/*
-
 /obj/vehicle/sealed/mecha/container_resist_act(mob/living/user)
 	if(isAI(user))
-		var/mob/living/silicon/ai/AI = user
-		if(!AI.linked_core)
-			to_chat(AI, span_userdanger("Inactive core destroyed. Unable to return."))
-			if(!AI.can_shunt || !AI.hacked_apcs.len)
-				to_chat(AI, span_warning("[AI.can_shunt ? "No hacked APCs available." : "No shunting capabilities."]"))
+		var/mob/living/silicon/ai/ai_pilot = user
+		if(!ai_pilot.linked_core)
+			to_chat(ai_pilot, span_userdanger("Inactive core destroyed. Unable to return."))
+			if(!ai_pilot.can_shunt || !LAZYLEN(ai_pilot.hacked_apcs))
+				to_chat(ai_pilot, span_warning("[ai_pilot.can_shunt ? "No hacked APCs available." : "No shunting capabilities."]"))
 				return
-			var/confirm = tgui_alert(AI, "Shunt to a random APC? You won't have anywhere else to go!", "Confirm Emergency Shunt", list("Yes", "No"))
+
+			var/confirm = tgui_alert(ai_pilot, "Shunt to a random APC? You won't have anywhere else to go!", "Confirm Emergency Shunt", list("Yes", "No"))
 			if(confirm == "Yes")
 				/// Mechs with open cockpits can have the pilot shot by projectiles, or EMPs may destroy the AI inside
 				/// Alternatively, destroying the mech will shunt the AI if they can shunt, or a deadeye wizard can hit
 				/// them with a teleportation bolt
-				if (AI.stat == DEAD || AI.loc != src)
+				if (ai_pilot.stat == DEAD || ai_pilot.loc != src)
 					return
-				mob_exit(AI, forced = TRUE)
+				mob_exit(ai_pilot, forced = TRUE)
 			return
+
 	to_chat(user, span_notice("You begin the ejection procedure. Equipment is disabled during this process. Hold still to finish ejecting."))
-	is_currently_ejecting = TRUE
-	if(do_after(user, has_gravity() ? exit_delay : 0 , target = src))
-		to_chat(user, span_notice("You exit the mech."))
-		if(cabin_sealed)
-			set_cabin_seal(user, FALSE)
-		mob_exit(user, silent = TRUE)
-	else
+	currently_ejecting = TRUE
+	if(!do_after(user, exit_delay, target = src))
 		to_chat(user, span_notice("You stop exiting the mech. Weapons are enabled again."))
-	is_currently_ejecting = FALSE
+		currently_ejecting = FALSE
+		return
+
+	if(cabin_sealed)
+		set_cabin_seal(user, FALSE)
+	mob_exit(user, silent = TRUE)
+
+/*
+
 
 ///proc called when a new mmi mob tries to enter this mech
 /obj/vehicle/sealed/mecha/proc/mmi_move_inside(obj/item/mmi/brain_obj, mob/user)

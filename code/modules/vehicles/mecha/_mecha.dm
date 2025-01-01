@@ -69,6 +69,9 @@
 	var/currently_ejecting = FALSE
 	/// What wires datum we use
 	var/wires_type = /datum/wires/mecha
+	/// Does this mech accept non-posibrain MMIs as fully capable pilots?
+	/// If FALSE, both MMIs and posibrains will go in as COMP units
+	var/mmi_full_control = FALSE
 
 	// ----- Equipment-related -----
 	/// Currently installed equipment
@@ -362,9 +365,14 @@
 /obj/vehicle/sealed/mecha/auto_assign_occupant_flags(mob/rider)
 	// COMP-units (MMIs and posibrains) get control based on whenever we currently have a pilot or not
 	if (isbrain(rider))
-		add_control_flags(rider, VEHICLE_CONTROL_SETTINGS)
-		if (!driver_amount())
-			add_control_flags(rider, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_MELEE|VEHICLE_CONTROL_SETTINGS)
+		var/mob/living/brain/brain = rider
+		var/obj/item/mmi/container = brain.container
+		add_control_flags(brain, VEHICLE_CONTROL_SETTINGS)
+		if (driver_amount())
+			return
+		add_control_flags(brain, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_MELEE)
+		if (mmi_full_control && !istype(container, /obj/item/mmi/posibrain))
+			add_control_flags(brain, VEHICLE_CONTROL_EQUIPMENT)
 		return
 
 	if (driver_amount() < max_drivers)

@@ -99,7 +99,7 @@
 		return FALSE
 	if(energy_drain && !chassis?.has_charge(energy_drain))
 		return FALSE
-	if(chassis.is_currently_ejecting)
+	if(chassis.currently_ejecting)
 		return FALSE
 	if(chassis.equipment_disabled)
 		to_chat(chassis.occupants, span_warning("Error -- Equipment control unit is unresponsive."))

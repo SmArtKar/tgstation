@@ -124,12 +124,12 @@
 		return
 	var/list/drivers = chassis.return_drivers()
 	chassis.balloon_alert(owner, "moving to other seat...")
-	chassis.is_currently_ejecting = TRUE
+	chassis.currently_ejecting = TRUE
 	if(!do_after(owner, chassis.has_gravity() ? chassis.exit_delay : 0 , target = chassis))
 		chassis.balloon_alert(owner, "interrupted!")
-		chassis.is_currently_ejecting = FALSE
+		chassis.currently_ejecting = FALSE
 		return
-	chassis.is_currently_ejecting = FALSE
+	chassis.currently_ejecting = FALSE
 	if(owner in drivers)
 		chassis.balloon_alert(owner, "controlling gunner seat")
 		chassis.remove_control_flags(owner, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_SETTINGS)
