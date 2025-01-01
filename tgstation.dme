@@ -6292,7 +6292,7 @@
 #include "code\modules\vehicles\mecha\mech_bay.dm"
 #include "code\modules\vehicles\mecha\mech_fabricator.dm"
 #include "code\modules\vehicles\mecha\mecha_actions.dm"
-#include "code\modules\vehicles\mecha\mecha_ai_interaction_TODO.dm"
+#include "code\modules\vehicles\mecha\mecha_ai_interaction.dm"
 #include "code\modules\vehicles\mecha\mecha_construction_paths.dm"
 #include "code\modules\vehicles\mecha\mecha_control_console.dm"
 #include "code\modules\vehicles\mecha\mecha_defense.dm"

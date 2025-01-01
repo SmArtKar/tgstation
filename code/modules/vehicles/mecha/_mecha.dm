@@ -158,8 +158,8 @@
 	var/last_heat_tick = 0
 	/// Delay before the mech starts losing heat
 	var/cooling_cooldown = 1 SECONDS
-	/// How much heat is lost per second
-	var/cooling_efficiency = 5
+	/// How much heat is lost per second, this is in JOULES
+	var/cooling_efficiency = 5 * MECHA_INTERNAL_HEAT_CAPACITY
 
 	// ----- Effects-related -----
 	/// Type of footsteps we play when moving. Can be null to prevent footsteps from playing
@@ -439,7 +439,7 @@
 		if (!capacitor)
 			. += span_warning("It's missing a capacitor.")
 		else if (capacitor.rating > 1)
-			. += span_notice("[capacitor] is increasing maximum overdrive heat capacity by [(capacitor.rating - 1) * 10]%.")
+			. += span_notice("[capacitor] is increasing maximum heat capacity by [(capacitor.rating - 1) * 10]%.")
 		if (!servo)
 			. += span_warning("It's missing a servo.")
 		else if (servo.rating > 1)
@@ -475,6 +475,9 @@
 
 /obj/vehicle/sealed/mecha/proc/give_power(amount)
 	return cell?.give(amount)
+
+/obj/vehicle/sealed/mecha/proc/get_maximum_heat()
+	return maximum_heat * (1 + max(capacitor?.rating, 0) * 0.1)
 
 /// Displays a special speech bubble when someone inside the mecha speaks
 /obj/vehicle/sealed/mecha/proc/display_speech_bubble(datum/source, list/speech_args)

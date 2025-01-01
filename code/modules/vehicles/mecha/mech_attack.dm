@@ -218,6 +218,7 @@
 			span_hear("You hear aggressive shuffling!"),\
 			vision_distance = COMBAT_MESSAGE_RANGE,\
 			ignored_mobs = user)
+		mecha_attacker.do_attack_animation(src, ATTACK_EFFECT_DISARM)
 		to_chat(user, span_danger("You push [src] out of your way."))
 		return
 
@@ -235,11 +236,13 @@
 
 	// Snowflake toxin damage into reagents
 	if (mecha_attacker.damtype == TOX)
-		var/bio_armor = (100 - run_armor_check(def_zone = get_random_valid_zone(user?.zone_selected, even_weights = TRUE), attack_flag = BIO, armour_penetration = mecha_attacker.armour_penetration)) / 100
+		var/bio_armor = run_armor_check(def_zone = get_random_valid_zone(user?.zone_selected, even_weights = TRUE), attack_flag = BIO, armour_penetration = mecha_attacker.armour_penetration)
+		if (bio_armor >= 100)
+			return TRUE
 		if(reagents.get_reagent_amount(/datum/reagent/cryptobiolin) < mecha_attacker.force)
-			reagents.add_reagent(/datum/reagent/cryptobiolin, mecha_attacker.force / 2 * bio_armor)
+			reagents.add_reagent(/datum/reagent/cryptobiolin, mecha_attacker.force / 2 * (1 - bio_armor / 100))
 		if(reagents.get_reagent_amount(/datum/reagent/toxin) < mecha_attacker.force)
-			reagents.add_reagent(/datum/reagent/toxin, mecha_attacker.force / 2 * bio_armor)
+			reagents.add_reagent(/datum/reagent/toxin, mecha_attacker.force / 2 * (1 - bio_armor / 100))
 		return TRUE
 
 	var/def_zone = get_random_valid_zone(user?.zone_selected, even_weights = TRUE)
@@ -255,13 +258,15 @@
 	return TRUE
 
 /obj/vehicle/sealed/mecha/proc/melee_attack_effect(mob/living/victim, damage_dealt, mob/living/user)
-	if (damage_dealt >= MECHA_MELEE_THROW_DAMAGE)
+	// This uses force and not damage_dealt as even if you manage to block a durand punch, it still packs enough power to send you flying
+	if (force >= MECHA_MELEE_THROW_DAMAGE)
 		throw_at(get_edge_target_turf(victim, get_dir(src, victim)), 2, 1, user)
-	else if (damage_dealt >= MECHA_MELEE_PUSH_DAMAGE)
+	else if (force >= MECHA_MELEE_PUSH_DAMAGE)
 		step_away(victim, src, 15)
 
-	if(damage_dealt > MECHA_MELEE_KNOCKOUT_DAMAGE)
+	if(damage_dealt >= MECHA_MELEE_KNOCKOUT_DAMAGE && prob(damage_dealt))
 		victim.Unconscious(2 SECONDS)
+
 	// Don't chain knockdown
-	if (damage_dealt > MECHA_MELEE_KNOCKDOWN_DAMAGE && !victim.IsKnockdown())
+	if (damage_dealt >= MECHA_MELEE_KNOCKDOWN_DAMAGE && !victim.IsKnockdown())
 		victim.Knockdown(4 SECONDS)

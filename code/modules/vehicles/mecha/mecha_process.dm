@@ -35,16 +35,45 @@
 		cabin_air.temperature -= delta_temperature
 
 /obj/vehicle/sealed/mecha/proc/process_temperature(seconds_per_tick)
+	var/max_heat = get_maximum_heat()
 	// When overheating, some heat may start bleeding into the cabin
-	if (current_heat > maximum_heat && cabin_air?.return_volume())
-		// Assuming that heat is temperature above 20C, and mech can sanely sustain up to maximum_heat + 20C
-		cabin_air.temperature = min(current_heat - 20, cabin_air.temperature + (current_heat - maximum_heat) * MECHA_CABIN_HEAT_DUMP_COEFFICIENT / cabin_air.heat_capacity())
+	if (current_heat > max_heat && cabin_air?.return_volume())
+		// Assuming that heat is temperature above 20C, and mechs can normally sustain up to maximum_heat + 20C
+		cabin_air.temperature = min(current_heat + T20C, cabin_air.temperature + (current_heat - max_heat) * MECHA_INTERNAL_HEAT_CAPACITY * MECHA_CABIN_HEAT_DUMP_COEFFICIENT / cabin_air.heat_capacity())
 
 	if (cabin_air.return_temperature() > max_temperature)
 		take_damage(round(cabin_air.return_temperature() / max_temperature, 0.1) * seconds_per_tick, BURN, null, FALSE)
 
-	if (world.time >= last_heat_tick + cooling_cooldown)
-		gain_heat(-cooling_efficiency, direct = TRUE)
+	if (world.time < last_heat_tick + cooling_cooldown)
+		return
+
+	var/list/cooling_mult = list()
+	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_ATTEMPTED_COOLING, seconds_per_tick, cooling_mult)
+	if (signal_result & COMPONENT_CANCEL_MECHA_COOLING)
+		return
+
+	var/datum/gas_mixture/environment = loc.return_air()
+	var/cooling_coeff = 1
+	// This is horrendously ugly but vaccuum has *7000* hardcoded heat capacity, over 2080 of normal air so we have to resort to this jank
+	// As we cannot use relative heat capacity for conductivity here
+	if (environment?.return_pressure() < MECHA_COOLING_LOW_PRESSURE && !(signal_result & COMPONENT_MECHA_IGNORE_LOW_PRESSURE))
+		cooling_coeff *= MECHA_LOW_PRESSURE_HEAT_DUMP_EFFICIENCY + (1 - MECHA_LOW_PRESSURE_HEAT_DUMP_EFFICIENCY) * (environment?.return_pressure() / MECHA_COOLING_LOW_PRESSURE)
+
+	if (environment)
+		// If air is hotter than the mech, it starts losing in cooling efficiency, up to its maximum_heat at which point it cannot cool at all
+		if (environment.temperature > (current_temp + T20C) && !(signal_result & COMPONENT_MECHA_IGNORE_EXTERNAL_TEMP))
+			cooling_coeff *= max(0, 1 - ((environment?.temperature - T20C) / max_heat))
+		// If air is cooler than the mech, it cools slightly better
+		else if (environment.temperature < current_temp)
+			// Using maximum_heat here as better capacitors would nerf this otherwise
+			cooling_coeff *= 1 + ((current_temp - environment.temperature) / (maximum_heat * T0C)) * MECHA_MAXIMUM_COLD_COOLING_EFFICIENCY
+
+	for (var/additional_coeff in cooling_mult)
+		cooling_coeff *= additional_coeff
+
+	var/heat_transferred = cooling_efficiency * cooling_coeff
+	gain_heat(-heat_transferred / MECHA_INTERNAL_HEAT_CAPACITY, direct = TRUE)
+	environment.temperature += heat_transferred / environment.heat_capacity()
 
 /obj/vehicle/sealed/mecha/proc/process_constant_power_usage(seconds_per_tick)
 	if(!light_on || use_energy(light_power_drain * seconds_per_tick))
@@ -81,11 +110,11 @@
 
 	last_heat_tick = world.time
 
-	if (current_heat > maximum_heat && !prevent_overheat && (!overclock_active || overclock_safety))
+	if (current_heat > get_maximum_heat() && !prevent_overheat && (!overclock_active || overclock_safety))
 		overheat()
 		return
 
-	if (current_heat > maximum_heat * overclock_maximum_temp_mult * (1 + max(capacitor?.rating - 1, 0) * 0.1))
+	if (current_heat > get_maximum_heat() * overclock_maximum_temp_mult * (1 + max(capacitor?.rating - 1, 0) * 0.1))
 		start_blowing_up()
 		return
 
@@ -93,8 +122,8 @@
 
 /// Handles all heat-related visuals, UI and SFX
 /obj/vehicle/sealed/mecha/proc/update_heat_effects(old_heat)
-	var/current_percentage = current_heat / maximum_heat
-	var/old_percentage = old_heat / maximum_heat
+	var/current_percentage = current_heat / get_maximum_heat()
+	var/old_percentage = old_heat / get_maximum_heat()
 	if (old_percentage >= MECHA_HEAT_COLOR_THRESHOLD && current_percentage < MECHA_HEAT_COLOR_THRESHOLD)
 		remove_filter("mecha_heat_color")
 
@@ -132,7 +161,7 @@
 /// Deals some damage, applies a malfunction and dumps heat
 /obj/vehicle/sealed/mecha/proc/overheat()
 	var/old_heat = current_heat
-	current_heat -= maximum_heat
+	current_heat -= get_maximum_heat()
 	playsound(src, 'sound/effects/gas_release.ogg', 70, TRUE)
 	playsound(src, 'sound/effects/bamf.ogg', 100, TRUE)
 	update_heat_effects(old_heat)
@@ -152,8 +181,8 @@
 		return
 
 	take_damage(damage_dealt, BRUTE, sound_effect = FALSE)
-	if (current_heat > maximum_heat)
-		// Don't stack SFX or VFX
+	if (current_heat > get_maximum_heat())
+		// Don't stack SFX or VFX if something manages to give us a ton of heat at once
 		addtimer(CALLBACK(src, PROC_REF(overheat)), 0.5 SECONDS)
 
 /// Blows the mech up alongside all of its drivers due to overheating

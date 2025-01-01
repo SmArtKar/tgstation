@@ -77,5 +77,13 @@
 #define MECHA_MELEE_KNOCKOUT_DAMAGE 35
 /// Melee damage over which living mobs get knocked down
 #define MECHA_MELEE_KNOCKDOWN_DAMAGE 20
-/// How much excess heat is dumped into mech's cabin? Account for heat capacity of the cabin, ~175u by default
-#define MECHA_CABIN_HEAT_DUMP_COEFFICIENT 1.75
+/// Mech's heat capacity, used purely for cooling calculations
+#define MECHA_INTERNAL_HEAT_CAPACITY 350
+/// How much excess heat is dumped into mech's cabin?
+#define MECHA_CABIN_HEAT_DUMP_COEFFICIENT 0.005
+/// Pressure below which mechs get a cooling penalty, make sure this is lower than both LAVALAND_EQUIPMENT_EFFECT_PRESSURE and minimum possible lavaland pressure!
+#define MECHA_COOLING_LOW_PRESSURE 30
+/// Percentage of normal cooling that occurs even in vaccuum
+#define MECHA_LOW_PRESSURE_HEAT_DUMP_EFFICIENCY 0.3
+/// Maximum increase in cooling that a mech can receive at absolute 0, and mech at max_heat
+#define MECHA_MAXIMUM_COLD_COOLING_EFFICIENCY 2.5

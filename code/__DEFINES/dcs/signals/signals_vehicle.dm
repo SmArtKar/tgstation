@@ -40,3 +40,9 @@
 /// From /obj/vehicle/sealed/mecha/proc/gain_heat(added_heat, direct, prevent_overheat): (added_heat, direct, prevent_overheat, list/heat_mult)
 #define COMSIG_MECHA_GAINED_HEAT "mecha_gained_heat"
 	#define COMPONENT_CANCEL_MECH_HEAT_GAIN (1<<0)
+
+/// From /obj/vehicle/sealed/mecha/proc/process_temperature(seconds_per_tick): (seconds_per_tick, list/cooling_mult)
+#define COMSIG_MECHA_ATTEMPTED_COOLING "mecha_attempted_cooling"
+	#define COMPONENT_CANCEL_MECHA_COOLING (1<<0)
+	#define COMPONENT_MECHA_IGNORE_LOW_PRESSURE (1<<1)
+	#define COMPONENT_MECHA_IGNORE_EXTERNAL_TEMP (1<<2)
