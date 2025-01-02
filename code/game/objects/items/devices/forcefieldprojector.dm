@@ -135,6 +135,6 @@
 
 /obj/structure/projected_forcefield/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	if(sound_effect)
-		play_attack_sound(damage.amount, damage.damage_type, damage.armor_type)
+		play_attack_sound(damage.amount, damage.damage_type, damage.damage_flag)
 	if(generator)
 		generator.shield_integrity = max(generator.shield_integrity - damage.amount, 0)

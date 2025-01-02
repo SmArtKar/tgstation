@@ -78,7 +78,7 @@
 /obj/structure/reagent_dispensers/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
-		if(tank_volume && (damage.armor_type == BULLET || damage.armor_type == LASER))
+		if(tank_volume && (damage.damage_flag == BULLET || damage.damage_flag == LASER))
 			boom()
 
 /obj/structure/reagent_dispensers/attackby(obj/item/attacking_item, mob/user, params)

@@ -371,5 +371,5 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 /// Calculates the amount of burn force when applying this much energy to a mob via electrocution from an energy source.
 #define ELECTROCUTE_DAMAGE(energy) (energy >= 1 KILO JOULES ? clamp(20 + round(energy / JOULES_PER_DAMAGE), 20, 195) + rand(-5,5) : 0)
 
-#define DAMAGE_PACKAGE(amount, damage_type, armor_type, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness)\
-	(new /datum/damage_package(amount, damage_type, armor_type, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness))
+#define DAMAGE_PACKAGE(amount, damage_type, damage_flag, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness)\
+	(new /datum/damage_package(amount, damage_type, damage_flag, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness))

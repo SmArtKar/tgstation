@@ -50,10 +50,9 @@
 
 /obj/vehicle/sealed/mecha/run_atom_armor(datum/damage_package/damage)
 	. = ..()
-	if(attack_dir)
-		var/facing_modifier = get_armor_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
-		if(.)
-			. *= facing_modifier
+	var/facing_modifier = get_armor_facing(damage.attack_dir)
+	if(.)
+		. *= facing_modifier
 
 /obj/vehicle/sealed/mecha/attack_hand(mob/living/user, list/modifiers)
 	. = ..()

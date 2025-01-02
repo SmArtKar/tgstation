@@ -14,13 +14,12 @@
  */
 
 /// returns a number for the damage multiplier for this relative angle/dir
-/obj/vehicle/sealed/mecha/proc/get_armor_facing(relative_dir)
-	switch(relative_dir)
-		if(180) // BACKSTAB!
-			return facing_modifiers[MECHA_BACK_ARMOUR]
-		if(0, 45) // direct or 45 degrees off
-			return facing_modifiers[MECHA_FRONT_ARMOUR]
-	return facing_modifiers[MECHA_SIDE_ARMOUR] //if its not a front hit or back hit then assume its from the side
+/obj/vehicle/sealed/mecha/proc/get_armor_facing(attack_dir)
+	if (attack_dir & dir) // Direct or 45 degrees off
+		return facing_modifiers[MECHA_FRONT_ARMOUR]
+	if (attack_dir == REVERSE_DIR(dir)) // Backstab
+		return facing_modifiers[MECHA_BACK_ARMOUR]
+	return facing_modifiers[MECHA_SIDE_ARMOUR] // If its not a front hit or back hit then assume its from the side
 
 ///tries to deal internal damaget depending on the damage amount
 /obj/vehicle/sealed/mecha/proc/try_deal_internal_damage(damage)

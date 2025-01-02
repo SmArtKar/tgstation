@@ -7,9 +7,9 @@
 	/// SMARTKAR TODO: Axe BRAIN damage
 	var/damage_type = BRUTE
 	/// Defines what sort of armor protects from this damage
-	var/armor_type = null
+	var/damage_flag = null
 	/// Flags defining what sort of an attack this is: Melee, unarmed, projectile, magical, etc.
-	var/damage_flags = NONE
+	var/type_flags = NONE
 	/// Bodypart which this attack was targeting, can be both a bodypart object or just a zone define
 	var/def_zone = null
 	/// Direction from which this attack came
@@ -36,7 +36,7 @@
 /datum/damage_package/New(
 	amount = 0,
 	damage_type = BRUTE,
-	armor_type = null,
+	damage_flag = null,
 	damage_flags = NONE,
 	def_zone = null,
 	attack_dir = NONE,
@@ -56,10 +56,10 @@
 		src.amount = amount
 	if (!isnull(damage_type))
 		src.damage_type = damage_type
-	if (!isnull(armor_type))
-		src.armor_type = armor_type
-	if (!isnull(damage_flags))
-		src.damage_flags = damage_flags
+	if (!isnull(damage_flag))
+		src.damage_flag = damage_flag
+	if (!isnull(type_flags))
+		src.type_flags = type_flags
 	if (!isnull(def_zone))
 		src.def_zone = def_zone
 	if (!isnull(attack_dir))

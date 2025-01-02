@@ -17,7 +17,7 @@
 		playsound(loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
 /obj/structure/spider/run_atom_armor(datum/damage_package/damage)
-	if(damage.armor_type == MELEE)
+	if(damage.damage_flag == MELEE)
 		switch(damage.damage_type)
 			if(BURN)
 				damage.amount *= 1.25

@@ -298,12 +298,12 @@
 			return 0
 
 	var/armor_protection = 0
-	if(damage.armor_type)
-		armor_protection = clamp(PENETRATE_ARMOR(get_armor_rating(damage.armor_type) * damage.armor_multiplier, damage.armor_penetration), min(armor_penetration, 0), 100)
+	if(damage.damage_flag)
+		armor_protection = clamp(PENETRATE_ARMOR(get_armor_rating(damage.damage_flag) * damage.armor_multiplier, damage.armor_penetration), min(damage.armor_penetration, 0), 100)
 
 	damage.amount = round(damage.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
-	if(overmind && damage.armor_type)
-		damage.amount = overmind.blobstrain.damage_reaction(src, damage.amount, damage.damage_type, damage.armor_type)
+	if(overmind && damage.damage_flag)
+		damage.amount = overmind.blobstrain.damage_reaction(src, damage.amount, damage.damage_type, damage.damage_flag)
 	return damage.amount
 
 /obj/structure/blob/take_damage(datum/damage_package/damage, sound_effect = TRUE)

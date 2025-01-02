@@ -89,7 +89,7 @@
 /obj/item/cardboard_cutout/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	var/damage_sustained = . || 0
-	if((damage.armor_type == MELEE || damage.armor_type == BULLET) && damage.damage_type == BRUTE && prob(damage_sustained))
+	if((damage.damage_flag == MELEE || damage.damage_flag == BULLET) && damage.damage_type == BRUTE && prob(damage_sustained))
 		push_over()
 
 /obj/item/cardboard_cutout/atom_deconstruct(disassembled)

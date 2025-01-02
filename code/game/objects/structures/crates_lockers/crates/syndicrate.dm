@@ -34,7 +34,7 @@
 /obj/structure/closet/crate/secure/syndicrate/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	if(created_items)
 		return ..()
-	if(damage_amount < DAMAGE_PRECISION)
+	if(damage.amount < DAMAGE_PRECISION)
 		return ..()
 	if(prob(75))
 		return ..()

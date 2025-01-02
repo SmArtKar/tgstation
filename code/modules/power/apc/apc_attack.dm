@@ -97,7 +97,7 @@
 	// APC being at 0 integrity doesnt delete it outright. Combined with take_damage this might cause runtimes.
 	if(machine_stat & BROKEN && atom_integrity <= 0)
 		if(sound_effect)
-			play_attack_sound(damage.amount, damage.damage_type, damage.armor_type)
+			play_attack_sound(damage.amount, damage.damage_type, damage.damage_flag)
 		return
 	return ..()
 

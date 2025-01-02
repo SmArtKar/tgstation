@@ -114,7 +114,7 @@
 		after_harvest(user)
 
 /obj/structure/flora/run_atom_armor(datum/damage_package/damage)
-	if(damage.armor_type == MELEE)
+	if(damage.damage_flag == MELEE)
 		if(damage.damage_type == BURN)
 			damage.amount *= 4
 	return ..()

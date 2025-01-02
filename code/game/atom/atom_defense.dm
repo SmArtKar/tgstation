@@ -25,7 +25,7 @@
 		CRASH("[src] taking damage while having <= 0 integrity")
 
 	if(sound_effect)
-		play_attack_sound(damage.amount, damage.damage_type, damage.armor_type)
+		play_attack_sound(damage.amount, damage.damage_type, damage.damage_flag)
 
 	if(resistance_flags & INDESTRUCTIBLE)
 		return
@@ -44,11 +44,11 @@
 
 	//BREAKING FIRST
 	if(integrity_failure && previous_atom_integrity > integrity_failure_amount && atom_integrity <= integrity_failure_amount)
-		atom_break(damage_flag)
+		atom_break(damage.damage_flag)
 
 	//DESTROYING SECOND
 	if(atom_integrity <= 0 && previous_atom_integrity > 0)
-		atom_destruction(damage_flag)
+		atom_destruction(damage.damage_flag)
 
 /// Proc for recovering atom_integrity. Returns the amount repaired by
 /atom/proc/repair_damage(amount)
@@ -96,20 +96,20 @@
 	if(!uses_integrity)
 		CRASH("/atom/proc/run_atom_armor was called on [src] without being implemented as a type that uses integrity!")
 
-	if(damage.armor_type == MELEE && damage_amount < damage_deflection)
+	if(damage.damage_flag == MELEE && damage.amount < damage_deflection)
 		return 0
 
 	if(damage.damage_type != BRUTE && damage.damage_type != BURN)
 		return 0
 
 	var/armor_protection = 0
-	if(damage.armor_type)
-		armor_protection = get_armor_rating(damage.armor_type)
+	if(damage.damage_flag)
+		armor_protection = get_armor_rating(damage.damage_flag)
 
 	if(armor_protection) //Only apply weak-against-armor/hollowpoint effects if there actually IS armor.
 		armor_protection = clamp(PENETRATE_ARMOR(armor_protection * damage.armor_multiplier, damage.armor_penetration), min(armor_protection, 0), 100)
 
-	return round(damage_amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
+	return round(damage.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
 
 ///the sound played when the atom is damaged.
 /atom/proc/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)

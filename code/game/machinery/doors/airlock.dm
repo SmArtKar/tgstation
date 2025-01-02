@@ -1550,7 +1550,7 @@
 		add_hiddenprint(user)
 
 /obj/machinery/door/airlock/take_damage(datum/damage_package/damage, sound_effect = TRUE)
-	if(damage.amount >= atom_integrity && damage.armor_type == BOMB)
+	if(damage.amount >= atom_integrity && damage.damage_flag == BOMB)
 		obj_flags |= NO_DEBRIS_AFTER_DECONSTRUCTION  //If an explosive took us out, don't drop the assembly
 	. = ..()
 	if(. && atom_integrity < (0.75 * max_integrity))
