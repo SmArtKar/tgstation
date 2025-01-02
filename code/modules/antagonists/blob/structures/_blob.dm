@@ -288,23 +288,25 @@
 		if(BURN)
 			playsound(src.loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
-/obj/structure/blob/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	switch(damage_type)
+/obj/structure/blob/run_atom_armor(datum/damage_package/damage)
+	switch(damage.damage_type)
 		if(BRUTE)
-			damage_amount *= brute_resist
+			damage.amount *= brute_resist
 		if(BURN)
-			damage_amount *= fire_resist
+			damage.amount *= fire_resist
 		else
 			return 0
-	var/armor_protection = 0
-	if(damage_flag)
-		armor_protection = get_armor_rating(damage_flag)
-	damage_amount = round(damage_amount * (100 - armor_protection)*0.01, 0.1)
-	if(overmind && damage_flag)
-		damage_amount = overmind.blobstrain.damage_reaction(src, damage_amount, damage_type, damage_flag)
-	return damage_amount
 
-/obj/structure/blob/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+	var/armor_protection = 0
+	if(damage.armor_type)
+		armor_protection = clamp(PENETRATE_ARMOR(get_armor_rating(damage.armor_type) * damage.armor_multiplier, damage.armor_penetration), min(armor_penetration, 0), 100)
+
+	damage.amount = round(damage.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
+	if(overmind && damage.armor_type)
+		damage.amount = overmind.blobstrain.damage_reaction(src, damage.amount, damage.damage_type, damage.armor_type)
+	return damage.amount
+
+/obj/structure/blob/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
 		update_appearance()

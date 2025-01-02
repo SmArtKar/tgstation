@@ -113,10 +113,10 @@
 	if(harvest(user))
 		after_harvest(user)
 
-/obj/structure/flora/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	if(damage_flag == MELEE)
-		if(damage_type == BURN)
-			damage_amount *= 4
+/obj/structure/flora/run_atom_armor(datum/damage_package/damage)
+	if(damage.armor_type == MELEE)
+		if(damage.damage_type == BURN)
+			damage.amount *= 4
 	return ..()
 
 /obj/structure/flora/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)

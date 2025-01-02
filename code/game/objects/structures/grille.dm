@@ -35,9 +35,10 @@
 	update_cable_icons_on_turf(get_turf(src))
 	return ..()
 
-/obj/structure/grille/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/grille/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
-	update_appearance()
+	if (.)
+		update_appearance()
 
 /obj/structure/grille/update_appearance(updates)
 	if(QDELETED(src) || broken)

@@ -16,7 +16,7 @@
 /// Brain damage. Should probably be decommissioned and replaced with proper organ damage.
 #define BRAIN "brain"
 
-//Damage flag defines //
+// Damage type defines //
 
 /// Involves corrosive substances.
 #define ACID "acid"
@@ -320,7 +320,7 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 
 /// IF an object is weak against armor, this is the value that any present armor is multiplied by
 #define ARMOR_WEAKENED_MULTIPLIER 2
-/// Armor can't block more than this as a percentage
+/// Armor can't block more than this as a percentage for melee and projectile attacks
 #define ARMOR_MAX_BLOCK 90
 /// Calculates the new armour value after armour penetration. Can return negative values, and those must be caught.
 #define PENETRATE_ARMOR(armor, penetration) (penetration == 100 ? 0 : 100 * (armor - penetration) / (100 - penetration))
@@ -370,3 +370,6 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 #define JOULES_PER_DAMAGE (25 KILO JOULES)
 /// Calculates the amount of burn force when applying this much energy to a mob via electrocution from an energy source.
 #define ELECTROCUTE_DAMAGE(energy) (energy >= 1 KILO JOULES ? clamp(20 + round(energy / JOULES_PER_DAMAGE), 20, 195) + rand(-5,5) : 0)
+
+#define DAMAGE_PACKAGE(amount, damage_type, armor_type, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness)\
+	(new /datum/damage_package(amount, damage_type, armor_type, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness))

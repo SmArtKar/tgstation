@@ -36,21 +36,19 @@
 		to_chat(occupants, "[icon2html(src, occupants)][span_danger("[gear] is critically damaged!")]")
 		playsound(src, gear.destroy_sound, 50)
 
-/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
-	var/damage_taken = ..()
-	if(damage_taken <= 0 || atom_integrity < 0)
-		return damage_taken
+/obj/vehicle/sealed/mecha/take_damage(datum/damage_package/damage, sound_effect = TRUE)
+	. = ..()
+	if(!. || atom_integrity < 0)
+		return
 
 	diag_hud_set_mechhealth()
 	spark_system?.start()
-	try_deal_internal_damage(damage_taken)
-	if(damage_taken >= 5 || prob(33))
+	try_deal_internal_damage(.)
+	if(. >= 5 || prob(33))
 		to_chat(occupants, "[icon2html(src, occupants)][span_userdanger("Taking damage!")]")
-	log_message("Took [damage_taken] points of damage. Damage type: [damage_type]", LOG_MECHA)
+	log_message("Took [.] points of damage. Damage type: [damage.damage_type]", LOG_MECHA)
 
-	return damage_taken
-
-/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armor_penetration)
+/obj/vehicle/sealed/mecha/run_atom_armor(datum/damage_package/damage)
 	. = ..()
 	if(attack_dir)
 		var/facing_modifier = get_armor_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))

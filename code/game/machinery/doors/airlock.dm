@@ -1549,11 +1549,11 @@
 		log_combat(user, src, message)
 		add_hiddenprint(user)
 
-/obj/machinery/door/airlock/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
-	if((damage_amount >= atom_integrity) && (damage_flag == BOMB))
+/obj/machinery/door/airlock/take_damage(datum/damage_package/damage, sound_effect = TRUE)
+	if(damage.amount >= atom_integrity && damage.armor_type == BOMB)
 		obj_flags |= NO_DEBRIS_AFTER_DECONSTRUCTION  //If an explosive took us out, don't drop the assembly
 	. = ..()
-	if(atom_integrity < (0.75 * max_integrity))
+	if(. && atom_integrity < (0.75 * max_integrity))
 		update_appearance()
 
 /obj/machinery/door/airlock/proc/prepare_deconstruction_assembly(obj/structure/door_assembly/assembly)

@@ -31,7 +31,7 @@
 
 	return TRUE
 
-/obj/structure/closet/crate/secure/syndicrate/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
+/obj/structure/closet/crate/secure/syndicrate/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	if(created_items)
 		return ..()
 	if(damage_amount < DAMAGE_PRECISION)

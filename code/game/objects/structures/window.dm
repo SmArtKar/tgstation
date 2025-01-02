@@ -320,7 +320,7 @@
 	return TRUE
 
 
-/obj/structure/window/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
+/obj/structure/window/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	if(.) //received damage
 		update_nearby_icons()

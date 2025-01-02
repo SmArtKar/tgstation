@@ -11,13 +11,13 @@
 	icon = 'icons/mob/nonhuman-player/alien.dmi'
 	max_integrity = 100
 
-/obj/structure/alien/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	if(damage_flag == MELEE)
-		switch(damage_type)
+/obj/structure/alien/run_atom_armor(datum/damage_package/damage)
+	if(damage.armor_type == MELEE)
+		switch(damage.damage_type)
 			if(BRUTE)
-				damage_amount *= 0.25
+				damage.amount *= 0.25
 			if(BURN)
-				damage_amount *= 2
+				damage.amount *= 2
 	. = ..()
 
 /obj/structure/alien/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)

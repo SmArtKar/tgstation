@@ -103,9 +103,8 @@
 		'sound/mobs/non-humanoids/pony/whinny03.ogg'
 	)), 50)
 
-/mob/living/basic/pony/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
+/mob/living/basic/pony/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
-
 	if (prob(33))
 		whinny_angrily()
 

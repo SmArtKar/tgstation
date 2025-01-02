@@ -133,8 +133,8 @@
 /obj/structure/projected_forcefield/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	playsound(loc, 'sound/items/weapons/egloves.ogg', 80, TRUE)
 
-/obj/structure/projected_forcefield/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/projected_forcefield/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	if(sound_effect)
-		play_attack_sound(damage_amount, damage_type, damage_flag)
+		play_attack_sound(damage.amount, damage.damage_type, damage.armor_type)
 	if(generator)
-		generator.shield_integrity = max(generator.shield_integrity - damage_amount, 0)
+		generator.shield_integrity = max(generator.shield_integrity - damage.amount, 0)

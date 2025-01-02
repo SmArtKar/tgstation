@@ -43,7 +43,7 @@
 		if(BRUTE)
 			playsound(loc, 'sound/effects/empulse.ogg', 75, TRUE)
 
-/obj/structure/emergency_shield/take_damage(damage, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/emergency_shield/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	if(.) //damage was dealt
 		new /obj/effect/temp_visual/impact_effect/ion(loc)
@@ -64,7 +64,7 @@
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/structure/emergency_shield/regenerating/take_damage(damage, damage_type, damage_flag, sound_effect, attack_dir)
+/obj/structure/emergency_shield/regenerating/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	if(.)
 		// We took some damage so we'll start processing to heal said damage.
@@ -587,10 +587,10 @@
 			playsound(loc, 'sound/effects/empulse.ogg', 75, TRUE)
 
 //the shield wall is immune to damage but it drains the stored power of the generators.
-/obj/machinery/shieldwall/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/machinery/shieldwall/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
-	if(damage_type == BRUTE || damage_type == BURN)
-		drain_power(damage_amount)
+	if(. && damage.damage_type == BRUTE || damage.damage_type == BURN)
+		drain_power(.)
 
 /// succs power from the connected shield wall generator
 /obj/machinery/shieldwall/proc/drain_power(drain_amount)

@@ -551,9 +551,10 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/newscaster, 30)
 	else
 		take_damage(5, BRUTE, MELEE)
 
-/obj/machinery/newscaster/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/machinery/newscaster/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
-	update_appearance()
+	if (.)
+		update_appearance()
 
 /**
  * Sends photo data to build the newscaster article.

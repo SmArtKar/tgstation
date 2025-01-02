@@ -392,10 +392,10 @@
 	try_to_crowbar_secondary(tool, user, forced_open)
 	return ITEM_INTERACT_SUCCESS
 
-/obj/machinery/door/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/machinery/door/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
-		if(damage_amount >= 10 && prob(30))
+		if(damage.amount >= 10 && prob(30))
 			spark_system.start()
 
 /obj/machinery/door/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
