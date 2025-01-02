@@ -791,6 +791,7 @@
 #include "code\datums\chatmessage.dm"
 #include "code\datums\cogbar.dm"
 #include "code\datums\communications.dm"
+#include "code\datums\damage_package.dm"
 #include "code\datums\dash_weapon.dm"
 #include "code\datums\datum.dm"
 #include "code\datums\datumvars.dm"

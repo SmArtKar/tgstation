@@ -15,8 +15,12 @@
 
 /// Regenerate health whenever this status effect is applied or reapplied
 /datum/status_effect/space_regeneration/proc/heal_owner()
-	if(isspaceturf(get_turf(owner)))
-		owner.heal_ordered_damage(healing, list(BRUTE, BURN, OXY, STAMINA, TOX, BRAIN))
+	if(!isspaceturf(get_turf(owner)))
+		return
+
+	var/damage_healed = owner.heal_ordered_damage(healing, list(BRUTE, BURN, OXY, STAMINA, TOX))
+	if (damage_healed < healing)
+		owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, damage_healed - healing)
 
 /datum/status_effect/planet_allergy
 	id = "planet_allergy"
