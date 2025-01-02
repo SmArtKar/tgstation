@@ -356,13 +356,13 @@
 	var/temperature = air_contents.return_temperature()
 	if(temperature >= TANK_MELT_TEMPERATURE)
 		var/temperature_damage_ratio = (temperature - TANK_MELT_TEMPERATURE) / temperature
-		take_damage(max_integrity * temperature_damage_ratio * seconds_per_tick, BURN, FIRE, FALSE, NONE)
+		take_damage(SIMPLE_DAMAGE(max_integrity * temperature_damage_ratio * seconds_per_tick, BURN, FIRE, ATMOS_ATTACK), FALSE)
 		if(QDELETED(src))
 			return TRUE
 
 	if(pressure >= TANK_LEAK_PRESSURE)
 		var/pressure_damage_ratio = (pressure - TANK_LEAK_PRESSURE) / (TANK_RUPTURE_PRESSURE - TANK_LEAK_PRESSURE)
-		take_damage(max_integrity * pressure_damage_ratio * seconds_per_tick, BRUTE, BOMB, FALSE, NONE)
+		take_damage(SIMPLE_DAMAGE(max_integrity * pressure_damage_ratio * seconds_per_tick, BRUTE, BOMB, ATMOS_ATTACK), FALSE)
 		return TRUE
 	return FALSE
 

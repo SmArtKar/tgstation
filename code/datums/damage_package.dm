@@ -9,7 +9,7 @@
 	/// Defines what sort of armor protects from this damage
 	var/damage_flag = null
 	/// Flags defining what sort of an attack this is: Melee, unarmed, projectile, magical, etc.
-	var/type_flags = NONE
+	var/attack_flags = NONE
 	/// Bodypart which this attack was targeting, can be both a bodypart object or just a zone define
 	var/def_zone = null
 	/// Direction from which this attack came
@@ -37,7 +37,7 @@
 	amount = 0,
 	damage_type = BRUTE,
 	damage_flag = null,
-	damage_flags = NONE,
+	attack_flags = NONE,
 	def_zone = null,
 	attack_dir = NONE,
 	armor_penetration = 0,
@@ -58,8 +58,8 @@
 		src.damage_type = damage_type
 	if (!isnull(damage_flag))
 		src.damage_flag = damage_flag
-	if (!isnull(type_flags))
-		src.type_flags = type_flags
+	if (!isnull(attack_flags))
+		src.attack_flags = attack_flags
 	if (!isnull(def_zone))
 		src.def_zone = def_zone
 	if (!isnull(attack_dir))

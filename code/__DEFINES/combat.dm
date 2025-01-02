@@ -127,18 +127,27 @@ DEFINE_BITFIELD(status_flags, list(
 //slowdown when crawling
 #define CRAWLING_ADD_SLOWDOWN 4
 
-//Attack types for checking block reactions
+// Attack flags for damage packages
 /// Attack was made with a melee weapon
-#define MELEE_ATTACK 1
-/// Attack is a punch or kick.
-/// Mob attacks are not classified as unarmed (currently).
-#define UNARMED_ATTACK 2
-/// A projectile is hitting us.
-#define PROJECTILE_ATTACK 3
-/// A thrown item is hitting us.
-#define THROWN_PROJECTILE_ATTACK 4
-/// We're being tackled or leaped at.
-#define LEAP_ATTACK 5
+#define MELEE_ATTACK (1<<0)
+/// Attack is a punch or kick, or basicmob attack
+#define UNARMED_ATTACK (1<<1)
+/// A projectile is hitting us
+#define PROJECTILE_ATTACK (1<<2)
+/// A thrown item is hitting us
+#define THROWN_PROJECTILE_ATTACK (1<<3)
+/// We're being tackled or leaped at
+#define LEAP_ATTACK (1<<4)
+/// This damage is from reagent metabolism
+#define REAGENT_ATTACK (1<<5)
+/// This damage is from atmospherics processing (extreme heat or pressure)
+#define ATMOS_ATTACK (1<<6)
+/// This damage is from a blob
+#define BLOB_ATTACK (1<<7)
+/// This damage is from a basicmob attack. Does not guarantee its a melee.
+#define BASICMOB_ATTACK (1<<8)
+/// This damage is from a magical source
+#define MAGIC_ATTACK (1<<9)
 
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))
@@ -371,5 +380,8 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 /// Calculates the amount of burn force when applying this much energy to a mob via electrocution from an energy source.
 #define ELECTROCUTE_DAMAGE(energy) (energy >= 1 KILO JOULES ? clamp(20 + round(energy / JOULES_PER_DAMAGE), 20, 195) + rand(-5,5) : 0)
 
-#define DAMAGE_PACKAGE(amount, damage_type, damage_flag, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness)\
-	(new /datum/damage_package(amount, damage_type, damage_flag, damage_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness))
+// Ideally should not be used, but most sources don't use information beyond these 4-5 so whatever
+#define SIMPLE_DAMAGE(amount, damage_type, damage_flag, attack_flags) (new /datum/damage_package(amount, damage_type, damage_flag, attack_flags))
+#define DIRECTIONAL_DAMAGE(amount, damage_type, damage_flag, attack_flags, attack_dir) (new /datum/damage_package(amount, damage_type, damage_flag, attack_flags, attack_dir = attack_dir))
+#define DAMAGE_PACKAGE(amount, damage_type, damage_flag, attack_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness)\
+	(new /datum/damage_package(amount, damage_type, damage_flag, attack_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness))

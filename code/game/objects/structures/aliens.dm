@@ -248,7 +248,7 @@
 	return exposed_temperature > 300
 
 /obj/structure/alien/weeds/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(SIMPLE_DAMAGE(5, BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/structure/alien/weeds/node
 	name = "glowing resin"
@@ -444,7 +444,7 @@
 	return exposed_temperature > 500
 
 /obj/structure/alien/egg/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(SIMPLE_DAMAGE(5, BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/structure/alien/egg/atom_break(damage_flag)
 	. = ..()

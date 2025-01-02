@@ -428,21 +428,21 @@
 
 					if(istype(current_thing, /obj/structure/window))
 						if(prob(15))
-							current_thing.take_damage(rand(30, 90))
+							current_thing.take_damage(SIMPLE_DAMAGE(rand(30, 90), BRUTE, null, null), FALSE)
 						continue
 
 					if(istype(current_thing, /obj/structure/table) && prob(40))
-						current_thing.take_damage(100)
+						current_thing.take_damage(SIMPLE_DAMAGE(100, BRUTE, null, null), FALSE)
 						continue
 
 					if(istype(current_thing, /obj/structure/chair) && prob(60))
-						current_thing.take_damage(150)
+						current_thing.take_damage(SIMPLE_DAMAGE(150, BRUTE, null, null), FALSE)
 						continue
 
 					if(istype(current_thing, /obj/machinery/computer) && prob(30))
 						if(istype(current_thing, /obj/machinery/computer/communications))
 							continue //To prevent the shuttle from getting autocalled at the start of the round
-						current_thing.take_damage(160)
+						current_thing.take_damage(SIMPLE_DAMAGE(160, BRUTE, null, null), FALSE)
 						continue
 
 					if(istype(current_thing, /obj/machinery/vending) && prob(45))
@@ -451,11 +451,11 @@
 							vendor_to_trash.tilt(get_turf(vendor_to_trash), 0) // crit effects can do some real weird shit, lets disable it
 
 						if(prob(50))
-							vendor_to_trash.take_damage(150)
+							vendor_to_trash.take_damage(SIMPLE_DAMAGE(150, BRUTE, null, null), FALSE)
 						continue
 
 					if(istype(current_thing, /obj/structure/fireaxecabinet)) //A staple of revolutionary behavior
-						current_thing.take_damage(90)
+						current_thing.take_damage(SIMPLE_DAMAGE(90, BRUTE, null, null), FALSE)
 						continue
 
 					if(istype(current_thing, /obj/item/bedsheet/captain))

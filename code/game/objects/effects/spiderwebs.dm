@@ -29,7 +29,7 @@
 	return exposed_temperature > 350
 
 /obj/structure/spider/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(SIMPLE_DAMAGE(5, BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/structure/spider/stickyweb
 	plane = FLOOR_PLANE

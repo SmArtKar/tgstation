@@ -238,7 +238,7 @@ GLOBAL_VAR_INIT(glowshrooms, 0)
  */
 /obj/structure/glowshroom/proc/Decay(amount)
 	myseed.adjust_endurance(-amount * endurance_decay_rate)
-	take_damage(amount)
+	take_damage(SIMPLE_DAMAGE(amount, BRUTE, null, null), FALSE)
 	// take_damage could qdel our shroom, so check beforehand
 	// if our endurance dropped before the min plant endurance, then delete our shroom anyways
 	if (!QDELETED(src) && myseed.endurance <= MIN_PLANT_ENDURANCE)
@@ -252,7 +252,7 @@ GLOBAL_VAR_INIT(glowshrooms, 0)
 	return exposed_temperature > 300
 
 /obj/structure/glowshroom/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(SIMPLE_DAMAGE(5, BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/structure/glowshroom/acid_act(acidpwr, acid_volume)
 	visible_message(span_danger("[src] melts away!"))

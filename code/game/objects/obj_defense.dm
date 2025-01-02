@@ -5,7 +5,7 @@
 	if(isitem(hit_by))
 		var/obj/item/as_item = hit_by
 		damage_taken *= as_item.demolition_mod
-	take_damage(damage_taken, BRUTE, MELEE, 1, get_dir(src, hit_by))
+	take_damage(DIRECTIONAL_DAMAGE(damage_taken, BRUTE, MELEE, THROWN_PROJECTILE_ATTACK, get_dir(src, hit_by)), TRUE)
 
 /obj/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)
@@ -15,15 +15,15 @@
 	if(QDELETED(src))
 		return TRUE
 	if(target == src)
-		take_damage(INFINITY, BRUTE, BOMB, 0)
+		take_damage(SIMPLE_DAMAGE(INFINITY, BRUTE, BOMB, null), FALSE)
 		return TRUE
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			take_damage(INFINITY, BRUTE, BOMB, 0)
+			take_damage(SIMPLE_DAMAGE(INFINITY, BRUTE, BOMB, null), FALSE)
 		if(EXPLODE_HEAVY)
-			take_damage(rand(100, 250), BRUTE, BOMB, 0)
+			take_damage(SIMPLE_DAMAGE(rand(100, 250), BRUTE, BOMB, null), FALSE)
 		if(EXPLODE_LIGHT)
-			take_damage(rand(10, 90), BRUTE, BOMB, 0)
+			take_damage(SIMPLE_DAMAGE(rand(10, 90), BRUTE, BOMB, null), FALSE)
 
 	return TRUE
 
@@ -34,14 +34,8 @@
 
 	var/damage_sustained = 0
 	if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-		damage_sustained = take_damage(
-			hitting_projectile.damage * hitting_projectile.demolition_mod,
-			hitting_projectile.damage_type,
-			hitting_projectile.armor_flag,
-			FALSE,
-			REVERSE_DIR(hitting_projectile.dir),
-			hitting_projectile.armor_penetration,
-		)
+		damage_sustained = take_damage(hitting_projectile.generage_damage(src), FALSE)
+
 	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
 		visible_message(
 			span_danger("[src] is hit by \a [hitting_projectile][damage_sustained ? "" : ", [no_damage_feedback]"]!"),
@@ -56,7 +50,18 @@
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-	var/damage = take_damage(hulk_damage(), BRUTE, MELEE, 0, get_dir(src, user))
+
+	var/damage = take_damage(new /datum/damage_package(
+		hulk_damage(),
+		BRUTE,
+		MELEE,
+		UNARMED_ATTACK,
+		user.zone_selected,
+		get_dir(src, user),
+		hit_by = user,
+		source = user,
+		)
+	)
 	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 
@@ -67,7 +72,7 @@
 		var/turf/T = loc
 		if(T.underfloor_accessibility < UNDERFLOOR_INTERACTABLE && HAS_TRAIT(src, TRAIT_T_RAY_VISIBLE))
 			return
-	take_damage(400, BRUTE, MELEE, 0, get_dir(src, B))
+	take_damage(DIRECTIONAL_DAMAGE(400, BRUTE, MELEE, BLOB_ATTACK, get_dir(src, B)), FALSE)
 
 /obj/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
 	if(attack_generic(user, 60, BRUTE, MELEE, 0))
@@ -99,7 +104,7 @@
 
 /obj/proc/collision_damage(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	var/amt = max(0, ((force - (move_resist * MOVE_FORCE_CRUSH_RATIO)) / (move_resist * MOVE_FORCE_CRUSH_RATIO)) * 10)
-	take_damage(amt, BRUTE, attack_dir = REVERSE_DIR(direction))
+	take_damage(DIRECTIONAL_DAMAGE(amt, BRUTE, null, NONE, REVERSE_DIR(direction)))
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src
@@ -132,7 +137,7 @@
 		if(our_turf.underfloor_accessibility < UNDERFLOOR_INTERACTABLE && HAS_TRAIT(src, TRAIT_T_RAY_VISIBLE))
 			return
 	if(exposed_temperature && !(resistance_flags & FIRE_PROOF))
-		take_damage(clamp(0.02 * exposed_temperature, 0, 20), BURN, FIRE, 0)
+		take_damage(SIMPLE_DAMAGE(clamp(0.02 * exposed_temperature, 0, 20), BURN, FIRE, ATMOS_ATTACK), FALSE)
 	if(!(resistance_flags & ON_FIRE) && (resistance_flags & FLAMMABLE) && !(resistance_flags & FIRE_PROOF))
 		AddComponent(/datum/component/burning, custom_fire_overlay || GLOB.fire_overlay, burning_particles)
 		SEND_SIGNAL(src, COMSIG_ATOM_FIRE_ACT, exposed_temperature, exposed_volume)
