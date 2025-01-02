@@ -374,7 +374,7 @@
 	inhand_y_dimension = 64
 	force = 20
 	throwforce = 17
-	armour_penetration = 50
+	armor_penetration = 50
 	sharpness = SHARP_EDGED
 	bare_wound_bonus = 10
 	layer = MOB_LAYER

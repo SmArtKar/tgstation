@@ -37,7 +37,7 @@
 	if(!vulnerable_projectiles)
 		vulnerable_projectiles = string_list(MINING_MOB_PROJECTILE_VULNERABILITY)
 	AddElement(\
-		/datum/element/ranged_armour,\
+		/datum/element/ranged_armor,\
 		minimum_projectile_force = 30,\
 		below_projectile_multiplier = 0.3,\
 		vulnerable_projectile_types = vulnerable_projectiles,\

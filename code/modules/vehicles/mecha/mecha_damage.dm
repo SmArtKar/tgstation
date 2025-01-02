@@ -14,7 +14,7 @@
  */
 
 /// returns a number for the damage multiplier for this relative angle/dir
-/obj/vehicle/sealed/mecha/proc/get_armour_facing(relative_dir)
+/obj/vehicle/sealed/mecha/proc/get_armor_facing(relative_dir)
 	switch(relative_dir)
 		if(180) // BACKSTAB!
 			return facing_modifiers[MECHA_BACK_ARMOUR]

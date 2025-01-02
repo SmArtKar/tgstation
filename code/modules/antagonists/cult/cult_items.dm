@@ -26,7 +26,7 @@
 	block_chance = 25
 	wound_bonus = -10
 	bare_wound_bonus = 20
-	armour_penetration = 35
+	armor_penetration = 35
 	block_sound = 'sound/items/weapons/parry.ogg'
 
 /obj/item/melee/cultblade/dagger/Initialize(mapload)
@@ -320,7 +320,7 @@ Striking a noncultist, however, will tear their flesh."}
 		wielder_spell.Grant(user)
 	free_use = TRUE
 	force += 5
-	armour_penetration += 10
+	armor_penetration += 10
 	light_range += 3
 	trapped_entity.update_mob_action_buttons()
 
@@ -331,7 +331,7 @@ Striking a noncultist, however, will tear their flesh."}
 	visible_message(span_danger("[user] has bound [src]!"))
 	bound = TRUE
 	force -= 5
-	armour_penetration -= 10
+	armor_penetration -= 10
 	free_use = FALSE // it's a cult blade and you sealed away the other power.
 	light_range -= 3
 	for(var/datum/action/cooldown/spell/sword_spell as anything in path_sword_actions)
@@ -1143,7 +1143,7 @@ Striking a noncultist, however, will tear their flesh."}
 	force = 17
 	throwforce = 40
 	throw_speed = 2
-	armour_penetration = 30
+	armor_penetration = 30
 	block_chance = 30
 	slot_flags = null
 	attack_verb_continuous = list("attacks", "slices", "shreds", "sunders", "lacerates", "cleaves")

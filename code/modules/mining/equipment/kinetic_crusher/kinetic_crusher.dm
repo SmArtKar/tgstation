@@ -22,7 +22,7 @@
 	slot_flags = ITEM_SLOT_BACK
 	throwforce = 5
 	throw_speed = 4
-	armour_penetration = 10
+	armor_penetration = 10
 	custom_materials = list(/datum/material/iron=HALF_SHEET_MATERIAL_AMOUNT*1.15, /datum/material/glass=HALF_SHEET_MATERIAL_AMOUNT*2.075)
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	attack_verb_continuous = list("smashes", "crushes", "cleaves", "chops", "pulps")

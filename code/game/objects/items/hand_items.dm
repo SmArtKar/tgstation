@@ -555,7 +555,7 @@
 	speed = 0.66
 	damage_type = BRUTE
 	damage = 0 // love can't actually hurt you
-	armour_penetration = 100 // but if it could, it would cut through even the thickest plate
+	armor_penetration = 100 // but if it could, it would cut through even the thickest plate
 	var/silent_blown = FALSE
 
 /obj/projectile/kiss/Initialize(mapload)
@@ -651,7 +651,7 @@
 	damage = /obj/projectile/ink_spit::damage
 	damage_type = /obj/projectile/ink_spit::damage_type
 	armor_flag = /obj/projectile/ink_spit::armor_flag
-	armour_penetration = /obj/projectile/ink_spit::armour_penetration
+	armor_penetration = /obj/projectile/ink_spit::armor_penetration
 	impact_effect_type = /obj/projectile/ink_spit::impact_effect_type
 	hitsound = /obj/projectile/ink_spit::hitsound
 	hitsound_wall = /obj/projectile/ink_spit::hitsound_wall
@@ -668,7 +668,7 @@
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/red_laser
 	damage_type = BURN
 	armor_flag = LASER
-	armour_penetration = 0
+	armor_penetration = 0
 	damage = 25
 	wound_bonus = -20
 	bare_wound_bonus = 40

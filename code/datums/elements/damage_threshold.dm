@@ -27,7 +27,7 @@
 	damage,
 	attack_text,
 	attack_type,
-	armour_penetration,
+	armor_penetration,
 	damage_type,
 	attack_flag,
 )

@@ -110,7 +110,7 @@
 	damage_type = BRUTE
 	damage = 10
 	stamina = 20
-	armour_penetration = 50
+	armor_penetration = 50
 	hitsound = 'sound/effects/coin2.ogg'
 	icon_state = "pellet"
 	color = COLOR_GOLD

@@ -18,14 +18,14 @@
 /obj/projectile/bullet/c9mm/ap
 	name = "9mm armor-piercing bullet"
 	damage = 27
-	armour_penetration = 40
+	armor_penetration = 40
 	embed_type = null
 	shrapnel_type = null
 
 /obj/projectile/bullet/c9mm/hp
 	name = "9mm hollow-point bullet"
 	damage = 40
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 
 /obj/projectile/bullet/incendiary/c9mm
 	name = "9mm incendiary bullet"
@@ -41,12 +41,12 @@
 /obj/projectile/bullet/c10mm/ap
 	name = "10mm armor-piercing bullet"
 	damage = 35
-	armour_penetration = 40
+	armor_penetration = 40
 
 /obj/projectile/bullet/c10mm/hp
 	name = "10mm hollow-point bullet"
 	damage = 50
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 
 /obj/projectile/bullet/incendiary/c10mm
 	name = "10mm incendiary bullet"
@@ -56,7 +56,7 @@
 /obj/projectile/bullet/c10mm/reaper
 	name = "10mm reaper pellet"
 	damage = 50
-	armour_penetration = 40
+	armor_penetration = 40
 	tracer_type = /obj/effect/projectile/tracer/sniper
 	impact_type = /obj/effect/projectile/impact/sniper
 	muzzle_type = /obj/effect/projectile/muzzle/sniper

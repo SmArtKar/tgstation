@@ -21,7 +21,7 @@
 	shrapnel_type = null
 	ricochets_max = 0
 	/// Whether we do extra damage when hitting a mech or silicon
-	var/anti_armour_damage = 0
+	var/anti_armor_damage = 0
 	/// Whether the rocket is capable of instantly killing a living target
 	var/random_crits_enabled = TRUE // Worst thing Valve ever added
 
@@ -35,12 +35,12 @@
 	..()
 
 	do_boom(target, random_crit_gib)
-	if(anti_armour_damage && ismecha(target))
+	if(anti_armor_damage && ismecha(target))
 		var/obj/vehicle/sealed/mecha/M = target
-		M.take_damage(anti_armour_damage)
+		M.take_damage(anti_armor_damage)
 	if(issilicon(target))
 		var/mob/living/silicon/S = target
-		S.take_overall_damage(anti_armour_damage*0.75, anti_armour_damage*0.25)
+		S.take_overall_damage(anti_armor_damage*0.75, anti_armor_damage*0.25)
 	return BULLET_ACT_HIT
 
 /** This proc allows us to customize the conditions necesary for the rocket to detonate, allowing for different explosions for living targets, turf targets,
@@ -61,9 +61,9 @@ among other potential differences. This granularity is helpful for things like t
 	desc = "I am become death."
 	icon_state = "84mm-heap"
 	damage = 80
-	armour_penetration = 100
+	armor_penetration = 100
 	dismemberment = 100
-	anti_armour_damage = 200
+	anti_armor_damage = 200
 
 /obj/projectile/bullet/rocket/heap/do_boom(atom/target, blocked=0)
 	explosion(target, devastation_range = -1, heavy_impact_range = 1, light_impact_range = 3, flame_range = 4, flash_range = 1, adminlog = FALSE)
@@ -104,7 +104,7 @@ among other potential differences. This granularity is helpful for things like t
 	desc = "Human friendly, metal unfriendly."
 	icon_state = "low_yield_rocket"
 	damage = 30
-	anti_armour_damage = 80 //Doesn't (probably) kill borgs in one shot, but it will hurt
+	anti_armor_damage = 80 //Doesn't (probably) kill borgs in one shot, but it will hurt
 	random_crits_enabled = FALSE //yeah, no
 
 /obj/projectile/bullet/rocket/pep/do_boom(atom/target, blocked=0)

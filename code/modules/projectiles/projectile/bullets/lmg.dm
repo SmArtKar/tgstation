@@ -29,20 +29,20 @@
 /obj/projectile/bullet/a7mm
 	name = "7mm bullet"
 	damage = 30
-	armour_penetration = 5
+	armor_penetration = 5
 	wound_bonus = -50
 	wound_falloff_tile = 0
 
 /obj/projectile/bullet/a7mm/ap
 	name = "7mm armor-piercing bullet"
 	damage = 25
-	armour_penetration = 75
+	armor_penetration = 75
 
 /obj/projectile/bullet/a7mm/hp
 	name = "7mm hollow-point bullet"
 	damage = 50
 	sharpness = SHARP_EDGED
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 	wound_bonus = -40
 	bare_wound_bonus = 30
 	wound_falloff_tile = -8

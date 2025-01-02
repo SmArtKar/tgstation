@@ -104,7 +104,7 @@
 	icon_state = "dio_knife"
 	speed = 0.5
 	damage = 25
-	armour_penetration = 100
+	armor_penetration = 100
 	sharpness = SHARP_EDGED
 	wound_bonus = 15
 	pass_flags = PASSTABLE | PASSFLAPS

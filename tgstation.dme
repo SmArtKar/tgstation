@@ -1564,7 +1564,7 @@
 #include "code\datums\elements\quality_food_ingredient.dm"
 #include "code\datums\elements\radiation_protected_clothing.dm"
 #include "code\datums\elements\radioactive.dm"
-#include "code\datums\elements\ranged_armour.dm"
+#include "code\datums\elements\ranged_armor.dm"
 #include "code\datums\elements\relay_attackers.dm"
 #include "code\datums\elements\ridable.dm"
 #include "code\datums\elements\rust.dm"

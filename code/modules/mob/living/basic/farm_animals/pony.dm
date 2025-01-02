@@ -103,7 +103,7 @@
 		'sound/mobs/non-humanoids/pony/whinny03.ogg'
 	)), 50)
 
-/mob/living/basic/pony/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+/mob/living/basic/pony/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
 	. = ..()
 
 	if (prob(33))

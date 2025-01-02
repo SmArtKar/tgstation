@@ -9,7 +9,7 @@
 	sharpness = SHARP_POINTY
 	wound_bonus = -10
 	bare_wound_bonus = 15
-	armour_penetration = 6
+	armor_penetration = 6
 	demolition_mod = 1.2
 	throwforce = 11
 	throw_range = 8
@@ -120,7 +120,7 @@
 	sharpness = SHARP_POINTY
 	wound_bonus = -5
 	bare_wound_bonus = 20
-	armour_penetration = 12
+	armor_penetration = 12
 	block_chance = 33
 	throwforce = 7
 	throw_range = 4
@@ -191,7 +191,7 @@
 	attack_speed *= multiplier
 	demolition_mod *= multiplier
 	block_chance *= multiplier
-	armour_penetration *= multiplier
+	armor_penetration *= multiplier
 	wound_bonus *= multiplier
 	bare_wound_bonus *= multiplier
 

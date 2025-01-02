@@ -21,7 +21,7 @@
 	toolspeed = 0.375
 	demolition_mod = 0.8
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
-	armour_penetration = 35
+	armor_penetration = 35
 	attack_verb_continuous = list("attacks", "slashes", "slices", "tears", "lacerates", "rips", "dices", "rends")
 	attack_verb_simple = list("attack", "slash", "slice", "tear", "lacerate", "rip", "dice", "rend")
 	var/after_use_message = ""
@@ -225,7 +225,7 @@
 	block_chance = 35
 	wound_bonus = 25
 	bare_wound_bonus = 15
-	armour_penetration = 35
+	armor_penetration = 35
 	icon_state = "cursed_blade"
 	inhand_icon_state = "cursed_blade"
 

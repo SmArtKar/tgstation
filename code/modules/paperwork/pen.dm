@@ -91,7 +91,7 @@
 		"damage" = max(5, throwforce),
 		"speed" = max(0, throw_speed - 3),
 		"embedding" = get_embed(),
-		"armour_penetration" = armour_penetration,
+		"armor_penetration" = armor_penetration,
 		"wound_bonus" = wound_bonus,
 		"bare_wound_bonus" = bare_wound_bonus,
 		"demolition_mod" = demolition_mod,
@@ -308,7 +308,7 @@
 	attack_verb_continuous = list("slashes", "slices", "tears", "lacerates", "rips", "dices", "cuts") //these won't show up if the pen is off
 	attack_verb_simple = list("slash", "slice", "tear", "lacerate", "rip", "dice", "cut")
 	sharpness = SHARP_POINTY
-	armour_penetration = 20
+	armor_penetration = 20
 	bare_wound_bonus = 10
 	item_flags = NO_BLOOD_ON_ITEM
 	light_system = OVERLAY_LIGHT

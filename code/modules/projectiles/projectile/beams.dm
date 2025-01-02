@@ -79,19 +79,19 @@
 	damage = 28
 	stamina = 35
 	light_color = COLOR_STRONG_VIOLET
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 
 /obj/projectile/beam/laser/musket/prime
 	name = "mid-power laser"
 	damage = 25
 	stamina = 20
-	weak_against_armour = FALSE
+	weak_against_armor = FALSE
 
 /obj/projectile/beam/weak
 	damage = 15
 
 /obj/projectile/beam/weak/penetrator
-	armour_penetration = 50
+	armor_penetration = 50
 
 /obj/projectile/beam/practice
 	name = "practice laser"
@@ -120,7 +120,7 @@
 	icon_state = "xray"
 	damage = 15
 	range = 15
-	armour_penetration = 100
+	armor_penetration = 100
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE | PASSDOORS
 
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/green_laser
@@ -147,11 +147,11 @@
 
 /obj/projectile/beam/disabler/smoothbore
 	name = "unfocused disabler beam"
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 
 /obj/projectile/beam/disabler/smoothbore/prime
 	name = "focused disabler beam"
-	weak_against_armour = FALSE
+	weak_against_armor = FALSE
 	damage = 35 //slight increase in damage just for the hell of it
 
 /obj/projectile/beam/pulse

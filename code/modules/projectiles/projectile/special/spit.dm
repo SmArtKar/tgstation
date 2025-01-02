@@ -5,7 +5,7 @@
 	damage_type = STAMINA
 	armor_flag = BIO
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/neurotoxin
-	armour_penetration = 50
+	armor_penetration = 50
 
 /obj/projectile/neurotoxin/on_hit(atom/target, blocked = 0, pierce_hit)
 	if(isalien(target))
@@ -23,7 +23,7 @@
 	damage_type = STAMINA
 	armor_flag = BIO
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/ink_spit
-	armour_penetration = 50
+	armor_penetration = 50
 	hitsound = SFX_DESECRATION
 	hitsound_wall = SFX_DESECRATION
 
@@ -34,7 +34,7 @@
 		var/datum/status_effect/organ_set_bonus/fish/bonus = living?.has_status_effect(/datum/status_effect/organ_set_bonus/fish)
 		if(bonus?.bonus_active)
 			damage = 12
-			armour_penetration = 65
+			armor_penetration = 65
 
 	AddComponent(/datum/component/splat, \
 		memory_type = /datum/memory/witnessed_inking, \

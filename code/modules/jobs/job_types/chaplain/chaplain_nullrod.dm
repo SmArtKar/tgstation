@@ -236,7 +236,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi'
 	w_class = WEIGHT_CLASS_BULKY
-	armour_penetration = 35
+	armor_penetration = 35
 	slot_flags = ITEM_SLOT_BACK
 	sharpness = SHARP_EDGED
 	attack_verb_continuous = list("chops", "slices", "cuts", "zandatsu's")
@@ -732,7 +732,7 @@
 	righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi'
 	slot_flags = ITEM_SLOT_BELT
 	damtype = BRAIN
-	armour_penetration = 35
+	armor_penetration = 35
 	attack_verb_continuous = list("pulses", "mends", "cuts")
 	attack_verb_simple = list("pulse", "mend", "cut")
 	hitsound = 'sound/effects/sparks/sparks4.ogg'
@@ -750,7 +750,7 @@
 	lefthand_file = 'icons/mob/inhands/antag/clockwork_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/clockwork_righthand.dmi'
 	slot_flags = ITEM_SLOT_BELT
-	armour_penetration = 10
+	armor_penetration = 10
 	sharpness = SHARP_POINTY
 	w_class = WEIGHT_CLASS_HUGE
 	attack_verb_continuous = list("stabs", "pokes", "slashes", "clocks")
@@ -774,7 +774,7 @@
 	throw_speed = 3
 	throw_range = 7
 	throwforce = 15
-	armour_penetration = 10
+	armor_penetration = 10
 	sharpness = SHARP_POINTY
 	w_class = WEIGHT_CLASS_HUGE
 	attack_verb_continuous = list("stabs", "pokes", "slashes", "clocks")
@@ -945,8 +945,8 @@
 
 	// Affecting body part check.
 	var/obj/item/bodypart/affecting = living_target.get_bodypart(user.get_random_valid_zone(user.zone_selected))
-	// Target's armor value. Accounts for armor penetration even though we have no armour_penetration defined on the parent.
-	var/armor_block = living_target.run_armor_check(affecting, MELEE, armour_penetration = armour_penetration)
+	// Target's armor value. Accounts for armor penetration even though we have no armor_penetration defined on the parent.
+	var/armor_block = living_target.run_armor_check(affecting, MELEE, armor_penetration = armor_penetration)
 
 	// We got a sneak attack!
 	living_target.apply_damage(round(sneak_attack_dice, DAMAGE_PRECISION), BRUTE, def_zone = affecting, blocked = armor_block, wound_bonus = bare_wound_bonus, sharpness = SHARP_EDGED)

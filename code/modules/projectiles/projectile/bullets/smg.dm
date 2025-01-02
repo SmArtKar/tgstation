@@ -8,12 +8,12 @@
 
 /obj/projectile/bullet/c45/ap
 	name = ".45 armor-piercing bullet"
-	armour_penetration = 50
+	armor_penetration = 50
 
 /obj/projectile/bullet/c45/hp
 	name = ".45 hollow point bullet"
 	damage = 50
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 
 /obj/projectile/bullet/incendiary/c45
 	name = ".45 incendiary bullet"
@@ -32,7 +32,7 @@
 /obj/projectile/bullet/c46x30mm/ap
 	name = "4.6x30mm armor-piercing bullet"
 	damage = 15
-	armour_penetration = 40
+	armor_penetration = 40
 	embed_type = null
 
 /obj/projectile/bullet/incendiary/c46x30mm

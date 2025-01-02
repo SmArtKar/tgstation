@@ -249,7 +249,7 @@
 	hitsound = 'sound/items/weapons/rapierhit.ogg'
 	block_sound = 'sound/items/weapons/parry.ogg'
 	force = 20
-	armour_penetration = 75
+	armor_penetration = 75
 	block_chance = 50
 	sharpness = SHARP_EDGED
 	max_charges = 4

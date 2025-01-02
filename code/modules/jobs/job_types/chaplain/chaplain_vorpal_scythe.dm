@@ -37,7 +37,7 @@ If the scythe isn't empowered when you sheath it, you take a heap of damage and 
 	inhand_y_dimension = 64
 	w_class = WEIGHT_CLASS_GIGANTIC
 	force = 10 //a lot worse than most nullrods initially. Why did you invest so much into making it vorpal, you dork.
-	armour_penetration = 50 //Very good armor penetration to make up for our abysmal force
+	armor_penetration = 50 //Very good armor penetration to make up for our abysmal force
 	reach = 2 //why yes, this does have reach
 	slot_flags = null
 	sharpness = SHARP_EDGED

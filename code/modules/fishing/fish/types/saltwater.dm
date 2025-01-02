@@ -157,7 +157,7 @@
 	block_chance = 50
 	wound_bonus = 10
 	bare_wound_bonus = 20
-	armour_penetration = 75
+	armor_penetration = 75
 	base_pixel_x = -18
 	pixel_x = -18
 	sprite_width = 13
@@ -189,28 +189,28 @@
 			force -= 11
 			attack_speed -= 0.4 SECONDS
 			block_chance -= 45
-			armour_penetration -= 20
+			armor_penetration -= 20
 			wound_bonus -= 15
 			bare_wound_bonus -= 20
 		if(WEIGHT_CLASS_SMALL)
 			force -= 8
 			attack_speed -= 0.3 SECONDS
 			block_chance -= 30
-			armour_penetration -= 15
+			armor_penetration -= 15
 			wound_bonus -= 10
 			bare_wound_bonus -= 20
 		if(WEIGHT_CLASS_NORMAL)
 			force -= 5
 			attack_speed -= 0.2 SECONDS
 			block_chance -= 20
-			armour_penetration -= 10
+			armor_penetration -= 10
 			wound_bonus -= 10
 			bare_wound_bonus -= 15
 		if(WEIGHT_CLASS_BULKY)
 			force -= 3
 			attack_speed -= 0.1 SECONDS
 			block_chance -= 10
-			armour_penetration -= 5
+			armor_penetration -= 5
 			wound_bonus -= 5
 			bare_wound_bonus -= 10
 		if(WEIGHT_CLASS_GIGANTIC)
@@ -218,20 +218,20 @@
 			attack_speed += 0.2 SECONDS
 			demolition_mod += 0.15
 			block_chance += 10
-			armour_penetration += 5
+			armor_penetration += 5
 			wound_bonus += 5
 			bare_wound_bonus += 10
 
 	if(status == FISH_DEAD)
 		force -= 4 + w_class
 		block_chance -= 25
-		armour_penetration -= 30
+		armor_penetration -= 30
 		wound_bonus -= 10
 		bare_wound_bonus -= 10
 
 /obj/item/fish/swordfish/calculate_fish_force_bonus(bonus_malus)
 	. = ..()
-	armour_penetration += bonus_malus * 5
+	armor_penetration += bonus_malus * 5
 	wound_bonus += bonus_malus * 3
 	bare_wound_bonus += bonus_malus * 5
 	block_chance += bonus_malus * 7

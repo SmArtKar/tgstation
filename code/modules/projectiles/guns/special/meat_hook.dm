@@ -55,7 +55,7 @@
 	pass_flags = PASSTABLE
 	damage = 20
 	stamina = 20
-	armour_penetration = 60
+	armor_penetration = 60
 	damage_type = BRUTE
 	hitsound = 'sound/effects/splat.ogg'
 	/// The chain we send out while we are in motion, referred to as "initial" to not get confused with the chain we use to reel the victim in.

@@ -171,14 +171,14 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throwforce = 20
 	throw_speed = 3
 	throw_range = 5
-	armour_penetration = 35
+	armor_penetration = 35
 
 /obj/item/claymore/cutlass/old
 	name = "old cutlass"
 	desc = parent_type::desc + " This one seems a tad old."
 	force = 24
 	throwforce = 17
-	armour_penetration = 20
+	armor_penetration = 20
 	block_chance = 30
 
 /obj/item/claymore/carrot
@@ -192,7 +192,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throwforce = 7
 	throw_speed = 3
 	throw_range = 7
-	armour_penetration = 5
+	armor_penetration = 5
 	block_chance = 10
 	resistance_flags = NONE
 
@@ -418,7 +418,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throwforce = 10 //10 + 2 (WEIGHT_CLASS_SMALL) * 4 (EMBEDDED_IMPACT_PAIN_MULTIPLIER) = 18 damage on hit due to guaranteed embedding
 	throw_speed = 4
 	embed_type = /datum/embed_data/throwing_star
-	armour_penetration = 40
+	armor_penetration = 40
 
 	w_class = WEIGHT_CLASS_SMALL
 	sharpness = SHARP_POINTY
@@ -765,7 +765,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	throw_speed = 2
 	throw_range = 5
 	w_class = WEIGHT_CLASS_SMALL
-	armour_penetration = 100
+	armor_penetration = 100
 	attack_verb_continuous = list("bludgeons", "whacks", "disciplines")
 	attack_verb_simple = list("bludgeon", "whack", "discipline")
 	resistance_flags = FLAMMABLE

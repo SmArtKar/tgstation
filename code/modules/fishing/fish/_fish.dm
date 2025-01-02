@@ -675,7 +675,7 @@
 	damtype = initial(damtype)
 	attack_speed = initial(attack_speed)
 	block_chance = initial(block_chance)
-	armour_penetration = initial(armour_penetration)
+	armor_penetration = initial(armor_penetration)
 	wound_bonus = initial(wound_bonus)
 	bare_wound_bonus = initial(bare_wound_bonus)
 	toolspeed = initial(toolspeed)

@@ -14,7 +14,7 @@
 	throw_speed = 4
 	demolition_mod = 0.75
 	embed_type = /datum/embed_data/spear
-	armour_penetration = 10
+	armor_penetration = 10
 	custom_materials = list(/datum/material/iron = HALF_SHEET_MATERIAL_AMOUNT, /datum/material/glass= HALF_SHEET_MATERIAL_AMOUNT * 2)
 	hitsound = 'sound/items/weapons/bladeslice.ogg'
 	attack_verb_continuous = list("attacks", "pokes", "jabs", "tears", "lacerates", "gores")
@@ -251,7 +251,7 @@
 	desc = "A haphazardly-constructed yet still deadly weapon. The pinnacle of modern technology."
 
 	throwforce = 22
-	armour_penetration = 15 //Enhanced armor piercing
+	armor_penetration = 15 //Enhanced armor piercing
 	custom_materials = list(/datum/material/bone = HALF_SHEET_MATERIAL_AMOUNT * 7)
 	force_unwielded = 12
 	force_wielded = 20

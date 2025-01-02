@@ -19,7 +19,7 @@
 	maxHealth = 300
 	health = 300
 	obj_damage = 40
-	armour_penetration = 20
+	armor_penetration = 20
 	melee_damage_lower = 20
 	melee_damage_upper = 20
 

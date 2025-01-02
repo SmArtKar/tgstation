@@ -36,7 +36,7 @@
 		to_chat(occupants, "[icon2html(src, occupants)][span_danger("[gear] is critically damaged!")]")
 		playsound(src, gear.destroy_sound, 50)
 
-/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armour_penetration = 0)
+/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
 	var/damage_taken = ..()
 	if(damage_taken <= 0 || atom_integrity < 0)
 		return damage_taken
@@ -50,10 +50,10 @@
 
 	return damage_taken
 
-/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armour_penetration)
+/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armor_penetration)
 	. = ..()
 	if(attack_dir)
-		var/facing_modifier = get_armour_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
+		var/facing_modifier = get_armor_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
 		if(.)
 			. *= facing_modifier
 
@@ -132,7 +132,7 @@
 		damage_type = hitting_projectile.damage_type,
 		damage_flag = hitting_projectile.armor_flag,
 		attack_dir = REVERSE_DIR(hitting_projectile.dir),
-		armour_penetration = hitting_projectile.armour_penetration,
+		armor_penetration = hitting_projectile.armor_penetration,
 	), def_zone)
 
 

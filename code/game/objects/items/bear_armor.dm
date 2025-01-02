@@ -15,7 +15,7 @@
 	bear.armored = TRUE
 	bear.maxHealth += 60
 	bear.health += 60
-	bear.armour_penetration += 20
+	bear.armor_penetration += 20
 	bear.melee_damage_lower += 3
 	bear.melee_damage_upper += 5
 	bear.wound_bonus += 5

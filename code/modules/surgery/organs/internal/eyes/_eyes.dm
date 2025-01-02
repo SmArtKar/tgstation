@@ -115,7 +115,7 @@
 		return
 
 	if (blocked && source.is_eyes_covered())
-		if (!proj.armour_penetration || prob(blocked - proj.armour_penetration))
+		if (!proj.armor_penetration || prob(blocked - proj.armor_penetration))
 			return
 
 	var/valid_sides = list()

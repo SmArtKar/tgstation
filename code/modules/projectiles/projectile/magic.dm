@@ -3,7 +3,7 @@
 	icon_state = "energy"
 	damage = 0 // MOST magic projectiles pass the "not a hostile projectile" test, despite many having negative effects
 	damage_type = OXY
-	armour_penetration = 100
+	armor_penetration = 100
 	armor_flag = NONE
 	/// determines what type of antimagic can block the spell projectile
 	var/antimagic_flags = MAGIC_RESISTANCE
@@ -557,7 +557,7 @@
 	name = "bolt of chills"
 	icon_state = "ice_2"
 	damage_type = BURN
-	armour_penetration = 100
+	armor_penetration = 100
 	temperature = -200 // Cools you down greatly per hit
 
 /obj/projectile/magic/nothing

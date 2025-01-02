@@ -70,7 +70,7 @@
 /obj/projectile/bullet/c38/dumdum
 	name = ".38 DumDum bullet"
 	damage = 15
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 	ricochets_max = 0
 	sharpness = SHARP_EDGED
 	wound_bonus = 20
@@ -142,7 +142,7 @@
 	name = ".357 phasic bullet"
 	icon_state = "gaussphase"
 	damage = 35
-	armour_penetration = 100
+	armor_penetration = 100
 	projectile_phasing =  PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE | PASSDOORS
 
 /obj/projectile/bullet/c357/heartseeker
@@ -165,7 +165,7 @@
 /obj/projectile/bullet/pea
 	name = "pea bullet"
 	damage = 15
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 	ricochets_max = 3
 	ricochet_chance = 100
 	icon_state = "pea"

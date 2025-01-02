@@ -35,7 +35,7 @@
 	attack_sound = 'sound/effects/magic/demon_attack1.ogg'
 	attack_vis_effect = ATTACK_EFFECT_BITE
 	speak_emote = list("echoes")
-	armour_penetration = 50
+	armor_penetration = 50
 	melee_damage_lower = 25
 	melee_damage_upper = 25
 	speed = 5

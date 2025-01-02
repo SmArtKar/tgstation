@@ -8,7 +8,7 @@
 	paralyze = 100
 	dismemberment = 50
 	catastropic_dismemberment = TRUE
-	armour_penetration = 50
+	armor_penetration = 50
 	ignore_range_hit_prone_targets = TRUE
 	///Determines object damage.
 	var/object_damage = 80
@@ -27,7 +27,7 @@
 
 /obj/projectile/bullet/p50/surplus
 	name =".50 BMG surplus bullet"
-	armour_penetration = 0
+	armor_penetration = 0
 	paralyze = 0
 	dismemberment = 0
 	catastropic_dismemberment = FALSE

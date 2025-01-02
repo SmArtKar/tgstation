@@ -9,7 +9,7 @@
 	inhand_icon_state = "tentacle"
 	icon_angle = 180
 	force = 25
-	armour_penetration = 35
+	armor_penetration = 35
 	lefthand_file = 'icons/mob/inhands/antag/voidwalker_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/voidwalker_righthand.dmi'
 	blocks_emissive = EMISSIVE_BLOCK_NONE

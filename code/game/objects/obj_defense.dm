@@ -40,7 +40,7 @@
 			hitting_projectile.armor_flag,
 			FALSE,
 			REVERSE_DIR(hitting_projectile.dir),
-			hitting_projectile.armour_penetration,
+			hitting_projectile.armor_penetration,
 		)
 	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
 		visible_message(
@@ -82,9 +82,9 @@
 		var/turf/current_turf = get_turf(src) //we want to save the turf to play the sound there, cause being destroyed deletes us!
 		var/play_soundeffect = user.environment_smash
 		if(user.obj_damage)
-			. = attack_generic(user, user.obj_damage, user.melee_damage_type, MELEE, play_soundeffect, user.armour_penetration)
+			. = attack_generic(user, user.obj_damage, user.melee_damage_type, MELEE, play_soundeffect, user.armor_penetration)
 		else
-			. = attack_generic(user, rand(user.melee_damage_lower,user.melee_damage_upper), user.melee_damage_type, MELEE, play_soundeffect, user.armour_penetration)
+			. = attack_generic(user, rand(user.melee_damage_lower,user.melee_damage_upper), user.melee_damage_type, MELEE, play_soundeffect, user.armor_penetration)
 		if(. && play_soundeffect)
 			playsound(current_turf, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 		if(user.client)

@@ -244,7 +244,7 @@
 	maxHealth = 500
 	health = 500
 	speed = -2 //ridicilously fast but i dont even know what this is used for
-	armour_penetration = 20
+	armor_penetration = 20
 	attack_verb_continuous = "steals the girlfriend of"
 	attack_verb_simple = "steal the girlfriend of"
 	attack_sound = 'sound/items/airhorn/airhorn2.ogg'
@@ -312,7 +312,7 @@
 	speed = 5
 	melee_damage_lower = 20
 	melee_damage_upper = 40
-	armour_penetration = 30
+	armor_penetration = 30
 	attack_verb_continuous = "acts out divine vengeance on"
 	attack_verb_simple = "act out divine vengeance on"
 	obj_damage = 50

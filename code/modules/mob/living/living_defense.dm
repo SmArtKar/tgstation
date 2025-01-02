@@ -1,17 +1,17 @@
 
-/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armour_penetration, penetrated_text, silent=FALSE, weak_against_armour = FALSE)
+/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armor_penetration, penetrated_text, silent=FALSE, weak_against_armor = FALSE)
 	var/our_armor = getarmor(def_zone, attack_flag)
 
 	if(our_armor <= 0)
 		return our_armor
-	if(weak_against_armour && our_armor >= 0)
+	if(weak_against_armor && our_armor >= 0)
 		our_armor *= ARMOR_WEAKENED_MULTIPLIER
 	if(silent)
-		return max(0, PENETRATE_ARMOUR(our_armor, armour_penetration))
+		return max(0, PENETRATE_ARMOR(our_armor, armor_penetration))
 
 	//the if "armor" check is because this is used for everything on /living, including humans
-	if(armour_penetration)
-		our_armor = max(PENETRATE_ARMOUR(our_armor, armour_penetration), 0)
+	if(armor_penetration)
+		our_armor = max(PENETRATE_ARMOR(our_armor, armor_penetration), 0)
 		if(penetrated_text)
 			to_chat(src, span_userdanger("[penetrated_text]"))
 		else
@@ -172,7 +172,7 @@
 			do_sparks(spark_amount, FALSE, src)
 
 /mob/living/check_projectile_armor(def_zone, obj/projectile/impacting_projectile, is_silent)
-	return run_armor_check(def_zone, impacting_projectile.armor_flag, "","",impacting_projectile.armour_penetration, "", is_silent, impacting_projectile.weak_against_armour)
+	return run_armor_check(def_zone, impacting_projectile.armor_flag, "","",impacting_projectile.armor_penetration, "", is_silent, impacting_projectile.weak_against_armor)
 
 /mob/living/proc/check_projectile_dismemberment(obj/projectile/proj, def_zone)
 	return
@@ -247,7 +247,7 @@
 					span_userdanger("You're hit by [thrown_item]!"))
 	if(!thrown_item.throwforce)
 		return
-	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armour_penetration, "", FALSE, thrown_item.weak_against_armour)
+	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armor_penetration, "", FALSE, thrown_item.weak_against_armor)
 	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
@@ -398,7 +398,7 @@
 		return FALSE
 
 	var/damage = rand(user.melee_damage_lower, user.melee_damage_upper)
-	if(check_block(user, damage, "[user]'s [user.attack_verb_simple]", UNARMED_ATTACK, user.armour_penetration, user.melee_damage_type))
+	if(check_block(user, damage, "[user]'s [user.attack_verb_simple]", UNARMED_ATTACK, user.armor_penetration, user.melee_damage_type))
 		return FALSE
 
 	if(user.attack_sound)
@@ -417,7 +417,7 @@
 	if(!dam_zone) //Dismemberment successful
 		return FALSE
 
-	var/armor_block = run_armor_check(user.zone_selected, MELEE, armour_penetration = user.armour_penetration)
+	var/armor_block = run_armor_check(user.zone_selected, MELEE, armor_penetration = user.armor_penetration)
 
 	to_chat(user, span_danger("You [user.attack_verb_simple] [src]!"))
 	log_combat(user, src, "attacked")
@@ -804,8 +804,8 @@
 		span_userdanger("You're shoved by [shover][weapon ? " with [weapon]" : ""]!"), span_hear("You hear aggressive shuffling!"), COMBAT_MESSAGE_RANGE, shover)
 	to_chat(shover, span_danger("You shove [name][weapon ? " with [weapon]" : ""]!"))
 
-/mob/living/proc/check_block(atom/hit_by, damage, attack_text = "the attack", attack_type = MELEE_ATTACK, armour_penetration = 0, damage_type = BRUTE)
-	if(SEND_SIGNAL(src, COMSIG_LIVING_CHECK_BLOCK, hit_by, damage, attack_text, attack_type, armour_penetration, damage_type) & SUCCESSFUL_BLOCK)
+/mob/living/proc/check_block(atom/hit_by, damage, attack_text = "the attack", attack_type = MELEE_ATTACK, armor_penetration = 0, damage_type = BRUTE)
+	if(SEND_SIGNAL(src, COMSIG_LIVING_CHECK_BLOCK, hit_by, damage, attack_text, attack_type, armor_penetration, damage_type) & SUCCESSFUL_BLOCK)
 		return SUCCESSFUL_BLOCK
 
 	return FAILED_BLOCK

@@ -74,7 +74,7 @@
 	demolition_mod = 0.75 //but not metal
 	w_class = WEIGHT_CLASS_BULKY
 	block_chance = 50
-	armour_penetration = 75
+	armor_penetration = 75
 	sharpness = SHARP_EDGED
 	attack_verb_continuous = list("slashes", "cuts")
 	attack_verb_simple = list("slash", "cut")
@@ -187,7 +187,7 @@
 	demolition_mod = 0.3
 	w_class = WEIGHT_CLASS_BULKY
 	block_chance = 40
-	armour_penetration = 40
+	armor_penetration = 40
 	sharpness = SHARP_EDGED
 	attack_verb_continuous = list("slashes", "cuts")
 	attack_verb_simple = list("slash", "cut")
@@ -231,7 +231,7 @@
 	throwforce = 10
 	attack_speed = CLICK_CD_RAPID
 	block_chance = 20
-	armour_penetration = 65
+	armor_penetration = 65
 	attack_verb_continuous = list("slashes", "stings", "prickles", "pokes")
 	attack_verb_simple = list("slash", "sting", "prickle", "poke")
 	hitsound = 'sound/items/weapons/rapierhit.ogg'
@@ -264,7 +264,7 @@
 	slot_flags = null
 	w_class = WEIGHT_CLASS_BULKY
 	force = 0.001
-	armour_penetration = 1000
+	armor_penetration = 1000
 	force_string = "INFINITE"
 	item_flags = NEEDS_PERMIT|NO_BLOOD_ON_ITEM
 	var/obj/machinery/power/supermatter_crystal/shard
@@ -540,7 +540,7 @@
 	throwforce = 8
 	block_chance = 10
 	block_sound = 'sound/items/weapons/genhit.ogg'
-	armour_penetration = 50
+	armor_penetration = 50
 	attack_verb_continuous = list("smacks", "strikes", "cracks", "beats")
 	attack_verb_simple = list("smack", "strike", "crack", "beat")
 

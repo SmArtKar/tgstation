@@ -64,7 +64,7 @@
 		victim.add_mood_event("embedded", /datum/mood_event/embedded)
 
 	if(damage > 0)
-		var/armor = victim.run_armor_check(limb.body_zone, MELEE, "Your armor has protected your [limb.plaintext_zone].", "Your armor has softened a hit to your [limb.plaintext_zone].", weapon.armour_penetration, weak_against_armour = weapon.weak_against_armour)
+		var/armor = victim.run_armor_check(limb.body_zone, MELEE, "Your armor has protected your [limb.plaintext_zone].", "Your armor has softened a hit to your [limb.plaintext_zone].", weapon.armor_penetration, weak_against_armor = weapon.weak_against_armor)
 		victim.apply_damage(
 			damage = (1 - embed_data.pain_stam_pct) * damage,
 			damagetype = BRUTE,

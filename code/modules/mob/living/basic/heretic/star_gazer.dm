@@ -14,7 +14,7 @@
 	health = 6000
 
 	obj_damage = 400
-	armour_penetration = 20
+	armor_penetration = 20
 	melee_damage_lower = 40
 	melee_damage_upper = 40
 	sentience_type = SENTIENCE_BOSS

@@ -3,7 +3,7 @@
 /obj/projectile/bullet/a223
 	name = ".223 bullet"
 	damage = 35
-	armour_penetration = 30
+	armor_penetration = 30
 	wound_bonus = -40
 
 /obj/projectile/bullet/a223/weak //centcom
@@ -13,7 +13,7 @@
 	name = ".223 phasic bullet"
 	icon_state = "gaussphase"
 	damage = 30
-	armour_penetration = 100
+	armor_penetration = 100
 	projectile_phasing =  PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE | PASSDOORS
 
 // .310 Strilka (Sakhno Rifle)
@@ -21,14 +21,14 @@
 /obj/projectile/bullet/strilka310
 	name = ".310 Strilka bullet"
 	damage = 60
-	armour_penetration = 10
+	armor_penetration = 10
 	wound_bonus = -45
 	wound_falloff_tile = 0
 
 /obj/projectile/bullet/strilka310/surplus
 	name = ".310 Strilka surplus bullet"
-	weak_against_armour = TRUE //this is specifically more important for fighting carbons than fighting noncarbons. Against a simple mob, this is still a full force bullet
-	armour_penetration = 0
+	weak_against_armor = TRUE //this is specifically more important for fighting carbons than fighting noncarbons. Against a simple mob, this is still a full force bullet
+	armor_penetration = 0
 
 /obj/projectile/bullet/strilka310/enchanted
 	name = "enchanted .310 bullet"
@@ -45,7 +45,7 @@
 	name = "harpoon"
 	icon_state = "gauss"
 	damage = 60
-	armour_penetration = 50
+	armor_penetration = 50
 	wound_bonus = -20
 	bare_wound_bonus = 80
 	embed_type = /datum/embed_data/harpoon
@@ -69,7 +69,7 @@
 	damage = 30
 	speed = 2.5
 	dismemberment = 1 //because a 1 in 100 chance to just blow someones arm off is enough to be cool but also not enough to be reliable
-	armour_penetration = 10
+	armor_penetration = 10
 	wound_bonus = -20
 	bare_wound_bonus = 20
 	embed_type = /datum/embed_data/rebar
@@ -94,7 +94,7 @@
 	icon_state = "rebar"
 	damage = 45
 	dismemberment = 2 //It's a budget sniper rifle.
-	armour_penetration = 20 //A bit better versus armor. Gets past anti laser armor or a vest, but doesnt wound proc on sec armor.
+	armor_penetration = 20 //A bit better versus armor. Gets past anti laser armor or a vest, but doesnt wound proc on sec armor.
 	wound_bonus = 10
 	bare_wound_bonus = 20
 	embed_falloff_tile = -3
@@ -119,7 +119,7 @@
 	dismemberment = 10
 	damage_type = TOX
 	eyeblur = 5
-	armour_penetration = 20 // not nearly as good, as its not as sharp.
+	armor_penetration = 20 // not nearly as good, as its not as sharp.
 	wound_bonus = 10
 	bare_wound_bonus = 40
 	embed_type = /datum/embed_data/rebar_zaukerite
@@ -147,7 +147,7 @@
 	phasing_ignore_direct_target = TRUE
 	dismemberment = 0 //goes through clean.
 	damage_type = BRUTE
-	armour_penetration = 30 //very pointy.
+	armor_penetration = 30 //very pointy.
 	wound_bonus = -100
 	bare_wound_bonus = 0
 	shrapnel_type = /obj/item/ammo_casing/rebar/hydrogen
@@ -173,7 +173,7 @@
 	damage = 0
 	dismemberment = 0
 	damage_type = BRUTE
-	armour_penetration = 100
+	armor_penetration = 100
 	wound_bonus = -100
 	bare_wound_bonus = -100
 	embed_type = null
@@ -200,7 +200,7 @@
 	dismemberment = 0
 	damage_type = TOX
 	embed_type = null
-	armour_penetration = 100
+	armor_penetration = 100
 	shrapnel_type = /obj/item/ammo_casing/rebar/supermatter
 
 /obj/projectile/bullet/rebar/supermatter/on_hit(atom/target, blocked = 0, pierce_hit)

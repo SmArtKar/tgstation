@@ -8,7 +8,7 @@
 	inhand_icon_state = "arm_blade"
 	icon_angle = 180
 	force = 25
-	armour_penetration = 35
+	armor_penetration = 35
 	lefthand_file = 'icons/mob/inhands/antag/changeling_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/antag/changeling_righthand.dmi'
 	item_flags = ABSTRACT | DROPDEL

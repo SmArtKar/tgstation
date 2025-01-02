@@ -36,7 +36,7 @@
 	friendly_verb_simple = "stare down"
 	icon = 'icons/mob/simple/lavaland/96x96megafauna.dmi'
 	speak_emote = list("roars")
-	armour_penetration = 40
+	armor_penetration = 40
 	melee_damage_lower = 40
 	melee_damage_upper = 40
 	speed = 10
@@ -181,7 +181,7 @@
 	name = "death bolt"
 	icon_state = "chronobolt"
 	damage = 25
-	armour_penetration = 100
+	armor_penetration = 100
 	speed = 0.5
 	damage_type = BRUTE
 	pass_flags = PASSTABLE

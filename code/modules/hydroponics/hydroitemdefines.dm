@@ -544,7 +544,7 @@
 	throw_range = 3
 	w_class = WEIGHT_CLASS_BULKY
 	obj_flags = CONDUCTS_ELECTRICITY
-	armour_penetration = 20
+	armor_penetration = 20
 	wound_bonus = 10
 	slot_flags = ITEM_SLOT_BACK
 	attack_verb_continuous = list("chops", "slices", "cuts", "reaps")

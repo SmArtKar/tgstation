@@ -140,10 +140,10 @@
 	var/siemens_coefficient = 1
 	/// How much clothing is slowing you down. Negative values speeds you up
 	var/slowdown = 0
-	///percentage of armour effectiveness to remove
-	var/armour_penetration = 0
-	///Whether or not our object doubles the value of affecting armour
-	var/weak_against_armour = FALSE
+	///percentage of armor effectiveness to remove
+	var/armor_penetration = 0
+	///Whether or not our object doubles the value of affecting armor
+	var/weak_against_armor = FALSE
 	/// The click cooldown given after attacking. Lower numbers means faster attacks
 	var/attack_speed = CLICK_CD_MELEE
 	/// The click cooldown on secondary attacks. Lower numbers mean faster attacks. Will use attack_speed if undefined.

@@ -24,7 +24,7 @@
 	. = ..()
 	AddComponent(/datum/component/pinata, candy = candy_options, death_drop = destruction_loot)
 
-/obj/structure/pinata/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armour_penetration)
+/obj/structure/pinata/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
 	. = ..()
 	if(get_integrity() < (max_integrity/2))
 		icon_state = "[base_icon_state]_damaged"

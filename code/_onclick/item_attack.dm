@@ -301,8 +301,8 @@
 			attack_flag = MELEE,
 			absorb_text = span_notice("Your armor has protected your [targeting_human_readable]!"),
 			soften_text = span_warning("Your armor has softened a hit to your [targeting_human_readable]!"),
-			armour_penetration = attacking_item.armour_penetration,
-			weak_against_armour = attacking_item.weak_against_armour,
+			armor_penetration = attacking_item.armor_penetration,
+			weak_against_armor = attacking_item.weak_against_armor,
 		), ARMOR_MAX_BLOCK)
 
 	var/damage = attacking_item.force
@@ -315,7 +315,7 @@
 
 	if(user != src)
 		// This doesn't factor in armor, or most damage modifiers (physiology). Your mileage may vary
-		if(check_block(attacking_item, damage, "the [attacking_item.name]", MELEE_ATTACK, attacking_item.armour_penetration, attacking_item.damtype))
+		if(check_block(attacking_item, damage, "the [attacking_item.name]", MELEE_ATTACK, attacking_item.armor_penetration, attacking_item.damtype))
 			return FALSE
 
 	SEND_SIGNAL(attacking_item, COMSIG_ITEM_ATTACK_ZONE, src, user, targeting)

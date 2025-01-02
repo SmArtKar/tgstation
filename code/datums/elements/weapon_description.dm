@@ -87,8 +87,8 @@
 			readout += "It takes about [span_warning("[HITS_TO_CRIT(source.throwforce)] throwing hit\s")] to take down an enemy."
 		else
 			readout += "It does not deal noticeable throwing damage."
-		if(source.armour_penetration > 0 || source.block_chance > 0)
-			readout += "It has [span_warning("[weapon_tag_convert(source.armour_penetration)]")] armor-piercing capability and [span_warning("[weapon_tag_convert(source.block_chance)]")] blocking capability."
+		if(source.armor_penetration > 0 || source.block_chance > 0)
+			readout += "It has [span_warning("[weapon_tag_convert(source.armor_penetration)]")] armor-piercing capability and [span_warning("[weapon_tag_convert(source.block_chance)]")] blocking capability."
 	// Custom manual notes
 	if(source.offensive_notes)
 		readout += source.offensive_notes

@@ -80,7 +80,7 @@
 		SEND_SIGNAL(user, COMSIG_MOB_PAT_BORG)
 		return TRUE
 
-/mob/living/silicon/check_block(atom/hitby, damage, attack_text, attack_type, armour_penetration, damage_type, attack_flag)
+/mob/living/silicon/check_block(atom/hitby, damage, attack_text, attack_type, armor_penetration, damage_type, attack_flag)
 	. = ..()
 	if(. == SUCCESSFUL_BLOCK)
 		return SUCCESSFUL_BLOCK

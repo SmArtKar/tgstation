@@ -109,7 +109,7 @@
 	damage_coeff = list(BRUTE = 1, BURN = 0.6, TOX = 0.5, STAMINA = 0, OXY = 1)
 	melee_damage_lower = 20
 	melee_damage_upper = 20
-	armour_penetration = 15
+	armor_penetration = 15
 	obj_damage = 20
 	death_message = "collapses into a pile of goo!"
 	///The ability to consume mobs

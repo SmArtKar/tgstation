@@ -1,7 +1,7 @@
 /obj/item/shrapnel // frag grenades
 	name = "shrapnel shard"
 	custom_materials = list(/datum/material/iron= SMALL_MATERIAL_AMOUNT * 0.5)
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 	icon = 'icons/obj/debris.dmi'
 	icon_state = "large"
 	icon_angle = -45
@@ -24,7 +24,7 @@
 	name = "flying shrapnel shard"
 	damage = 14
 	range = 20
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 	dismemberment = 5
 	ricochets_max = 2
 	ricochet_chance = 70
@@ -124,5 +124,5 @@
 /obj/item/shrapnel/capmine
 	name = "\improper AP shrapnel shard"
 	custom_materials = list(/datum/material/iron= SMALL_MATERIAL_AMOUNT * 0.5)
-	weak_against_armour = TRUE
+	weak_against_armor = TRUE
 

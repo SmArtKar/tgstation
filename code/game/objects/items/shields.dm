@@ -86,17 +86,17 @@
 	if(isprojectile(hitby))
 		var/obj/projectile/bang_bang = hitby
 		armor_flag = bang_bang.armor_flag
-		penetration = bang_bang.armour_penetration
+		penetration = bang_bang.armor_penetration
 	else if(isitem(hitby))
 		var/obj/item/weapon = hitby
-		penetration = weapon.armour_penetration
+		penetration = weapon.armor_penetration
 	else if(isanimal(hitby))
 		var/mob/living/simple_animal/critter = hitby
-		penetration = critter.armour_penetration
+		penetration = critter.armor_penetration
 	else if(isbasicmob(hitby))
 		var/mob/living/basic/critter = hitby
-		penetration = critter.armour_penetration
-	take_damage(damage, damage_type, armor_flag, armour_penetration = penetration)
+		penetration = critter.armor_penetration
+	take_damage(damage, damage_type, armor_flag, armor_penetration = penetration)
 
 /obj/item/shield/atom_destruction(damage_flag)
 	playsound(src, shield_break_sound, 50)

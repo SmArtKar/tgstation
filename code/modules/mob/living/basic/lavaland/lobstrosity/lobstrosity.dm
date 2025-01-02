@@ -191,7 +191,7 @@
 
 /mob/living/basic/mining/lobstrosity/juvenile/add_ranged_armour(list/vulnerable_projectiles)
 	AddElement(\
-		/datum/element/ranged_armour,\
+		/datum/element/ranged_armor,\
 		minimum_projectile_force = 30,\
 		below_projectile_multiplier = 0.6,\
 		vulnerable_projectile_types = vulnerable_projectiles,\

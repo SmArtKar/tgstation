@@ -374,7 +374,7 @@
 	recoil_factor = (active ? 2 : initial(recoil_factor))
 	do_launch = (active ? FALSE : initial(do_launch))
 	tool_behaviour = (active ? TOOL_WRENCH : initial(tool_behaviour))
-	armour_penetration = (active ? 30 : initial(armour_penetration))
+	armor_penetration = (active ? 30 : initial(armor_penetration))
 	if(user)
 		balloon_alert(user, "folded Big Slappy [active ? "open" : "closed"]")
 	playsound(src, 'sound/items/tools/ratchet.ogg', 50, TRUE)

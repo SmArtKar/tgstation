@@ -119,7 +119,7 @@
 /obj/item/chainsaw/doomslayer
 	name = "THE GREAT COMMUNICATOR"
 	desc = span_warning("VRRRRRRR!!!")
-	armour_penetration = 100
+	armor_penetration = 100
 	force_on = 30
 	behead_time = 2 SECONDS
 

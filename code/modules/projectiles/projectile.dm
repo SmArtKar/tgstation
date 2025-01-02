@@ -189,9 +189,9 @@
 	/// Defines what armor to use when it hits things.  Must be set to bullet, laser, energy, or bomb
 	var/armor_flag = BULLET
 	/// How much armor this projectile pierces.
-	var/armour_penetration = 0
+	var/armor_penetration = 0
 	/// Whether or not our projectile doubles the value of affecting armour
-	var/weak_against_armour = FALSE
+	var/weak_against_armor = FALSE
 	/// This will de-increment every step. When 0, it will delete the projectile.
 	var/range = 50
 	/// Original range upon being fired/reflected
