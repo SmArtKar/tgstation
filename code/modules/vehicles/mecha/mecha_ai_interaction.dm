@@ -11,8 +11,7 @@
 		to_chat(user, "<a href='byond://?src=[REF(user)];ai_take_control=[REF(src)]'>[span_userdanger("ASSUME DIRECT CONTROL?")]</a><br>")
 		return
 
-
-	if (driver_amount())
+	if (noncomp_driver_amount())
 		to_chat(user, span_warning("This exosuit has a pilot and cannot be controlled."))
 		return
 
@@ -64,8 +63,8 @@
 			to_chat(user, span_warning("[new_pilot.name] is currently unresponsive, and cannot be uploaded."))
 			return
 
-		if((driver_amount() >= max_drivers) || dna_lock) //Normal AIs cannot steal mechs!
-			to_chat(user, span_warning("Access denied. [name] is [(driver_amount() >= max_drivers) ? "currently fully occupied" : "secured with a DNA lock"]."))
+		if((noncomp_driver_amount() >= max_drivers) || dna_lock) // Normal AIs cannot steal mechs!
+			to_chat(user, span_warning("Access denied. [name] is [(noncomp_driver_amount() >= max_drivers) ? "currently fully occupied" : "secured with a DNA lock"]."))
 			return
 
 		new_pilot.control_disabled = FALSE

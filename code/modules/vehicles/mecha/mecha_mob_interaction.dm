@@ -10,12 +10,10 @@
 
 	log_message("[new_pilot] tried to move into [src].", LOG_MECHA)
 
-	if(dna_lock && new_pilot.has_dna())
-		var/mob/living/carbon/entering_carbon = new_pilot
-		if(entering_carbon.dna.unique_enzymes != dna_lock)
-			to_chat(new_pilot, span_warning("Access denied. [name] is secured with a DNA lock."))
-			log_message("Permission denied (DNA LOCK).", LOG_MECHA)
-			return
+	if(dna_lock && new_pilot.has_dna()?.unique_enzymes != dna_lock)
+		to_chat(new_pilot, span_warning("Access denied. [name] is secured with a DNA lock."))
+		log_message("Permission denied (DNA LOCK).", LOG_MECHA)
+		return
 
 	if((mecha_flags & ACCESS_LOCK_ON) && !allowed(new_pilot))
 		to_chat(new_pilot, span_warning("Access denied. Insufficient operation keycodes."))
@@ -87,7 +85,7 @@
 
 /// Proc called whenever a new pilot enters a mech
 /obj/vehicle/sealed/mecha/proc/moved_inside(mob/living/new_pilot)
-	mecha_flags &= ~PANEL_OPEN //Close panel if open
+	mecha_flags &= ~PANEL_OPEN // Close panel if open
 	add_fingerprint(new_pilot)
 	log_message("[new_pilot] moved in as pilot.", LOG_MECHA)
 	setDir(SOUTH)
@@ -103,6 +101,9 @@
 		var/mob/living/brain/brain = user
 		var/obj/item/mmi/mmi = brain.container
 		mmi.forceMove(cur_turf)
+		// Restore our occupant limit after removing a COMP unit
+		if (!mmi_full_control || istype(new_pilot, /obj/item/mmi/posibrain))
+			max_occupants -= 1
 		log_message("[mmi] moved out.", LOG_MECHA)
 		if(mmi.brainmob)
 			brain.forceMove(mmi)
@@ -175,59 +176,66 @@
 		set_cabin_seal(user, FALSE)
 	mob_exit(user, silent = TRUE)
 
-/*
+/// Installs an MMI or posibrain into our mechs
+/obj/vehicle/sealed/mecha/proc/install_mmi(obj/item/mmi/new_pilot, mob/user)
+	if (!(mecha_flags & MMI_COMPATIBLE))
+		to_chat(user, span_warning("[name] is not compatible with MMIs!"))
+		return FALSE
 
+	if (!new_pilot.brain_check(user))
+		return FALSE
 
-///proc called when a new mmi mob tries to enter this mech
-/obj/vehicle/sealed/mecha/proc/mmi_move_inside(obj/item/mmi/brain_obj, mob/user)
-	if(!(mecha_flags & MMI_COMPATIBLE))
-		to_chat(user, span_warning("This mecha is not compatible with MMIs!"))
+	if (locate(/mob/living/brain) in occupants)
+		to_chat(user, span_warning("[name] already has a COMP unit installed!"))
 		return FALSE
-	if(!brain_obj.brain_check(user))
-		return FALSE
-	var/mob/living/brain/brain_mob = brain_obj.brainmob
-	if(LAZYLEN(occupants) >= max_occupants)
-		to_chat(user, span_warning("It's full!"))
-		return FALSE
-	if(dna_lock && (!brain_mob.stored_dna || (dna_lock != brain_mob.stored_dna.unique_enzymes)))
+
+	var/mob/living/brain/brain_mob = new_pilot.brainmob
+	if(dna_lock && (!brain_mob.stored_dna || brain_mob.stored_dna.unique_enzymes != dna_lock || user.has_dna()?.unique_enzymes != dna_lock))
 		to_chat(user, span_warning("Access denied. [name] is secured with a DNA lock."))
 		return FALSE
 
-	visible_message(span_notice("[user] starts to insert an MMI into [name]."))
+	user.visible_message(span_notice("[user] starts to insert [new_pilot] into [name]."), span_notice("You start inserting [new_pilot] into [name]."))
 
 	if(!do_after(user, 4 SECONDS, target = src))
-		to_chat(user, span_notice("You stop inserting the MMI."))
-		return FALSE
-	if(LAZYLEN(occupants) < max_occupants)
-		return mmi_moved_inside(brain_obj, user)
-	to_chat(user, span_warning("Maximum occupants exceeded!"))
-	return FALSE
-
-///proc called when a new mmi mob enters this mech
-/obj/vehicle/sealed/mecha/proc/mmi_moved_inside(obj/item/mmi/brain_obj, mob/user)
-	if(!(Adjacent(brain_obj) && Adjacent(user)))
-		return FALSE
-	if(!brain_obj.brain_check(user))
 		return FALSE
 
-	var/mob/living/brain/brain_mob = brain_obj.brainmob
-	if(!user.transferItemToLoc(brain_obj, src))
-		to_chat(user, span_warning("[brain_obj] is stuck to your hand, you cannot put it in [src]!"))
+	if (locate(/mob/living/brain) in occupants)
+		to_chat(user, span_warning("[name] already has a COMP unit installed!"))
 		return FALSE
 
-	brain_obj.set_mecha(src)
-	add_occupant(brain_mob)//Note this forcemoves the brain into the mech to allow relaymove
-	mecha_flags &= ~PANEL_OPEN //Close panel if open
-	mecha_flags |= SILICON_PILOT
+	return mmi_moved_inside(new_pilot, user)
+
+/obj/vehicle/sealed/mecha/proc/mmi_moved_inside(obj/item/mmi/new_pilot, mob/user)
+	if(!new_pilot.brain_check(user))
+		return FALSE
+
+	if(!user.transferItemToLoc(new_pilot, src))
+		to_chat(user, span_warning("[new_pilot] is stuck to your hand, you cannot put it in [src]!"))
+		return FALSE
+
+	var/mob/living/brain/brain_mob = new_pilot.brainmob
+	new_pilot.set_mecha(src)
+	add_occupant(brain_mob) // Note this forcemoves the brain into the mech to allow relaymove
+	mecha_flags &= ~PANEL_OPEN // Close panel if open
 	brain_mob.reset_perspective(src)
 	brain_mob.remote_control = src
 	brain_mob.update_mouse_pointer()
+	if (!mmi_full_control || istype(new_pilot, /obj/item/mmi/posibrain))
+		max_occupants += 1 // Cursed, but required as MMIs count for occupants
 	setDir(SOUTH)
-	log_message("[brain_obj] moved in as pilot.", LOG_MECHA)
-	if(!internal_damage)
-		SEND_SOUND(brain_obj, sound('sound/vehicles/mecha/nominal.ogg',volume=50))
+	log_message("[new_pilot] moved in as pilot.", LOG_MECHA)
 	user.log_message("has put the MMI/posibrain of [key_name(brain_mob)] into [src]", LOG_GAME)
 	brain_mob.log_message("was put into [src] by [key_name(user)]", LOG_GAME, log_globally = FALSE)
 	return TRUE
 
-*/
+/// Returns a list of non-COMP unit drivers
+/obj/vehicle/sealed/mecha/proc/noncomp_driver_amount()
+	. = 0
+	for (var/mob/living/pilot as anything in return_drivers())
+		if (!isbrain(pilot))
+			. += 1
+			continue
+
+		var/mob/living/brain/brain = pilot
+		if (mmi_full_control && !istype(brain.container, /obj/item/mmi/posibrain))
+			. += 1

@@ -233,9 +233,11 @@
 	if(!HAS_TRAIT(src, TRAIT_WIELDED))
 		mech.balloon_alert(user, "not wielded!")
 		return
-	if(!LAZYLEN(mech.occupants) || (LAZYLEN(mech.occupants) == 1 && mech.mecha_flags & SILICON_PILOT)) //if no occupants, or only an ai
+
+	if(!LAZYLEN(mech.occupants) || (LAZYLEN(mech.occupants) == 1 && mech.mecha_flags & SILICON_PILOT)) // If no occupants, or only an ai
 		mech.balloon_alert(user, "it's empty!")
 		return
+
 	user.log_message("tried to pry open [mech], located at [loc_name(mech)], which is currently occupied by [mech.occupants.Join(", ")].", LOG_ATTACK)
 	var/mech_dir = mech.dir
 	mech.balloon_alert(user, "prying open...")

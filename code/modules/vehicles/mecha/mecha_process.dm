@@ -208,11 +208,11 @@
 /// Toggle mech overclock with a button or by hacking
 /obj/vehicle/sealed/mecha/proc/toggle_overclock(forced_state = null)
 	if(!isnull(forced_state))
-		if(overclock_mode == forced_state)
+		if(overclock_active == forced_state)
 			return
-		overclock_mode = forced_state
+		overclock_active = forced_state
 	else
-		overclock_mode = !overclock_mode
+		overclock_active = !overclock_active
 	log_message("Toggled overclocking.", LOG_MECHA)
 
 /*

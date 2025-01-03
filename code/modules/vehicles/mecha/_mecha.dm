@@ -363,20 +363,20 @@
 
 /// Can be used to split control between multiple mobs
 /obj/vehicle/sealed/mecha/auto_assign_occupant_flags(mob/rider)
-	// COMP-units (MMIs and posibrains) get control based on whenever we currently have a pilot or not
-	if (isbrain(rider))
-		var/mob/living/brain/brain = rider
-		var/obj/item/mmi/container = brain.container
-		add_control_flags(brain, VEHICLE_CONTROL_SETTINGS)
-		if (driver_amount())
-			return
-		add_control_flags(brain, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_MELEE)
-		if (mmi_full_control && !istype(container, /obj/item/mmi/posibrain))
-			add_control_flags(brain, VEHICLE_CONTROL_EQUIPMENT)
+	if (!isbrain(rider))
+		if (noncomp_driver_amount() < max_drivers)
+			add_control_flags(rider, FULL_MECHA_CONTROL)
 		return
 
-	if (driver_amount() < max_drivers)
-		add_control_flags(rider, FULL_MECHA_CONTROL)
+	// COMP-units (MMIs and posibrains) get control based on whenever we currently have a human/ai pilot or not
+	var/mob/living/brain/brain = rider
+	var/obj/item/mmi/container = brain.container
+	add_control_flags(brain, VEHICLE_CONTROL_SETTINGS)
+	if (noncomp_driver_amount())
+		return
+	add_control_flags(brain, VEHICLE_CONTROL_DRIVE|VEHICLE_CONTROL_MELEE)
+	if (mmi_full_control && !istype(container, /obj/item/mmi/posibrain))
+		add_control_flags(brain, VEHICLE_CONTROL_EQUIPMENT)
 
 /obj/vehicle/sealed/mecha/proc/set_mouse_pointer()
 	if(safety_enabled)

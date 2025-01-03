@@ -113,21 +113,24 @@
 	attack_generic(user, animal_damage, user.melee_damage_type, MELEE, play_soundeffect)
 
 /obj/vehicle/sealed/mecha/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit, blocked = 0) //wrapper
+	var/list/human_occupants = list()
+	for (var/mob/living/carbon/pilot in occupants)
+		human_occupants += pilot
+
+	if (!LAZYLEN(human_occupants) || !(def_zone == BODY_ZONE_HEAD || def_zone == BODY_ZONE_CHEST))
+		log_message("Hit by projectile. Type: [hitting_projectile]([hitting_projectile.damage_type]).", LOG_MECHA, color="red")
+		return ..()
+
 	// Allows bullets to hit the pilot of open-canopy mechs
-	if(!(mecha_flags & IS_ENCLOSED)\
-		&& LAZYLEN(occupants)\
-		&& prob(MECHA_OPEN_CABIN_DRIVER_HIT_CHANCE)\
-		&& !(mecha_flags & SILICON_PILOT)\
-		&& (def_zone == BODY_ZONE_HEAD || def_zone == BODY_ZONE_CHEST)\
-	)
-		var/mob/living/hitmob = pick(occupants)
+	if(!(mecha_flags & IS_ENCLOSED) && prob(MECHA_OPEN_CABIN_DRIVER_HIT_CHANCE))
+		var/mob/living/hitmob = pick(human_occupants)
 		return hitmob.projectile_hit(hitting_projectile, def_zone, piercing_hit) // If the cabin is open, the occupant can be hit
 
-	. = ..()
 	log_message("Hit by projectile. Type: [hitting_projectile]([hitting_projectile.damage_type]).", LOG_MECHA, color="red")
+	. = ..()
 	// Or if its a piercing hit and we failed to block the projectile
 	if (. != BULLET_ACT_BLOCK && blocked < 100 && piercing_hit && prob(MECHA_DRIVER_PIERCE_HIT_CHANCE))
-		var/mob/living/hitmob = pick(occupants)
+		var/mob/living/hitmob = pick(human_occupants)
 		var/hit_result = hitmob.projectile_hit(hitting_projectile, def_zone, piercing_hit)
 		// Don't transfer FORCE_PIERCE over if it didn't FORCE_PIERCE us
 		if (hit_result != BULLET_ACT_FORCE_PIERCE)
@@ -250,11 +253,9 @@
 		balloon_alert(user, "open the panel first!")
 		return
 
-	if(dna_lock)
-		var/datum/dna/user_dna = user.has_dna()
-		if(user_dna?.unique_enzymes != dna_lock)
-			balloon_alert(user, "access denied!")
-			return
+	if(dna_lock && user.has_dna()?.unique_enzymes != dna_lock)
+		balloon_alert(user, "access denied!")
+		return
 
 	if((mecha_flags & ACCESS_LOCK_ON) && !allowed(user))
 		balloon_alert(user, "access denied!")
@@ -430,9 +431,9 @@
 
 /obj/vehicle/sealed/mecha/fire_act() //Check if we should ignite the pilot of an open-canopy mech
 	. = ..()
-	if (mecha_flags & IS_ENCLOSED || mecha_flags & SILICON_PILOT)
+	if (mecha_flags & IS_ENCLOSED)
 		return
-	for (var/mob/living/cookedalive as anything in occupants)
+	for (var/mob/living/carbon/cookedalive in occupants)
 		if (cookedalive.fire_stacks < 5)
 			cookedalive.adjust_fire_stacks(1)
 			cookedalive.ignite_mob()
