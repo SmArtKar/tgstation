@@ -47,5 +47,9 @@
 	#define COMPONENT_MECHA_IGNORE_LOW_PRESSURE (1<<1)
 	#define COMPONENT_MECHA_IGNORE_EXTERNAL_TEMP (1<<2)
 
+/// From /obj/vehicle/sealed/mecha/proc/process_cabin_air(seconds_per_tick): (seconds_per_tick)
+#define COMSIG_MECHA_ATTEMPTED_CABIN_COOLING "mecha_attempted_cabin_cooling"
+	#define COMPONENT_CANCEL_MECHA_CABIN_COOLING (1<<0)
+
 /// From /obj/vehicle/sealed/mecha/screwdriver_act(mob/living/user, obj/item/tool): (mob/living/user, obj/item/tool)
 #define COMSIG_MECHA_PANEL_STATE_CHANGED "mecha_panel_state_changed"

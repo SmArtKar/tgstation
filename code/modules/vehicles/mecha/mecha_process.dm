@@ -19,16 +19,17 @@
 	if (cabin_air.temperature > T20C && (overclock_active || current_heat > maximum_heat))
 		return
 
+	var/signal_result = SEND_SIGNAL(src, COMSIG_MECHA_ATTEMPTED_CABIN_COOLING, seconds_per_tick)
+	if (signal_result & COMPONENT_CANCEL_MECHA_CABIN_COOLING)
+		return
+
 	var/heat_capacity = cabin_air.heat_capacity()
 	var/required_energy = abs(T20C - cabin_air.temperature) * heat_capacity
 	required_energy = min(required_energy, 1000)
-	if(required_energy < 1)
+	if(required_energy < 1 || !use_energy(required_energy))
 		return
 
 	var/delta_temperature = required_energy / heat_capacity
-	if(!delta_temperature)
-		return
-
 	if(cabin_air.temperature < T20C)
 		cabin_air.temperature += delta_temperature
 	else
@@ -54,7 +55,15 @@
 
 	var/datum/gas_mixture/environment = loc.return_air()
 	var/cooling_coeff = 1
-	// This is horrendously ugly but vaccuum has *7000* hardcoded heat capacity, over 2080 of normal air so we have to resort to this jank
+
+	for (var/additional_coeff in cooling_mult)
+		cooling_coeff *= additional_coeff
+
+	// If we cannot dump any heat, don't do atmos processing
+	if (!cooling_coeff)
+		return
+
+	// This is horrendously ugly but space has *7000* hardcoded heat capacity, over 2080 of normal air so we have to resort to this jank
 	// As we cannot use relative heat capacity for conductivity here
 	if (environment?.return_pressure() < MECHA_COOLING_LOW_PRESSURE && !(signal_result & COMPONENT_MECHA_IGNORE_LOW_PRESSURE))
 		cooling_coeff *= MECHA_LOW_PRESSURE_HEAT_DUMP_EFFICIENCY + (1 - MECHA_LOW_PRESSURE_HEAT_DUMP_EFFICIENCY) * (environment?.return_pressure() / MECHA_COOLING_LOW_PRESSURE)
@@ -66,10 +75,7 @@
 		// If air is cooler than the mech, it cools slightly better
 		else if (environment.temperature < current_heat)
 			// Using maximum_heat here as better capacitors would nerf this otherwise
-			cooling_coeff *= 1 + ((current_heat - environment.temperature) / (maximum_heat * T0C)) * MECHA_MAXIMUM_COLD_COOLING_EFFICIENCY
-
-	for (var/additional_coeff in cooling_mult)
-		cooling_coeff *= additional_coeff
+			cooling_coeff *= 1 + ((current_heat - environment.temperature) / (maximum_heat + T20C)) * MECHA_MAXIMUM_COLD_COOLING_EFFICIENCY
 
 	var/heat_transferred = cooling_efficiency * cooling_coeff
 	gain_heat(-heat_transferred / MECHA_INTERNAL_HEAT_CAPACITY, direct = TRUE)

@@ -121,7 +121,7 @@
 	if(mecha.occupant_amount() && !is_cut(WIRE_TARGETING))
 		return
 
-	if (!mecha.Adjacent(target) || mecha.safeties_enabled || HAS_TRAIT(mecha, TRAIT_MECHA_ACTIONS_DISABLED))
+	if (!mecha.Adjacent(target) || mecha.safety_enabled || HAS_TRAIT(mecha, TRAIT_MECHA_ACTIONS_DISABLED))
 		return
 
 	mecha.melee_attack(null, target, modifiers)
