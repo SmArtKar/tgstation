@@ -98,6 +98,15 @@
 /obj/effect/decal/cleanable/trail_holder/can_bloodcrawl_in()
 	return TRUE
 
+/obj/effect/decal/cleanable/trail_holder/transfer_mob_blood_dna(mob/living/injected_mob)
+	. = ..()
+	if (ishuman(injected_mob))
+		blood_state = BLOOD_STATE_HUMAN
+	else if (isalien(injected_mob))
+		blood_state = BLOOD_STATE_XENO
+	else if (issilicon(injected_mob))
+		blood_state = BLOOD_STATE_OIL
+
 // normal version of the above trail holder object for use in less convoluted things
 /obj/effect/decal/cleanable/blood/trails
 	desc = "Looks like a corpse was smeared all over the floor like ketchup. Kinda makes you hungry."

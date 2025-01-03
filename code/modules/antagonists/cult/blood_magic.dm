@@ -882,7 +882,7 @@
 		return
 	for(var/obj/effect/decal/cleanable/blood/blood_around_us in range(our_turf,2))
 		if(blood_around_us.blood_state != BLOOD_STATE_HUMAN)
-			break
+			continue
 		if(blood_around_us.bloodiness == 100) // Bonus for "pristine" bloodpools, also to prevent cheese with footprint spam
 			blood_to_gain += 30
 		else
@@ -891,7 +891,7 @@
 		qdel(blood_around_us)
 	for(var/obj/effect/decal/cleanable/trail_holder/trail_around_us in range(our_turf, 2))
 		if(trail_around_us.blood_state != BLOOD_STATE_HUMAN)
-			break
+			continue
 		blood_to_gain += 5 //These don't get bloodiness, so we'll just increase this by a fixed value
 		new /obj/effect/temp_visual/cult/turf/floor(get_turf(trail_around_us))
 		qdel(trail_around_us)
