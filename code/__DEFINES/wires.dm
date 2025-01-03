@@ -1,6 +1,8 @@
-/// from base of /datum/wires/proc/cut : (wire)
-#define COMSIG_CUT_WIRE(wire) "cut_wire [wire]"
-#define COMSIG_MEND_WIRE(wire) "mend_wire [wire]"
+/// from base of /datum/wires/proc/cut : (wire, source)
+#define COMSIG_CUT_WIRE "cut_wire"
+	#define COMPONENT_CANCEL_WIRE_MEND (1<<0)
+#define COMSIG_MEND_WIRE "mend_wire"
+	#define COMPONENT_CANCEL_WIRE_CUT (1<<0)
 
 //retvals for attempt_wires_interaction
 #define WIRE_INTERACTION_FAIL 0

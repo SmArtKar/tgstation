@@ -426,32 +426,16 @@
 // Alright, we're gonna do a meme here
 /obj/machinery/door/airlock/set_wires(datum/wires/new_wires)
 	if(wires)
-		UnregisterSignal(wires, list(
-			COMSIG_CUT_WIRE(WIRE_POWER1),
-			COMSIG_CUT_WIRE(WIRE_POWER2),
-			COMSIG_CUT_WIRE(WIRE_BACKUP1),
-			COMSIG_CUT_WIRE(WIRE_BACKUP2),
-			COMSIG_MEND_WIRE(WIRE_POWER1),
-			COMSIG_MEND_WIRE(WIRE_POWER2),
-			COMSIG_MEND_WIRE(WIRE_BACKUP1),
-			COMSIG_MEND_WIRE(WIRE_BACKUP2),
-		))
+		UnregisterSignal(wires, list(COMSIG_CUT_WIRE, COMSIG_MEND_WIRE))
 	. = ..()
 	if(new_wires)
-		RegisterSignals(new_wires, list(
-			COMSIG_CUT_WIRE(WIRE_POWER1),
-			COMSIG_CUT_WIRE(WIRE_POWER2),
-			COMSIG_CUT_WIRE(WIRE_BACKUP1),
-			COMSIG_CUT_WIRE(WIRE_BACKUP2),
-			COMSIG_MEND_WIRE(WIRE_POWER1),
-			COMSIG_MEND_WIRE(WIRE_POWER2),
-			COMSIG_MEND_WIRE(WIRE_BACKUP1),
-			COMSIG_MEND_WIRE(WIRE_BACKUP2),
-		), PROC_REF(power_wires_changed))
+		RegisterSignals(new_wires, list(COMSIG_CUT_WIRE, COMSIG_MEND_WIRE), PROC_REF(power_wires_changed))
 
 /// If our power wires have changed, then our backup/main power regen may have failed, so let's just check in yeah?
 /obj/machinery/door/airlock/proc/power_wires_changed(datum/source, wire)
 	SIGNAL_HANDLER
+	if (wire != WIRE_POWER1 && wire != WIRE_POWER2 && wire != WIRE_BACKUP1 && wire != WIRE_BACKUP2)
+		return
 	handle_main_power()
 	handle_backup_power()
 

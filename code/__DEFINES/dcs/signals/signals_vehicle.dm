@@ -46,3 +46,6 @@
 	#define COMPONENT_CANCEL_MECHA_COOLING (1<<0)
 	#define COMPONENT_MECHA_IGNORE_LOW_PRESSURE (1<<1)
 	#define COMPONENT_MECHA_IGNORE_EXTERNAL_TEMP (1<<2)
+
+/// From /obj/vehicle/sealed/mecha/screwdriver_act(mob/living/user, obj/item/tool): (mob/living/user, obj/item/tool)
+#define COMSIG_MECHA_PANEL_STATE_CHANGED "mecha_panel_state_changed"

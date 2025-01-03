@@ -176,11 +176,12 @@
 	QDEL_IN(spark_particles, 2.7 SECONDS)
 
 	var/damage_dealt = max_integrity / 100 * overheat_damage_percentage
-	if (atom_integrity < damage_dealt) // Not enough health, go kaboom
+	if (atom_integrity < damage_dealt || LAZYLEN(active_malfunctions) >= max_malfunctions) // Not enough health, go kaboom
 		start_blowing_up()
 		return
 
 	take_damage(damage_dealt, BRUTE, sound_effect = FALSE)
+	gain_malfunction()
 	if (current_heat > get_maximum_heat())
 		// Don't stack SFX or VFX if something manages to give us a ton of heat at once
 		addtimer(CALLBACK(src, PROC_REF(overheat)), 0.5 SECONDS)

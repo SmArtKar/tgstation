@@ -131,7 +131,7 @@
 	/// Mech will blow up after overheating while having this amount of malfunctions.
 	var/max_malfunctions = 3
 	/// List of all currently active malfunctions
-	var/list/active_malfunctions = list()
+	var/list/active_malfunctions
 	/// How much heat this mech can hold before it overheats
 	var/maximum_heat = 200
 	/// Mech's current heat
@@ -270,7 +270,8 @@
 
 	equip_by_category.Cut()
 	flat_equipment.Cut()
-	// Sign themselves up for our deletion
+	for (var/datum/mech_malfunction/malfunction as anything in active_malfunctions)
+		qdel(malfunction)
 	active_malfunctions.Cut()
 	STOP_PROCESSING(SSobj, src)
 
@@ -600,9 +601,7 @@
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/view_stats, VEHICLE_CONTROL_SETTINGS)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/toggle_overclock, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_strafe, VEHICLE_CONTROL_DRIVE)
-
 /*
-
 	for(var/mob/occupant as anything in occupants)
 		var/datum/action/act = locate(/datum/action/vehicle/sealed/mecha/mech_overclock) in occupant.actions
 		if(!act)
@@ -620,3 +619,9 @@
 	update_energy_drain()
 
 */
+
+/// Grant outselves a malfunction. If no type is passed, pick a random one
+/obj/vehicle/sealed/mecha/proc/gain_malfunction(malfunction_type)
+	if (!ispath(malfunction_type, /datum/mech_malfunction))
+		malfunction_type = pick(subtypesof(/datum/mech_malfunction))
+	new malfunction_type(src)

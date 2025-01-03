@@ -158,13 +158,16 @@
 
 /datum/wires/proc/cut(wire, source)
 	if(is_cut(wire))
+		if (SEND_SIGNAL(src, COMSIG_MEND_WIRE, wire, source) & COMPONENT_CANCEL_WIRE_MEND)
+			return
 		cut_wires -= wire
-		SEND_SIGNAL(src, COMSIG_MEND_WIRE(wire), wire)
 		on_cut(wire, mend = TRUE, source = source)
-	else
-		cut_wires += wire
-		SEND_SIGNAL(src, COMSIG_CUT_WIRE(wire), wire)
-		on_cut(wire, mend = FALSE, source = source)
+		return
+
+	if (SEND_SIGNAL(src, COMSIG_CUT_WIRE, wire, source) & COMPONENT_CANCEL_WIRE_CUT)
+		return
+	cut_wires += wire
+	on_cut(wire, mend = FALSE, source = source)
 
 /datum/wires/proc/cut_color(color, source)
 	cut(get_wire(color), source)

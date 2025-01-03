@@ -6288,6 +6288,7 @@
 #include "code\modules\vehicles\cars\speedwagon.dm"
 #include "code\modules\vehicles\cars\vim.dm"
 #include "code\modules\vehicles\mecha\_mecha.dm"
+#include "code\modules\vehicles\mecha\malfunctions.dm"
 #include "code\modules\vehicles\mecha\mech_attack.dm"
 #include "code\modules\vehicles\mecha\mech_bay.dm"
 #include "code\modules\vehicles\mecha\mech_fabricator.dm"

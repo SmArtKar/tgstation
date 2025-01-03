@@ -416,7 +416,7 @@ Diagnostic HUDs!
 		set_hud_image_state(DIAG_BATT_HUD, "hudnobatt")
 
 /obj/vehicle/sealed/mecha/proc/update_diag_stat()
-	if(!internal_damage)
+	if(!LAZYLEN(active_malfunctions))
 		set_hud_image_inactive(DIAG_STAT_HUD)
 		return
 

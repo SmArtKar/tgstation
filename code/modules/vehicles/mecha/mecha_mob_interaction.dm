@@ -102,7 +102,7 @@
 		var/obj/item/mmi/mmi = brain.container
 		mmi.forceMove(cur_turf)
 		// Restore our occupant limit after removing a COMP unit
-		if (!mmi_full_control || istype(new_pilot, /obj/item/mmi/posibrain))
+		if (!mmi_full_control || istype(mmi, /obj/item/mmi/posibrain))
 			max_occupants -= 1
 		log_message("[mmi] moved out.", LOG_MECHA)
 		if(mmi.brainmob)

@@ -240,6 +240,7 @@
 	mecha_flags ^= PANEL_OPEN
 	balloon_alert(user, (mecha_flags & PANEL_OPEN) ? "panel open" : "panel closed")
 	tool.play_tool_sound(src)
+	SEND_SIGNAL(src, COMSIG_MECHA_PANEL_STATE_CHANGED, user, tool)
 
 /obj/vehicle/sealed/mecha/crowbar_act(mob/living/user, obj/item/tool)
 	..()
@@ -449,25 +450,17 @@
 		if (rcd_equip.internal_rcd.install_upgrade(rcd_upgrade, user))
 			return
 
-/*
-
-
 /obj/vehicle/sealed/mecha/proc/full_repair(charge_cell)
 	atom_integrity = max_integrity
+	update_diag_health()
 	if(cell && charge_cell)
 		cell.charge = cell.maxcharge
-		diag_hud_set_mechcell()
-	if(internal_damage & MECHA_INT_FIRE)
-		clear_internal_damage(MECHA_INT_FIRE)
-	if(internal_damage & MECHA_INT_TEMP_CONTROL)
-		clear_internal_damage(MECHA_INT_TEMP_CONTROL)
-	if(internal_damage & MECHA_INT_SHORT_CIRCUIT)
-		clear_internal_damage(MECHA_INT_SHORT_CIRCUIT)
-	if(internal_damage & MECHA_CABIN_AIR_BREACH)
-		clear_internal_damage(MECHA_CABIN_AIR_BREACH)
-	if(internal_damage & MECHA_INT_CONTROL_LOST)
-		clear_internal_damage(MECHA_INT_CONTROL_LOST)
-	diag_hud_set_mechhealth()
+		update_diag_cell()
+	for (var/datum/mech_malfunction/malfunction as anything in active_malfunctions)
+		qdel(malfunction)
+	update_diag_stat()
+
+/*
 
 /obj/vehicle/sealed/mecha/proc/ammo_resupply(obj/item/mecha_ammo/A, mob/user,fail_chat_override = FALSE)
 	if(!A.rounds)
