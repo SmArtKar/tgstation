@@ -578,8 +578,8 @@
 		balloon_alert(occupant, "cabin [cabin_sealed ? "sealed" : "unsealed"]")
 		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_cabin_seal)
 		action?.build_all_button_icons()
-	/*
 
+	/*
 	var/obj/item/mecha_equipment/air_tank/tank = locate(/obj/item/mecha_equipment/air_tank) in equip_by_category[MECHA_UTILITY]
 	for(var/mob/occupant as anything in occupants)
 		var/datum/action/action = locate(/datum/action/vehicle/sealed/mecha/mech_toggle_cabin_seal) in occupant.actions
@@ -601,24 +601,6 @@
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/view_stats, VEHICLE_CONTROL_SETTINGS)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/toggle_overclock, VEHICLE_CONTROL_SETTINGS)
 	initialize_controller_action_type(/datum/action/vehicle/sealed/mecha/toggle_strafe, VEHICLE_CONTROL_DRIVE)
-/*
-	for(var/mob/occupant as anything in occupants)
-		var/datum/action/act = locate(/datum/action/vehicle/sealed/mecha/mech_overclock) in occupant.actions
-		if(!act)
-			continue
-		act.button_icon_state = "mech_overload_[overclock_mode ? "on" : "off"]"
-		balloon_alert(occupant, "overclock [overclock_mode ? "on":"off"]")
-		act.build_all_button_icons()
-
-	if(overclock_mode)
-		movedelay = movedelay / overclock_coeff
-		visible_message(span_notice("[src] starts heating up, making humming sounds."))
-	else
-		movedelay = initial(movedelay)
-		visible_message(span_notice("[src] cools down and the humming stops."))
-	update_energy_drain()
-
-*/
 
 /// Grant outselves a malfunction. If no type is passed, pick a random one
 /obj/vehicle/sealed/mecha/proc/gain_malfunction(malfunction_type)

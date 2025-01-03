@@ -216,6 +216,15 @@
 		overclock_active = !overclock_active
 	log_message("Toggled overclocking.", LOG_MECHA)
 
+	for(var/mob/occupant as anything in occupants)
+		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/toggle_overclock)
+		action?.build_all_button_icons()
+
+	if(overclock_mode)
+		visible_message(span_notice("[src] starts heating up, making humming sounds."))
+	else
+		visible_message(span_notice("[src] cools down and the humming stops."))
+
 /*
 
 ///Locate an internal tack in the utility modules
