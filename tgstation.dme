@@ -4111,6 +4111,7 @@
 #include "code\modules\events\scrubber_overflow.dm"
 #include "code\modules\events\shuttle_catastrophe.dm"
 #include "code\modules\events\shuttle_insurance.dm"
+#include "code\modules\events\spartial_refraction.dm"
 #include "code\modules\events\spider_infestation.dm"
 #include "code\modules\events\stray_cargo.dm"
 #include "code\modules\events\supermatter_surge.dm"
