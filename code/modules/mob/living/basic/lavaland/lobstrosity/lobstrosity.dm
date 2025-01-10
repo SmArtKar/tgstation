@@ -189,7 +189,7 @@
 	AddComponent(/datum/component/swarming, 16, 11)
 	ADD_TRAIT(src, TRAIT_MOB_HIDE_HAPPINESS, INNATE_TRAIT) //Do not let strangers know it gets happy when poked if stray.
 
-/mob/living/basic/mining/lobstrosity/juvenile/add_ranged_armour(list/vulnerable_projectiles)
+/mob/living/basic/mining/lobstrosity/juvenile/add_ranged_armor(list/vulnerable_projectiles)
 	AddElement(\
 		/datum/element/ranged_armor,\
 		minimum_projectile_force = 30,\

@@ -1,4 +1,4 @@
-//This element facilitates reaction to atmos changes when a tile is inactive.
+e//This element facilitates reaction to atmos changes when a tile is inactive.
 //It adds the object to a list on SSair to be processed for so long as the object wants to be processed
 //And removes it as soon as the object is no longer interested
 //Don't put it on things that tend to clump into one spot, you will cause lag spikes.

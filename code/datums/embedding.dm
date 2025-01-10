@@ -165,7 +165,7 @@
 		payload.name = source.name
 	SEND_SIGNAL(source, COMSIG_PROJECTILE_ON_SPAWN_EMBEDDED, payload, victim)
 
-/// Calculates the actual chance to embed based on armour penetration and throwing speed, then returns true if we pass that probability check
+/// Calculates the actual chance to embed based on armor penetration and throwing speed, then returns true if we pass that probability check
 /datum/embedding/proc/roll_embed_chance(mob/living/carbon/victim, hit_zone, datum/thrownthing/throwingdatum)
 	var/chance = embed_chance
 
@@ -177,12 +177,12 @@
 		return prob(embed_chance)
 
 	// We'll be nice and take the better of bullet and bomb armor, halved
-	var/armor = max(victim.run_armor_check(hit_zone, BULLET, armour_penetration = parent.armour_penetration, silent = TRUE), victim.run_armor_check(hit_zone, BOMB, armour_penetration = parent.armour_penetration,  silent = TRUE)) * 0.5
+	var/armor = max(victim.run_armor_check(hit_zone, BULLET, armor_penetration = parent.armor_penetration, silent = TRUE), victim.run_armor_check(hit_zone, BOMB, armor_penetration = parent.armor_penetration,  silent = TRUE)) * 0.5
 	// We only care about armor penetration if there's actually armor to penetrate
 	if(!armor)
 		return prob(chance)
 
-	if (parent.weak_against_armour)
+	if (parent.weak_against_armor)
 		armor *= ARMOR_WEAKENED_MULTIPLIER
 
 	chance -= armor
@@ -236,8 +236,8 @@
 		return TRUE
 
 	var/armor = owner.run_armor_check(owner_limb.body_zone, MELEE, "Your armor has protected your [owner_limb.plaintext_zone].",
-		"Your armor has softened a hit to your [owner_limb.plaintext_zone].", parent.armour_penetration,
-		weak_against_armour = parent.weak_against_armour,
+		"Your armor has softened a hit to your [owner_limb.plaintext_zone].", parent.armor_penetration,
+		weak_against_armor = parent.weak_against_armor,
 	)
 
 	owner.apply_damage(

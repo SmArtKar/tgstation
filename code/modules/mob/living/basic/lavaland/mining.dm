@@ -27,7 +27,7 @@
 	var/static/list/vulnerable_projectiles
 	if(!vulnerable_projectiles)
 		vulnerable_projectiles = string_list(MINING_MOB_PROJECTILE_VULNERABILITY)
-	add_ranged_armour(vulnerable_projectiles)
+	add_ranged_armor(vulnerable_projectiles)
 	if(crusher_loot)
 		AddElement(\
 			/datum/element/crusher_loot,\
@@ -40,7 +40,7 @@
 	// handling for retaliation and attack special cases
 	AddElement(/datum/element/relay_attackers)
 
-/mob/living/basic/mining/proc/add_ranged_armour(list/vulnerable_projectiles)
+/mob/living/basic/mining/proc/add_ranged_armor(list/vulnerable_projectiles)
 	AddElement(\
 		/datum/element/ranged_armor,\
 		minimum_projectile_force = 30,\
