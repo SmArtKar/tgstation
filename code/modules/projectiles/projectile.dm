@@ -1353,6 +1353,26 @@
 		new_angle_s -= 360
 	set_angle(new_angle_s)
 
+/// Quickly generates a damage package for ease of use
+/obj/projectile/proc/generate_damage(atom/target, ricochet = FALSE)
+	return new /datum/damage_package(
+		amount = damage * (isobj(target) ? demolition_mod : 1) * (ricochet ? receive_ricochet_damage_coeff : 1),
+		damage_type = damage_type,
+		damage_flag = armor_flag,
+		attack_flags = PROJECTILE_ATTACK,
+		def_zone = def_zone,
+		attack_dir = REVERSE_DIR(dir),
+		armor_penetration = armor_penetration,
+		armor_multiplier = weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1,
+		forced = FALSE,
+		hit_by = src,
+		source = firer,
+		attack_text = "\a [src]",
+		wound_bonus = wound_bonus,
+		bare_wound_bonus = bare_wound_bonus,
+		sharpness = sharpness,
+	)
+
 /// Fire a projectile from this atom at another atom
 /atom/proc/fire_projectile(projectile_type, atom/target, sound, firer, list/ignore_targets = list())
 	if (!isnull(sound))

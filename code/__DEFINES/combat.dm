@@ -127,18 +127,31 @@ DEFINE_BITFIELD(status_flags, list(
 //slowdown when crawling
 #define CRAWLING_ADD_SLOWDOWN 4
 
-//Attack types for checking block reactions
+// Attack flags for damage packages
 /// Attack was made with a melee weapon
-#define MELEE_ATTACK 1
-/// Attack is a punch or kick.
-/// Mob attacks are not classified as unarmed (currently).
-#define UNARMED_ATTACK 2
-/// A projectile is hitting us.
-#define PROJECTILE_ATTACK 3
-/// A thrown item is hitting us.
-#define THROWN_PROJECTILE_ATTACK 4
-/// We're being tackled or leaped at.
-#define LEAP_ATTACK 5
+#define MELEE_ATTACK (1<<0)
+/// Attack is a punch or kick, or basicmob attack
+#define UNARMED_ATTACK (1<<1)
+/// A projectile is hitting us
+#define PROJECTILE_ATTACK (1<<2)
+/// A thrown item is hitting us
+#define THROWN_PROJECTILE_ATTACK (1<<3)
+/// We're being tackled or leaped at
+#define LEAP_ATTACK (1<<4)
+/// This damage is from reagent metabolism
+#define REAGENT_ATTACK (1<<5)
+/// This damage is from atmospherics processing (extreme heat or pressure)
+#define ATMOS_ATTACK (1<<6)
+/// This damage is from a blob
+#define BLOB_ATTACK (1<<7)
+/// This damage is from a basicmob attack. Does not guarantee its a melee.
+#define BASICMOB_ATTACK (1<<8)
+/// This damage is from a magical source
+#define MAGIC_ATTACK (1<<9)
+/// This damage is from someone getting electrocuted
+#define SHOCK_ATTACK (1<<10)
+/// This damage is from something getting EMPed
+#define EMP_ATTACK (1<<11)
 
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))

@@ -7,6 +7,36 @@
 		damage_taken *= as_item.demolition_mod
 	take_damage(damage_taken, BRUTE, MELEE, 1, get_dir(src, hit_by))
 
+/obj/attacked_by(obj/item/attacking_item, mob/living/user)
+	if(!attacking_item.force)
+		return
+
+	var/total_force = (attacking_item.force * attacking_item.demolition_mod)
+	var/damage = take_damage(total_force, attacking_item.damtype, MELEE, TRUE, get_dir(src, user), attacking_item.armor_penetration)
+
+	// Sanity in case one is null for some reason
+	var/picked_index = rand(max(length(attacking_item.attack_verb_simple), length(attacking_item.attack_verb_continuous)))
+
+	var/message_verb_continuous = "attacks"
+	var/message_verb_simple = "attack"
+	// Sanity in case one is... longer than the other?
+	if (picked_index && length(attacking_item.attack_verb_continuous) >= picked_index)
+		message_verb_continuous = attacking_item.attack_verb_continuous[picked_index]
+	if (picked_index && length(attacking_item.attack_verb_simple) >= picked_index)
+		message_verb_simple = attacking_item.attack_verb_simple[picked_index]
+
+	if(attacking_item.demolition_mod > 1 && prob(damage * 5))
+		message_verb_simple = "pulverise"
+		message_verb_continuous = "pulverises"
+
+	if(attacking_item.demolition_mod < 1)
+		message_verb_simple = "ineffectively " + message_verb_simple
+		message_verb_continuous = "ineffectively " + message_verb_continuous
+
+	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), \
+		span_danger("You [message_verb_simple] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
+	log_combat(user, src, "attacked", attacking_item)
+
 /obj/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)
 		return FALSE

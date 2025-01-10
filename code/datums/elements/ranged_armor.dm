@@ -1,5 +1,5 @@
 /// Reduces or nullifies damage from ranged weaponry with force below a certain value
-/datum/element/ranged_armour
+/datum/element/ranged_armor
 	element_flags = ELEMENT_BESPOKE
 	argument_hash_start_idx = 2
 	/// The minimum force a projectile must have to ignore our armour
@@ -13,7 +13,7 @@
 	/// Message to output if throwing damage is absorbed
 	var/throw_blocked_message
 
-/datum/element/ranged_armour/Attach(
+/datum/element/ranged_armor/Attach(
 	atom/target,
 	minimum_projectile_force = 0,
 	below_projectile_multiplier = 0,
@@ -35,12 +35,12 @@
 	if (minimum_thrown_force > 0)
 		RegisterSignal(target, COMSIG_ATOM_PREHITBY, PROC_REF(pre_thrown_impact))
 
-/datum/element/ranged_armour/Detach(datum/target)
+/datum/element/ranged_armor/Detach(datum/target)
 	UnregisterSignal(target, list(COMSIG_PROJECTILE_PREHIT, COMSIG_ATOM_PREHITBY))
 	return ..()
 
 /// Modify or ignore bullet damage based on projectile properties
-/datum/element/ranged_armour/proc/pre_bullet_impact(atom/parent, obj/projectile/bullet)
+/datum/element/ranged_armor/proc/pre_bullet_impact(atom/parent, obj/projectile/bullet)
 	SIGNAL_HANDLER
 	if (bullet.damage >= minimum_projectile_force || (bullet.damage_type in vulnerable_projectile_types))
 		return
@@ -51,7 +51,7 @@
 	parent.visible_message(span_danger("[parent] seems resistant to [bullet]!"))
 
 /// Ignore thrown damage based on projectile properties. There's no elegant way to multiply the damage because throwforce is persistent.
-/datum/element/ranged_armour/proc/pre_thrown_impact(atom/parent, obj/item/hit_atom, datum/thrownthing/throwingdatum)
+/datum/element/ranged_armor/proc/pre_thrown_impact(atom/parent, obj/item/hit_atom, datum/thrownthing/throwingdatum)
 	SIGNAL_HANDLER
 	if (!isitem(hit_atom) || HAS_TRAIT(hit_atom, TRAIT_BYPASS_RANGED_ARMOR))
 		return
