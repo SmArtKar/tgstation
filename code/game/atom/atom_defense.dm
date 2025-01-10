@@ -14,7 +14,27 @@
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
 /// The essential proc to call when an atom must receive damage of any kind.
-/atom/proc/take_damage(..., sound_effect = TRUE)
+/atom/proc/take_damage(
+	amount = 0,
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	spread_damage = FALSE,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	attack_text = null,
+	attack_message_spectator = null,
+	attack_message_attacker = null,
+	wound_bonus = 0,
+	bare_wound_bonus = 0,
+	sharpness = NONE,
+	sound_effect = TRUE
+	)
 	if(!uses_integrity)
 		CRASH("[src] had /atom/proc/take_damage() called on it without it being a type that has uses_integrity = TRUE!")
 

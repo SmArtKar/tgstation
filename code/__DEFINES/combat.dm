@@ -401,4 +401,4 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	attack_message_attacker = null,\
 	wound_bonus = 0,\
 	bare_wound_bonus = 0,\
-	sharpness = NONE,\
+	sharpness = NONE
