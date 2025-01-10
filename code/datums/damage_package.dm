@@ -26,6 +26,10 @@
 	var/atom/source = null
 	/// Short descriptor of the attack, like "John Doe's punch"
 	var/attack_text = null
+	/// Override for normal "X ineffectively stabs Y, without leaving a mark!" attack messages
+	var/attack_message_spectator = null
+	/// Override for attack messages that user sees. If null, defaults to attack_message_spectator if it is set
+	var/attack_message_attacker = null
 	/// Additional chance this attack has to wound living beings
 	var/wound_bonus = 0
 	/// Additional wound bonus against bodyparts not protected by clothing
@@ -46,6 +50,8 @@
 	atom/hit_by = null,
 	atom/source = null,
 	attack_text = null,
+	attack_message_spectator = null,
+	attack_message_attacker = null,
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
@@ -76,6 +82,10 @@
 		src.source = source
 	if (!isnull(attack_text))
 		src.attack_text = attack_text
+	if (!isnull(attack_message_spectator))
+		src.attack_message_spectator = attack_message_spectator
+	if (!isnull(attack_message_attacker))
+		src.attack_message_attacker = attack_message_attacker
 	if (!isnull(wound_bonus))
 		src.wound_bonus = wound_bonus
 	if (!isnull(bare_wound_bonus))

@@ -64,35 +64,6 @@ GLOBAL_LIST_EMPTY(objects_by_id_tag)
 	GLOB.objects_by_id_tag -= id_tag
 	. = ..()
 
-/obj/attacked_by(obj/item/attacking_item, mob/living/user)
-	if(!attacking_item.force)
-		return
-
-	var/damage = take_damage(attacking_item.generate_damage(src, user))
-
-	// Sanity in case one is null for some reason
-	var/picked_index = rand(max(length(attacking_item.attack_verb_simple), length(attacking_item.attack_verb_continuous)))
-
-	var/message_verb_continuous = "attacks"
-	var/message_verb_simple = "attack"
-	// Sanity in case one is... longer than the other?
-	if (picked_index && length(attacking_item.attack_verb_continuous) >= picked_index)
-		message_verb_continuous = attacking_item.attack_verb_continuous[picked_index]
-	if (picked_index && length(attacking_item.attack_verb_simple) >= picked_index)
-		message_verb_simple = attacking_item.attack_verb_simple[picked_index]
-
-	if(attacking_item.demolition_mod > 1 && prob(damage * 5))
-		message_verb_simple = "pulverise"
-		message_verb_continuous = "pulverises"
-
-	if(attacking_item.demolition_mod < 1)
-		message_verb_simple = "ineffectively " + message_verb_simple
-		message_verb_continuous = "ineffectively " + message_verb_continuous
-
-	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), \
-		span_danger("You [message_verb_simple] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
-	log_combat(user, src, "attacked", attacking_item)
-
 /obj/assume_air(datum/gas_mixture/giver)
 	if(loc)
 		return loc.assume_air(giver)

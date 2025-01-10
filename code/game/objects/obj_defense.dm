@@ -74,17 +74,7 @@
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
 
-	var/damage = take_damage(new /datum/damage_package(
-		hulk_damage(),
-		BRUTE,
-		MELEE,
-		UNARMED_ATTACK,
-		user.zone_selected,
-		get_dir(src, user),
-		hit_by = user,
-		source = user,
-		)
-	)
+	var/damage = take_damage(user.get_unarmed_package(hulk_damage, ignore_custom = TRUE))
 	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 
@@ -144,6 +134,39 @@
 		qdel(src)
 	return 2
 
+/obj/attacked_by(obj/item/attacking_item, mob/living/user)
+	if(!attacking_item.force)
+		return
+
+	var/datum/damage_package/package = attacking_item.generate_damage(src, user)
+	var/damage = take_damage(package)
+	log_combat(user, src, "attacked", attacking_item)
+
+	if (length(package.attack_message_spectator))
+		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
+		return
+
+	// Sanity in case one is null for some reason
+	var/picked_index = rand(max(length(attacking_item.attack_verb_simple), length(attacking_item.attack_verb_continuous)))
+
+	var/message_verb_continuous = "attacks"
+	var/message_verb_simple = "attack"
+	// Sanity in case one is... longer than the other?
+	if (picked_index && length(attacking_item.attack_verb_continuous) >= picked_index)
+		message_verb_continuous = attacking_item.attack_verb_continuous[picked_index]
+	if (picked_index && length(attacking_item.attack_verb_simple) >= picked_index)
+		message_verb_simple = attacking_item.attack_verb_simple[picked_index]
+
+	if(attacking_item.demolition_mod > 1 && prob(damage * 5))
+		message_verb_simple = "pulverise"
+		message_verb_continuous = "pulverises"
+
+	if(attacking_item.demolition_mod < 1)
+		message_verb_simple = "ineffectively " + message_verb_simple
+		message_verb_continuous = "ineffectively " + message_verb_continuous
+
+	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), \
+		span_danger("You [message_verb_simple] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
 
 ///// ACID
 

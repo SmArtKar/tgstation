@@ -17,9 +17,9 @@
 /datum/blobstrain/reagent/energized_jelly/tesla_reaction(obj/structure/blob/B, power)
 	return FALSE
 
-/datum/blobstrain/reagent/energized_jelly/emp_reaction(obj/structure/blob/B, severity)
+/datum/blobstrain/reagent/energized_jelly/emp_reaction(obj/structure/blob/blob, severity)
 	var/damage = rand(30, 50) - severity * rand(10, 15)
-	B.take_damage(damage, BURN, ENERGY)
+	blob.take_damage(SIMPLE_DAMAGE(damage, BURN, ENERGY, null))
 
 /datum/reagent/blob/energized_jelly
 	name = "Energized Blob Jelly"
