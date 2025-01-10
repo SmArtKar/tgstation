@@ -155,7 +155,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	return BRUTELOSS
 
 /obj/item/claymore/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(attack_type == PROJECTILE_ATTACK || attack_type == LEAP_ATTACK)
+	if((attack_type & PROJECTILE_ATTACK) || (attack_type == LEAP_ATTACK))
 		final_block_chance = 0 //Don't bring a sword to a gunfight, and also you aren't going to really block someone full body tackling you with a sword
 	return ..()
 
@@ -1265,7 +1265,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	return ..()
 
 /obj/item/highfrequencyblade/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(attack_type == PROJECTILE_ATTACK)
+	if(attack_type & PROJECTILE_ATTACK)
 		if(HAS_TRAIT(src, TRAIT_WIELDED) || prob(final_block_chance))
 			owner.visible_message(span_danger("[owner] deflects [attack_text] with [src]!"))
 			playsound(src, SFX_BULLET_MISS, 75, TRUE)

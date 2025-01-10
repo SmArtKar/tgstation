@@ -204,7 +204,7 @@
 	if(!HAS_TRAIT(src, TRAIT_TRANSFORM_ACTIVE))
 		return FALSE
 
-	if(attack_type == LEAP_ATTACK)
+	if(attack_type & LEAP_ATTACK)
 		final_block_chance -= 25 //OH GOD GET IT OFF ME
 
 	return ..()

@@ -58,7 +58,7 @@
 	throwforce = old_throwforce
 
 /obj/item/ceremonial_blade/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(attack_type != MELEE_ATTACK || !ishuman(hitby.loc))
+	if(!(attack_type & MELEE_ATTACK) || !ishuman(hitby.loc))
 		return ..()
 	if(HAS_TRAIT(hitby.loc, TRAIT_SPARRING))
 		//becomes 30 block

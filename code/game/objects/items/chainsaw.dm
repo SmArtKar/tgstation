@@ -124,7 +124,7 @@
 	behead_time = 2 SECONDS
 
 /obj/item/chainsaw/doomslayer/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
-	if(attack_type == PROJECTILE_ATTACK)
+	if(attack_type & PROJECTILE_ATTACK)
 		owner.visible_message(span_danger("Ranged attacks just make [owner] angrier!"))
 		playsound(src, SFX_BULLET_MISS, 75, TRUE)
 		return TRUE

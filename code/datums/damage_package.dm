@@ -12,6 +12,8 @@
 	var/attack_flags = NONE
 	/// Bodypart which this attack was targeting, can be both a bodypart object or just a zone define
 	var/def_zone = null
+	/// If the damage gets spread out evenly between all bodyparts on mobs
+	var/spread_damage = FALSE
 	/// Direction from which this attack came
 	var/attack_dir = NONE
 	/// Additive armor penetration of this attack. Anything above 100 will ignore armor completely
@@ -43,6 +45,7 @@
 	damage_flag = null,
 	attack_flags = NONE,
 	def_zone = null,
+	spread_damage = FALSE,
 	attack_dir = NONE,
 	armor_penetration = 0,
 	armor_multiplier = 1,
@@ -57,41 +60,24 @@
 	sharpness = NONE,
 	)
 	. = ..()
-	// This is rather ugly, but nullchecks allow for easy macro passing
-	if (!isnull(amount))
-		src.amount = amount
-	if (!isnull(damage_type))
-		src.damage_type = damage_type
-	if (!isnull(damage_flag))
-		src.damage_flag = damage_flag
-	if (!isnull(attack_flags))
-		src.attack_flags = attack_flags
-	if (!isnull(def_zone))
-		src.def_zone = def_zone
-	if (!isnull(attack_dir))
-		src.attack_dir = attack_dir
-	if (!isnull(armor_penetration))
-		src.armor_penetration = armor_penetration
-	if (!isnull(armor_multiplier))
-		src.armor_multiplier = armor_multiplier
-	if (!isnull(forced))
-		src.forced = forced
-	if (!isnull(hit_by))
-		src.hit_by = hit_by
-	if (!isnull(source))
-		src.source = source
-	if (!isnull(attack_text))
-		src.attack_text = attack_text
-	if (!isnull(attack_message_spectator))
-		src.attack_message_spectator = attack_message_spectator
-	if (!isnull(attack_message_attacker))
-		src.attack_message_attacker = attack_message_attacker
-	if (!isnull(wound_bonus))
-		src.wound_bonus = wound_bonus
-	if (!isnull(bare_wound_bonus))
-		src.bare_wound_bonus = bare_wound_bonus
-	if (!isnull(sharpness))
-		src.sharpness = sharpness
+	src.amount = amount
+	src.damage_type = damage_type
+	src.damage_flag = damage_flag
+	src.attack_flags = attack_flags
+	src.def_zone = def_zone
+	src.spread_damage = spread_damage
+	src.attack_dir = attack_dir
+	src.armor_penetration = armor_penetration
+	src.armor_multiplier = armor_multiplier
+	src.forced = forced
+	src.hit_by = hit_by
+	src.source = source
+	src.attack_text = attack_text
+	src.attack_message_spectator = attack_message_spectator
+	src.attack_message_attacker = attack_message_attacker
+	src.wound_bonus = wound_bonus
+	src.bare_wound_bonus = bare_wound_bonus
+	src.sharpness = sharpness
 
 /datum/damage_package/Destroy(force)
 	hit_by = null

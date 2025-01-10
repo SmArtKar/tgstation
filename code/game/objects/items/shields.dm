@@ -46,9 +46,9 @@
 /obj/item/shield/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(transparent && (hitby.pass_flags & PASSGLASS))
 		return FALSE
-	if(attack_type == THROWN_PROJECTILE_ATTACK)
+	if(attack_type & THROWN_PROJECTILE_ATTACK)
 		final_block_chance += 30
-	if(attack_type == LEAP_ATTACK)
+	if(attack_type & LEAP_ATTACK)
 		final_block_chance = 100
 	. = ..()
 	if(.)
@@ -336,7 +336,7 @@
 	if(!HAS_TRAIT(src, TRAIT_TRANSFORM_ACTIVE))
 		return FALSE
 
-	if(attack_type == PROJECTILE_ATTACK)
+	if(attack_type & PROJECTILE_ATTACK)
 		var/obj/projectile/our_projectile = hitby
 
 		if(our_projectile.reflectable) //We handle this via IsReflect() instead.

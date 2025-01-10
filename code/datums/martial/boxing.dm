@@ -235,7 +235,7 @@
 	if(!can_use(boxer) || !boxer.throw_mode || INCAPACITATED_IGNORING(boxer, INCAPABLE_GRAB))
 		return NONE
 
-	if(attack_type != UNARMED_ATTACK)
+	if(!(attack_type & UNARMED_ATTACK))
 		return NONE
 
 	//Determines unarmed defense against boxers using our current active arm.

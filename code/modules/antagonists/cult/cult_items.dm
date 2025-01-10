@@ -48,7 +48,7 @@ Striking a noncultist, however, will tear their flesh."}
 	if(owner.get_active_held_item() != src)
 		block_message = "[owner] parries [attack_text] with [src] in their offhand"
 
-	if(IS_CULTIST(owner) && prob(final_block_chance) && attack_type != PROJECTILE_ATTACK)
+	if(IS_CULTIST(owner) && prob(final_block_chance) && !(attack_type & PROJECTILE_ATTACK))
 		new /obj/effect/temp_visual/cult/sparks(get_turf(owner))
 		owner.visible_message(span_danger("[block_message]"))
 		return TRUE
@@ -1424,7 +1424,7 @@ Striking a noncultist, however, will tear their flesh."}
 
 /obj/item/shield/mirror/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(IS_CULTIST(owner))
-		if(attack_type == PROJECTILE_ATTACK)
+		if(attack_type & PROJECTILE_ATTACK)
 			if(damage_type == BRUTE || damage_type == BURN)
 				if(damage >= 30)
 					var/turf/T = get_turf(owner)
