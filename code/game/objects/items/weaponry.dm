@@ -1323,7 +1323,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		return TRUE
 	else if(target.uses_integrity)
 		var/datum/damage_package/package = generate_damage(target, user)
-		package.amount *= damage_mob * 3
+		package.amount *= damage_mod * 3
 		package.armor_penetration = 50
 		target.take_damage(package, FALSE)
 		return TRUE

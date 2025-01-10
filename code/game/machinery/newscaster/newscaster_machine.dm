@@ -550,18 +550,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/newscaster, 30)
 		to_chat(user, span_warning("The newscaster controls are far too complicated for your tiny brain!"))
 		return
 
-	take_damage(new /datum/damage_package(
-		5,
-		BRUTE,
-		MELEE,
-		UNARMED_ATTACK,
-		user.zone_selected,
-		get_dir(src, user),
-		hit_by = user,
-		source = user,
-		sharpness = arm?.sharpness,
-		)
-	)
+	take_damage(user.get_unarmed_package(src, 5))
 
 /obj/machinery/newscaster/take_damage(datum/damage_package/damage, sound_effect = TRUE)
 	. = ..()

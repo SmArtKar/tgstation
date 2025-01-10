@@ -199,7 +199,7 @@
 		extra_wound = 20
 	pushed_mob.apply_damage(30, BRUTE, banged_limb, wound_bonus = extra_wound)
 	pushed_mob.apply_damage(60, STAMINA)
-	take_damage(50)
+	take_damage(SOURCED_DAMAGE(50, BRUTE, MELEE, UNARMED_ATTACK, get_dir(src, pushed_mob), banged_limb, user))
 	if(user.mind?.martial_art?.smashes_tables && user.mind?.martial_art.can_use(user))
 		deconstruct(FALSE)
 	playsound(pushed_mob, 'sound/effects/bang.ogg', 90, TRUE)
@@ -956,7 +956,7 @@
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_KICK)
 	user.visible_message(span_danger("[user] kicks [src]."), null, null, COMBAT_MESSAGE_RANGE)
-	take_damage(rand(4,8), BRUTE, MELEE, 1)
+	take_damage(user.get_unarmed_package(src, rand(4, 8)))
 
 /obj/structure/rack/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)

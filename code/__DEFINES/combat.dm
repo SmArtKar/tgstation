@@ -1,8 +1,8 @@
 /*ALL DEFINES RELATED TO COMBAT GO HERE*/
 
-//Damage and status effect defines
+// Damage and status effect defines
 
-//Damage defines //TODO: merge these down to reduce on defines
+// Damage defines
 /// Physical fracturing and warping of the material.
 #define BRUTE "brute"
 /// Scorching and charring of the material.
@@ -148,6 +148,10 @@ DEFINE_BITFIELD(status_flags, list(
 #define BASICMOB_ATTACK (1<<8)
 /// This damage is from a magical source
 #define MAGIC_ATTACK (1<<9)
+/// This damage is from someone getting electrocuted
+#define SHOCK_ATTACK (1<<10)
+/// This damage is from something getting EMPed
+#define EMP_ATTACK (1<<11)
 
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))
@@ -383,5 +387,6 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 // Ideally should not be used, but most sources don't use information beyond these 4-5 so whatever
 #define SIMPLE_DAMAGE(amount, damage_type, damage_flag, attack_flags) (new /datum/damage_package(amount, damage_type, damage_flag, attack_flags))
 #define DIRECTIONAL_DAMAGE(amount, damage_type, damage_flag, attack_flags, attack_dir) (new /datum/damage_package(amount, damage_type, damage_flag, attack_flags, attack_dir = attack_dir))
+#define SOURCED_DAMAGE(amount, damage_type, damage_flag, attack_flags, attack_dir, hit_by, source) (new /datum/damage_package(amount, damage_type, damage_flag, attack_flags, attack_dir = attack_dir, hit_by = hit_by, source = source))
 #define DAMAGE_PACKAGE(amount, damage_type, damage_flag, attack_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness)\
 	(new /datum/damage_package(amount, damage_type, damage_flag, attack_flags, def_zone, attack_dir, armor_penetration, armor_multiplier, forced, hit_by, source, attack_text, wound_bonus, bare_wound_bonus, sharpness))

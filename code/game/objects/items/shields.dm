@@ -96,7 +96,7 @@
 	else if(isbasicmob(hitby))
 		var/mob/living/basic/critter = hitby
 		penetration = critter.armor_penetration
-	take_damage(damage, damage_type, armor_flag, armor_penetration = penetration)
+	take_damage(damage, damage_type, armor_flag, armor_penetration = penetration) // SMARTKAR TODO: Do alongside block code
 
 /obj/item/shield/atom_destruction(damage_flag)
 	playsound(src, shield_break_sound, 50)

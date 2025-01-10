@@ -219,16 +219,15 @@
 	log_combat(user, src, "kicks")
 	user.do_attack_animation(src, ATTACK_EFFECT_KICK)
 	take_damage(new /datum/damage_package(
-		2,
-		BRUTE,
-		MELEE,
-		UNARMED_ATTACK,
-		user.zone_selected,
-		get_dir(src, user),
+		amount = 2,
+		damage_type = BRUTE,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		def_zone = user.zone_selected,
+		attack_dir = get_dir(src, user),
 		hit_by = user,
 		source = user,
-		)
-	)
+	))
 
 /obj/structure/displaycase_chassis
 	name = "display case chassis"

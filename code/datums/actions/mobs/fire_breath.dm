@@ -66,7 +66,8 @@
 		if(robotron in hit_list)
 			continue
 		hit_list |= robotron
-		robotron.take_damage(SIMPLE_DAMAGE(mech_damage, BURN, FIRE, BASICMOB_ATTACK))
+		// Don't set hit_by as its not a direct attack
+		robotron.take_damage(SOURCED_DAMAGE(mech_damage, BURN, FIRE, BASICMOB_ATTACK, get_dir(robotron, owner), null, source))
 
 	return fire_hotspot
 

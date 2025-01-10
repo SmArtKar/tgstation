@@ -1,11 +1,34 @@
 
 /obj/hitby(atom/movable/hit_by, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
 	..()
-	var/damage_taken = hit_by.throwforce
-	if(isitem(hit_by))
-		var/obj/item/as_item = hit_by
-		damage_taken *= as_item.demolition_mod
-	take_damage(DIRECTIONAL_DAMAGE(damage_taken, BRUTE, MELEE, THROWN_PROJECTILE_ATTACK, get_dir(src, hit_by)), TRUE)
+	var/datum/damage_package/package = new /datum/damage_package(
+		amount = hit_by.throwforce,
+		damage_type = BRUTE,
+		damage_flag = MELEE,
+		attack_flags = THROWN_PROJECTILE_ATTACK,
+		attack_dir = get_dir(src, hit_by),
+		forced = FALSE,
+		hit_by = hit_by,
+	)
+
+	var/mob/thrower = throwingdatum?.thrower.resolve()
+	if (thrower)
+		package.source = thrower
+		package.def_zone = thrower.zone_selected
+
+	if(isobj(hit_by))
+		var/obj/item/as_obj = hit_by
+		package.amount *= as_obj.demolition_mod
+		package.damage_type = as_obj.damtype
+		package.wound_bonus = as_obj.wound_bonus
+		package.bare_wound_bonus = as_obj.bare_wound_bonus
+		if (isitem(as_obj))
+			var/obj/item/as_item = as_obj
+			package.armor_penetration = as_item.armor_penetration
+			package.armor_multiplier = as_item.weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1
+			package.sharpness = as_item.sharpness
+
+	take_damage(package, TRUE)
 
 /obj/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)
@@ -34,7 +57,7 @@
 
 	var/damage_sustained = 0
 	if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-		damage_sustained = take_damage(hitting_projectile.generage_damage(src), FALSE)
+		damage_sustained = take_damage(hitting_projectile.generate_damage(src), FALSE)
 
 	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
 		visible_message(
@@ -104,7 +127,16 @@
 
 /obj/proc/collision_damage(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	var/amt = max(0, ((force - (move_resist * MOVE_FORCE_CRUSH_RATIO)) / (move_resist * MOVE_FORCE_CRUSH_RATIO)) * 10)
-	take_damage(DIRECTIONAL_DAMAGE(amt, BRUTE, null, NONE, REVERSE_DIR(direction)))
+	take_damage( new /datum/damage_package(
+		amount = amt,
+		damage_type = BRUTE,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		attack_dir = REVERSE_DIR(direction),
+		forced = FALSE,
+		hit_by = pusher,
+		source = pusher,
+	))
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src

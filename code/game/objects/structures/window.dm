@@ -427,7 +427,7 @@
 	return exposed_temperature > T0C + heat_resistance
 
 /obj/structure/window/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(round(air.return_volume() / 100), BURN, 0, 0)
+	take_damage(SIMPLE_DAMAGE(round(air.return_volume() / 100), BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/structure/window/get_dumping_location()
 	return null
@@ -620,7 +620,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/unanchored/spawner,
 	add_atom_colour(COLOR_RUSTED_GLASS, FIXED_COLOUR_PRIORITY)
 	AddElement(/datum/element/rust)
 	set_armor(/datum/armor/none)
-	take_damage(get_integrity() * 0.5)
+	take_damage(SIMPLE_DAMAGE(get_integrity() * 0.5, BRUTE, null, MAGIC_ATTACK))
 	modify_max_integrity(max_integrity * 0.5)
 
 /obj/structure/window/plasma
@@ -961,12 +961,13 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 
 /obj/structure/window/paperframe/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
-	if(.)
+	if(. || !user.combat_mode)
 		return
-	if(user.combat_mode)
-		take_damage(4, BRUTE, MELEE, 0)
-		if(!QDELETED(src))
-			update_appearance()
+
+	take_damage(user.get_unarmed_package(src, 4))
+
+	if(!QDELETED(src))
+		update_appearance()
 
 /obj/structure/window/paperframe/update_appearance(updates)
 	. = ..()
@@ -981,23 +982,28 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	. = ..()
 	. += (atom_integrity < max_integrity) ? torn : paper
 
-/obj/structure/window/paperframe/attackby(obj/item/W, mob/living/user)
-	if(W.get_temperature())
-		fire_act(W.get_temperature())
+/obj/structure/window/paperframe/attackby(obj/item/tool, mob/living/user)
+	if(tool.get_temperature())
+		fire_act(tool.get_temperature())
 		return
+
 	if(user.combat_mode)
 		return ..()
-	if(istype(W, /obj/item/paper) && atom_integrity < max_integrity)
-		user.visible_message(span_notice("[user] starts to patch the holes in \the [src]."))
-		if(do_after(user, 2 SECONDS, target = src))
-			atom_integrity = min(atom_integrity+4,max_integrity)
-			qdel(W)
-			user.visible_message(span_notice("[user] patches some of the holes in \the [src]."))
-			if(atom_integrity == max_integrity)
-				update_appearance()
-			return
-	..()
-	update_appearance()
+
+	if(!istype(tool, /obj/item/paper) && atom_integrity < max_integrity)
+		. = ..()
+		update_appearance()
+		return
+
+	user.visible_message(span_notice("[user] starts to patch the holes in \the [src]."))
+	if(!do_after(user, 2 SECONDS, target = src))
+		return
+
+	atom_integrity = min(atom_integrity + 4,max_integrity)
+	qdel(tool)
+	user.visible_message(span_notice("[user] patches some of the holes in \the [src]."))
+	if(atom_integrity == max_integrity)
+		update_appearance()
 
 /obj/structure/window/bronze
 	name = "brass window"

@@ -407,8 +407,11 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/chair/stool/bar, 0)
 /obj/item/chair/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(attack_type == UNARMED_ATTACK && prob(hit_reaction_chance) || attack_type == LEAP_ATTACK && prob(hit_reaction_chance))
 		owner.visible_message(span_danger("[owner] fends off [attack_text] with [src]!"))
-		if(take_chair_damage(damage, damage_type, MELEE)) // Our chair takes our incoming damage for us, which can result in it smashing.
+		// Our chair takes our incoming damage for us, which can result in it smashing.
+		if (damage_to_inflict >= atom_integrity)
 			smash(owner)
+			return TRUE
+		take_damage(SIMPLE_DAMAGE(damage, damage_type, MELEE, UNARMED_ATTACK))
 		return TRUE
 	return FALSE
 
@@ -424,7 +427,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/chair/stool/bar, 0)
 	// If our attack is against a vulnerable target, we do additional damage to the chair
 	var/damage_to_inflict = vulnerable_hit ? (force * 5) : (force * 2.5)
 
-	if(!take_chair_damage(damage_to_inflict, damtype, MELEE)) // If we would do enough damage to bring our chair's integrity to 0, we instead go past the check to smash it against our target
+	// If we would do enough damage to bring our chair's integrity to 0, we instead smash it against our target
+	if (damage_to_inflict < atom_integrity)
+		take_damage(SIMPLE_DAMAGE(damage_to_inflict, damtype, MELEE, MELEE_ATTACK))
 		return
 
 	user.visible_message(span_danger("[user] smashes [src] to pieces against [give_this_fucker_the_chair]"))
@@ -437,12 +442,6 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/chair/stool/bar, 0)
 				give_this_fucker_the_chair.apply_status_effect(/datum/status_effect/next_shove_stuns)
 
 	smash(user)
-
-/obj/item/chair/proc/take_chair_damage(damage_to_inflict, damage_type, armor_flag)
-	if(damage_to_inflict >= atom_integrity)
-		return TRUE
-	take_damage(damage_to_inflict, damage_type, armor_flag)
-	return FALSE
 
 /obj/item/chair/greyscale
 	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS

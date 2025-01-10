@@ -32,5 +32,5 @@
 	qdel(smoke) //And deleted again. Sad really.
 	for(var/obj/structure/blob/blob in view(8, src))
 		var/damage = round(30/(get_dist(blob, src) + 1))
-		blob.take_damage(SIMPLE_DAMAGE(damage, BURN, MELEE, null), FALSE)
+		blob.take_damage(SOURCED_DAMAGE(damage, BURN, MELEE, null, get_dir(blob, src), src, src), FALSE)
 	qdel(src)

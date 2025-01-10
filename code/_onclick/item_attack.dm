@@ -275,13 +275,13 @@
 		damage_flag = MELEE,
 		attack_flags = MELEE_ATTACK,
 		def_zone = user.zone_selected,
-		attack_dir = get_dir(target, user)
+		attack_dir = get_dir(target, user),
 		armor_penetration = armor_penetration,
-		armor_multiplier = weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1
-		forced = FALSE
+		armor_multiplier = weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1,
+		forced = FALSE,
 		hit_by = src,
 		source = user,
-		attack_text = "[user]'s [src]"
+		attack_text = "[user]'s [src]",
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,

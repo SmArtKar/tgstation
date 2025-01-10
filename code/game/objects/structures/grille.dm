@@ -154,7 +154,7 @@
 	if(!.)
 		return
 	if(!shock(user, 70) && !QDELETED(src)) //Last hit still shocks but shouldn't deal damage to the grille
-		take_damage(rand(5,10), BRUTE, MELEE, 1)
+		take_damage(rand(5,10), BRUTE, MELEE, 1) // SMARTKAR TODO: simplemobs
 
 /obj/structure/grille/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
@@ -175,10 +175,11 @@
 	user.do_attack_animation(src, ATTACK_EFFECT_KICK)
 	user.visible_message(span_warning("[user] hits [src]."), null, null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "hit")
-	if(!shock(user, 70))
-		take_damage(rand(5,10), BRUTE, MELEE, 1)
+	if(shock(user, 70))
+		return
+	take_damage(user.get_unarmed_package(src, rand(5, 10)))
 
-/obj/structure/grille/attack_alien(mob/living/user, list/modifiers)
+/obj/structure/grille/attack_alien(mob/living/user, list/modifiers) // SMARTKAR TODO: simplemobs
 	user.do_attack_animation(src)
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.visible_message(span_warning("[user] mangles [src]."), null, null, COMBAT_MESSAGE_RANGE)
@@ -338,7 +339,6 @@
 	if(!electrocute_mob(user, cable_node, src, 1, TRUE))
 		return FALSE
 	if(prob(50)) // Shocking hurts the grille (to weaken monkey powersinks)
-		take_damage(1, BURN, FIRE, sound_effect = FALSE)
 	var/datum/effect_system/spark_spread/sparks = new /datum/effect_system/spark_spread
 	sparks.set_up(3, 1, src)
 	sparks.start()
@@ -349,7 +349,7 @@
 	return exposed_temperature > T0C + 1500 && !broken
 
 /obj/structure/grille/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(1, BURN, 0, 0)
+	take_damage(SIMPLE_DAMAGE(1, BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/structure/grille/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
 	if(isobj(AM))
@@ -402,6 +402,6 @@
 
 /obj/structure/grille/broken/Initialize(mapload)
 	. = ..()
-	take_damage(max_integrity * 0.6)
+	take_damage(SIMPLE_DAMAGE(max_integrity * 0.6, BRUTE, null, null))
 
 #undef CLEAR_TILE_MOVE_LIMIT

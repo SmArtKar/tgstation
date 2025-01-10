@@ -809,3 +809,27 @@
 		return SUCCESSFUL_BLOCK
 
 	return FAILED_BLOCK
+
+// Creates a new damage package for our unarmed attack. Uses our selected arm's unarmed damage, or falls back to amount arg if such doesn't exist
+// If ignore_custom is TRUE, then deal fixed amount of damage of fixed type, ignoring picked arm or custom logic
+/mob/living/proc/get_unarmed_package(atom/target, amount, damtype = BRUTE, forced = FALSE, ignore_custom = FALSE)
+	var/obj/item/bodypart/arm = get_active_hand()
+	var/sharpness = NONE
+	if (!isnull(arm) && !ignore_custom)
+		amount = rand(arm.unarmed_damage_low, arm.unarmed_damage_high)
+		damtype = arm.attack_type
+		sharpness = arm.sharpness
+
+	return new /datum/damage_package(
+		amount = amount,
+		damage_type = damtype,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		def_zone = zone_selected,
+		attack_dir = get_dir(target, src),
+		forced = forced,
+		hit_by = src,
+		source = src,
+		sharpness = sharpness,
+		)
+	)

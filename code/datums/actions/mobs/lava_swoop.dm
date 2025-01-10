@@ -106,7 +106,7 @@
 			victim.throw_at(throwtarget, 3)
 			owner.visible_message(span_warning("[victim] is thrown clear of [owner]!"))
 	for(var/obj/vehicle/sealed/mecha/mech in orange(1, owner))
-		mech.take_damage(SIMPLE_DAMAGE(75, BRUTE, MELEE, BASICMOB_ATTACK))
+		mech.take_damage(SOURCED_DAMAGE(75, BRUTE, MELEE, BASICMOB_ATTACK, get_dir(mech, owner), owner, owner))
 
 	for(var/mob/observer in range(7, owner))
 		shake_camera(observer, 15, 1)

@@ -22,7 +22,7 @@
 	var/forced = FALSE
 	/// Source of the attack - weapon, projectile, thrown item, or a maint-fu practicioner
 	var/atom/hit_by = null
-	/// Atom or mob that shot the projectile, or hit you with a weapon. Can be the same as source, can differ
+	/// Atom or mob that shot the projectile, or hit you with a weapon. Can be the same as hit_by, can differ
 	var/atom/source = null
 	/// Short descriptor of the attack, like "John Doe's punch"
 	var/attack_text = null

@@ -898,7 +898,7 @@
 
 
 /mob/living/carbon/human/limb_attack_self()
-	var/obj/item/bodypart/arm = hand_bodyparts[active_hand_index]
+	var/obj/item/bodypart/arm = get_active_hand()
 	if(arm)
 		arm.attack_self(src)
 	return ..()

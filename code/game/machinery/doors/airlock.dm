@@ -1232,7 +1232,7 @@
 		return
 
 	open(BYPASS_DOOR_CHECKS)
-	take_damage(SIMPLE_DAMAGE(25, BRUTE, null, MELEE_ATTACK), FALSE) // Enough to sometimes spark
+	take_damage(SOURCED_DAMAGE(25, BRUTE, null, MELEE_ATTACK, get_dir(src, user), tool, user), FALSE) // Enough to sometimes spark
 	if(density && !open(BYPASS_DOOR_CHECKS))
 		to_chat(user, span_warning("Despite your attempts, [src] refuses to open."))
 

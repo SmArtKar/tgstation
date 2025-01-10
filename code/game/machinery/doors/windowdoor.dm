@@ -361,7 +361,7 @@
 	return (exposed_temperature > T0C + (reinf ? 1600 : 800))
 
 /obj/machinery/door/window/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(SIMPLE_DAMAGE(round(exposed_temperature / 200), BURN, null, ATMOS_ATTACK) FALSE)
+	take_damage(SIMPLE_DAMAGE(round(exposed_temperature / 200), BURN, null, ATMOS_ATTACK), FALSE)
 
 /obj/machinery/door/window/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if(!operating && density && !(obj_flags & EMAGGED))

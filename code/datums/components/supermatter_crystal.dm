@@ -61,7 +61,7 @@
 	if(blob.get_integrity() > 100)
 		blob.visible_message(span_danger("\The [blob] strikes at \the [atom_source] and flinches away!"),
 			span_hear("You hear a loud crack as you are washed with a wave of heat."))
-		blob.take_damage(SIMPLE_DAMAGE(100, BURN, null, null), TRUE)
+		blob.take_damage(SOURCED_DAMAGE(100, BURN, null, null, get_dir(blob, atom_source), atom_source, atom_source), TRUE)
 	else
 		blob.visible_message(span_danger("\The [blob] strikes at \the [atom_source] and rapidly flashes to ash."),
 			span_hear("You hear a loud crack as you are washed with a wave of heat."))

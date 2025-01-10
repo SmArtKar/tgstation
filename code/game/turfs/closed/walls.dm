@@ -147,7 +147,7 @@
 
 /turf/closed/wall/attack_hulk(mob/living/carbon/user)
 	..()
-	var/obj/item/bodypart/arm = user.hand_bodyparts[user.active_hand_index]
+	var/obj/item/bodypart/arm = user.get_active_hand()
 	if(!arm)
 		return
 	if(arm.bodypart_disabled)
