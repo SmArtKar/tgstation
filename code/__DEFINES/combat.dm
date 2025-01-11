@@ -402,3 +402,22 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	wound_bonus = 0,\
 	bare_wound_bonus = 0,\
 	sharpness = NONE
+
+#define DAMAGE_PROC_PASSING amount = amount,\
+	damage_type = damage_type,\
+	damage_flag = damage_flag,\
+	attack_flags = attack_flags,\
+	def_zone = def_zone,\
+	spread_damage = spread_damage,\
+	attack_dir = attack_dir,\
+	armor_penetration = armor_penetration,\
+	armor_multiplier = armor_multiplier,\
+	forced = forced,\
+	hit_by = hit_by,\
+	source = source,\
+	attack_text = attack_text,\
+	attack_message_spectator = attack_message_spectator,\
+	attack_message_attacker = attack_message_attacker,\
+	wound_bonus = wound_bonus,\
+	bare_wound_bonus = bare_wound_bonus,\
+	sharpness = sharpness
