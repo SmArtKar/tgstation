@@ -39,26 +39,7 @@
 	/// Sharpness of the tool this attack was made with
 	var/sharpness = NONE
 
-/datum/damage_package/New(
-	amount = 0,
-	damage_type = BRUTE,
-	damage_flag = null,
-	attack_flags = NONE,
-	def_zone = null,
-	spread_damage = FALSE,
-	attack_dir = NONE,
-	armor_penetration = 0,
-	armor_multiplier = 1,
-	forced = FALSE,
-	atom/hit_by = null,
-	atom/source = null,
-	attack_text = null,
-	attack_message_spectator = null,
-	attack_message_attacker = null,
-	wound_bonus = 0,
-	bare_wound_bonus = 0,
-	sharpness = NONE,
-	)
+/datum/damage_package/New(DAMAGE_PROC_ARGS)
 	. = ..()
 	src.amount = amount
 	src.damage_type = damage_type
