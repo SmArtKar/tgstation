@@ -734,8 +734,8 @@
 		if(leg_clothes)
 			torn_items |= leg_clothes
 
-	for(var/obj/item/I in torn_items)
-		I.take_damage(damage_amount, damage_type, damage_flag, 0)
+	for(var/obj/item/torn_stuff in torn_items)
+		torn_stuff.take_damage(damage_amount, damage_type, damage_flag, null, sound_effect = FALSE)
 
 /**
  * Used by fire code to damage worn items.

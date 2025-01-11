@@ -269,16 +269,19 @@
 
 /// Called from [/obj/item/proc/attack_atom] and [/obj/item/proc/attack] if the attack succeeds
 /atom/proc/attacked_by(obj/item/attacking_item, mob/living/user)
-	if(!uses_integrity)
+	if (!uses_integrity)
 		CRASH("attacked_by() was called on an object that doesn't use integrity!")
 
-	if(!attacking_item.force)
+	if (!attacking_item.force)
 		return
 
-	var/damage = take_damage(attacking_item.force, attacking_item.damtype, MELEE, 1, get_dir(src, user))
-	//only witnesses close by and the victim see a hit message.
-	user.visible_message(span_danger("[user] hits [src] with [attacking_item][damage ? "." : ", without leaving a mark!"]"), \
-		span_danger("You hit [src] with [attacking_item][damage ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
+	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user))
+	// Only witnesses close by and the victim see a hit message.
+	if (package.attack_message_spectator)
+		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
+	else
+		user.visible_message(span_danger("[user] hits [src] with [attacking_item][package.amount ? "." : ", without leaving a mark!"]"), \
+			span_danger("You hit [src] with [attacking_item][package.amount ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "attacked", attacking_item)
 
 /area/attacked_by(obj/item/attacking_item, mob/living/user)
@@ -489,14 +492,14 @@
 		damage_type = damtype,
 		damage_flag = MELEE,
 		attack_flags = MELEE_ATTACK,
-		def_zone = user.zone_selected,
-		attack_dir = get_dir(target, user),
+		def_zone = user?.zone_selected,
+		attack_dir = get_dir(target, user || src),
 		armor_penetration = armor_penetration,
 		armor_multiplier = weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1,
 		forced = FALSE,
 		hit_by = src,
 		source = user,
-		attack_text = "[user]'s [src]",
+		attack_text = user ? "[user]'s [src]" : "[src]",
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,

@@ -32,7 +32,9 @@
 		return ..()
 	if(isobj(target))
 		var/obj/hit_object = target
-		hit_object.take_damage(object_damage, BRUTE, BULLET, FALSE)
+		var/datum/damage_package/package = generate_damage(hit_object)
+		package.amount = object_damage
+		hit_object.take_damage(direct_package = package, sound_effect = FALSE) // Smartkar: convert into damage mods!!
 	else if(isclosedturf(target))
 		damage -= max(damage - 30, 10) //lose extra momentum from busting through a wall
 		if(!isindestructiblewall(target))

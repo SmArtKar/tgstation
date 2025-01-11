@@ -36,8 +36,9 @@
 
 	do_boom(target, random_crit_gib)
 	if(anti_armor_damage && ismecha(target))
-		var/obj/vehicle/sealed/mecha/M = target
-		M.take_damage(anti_armor_damage)
+		var/datum/damage_package/package = generate_damage(target)
+		package.amount = anti_armor_damage
+		target.take_damage(package) // Smartkar: convert into damage mods!!
 	if(issilicon(target))
 		var/mob/living/silicon/S = target
 		S.take_overall_damage(anti_armor_damage*0.75, anti_armor_damage*0.25)

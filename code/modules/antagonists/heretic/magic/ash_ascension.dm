@@ -143,26 +143,26 @@
 
 /datum/action/cooldown/spell/pointed/ash_beams/proc/fire_line(atom/source, list/turfs)
 	var/list/hit_list = list()
-	for(var/turf/T in turfs)
-		if(isclosedturf(T))
+	for(var/turf/target_turf in turfs)
+		if(isclosedturf(target_turf))
 			break
 
-		for(var/mob/living/L in T.contents)
-			if(L.can_block_magic())
-				L.visible_message(span_danger("The spell bounces off of [L]!"), span_danger("The spell bounces off of you!"))
+		for(var/mob/living/victim in target_turf.contents)
+			if(victim.can_block_magic())
+				victim.visible_message(span_danger("The spell bounces off of [victim]!"), span_danger("The spell bounces off of you!"))
 				continue
-			if((L in hit_list) || L == source)
+			if((victim in hit_list) || victim == source)
 				continue
-			hit_list += L
-			L.adjustFireLoss(20)
-			to_chat(L, span_userdanger("You're hit by [source]'s eldritch flames!"))
+			hit_list += victim
+			victim.adjustFireLoss(20)
+			to_chat(victim, span_userdanger("You're hit by [source]'s eldritch flames!"))
 
-		new /obj/effect/hotspot(T)
-		T.hotspot_expose(700,50,1)
+		new /obj/effect/hotspot(target_turf)
+		target_turf.hotspot_expose(700,50,1)
 		// deals damage to mechs
-		for(var/obj/vehicle/sealed/mecha/M in T.contents)
-			if(M in hit_list)
+		for(var/obj/vehicle/sealed/mecha/mech in target_turf.contents)
+			if(mech in hit_list)
 				continue
-			hit_list += M
-			M.take_damage(45, BURN, MELEE, 1)
+			hit_list += mech
+			mech.take_damage(45, BURN, MELEE, MAGIC_ATTACK, source = source)
 		sleep(0.15 SECONDS)

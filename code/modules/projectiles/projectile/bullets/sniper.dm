@@ -16,13 +16,17 @@
 	var/mecha_damage = 10
 
 /obj/projectile/bullet/p50/on_hit(atom/target, blocked = 0, pierce_hit)
-	if(isobj(target) && (blocked != 100))
-		var/obj/thing_to_break = target
-		var/damage_to_deal = object_damage
-		if(ismecha(thing_to_break) && mecha_damage)
-			damage_to_deal += mecha_damage
-		if(damage_to_deal)
-			thing_to_break.take_damage(damage_to_deal, BRUTE, BULLET, FALSE)
+	if(!isobj(target) || blocked >= 100)
+		return ..()
+	var/obj/thing_to_break = target
+	var/damage_to_deal = object_damage
+	if(ismecha(thing_to_break) && mecha_damage)
+		damage_to_deal += mecha_damage
+	if(damage_to_deal)
+		var/datum/damage_package/package = generate_damage(target)
+		package.amount = damage_to_deal
+		package.armor_penetration = 0
+		thing_to_break.take_damage(direct_package = package, sound_effect = FALSE) // Smartkar: convert into damage mods!!
 	return ..()
 
 /obj/projectile/bullet/p50/surplus

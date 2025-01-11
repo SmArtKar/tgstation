@@ -127,7 +127,7 @@
 			eaten = TRUE
 
 		if(istype(target, /obj/structure/alien/resin/flower_bud))
-			target.take_damage(rand(30, 50), BRUTE, 0)
+			target.take_damage(rand(30, 50), BRUTE, null, UNARMED_ATTACK|BASICMOB_ATTACK, zone_selected, attack_dir = get_dir(target, src), hit_by = src, source = src, sound_effect = FALSE)
 			eaten = TRUE
 
 		if(istype(target, /obj/structure/glowshroom))

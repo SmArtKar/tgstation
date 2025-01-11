@@ -101,11 +101,11 @@
 
 			if(istype(thing_to_affect, /obj/machinery/door) || istype(thing_to_affect, /obj/structure/door_assembly))
 				var/obj/affected_door = thing_to_affect
-				affected_door.take_damage(rand(15, 30))
+				affected_door.take_damage(rand(15, 30), BRUTE, null, MAGIC_ATTACK, sound_effect = FALSE)
 
 			if(istype(thing_to_affect, /obj/structure/window) || istype(thing_to_affect, /obj/structure/grille))
 				var/obj/structure/affected_structure = thing_to_affect
-				affected_structure.take_damage(rand(10, 20))
+				affected_structure.take_damage(rand(10, 20), BRUTE, null, MAGIC_ATTACK, sound_effect = FALSE)
 
 /datum/looping_sound/void_conduit
 	mid_sounds = 'sound/ambience/misc/ambiatm1.ogg'

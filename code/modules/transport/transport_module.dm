@@ -396,7 +396,7 @@
 								throw_target = get_edge_target_turf(src, turn(travel_direction, pick(45, -45)))
 							visible_message(span_danger("[src] violently rams [victim_structure] out of the way!"))
 							victim_structure.anchored = FALSE
-							victim_structure.take_damage(rand(20, 25) * collision_lethality)
+							victim_structure.take_damage(rand(20, 25) * collision_lethality, BRUTE, MELEE, attack_dir = get_dir(victim_structure, src), armor_penetration = 100, hit_by = src, source = src)
 							victim_structure.throw_at(throw_target, 200 * collision_lethality, 4 * collision_lethality)
 
 			for(var/obj/machinery/victim_machine in dest_turf.contents)

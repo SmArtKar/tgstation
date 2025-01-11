@@ -440,7 +440,7 @@
 	return cell
 
 /obj/vehicle/sealed/mecha/rust_heretic_act()
-	take_damage(500,  BRUTE)
+	take_damage(500, BRUTE, MELEE, MAGIC_ATTACK, armor_penetration = 100)
 
 /obj/vehicle/sealed/mecha/proc/restore_equipment()
 	equipment_disabled = FALSE
@@ -545,7 +545,7 @@
 	if(SPT_PROB(damage_chance, seconds_per_tick))
 		do_sparks(5, TRUE, src)
 		try_deal_internal_damage(damage_chance)
-		take_damage(seconds_per_tick, BURN, 0, 0)
+		take_damage(seconds_per_tick, BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 /obj/vehicle/sealed/mecha/proc/process_internal_damage_effects(seconds_per_tick)
 	if(internal_damage & MECHA_INT_FIRE)
@@ -556,7 +556,7 @@
 				set_internal_damage(MECHA_CABIN_AIR_BREACH)
 			cabin_air.temperature = min(6000+T0C, cabin_air.temperature+rand(5,7.5)*seconds_per_tick)
 			if(cabin_air.return_temperature() > max_temperature/2)
-				take_damage(seconds_per_tick*2/round(max_temperature/cabin_air.return_temperature(),0.1), BURN, 0, 0)
+				take_damage(seconds_per_tick * 2 / round(max_temperature / cabin_air.return_temperature(), 0.1), BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 	if(internal_damage & MECHA_CABIN_AIR_BREACH && cabin_air && cabin_sealed) //remove some air from cabin_air
 		var/datum/gas_mixture/leaked_gas = cabin_air.remove_ratio(SPT_PROB_RATE(0.05, seconds_per_tick))

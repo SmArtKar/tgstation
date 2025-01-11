@@ -714,7 +714,7 @@
 	return (exposed_temperature > 2000)
 
 /obj/machinery/power/apc/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(min(exposed_temperature/100, 10), BURN)
+	take_damage(min(exposed_temperature/100, 10), BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 /obj/machinery/power/apc/proc/report()
 	return "[area.name] : [equipment]/[lighting]/[environ] ([lastused_total]) : [cell? cell.percent() : "N/C"] ([charging])"

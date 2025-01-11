@@ -135,7 +135,7 @@
 	if(!taking_damage)
 		return FALSE
 
-	take_damage(clamp(temp_damage * pressure_damage, 5, 50), BURN, 0)
+	take_damage(clamp(temp_damage * pressure_damage, 5, 50), BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 	return TRUE
 
 /obj/machinery/portable_atmospherics/return_air()

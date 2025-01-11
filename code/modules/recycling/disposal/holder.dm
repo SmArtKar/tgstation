@@ -142,7 +142,7 @@
 	for(var/mob/living/jailbird in contents)
 		jailbird.apply_damage(rand(5,15), damagetype = BRUTE)
 	transport_cylinder.spew_forth()
-	transport_cylinder.take_damage(transport_cylinder.max_integrity)
+	transport_cylinder.take_damage(transport_cylinder.max_integrity, BRUTE, null, UNARMED_ATTACK, hit_by = escapee, source = escapee)
 
 //failsafe in the case the holder is somehow forcemoved somewhere that's not a disposal pipe. Otherwise the above loop breaks.
 /obj/structure/disposalholder/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)

@@ -62,11 +62,11 @@
 	return "structure"
 
 /obj/structure/rust_heretic_act()
-	take_damage(500, BRUTE, "melee", 1)
+	take_damage(500, BRUTE, MELEE, MAGIC_ATTACK)
 
 /obj/structure/zap_act(power, zap_flags)
 	if(zap_flags & ZAP_OBJ_DAMAGE)
-		take_damage(power * 2.5e-4, BURN, "energy")
+		take_damage(power * 2.5e-4, BURN, ENERGY, SHOCK_ATTACK)
 	power -= power * 5e-4 //walls take a lot out of ya
 	. = ..()
 

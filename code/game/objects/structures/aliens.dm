@@ -11,14 +11,15 @@
 	icon = 'icons/mob/nonhuman-player/alien.dmi'
 	max_integrity = 100
 
-/obj/structure/alien/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	if(damage_flag == MELEE)
-		switch(damage_type)
-			if(BRUTE)
-				damage_amount *= 0.25
-			if(BURN)
-				damage_amount *= 2
+/obj/structure/alien/run_atom_armor(datum/damage_package/package)
 	. = ..()
+	if(package.damage_flag != MELEE)
+		return
+	switch(package.damage_type)
+		if(BRUTE)
+			package.amount *= 0.25
+		if(BURN)
+			package.amount *= 2
 
 /obj/structure/alien/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)
@@ -248,7 +249,7 @@
 	return exposed_temperature > 300
 
 /obj/structure/alien/weeds/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(5, BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 /obj/structure/alien/weeds/node
 	name = "glowing resin"
@@ -444,7 +445,7 @@
 	return exposed_temperature > 500
 
 /obj/structure/alien/egg/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(5, BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 /obj/structure/alien/egg/atom_break(damage_flag)
 	. = ..()

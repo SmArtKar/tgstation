@@ -354,14 +354,14 @@
 	add_atom_colour(COLOR_RUSTED_GLASS, FIXED_COLOUR_PRIORITY)
 	AddElement(/datum/element/rust)
 	set_armor(/datum/armor/none)
-	take_damage(get_integrity() * 0.5)
+	take_damage(get_integrity() * 0.5, BRUTE, MELEE, MAGIC_ATTACK, armor_penetration = 100, sound_effect = FALSE)
 	modify_max_integrity(max_integrity * 0.5)
 
 /obj/machinery/door/window/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return (exposed_temperature > T0C + (reinf ? 1600 : 800))
 
 /obj/machinery/door/window/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(round(exposed_temperature / 200), BURN, 0, 0)
+	take_damage(round(exposed_temperature / 200), BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 /obj/machinery/door/window/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if(!operating && density && !(obj_flags & EMAGGED))

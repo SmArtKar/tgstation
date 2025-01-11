@@ -440,7 +440,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/chair/stool/bar, 0)
 
 	smash(user)
 
-/obj/item/chair/proc/take_chair_damage(damage_to_inflict, damage_type, armor_flag)
+/obj/item/chair/proc/take_chair_damage(damage_to_inflict, damage_type, armor_flag) // Smartkar: clean this up and give it more data
 	if(damage_to_inflict >= atom_integrity)
 		return TRUE
 	take_damage(damage_to_inflict, damage_type, armor_flag)

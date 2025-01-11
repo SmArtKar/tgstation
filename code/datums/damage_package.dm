@@ -4,7 +4,7 @@
 	/// Amount of damage dealt
 	var/amount = 0
 	/// Type of damage dealt, can be BRUTE, BURN, TOX, OXY and STAMINA. Use BRAIN and I will obliterate you
-	/// SMARTKAR TODO: Axe BRAIN damage
+	/// SMARTKAR: Axe BRAIN damage
 	var/damage_type = BRUTE
 	/// Defines what sort of armor protects from this damage
 	var/damage_flag = null

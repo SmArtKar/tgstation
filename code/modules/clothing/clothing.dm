@@ -99,7 +99,7 @@
 /obj/item/food/clothing/proc/after_eat(mob/eater)
 	var/obj/item/clothing/resolved_clothing = clothing.resolve()
 	if (resolved_clothing)
-		resolved_clothing.take_damage(MOTH_EATING_CLOTHING_DAMAGE, sound_effect = FALSE, damage_flag = CONSUME)
+		resolved_clothing.take_damage(MOTH_EATING_CLOTHING_DAMAGE, CONSUME, null, UNARMED_ATTACK, hit_by = eater, source = eater, sound_effect = FALSE)
 	else
 		qdel(src)
 
@@ -177,9 +177,9 @@
 	if(!(def_zone in covered_limbs))
 		return
 
-	var/damage_dealt = take_damage(damage_amount * 0.1, damage_type, armor_penetration, FALSE) * 10 // only deal 10% of the damage to the general integrity damage, then multiply it by 10 so we know how much to deal to limb
+	var/datum/damage_package/taken_damage = take_damage(damage_amount * 0.1, damage_type, armor_penetration, FALSE) * 10 // only deal 10% of the damage to the general integrity damage, then multiply it by 10 so we know how much to deal to limb
 	LAZYINITLIST(damage_by_parts)
-	damage_by_parts[def_zone] += damage_dealt
+	damage_by_parts[def_zone] += taken_damage.amount
 	if(damage_by_parts[def_zone] > limb_integrity)
 		disable_zone(def_zone, damage_type)
 

@@ -6,13 +6,13 @@
 
 
 /// Checks the integrity, alerts occupants
-/obj/machinery/netpod/proc/on_damage_taken(datum/source, damage_amount)
+/obj/machinery/netpod/proc/on_damage_taken(datum/source, datum/damage_package/package)
 	SIGNAL_HANDLER
 
 	if(isnull(occupant) || !connected)
 		return
 
-	var/total = max_integrity - damage_amount
+	var/total = max_integrity - package.amount
 	var/integrity = (atom_integrity / total) * 100
 	if(integrity > 50)
 		return

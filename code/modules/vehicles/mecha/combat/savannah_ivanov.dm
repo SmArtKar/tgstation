@@ -196,7 +196,7 @@
 			var/obj/crushed_object = thing
 			if(crushed_object == chassis || crushed_object.loc == chassis)
 				continue
-			crushed_object.take_damage(150) //same as a hulk punch, makes sense to me
+			crushed_object.take_damage(150, BRUTE, MELEE, MELEE_ATTACK, attack_dir = get_dir(thing, src), hit_by = src, source = src) //same as a hulk punch, makes sense to me
 			continue
 		if(isliving(thing))
 			var/mob/living/crushed_victim = thing

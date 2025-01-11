@@ -13,8 +13,9 @@
 
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
-/// The essential proc to call when an atom must receive damage of any kind.
-/atom/proc/take_damage(DAMAGE_PROC_ARGS, sound_effect = TRUE)
+/// Wrapper for taking damage - ensures that the atom is in a valid state to take damage, and then assembles and processes a damage package
+/// Returns the final taken package!
+/atom/proc/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, sound_effect = TRUE)
 	if(!uses_integrity)
 		CRASH("[src] had /atom/proc/take_damage() called on it without it being a type that has uses_integrity = TRUE!")
 
@@ -25,35 +26,40 @@
 		CRASH("[src] taking damage while having <= 0 integrity")
 
 	if(sound_effect)
-		play_attack_sound(damage_amount, damage_type, damage_flag)
+		play_attack_sound(amount, damage_type, damage_flag)
 
 	if(resistance_flags & INDESTRUCTIBLE)
 		return
 
-	deal_damage_package()
-	damage_amount = run_atom_armor(damage_amount, damage_type, damage_flag, attack_dir, armor_penetration)
+	var/datum/damage_package/package = direct_package || new(DAMAGE_PROC_PASSING)
 
-	if(damage_amount < DAMAGE_PRECISION)
+	if(SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, package) & COMPONENT_NO_TAKE_DAMAGE)
 		return
 
-	if(SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration) & COMPONENT_NO_TAKE_DAMAGE)
+	return process_damage_package(package)
+
+/// Proc that is actually applies damage based on a damage package
+/atom/proc/process_damage_package(datum/damage_package/package)
+	run_atom_armor(package)
+
+	if(package.amount < DAMAGE_PRECISION)
 		return
 
-	. = damage_amount
+	if(SEND_SIGNAL(src, COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE, package) & COMPONENT_CANCEL_DAMAGE_PACKAGE)
+		return
 
 	var/previous_atom_integrity = atom_integrity
-
-	update_integrity(atom_integrity - damage_amount)
-
+	update_integrity(atom_integrity - package.amount)
 	var/integrity_failure_amount = integrity_failure * max_integrity
 
 	//BREAKING FIRST
 	if(integrity_failure && previous_atom_integrity > integrity_failure_amount && atom_integrity <= integrity_failure_amount)
-		atom_break(damage_flag)
+		atom_break(package.damage_flag)
 
 	//DESTROYING SECOND
 	if(atom_integrity <= 0 && previous_atom_integrity > 0)
-		atom_destruction(damage_flag)
+		atom_destruction(package.damage_flag)
+	return package
 
 /// Proc for recovering atom_integrity. Returns the amount repaired by
 /atom/proc/repair_damage(amount)
@@ -96,20 +102,28 @@
 	SHOULD_BE_PURE(TRUE)
 	return round(atom_integrity / max_integrity, 0.01)
 
-///returns the damage value of the attack after processing the atom's various armor protections
-/atom/proc/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armor_penetration = 0)
+/// Modifies a damage package based on atom armor
+/atom/proc/run_atom_armor(datum/damage_package/package)
+	RETURN_TYPE(/datum/damage_package)
 	if(!uses_integrity)
 		CRASH("/atom/proc/run_atom_armor was called on [src] without being implemented as a type that uses integrity!")
-	if(damage_flag == MELEE && damage_amount < damage_deflection)
-		return 0
-	if(damage_type != BRUTE && damage_type != BURN)
-		return 0
+
+	if(package.damage_flag == MELEE && package.amount < damage_deflection)
+		return
+
+	if(package.damage_type != BRUTE && package.damage_type != BURN)
+		return
+
 	var/armor_protection = 0
-	if(damage_flag)
-		armor_protection = get_armor_rating(damage_flag)
+
+	if(package.damage_flag)
+		armor_protection = get_armor_rating(package.damage_flag)
+
 	if(armor_protection) //Only apply weak-against-armor/hollowpoint effects if there actually IS armor.
-		armor_protection = clamp(PENETRATE_ARMOR(armor_protection, armor_penetration), min(armor_protection, 0), 100)
-	return round(damage_amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
+		armor_protection = clamp(PENETRATE_ARMOR(armor_protection * package.armor_multiplier, package.armor_penetration), min(armor_protection, 0), 100)
+
+	package.amount = round(package.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
+	return package
 
 ///the sound played when the atom is damaged.
 /atom/proc/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
@@ -131,7 +145,7 @@
 		CRASH("unimplemented /atom/proc/attack_generic()!")
 	user.do_attack_animation(src)
 	user.changeNext_move(CLICK_CD_MELEE)
-	return take_damage(damage_amount, damage_type, damage_flag, sound_effect, get_dir(src, user), armor_penetration)
+	return take_damage(damage_amount, damage_type, damage_flag, sound_effect, get_dir(src, user), armor_penetration) // SMARTKAR: Unfuck this
 
 /// Called after the atom takes damage and integrity is below integrity_failure level
 /atom/proc/atom_break(damage_flag)

@@ -27,6 +27,11 @@
 			visible_message(span_warning("[src] fizzles on contact with [plant_tray]!"))
 			return PROJECTILE_DELETE_WITHOUT_HITTING
 
+/obj/projectile/magic/generate_damage(atom/target, ricochet)
+	var/datum/damage_package/package = ..()
+	package.attack_flags |= MAGIC_ATTACK
+	return package
+
 /obj/projectile/magic/death
 	name = "bolt of death"
 	icon_state = "pulse1_bl"
@@ -548,7 +553,9 @@
 		if(istype(adjacent_object, /obj/structure/destructible/cult))
 			continue
 
-		adjacent_object.take_damage(90, BRUTE, MELEE, 0)
+		var/datum/damage_package/package = generate_damage(adjacent_object)
+		package.amount *= 0.5
+		adjacent_object.take_damage(direct_package = package, sound_effect = FALSE)
 		new /obj/effect/temp_visual/cult/turf/floor(get_turf(adjacent_object))
 
 //still magic related, but a different path

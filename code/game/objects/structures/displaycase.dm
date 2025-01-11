@@ -204,20 +204,20 @@
 		dump()
 		add_fingerprint(user)
 		return
-	else
-		//prevents remote "kicks" with TK
-		if (!Adjacent(user))
+
+	//prevents remote "kicks" with TK
+	if (!Adjacent(user))
+		return
+	if (!user.combat_mode)
+		if(!open && !autoexamine_while_closed)
 			return
-		if (!user.combat_mode)
-			if(!open && !autoexamine_while_closed)
-				return
-			if(!user.is_blind())
-				user.examinate(src)
-			return
-		user.visible_message(span_danger("[user] kicks the display case."), null, null, COMBAT_MESSAGE_RANGE)
-		log_combat(user, src, "kicks")
-		user.do_attack_animation(src, ATTACK_EFFECT_KICK)
-		take_damage(2)
+		if(!user.is_blind())
+			user.examinate(src)
+		return
+	user.visible_message(span_danger("[user] kicks [src]."), span_danger("You kick [src]."), null, COMBAT_MESSAGE_RANGE)
+	log_combat(user, src, "kicks")
+	user.do_attack_animation(src, ATTACK_EFFECT_KICK)
+	take_damage(2, BRUTE, MELEE, UNARMED_ATTACK, user.zone_selected, get_dir(src, user), hit_by = user, source = user)
 
 /obj/structure/displaycase_chassis
 	name = "display case chassis"

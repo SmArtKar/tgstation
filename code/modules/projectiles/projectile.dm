@@ -1356,9 +1356,9 @@
 	set_angle(new_angle_s)
 
 /// Quickly generates a damage package for ease of use
-/obj/projectile/proc/generate_damage(atom/target, ricochet = FALSE)
+/obj/projectile/proc/generate_damage(atom/target)
 	return new /datum/damage_package(
-		amount = damage * (isobj(target) ? demolition_mod : 1) * (ricochet ? receive_ricochet_damage_coeff : 1),
+		amount = damage * (isobj(target) ? demolition_mod : 1),
 		damage_type = damage_type,
 		damage_flag = armor_flag,
 		attack_flags = PROJECTILE_ATTACK,

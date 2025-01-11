@@ -291,9 +291,9 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 	else if(upgrade_dropped == proximity_monitor)
 		proximity_monitor = null
 
-/obj/machinery/camera/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
+/obj/machinery/camera/run_atom_armor(datum/damage_package/package)
 	if(machine_stat & BROKEN)
-		return damage_amount
+		return
 	. = ..()
 
 /obj/machinery/camera/atom_break(damage_flag)

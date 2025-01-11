@@ -24,8 +24,8 @@
 	ADD_TRAIT(src, TRAIT_NO_MISSING_ITEM_ERROR, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NO_MANIFEST_CONTENTS_ERROR, TRAIT_GENERIC)
 
-/obj/structure/closet/crate/secure/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
-	if(prob(tamperproof) && damage_amount >= DAMAGE_PRECISION)
+/obj/structure/closet/crate/secure/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+	if(prob(tamperproof) && amount >= DAMAGE_PRECISION)
 		boom()
 	else
 		return ..()

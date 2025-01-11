@@ -36,7 +36,7 @@
 		to_chat(occupants, "[icon2html(src, occupants)][span_danger("[gear] is critically damaged!")]")
 		playsound(src, gear.destroy_sound, 50)
 
-/obj/vehicle/sealed/mecha/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
+/obj/vehicle/sealed/mecha/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	var/damage_taken = ..()
 	if(damage_taken <= 0 || atom_integrity < 0)
 		return damage_taken
@@ -50,12 +50,10 @@
 
 	return damage_taken
 
-/obj/vehicle/sealed/mecha/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir, armor_penetration)
+/obj/vehicle/sealed/mecha/run_atom_armor(datum/damage_package/package)
 	. = ..()
-	if(attack_dir)
-		var/facing_modifier = get_armor_facing(abs(dir2angle(dir) - dir2angle(attack_dir)))
-		if(.)
-			. *= facing_modifier
+	if(package.attack_dir)
+		package.amount *= get_armor_facing(package.attack_dir)
 
 /obj/vehicle/sealed/mecha/attack_hand(mob/living/user, list/modifiers)
 	. = ..()
@@ -105,7 +103,7 @@
 
 /obj/vehicle/sealed/mecha/blob_act(obj/structure/blob/B)
 	log_message("Attack by blob. Attacker - [B].", LOG_MECHA, color="red")
-	take_damage(30, BRUTE, MELEE, 0, get_dir(src, B))
+	take_damage(30, BRUTE, MELEE, BLOB_ATTACK, attack_dir = get_dir(src, B), hit_by = B, source = B)
 
 /obj/vehicle/sealed/mecha/attack_tk()
 	return
@@ -114,7 +112,7 @@
 	log_message("Hit by [AM].", LOG_MECHA, color="red")
 	return ..()
 
-/obj/vehicle/sealed/mecha/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit) //wrapper
+/obj/vehicle/sealed/mecha/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit, blocked = 0) //wrapper
 	//allows bullets to hit the pilot of open-canopy mechs
 	if(!(mecha_flags & IS_ENCLOSED) \
 		&& LAZYLEN(occupants) \
@@ -124,16 +122,9 @@
 		return hitmob.projectile_hit(hitting_projectile, def_zone, piercing_hit) //If the sides are open, the occupant can be hit
 
 	. = ..()
-
 	log_message("Hit by projectile. Type: [hitting_projectile]([hitting_projectile.damage_type]).", LOG_MECHA, color="red")
 	// yes we *have* to run the armor calc proc here I love tg projectile code too
-	try_damage_component(run_atom_armor(
-		damage_amount = hitting_projectile.damage,
-		damage_type = hitting_projectile.damage_type,
-		damage_flag = hitting_projectile.armor_flag,
-		attack_dir = REVERSE_DIR(hitting_projectile.dir),
-		armor_penetration = hitting_projectile.armor_penetration,
-	), def_zone)
+	try_damage_component(round(hitting_projectile.damage * (100 - blocked) * 0.01, DAMAGE_PRECISION), def_zone)
 
 
 /obj/vehicle/sealed/mecha/ex_act(severity, target)
@@ -172,7 +163,7 @@
 		return
 	if(get_charge())
 		use_energy((cell.charge/3)/(severity*2))
-		take_damage(30 / severity, BURN, ENERGY, 1)
+		take_damage(30 / severity, BURN, ENERGY, EMP_ATTACK)
 	log_message("EMP detected", LOG_MECHA, color="red")
 
 	//Mess with the focus of the inbuilt camera if present
@@ -193,7 +184,7 @@
 
 /obj/vehicle/sealed/mecha/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	log_message("Exposed to dangerous temperature.", LOG_MECHA, color="red")
-	take_damage(5, BURN, 0, 1)
+	take_damage(5, BURN, null, ATMOS_ATTACK)
 
 /obj/vehicle/sealed/mecha/fire_act() //Check if we should ignite the pilot of an open-canopy mech
 	. = ..()
@@ -317,19 +308,23 @@
 	if(!attacking_item.force)
 		return
 
-	var/damage_taken = take_damage(attacking_item.force * attacking_item.demolition_mod, attacking_item.damtype, MELEE, 1, get_dir(src, user))
-	try_damage_component(damage_taken, user.zone_selected)
+	var/datum/damage_package/taken_damage = take_damage(direct_package = attacking_item.generate_damage(src, user))
+	try_damage_component(taken_damage.amount, user.zone_selected)
+
+	log_combat(user, src, "attacked", attacking_item)
+	log_message("Attacked by [user]. Item - [attacking_item], Damage - [taken_damage.amount]", LOG_MECHA)
+
+	if (taken_damage.attack_message_spectator)
+		user.visible_message(taken_damage.attack_message_spectator, taken_damage.attack_message_attacker || taken_damage.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
+		return
 
 	var/hit_verb = length(attacking_item.attack_verb_simple) ? "[pick(attacking_item.attack_verb_simple)]" : "hit"
 	user.visible_message(
-		span_danger("[user] [hit_verb][plural_s(hit_verb)] [src] with [attacking_item][damage_taken ? "." : ", without leaving a mark!"]"),
-		span_danger("You [hit_verb] [src] with [attacking_item][damage_taken ? "." : ", without leaving a mark!"]"),
+		span_danger("[user] [hit_verb][plural_s(hit_verb)] [src] with [attacking_item][taken_damage.amount ? "." : ", without leaving a mark!"]"),
+		span_danger("You [hit_verb] [src] with [attacking_item][taken_damage.amount ? "." : ", without leaving a mark!"]"),
 		span_hear("You hear a [hit_verb]."),
 		COMBAT_MESSAGE_RANGE,
 	)
-
-	log_combat(user, src, "attacked", attacking_item)
-	log_message("Attacked by [user]. Item - [attacking_item], Damage - [damage_taken]", LOG_MECHA)
 
 /obj/vehicle/sealed/mecha/attack_generic(mob/user, damage_amount, damage_type, damage_flag, effects, armor_penetration)
 	. = ..()

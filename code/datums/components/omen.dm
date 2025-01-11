@@ -167,7 +167,7 @@
 			switch(rand(1, 5))
 				if(1)
 					to_chat(living_guy, span_warning("The mirror explodes into a million pieces! Wait, does that mean you're even more unlucky?"))
-					evil_mirror.take_damage(evil_mirror.max_integrity, BRUTE, MELEE, FALSE)
+					evil_mirror.take_damage(evil_mirror.max_integrity, BRUTE, MELEE, MAGIC_ATTACK, sound_effect = FALSE)
 					if(prob(50 * effective_luck)) // sometimes
 						luck_mod += 0.25
 						damage_mod += 0.25

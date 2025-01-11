@@ -103,10 +103,9 @@
 		'sound/mobs/non-humanoids/pony/whinny03.ogg'
 	)), 50)
 
-/mob/living/basic/pony/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
+/mob/living/basic/pony/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	. = ..()
-
-	if (prob(33))
+	if (. && prob(33))
 		whinny_angrily()
 
 /mob/living/basic/pony/melee_attack(atom/target, list/modifiers, ignore_cooldown = FALSE)

@@ -228,9 +228,9 @@
 /obj/structure/blob/zap_act(power, zap_flags)
 	if(overmind)
 		if(overmind.blobstrain.tesla_reaction(src, power))
-			take_damage(power * 1.25e-3, BURN, ENERGY)
+			take_damage(power * 1.25e-3, BURN, ENERGY, SHOCK_ATTACK)
 	else
-		take_damage(power * 1.25e-3, BURN, ENERGY)
+		take_damage(power * 1.25e-3, BURN, ENERGY, SHOCK_ATTACK)
 	power -= power * 2.5e-3 //You don't get to do it for free
 	return ..() //You don't get to do it for free
 
@@ -288,23 +288,24 @@
 		if(BURN)
 			playsound(src.loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
-/obj/structure/blob/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	switch(damage_type)
+/obj/structure/blob/run_atom_armor(datum/damage_package/package)
+	switch(package.damage_type)
 		if(BRUTE)
-			damage_amount *= brute_resist
+			package.amount *= brute_resist
 		if(BURN)
-			damage_amount *= fire_resist
+			package.amount *= fire_resist
 		else
-			return 0
-	var/armor_protection = 0
-	if(damage_flag)
-		armor_protection = get_armor_rating(damage_flag)
-	damage_amount = round(damage_amount * (100 - armor_protection)*0.01, 0.1)
-	if(overmind && damage_flag)
-		damage_amount = overmind.blobstrain.damage_reaction(src, damage_amount, damage_type, damage_flag)
-	return damage_amount
+			return
 
-/obj/structure/blob/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+	var/armor_protection = 0
+	if(package.damage_flag)
+		armor_protection = get_armor_rating(package.damage_flag)
+	package.amount = round(package.amount * (100 - armor_protection) * 0.01, 0.1)
+
+	if(overmind && package.damage_flag)
+		package.amount = overmind.blobstrain.damage_reaction(src, package.amount, package.damage_type, package.damage_flag)
+
+/obj/structure/blob/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
 		update_appearance()

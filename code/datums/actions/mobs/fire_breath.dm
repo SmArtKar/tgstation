@@ -66,7 +66,7 @@
 		if(robotron in hit_list)
 			continue
 		hit_list |= robotron
-		robotron.take_damage(mech_damage, BURN, FIRE)
+		robotron.take_damage(mech_damage, BURN, FIRE, BASICMOB_ATTACK, source = source) // No hit_by as the mech got hit by fire
 
 	return fire_hotspot
 

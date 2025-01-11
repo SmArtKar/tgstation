@@ -67,10 +67,11 @@
 	QDEL_NULL(laws)
 	return ..()
 
-/obj/structure/ai_core/take_damage(damage_amount, damage_type, damage_flag, sound_effect, attack_dir, armor_penetration)
-	. = ..()
-	if(. > 0 && istype(remote_ai))
+/obj/structure/ai_core/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+	var/datum/damage_package/package = ..()
+	if(package?.amount > 0 && istype(remote_ai))
 		to_chat(remote_ai, span_danger("Your core is under attack!"))
+	return package
 
 
 /obj/structure/ai_core/deactivated

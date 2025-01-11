@@ -302,7 +302,7 @@
 	for(var/obj/item/food/deadmouse in range(shock_range, src))
 		src.Beam(deadmouse, icon_state = "lightning[rand(1,12)]", time = 0.5 SECONDS)
 	do_sparks(number = 1, source = host_machine)
-	host_machine.take_damage(machine_overload_damage, sound_effect = FALSE)
+	host_machine.take_damage(machine_overload_damage, BURN, null, SHOCK_ATTACK, source = src, sound_effect = FALSE)
 	uses_remaining--
 	if(uses_remaining <= 0)
 		qdel(src)

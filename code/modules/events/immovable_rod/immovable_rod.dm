@@ -184,7 +184,7 @@
 			return ..()
 
 		var/obj/clong_obj = clong
-		clong_obj.take_damage(INFINITY, BRUTE, NONE, TRUE, dir, INFINITY)
+		clong_obj.take_damage(INFINITY, BRUTE, null, MELEE_ATTACK, attack_dir = REVERSE_DIR(dir), hit_by = src, source = src)
 		return ..()
 
 	// If we Bump into a living thing, living thing goes splat.

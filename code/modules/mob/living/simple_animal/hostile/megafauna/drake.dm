@@ -223,8 +223,8 @@
 		to_chat(L, span_userdanger("You fall directly into the pool of lava!"))
 
 	// deals damage to mechs
-	for(var/obj/vehicle/sealed/mecha/M in T.contents)
-		M.take_damage(45, BRUTE, MELEE, 1)
+	for(var/obj/vehicle/sealed/mecha/tin_can in T.contents)
+		tin_can.take_damage(45, BRUTE, MELEE, BASICMOB_ATTACK|MAGIC_ATTACK, source = owner)
 
 	// changes turf to lava temporarily
 	if(!isclosedturf(T) && !islava(T))

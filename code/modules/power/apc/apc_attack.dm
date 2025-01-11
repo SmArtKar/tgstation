@@ -93,17 +93,17 @@
 /obj/machinery/power/apc/blob_act(obj/structure/blob/B)
 	atom_break()
 
-/obj/machinery/power/apc/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
+/obj/machinery/power/apc/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	// APC being at 0 integrity doesnt delete it outright. Combined with take_damage this might cause runtimes.
-	if(machine_stat & BROKEN && atom_integrity <= 0)
+	if((machine_stat & BROKEN) && atom_integrity <= 0)
 		if(sound_effect)
-			play_attack_sound(damage_amount, damage_type, damage_flag)
+			play_attack_sound(amount, damage_type, damage_flag)
 		return
 	return ..()
 
-/obj/machinery/power/apc/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
+/obj/machinery/power/apc/run_atom_armor(datum/damage_package/package)
 	if(machine_stat & BROKEN)
-		return damage_amount
+		return
 	. = ..()
 
 /obj/machinery/power/apc/proc/can_use(mob/user, loud = 0) //used by attack_hand() and Topic()

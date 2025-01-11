@@ -1232,7 +1232,7 @@
 		return
 
 	open(BYPASS_DOOR_CHECKS)
-	take_damage(25, BRUTE, 0, 0) // Enough to sometimes spark
+	take_damage(25, BRUTE, null, MELEE_ATTACK, hit_by = tool, source = user, sound_effect = FALSE) // Enough to sometimes spark
 	if(density && !open(BYPASS_DOOR_CHECKS))
 		to_chat(user, span_warning("Despite your attempts, [src] refuses to open."))
 
@@ -1549,8 +1549,8 @@
 		log_combat(user, src, message)
 		add_hiddenprint(user)
 
-/obj/machinery/door/airlock/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
-	if((damage_amount >= atom_integrity) && (damage_flag == BOMB))
+/obj/machinery/door/airlock/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+	if((amount >= atom_integrity) && (damage_flag == BOMB))
 		obj_flags |= NO_DEBRIS_AFTER_DECONSTRUCTION  //If an explosive took us out, don't drop the assembly
 	. = ..()
 	if(atom_integrity < (0.75 * max_integrity))

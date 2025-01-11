@@ -28,12 +28,16 @@
 	if(isobj(parent))
 		var/obj/parent_integrity_test = parent
 		if(parent_integrity_test.uses_integrity)
-			RegisterSignal(parent, COMSIG_ATOM_TAKE_DAMAGE, PROC_REF(damage_inflicted))
+			RegisterSignal(parent, COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE, PROC_REF(process_damage))
 			RegisterSignal(parent, COMSIG_ATOM_DESTRUCTION, PROC_REF(pinata_broken))
 			return
 	return COMPONENT_INCOMPATIBLE
 
-/datum/component/pinata/proc/damage_inflicted(obj/target, damage, damage_type, ...)
+/datum/component/pinata/proc/process_damage(obj/target, datum/damage_package/package)
+	SIGNAL_HANDLER
+	damage_inflicted(package.amount, package.damage_type)
+
+/datum/component/pinata/proc/damage_inflicted(obj/target, damage, damage_type)
 	SIGNAL_HANDLER
 	if(damage < minimum_damage || damage_type == STAMINA || damage_type == OXY)
 		return
@@ -56,7 +60,7 @@
 	UnregisterSignal(parent, list(
 		COMSIG_MOB_APPLY_DAMAGE,
 		COMSIG_LIVING_DEATH,
-		COMSIG_ATOM_TAKE_DAMAGE,
+		COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE,
 		COMSIG_ATOM_DESTRUCTION,
 	))
 	return ..()

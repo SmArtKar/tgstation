@@ -98,15 +98,17 @@
 	playsound(owner.loc, 'sound/effects/meteorimpact.ogg', 200, TRUE)
 	for(var/mob/living/victim in orange(1, owner) - owner)
 		victim.adjustBruteLoss(75)
-		if(!QDELETED(victim)) // Some mobs are deleted on death
-			var/throw_dir = get_dir(owner, victim)
-			if(victim.loc == owner.loc)
-				throw_dir = pick(GLOB.alldirs)
-			var/throwtarget = get_edge_target_turf(owner, throw_dir)
-			victim.throw_at(throwtarget, 3)
-			owner.visible_message(span_warning("[victim] is thrown clear of [owner]!"))
+		if(QDELETED(victim)) // Some mobs are deleted on death
+			continue
+		var/throw_dir = get_dir(owner, victim)
+		if(victim.loc == owner.loc)
+			throw_dir = pick(GLOB.alldirs)
+		var/throwtarget = get_edge_target_turf(owner, throw_dir)
+		victim.throw_at(throwtarget, 3)
+		owner.visible_message(span_warning("[victim] is thrown clear of [owner]!"))
+
 	for(var/obj/vehicle/sealed/mecha/mech in orange(1, owner))
-		mech.take_damage(75, BRUTE, MELEE, 1)
+		mech.take_damage(75, BRUTE, MELEE, BASICMOB_ATTACK, attack_dir = get_dir(mech, owner), hit_by = owner, source = owner)
 
 	for(var/mob/observer in range(7, owner))
 		shake_camera(observer, 15, 1)

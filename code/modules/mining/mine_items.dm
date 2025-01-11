@@ -253,7 +253,7 @@
 			span_userdanger("You are smacked by [src]!"),
 		)
 	playsound(src, 'sound/effects/bang.ogg', 50, vary = TRUE)
-	take_damage(max_integrity * 0.05)
+	take_damage(max_integrity * 0.05, BRUTE, null, UNARMED_ATTACK, attack_dir = get_dir(src, smacked), hit_by = smacked, source = src)
 	momentum = floor(momentum / momentum_mod)
 	if(smacked.body_position == LYING_DOWN)
 		smacked.Paralyze(4 SECONDS)

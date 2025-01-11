@@ -16,20 +16,21 @@
 	if(damage_type == BURN)//the stickiness of the web mutes all attack sounds except fire damage type
 		playsound(loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
-/obj/structure/spider/run_atom_armor(damage_amount, damage_type, damage_flag = 0, attack_dir)
-	if(damage_flag == MELEE)
-		switch(damage_type)
-			if(BURN)
-				damage_amount *= 1.25
-			if(BRUTE)
-				damage_amount *= 0.25
-	return ..()
+/obj/structure/spider/run_atom_armor(datum/damage_package/package)
+	. = ..()
+	if(package.damage_flag != MELEE)
+		return
+	switch(package.damage_type)
+		if(BURN)
+			package.amount *= 1.25
+		if(BRUTE)
+			package.amount *= 0.25
 
 /obj/structure/spider/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > 350
 
 /obj/structure/spider/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, BURN, 0, 0)
+	take_damage(5, BURN, null, ATMOS_ATTACK)
 
 /obj/structure/spider/stickyweb
 	plane = FLOOR_PLANE

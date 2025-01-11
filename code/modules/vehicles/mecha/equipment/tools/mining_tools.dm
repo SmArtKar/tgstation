@@ -143,7 +143,7 @@
 				var/obj/item/boulder/nu_boulder = obj_target
 				nu_boulder.manual_process(src, source)
 			else
-				obj_target.take_damage(15, BRUTE, 0, FALSE, get_dir(chassis, target))
+				obj_target.take_damage(15, BRUTE, null, MELEE_ATTACK, source?.zone_selected, get_dir(chassis, target), hit_by = src, source = chassis)
 			playsound(src,'sound/items/weapons/drill.ogg', 40, TRUE)
 
 		// If we caused a qdel drilling the target, we can stop drilling them.

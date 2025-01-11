@@ -745,11 +745,13 @@
 /obj/machinery/attack_paw(mob/living/user, list/modifiers)
 	if(!user.combat_mode)
 		return attack_hand(user)
+	return paw_melee(user, modifiers)
 
+/// Take melee damage from a monkey attacking us
+/obj/machinery/proc/paw_melee(mob/living/user, list/modifiers)
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-	var/damage = take_damage(damage_amount = 4, damage_type = BRUTE, damage_flag = MELEE, sound_effect = TRUE, attack_dir = get_dir(user, src))
-
+	var/datum/damage_package/package = take_damage(direct_package = user.get_unarmed_package(src, 4))
 	var/hit_with_what_noun = "paws"
 	var/obj/item/bodypart/arm/arm = user.get_active_hand()
 	if(!isnull(arm))
@@ -757,12 +759,20 @@
 		if(user.usable_hands > 1)
 			hit_with_what_noun += plural_s(hit_with_what_noun) // hit with "their hands"
 
-	user.visible_message(
-		span_danger("[user] smashes [src] with [user.p_their()] [hit_with_what_noun][damage ? "." : ", [no_damage_feedback]!"]"),
-		span_danger("You smash [src] with your [hit_with_what_noun][damage ? "." : ", [no_damage_feedback]!"]"),
-		span_hear("You hear a [damage ? "smash" : "thud"]."),
-		COMBAT_MESSAGE_RANGE,
-	)
+	if (package.attack_message_spectator)
+		user.visible_message(
+			package.attack_message_spectator,
+			package.attack_message_attacker || package.attack_message_spectator,
+			span_hear("You hear a [package.amount ? "smash" : "thud"]."),
+			COMBAT_MESSAGE_RANGE,
+		)
+	else
+		user.visible_message(
+			span_danger("[user] smashes [src] with [user.p_their()] [hit_with_what_noun][package.amount ? "." : ", [no_damage_feedback]!"]"),
+			span_danger("You smash [src] with your [hit_with_what_noun][package.amount ? "." : ", [no_damage_feedback]!"]"),
+			span_hear("You hear a [package.amount ? "smash" : "thud"]."),
+			COMBAT_MESSAGE_RANGE,
+		)
 	return TRUE
 
 /obj/machinery/attack_hulk(mob/living/carbon/user)
@@ -1210,7 +1220,7 @@
 	if(prob(85) && (zap_flags & ZAP_MACHINE_EXPLOSIVE) && !(resistance_flags & INDESTRUCTIBLE))
 		explosion(src, devastation_range = 1, heavy_impact_range = 2, light_impact_range = 4, flame_range = 2, adminlog = TRUE, smoke = FALSE)
 	else if(zap_flags & ZAP_OBJ_DAMAGE)
-		take_damage(power * 2.5e-4, BURN, ENERGY)
+		take_damage(power * 2.5e-4, BURN, ENERGY, SHOCK_ATTACK)
 		if(prob(40))
 			emp_act(EMP_LIGHT)
 		power -= power * 5e-4
@@ -1225,7 +1235,7 @@
 	dropped_atom.pixel_y = -8 + (round( . / 3)*8)
 
 /obj/machinery/rust_heretic_act()
-	take_damage(500, BRUTE, MELEE, 1)
+	take_damage(500, BRUTE, MELEE, MAGIC_ATTACK)
 
 /obj/machinery/vv_edit_var(vname, vval)
 	if(vname == NAMEOF(src, occupant))

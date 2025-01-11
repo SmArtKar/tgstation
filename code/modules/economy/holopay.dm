@@ -56,7 +56,8 @@
 		return .
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
 	user.changeNext_move(CLICK_CD_MELEE)
-	take_damage(5, BRUTE, MELEE, 1)
+	user.visible_message(span_danger("[user] swats [src]."), span_danger("You swat [src]."), null, COMBAT_MESSAGE_RANGE)
+	take_damage(direct_package = user.get_unarmed_package(src, 5, ignore_custom = TRUE))
 
 /obj/structure/holopay/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)

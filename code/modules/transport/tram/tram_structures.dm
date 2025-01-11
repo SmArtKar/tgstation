@@ -137,7 +137,7 @@
 			return TRUE
 	return FALSE
 
-/obj/structure/tram/take_damage(damage_amount, damage_type = BRUTE, damage_flag = "", sound_effect = TRUE, attack_dir, armor_penetration = 0)
+/obj/structure/tram/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	. = ..()
 	if(.) //received damage
 		update_appearance()

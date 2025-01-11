@@ -701,14 +701,14 @@
 
 
 //Damage from direct attacks
-/obj/structure/emergency_shield/modular/take_damage(damage_amount, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, attack_dir)
+/obj/structure/emergency_shield/modular/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	. = ..()
 	if(damage_type == BRUTE || damage_type == BURN)
 		if(isnull(shield_generator))
 			qdel(src)
 			return
 
-		shield_generator.shield_drain(damage_amount)//can add or subtract a flat value to buff or nerf crowd damage
+		shield_generator.shield_drain(amount)//can add or subtract a flat value to buff or nerf crowd damage
 
 //Damage from emp
 /obj/structure/emergency_shield/modular/emp_act(severity)

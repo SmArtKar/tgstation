@@ -332,7 +332,7 @@ GLOBAL_LIST_EMPTY(exodrone_launchers)
 
 /// Deals damage in adventures/events.
 /obj/item/exodrone/proc/damage(amount)
-	take_damage(amount)
+	take_damage(amount, sound_effect = FALSE)
 	drone_log("Sustained [amount] damage.")
 
 /obj/item/exodrone/proc/drone_log(message)

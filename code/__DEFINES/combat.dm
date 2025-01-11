@@ -384,12 +384,13 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 /// Calculates the amount of burn force when applying this much energy to a mob via electrocution from an energy source.
 #define ELECTROCUTE_DAMAGE(energy) (energy >= 1 KILO JOULES ? clamp(20 + round(energy / JOULES_PER_DAMAGE), 20, 195) + rand(-5,5) : 0)
 
+// Forgive me for this monstrocity, but this needs to be consistent between all use cases
+/// Used to mark a damage proc, use this to quickly set up all damage arguments
 #define DAMAGE_PROC_ARGS amount = 0,\
 	damage_type = BRUTE,\
 	damage_flag = null,\
 	attack_flags = NONE,\
 	def_zone = null,\
-	spread_damage = FALSE,\
 	attack_dir = NONE,\
 	armor_penetration = 0,\
 	armor_multiplier = 1,\
@@ -399,16 +400,17 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	attack_text = null,\
 	attack_message_spectator = null,\
 	attack_message_attacker = null,\
+	spread_damage = FALSE,\
 	wound_bonus = 0,\
 	bare_wound_bonus = 0,\
 	sharpness = NONE
 
+/// An easy way to pass all damage proc data into either another proc, or to a new damage package
 #define DAMAGE_PROC_PASSING amount = amount,\
 	damage_type = damage_type,\
 	damage_flag = damage_flag,\
 	attack_flags = attack_flags,\
 	def_zone = def_zone,\
-	spread_damage = spread_damage,\
 	attack_dir = attack_dir,\
 	armor_penetration = armor_penetration,\
 	armor_multiplier = armor_multiplier,\
@@ -418,6 +420,7 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	attack_text = attack_text,\
 	attack_message_spectator = attack_message_spectator,\
 	attack_message_attacker = attack_message_attacker,\
+	spread_damage = spread_damage,\
 	wound_bonus = wound_bonus,\
 	bare_wound_bonus = bare_wound_bonus,\
 	sharpness = sharpness

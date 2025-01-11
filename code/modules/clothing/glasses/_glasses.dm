@@ -318,7 +318,7 @@
 		if(crusher.move_intent != MOVE_INTENT_WALK && (!(crusher.movement_type & MOVETYPES_NOT_TOUCHING_GROUND) || crusher.buckled))
 			playsound(src, 'sound/effects/footstep/glass_step.ogg', 30, TRUE)
 			visible_message(span_warning("[crusher] steps on [src], damaging it!"))
-			take_damage(100, sound_effect = FALSE)
+			take_damage(100, BRUTE, null, UNARMED_ATTACK, hit_by = crusher, source = crusher, sound_effect = FALSE)
 
 /obj/item/clothing/glasses/regular/atom_destruction(damage_flag)
 	. = ..()

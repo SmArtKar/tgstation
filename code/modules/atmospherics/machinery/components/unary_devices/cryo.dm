@@ -472,7 +472,7 @@
 
 	//take damage from high temperatures
 	if(air1.temperature > 2000)
-		take_damage(clamp((air1.temperature) / 200, 10, 20), BURN)
+		take_damage(clamp((air1.temperature) / 200, 10, 20), BURN, null, ATMOS_ATTACK, sound_effect = FALSE)
 
 	//adjust temperature of mob
 	if(!QDELETED(occupant))

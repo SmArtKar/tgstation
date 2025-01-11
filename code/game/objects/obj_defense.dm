@@ -11,8 +11,12 @@
 	if(!attacking_item.force)
 		return
 
-	var/total_force = (attacking_item.force * attacking_item.demolition_mod)
-	var/damage = take_damage(total_force, attacking_item.damtype, MELEE, TRUE, get_dir(src, user), attacking_item.armor_penetration)
+	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user))
+	log_combat(user, src, "attacked", attacking_item)
+
+	if (package.attack_message_spectator)
+		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
+		return
 
 	// Sanity in case one is null for some reason
 	var/picked_index = rand(max(length(attacking_item.attack_verb_simple), length(attacking_item.attack_verb_continuous)))
@@ -25,7 +29,7 @@
 	if (picked_index && length(attacking_item.attack_verb_simple) >= picked_index)
 		message_verb_simple = attacking_item.attack_verb_simple[picked_index]
 
-	if(attacking_item.demolition_mod > 1 && prob(damage * 5))
+	if(attacking_item.demolition_mod > 1 && prob(package.amount * 5))
 		message_verb_simple = "pulverise"
 		message_verb_continuous = "pulverises"
 
@@ -33,9 +37,8 @@
 		message_verb_simple = "ineffectively " + message_verb_simple
 		message_verb_continuous = "ineffectively " + message_verb_continuous
 
-	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), \
-		span_danger("You [message_verb_simple] [src] with [attacking_item][damage ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
-	log_combat(user, src, "attacked", attacking_item)
+	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][package.amount ? "." : ", [no_damage_feedback]!"]"), \
+		span_danger("You [message_verb_simple] [src] with [attacking_item][package.amount ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
 
 /obj/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)
@@ -45,40 +48,34 @@
 	if(QDELETED(src))
 		return TRUE
 	if(target == src)
-		take_damage(INFINITY, BRUTE, BOMB, 0)
+		take_damage(INFINITY, BRUTE, BOMB, sound_effect = FALSE)
 		return TRUE
 	switch(severity)
 		if(EXPLODE_DEVASTATE)
-			take_damage(INFINITY, BRUTE, BOMB, 0)
+			take_damage(INFINITY, BRUTE, BOMB, sound_effect = FALSE)
 		if(EXPLODE_HEAVY)
-			take_damage(rand(100, 250), BRUTE, BOMB, 0)
+			take_damage(rand(100, 250), BRUTE, BOMB, sound_effect = FALSE)
 		if(EXPLODE_LIGHT)
-			take_damage(rand(10, 90), BRUTE, BOMB, 0)
+			take_damage(rand(10, 90), BRUTE, BOMB, sound_effect = FALSE)
 
 	return TRUE
 
-/obj/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
+/obj/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE, blocked = 0)
 	. = ..()
 	if(. != BULLET_ACT_HIT)
 		return .
 
-	var/damage_sustained = 0
+	var/datum/damage_package/damage_taken
 	if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-		damage_sustained = take_damage(
-			hitting_projectile.damage * hitting_projectile.demolition_mod,
-			hitting_projectile.damage_type,
-			hitting_projectile.armor_flag,
-			FALSE,
-			REVERSE_DIR(hitting_projectile.dir),
-			hitting_projectile.armor_penetration,
-		)
+		damage_taken = take_damage(direct_package = hitting_projectile.generate_damage(src), sound_effect = FALSE)
+
 	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
 		visible_message(
-			span_danger("[src] is hit by \a [hitting_projectile][damage_sustained ? "" : ", [no_damage_feedback]"]!"),
+			damage_taken?.attack_message_spectator || span_danger("[src] is hit by \a [hitting_projectile][damage_taken?.amount ? "" : ", [no_damage_feedback]"]!"),
 			vision_distance = COMBAT_MESSAGE_RANGE,
 		)
 
-	return damage_sustained > 0 ? BULLET_ACT_HIT : BULLET_ACT_BLOCK
+	return damage_taken?.amount > 0 ? BULLET_ACT_HIT : BULLET_ACT_BLOCK
 
 /obj/attack_hulk(mob/living/carbon/human/user)
 	..()
@@ -86,7 +83,7 @@
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-	var/damage = take_damage(hulk_damage(), BRUTE, MELEE, 0, get_dir(src, user))
+	var/damage = take_damage(direct_package = user.get_unarmed_package(hulk_damage(), ignore_custom = TRUE), sound_effect = FALSE)
 	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 
@@ -97,7 +94,7 @@
 		var/turf/T = loc
 		if(T.underfloor_accessibility < UNDERFLOOR_INTERACTABLE && HAS_TRAIT(src, TRAIT_T_RAY_VISIBLE))
 			return
-	take_damage(400, BRUTE, MELEE, 0, get_dir(src, B))
+	take_damage(400, BRUTE, MELEE, BLOB_ATTACK, attack_dir = get_dir(src, B), hit_by = B, source = B, sound_effect = FALSE)
 
 /obj/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
 	if(attack_generic(user, 60, BRUTE, MELEE, 0))
@@ -129,7 +126,7 @@
 
 /obj/proc/collision_damage(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	var/amt = max(0, ((force - (move_resist * MOVE_FORCE_CRUSH_RATIO)) / (move_resist * MOVE_FORCE_CRUSH_RATIO)) * 10)
-	take_damage(amt, BRUTE, attack_dir = REVERSE_DIR(direction))
+	take_damage(amt, BRUTE, MELEE, UNARMED_ATTACK, attack_dir = REVERSE_DIR(direction), hit_by = pusher, source = pusher)
 
 /obj/singularity_act()
 	SSexplosions.high_mov_atom += src
@@ -162,7 +159,7 @@
 		if(our_turf.underfloor_accessibility < UNDERFLOOR_INTERACTABLE && HAS_TRAIT(src, TRAIT_T_RAY_VISIBLE))
 			return
 	if(exposed_temperature && !(resistance_flags & FIRE_PROOF))
-		take_damage(clamp(0.02 * exposed_temperature, 0, 20), BURN, FIRE, 0)
+		take_damage(clamp(0.02 * exposed_temperature, 0, 20), BURN, FIRE, ATMOS_ATTACK, sound_effect = FALSE)
 	if(!(resistance_flags & ON_FIRE) && (resistance_flags & FLAMMABLE) && !(resistance_flags & FIRE_PROOF))
 		AddComponent(/datum/component/burning, custom_fire_overlay || GLOB.fire_overlay, burning_particles)
 		SEND_SIGNAL(src, COMSIG_ATOM_FIRE_ACT, exposed_temperature, exposed_volume)

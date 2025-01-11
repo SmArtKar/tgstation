@@ -34,7 +34,7 @@
 	disconnect_damage = BASE_DISCONNECT_DAMAGE
 	find_server()
 
-	RegisterSignal(src, COMSIG_ATOM_TAKE_DAMAGE, PROC_REF(on_damage_taken))
+	RegisterSignal(src, COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE, PROC_REF(on_damage_taken))
 	RegisterSignal(src, COMSIG_MACHINERY_POWER_LOST, PROC_REF(on_power_loss))
 	RegisterSignals(src, list(COMSIG_QDELETING,	COMSIG_MACHINERY_BROKEN),PROC_REF(on_broken))
 
