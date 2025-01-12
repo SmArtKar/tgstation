@@ -9,7 +9,7 @@
 /obj/machinery/netpod/proc/on_damage_taken(datum/source, datum/damage_package/package)
 	SIGNAL_HANDLER
 
-	if(isnull(occupant) || !connected)
+	if(isnull(occupant) || !connected || !package)
 		return
 
 	var/total = max_integrity - package.amount

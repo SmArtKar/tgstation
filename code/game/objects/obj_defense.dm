@@ -29,7 +29,7 @@
 	if (picked_index && length(attacking_item.attack_verb_simple) >= picked_index)
 		message_verb_simple = attacking_item.attack_verb_simple[picked_index]
 
-	if(attacking_item.demolition_mod > 1 && prob(package.amount * 5))
+	if(attacking_item.demolition_mod > 1 && prob(package?.amount * 5))
 		message_verb_simple = "pulverise"
 		message_verb_continuous = "pulverises"
 
@@ -37,8 +37,8 @@
 		message_verb_simple = "ineffectively " + message_verb_simple
 		message_verb_continuous = "ineffectively " + message_verb_continuous
 
-	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][package.amount ? "." : ", [no_damage_feedback]!"]"), \
-		span_danger("You [message_verb_simple] [src] with [attacking_item][package.amount ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
+	user.visible_message(span_danger("[user] [message_verb_continuous] [src] with [attacking_item][package?.amount ? "." : ", [no_damage_feedback]!"]"), \
+		span_danger("You [message_verb_simple] [src] with [attacking_item][package?.amount ? "." : ", [no_damage_feedback]!"]"), null, COMBAT_MESSAGE_RANGE)
 
 /obj/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)

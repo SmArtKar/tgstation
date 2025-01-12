@@ -320,10 +320,11 @@
 		return
 
 	var/datum/damage_package/taken_damage = take_damage(direct_package = attacking_item.generate_damage(src, user, modifiers))
-	try_damage_component(taken_damage.amount, user.zone_selected)
+	if (taken_damage?.amount)
+		try_damage_component(taken_damage.amount, user.zone_selected)
 
 	log_combat(user, src, "attacked", attacking_item)
-	log_message("Attacked by [user]. Item - [attacking_item], Damage - [taken_damage.amount]", LOG_MECHA)
+	log_message("Attacked by [user]. Item - [attacking_item], Damage - [taken_damage?.amount]", LOG_MECHA)
 
 	if (taken_damage.attack_message_spectator)
 		user.visible_message(taken_damage.attack_message_spectator, taken_damage.attack_message_attacker || taken_damage.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
@@ -331,8 +332,8 @@
 
 	var/hit_verb = length(attacking_item.attack_verb_simple) ? "[pick(attacking_item.attack_verb_simple)]" : "hit"
 	user.visible_message(
-		span_danger("[user] [hit_verb][plural_s(hit_verb)] [src] with [attacking_item][taken_damage.amount ? "." : ", without leaving a mark!"]"),
-		span_danger("You [hit_verb] [src] with [attacking_item][taken_damage.amount ? "." : ", without leaving a mark!"]"),
+		span_danger("[user] [hit_verb][plural_s(hit_verb)] [src] with [attacking_item][taken_damage?.amount ? "." : ", without leaving a mark!"]"),
+		span_danger("You [hit_verb] [src] with [attacking_item][taken_damage?.amount ? "." : ", without leaving a mark!"]"),
 		span_hear("You hear a [hit_verb]."),
 		COMBAT_MESSAGE_RANGE,
 	)

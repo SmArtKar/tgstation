@@ -281,8 +281,8 @@
 	if (package.attack_message_spectator)
 		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
 	else
-		user.visible_message(span_danger("[user] hits [src] with [attacking_item][package.amount ? "." : ", without leaving a mark!"]"), \
-			span_danger("You hit [src] with [attacking_item][package.amount ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
+		user.visible_message(span_danger("[user] hits [src] with [attacking_item][package?.amount ? "." : ", without leaving a mark!"]"), \
+			span_danger("You hit [src] with [attacking_item][package?.amount ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "attacked", attacking_item)
 
 /area/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)

@@ -759,7 +759,7 @@
 		if(user.usable_hands > 1)
 			hit_with_what_noun += plural_s(hit_with_what_noun) // hit with "their hands"
 
-	if (package.attack_message_spectator)
+	if (package?.attack_message_spectator)
 		user.visible_message(
 			package.attack_message_spectator,
 			package.attack_message_attacker || package.attack_message_spectator,
@@ -768,9 +768,9 @@
 		)
 	else
 		user.visible_message(
-			span_danger("[user] smashes [src] with [user.p_their()] [hit_with_what_noun][package.amount ? "." : ", [no_damage_feedback]!"]"),
-			span_danger("You smash [src] with your [hit_with_what_noun][package.amount ? "." : ", [no_damage_feedback]!"]"),
-			span_hear("You hear a [package.amount ? "smash" : "thud"]."),
+			span_danger("[user] smashes [src] with [user.p_their()] [hit_with_what_noun][package?.amount ? "." : ", [no_damage_feedback]!"]"),
+			span_danger("You smash [src] with your [hit_with_what_noun][package?.amount ? "." : ", [no_damage_feedback]!"]"),
+			span_hear("You hear a [package?.amount ? "smash" : "thud"]."),
 			COMBAT_MESSAGE_RANGE,
 		)
 	return TRUE
