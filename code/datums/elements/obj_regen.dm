@@ -35,14 +35,13 @@
 		STOP_PROCESSING(SSobj, src)
 
 /// Handles beginning processing objects.
-/datum/element/obj_regen/proc/on_take_damage(obj/target, damage_amt)
+/datum/element/obj_regen/proc/on_take_damage(obj/target, datum/damage_package/package)
 	SIGNAL_HANDLER
-	if(!damage_amt)
+	if(!package?.amount)
 		return
 	if(!length(processing))
 		START_PROCESSING(SSobj, src)
 	processing |= target
-
 
 /// Handle regenerating attached objects.
 /datum/element/obj_regen/process(seconds_per_tick)
