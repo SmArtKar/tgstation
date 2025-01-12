@@ -41,7 +41,7 @@
 	var/datum/damage_package/package = ..()
 	if (isobj(target))
 		package.amount += object_damage
-	return pacakge
+	return package
 
 /obj/projectile/bullet/cannonball/explosive
 	name = "explosive shell"

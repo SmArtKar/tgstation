@@ -37,16 +37,16 @@
 		playsound(src, gear.destroy_sound, 50)
 
 /obj/vehicle/sealed/mecha/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
-	var/damage_taken = ..()
-	if(damage_taken <= 0 || atom_integrity < 0)
+	var/datum/damage_package/damage_taken = ..()
+	if(damage_taken.amount <= 0 || atom_integrity < 0)
 		return damage_taken
 
 	diag_hud_set_mechhealth()
 	spark_system?.start()
-	try_deal_internal_damage(damage_taken)
-	if(damage_taken >= 5 || prob(33))
+	try_deal_internal_damage(damage_taken.amount)
+	if(damage_taken.amount >= 5 || prob(33))
 		to_chat(occupants, "[icon2html(src, occupants)][span_userdanger("Taking damage!")]")
-	log_message("Took [damage_taken] points of damage. Damage type: [damage_type]", LOG_MECHA)
+	log_message("Took [damage_taken.amount] points of damage. Damage type: [damage_taken.damage_type]", LOG_MECHA)
 
 	return damage_taken
 
