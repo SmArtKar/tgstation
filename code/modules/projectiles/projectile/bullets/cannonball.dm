@@ -30,17 +30,18 @@
 		projectile_piercing = NONE //so it finishes its rampage
 	if(blocked == 100)
 		return ..()
-	if(isobj(target))
-		var/obj/hit_object = target
-		var/datum/damage_package/package = generate_damage(hit_object)
-		package.amount = object_damage
-		hit_object.take_damage(direct_package = package, sound_effect = FALSE) // Smartkar: convert into damage mods!!
 	else if(isclosedturf(target))
 		damage -= max(damage - 30, 10) //lose extra momentum from busting through a wall
 		if(!isindestructiblewall(target))
 			var/turf/closed/hit_turf = target
 			hit_turf.ScrapeAway()
 	return ..()
+
+/obj/projectile/bullet/cannonball/generate_damage(atom/target)
+	var/datum/damage_package/package = ..()
+	if (isobj(target))
+		package.amount += object_damage
+	return pacakge
 
 /obj/projectile/bullet/cannonball/explosive
 	name = "explosive shell"

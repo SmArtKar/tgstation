@@ -35,14 +35,16 @@
 	..()
 
 	do_boom(target, random_crit_gib)
-	if(anti_armor_damage && ismecha(target))
-		var/datum/damage_package/package = generate_damage(target)
-		package.amount = anti_armor_damage
-		target.take_damage(package) // Smartkar: convert into damage mods!!
 	if(issilicon(target))
 		var/mob/living/silicon/S = target
 		S.take_overall_damage(anti_armor_damage*0.75, anti_armor_damage*0.25)
 	return BULLET_ACT_HIT
+
+/obj/projectile/bullet/rocket/generate_damage(atom/target)
+	var/datum/damage_package/package = ..()
+	if (ismecha(target))
+		package.amount += anti_armor_damage
+	return package
 
 /** This proc allows us to customize the conditions necesary for the rocket to detonate, allowing for different explosions for living targets, turf targets,
 among other potential differences. This granularity is helpful for things like the special rockets mechs use. */

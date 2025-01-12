@@ -26,7 +26,8 @@
 		var/datum/damage_package/package = generate_damage(target)
 		package.amount = damage_to_deal
 		package.armor_penetration = 0
-		thing_to_break.take_damage(direct_package = package, sound_effect = FALSE) // Smartkar: convert into damage mods!!
+		// I know that we got ourselves packages to stop doing this but this is needed as it should have 0 AP
+		thing_to_break.take_damage(direct_package = package, sound_effect = FALSE)
 	return ..()
 
 /obj/projectile/bullet/p50/surplus
