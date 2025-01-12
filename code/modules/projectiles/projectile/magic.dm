@@ -554,7 +554,7 @@
 			continue
 
 		var/datum/damage_package/package = generate_damage(adjacent_object)
-		package.amount *= 0.5
+		package.amount_multiplier *= 0.5
 		adjacent_object.take_damage(direct_package = package, sound_effect = FALSE)
 		new /obj/effect/temp_visual/cult/turf/floor(get_turf(adjacent_object))
 

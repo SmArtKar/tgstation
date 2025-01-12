@@ -124,11 +124,11 @@
 	return ..()
 
 /// Spears deal bonus damage to lockers
-/obj/item/spear/generate_damage(atom/target, mob/living/user)
+/obj/item/spear/generate_damage(atom/target, mob/living/user, list/modifiers)
 	if (!istype(target, /obj/structure/closet))
 		return ..()
 	var/datum/damage_package/package = ..()
-	package.amount *= 2
+	package.amount_multiplier *= 2
 	package.attack_message_spectator = span_danger("[user] precisely stabs [target]'s electronics with [src]!")
 	package.attack_message_attacker = span_danger("You precisely stab [target]'s electronics with [src]!")
 	return package

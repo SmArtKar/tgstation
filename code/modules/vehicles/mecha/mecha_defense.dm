@@ -70,27 +70,38 @@
 
 /obj/vehicle/sealed/mecha/attack_alien(mob/living/user, list/modifiers)
 	log_message("Attack by alien. Attacker - [user].", LOG_MECHA, color="red")
-	playsound(loc, 'sound/items/weapons/slash.ogg', 100, TRUE)
-	attack_generic(user, rand(user.melee_damage_lower, user.melee_damage_upper), BRUTE, MELEE, 0)
+
+	var/datum/damage_package/package = attack_generic(direct_package = user.get_unarmed_package(src, modifiers = modifiers))
+	if(package?.amount)
+		playsound(loc, 'sound/items/weapons/slash.ogg', 100, TRUE)
+
+	if (package?.attack_message_spectator)
+		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_attacker, null, COMBAT_MESSAGE_RANGE)
+	else
+		user.visible_message(
+			span_danger("[user] slashes at [src][package?.amount ? "" : ", [no_damage_feedback]"]!"),
+			span_danger("You slash at [src][package?.amount ? "" : ", [no_damage_feedback]"]!"),
+			null,
+			COMBAT_MESSAGE_RANGE
+		)
 
 /obj/vehicle/sealed/mecha/attack_animal(mob/living/simple_animal/user, list/modifiers)
 	log_message("Attack by simple animal. Attacker - [user].", LOG_MECHA, color="red")
 	if(!user.melee_damage_upper && !user.obj_damage)
 		user.emote("custom", message = "[user.friendly_verb_continuous] [src].")
-		return 0
-	else
-		var/play_soundeffect = 1
-		if(user.environment_smash)
-			play_soundeffect = 0
-			playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-		var/animal_damage = rand(user.melee_damage_lower,user.melee_damage_upper)
-		if(user.obj_damage)
-			animal_damage = user.obj_damage
-		animal_damage = min(animal_damage, 20*user.environment_smash)
-		log_combat(user, src, "attacked")
-		attack_generic(user, animal_damage, user.melee_damage_type, MELEE, play_soundeffect)
-		return 1
+		return FALSE
 
+	var/play_soundeffect = TRUE
+	if(user.environment_smash)
+		play_soundeffect = FALSE
+		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
+
+	var/datum/damage_package/package = user.get_unarmed_package(src, modifiers = modifiers)
+	if (package.amount < user.environment_smash * 20)
+		package.amount = user.environment_smash * 20
+	log_combat(user, src, "attacked")
+	package = attack_generic(direct_package = package, user = user, sound_effect = play_soundeffect)
+	return package?.amount
 
 /obj/vehicle/sealed/mecha/hulk_damage()
 	return 15
@@ -304,11 +315,11 @@
 			balloon_alert(user, "already installed!")
 		return
 
-/obj/vehicle/sealed/mecha/attacked_by(obj/item/attacking_item, mob/living/user)
+/obj/vehicle/sealed/mecha/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/taken_damage = take_damage(direct_package = attacking_item.generate_damage(src, user))
+	var/datum/damage_package/taken_damage = take_damage(direct_package = attacking_item.generate_damage(src, user, modifiers))
 	try_damage_component(taken_damage.amount, user.zone_selected)
 
 	log_combat(user, src, "attacked", attacking_item)
@@ -326,11 +337,12 @@
 		COMBAT_MESSAGE_RANGE,
 	)
 
-/obj/vehicle/sealed/mecha/attack_generic(mob/user, damage_amount, damage_type, damage_flag, effects, armor_penetration)
-	. = ..()
-	if(.)
-		try_damage_component(., user.zone_selected)
+/obj/vehicle/sealed/mecha/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
+	var/datum/damage_package/package = ..()
+	if(package?.amount)
+		try_damage_component(package.amount, user.zone_selected)
 		diag_hud_set_mechhealth()
+	return package
 
 /obj/vehicle/sealed/mecha/examine(mob/user)
 	. = ..()

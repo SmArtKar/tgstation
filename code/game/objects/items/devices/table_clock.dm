@@ -35,8 +35,9 @@
 
 /obj/item/table_clock/attackby(obj/item/attacking_item, mob/user, params)
 	. = ..()
-	if(attacking_item.force < 5 || broken)
+	if(attacking_item.force < MINIMUM_WEAPON_DAMAGE || broken)
 		return
+
 	if(break_clock(break_sound = 'sound/effects/magic/clockwork/ark_activation.ogg'))
 		user.visible_message(
 			span_warning("[user] smashes \the [src] so hard it stops breaking!"),

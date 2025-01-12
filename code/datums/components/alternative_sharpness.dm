@@ -1,4 +1,4 @@
-/// Allows items to have different sharpness for right click attacks
+/// Allows items and mobs to have different sharpness for right click attacks
 /datum/component/alternative_sharpness
 	/// Sharpness we change the attack to
 	var/alt_sharpness = NONE
@@ -8,53 +8,76 @@
 	var/verbs_simple = null
 	/// Value by which we offset our force during the attack
 	var/force_mod = 0
-	/// Are we currently performing an alt attack?
-	var/alt_attacking = FALSE
 	/// Trait required for us to trigger
 	var/required_trait = null
-	// Old values before we overrode them
-	var/base_continuous = null
-	var/base_simple = null
-	var/base_sharpness = NONE
 
 /datum/component/alternative_sharpness/Initialize(alt_sharpness, verbs_continuous = null, verbs_simple = null, force_mod = 0, required_trait = null)
-	if (!isitem(parent))
+	if (!isitem(parent) && !isliving(parent))
 		return COMPONENT_INCOMPATIBLE
-	var/obj/item/weapon = parent
+
 	src.alt_sharpness = alt_sharpness
 	src.verbs_continuous = verbs_continuous
 	src.verbs_simple = verbs_simple
 	src.force_mod = force_mod
 	src.required_trait = required_trait
-	base_continuous = weapon.attack_verb_continuous
-	base_simple = weapon.attack_verb_simple
 
 /datum/component/alternative_sharpness/RegisterWithParent()
-	RegisterSignal(parent, COMSIG_ITEM_PRE_ATTACK_SECONDARY, PROC_REF(on_secondary_attack))
+	RegisterSignal(parent, COMSIG_ITEM_CREATED_DAMAGE_PACKAGE, PROC_REF(item_package_created))
+	RegisterSignal(parent, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, PROC_REF(mob_package_created))
 
-/datum/component/alternative_sharpness/proc/on_secondary_attack(obj/item/source, atom/target, mob/user, params)
+/datum/component/alternative_sharpness/proc/item_package_created(obj/item/source, datum/damage_package/package, atom/target, mob/living/user, list/modifiers)
 	SIGNAL_HANDLER
 
-	if (alt_attacking || (required_trait && !HAS_TRAIT(source, required_trait)))
+	if (!LAZYACCESS(modifiers, RIGHT_CLICK))
 		return
 
-	alt_attacking = TRUE
-	source.force += force_mod
-	base_sharpness = source.sharpness
-	source.sharpness = alt_sharpness
-	if (!isnull(verbs_continuous))
-		source.attack_verb_continuous = verbs_continuous
+	if (required_trait && !HAS_TRAIT(source, required_trait))
+		return
 
-	if (!isnull(verbs_simple))
-		source.attack_verb_simple = verbs_simple
+	package.amount += force_mod
+	package.sharpness = alt_sharpness
 
-	// I absolutely despise this but this is geniunely the best way to do this without creating and hooking up to a dozen signals and still risking failure edge cases
-	addtimer(CALLBACK(src, PROC_REF(disable_alt_attack)), 1)
+	if (isnull(verbs_continuous))
+		return
 
-/datum/component/alternative_sharpness/proc/disable_alt_attack()
-	var/obj/item/weapon = parent
-	alt_attacking = FALSE
-	weapon.force -= force_mod
-	weapon.attack_verb_continuous = base_continuous
-	weapon.attack_verb_simple = base_simple
-	weapon.sharpness = base_sharpness
+	var/verb_index = rand(1, length(verbs_continuous))
+	var/verb_simple = verbs_simple[verb_index]
+	var/verb_continuous = verbs_continuous[verb_index]
+	var/no_damage_feedback = null
+
+	if (isobj(target))
+		var/obj/as_obj = target
+		if (source.demolition_mod < 1)
+			verb_simple = "ineffectively " + verb_simple
+			verb_continuous = "ineffectively " + verb_continuous
+		if (package.amount < as_obj.damage_deflection)
+			no_damage_feedback = ", [as_obj.no_damage_feedback]"
+
+	package.attack_message_spectator = span_danger("[user] [verb_continuous] [src] with [source][no_damage_feedback]!")
+	package.attack_message_attacker = span_danger("You [verb_simple] [src] with [source][no_damage_feedback]!")
+
+/datum/component/alternative_sharpness/proc/mob_package_created(mob/living/source, datum/damage_package/package, atom/target, amount, damtype, forced, ignore_custom, list/modifiers)
+	SIGNAL_HANDLER
+
+	if (!LAZYACCESS(modifiers, RIGHT_CLICK))
+		return
+
+	if (required_trait && !HAS_TRAIT(source, required_trait))
+		return
+
+	package.amount += force_mod
+	package.sharpness = alt_sharpness
+
+	if (isnull(verbs_continuous))
+		return
+
+	var/verb_index = rand(1, length(verbs_continuous))
+	var/no_damage_feedback = null
+
+	if (isobj(target))
+		var/obj/as_obj = target
+		if (package.amount < as_obj.damage_deflection)
+			no_damage_feedback = ", [as_obj.no_damage_feedback]"
+
+	package.attack_message_spectator = span_danger("[source] [verbs_continuous[verb_index]] [src][no_damage_feedback]!")
+	package.attack_message_attacker = span_danger("You [verbs_simple[verb_index]] [src][no_damage_feedback]!")

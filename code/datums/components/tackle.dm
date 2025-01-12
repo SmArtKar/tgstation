@@ -613,7 +613,7 @@
 		user.visible_message(span_danger("[user] smacks into [windscreen_casualty] like a bug!"), span_userdanger("You smacks into [windscreen_casualty] like a bug!"))
 		user.Paralyze(1 SECONDS)
 		user.Knockdown(3 SECONDS)
-		windscreen_casualty.take_damage(60 * speed, BRUTE, MELEE, LEAP_ATTACK, hit_by = windscreen_casualty, source = windscreen_casualty)
+		windscreen_casualty.take_damage(60 * speed, BRUTE, MELEE, LEAP_ATTACK, attack_dir = get_dir(windscreen_casualty, user), hit_by = user, source = user)
 		user.adjustStaminaLoss(10 * speed, updating_stamina=FALSE)
 		user.adjustBruteLoss(5 * speed)
 

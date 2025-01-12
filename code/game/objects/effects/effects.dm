@@ -19,7 +19,7 @@
 
 	return ..()
 
-/obj/effect/attack_generic(mob/user, damage_amount, damage_type, damage_flag, sound_effect, armor_penetration)
+/obj/effect/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
 	return
 
 /obj/effect/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)

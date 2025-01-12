@@ -329,3 +329,33 @@
 	Move(get_step(src, dir), dir)
 	animate(src, pixel_y = 18, time = 0.4 SECONDS, flags = ANIMATION_RELATIVE, easing = CUBIC_EASING|EASE_OUT)
 	animate(pixel_y = -18, time = 0.4 SECONDS, flags = ANIMATION_RELATIVE, easing = CUBIC_EASING|EASE_IN)
+
+/mob/living/basic/get_unarmed_package(atom/target, amount = null, damtype = null, forced = FALSE, ignore_custom = FALSE, list/modifiers = null)
+	if (isnull(amount))
+		if (isobj(target))
+			amount = obj_damage
+		else
+			amount = rand(melee_damage_lower, melee_damage_upper)
+
+	if (isnull(damtype))
+		damtype = melee_damage_type
+
+	var/datum/damage_package/package = new(
+		amount = amount,
+		damage_type = damtype,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		def_zone = zone_selected,
+		attack_dir = get_dir(target, src),
+		armor_penetration = armor_penetration,
+		forced = forced,
+		hit_by = src,
+		source = src,
+		sharpness = sharpness,
+		wound_bonus = wound_bonus,
+		bare_wound_bonus = bare_wound_bonus,
+		modifiers = modifiers,
+		)
+
+	SEND_SIGNAL(src, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, package, target, amount, damtype, forced, ignore_custom, modifiers)
+	return package

@@ -140,12 +140,13 @@
 /atom/proc/hulk_damage()
 	return 150 //the damage hulks do on punches to this atom, is affected by melee armor
 
-/atom/proc/attack_generic(mob/user, damage_amount = 0, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, armor_penetration = 0) //used by attack_alien, attack_animal
+/atom/proc/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
 	if(!uses_integrity)
 		CRASH("unimplemented /atom/proc/attack_generic()!")
+
 	user.do_attack_animation(src)
 	user.changeNext_move(CLICK_CD_MELEE)
-	return take_damage(damage_amount, damage_type, damage_flag, sound_effect, get_dir(src, user), armor_penetration) // SMARTKAR: Unfuck this
+	return take_damage(DAMAGE_PROC_PASSING, direct_package = direct_package, sound_effect = sound_effect)
 
 /// Called after the atom takes damage and integrity is below integrity_failure level
 /atom/proc/atom_break(damage_flag)

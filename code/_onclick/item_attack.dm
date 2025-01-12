@@ -226,7 +226,8 @@
 
 	if(get(src, /mob/living) == user) // telekinesis.
 		user.do_attack_animation(target_mob)
-	if(!target_mob.attacked_by(src, user))
+
+	if(!target_mob.attacked_by(src, user, params2list(params)))
 		return TRUE
 
 	SEND_SIGNAL(src, COMSIG_ITEM_AFTERATTACK, target_mob, user, params)
@@ -261,21 +262,21 @@
 	user.changeNext_move(attack_speed)
 	if(get(src, /mob/living) == user) // telekinesis.
 		user.do_attack_animation(attacked_atom)
-	attacked_atom.attacked_by(src, user)
+	attacked_atom.attacked_by(src, user, params2list(params))
 	SEND_SIGNAL(src, COMSIG_ITEM_AFTERATTACK, attacked_atom, user, params)
 	SEND_SIGNAL(attacked_atom, COMSIG_ATOM_AFTER_ATTACKEDBY, src, user, params)
 	afterattack(attacked_atom, user, params)
 	return FALSE // unhandled
 
 /// Called from [/obj/item/proc/attack_atom] and [/obj/item/proc/attack] if the attack succeeds
-/atom/proc/attacked_by(obj/item/attacking_item, mob/living/user)
+/atom/proc/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
 	if (!uses_integrity)
 		CRASH("attacked_by() was called on an object that doesn't use integrity!")
 
 	if (!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user))
+	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user, modifiers))
 	// Only witnesses close by and the victim see a hit message.
 	if (package.attack_message_spectator)
 		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
@@ -284,10 +285,10 @@
 			span_danger("You hit [src] with [attacking_item][package.amount ? "." : ", without leaving a mark!"]"), null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "attacked", attacking_item)
 
-/area/attacked_by(obj/item/attacking_item, mob/living/user)
+/area/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
 	CRASH("areas are NOT supposed to have attacked_by() called on them!")
 
-/mob/living/attacked_by(obj/item/attacking_item, mob/living/user)
+/mob/living/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
 
 	var/targeting = check_zone(user.zone_selected)
 	if(user != src)
@@ -486,9 +487,9 @@
 	return ""
 
 /// A simple way to create a damage package targeting an atom
-/obj/item/proc/generate_damage(atom/target, mob/living/user)
-	return new /datum/damage_package(
-		amount = force * (isobj(target) ? demolition_mod : 1),
+/obj/item/proc/generate_damage(atom/target, mob/living/user, list/modifiers)
+	var/datum/damage_package/package = new(
+		amount = force,
 		damage_type = damtype,
 		damage_flag = MELEE,
 		attack_flags = MELEE_ATTACK,
@@ -503,4 +504,8 @@
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,
+		amount_multiplier = (isobj(target) ? demolition_mod : 1),
+		modifiers = modifiers,
 	)
+	SEND_SIGNAL(src, COMSIG_ITEM_CREATED_DAMAGE_PACKAGE, package, target, user, modifiers)
+	return package

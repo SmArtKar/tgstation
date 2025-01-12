@@ -812,7 +812,7 @@
 
 // Creates a new damage package for our unarmed attack. Uses our selected arm's unarmed damage, or falls back to amount arg if such doesn't exist
 // If ignore_custom is TRUE, then deal fixed amount of damage of fixed type, ignoring picked arm or custom logic
-/mob/living/proc/get_unarmed_package(atom/target, amount, damtype = BRUTE, forced = FALSE, ignore_custom = FALSE)
+/mob/living/proc/get_unarmed_package(atom/target, amount, damtype = BRUTE, forced = FALSE, ignore_custom = FALSE, list/modifiers = null)
 	var/obj/item/bodypart/arm = get_active_hand()
 	var/sharpness = NONE
 	if (!isnull(arm) && !ignore_custom)
@@ -820,7 +820,7 @@
 		damtype = arm.attack_type
 		sharpness = arm.sharpness
 
-	return new /datum/damage_package(
+	var/datum/damage_package/package = new(
 		amount = amount,
 		damage_type = damtype,
 		damage_flag = MELEE,
@@ -831,4 +831,8 @@
 		hit_by = src,
 		source = src,
 		sharpness = sharpness,
+		modifiers = modifiers,
 		)
+
+	SEND_SIGNAL(src, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, package, target, amount, damtype, forced, ignore_custom, modifiers)
+	return package

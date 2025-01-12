@@ -43,8 +43,8 @@
 
 	grant_actions_by_list(get_innate_actions())
 
-/mob/living/simple_animal/hostile/ooze/attacked_by(obj/item/I, mob/living/user)
-	if(!eat_atom(I, TRUE))
+/mob/living/simple_animal/hostile/ooze/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
+	if(!eat_atom(attacking_item, TRUE))
 		return ..()
 
 /mob/living/simple_animal/hostile/ooze/AttackingTarget(atom/attacked_target)

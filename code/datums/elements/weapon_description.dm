@@ -38,7 +38,7 @@
 /datum/element/weapon_description/proc/warning_label(obj/item/item, mob/user, list/examine_texts)
 	SIGNAL_HANDLER
 
-	if(item.force >= 5 || item.throwforce >= 5 || item.override_notes || item.offensive_notes || attached_proc) /// Only show this tag for items that could feasibly be weapons, shields, or those that have special notes
+	if(item.force >= MINIMUM_WEAPON_DAMAGE || item.throwforce >= MINIMUM_WEAPON_DAMAGE || item.override_notes || item.offensive_notes || attached_proc) /// Only show this tag for items that could feasibly be weapons, shields, or those that have special notes
 		examine_texts += span_notice("<a href='byond://?src=[REF(item)];examine=1'>See combat information.</a>")
 
 /**

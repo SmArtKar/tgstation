@@ -309,3 +309,6 @@
 #define COMSIG_LIVING_ATTACK_ATOM "living_attack_atom"
 /// From /mob/living/proc/stop_leaning()
 #define COMSIG_LIVING_STOPPED_LEANING "living_stopped_leaning"
+
+/// From /mob/living/simple_animal/get_unarmed_package() : (datum/damage_package/package, atom/target, amount, damtype, forced, ignore_custom, list/modifiers)
+#define COMSIG_MOB_CREATED_DAMAGE_PACKAGE "mob_created_damage_package"

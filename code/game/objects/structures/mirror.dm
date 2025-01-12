@@ -239,8 +239,8 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/mirror/broken, 28)
 		return list()// no message spam
 	return ..()
 
-/obj/structure/mirror/attacked_by(obj/item/I, mob/living/user)
-	if(broken || !istype(user) || !I.force)
+/obj/structure/mirror/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
+	if(broken || !istype(user) || !attacking_item.force)
 		return ..()
 
 	. = ..()

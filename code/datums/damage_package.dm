@@ -38,8 +38,15 @@
 	var/bare_wound_bonus = 0
 	/// Sharpness of the tool this attack was made with
 	var/sharpness = NONE
+	/// Damage multiplier, applied last in order to avoid comsig order issues
+	var/amount_multiplier = 1
+	/// Click modifiers if this package was created as a result of a mob attack
+	var/list/modifiers = null
 
-/datum/damage_package/New(DAMAGE_PROC_ARGS)
+	/// Initial amount of damage that the package dealt before any side mods
+	VAR_FINAL/initial_amount = 0
+
+/datum/damage_package/New(DAMAGE_PROC_ARGS, modifiers = null, initial_amount = null)
 	. = ..()
 	src.amount = amount
 	src.damage_type = damage_type
@@ -59,6 +66,13 @@
 	src.wound_bonus = wound_bonus
 	src.bare_wound_bonus = bare_wound_bonus
 	src.sharpness = sharpness
+	src.amount_multiplier = amount_multiplier
+	src.modifiers = modifiers
+
+	if (!isnull(initial_amount))
+		src.initial_amount = initial_amount
+	else
+		src.initial_amount = amount
 
 /datum/damage_package/Destroy(force)
 	hit_by = null

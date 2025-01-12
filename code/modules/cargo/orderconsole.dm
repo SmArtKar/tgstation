@@ -54,13 +54,12 @@
 	QDEL_NULL(radio)
 	return ..()
 
-/obj/machinery/computer/cargo/attacked_by(obj/item/I, mob/living/user)
-	if(istype(I,/obj/item/trade_chip))
-		var/obj/item/trade_chip/contract = I
+/obj/machinery/computer/cargo/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
+	if(istype(attacking_item, /obj/item/trade_chip))
+		var/obj/item/trade_chip/contract = attacking_item
 		contract.try_to_unlock_contract(user)
 		return TRUE
-	else
-		return ..()
+	return ..()
 
 /obj/machinery/computer/cargo/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if(obj_flags & EMAGGED)

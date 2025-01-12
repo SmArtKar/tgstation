@@ -252,7 +252,7 @@
 	if(species_exception)
 		species_exception = string_list(species_exception)
 
-	if(sharpness && force > 5) //give sharp objects butchering functionality, for consistency
+	if(sharpness && force >= MINIMUM_WEAPON_DAMAGE) //give sharp objects butchering functionality, for consistency
 		AddComponent(/datum/component/butchering, speed = 8 SECONDS * toolspeed)
 
 	if(!greyscale_config && greyscale_colors && (greyscale_config_worn || greyscale_config_belt || greyscale_config_inhand_right || greyscale_config_inhand_left))
@@ -1348,7 +1348,7 @@
  * * discover_after - if the item will be discovered after being chomped (FALSE will usually mean it was swallowed, TRUE will usually mean it was bitten into and discovered)
  */
 /obj/item/proc/on_accidental_consumption(mob/living/carbon/victim, mob/living/carbon/user, obj/item/source_item, discover_after = TRUE)
-	if(get_sharpness() && force >= 5) //if we've got something sharp with a decent force (ie, not plastic)
+	if(get_sharpness() && force >= MINIMUM_WEAPON_DAMAGE) //if we've got something sharp with a decent force (ie, not plastic)
 		INVOKE_ASYNC(victim, TYPE_PROC_REF(/mob, emote), "scream")
 		victim.visible_message(span_warning("[victim] looks like [victim.p_theyve()] just bit something they shouldn't have!"), \
 							span_boldwarning("OH GOD! Was that a crunch? That didn't feel good at all!!"))

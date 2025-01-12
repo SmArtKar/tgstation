@@ -110,10 +110,10 @@ Expects a turf. Returns true if the attack should be blocked, false if not.*/
 				. = TRUE
 	return
 
-/obj/vehicle/sealed/mecha/durand/attack_generic(mob/user, damage_amount = 0, damage_type = BRUTE, damage_flag = 0, sound_effect = 1, armor_penetration = 0)
+/obj/vehicle/sealed/mecha/durand/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
 	if(defense_check(user.loc))
 		log_message("Attack absorbed by defense field. Attacker - [user].", LOG_MECHA, color="orange")
-		return shield.attack_generic(user, damage_amount, damage_type, damage_flag, sound_effect, armor_penetration)
+		return shield.attack_generic(DAMAGE_PROC_PASSING, direct_package = direct_package, user = user, sound_effect = sound_effect)
 	return ..()
 
 /obj/vehicle/sealed/mecha/durand/blob_act(obj/structure/blob/B)

@@ -201,11 +201,11 @@
 	linked_venue.toggle_open()
 	update_icon()
 
-/obj/machinery/restaurant_portal/attacked_by(obj/item/I, mob/living/user)
-	if(!istype(I,  /obj/item/card/id))
+/obj/machinery/restaurant_portal/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
+	if(!istype(attacking_item,  /obj/item/card/id))
 		return ..()
 
-	var/obj/item/card/id/used_id = I
+	var/obj/item/card/id/used_id = attacking_item
 
 	if(!(linked_venue.req_access in used_id.GetAccess()))
 		to_chat(user, span_warning("This card lacks the access to change this venues status."))

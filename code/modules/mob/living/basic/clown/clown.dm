@@ -410,7 +410,7 @@
 	AddComponent(/datum/component/tameable, food_types = food_types, tame_chance = 30, bonus_tame_chance = 0)
 	AddElement(/datum/element/damage_threshold, 10) //lots of fat to cushion blows.
 
-/mob/living/basic/clown/mutant/glutton/attacked_by(obj/item/item, mob/living/user)
+/mob/living/basic/clown/mutant/glutton/attacked_by(obj/item/item, mob/living/user, list/modifiers)
 	if(!check_edible(item))
 		return ..()
 	eat_atom(item)

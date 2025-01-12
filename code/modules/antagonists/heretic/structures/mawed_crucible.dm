@@ -75,7 +75,7 @@
 /obj/structure/destructible/eldritch_crucible/rust_heretic_act()
 	return
 
-/obj/structure/destructible/eldritch_crucible/attacked_by(obj/item/weapon, mob/living/user)
+/obj/structure/destructible/eldritch_crucible/attacked_by(obj/item/weapon, mob/living/user, list/modifiers)
 	if(!iscarbon(user))
 		return ..()
 

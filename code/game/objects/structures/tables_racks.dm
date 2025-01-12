@@ -957,7 +957,7 @@
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_KICK)
 	user.visible_message(span_danger("[user] kicks [src]."), span_danger("You kick [src]."), null, COMBAT_MESSAGE_RANGE)
-	take_damage(direct_package = user.get_unarmed_package(src, rand(4, 8), ignore_custom = TRUE))
+	take_damage(direct_package = user.get_unarmed_package(src, rand(4, 8), ignore_custom = TRUE, modifiers = modifiers))
 
 /obj/structure/rack/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
 	switch(damage_type)

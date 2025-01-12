@@ -285,7 +285,10 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 #define BODY_ZONE_PRECISE_L_FOOT "l_foot"
 #define BODY_ZONE_PRECISE_R_FOOT "r_foot"
 
-//We will round to this value in damage calculations.
+/// Minimal amount of damage that something must deal to be considered a weapon
+#define MINIMUM_WEAPON_DAMAGE 5
+
+/// We will round to this value in damage calculations.
 #define DAMAGE_PRECISION 0.1
 
 //bullet_act() return values
@@ -403,7 +406,8 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	spread_damage = FALSE,\
 	wound_bonus = 0,\
 	bare_wound_bonus = 0,\
-	sharpness = NONE
+	sharpness = NONE,\
+	amount_multiplier = 1
 
 /// An easy way to pass all damage proc data into either another proc, or to a new damage package
 #define DAMAGE_PROC_PASSING amount = amount,\
@@ -423,4 +427,5 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	spread_damage = spread_damage,\
 	wound_bonus = wound_bonus,\
 	bare_wound_bonus = bare_wound_bonus,\
-	sharpness = sharpness
+	sharpness = sharpness,\
+	amount_multiplier = amount_multiplier

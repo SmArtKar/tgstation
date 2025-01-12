@@ -195,7 +195,7 @@
 /obj/structure/window/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
 
-/obj/structure/window/attack_generic(mob/user, damage_amount = 0, damage_type = BRUTE, damage_flag = 0, sound_effect = 1) //used by attack_alien, attack_animal
+/obj/structure/window/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
 	if(!can_be_reached(user))
 		return
 	return ..()
@@ -963,7 +963,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	. = ..()
 	if(. || !user.combat_mode)
 		return
-	take_damage(user.get_unarmed_package(src, 4), sound_effect = FALSE)
+	take_damage(direct_package = user.get_unarmed_package(src, 4, modifiers = modifiers), sound_effect = FALSE)
 	if(!QDELETED(src))
 		update_appearance()
 

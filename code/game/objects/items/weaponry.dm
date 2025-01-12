@@ -1322,7 +1322,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 			log_combat(user, living_target, "gibbed", src)
 		return TRUE
 	else if(target.uses_integrity)
-		var/datum/damage_package/package = generate_damage(target, user)
+		var/datum/damage_package/package = generate_damage(target, user, params2list(params))
 		package.amount = force * damage_mod * 3
 		package.armor_penetration = 50
 		target.take_damage(direct_package = package, sound_effect = FALSE)

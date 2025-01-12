@@ -76,7 +76,7 @@
 	if(!override)
 		qdel(src)
 
-/obj/structure/spacevine/attacked_by(obj/item/item, mob/living/user)
+/obj/structure/spacevine/attacked_by(obj/item/item, mob/living/user, list/modifiers)
 	var/damage_dealt = item.force
 	if(item.get_sharpness())
 		damage_dealt *= 4

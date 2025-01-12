@@ -707,7 +707,7 @@
 		to_chat(user, span_userdanger("Such a feat is beyond your skills of telekinesis!"))
 		return
 
-	if(attacking_item.force < 5)
+	if(attacking_item.force < MINIMUM_WEAPON_DAMAGE)
 		balloon_alert(user, "not strong enough!")
 		return
 

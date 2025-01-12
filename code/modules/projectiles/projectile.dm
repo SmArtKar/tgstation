@@ -1357,8 +1357,8 @@
 
 /// Quickly generates a damage package for ease of use
 /obj/projectile/proc/generate_damage(atom/target)
-	return new /datum/damage_package(
-		amount = damage * (isobj(target) ? demolition_mod : 1),
+	var/datum/damage_package/package = new(
+		amount = damage,
 		damage_type = damage_type,
 		damage_flag = armor_flag,
 		attack_flags = PROJECTILE_ATTACK,
@@ -1373,7 +1373,10 @@
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,
+		amount_multiplier = (isobj(target) ? demolition_mod : 1),
 	)
+	SEND_SIGNAL(src, COMSIG_PROJECTILE_CREATED_DAMAGE_PACKAGE, package, target)
+	return package
 
 /// Fire a projectile from this atom at another atom
 /atom/proc/fire_projectile(projectile_type, atom/target, sound, firer, list/ignore_targets = list())

@@ -287,7 +287,7 @@
 	investigate_log("was connected to [possible_port] by [key_name(user)].", INVESTIGATE_ATMOS)
 	return TRUE
 
-/obj/machinery/portable_atmospherics/attacked_by(obj/item/item, mob/user)
+/obj/machinery/portable_atmospherics/attacked_by(obj/item/item, mob/user, list/modifiers)
 	if(item.force < 10 && !(machine_stat & BROKEN))
 		take_damage(0)
 		return

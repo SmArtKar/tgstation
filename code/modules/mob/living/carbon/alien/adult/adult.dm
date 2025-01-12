@@ -154,3 +154,21 @@ GLOBAL_LIST_INIT(strippable_alien_humanoid_items, create_strippable_list(list(
 // Aliens can touch acid
 /mob/living/carbon/alien/can_touch_acid(atom/acided_atom, acid_power, acid_volume)
 	return TRUE
+
+/mob/living/carbon/alien/get_unarmed_package(atom/target, amount = null, damtype = BRUTE, forced = FALSE, ignore_custom = FALSE, list/modifiers = null)
+	var/datum/damage_package/package = new(
+		amount = isnull(amount) ? rand(melee_damage_lower, melee_damage_upper) : amount, // Not || because 0 is still a valid amount of damage... yeah.
+		damage_type = damtype,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		def_zone = zone_selected,
+		attack_dir = get_dir(target, src),
+		forced = forced,
+		hit_by = src,
+		source = src,
+		sharpness = SHARP_EDGED, // Sharp claws, rawr
+		modifiers = modifiers,
+		)
+
+	SEND_SIGNAL(src, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, package, target, amount, damtype, forced, ignore_custom, modifiers)
+	return package

@@ -418,6 +418,9 @@
 ///sent to the projectile when successfully embedding into something: (new_item, victim)
 #define COMSIG_PROJECTILE_ON_EMBEDDED "projectile_on_embedded"
 
+// Sent from /obj/projectile/proc/generate_damage(atom/target): (datum/damage_package/package, atom/target)
+#define COMSIG_PROJECTILE_CREATED_DAMAGE_PACKAGE "projectile_created_damage_package"
+
 // /obj/vehicle/sealed/car/vim signals
 
 ///from /datum/action/vehicle/sealed/noise/chime/Trigger(): ()
@@ -550,3 +553,6 @@
 #define COMSIG_WINGS_OPENED "wings_opened"
 /// Sent from /obj/item/organ/wings/functional/proc/close_wings(): (mob/living/carbon/owner)
 #define COMSIG_WINGS_CLOSED "wings_closed"
+
+// Sent from /obj/item/proc/generate_damage(atom/target, mob/living/user, list/modifiers): (datum/damage_package/package, atom/target, mob/living/user, list/modifiers)
+#define COMSIG_ITEM_CREATED_DAMAGE_PACKAGE "item_created_damage_package"

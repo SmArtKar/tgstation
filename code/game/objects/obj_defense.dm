@@ -7,11 +7,11 @@
 		damage_taken *= as_item.demolition_mod
 	take_damage(damage_taken, BRUTE, MELEE, 1, get_dir(src, hit_by))
 
-/obj/attacked_by(obj/item/attacking_item, mob/living/user)
+/obj/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user))
+	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user, modifiers))
 	log_combat(user, src, "attacked", attacking_item)
 
 	if (package.attack_message_spectator)
@@ -83,7 +83,7 @@
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-	var/damage = take_damage(direct_package = user.get_unarmed_package(hulk_damage(), ignore_custom = TRUE), sound_effect = FALSE)
+	var/damage = take_damage(direct_package = user.get_unarmed_package(src, hulk_damage(), ignore_custom = TRUE), sound_effect = FALSE)
 	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 
@@ -97,25 +97,36 @@
 	take_damage(400, BRUTE, MELEE, BLOB_ATTACK, attack_dir = get_dir(src, B), hit_by = B, source = B, sound_effect = FALSE)
 
 /obj/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
-	if(attack_generic(user, 60, BRUTE, MELEE, 0))
-		playsound(src.loc, 'sound/items/weapons/slash.ogg', 100, TRUE)
+	var/datum/damage_package/package = attack_generic(direct_package = user.get_unarmed_package(src, 60, modifiers = modifiers))
+	if(package?.amount)
+		playsound(loc, 'sound/items/weapons/slash.ogg', 100, TRUE)
+
+	if (package?.attack_message_spectator)
+		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_attacker, null, COMBAT_MESSAGE_RANGE)
+	else
+		user.visible_message(
+			span_danger("[user] slashes at [src][package?.amount ? "" : ", [no_damage_feedback]"]!"),
+			span_danger("You slash at [src][package?.amount ? "" : ", [no_damage_feedback]"]!"),
+			null,
+			COMBAT_MESSAGE_RANGE
+		)
 
 /obj/attack_animal(mob/living/simple_animal/user, list/modifiers)
 	. = ..()
 	if(!user.melee_damage_upper && !user.obj_damage)
 		user.emote("custom", message = "[user.friendly_verb_continuous] [src].")
 		return FALSE
-	else
-		var/turf/current_turf = get_turf(src) //we want to save the turf to play the sound there, cause being destroyed deletes us!
-		var/play_soundeffect = user.environment_smash
-		if(user.obj_damage)
-			. = attack_generic(user, user.obj_damage, user.melee_damage_type, MELEE, play_soundeffect, user.armor_penetration)
-		else
-			. = attack_generic(user, rand(user.melee_damage_lower,user.melee_damage_upper), user.melee_damage_type, MELEE, play_soundeffect, user.armor_penetration)
-		if(. && play_soundeffect)
-			playsound(current_turf, 'sound/effects/meteorimpact.ogg', 100, TRUE)
-		if(user.client)
-			log_combat(user, src, "attacked")
+
+	var/turf/current_turf = get_turf(src) //we want to save the turf to play the sound there, cause being destroyed deletes us!
+	var/play_soundeffect = user.environment_smash
+	var/datum/damage_package/package = attack_generic(direct_package = user.get_unarmed_package(src, modifiers = modifiers), user = user, sound_effect = !play_soundeffect)
+	if(package?.amount && play_soundeffect)
+		playsound(current_turf, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+
+	if(user.client)
+		log_combat(user, src, "attacked")
+
+	return package?.amount
 
 /obj/force_pushed(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	return TRUE

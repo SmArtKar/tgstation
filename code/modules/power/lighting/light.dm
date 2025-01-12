@@ -429,7 +429,7 @@
 		real_cell.forceMove(new_light)
 		cell = null
 
-/obj/machinery/light/attacked_by(obj/item/attacking_object, mob/living/user)
+/obj/machinery/light/attacked_by(obj/item/attacking_object, mob/living/user, list/modifiers)
 	..()
 	if(status != LIGHT_BROKEN && status != LIGHT_EMPTY)
 		return
