@@ -569,7 +569,7 @@
 		to_chat(attacked_mob, span_userdanger("You're slashed by [src]!"))
 	else if((ismachinery(attacked_atom) || isstructure(attacked_atom)) && use_blood(5))
 		var/obj/attacked_obj = attacked_atom
-		attacked_obj.take_damage(generate_damage(attacked_obj, soul))
+		attacked_obj.take_damage(direct_package = generate_damage(attacked_obj, soul))
 	else
 		return
 	COOLDOWN_START(src, attack_cooldown, 1 SECONDS)

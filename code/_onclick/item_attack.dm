@@ -276,7 +276,7 @@
 	if (!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/package = take_damage(direct_package = attacking_item.generate_damage(src, user, modifiers))
 	// Only witnesses close by and the victim see a hit message.
 	if (package.attack_message_spectator)
 		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)

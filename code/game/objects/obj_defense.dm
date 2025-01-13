@@ -11,7 +11,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = take_damage(attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/package = take_damage(direct_package = attacking_item.generate_damage(src, user, modifiers))
 	log_combat(user, src, "attacked", attacking_item)
 
 	if (package.attack_message_spectator)
