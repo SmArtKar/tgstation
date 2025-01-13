@@ -137,7 +137,7 @@
 			return NONE
 		user.do_attack_animation(target)
 		user.changeNext_move(CLICK_CD_RAPID)
-		target.play_attack_sound()
+		target.play_attack_sound(source.force, source.damtype, MELEE)
 	// not particularly picky about what happens afterwards in the attack chain
 	return NONE
 

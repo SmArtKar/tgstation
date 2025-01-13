@@ -53,8 +53,8 @@
 		if (package.amount < as_obj.damage_deflection)
 			no_damage_feedback = ", [as_obj.no_damage_feedback]"
 
-	package.attack_message_spectator = span_danger("[user] [verb_continuous] [src] with [source][no_damage_feedback]!")
-	package.attack_message_attacker = span_danger("You [verb_simple] [src] with [source][no_damage_feedback]!")
+	package.attack_message_spectator = span_danger("[user] [verb_continuous] [target] with [source][no_damage_feedback]!")
+	package.attack_message_attacker = span_danger("You [verb_simple] [target] with [source][no_damage_feedback]!")
 
 /datum/component/alternative_sharpness/proc/mob_package_created(mob/living/source, datum/damage_package/package, atom/target, amount, damtype, forced, ignore_custom, list/modifiers)
 	SIGNAL_HANDLER

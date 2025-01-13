@@ -511,10 +511,14 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/unanchored/spawner, 0)
 		return list("delay" = 3 SECONDS, "cost" = 15)
 	return FALSE
 
-/obj/structure/window/reinforced/attackby_secondary(obj/item/tool, mob/user, params)
-	if(resistance_flags & INDESTRUCTIBLE)
+/obj/structure/window/reinforced/attackby_secondary(obj/item/tool, mob/living/user, params)
+	if (resistance_flags & INDESTRUCTIBLE)
 		balloon_alert(user, "too resilient!")
 		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+	if (user.combat_mode)
+		return ..()
+
 	switch(state)
 		if(RWINDOW_SECURE)
 			if(tool.tool_behaviour == TOOL_WELDER)

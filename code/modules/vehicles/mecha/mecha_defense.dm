@@ -38,7 +38,7 @@
 
 /obj/vehicle/sealed/mecha/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
 	var/datum/damage_package/damage_taken = ..()
-	if(damage_taken.amount <= 0 || atom_integrity < 0)
+	if(!damage_taken || atom_integrity < 0)
 		return damage_taken
 
 	diag_hud_set_mechhealth()

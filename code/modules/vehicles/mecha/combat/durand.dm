@@ -270,17 +270,18 @@ own integrity back to max. Shield is automatically dropped if we run out of powe
 		return
 	if(!chassis.defense_mode) //if defense mode is disabled, we're taking damage that we shouldn't be taking
 		return
-	. = ..()
+	var/datum/damage_package/package = ..()
 	flick("shield_impact", src)
-	if(!.)
-		return
-	if(!chassis.use_energy(. * (STANDARD_CELL_CHARGE / 150)))
+	if(!package?.amount)
+		return package
+	if(!chassis.use_energy(package.amount * (STANDARD_CELL_CHARGE / 150)))
 		chassis.cell?.charge = 0
 		for(var/O in chassis.occupants)
 			var/mob/living/occupant = O
 			var/datum/action/action = LAZYACCESSASSOC(chassis.occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/mech_defense_mode)
 			action.Trigger()
 	atom_integrity = 10000
+	return package
 
 /obj/durand_shield/play_attack_sound()
 	playsound(src, 'sound/vehicles/mecha/mech_shield_deflect.ogg', 100, TRUE)
