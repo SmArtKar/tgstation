@@ -8,7 +8,7 @@
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
-	attack_direction = null,
+	attack_dir = null,
 	attacking_item,
 	wound_clothing = TRUE,
 )
@@ -45,7 +45,7 @@
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
-	attack_direction = null,
+	attack_dir = null,
 	attacking_item,
 	wound_clothing = TRUE,
 )
@@ -60,7 +60,7 @@
 	damagetype = BRUTE,
 	def_zone = null,
 	sharpness = NONE,
-	attack_direction = null,
+	attack_dir = null,
 	attacking_item,
 )
 	var/final_mod = ..()

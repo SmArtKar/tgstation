@@ -430,7 +430,7 @@
 		spread_damage = TRUE,
 		wound_bonus = 5,
 		sharpness = SHARP_EDGED,
-		attack_direction = get_dir(source, target),
+		attack_dir = get_dir(source, target),
 	)
 
 	if(target.stat != DEAD)

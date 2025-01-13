@@ -187,10 +187,10 @@
 	qdel(src)
 
 ///If the shooter is hit by an attack, they have a 50% chance to flinch and fire. If it hit the arm holding the trigger, it's an 80% chance to fire instead
-/datum/component/gunpoint/proc/flinch(mob/living/source, damage_amount, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item)
+/datum/component/gunpoint/proc/flinch(mob/living/source, damage_amount, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_dir, attacking_item)
 	SIGNAL_HANDLER
 
-	if(!attack_direction) // No fliching from yourself
+	if(!attack_dir) // No fliching from yourself
 		return
 
 	var/flinch_chance = 50

@@ -27,13 +27,15 @@
 #define COMSIG_ATOM_DESTRUCTION "atom_destruction"
 /// from base of [/atom/proc/extinguish]
 #define COMSIG_ATOM_EXTINGUISH "atom_extinguish"
-///from base of [/atom/proc/update_integrity]: (old_value, new_value)
+/// from base of [/atom/proc/update_integrity]: (old_value, new_value)
 #define COMSIG_ATOM_INTEGRITY_CHANGED "atom_integrity_changed"
-///from base of [/atom/proc/process_damage_package], occurs before armor processing - can have zero damage: (datum/damage_package/package)
+/// from base of [/atom/proc/process_damage_package]: (datum/damage_package/package)
+/// Occurs prior to run_atom_armor and BEFORE amount_multiplier is applied!
 #define COMSIG_ATOM_TAKE_DAMAGE "atom_take_damage"
 	/// Return bitflags for the above signal which prevents the atom taking any damage.
 	#define COMPONENT_NO_TAKE_DAMAGE (1<<0)
-///from [/atom/proc/process_damage_package], occurs after armor processing has ran: (datum/damage_package/package)
+/// from [/atom/proc/process_damage_package]: (datum/damage_package/package)
+/// Occurs after armor processing has ran, and amount is already multiplied by amount_multiplier
 #define COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE "processing_damage_package"
 	#define COMPONENT_CANCEL_DAMAGE_PACKAGE (1<<0)
 /* Attack signals. They should share the returned flags, to standardize the attack chain. */

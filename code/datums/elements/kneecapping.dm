@@ -86,7 +86,7 @@
 	var/min_wound = leg.get_wound_threshold_of_wound_type(WOUND_BLUNT, WOUND_SEVERITY_SEVERE, return_value_if_no_wound = 30, wound_source = weapon)
 	var/max_wound = leg.get_wound_threshold_of_wound_type(WOUND_BLUNT, WOUND_SEVERITY_CRITICAL, return_value_if_no_wound = 50, wound_source = weapon)
 
-	target.apply_damage(weapon.force, weapon.damtype, leg, wound_bonus = rand(min_wound, max_wound + 10), attacking_item = weapon)
+	target.apply_damage(weapon.force, weapon.damtype, leg, wound_bonus = rand(min_wound, max_wound + 10), hit_by = weapon)
 	target.emote("scream")
 	log_combat(attacker, target, "broke the kneecaps of", weapon)
 	attacker.do_attack_animation(target, used_item = weapon)

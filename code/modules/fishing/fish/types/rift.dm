@@ -222,7 +222,7 @@
 		if(0)
 			// No check, we always want sharky to bite jerky on 0
 			moc.visible_message(span_bolddanger("[src] bites directly into [moc] and squirms away from [moc.p_their()] grasp!"), span_userdanger("[src] sinks its fangs into you!!"))
-			moc.apply_damage(force, BRUTE, moc.get_active_hand(), wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness, attacking_item = src)
+			moc.apply_damage(force, BRUTE, moc.get_active_hand(), wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness, hit_by = src)
 			forceMove(moc.drop_location())
 			moc.painful_scream()
 			patience = max_patience
@@ -254,7 +254,7 @@
 		span_warning("You try to pet [src], but it sinks its fangs into your hand!"),
 		vision_distance = DEFAULT_MESSAGE_RANGE - 3,
 		)
-	user.apply_damage(force, BRUTE, user.get_active_hand(), wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness, attacking_item = src)
+	user.apply_damage(force, BRUTE, user.get_active_hand(), wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness, hit_by = src)
 	if(!in_aquarium)
 		forceMove(user.drop_location())
 	user.painful_scream()

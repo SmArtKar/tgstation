@@ -37,7 +37,7 @@
 /// Handles beginning processing objects.
 /datum/element/obj_regen/proc/on_take_damage(obj/target, datum/damage_package/package)
 	SIGNAL_HANDLER
-	if(!package?.amount)
+	if(!package.amount)
 		return
 	if(!length(processing))
 		START_PROCESSING(SSobj, src)

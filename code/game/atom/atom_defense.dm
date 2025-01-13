@@ -32,7 +32,10 @@
 		CRASH("[src] taking damage while having <= 0 integrity")
 
 	if (sound_effect)
-		play_attack_sound(package.amount, package.damage_type, package.damage_flag)
+		var/sound_amount = package.amount
+		if (!package.forced)
+			sound_amount *= package.amount_multiplier
+		play_attack_sound(sound_amount, package.damage_type, package.damage_flag)
 
 	if(resistance_flags & INDESTRUCTIBLE)
 		return
@@ -40,6 +43,9 @@
 	if(SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, package) & COMPONENT_NO_TAKE_DAMAGE)
 		return
 
+	// Before armor due to damage_deflection
+	if (!package.forced)
+		package.amount *= package.amount_multiplier
 	run_atom_armor(package)
 
 	if(package.amount < DAMAGE_PRECISION)

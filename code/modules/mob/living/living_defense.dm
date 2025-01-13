@@ -6,12 +6,15 @@
 		return our_armor
 	if(weak_against_armor && our_armor >= 0)
 		our_armor *= ARMOR_WEAKENED_MULTIPLIER
+
+	if(armor_penetration)
+		our_armor = max(PENETRATE_ARMOR(our_armor, armor_penetration), 0)
+
 	if(silent)
-		return max(0, PENETRATE_ARMOR(our_armor, armor_penetration))
+		return our_armor
 
 	//the if "armor" check is because this is used for everything on /living, including humans
 	if(armor_penetration)
-		our_armor = max(PENETRATE_ARMOR(our_armor, armor_penetration), 0)
 		if(penetrated_text)
 			to_chat(src, span_userdanger("[penetrated_text]"))
 		else
@@ -26,6 +29,7 @@
 			to_chat(src, span_warning("[soften_text]"))
 		else
 			to_chat(src, span_warning("Your armor softens the blow!"))
+
 	return our_armor
 
 /mob/living/proc/getarmor(def_zone, type)
@@ -127,8 +131,8 @@
 		wound_bonus = proj.wound_bonus,
 		bare_wound_bonus = proj.bare_wound_bonus,
 		sharpness = proj.sharpness,
-		attack_direction = get_dir(proj.starting, src),
-		attacking_item = proj,
+		attack_dir = get_dir(proj.starting, src),
+		hit_by = proj,
 	)
 
 	apply_effects(
@@ -429,7 +433,7 @@
 		wound_bonus = user.wound_bonus,
 		bare_wound_bonus = user.bare_wound_bonus,
 		sharpness = user.sharpness,
-		attack_direction = get_dir(user, src),
+		attack_dir = get_dir(user, src),
 	)
 	return damage_done
 

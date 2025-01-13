@@ -939,15 +939,15 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(user.limb_destroyer)
 		target.dismembering_strike(user, affecting.body_zone)
 
-	var/attack_direction = get_dir(user, target)
+	var/attack_dir = get_dir(user, target)
 	var/attack_type = attacking_bodypart.attack_type
 	if(atk_effect == ATTACK_EFFECT_KICK || grappled) //kicks and punches when grappling bypass armor slightly.
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, grappled ? "grapple punched" : "kicked")
-		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_direction = attack_direction)
+		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_dir = attack_dir)
 	else // Normal attacks do not gain the benefit of armor penetration.
-		target.apply_damage(damage, attack_type, affecting, armor_block, attack_direction = attack_direction)
+		target.apply_damage(damage, attack_type, affecting, armor_block, attack_dir = attack_dir)
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, "punched")

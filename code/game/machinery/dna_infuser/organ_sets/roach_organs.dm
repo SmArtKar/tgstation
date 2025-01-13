@@ -100,10 +100,10 @@
  *
  * Adds a 0.5 modifier to attacks from the back
  */
-/obj/item/organ/heart/roach/proc/modify_damage(mob/living/carbon/human/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_direction, obj/item/attacking_item)
+/obj/item/organ/heart/roach/proc/modify_damage(mob/living/carbon/human/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_dir, obj/item/attacking_item)
 	SIGNAL_HANDLER
 
-	if(!is_blocking(source, damage_amount, damagetype, attack_direction))
+	if(!is_blocking(source, damage_amount, damagetype, attack_dir))
 		return
 
 	damage_mods += 0.5
@@ -113,10 +113,10 @@
  *
  * Does a special effect if we blocked damage with our back
  */
-/obj/item/organ/heart/roach/proc/do_block_effect(mob/living/carbon/human/source, damage_dealt, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, obj/item/attacking_item)
+/obj/item/organ/heart/roach/proc/do_block_effect(mob/living/carbon/human/source, damage_dealt, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_dir, obj/item/attacking_item)
 	SIGNAL_HANDLER
 
-	if(!is_blocking(source, damage_dealt, damagetype, attack_direction))
+	if(!is_blocking(source, damage_dealt, damagetype, attack_dir))
 		return
 
 	if(COOLDOWN_FINISHED(src, harden_effect_cd))
@@ -126,15 +126,15 @@
 	COOLDOWN_START(src, harden_effect_cd, 5 SECONDS) // Cooldown resets EVERY time we get hit
 
 /// Checks if the passed mob is in a valid state to be blocking damage with the roach shell
-/obj/item/organ/heart/roach/proc/is_blocking(mob/living/carbon/human/blocker, damage_amount, damagetype, attack_direction)
-	if(damage_amount < 5 || damagetype != BRUTE || !attack_direction)
+/obj/item/organ/heart/roach/proc/is_blocking(mob/living/carbon/human/blocker, damage_amount, damagetype, attack_dir)
+	if(damage_amount < 5 || damagetype != BRUTE || !attack_dir)
 		return
 	if(!ishuman(blocker) || blocker.stat >= UNCONSCIOUS)
 		return FALSE
 	// No tactical spinning
 	if(HAS_TRAIT(blocker, TRAIT_SPINNING))
 		return FALSE
-	if(blocker.body_position == LYING_DOWN || (blocker.dir & attack_direction))
+	if(blocker.body_position == LYING_DOWN || (blocker.dir & attack_dir))
 		return TRUE
 	return FALSE
 

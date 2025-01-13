@@ -4,48 +4,56 @@
  *
  * Sends [COMSIG_MOB_APPLY_DAMAGE]
  *
- * Arguuments:
+ * Arguments:
  * * damage - Amount of damage
- * * damagetype - What type of damage to do. one of [BRUTE], [BURN], [TOX], [OXY], [STAMINA], [BRAIN].
+ * * damage_type - Type of damage dealt, can be BRUTE, BURN, TOX, OXY and STAMINA. Also BRAIN but please don't use this. // SMARTKAR: kill BRAIN
+ * * damage_flag - Armor which would've protected from this damage, determines the sort of damage we're dealing with.
+ * * attack_flags - What sort of an attack this is, melee, blob, ranged, etc.
  * * def_zone - What body zone is being hit. Or a reference to what bodypart is being hit.
- * * blocked - Percent modifier to damage. 100 = 100% less damage dealt, 50% = 50% less damage dealt.
+ * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced is TRUE, does not apply.
+ * * attack_dir - Direction of the attack from the self to attacker. // SMARTKAR TODO: reverse all directions because this was written by someone with too much free time
  * * forced - "Force" exactly the damage dealt. This means it skips damage modifier from blocked.
+ * * hit_by - Item, mob or projectile that dealt the damage.
+ * * source - Who actually dealt the damage - turret that fired the gun, greyshirt hit you with a toolbox, punched you, etc.
  * * spread_damage - For carbons, spreads the damage across all bodyparts rather than just the targeted zone.
  * * wound_bonus - Bonus modifier for wound chance.
  * * bare_wound_bonus - Bonus modifier for wound chance on bare skin.
  * * sharpness - Sharpness of the weapon.
- * * attack_direction - Direction of the attack from the attacker to [src].
- * * attacking_item - Item that is attacking [src].
  * * wound_clothing - If this should cause damage to clothing.
  *
  * Returns the amount of damage dealt.
  */
+
+
 /mob/living/proc/apply_damage(
 	damage = 0,
-	damagetype = BRUTE,
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
 	def_zone = null,
 	blocked = 0,
+	attack_dir = NONE,
 	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
 	spread_damage = FALSE,
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
-	attack_direction = null,
-	attacking_item,
 	wound_clothing = TRUE,
 )
 	SHOULD_CALL_PARENT(TRUE)
 	var/damage_amount = damage
 	if(!forced)
 		damage_amount *= ((100 - blocked) / 100)
-		damage_amount *= get_incoming_damage_modifier(damage_amount, damagetype, def_zone, sharpness, attack_direction, attacking_item)
+		damage_amount *= get_incoming_damage_modifier(damage_amount, damage_type, def_zone, sharpness, attack_dir, hit_by)
 	if(damage_amount <= 0)
 		return 0
 
-	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, damage_amount, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_direction, attacking_item, wound_clothing)
+	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, damage_amount, damage_type, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_dir, hit_by, wound_clothing)
 
 	var/damage_dealt = 0
-	switch(damagetype)
+	switch(damage_type)
 		if(BRUTE)
 			if(isbodypart(def_zone))
 				var/obj/item/bodypart/actual_hit = def_zone
@@ -57,8 +65,8 @@
 					wound_bonus = wound_bonus,
 					bare_wound_bonus = bare_wound_bonus,
 					sharpness = sharpness,
-					attack_direction = attack_direction,
-					damage_source = attacking_item,
+					attack_dir = attack_dir,
+					damage_source = hit_by,
 					wound_clothing = wound_clothing,
 				))
 					update_damage_overlays()
@@ -76,8 +84,8 @@
 					wound_bonus = wound_bonus,
 					bare_wound_bonus = bare_wound_bonus,
 					sharpness = sharpness,
-					attack_direction = attack_direction,
-					damage_source = attacking_item,
+					attack_dir = attack_dir,
+					damage_source = hit_by,
 					wound_clothing = wound_clothing,
 				))
 					update_damage_overlays()
@@ -93,7 +101,7 @@
 		if(BRAIN)
 			damage_dealt = -1 * adjustOrganLoss(ORGAN_SLOT_BRAIN, damage_amount)
 
-	SEND_SIGNAL(src, COMSIG_MOB_AFTER_APPLY_DAMAGE, damage_dealt, damagetype, def_zone, blocked, wound_bonus, bare_wound_bonus,sharpness, attack_direction, attacking_item, wound_clothing)
+	SEND_SIGNAL(src, COMSIG_MOB_AFTER_APPLY_DAMAGE, damage_dealt, damage_type, def_zone, blocked, wound_bonus, bare_wound_bonus,sharpness, attack_dir, hit_by, wound_clothing)
 	return damage_dealt
 
 /**
@@ -104,14 +112,14 @@
 	damagetype = BRUTE,
 	def_zone = null,
 	sharpness = NONE,
-	attack_direction = null,
+	attack_dir = null,
 	attacking_item,
 )
 	SHOULD_CALL_PARENT(TRUE)
 	SHOULD_BE_PURE(TRUE)
 
 	var/list/damage_mods = list()
-	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, damage_mods, damage, damagetype, def_zone, sharpness, attack_direction, attacking_item)
+	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, damage_mods, damage, damagetype, def_zone, sharpness, attack_dir, attacking_item)
 
 	var/final_mod = 1
 	for(var/new_mod in damage_mods)
@@ -158,32 +166,6 @@
 /// return the total damage of all types which update your health
 /mob/living/proc/get_total_damage(precision = DAMAGE_PRECISION)
 	return round(getBruteLoss() + getFireLoss() + getToxLoss() + getOxyLoss(), precision)
-
-/// Applies multiple damages at once via [apply_damage][/mob/living/proc/apply_damage]
-/mob/living/proc/apply_damages(
-	brute = 0,
-	burn = 0,
-	tox = 0,
-	oxy = 0,
-	def_zone = null,
-	blocked = 0,
-	stamina = 0,
-	brain = 0,
-)
-	var/total_damage = 0
-	if(brute)
-		total_damage += apply_damage(brute, BRUTE, def_zone, blocked)
-	if(burn)
-		total_damage += apply_damage(burn, BURN, def_zone, blocked)
-	if(tox)
-		total_damage += apply_damage(tox, TOX, def_zone, blocked)
-	if(oxy)
-		total_damage += apply_damage(oxy, OXY, def_zone, blocked)
-	if(stamina)
-		total_damage += apply_damage(stamina, STAMINA, def_zone, blocked)
-	if(brain)
-		total_damage += apply_damage(brain, BRAIN, def_zone, blocked)
-	return total_damage
 
 /// applies various common status effects or common hardcoded mob effects
 /mob/living/proc/apply_effect(effect = 0,effecttype = EFFECT_STUN, blocked = 0)

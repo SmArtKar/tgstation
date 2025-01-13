@@ -248,7 +248,7 @@
 		wound_bonus = parent.wound_bonus,
 		bare_wound_bonus = parent.bare_wound_bonus,
 		sharpness = parent.get_sharpness(),
-		attacking_item = parent,
+		hit_by = parent,
 	)
 
 	owner.apply_damage(
@@ -351,7 +351,7 @@
 		def_zone = owner_limb,
 		wound_bonus = max(0, parent.wound_bonus), // It hurts to rip it out, get surgery you dingus. unlike the others, this CAN wound + increase slash bloodflow
 		sharpness = parent.get_sharpness() || SHARP_EDGED, // always sharp, even if the object isn't
-		attacking_item = parent,
+		hit_by = parent,
 	)
 
 	owner.apply_damage(
@@ -388,7 +388,7 @@
 		def_zone = owner_limb,
 		wound_bonus = CANT_WOUND,
 		sharpness = parent.get_sharpness(),
-		attacking_item = parent,
+		hit_by = parent,
 	)
 
 	owner.apply_damage(
@@ -454,7 +454,7 @@
 		def_zone = owner_limb,
 		wound_bonus = CANT_WOUND,
 		sharpness = parent.get_sharpness(),
-		attacking_item = parent,
+		hit_by = parent,
 	)
 
 	owner.apply_damage(
@@ -517,7 +517,7 @@
 		def_zone = owner_limb,
 		wound_bonus = CANT_WOUND,
 		sharpness = parent.get_sharpness(),
-		attacking_item = parent,
+		hit_by = parent,
 	)
 
 	owner.apply_damage(
@@ -567,7 +567,7 @@
 		def_zone = owner_limb,
 		wound_bonus = max(0, parent.wound_bonus), // Performs exit wounds and flings the user to the caster if nearby
 		sharpness = parent.get_sharpness() || SHARP_EDGED,
-		attacking_item = parent,
+		hit_by = parent,
 	)
 
 	owner.apply_damage(

@@ -331,7 +331,7 @@
 		SSblackbox.record_feedback("nested tally", "item_used_for_combat", 1, list("[attacking_item.force]", "[attacking_item.type]"))
 		SSblackbox.record_feedback("tally", "zone_targeted", 1, targeting_human_readable)
 
-	var/damage_done = apply_damage(
+	var/damage_done = apply_damage( // Smartkar TODO
 		damage = damage,
 		damagetype = attacking_item.damtype,
 		def_zone = targeting,
@@ -339,8 +339,8 @@
 		wound_bonus = wounding,
 		bare_wound_bonus = attacking_item.bare_wound_bonus,
 		sharpness = attacking_item.get_sharpness(),
-		attack_direction = get_dir(user, src),
-		attacking_item = attacking_item,
+		attack_dir = get_dir(user, src),
+		hit_by = attacking_item,
 	)
 
 	attack_effects(damage_done, targeting, armor_block, attacking_item, user)

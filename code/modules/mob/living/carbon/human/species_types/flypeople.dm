@@ -34,7 +34,7 @@
 	. = ..()
 	UnregisterSignal(C, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS)
 
-/datum/species/fly/proc/damage_weakness(datum/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_direction, obj/item/attacking_item)
+/datum/species/fly/proc/damage_weakness(datum/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_dir, obj/item/attacking_item)
 	SIGNAL_HANDLER
 
 	if(istype(attacking_item, /obj/item/melee/flyswatter))

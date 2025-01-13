@@ -35,7 +35,7 @@
 
 /datum/component/pinata/proc/process_damage(obj/target, datum/damage_package/package)
 	SIGNAL_HANDLER
-	damage_inflicted(package.amount, package.damage_type)
+	damage_inflicted(target, package.amount, package.damage_type)
 
 /datum/component/pinata/proc/damage_inflicted(obj/target, damage, damage_type)
 	SIGNAL_HANDLER

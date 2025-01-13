@@ -63,7 +63,7 @@
 		vampire.adjust_fire_stacks(3 * seconds_per_tick)
 		vampire.ignite_mob()
 
-/datum/species/human/vampire/proc/damage_weakness(datum/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_direction, obj/item/attacking_item)
+/datum/species/human/vampire/proc/damage_weakness(datum/source, list/damage_mods, damage_amount, damagetype, def_zone, sharpness, attack_dir, obj/item/attacking_item)
 	SIGNAL_HANDLER
 
 	if(istype(attacking_item, /obj/item/nullrod/whip))
