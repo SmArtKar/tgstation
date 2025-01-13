@@ -3,7 +3,7 @@
  */
 /datum/element/mirage_border
 
-/datum/element/mirage_border/Attach(datum/target, turf/target_turf, direction, range=world.view)
+/datum/element/mirage_border/Attach(datum/target, turf/target_turf, direction, range=world.view, extra_x = 0, extra_y = 0)
 	. = ..()
 	if(!isturf(target))
 		return ELEMENT_INCOMPATIBLE
@@ -27,6 +27,8 @@
 		holder.pixel_y -= ICON_SIZE_Y * range
 	if(direction & WEST)
 		holder.pixel_x -= ICON_SIZE_X * range
+	holder.pixel_x += extra_x
+	holder.pixel_y += extra_y
 
 /datum/element/mirage_border/Detach(atom/movable/target)
 	. = ..()

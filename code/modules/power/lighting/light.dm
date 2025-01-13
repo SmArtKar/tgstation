@@ -498,7 +498,7 @@
 	return TRUE
 
 
-/obj/machinery/light/proc/flicker(amount = rand(10, 20))
+/obj/machinery/light/proc/flicker(amount = rand(10, 20), delay = rand(5, 15))
 	set waitfor = FALSE
 	if(flickering)
 		return
@@ -509,7 +509,7 @@
 				break
 			on = !on
 			update(FALSE)
-			sleep(rand(5, 15))
+			sleep(delay)
 		if(has_power())
 			on = (status == LIGHT_OK)
 		else

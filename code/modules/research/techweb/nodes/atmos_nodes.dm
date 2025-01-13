@@ -38,7 +38,6 @@
 		"turbine_compressor",
 		"turbine_rotor",
 		"turbine_stator",
-		"atmos_thermal",
 		"pneumatic_seal",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
@@ -81,7 +80,6 @@
 		"adv_fire_extinguisher",
 		"bolter_wrench",
 		"rpd_loaded",
-		"engine_goggles",
 		"crystallizer",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_3_POINTS)

@@ -326,8 +326,7 @@
 /turf/open/floor/iron,
 /area/station/engineering/gravity_generator)
 "bZ" = (
-/obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating,
+/turf/closed/wall/r_wall,
 /area/station/hallway/primary/central)
 "ca" = (
 /obj/machinery/autolathe/hacked,
@@ -2165,12 +2164,6 @@
 /obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/iron,
 /area/station/engineering/main)
-"Mg" = (
-/obj/machinery/door/airlock/public/glass,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/scrubbers/hidden/layer2,
-/turf/open/floor/iron,
-/area/station/medical/medbay)
 "Mh" = (
 /obj/structure/cable,
 /turf/open/floor/iron,
@@ -2586,12 +2579,6 @@
 	},
 /turf/open/floor/iron,
 /area/station/engineering/atmos)
-"Xy" = (
-/obj/machinery/door/airlock,
-/obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
-/obj/structure/cable,
-/turf/open/floor/plating,
-/area/station/hallway/primary/central)
 "XA" = (
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
@@ -5986,7 +5973,7 @@ bA
 gd
 bA
 bZ
-Xy
+xK
 bZ
 cN
 cN
@@ -8010,7 +7997,7 @@ ck
 by
 Ns
 by
-Mg
+WL
 by
 by
 pZ

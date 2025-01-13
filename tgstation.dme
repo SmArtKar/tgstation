@@ -5493,6 +5493,8 @@
 #include "code\modules\movespeed\modifiers\reagent.dm"
 #include "code\modules\movespeed\modifiers\status_effects.dm"
 #include "code\modules\NTNet\relays.dm"
+#include "code\modules\nullstation\creepy.dm"
+#include "code\modules\nullstation\refraction.dm"
 #include "code\modules\pai\actions.dm"
 #include "code\modules\pai\camera.dm"
 #include "code\modules\pai\candidate.dm"
