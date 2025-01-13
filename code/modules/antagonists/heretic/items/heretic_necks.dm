@@ -112,7 +112,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 	resistance_flags = FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	/// A secondary clothing trait only applied to heretics.
-	var/heretic_only_trait = TRAIT_THERMAL_VISION
+	var/heretic_only_trait = TRAIT_NOFLASH
 
 /obj/item/clothing/neck/eldritch_amulet/Initialize(mapload)
 	. = ..()
@@ -136,7 +136,7 @@
 /obj/item/clothing/neck/eldritch_amulet/piercing
 	name = "piercing eldritch medallion"
 	desc = "A strange medallion. Peering through the crystalline surface, the light refracts into new and terrifying spectrums of color. You see yourself, reflected off cascading mirrors, warped into impossible shapes."
-	heretic_only_trait = TRAIT_XRAY_VISION
+	heretic_only_trait = TRAIT_NIGHT_VISION
 
 // Cosmetic-only version
 /obj/item/clothing/neck/fake_heretic_amulet

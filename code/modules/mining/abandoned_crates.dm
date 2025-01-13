@@ -229,7 +229,7 @@
 		if(92)
 			new /obj/item/katana(src)
 		if(93)
-			new /obj/item/dnainjector/xraymut(src)
+			new /obj/item/dnainjector/hulkmut(src)
 		if(94)
 			new /mob/living/simple_animal/hostile/mimic/crate(src)
 			qdel_on_open = TRUE

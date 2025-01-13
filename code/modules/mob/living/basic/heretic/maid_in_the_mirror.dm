@@ -14,7 +14,6 @@
 	health = 80
 	melee_damage_lower = 12
 	melee_damage_upper = 16
-	sight = SEE_MOBS | SEE_OBJS | SEE_TURFS
 	death_message = "shatters and vanishes, releasing a gust of cold air."
 	/// Whether we take damage when someone looks at us
 	var/harmed_by_examine = TRUE

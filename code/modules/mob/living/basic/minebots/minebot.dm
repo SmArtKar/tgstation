@@ -73,7 +73,6 @@
 		/datum/action/cooldown/mob_cooldown/missile_launcher = BB_MINEBOT_MISSILE_ABILITY,
 		/datum/action/cooldown/mob_cooldown/drop_landmine = BB_MINEBOT_LANDMINE_ABILITY,
 		/datum/action/cooldown/mob_cooldown/minedrone/toggle_light = BB_MINEBOT_LIGHT_ABILITY,
-		/datum/action/cooldown/mob_cooldown/minedrone/toggle_meson_vision = null,
 		/datum/action/cooldown/mob_cooldown/minedrone/dump_ore = BB_MINEBOT_DUMP_ABILITY,
 	)
 

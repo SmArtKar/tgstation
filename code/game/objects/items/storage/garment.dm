@@ -137,7 +137,7 @@
 	new /obj/item/clothing/under/rank/engineering/chief_engineer/turtleneck(src)
 	new /obj/item/clothing/under/rank/engineering/chief_engineer/turtleneck/skirt(src)
 	new /obj/item/clothing/suit/hooded/wintercoat/engineering/ce(src)
-	new /obj/item/clothing/glasses/meson/engine(src)
+	new /obj/item/clothing/glasses/cold(src)
 	new /obj/item/clothing/gloves/chief_engineer(src)
 	new /obj/item/clothing/head/utility/hardhat/white(src)
 	new /obj/item/clothing/head/utility/hardhat/welding/white(src)

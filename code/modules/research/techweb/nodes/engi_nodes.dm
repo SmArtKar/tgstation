@@ -236,7 +236,6 @@
 		"diagnostic_hud_night",
 		"health_hud_night",
 		"night_visision_goggles",
-		"nvgmesons",
 		"nv_scigoggles",
 		"security_hud_night",
 	)

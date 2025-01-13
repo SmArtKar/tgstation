@@ -36,15 +36,15 @@
 
 	if(active)
 		active = FALSE
-		REMOVE_TRAIT(user, TRAIT_XRAY_VISION, REF(src))
+		REMOVE_TRAIT(user, TRAIT_NIGHT_VISION, REF(src))
 		ling_eyes.flash_protect = max(ling_eyes.flash_protect += 3, FLASH_PROTECTION_WELDER)
 		to_chat(user, span_changeling("We adjust our eyes to protect them from bright lights."))
 
 	else
 		active = TRUE
-		ADD_TRAIT(user, TRAIT_XRAY_VISION, REF(src))
+		ADD_TRAIT(user, TRAIT_NIGHT_VISION, REF(src))
 		ling_eyes.flash_protect = max(ling_eyes.flash_protect += -3, FLASH_PROTECTION_HYPER_SENSITIVE)
-		to_chat(user, span_changeling("We adjust our eyes to sense prey through walls."))
+		to_chat(user, span_changeling("We adjust our eyes to sense prey in darkness."))
 
 	user.update_sight()
 	return TRUE
@@ -54,7 +54,7 @@
 	if(!isnull(ling_eyes))
 		ling_eyes.flash_protect = initial(ling_eyes.flash_protect)
 
-	REMOVE_TRAIT(user, TRAIT_XRAY_VISION, REF(src))
+	REMOVE_TRAIT(user, TRAIT_TRUE_NIGHT_VISION, REF(src))
 	user.update_sight()
 
 	UnregisterSignal(user, list(COMSIG_CARBON_GAIN_ORGAN, COMSIG_CARBON_LOSE_ORGAN))

@@ -193,7 +193,7 @@
 			new /obj/item/coin/gold(src)
 			new /obj/item/storage/wallet(src)
 		if(2)
-			new /obj/item/clothing/glasses/meson(src)
+			new /obj/item/clothing/glasses/heat(src)
 		if(3)
 			new /obj/item/coin/silver(src)
 			new /obj/item/shovel/spade(src)

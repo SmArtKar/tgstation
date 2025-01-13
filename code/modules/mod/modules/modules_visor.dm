@@ -74,4 +74,4 @@
 		this allows the user to perceive their surroundings while in complete darkness, enhancing the view by tenfold; \
 		yet brightening everything into a spooky green glow. They say these also let you see behind you."
 	icon_state = "night_visor"
-	visor_traits = list(TRAIT_TRUE_NIGHT_VISION)
+	visor_traits = list(TRAIT_NIGHT_VISION)

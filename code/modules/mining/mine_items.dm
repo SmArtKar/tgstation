@@ -74,7 +74,7 @@
 	new /obj/item/storage/bag/plants(src)
 	new /obj/item/storage/bag/ore(src)
 	new /obj/item/mining_scanner(src)
-	new /obj/item/clothing/glasses/meson(src)
+	new /obj/item/clothing/glasses/heat(src)
 	if (HAS_TRAIT(SSstation, STATION_TRAIT_SMALLER_PODS))
 		new /obj/item/survivalcapsule/bathroom(src)
 	else

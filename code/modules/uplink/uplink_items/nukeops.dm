@@ -765,18 +765,6 @@
 	item = /obj/item/autosurgeon/syndicate/reviver
 	cost = 8
 
-/datum/uplink_item/implants/nuclear/thermals
-	name = "Thermal Eyes"
-	desc = "These cybernetic eyes will give you thermal vision. Comes with a free autosurgeon."
-	item = /obj/item/autosurgeon/syndicate/thermal_eyes
-	cost = 8
-
-/datum/uplink_item/implants/nuclear/implants/xray
-	name = "X-ray Vision Implant"
-	desc = "These cybernetic eyes will give you X-ray vision. Comes with an autosurgeon."
-	item = /obj/item/autosurgeon/syndicate/xray_eyes
-	cost = 8
-
 /datum/uplink_item/implants/nuclear/antistun
 	name = "CNS Rebooter Implant"
 	desc = "This implant will help you get back up on your feet faster after being stunned. Comes with an autosurgeon."

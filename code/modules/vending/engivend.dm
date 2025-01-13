@@ -5,7 +5,7 @@
 	icon_deny = "engivend-deny"
 	panel_type = "panel10"
 	products = list(
-		/obj/item/clothing/glasses/meson/engine = 2,
+		/obj/item/clothing/glasses/cold = 2,
 		/obj/item/clothing/glasses/welding = 3,
 		/obj/item/multitool = 4,
 		/obj/item/grenade/chem_grenade/smart_metal_foam = 10,

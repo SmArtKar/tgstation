@@ -26,6 +26,5 @@
 	if(!istype(H))
 		return
 	H.dna.add_mutation(/datum/mutation/human/hulk)
-	H.dna.add_mutation(/datum/mutation/human/xray)
 	H.dna.add_mutation(/datum/mutation/human/adaptation/pressure)
 	H.dna.add_mutation(/datum/mutation/human/telekinesis)

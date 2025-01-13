@@ -33,7 +33,7 @@
 	habitable_atmos = null
 	minimum_survivable_temperature = T0C
 	maximum_survivable_temperature = T0C + 1500
-	sight = SEE_SELF|SEE_MOBS|SEE_OBJS|SEE_TURFS
+	sight = SEE_SELF|SEE_MOBS
 
 	lighting_cutoff_red = 40
 	lighting_cutoff_green = 20

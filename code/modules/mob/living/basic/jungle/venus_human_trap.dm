@@ -151,7 +151,7 @@
 	habitable_atmos = null
 	unsuitable_atmos_damage = 0
 	/// copied over from the code from eyeballs (the mob) to make it easier for venus human traps to see in kudzu that doesn't have the transparency mutation
-	sight = SEE_SELF|SEE_MOBS|SEE_OBJS|SEE_TURFS
+	sight = SEE_SELF|SEE_MOBS
 	// Real green, cause of course
 	lighting_cutoff_red = 10
 	lighting_cutoff_green = 35

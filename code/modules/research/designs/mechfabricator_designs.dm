@@ -2209,17 +2209,6 @@
 	category = list(
 		RND_CATEGORY_MODSUIT_MODULES + RND_SUBCATEGORY_MODSUIT_MODULES_SECURITY
 	)
-/datum/design/module/mod_visor_meson
-	name = "Meson Visor Module"
-	id = "mod_visor_meson"
-	materials = list(
-		/datum/material/uranium =SMALL_MATERIAL_AMOUNT*5,
-		/datum/material/glass =HALF_SHEET_MATERIAL_AMOUNT,
-	)
-	build_path = /obj/item/mod/module/visor/meson
-	category = list(
-		RND_CATEGORY_MODSUIT_MODULES + RND_SUBCATEGORY_MODSUIT_MODULES_SUPPLY
-	)
 /datum/design/module/mod_visor_welding
 	name = "Welding Protection Module"
 	id = "mod_welding"

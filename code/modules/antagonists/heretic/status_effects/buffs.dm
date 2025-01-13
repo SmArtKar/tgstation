@@ -52,12 +52,12 @@
 	alert_type =/atom/movable/screen/alert/status_effect/duskndawn
 
 /datum/status_effect/duskndawn/on_apply()
-	ADD_TRAIT(owner, TRAIT_XRAY_VISION, STATUS_EFFECT_TRAIT)
+	ADD_TRAIT(owner, TRAIT_NOFLASH, STATUS_EFFECT_TRAIT)
 	owner.update_sight()
 	return TRUE
 
 /datum/status_effect/duskndawn/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_XRAY_VISION, STATUS_EFFECT_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_NOFLASH, STATUS_EFFECT_TRAIT)
 	owner.update_sight()
 
 // WOUNDED SOLDIER

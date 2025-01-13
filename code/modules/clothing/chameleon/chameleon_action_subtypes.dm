@@ -90,7 +90,7 @@
 /datum/action/item_action/chameleon/change/glasses
 	chameleon_type = /obj/item/clothing/glasses
 	chameleon_name = "Glasses"
-	active_type = /obj/item/clothing/glasses/meson
+	active_type = /obj/item/clothing/glasses/sunglasses
 
 /datum/action/item_action/chameleon/change/glasses/initialize_blacklist()
 	. = ..()

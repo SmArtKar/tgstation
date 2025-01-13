@@ -242,10 +242,6 @@
 	prereq_ids = list(TECHWEB_NODE_CYBER_ORGANS_UPGRADED, TECHWEB_NODE_NIGHT_VISION)
 	design_ids = list(
 		"cybernetic_ears_xray",
-		"ci-thermals",
-		"ci-xray",
-		"ci-thermals-moth",
-		"ci-xray-moth",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS)
 	discount_experiments = list(/datum/experiment/scanning/people/android = TECHWEB_TIER_5_POINTS)

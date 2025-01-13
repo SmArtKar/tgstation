@@ -29,26 +29,6 @@
 	var/mob/living/basic/mining_drone/user = owner
 	user.drop_ore()
 
-/datum/action/cooldown/mob_cooldown/minedrone/toggle_meson_vision
-	name = "Toggle Meson Vision"
-	button_icon_state = "meson"
-
-/datum/action/cooldown/mob_cooldown/minedrone/toggle_meson_vision/Activate()
-	if(owner.sight & SEE_TURFS)
-		owner.clear_sight(SEE_TURFS)
-		owner.lighting_cutoff_red += 5
-		owner.lighting_cutoff_green += 15
-		owner.lighting_cutoff_blue += 5
-	else
-		owner.add_sight(SEE_TURFS)
-		owner.lighting_cutoff_red -= 5
-		owner.lighting_cutoff_green -= 15
-		owner.lighting_cutoff_blue -= 5
-
-	owner.sync_lighting_plane_cutoff()
-
-	to_chat(owner, span_notice("You toggle your meson vision [(owner.sight & SEE_TURFS) ? "on" : "off"]."))
-
 /datum/action/cooldown/mob_cooldown/missile_launcher
 	name = "Launch Missile"
 	button_icon = 'icons/obj/weapons/guns/projectiles.dmi'

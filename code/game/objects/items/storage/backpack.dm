@@ -795,7 +795,7 @@
 	inhand_icon_state = "duffel-explorer"
 
 /obj/item/storage/backpack/duffelbag/mining_conscript/PopulateContents()
-	new /obj/item/clothing/glasses/meson(src)
+	new /obj/item/clothing/glasses/heat(src)
 	new /obj/item/t_scanner/adv_mining_scanner/lesser(src)
 	new /obj/item/storage/bag/ore(src)
 	new /obj/item/clothing/suit/hooded/explorer(src)

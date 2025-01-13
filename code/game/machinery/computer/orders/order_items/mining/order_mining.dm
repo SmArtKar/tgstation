@@ -66,10 +66,6 @@
 	purchase_path = /obj/item/lazarus_injector
 	cost_per_order = 1000
 
-/datum/orderable_item/mining/gar_mesons
-	purchase_path = /obj/item/clothing/glasses/meson/gar
-	cost_per_order = 500
-
 /datum/orderable_item/mining/silver_pickaxe
 	purchase_path = /obj/item/pickaxe/silver
 	cost_per_order = 1000

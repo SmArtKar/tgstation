@@ -34,12 +34,6 @@
 	cost = 8
 	purchasable_from = ~UPLINK_ALL_SYNDIE_OPS //you can't buy it in nuke, because the elite modsuit costs the same while being better
 
-/datum/uplink_item/suits/thermal
-	name = "MODsuit Thermal Visor Module"
-	desc = "A visor for a MODsuit. Lets you see living beings through walls."
-	item = /obj/item/mod/module/visor/thermal
-	cost = 3
-
 /datum/uplink_item/suits/night
 	name = "MODsuit Night Visor Module"
 	desc = "A visor for a MODsuit. Lets you see clearer in the dark."

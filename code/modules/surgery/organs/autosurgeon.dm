@@ -156,18 +156,6 @@
 	uses = 1
 	starting_organ = /obj/item/organ/cyberimp/arm/gun/laser
 
-/obj/item/autosurgeon/syndicate/thermal_eyes
-	starting_organ = /obj/item/organ/eyes/robotic/thermals
-
-/obj/item/autosurgeon/syndicate/thermal_eyes/single_use
-	uses = 1
-
-/obj/item/autosurgeon/syndicate/xray_eyes
-	starting_organ = /obj/item/organ/eyes/robotic/xray
-
-/obj/item/autosurgeon/syndicate/xray_eyes/single_use
-	uses = 1
-
 /obj/item/autosurgeon/syndicate/anti_stun
 	starting_organ = /obj/item/organ/cyberimp/brain/anti_stun
 

@@ -288,7 +288,7 @@
 	var/mob/being = thing
 	RegisterSignal(being, COMSIG_MOB_UPDATE_SIGHT, PROC_REF(update_user_sight))
 	to_chat(being, span_notice("The wisp enhances your vision."))
-	ADD_TRAIT(being, TRAIT_THERMAL_VISION, REF(src))
+	ADD_TRAIT(being, TRAIT_NIGHT_VISION, REF(src))
 	being.update_sight()
 
 /obj/effect/wisp/stop_orbit(datum/component/orbiter/orbits)
@@ -297,7 +297,7 @@
 	var/mob/being = orbit_target
 	UnregisterSignal(being, COMSIG_MOB_UPDATE_SIGHT)
 	to_chat(being, span_notice("Your vision returns to normal."))
-	REMOVE_TRAIT(being, TRAIT_THERMAL_VISION, REF(src))
+	REMOVE_TRAIT(being, TRAIT_NIGHT_VISION, REF(src))
 	being.update_sight()
 	return ..()
 
@@ -827,7 +827,7 @@
 	desc = "A strange eye, said to have been torn from an omniscient creature that used to roam the wastes."
 	icon_state = "godeye"
 	inhand_icon_state = null
-	vision_flags = SEE_TURFS
+	vision_flags = SEE_MOBS
 	clothing_traits = list(TRAIT_MADNESS_IMMUNE)
 	// Blue, light blue
 	color_cutoffs = list(15, 30, 40)

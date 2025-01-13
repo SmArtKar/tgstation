@@ -73,7 +73,6 @@
 	new /obj/item/tank/internals/emergency_oxygen/engi(src)
 	new /obj/item/holosign_creator/engineering(src)
 	new /obj/item/clothing/mask/gas(src)
-	new /obj/item/clothing/glasses/meson/engine(src)
 	new /obj/item/storage/box/emptysandbags(src)
 	new /obj/item/storage/bag/construction(src)
 
@@ -95,7 +94,7 @@
 	new /obj/item/clothing/gloves/atmos(src)
 	new /obj/item/clothing/mask/gas/atmos(src)
 	new /obj/item/clothing/head/utility/hardhat/welding/atmos(src)
-	new /obj/item/clothing/glasses/meson/engine/tray(src)
+	new /obj/item/clothing/glasses/heat(src)
 	new /obj/item/extinguisher/advanced(src)
 
 /obj/structure/closet/secure_closet/atmospherics/populate_contents_immediate()

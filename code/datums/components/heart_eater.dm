@@ -22,7 +22,6 @@
 		/datum/mutation/human/thermal,
 		/datum/mutation/human/tongue_spike,
 		/datum/mutation/human/webbing,
-		/datum/mutation/human/xray,
 	)
 
 /datum/component/heart_eater/Initialize(...)

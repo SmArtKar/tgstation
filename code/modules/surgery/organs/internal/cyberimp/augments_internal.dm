@@ -297,6 +297,6 @@
 	icon_state = "cyber_implants"
 
 /obj/item/storage/box/cyber_implants/PopulateContents()
-	new /obj/item/autosurgeon/syndicate/xray_eyes(src)
+	new /obj/item/autosurgeon/syndicate/laser_arm(src)
 	new /obj/item/autosurgeon/syndicate/anti_stun(src)
 	new /obj/item/autosurgeon/syndicate/reviver(src)

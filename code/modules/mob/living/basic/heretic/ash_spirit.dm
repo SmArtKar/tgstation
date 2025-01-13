@@ -11,7 +11,6 @@
 	health = 75
 	melee_damage_lower = 15
 	melee_damage_upper = 20
-	sight = SEE_TURFS
 
 /mob/living/basic/heretic_summon/ash_spirit/Initialize(mapload)
 	. = ..()

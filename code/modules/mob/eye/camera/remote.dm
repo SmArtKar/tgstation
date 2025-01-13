@@ -95,7 +95,7 @@
 
 /mob/eye/camera/remote/update_remote_sight(mob/living/user)
 	user.set_invis_see(SEE_INVISIBLE_LIVING) //can't see ghosts through cameras
-	user.set_sight(SEE_TURFS)
+	user.set_sight()
 	return TRUE
 
 /mob/eye/camera/remote/GetViewerClient()

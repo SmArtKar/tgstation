@@ -330,7 +330,6 @@
 	limb_destroyer = 50
 	speed = 5
 	player_speed_modifier = -4
-	sight = SEE_TURFS
 	menu_description = "Has the ability to destroy walls and limbs, and to send warnings to the nest."
 
 /mob/living/basic/spider/giant/breacher/Initialize(mapload)

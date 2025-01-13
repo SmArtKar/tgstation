@@ -486,58 +486,6 @@
 	)
 	departmental_flags = DEPARTMENT_BITFLAG_MEDICAL
 
-/datum/design/cyberimp_xray
-	name = "X-ray Eyes"
-	desc = "These cybernetic eyes will give you X-ray vision. Blinking is futile."
-	id = "ci-xray"
-	build_type = PROTOLATHE | AWAY_LATHE | MECHFAB
-	construction_time = 6 SECONDS
-	materials = list(
-		/datum/material/iron = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/glass = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/silver = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/gold = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/plasma = HALF_SHEET_MATERIAL_AMOUNT,
-		/datum/material/uranium = HALF_SHEET_MATERIAL_AMOUNT,
-		/datum/material/diamond = HALF_SHEET_MATERIAL_AMOUNT,
-		/datum/material/bluespace = HALF_SHEET_MATERIAL_AMOUNT,
-	)
-	build_path = /obj/item/organ/eyes/robotic/xray
-	category = list(
-		RND_CATEGORY_CYBERNETICS + RND_SUBCATEGORY_CYBERNETICS_ORGANS_COMBAT
-	)
-	departmental_flags = DEPARTMENT_BITFLAG_MEDICAL
-
-/datum/design/cyberimp_xray/moth
-	name = "Moth X-ray Eyes"
-	id = "ci-xray-moth"
-	build_path = /obj/item/organ/eyes/robotic/xray/moth
-
-/datum/design/cyberimp_thermals
-	name = "Thermal Eyes"
-	desc = "These cybernetic eyes will give you Thermal vision. Vertical slit pupil included."
-	id = "ci-thermals"
-	build_type = PROTOLATHE | AWAY_LATHE | MECHFAB
-	construction_time = 6 SECONDS
-	materials = list(
-		/datum/material/iron = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/glass = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/silver = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/gold = SMALL_MATERIAL_AMOUNT*6,
-		/datum/material/plasma =HALF_SHEET_MATERIAL_AMOUNT,
-		/datum/material/diamond =SHEET_MATERIAL_AMOUNT,
-	)
-	build_path = /obj/item/organ/eyes/robotic/thermals
-	category = list(
-		RND_CATEGORY_CYBERNETICS + RND_SUBCATEGORY_CYBERNETICS_ORGANS_COMBAT
-	)
-	departmental_flags = DEPARTMENT_BITFLAG_MEDICAL
-
-/datum/design/cyberimp_thermals/moth
-	name = "Moth Thermal Eyes"
-	id = "ci-thermals-moth"
-	build_path = /obj/item/organ/eyes/robotic/thermals/moth
-
 /datum/design/cyberimp_antidrop
 	name = "Anti-Drop Implant"
 	desc = "This cybernetic brain implant will allow you to force your hand muscles to contract, preventing item dropping. Twitch ear to toggle."

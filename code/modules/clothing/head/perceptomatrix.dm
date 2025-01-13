@@ -22,7 +22,7 @@
 	clothing_traits = list(
 		/* eye/ear protection */
 		TRAIT_NOFLASH,
-		TRAIT_TRUE_NIGHT_VISION,
+		TRAIT_NIGHT_VISION,
 		TRAIT_SIGHT_BYPASS,
 		TRAIT_EXPANDED_FOV,
 		TRAIT_GOOD_HEARING,

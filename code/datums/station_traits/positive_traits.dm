@@ -260,7 +260,7 @@
 		/datum/job/assistant = /obj/item/organ/heart/cybernetic, //real cardiac
 		/datum/job/atmospheric_technician = /obj/item/organ/cyberimp/mouth/breathing_tube,
 		/datum/job/bartender = /obj/item/organ/liver/cybernetic/tier3,
-		/datum/job/bitrunner = /obj/item/organ/eyes/robotic/thermals,
+		/datum/job/bitrunner = /obj/item/organ/eyes/robotic/flashlight,
 		/datum/job/botanist = /obj/item/organ/cyberimp/chest/nutriment,
 		/datum/job/captain = /obj/item/organ/heart/cybernetic/tier3,
 		/datum/job/cargo_technician = /obj/item/organ/stomach/cybernetic/tier2,
@@ -276,9 +276,9 @@
 		/datum/job/doctor = /obj/item/organ/cyberimp/arm/surgery,
 		/datum/job/geneticist = /obj/item/organ/fly, //we don't care about implants, we have cancer.
 		/datum/job/head_of_personnel = /obj/item/organ/eyes/robotic,
-		/datum/job/head_of_security = /obj/item/organ/eyes/robotic/thermals,
+		/datum/job/head_of_security = /obj/item/organ/eyes/robotic/shield,
 		/datum/job/human_ai = /obj/item/organ/brain/cybernetic,
-		/datum/job/janitor = /obj/item/organ/eyes/robotic/xray,
+		/datum/job/janitor = /obj/item/organ/eyes/robotic/flashlight,
 		/datum/job/lawyer = /obj/item/organ/heart/cybernetic/tier2,
 		/datum/job/mime = /obj/item/organ/tongue/robot, //...
 		/datum/job/paramedic = /obj/item/organ/cyberimp/eyes/hud/medical,

@@ -131,7 +131,7 @@
 		/obj/item/pipe_dispenser = 1,
 	)
 	belt = /obj/item/storage/belt/utility/full/powertools
-	glasses = /obj/item/clothing/glasses/meson/engine
+	glasses = /obj/item/clothing/glasses/cold
 	l_pocket = /obj/item/rcd_ammo/large
 	additional_radio = /obj/item/encryptionkey/heads/ce
 
@@ -355,7 +355,7 @@
 		/obj/item/storage/box/lights/mixed = 1,
 	)
 	belt = /obj/item/storage/belt/janitor/full
-	glasses = /obj/item/clothing/glasses/meson
+	glasses = /obj/item/clothing/glasses/cold
 	mask = /obj/item/clothing/mask/bandana/blue
 	l_pocket = /obj/item/grenade/chem_grenade/cleaner
 	r_pocket = /obj/item/grenade/chem_grenade/cleaner

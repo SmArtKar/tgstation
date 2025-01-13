@@ -71,7 +71,7 @@
 		/obj/item/stack/marker_beacon/ten = 1,
 		/obj/item/t_scanner/adv_mining_scanner/lesser = 1,
 	)
-	glasses = /obj/item/clothing/glasses/meson
+	glasses = /obj/item/clothing/glasses/heat
 	mask = /obj/item/clothing/mask/gas/explorer
 	internals_slot = ITEM_SLOT_SUITSTORE
 
@@ -83,7 +83,7 @@
 
 /datum/outfit/job/miner/equipped/combat
 	name = "Shaft Miner (Combat-Ready)"
-	glasses = /obj/item/clothing/glasses/hud/health/night/meson
+	glasses = /obj/item/clothing/glasses/heat
 	gloves = /obj/item/clothing/gloves/bracer
 	accessory = /obj/item/clothing/accessory/talisman
 	backpack_contents = list(

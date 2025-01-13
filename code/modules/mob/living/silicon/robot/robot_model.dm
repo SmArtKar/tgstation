@@ -382,7 +382,6 @@
 	name = "Engineering"
 	basic_modules = list(
 		/obj/item/assembly/flash/cyborg,
-		/obj/item/borg/sight/meson,
 		/obj/item/construction/rcd/borg,
 		/obj/item/pipe_dispenser,
 		/obj/item/extinguisher,
@@ -714,7 +713,6 @@
 	name = "Miner"
 	basic_modules = list(
 		/obj/item/assembly/flash/cyborg,
-		/obj/item/borg/sight/meson,
 		/obj/item/storage/bag/ore/cyborg,
 		/obj/item/pickaxe/drill/cyborg,
 		/obj/item/shovel,

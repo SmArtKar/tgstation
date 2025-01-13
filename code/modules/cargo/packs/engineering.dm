@@ -48,14 +48,14 @@
 /datum/supply_pack/engineering/engiequipment
 	name = "Engineering Gear Crate"
 	desc = "Gear up with three toolbelts, high-visibility vests, welding helmets, hardhats, \
-		and two pairs of meson goggles!"
+		and two pairs of cold goggles!"
 	cost = CARGO_CRATE_VALUE * 4
 	access_view = ACCESS_ENGINEERING
 	contains = list(/obj/item/storage/belt/utility = 3,
 					/obj/item/clothing/suit/hazardvest = 3,
 					/obj/item/clothing/head/utility/welding = 3,
 					/obj/item/clothing/head/utility/hardhat = 3,
-					/obj/item/clothing/glasses/meson/engine = 2,
+					/obj/item/clothing/glasses/cold = 2,
 				)
 	crate_name = "engineering gear crate"
 

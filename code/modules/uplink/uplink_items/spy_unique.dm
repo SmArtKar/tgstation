@@ -143,8 +143,3 @@
 	name = /datum/uplink_item/implants/nuclear/reviver::name
 	desc = /datum/uplink_item/implants/nuclear/reviver::desc
 	item = /obj/item/autosurgeon/syndicate/reviver/single_use
-
-/datum/uplink_item/spy_unique/thermals
-	name = /datum/uplink_item/implants/nuclear/thermals::name
-	desc = /datum/uplink_item/implants/nuclear/thermals::desc
-	item = /obj/item/autosurgeon/syndicate/thermal_eyes/single_use

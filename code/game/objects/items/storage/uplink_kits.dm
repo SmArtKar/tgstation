@@ -43,7 +43,6 @@
 		KIT_REVOLUTIONARY = 2
 		)))
 		if(KIT_RECON)
-			new /obj/item/clothing/glasses/thermal/xray(src) // ~8 tc?
 			new /obj/item/storage/briefcase/launchpad(src) //6 tc
 			new /obj/item/binoculars(src) // 2 tc?
 			new /obj/item/encryptionkey/syndicate(src) // 2 tc

@@ -16,7 +16,7 @@
 		/obj/item/analyzer = 2,
 		/obj/item/t_scanner = 2,
 		/obj/item/multitool = 1,
-		/obj/item/clothing/glasses/meson = 1,
+		/obj/item/clothing/glasses/cold = 1,
 		/obj/item/storage/belt/utility = 1,
 		/obj/item/clothing/head/utility/welding = 1,
 	)
