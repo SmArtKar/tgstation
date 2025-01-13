@@ -99,7 +99,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/fireaxecabinet, 32)
 		if(BURN)
 			playsound(src.loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
-/obj/structure/fireaxecabinet/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/fireaxecabinet/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	if(open)
 		return
 	. = ..()

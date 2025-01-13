@@ -11,7 +11,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = take_damage(direct_package = attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/package = process_damage_package(attacking_item.generate_damage(src, user, modifiers))
 	log_combat(user, src, "attacked", attacking_item)
 
 	if (package.attack_message_spectator)
@@ -67,7 +67,7 @@
 
 	var/datum/damage_package/damage_taken
 	if(!QDELETED(src)) //Bullet on_hit effect might have already destroyed this object
-		damage_taken = take_damage(direct_package = hitting_projectile.generate_damage(src), sound_effect = FALSE)
+		damage_taken = process_damage_package(hitting_projectile.generate_damage(src), sound_effect = FALSE)
 
 	if(hitting_projectile.suppressed != SUPPRESSED_VERY)
 		visible_message(
@@ -83,7 +83,7 @@
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-	var/damage = take_damage(direct_package = user.get_unarmed_package(src, hulk_damage(), ignore_custom = TRUE), sound_effect = FALSE)
+	var/damage = process_damage_package(user.get_unarmed_package(src, hulk_damage(), ignore_custom = TRUE), sound_effect = FALSE)
 	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 
@@ -97,7 +97,7 @@
 	take_damage(400, BRUTE, MELEE, BLOB_ATTACK, attack_dir = get_dir(src, B), hit_by = B, source = B, sound_effect = FALSE)
 
 /obj/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
-	var/datum/damage_package/package = attack_generic(direct_package = user.get_unarmed_package(src, 60, modifiers = modifiers))
+	var/datum/damage_package/package = attack_generic(user.get_unarmed_package(src, 60, modifiers = modifiers), user)
 	if(package?.amount)
 		playsound(loc, 'sound/items/weapons/slash.ogg', 100, TRUE)
 
@@ -119,7 +119,7 @@
 
 	var/turf/current_turf = get_turf(src) //we want to save the turf to play the sound there, cause being destroyed deletes us!
 	var/play_soundeffect = user.environment_smash
-	var/datum/damage_package/package = attack_generic(direct_package = user.get_unarmed_package(src, modifiers = modifiers), user = user, sound_effect = !play_soundeffect)
+	var/datum/damage_package/package = attack_generic(user.get_unarmed_package(src, modifiers = modifiers), user, !play_soundeffect)
 	if(package?.amount && play_soundeffect)
 		playsound(current_turf, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 

@@ -29,7 +29,7 @@ GLOBAL_VAR_INIT(roaches_deployed, FALSE)
 	for(var/mob/living/basic/mothroach/roach in contents)
 		food.take_damage(food.get_integrity() * 0.5, BRUTE, CONSUME, BASICMOB_ATTACK, hit_by = roach, source = roach, sound_effect = FALSE)
 
-/obj/machinery/vending/wardrobe/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/vending/wardrobe/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	for(var/mob/living/basic/mothroach/roach in contents)
 		roach.ai_controller.set_blackboard_key(BB_BASIC_MOB_FLEE_TARGET, src) //scatter away!

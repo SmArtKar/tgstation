@@ -37,7 +37,7 @@
 	. = ..()
 	desc = (atom_integrity < (max_integrity * 0.5)) ? "[damaged_desc]" : initial(desc)
 
-/obj/structure/blob/shield/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/blob/shield/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
 		atmosblock = atom_integrity < (max_integrity * 0.5)

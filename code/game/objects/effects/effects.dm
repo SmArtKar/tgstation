@@ -19,10 +19,10 @@
 
 	return ..()
 
-/obj/effect/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
+/obj/effect/attack_generic(datum/damage_package/package, mob/user, sound_effect = TRUE)
 	return
 
-/obj/effect/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/effect/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	return
 
 /obj/effect/fire_act(exposed_temperature, exposed_volume)

@@ -195,7 +195,7 @@
 /obj/structure/window/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
 
-/obj/structure/window/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
+/obj/structure/window/attack_generic(datum/damage_package/package, mob/user, sound_effect = TRUE)
 	if(!can_be_reached(user))
 		return
 	return ..()
@@ -320,7 +320,7 @@
 	return TRUE
 
 
-/obj/structure/window/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/window/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(.) //received damage
 		update_nearby_icons()
@@ -967,7 +967,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/window/reinforced/tinted/frosted/spaw
 	. = ..()
 	if(. || !user.combat_mode)
 		return
-	take_damage(direct_package = user.get_unarmed_package(src, 4, modifiers = modifiers), sound_effect = FALSE)
+	process_damage_package(user.get_unarmed_package(src, 4, modifiers = modifiers), sound_effect = FALSE)
 	if(!QDELETED(src))
 		update_appearance()
 

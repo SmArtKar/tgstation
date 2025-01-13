@@ -1325,7 +1325,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		var/datum/damage_package/package = generate_damage(target, user, params2list(params))
 		package.amount = force * damage_mod * 3
 		package.armor_penetration = 50
-		target.take_damage(direct_package = package, sound_effect = FALSE)
+		target.process_damage_package(package, sound_effect = FALSE)
 		return TRUE
 	else if(iswallturf(target) && prob(force*damage_mod*0.5))
 		var/turf/closed/wall/wall_target = target

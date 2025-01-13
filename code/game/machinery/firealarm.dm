@@ -419,7 +419,7 @@
 			return TRUE
 	return FALSE
 
-/obj/machinery/firealarm/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/firealarm/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(!.) // took no damage
 		return

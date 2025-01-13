@@ -62,9 +62,9 @@
 	take_damage(damage, BRUTE, BOMB, sound_effect = FALSE)
 	return TRUE
 
-/obj/structure/blob/special/core/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/blob/special/core/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
-	if(atom_integrity > 0 && overmind) // we should have an overmind, but...
+	if(. && atom_integrity > 0 && overmind) // we should have an overmind, but...
 		overmind.update_health_hud()
 
 /obj/structure/blob/special/core/process(seconds_per_tick)

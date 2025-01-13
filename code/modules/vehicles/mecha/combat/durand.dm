@@ -110,10 +110,10 @@ Expects a turf. Returns true if the attack should be blocked, false if not.*/
 				. = TRUE
 	return
 
-/obj/vehicle/sealed/mecha/durand/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
+/obj/vehicle/sealed/mecha/durand/attack_generic(datum/damage_package/package, mob/user, sound_effect = TRUE)
 	if(defense_check(user.loc))
 		log_message("Attack absorbed by defense field. Attacker - [user].", LOG_MECHA, color="orange")
-		return shield.attack_generic(DAMAGE_PROC_PASSING, direct_package = direct_package, user = user, sound_effect = sound_effect)
+		return shield.attack_generic(package, user, sound_effect)
 	return ..()
 
 /obj/vehicle/sealed/mecha/durand/blob_act(obj/structure/blob/B)
@@ -264,16 +264,16 @@ own integrity back to max. Shield is automatically dropped if we run out of powe
 
 	setDir(newdir)
 
-/obj/durand_shield/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/durand_shield/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	if(!chassis)
 		qdel(src)
 		return
 	if(!chassis.defense_mode) //if defense mode is disabled, we're taking damage that we shouldn't be taking
 		return
-	var/datum/damage_package/package = ..()
+	. = ..()
 	flick("shield_impact", src)
-	if(!package?.amount)
-		return package
+	if (!.)
+		return
 	if(!chassis.use_energy(package.amount * (STANDARD_CELL_CHARGE / 150)))
 		chassis.cell?.charge = 0
 		for(var/O in chassis.occupants)

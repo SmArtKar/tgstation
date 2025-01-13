@@ -35,9 +35,10 @@
 	update_cable_icons_on_turf(get_turf(src))
 	return ..()
 
-/obj/structure/grille/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/grille/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
-	update_appearance()
+	if (.)
+		update_appearance()
 
 /obj/structure/grille/update_appearance(updates)
 	if(QDELETED(src) || broken)
@@ -153,7 +154,7 @@
 	if(!.)
 		return
 	if(!shock(user, 70) && !QDELETED(src)) //Last hit still shocks but shouldn't deal damage to the grille
-		take_damage(direct_package = user.get_unarmed_package(rand(5, 10), modifiers = modifiers))
+		process_damage_package(user.get_unarmed_package(rand(5, 10), modifiers = modifiers))
 
 /obj/structure/grille/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
@@ -175,14 +176,14 @@
 	user.visible_message(span_warning("[user] kicks [src]."), span_warning("You kick [src]."), null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "hit")
 	if(!shock(user, 70))
-		take_damage(direct_package = user.get_unarmed_package(src, rand(5, 10), ignore_custom = TRUE, modifiers = modifiers)) // You kick using your boots (hopefully)
+		process_damage_package(user.get_unarmed_package(src, rand(5, 10), ignore_custom = TRUE, modifiers = modifiers)) // You kick using your boots (hopefully)
 
 /obj/structure/grille/attack_alien(mob/living/user, list/modifiers)
 	user.do_attack_animation(src)
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.visible_message(span_warning("[user] mangles [src]."), null, null, COMBAT_MESSAGE_RANGE)
 	if(!shock(user, 70))
-		take_damage(direct_package = user.get_unarmed_package(src, 20, modifiers = modifiers))
+		process_damage_package(user.get_unarmed_package(src, 20, modifiers = modifiers))
 
 /obj/structure/grille/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()

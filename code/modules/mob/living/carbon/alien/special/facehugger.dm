@@ -43,9 +43,9 @@
 
 	RegisterSignal(src, COMSIG_LIVING_TRYING_TO_PULL, PROC_REF(react_to_mob))
 
-/obj/item/clothing/mask/facehugger/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
-	..()
-	if(atom_integrity < 90)
+/obj/item/clothing/mask/facehugger/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
+	. = ..()
+	if(. && atom_integrity < 90)
 		Die()
 
 /obj/item/clothing/mask/facehugger/attackby(obj/item/O, mob/user, params)

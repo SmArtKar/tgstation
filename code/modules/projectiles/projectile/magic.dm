@@ -555,7 +555,7 @@
 
 		var/datum/damage_package/package = generate_damage(adjacent_object)
 		package.amount_multiplier *= 0.5
-		adjacent_object.take_damage(direct_package = package, sound_effect = FALSE)
+		adjacent_object.process_damage_package(package, sound_effect = FALSE)
 		new /obj/effect/temp_visual/cult/turf/floor(get_turf(adjacent_object))
 
 //still magic related, but a different path

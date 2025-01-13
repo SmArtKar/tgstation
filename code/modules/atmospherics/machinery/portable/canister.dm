@@ -417,7 +417,7 @@
 	if(gone == internal_cell)
 		internal_cell = null
 
-/obj/machinery/portable_atmospherics/canister/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/portable_atmospherics/canister/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(!. || QDELETED(src))
 		return

@@ -212,7 +212,7 @@
 		. += span_notice("You can [EXAMINE_HINT("crowbar")] to remove the tile.")
 		. += span_notice("It can be re-secured using a [EXAMINE_HINT("screwdriver.")]")
 
-/obj/structure/thermoplastic/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/thermoplastic/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(.) //received damage
 		update_appearance()

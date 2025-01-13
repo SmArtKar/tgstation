@@ -751,7 +751,7 @@
 /obj/machinery/proc/paw_melee(mob/living/user, list/modifiers)
 	user.changeNext_move(CLICK_CD_MELEE)
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
-	var/datum/damage_package/package = take_damage(direct_package = user.get_unarmed_package(src, 4, modifiers = modifiers))
+	var/datum/damage_package/package = process_damage_package(user.get_unarmed_package(src, 4, modifiers = modifiers))
 	var/hit_with_what_noun = "paws"
 	var/obj/item/bodypart/arm/arm = user.get_active_hand()
 	if(!isnull(arm))

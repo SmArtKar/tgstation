@@ -93,15 +93,16 @@
 	. = ..()
 	UnregisterSignal(M, COMSIG_MOB_CLICKON)
 
-/obj/vehicle/sealed/car/clowncar/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/vehicle/sealed/car/clowncar/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
-	if(prob(33))
-		visible_message(span_danger("[src] spews out a ton of space lube!"))
-		var/datum/effect_system/fluid_spread/foam/foam = new
-		var/datum/reagents/foamreagent = new /datum/reagents(25)
-		foamreagent.add_reagent(/datum/reagent/lube, 25)
-		foam.set_up(4, holder = src, location = loc, carry = foamreagent)
-		foam.start()
+	if (!. || !prob(33))
+		return
+	visible_message(span_danger("[src] spews out a ton of space lube!"))
+	var/datum/effect_system/fluid_spread/foam/foam = new
+	var/datum/reagents/foamreagent = new /datum/reagents(25)
+	foamreagent.add_reagent(/datum/reagent/lube, 25)
+	foam.set_up(4, holder = src, location = loc, carry = foamreagent)
+	foam.start()
 
 /obj/vehicle/sealed/car/clowncar/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
 	. = ..()

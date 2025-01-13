@@ -438,10 +438,10 @@
 	if(prob(12))
 		electrocute_mob(user, get_area(src), src, 0.3, TRUE)
 
-/obj/machinery/light/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/light/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(. && !QDELETED(src))
-		if(prob(amount * 5))
+		if(prob(package.amount * 5))
 			break_light_tube()
 
 /obj/machinery/light/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)

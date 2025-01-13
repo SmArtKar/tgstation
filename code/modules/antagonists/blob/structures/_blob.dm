@@ -305,7 +305,7 @@
 	if(overmind && package.damage_flag)
 		package.amount = overmind.blobstrain.damage_reaction(src, package.amount, package.damage_type, package.damage_flag)
 
-/obj/structure/blob/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/blob/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
 		update_appearance()

@@ -403,9 +403,11 @@ DEFINE_BITFIELD(turret_flags, list(
 		set_disabled(rand(6 SECONDS, 20 SECONDS))
 		remove_control()
 
-/obj/machinery/porta_turret/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/porta_turret/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
-	if(. && atom_integrity > 0) //damage received
+	if (!.)
+		return
+	if(atom_integrity > 0) //damage received
 		if(prob(30))
 			spark_system.start()
 		if(on && !(turret_flags & TURRET_FLAG_SHOOT_ALL_REACT) && !(obj_flags & EMAGGED))

@@ -31,10 +31,10 @@
 
 	return TRUE
 
-/obj/structure/closet/crate/secure/syndicrate/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/closet/crate/secure/syndicrate/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	if(created_items)
 		return ..()
-	if(amount < DAMAGE_PRECISION)
+	if(package.amount < DAMAGE_PRECISION)
 		return ..()
 	if(prob(75))
 		return ..()

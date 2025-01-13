@@ -121,7 +121,7 @@
 	triggermine(gone)
 	foot_on_mine = null
 
-/obj/effect/mine/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/effect/mine/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	triggermine()
 

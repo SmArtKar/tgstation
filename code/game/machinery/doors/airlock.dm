@@ -1549,8 +1549,8 @@
 		log_combat(user, src, message)
 		add_hiddenprint(user)
 
-/obj/machinery/door/airlock/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
-	if((amount >= atom_integrity) && (damage_flag == BOMB))
+/obj/machinery/door/airlock/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
+	if((package.amount >= atom_integrity) && (package.damage_flag == BOMB))
 		obj_flags |= NO_DEBRIS_AFTER_DECONSTRUCTION  //If an explosive took us out, don't drop the assembly
 	. = ..()
 	if(atom_integrity < (0.75 * max_integrity))

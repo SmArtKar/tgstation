@@ -24,11 +24,13 @@
 	. = ..()
 	AddComponent(/datum/component/pinata, candy = candy_options, death_drop = destruction_loot)
 
-/obj/structure/pinata/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/pinata/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
+	if (!.)
+		return
 	if(get_integrity() < (max_integrity/2))
 		icon_state = "[base_icon_state]_damaged"
-	if(amount >= 10) // Swing means minimum damage threshold for dropping candy is met.
+	if(package.amount >= 10) // Swing means minimum damage threshold for dropping candy is met.
 		flick("[icon_state]_swing", src)
 
 /obj/structure/pinata/play_attack_sound(damage_amount, damage_type, damage_flag)

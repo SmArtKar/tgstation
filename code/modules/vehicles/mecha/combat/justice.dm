@@ -142,7 +142,7 @@
 	animate(src, alpha = 255, time = 0.5 SECONDS)
 	playsound(src, 'sound/vehicles/mecha/mech_stealth_effect.ogg' , 75, FALSE)
 
-/obj/vehicle/sealed/mecha/justice/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/vehicle/sealed/mecha/justice/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	if(LAZYLEN(occupants))
 		if(prob(60))
 			new /obj/effect/temp_visual/mech_sparks(get_turf(src))

@@ -36,19 +36,17 @@
 		to_chat(occupants, "[icon2html(src, occupants)][span_danger("[gear] is critically damaged!")]")
 		playsound(src, gear.destroy_sound, 50)
 
-/obj/vehicle/sealed/mecha/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
-	var/datum/damage_package/damage_taken = ..()
-	if(!damage_taken || atom_integrity < 0)
-		return damage_taken
+/obj/vehicle/sealed/mecha/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
+	. = ..()
+	if (!. || atom_integrity <= 0)
+		return
 
 	diag_hud_set_mechhealth()
 	spark_system?.start()
-	try_deal_internal_damage(damage_taken.amount)
-	if(damage_taken.amount >= 5 || prob(33))
+	try_deal_internal_damage(package.amount)
+	if(package.amount >= 5 || prob(33))
 		to_chat(occupants, "[icon2html(src, occupants)][span_userdanger("Taking damage!")]")
-	log_message("Took [damage_taken.amount] points of damage. Damage type: [damage_taken.damage_type]", LOG_MECHA)
-
-	return damage_taken
+	log_message("Took [package.amount] points of damage. Damage type: [package.damage_type]", LOG_MECHA)
 
 /obj/vehicle/sealed/mecha/run_atom_armor(datum/damage_package/package)
 	. = ..()
@@ -71,7 +69,7 @@
 /obj/vehicle/sealed/mecha/attack_alien(mob/living/user, list/modifiers)
 	log_message("Attack by alien. Attacker - [user].", LOG_MECHA, color="red")
 
-	var/datum/damage_package/package = attack_generic(direct_package = user.get_unarmed_package(src, modifiers = modifiers))
+	var/datum/damage_package/package = attack_generic(user.get_unarmed_package(src, modifiers = modifiers), user)
 	if(package?.amount)
 		playsound(loc, 'sound/items/weapons/slash.ogg', 100, TRUE)
 
@@ -100,7 +98,7 @@
 	if (package.amount < user.environment_smash * 20)
 		package.amount = user.environment_smash * 20
 	log_combat(user, src, "attacked")
-	package = attack_generic(direct_package = package, user = user, sound_effect = play_soundeffect)
+	package = attack_generic(package, user, play_soundeffect)
 	return package?.amount
 
 /obj/vehicle/sealed/mecha/hulk_damage()
@@ -319,7 +317,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/taken_damage = take_damage(direct_package = attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/taken_damage = process_damage_package(attacking_item.generate_damage(src, user, modifiers))
 	if (taken_damage?.amount)
 		try_damage_component(taken_damage.amount, user.zone_selected)
 
@@ -338,8 +336,8 @@
 		COMBAT_MESSAGE_RANGE,
 	)
 
-/obj/vehicle/sealed/mecha/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
-	var/datum/damage_package/package = ..()
+/obj/vehicle/sealed/mecha/attack_generic(datum/damage_package/package, mob/user, sound_effect = TRUE)
+	package = ..()
 	if(package?.amount)
 		try_damage_component(package.amount, user.zone_selected)
 		diag_hud_set_mechhealth()

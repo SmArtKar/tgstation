@@ -103,7 +103,7 @@
 		'sound/mobs/non-humanoids/pony/whinny03.ogg'
 	)), 50)
 
-/mob/living/basic/pony/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/mob/living/basic/pony/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if (. && prob(33))
 		whinny_angrily()

@@ -551,7 +551,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/newscaster, 30)
 		return
 	return paw_melee(user, modifiers)
 
-/obj/machinery/newscaster/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/newscaster/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if (.)
 		update_appearance()

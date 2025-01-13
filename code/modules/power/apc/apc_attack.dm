@@ -127,11 +127,11 @@
 /obj/machinery/power/apc/blob_act(obj/structure/blob/B)
 	atom_break()
 
-/obj/machinery/power/apc/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/machinery/power/apc/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	// APC being at 0 integrity doesnt delete it outright. Combined with take_damage this might cause runtimes.
 	if((machine_stat & BROKEN) && atom_integrity <= 0)
 		if(sound_effect)
-			play_attack_sound(amount, damage_type, damage_flag)
+			play_attack_sound(package.amount, package.damage_type, package.damage_flag)
 		return
 	return ..()
 

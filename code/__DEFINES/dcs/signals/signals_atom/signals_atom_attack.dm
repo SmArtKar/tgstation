@@ -29,13 +29,13 @@
 #define COMSIG_ATOM_EXTINGUISH "atom_extinguish"
 ///from base of [/atom/proc/update_integrity]: (old_value, new_value)
 #define COMSIG_ATOM_INTEGRITY_CHANGED "atom_integrity_changed"
-///from base of [/atom/proc/take_damage]: (datum/damage_package/package)
+///from base of [/atom/proc/process_damage_package], occurs before armor processing - can have zero damage: (datum/damage_package/package)
 #define COMSIG_ATOM_TAKE_DAMAGE "atom_take_damage"
-///from base of [/atom/proc/process_damage_package]: (datum/damage_package/package)
-#define COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE "processing_damage_package"
-	#define COMPONENT_CANCEL_DAMAGE_PACKAGE (1<<0)
 	/// Return bitflags for the above signal which prevents the atom taking any damage.
 	#define COMPONENT_NO_TAKE_DAMAGE (1<<0)
+///from [/atom/proc/process_damage_package], occurs after armor processing has ran: (datum/damage_package/package)
+#define COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE "processing_damage_package"
+	#define COMPONENT_CANCEL_DAMAGE_PACKAGE (1<<0)
 /* Attack signals. They should share the returned flags, to standardize the attack chain. */
 /// tool_act -> pre_attack -> target.attackby (item.attack) -> afterattack
 	///Ends the attack chain. If sent early might cause posterior attacks not to happen.

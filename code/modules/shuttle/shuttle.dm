@@ -65,7 +65,7 @@
 /obj/docking_port/has_gravity(turf/current_turf)
 	return TRUE
 
-/obj/docking_port/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/docking_port/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	return
 
 /obj/docking_port/singularity_pull(atom/singularity, current_size)

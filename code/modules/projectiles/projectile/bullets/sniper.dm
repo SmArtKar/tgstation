@@ -27,7 +27,7 @@
 		package.amount = damage_to_deal
 		package.armor_penetration = 0
 		// I know that we got ourselves packages to stop doing this but this is needed as it should have 0 AP
-		thing_to_break.take_damage(direct_package = package, sound_effect = FALSE)
+		thing_to_break.process_damage_package(package, sound_effect = FALSE)
 	return ..()
 
 /obj/projectile/bullet/p50/surplus

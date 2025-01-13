@@ -13,11 +13,17 @@
 
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
-/// Wrapper for taking damage - ensures that the atom is in a valid state to take damage, and then assembles and processes a damage package
-/// Returns the final taken package!
-/atom/proc/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, sound_effect = TRUE)
+/// Wrapper for taking damage - assembles and processes a damage package, then returns the final taken package
+/atom/proc/take_damage(DAMAGE_PROC_ARGS, sound_effect = TRUE)
+	// Nothing should override this as this is simply a wrapper for user convinience, do yer logic in process_damage_package
+	SHOULD_NOT_OVERRIDE(TRUE)
+	var/datum/damage_package/package = new(DAMAGE_PROC_PASSING)
+	return process_damage_package(package, sound_effect)
+
+/// Proc that ensures that the atom is in a valid state to take damage, and then actually applies damage based on a damage package
+/atom/proc/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	if(!uses_integrity)
-		CRASH("[src] had /atom/proc/take_damage() called on it without it being a type that has uses_integrity = TRUE!")
+		CRASH("[src] had /atom/proc/process_damage_package() called on it without it being a type that has uses_integrity = TRUE!")
 
 	if(QDELETED(src))
 		CRASH("[src] taking damage after deletion")
@@ -25,21 +31,15 @@
 	if(atom_integrity <= 0)
 		CRASH("[src] taking damage while having <= 0 integrity")
 
-	if(sound_effect)
-		play_attack_sound(amount, damage_type, damage_flag)
+	if (sound_effect)
+		play_attack_sound(package.amount, package.damage_type, package.damage_flag)
 
 	if(resistance_flags & INDESTRUCTIBLE)
 		return
 
-	var/datum/damage_package/package = direct_package || new(DAMAGE_PROC_PASSING)
-
 	if(SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, package) & COMPONENT_NO_TAKE_DAMAGE)
 		return
 
-	return process_damage_package(package)
-
-/// Proc that is actually applies damage based on a damage package
-/atom/proc/process_damage_package(datum/damage_package/package)
 	run_atom_armor(package)
 
 	if(package.amount < DAMAGE_PRECISION)
@@ -59,6 +59,8 @@
 	//DESTROYING SECOND
 	if(atom_integrity <= 0 && previous_atom_integrity > 0)
 		atom_destruction(package.damage_flag)
+
+	// Should always either return the modified given package, or nothing at all.
 	return package
 
 /// Proc for recovering atom_integrity. Returns the amount repaired by
@@ -140,13 +142,13 @@
 /atom/proc/hulk_damage()
 	return 150 //the damage hulks do on punches to this atom, is affected by melee armor
 
-/atom/proc/attack_generic(DAMAGE_PROC_ARGS, datum/damage_package/direct_package = null, mob/user, sound_effect = TRUE)
+/atom/proc/attack_generic(datum/damage_package/package, mob/user, sound_effect = TRUE)
 	if(!uses_integrity)
 		CRASH("unimplemented /atom/proc/attack_generic()!")
 
 	user.do_attack_animation(src)
 	user.changeNext_move(CLICK_CD_MELEE)
-	return take_damage(DAMAGE_PROC_PASSING, direct_package = direct_package, sound_effect = sound_effect)
+	return process_damage_package(package, sound_effect = sound_effect)
 
 /// Called after the atom takes damage and integrity is below integrity_failure level
 /atom/proc/atom_break(damage_flag)

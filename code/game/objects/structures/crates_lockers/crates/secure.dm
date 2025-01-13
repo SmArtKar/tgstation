@@ -24,11 +24,10 @@
 	ADD_TRAIT(src, TRAIT_NO_MISSING_ITEM_ERROR, TRAIT_GENERIC)
 	ADD_TRAIT(src, TRAIT_NO_MANIFEST_CONTENTS_ERROR, TRAIT_GENERIC)
 
-/obj/structure/closet/crate/secure/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
-	if(prob(tamperproof) && amount >= DAMAGE_PRECISION)
+/obj/structure/closet/crate/secure/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
+	. = ..()
+	if (. && prob(tamperproof))
 		boom()
-	else
-		return ..()
 
 /obj/structure/closet/crate/secure/proc/boom(mob/user)
 	if(user)

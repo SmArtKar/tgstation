@@ -86,11 +86,12 @@
 
 	return ..()
 
-/obj/item/cardboard_cutout/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
-	var/datum/damage_package/package = ..()
-	if((damage_flag == BULLET || damage_flag == MELEE) && (damage_type == BRUTE) && prob(package?.amount))
+/obj/item/cardboard_cutout/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
+	. = ..()
+	if (!.)
+		return
+	if((package.damage_flag == BULLET || package.damage_flag == MELEE) && (package.damage_type == BRUTE) && prob(package.amount))
 		push_over()
-	return package
 
 /obj/item/cardboard_cutout/atom_deconstruct(disassembled)
 	new /obj/item/stack/sheet/cardboard(loc, 1)

@@ -75,10 +75,10 @@
 			. += span_notice("It looks like you could <b>rig</b> a device to the tank.")
 
 
-/obj/structure/reagent_dispensers/take_damage(DAMAGE_PROC_ARGS, datum/damage_package/direct_package, sound_effect = TRUE)
+/obj/structure/reagent_dispensers/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	. = ..()
 	if(. && atom_integrity > 0)
-		if(tank_volume && (damage_flag == BULLET || damage_flag == LASER))
+		if(tank_volume && (package.damage_flag == BULLET || package.damage_flag == LASER))
 			boom()
 
 /obj/structure/reagent_dispensers/attackby(obj/item/attacking_item, mob/user, params)
