@@ -71,7 +71,7 @@
 
 /obj/item/nullrod/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is killing [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to get closer to god!"))
-	return (BRUTELOSS|FIRELOSS)
+	return (BRUTELOSS|BURNLOSS)
 
 /obj/item/nullrod/attack(mob/living/target_mob, mob/living/user, params)
 	if(!user.mind?.holy_role)
@@ -537,7 +537,7 @@
 
 /obj/item/nullrod/fedora/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is killing [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to get further from god!"))
-	return (BRUTELOSS|FIRELOSS)
+	return (BRUTELOSS|BURNLOSS)
 
 // Dark Blessing - Replaces your arm with an armblade. Cannot be dropped.
 

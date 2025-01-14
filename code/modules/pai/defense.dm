@@ -74,7 +74,7 @@
 	return amount
 
 /// Called when we take burn or brute damage, pass it to the shell instead
-/mob/living/silicon/pai/proc/on_shell_damaged(datum/hurt, type, amount, forced)
+/mob/living/silicon/pai/proc/on_shell_damaged(datum/hurt, amount, forced)
 	SIGNAL_HANDLER
 	take_holo_damage(amount)
 	return COMPONENT_IGNORE_CHANGE
@@ -85,8 +85,8 @@
 	take_holo_damage(amount * ((forced) ? 1 : 0.25))
 	return COMPONENT_IGNORE_CHANGE
 
-/mob/living/silicon/pai/getBruteLoss()
+/mob/living/silicon/pai/get_brute_loss()
 	return HOLOCHASSIS_MAX_HEALTH - holochassis_health
 
-/mob/living/silicon/pai/getFireLoss()
+/mob/living/silicon/pai/get_burn_loss()
 	return HOLOCHASSIS_MAX_HEALTH - holochassis_health

@@ -479,7 +479,7 @@
 	..()
 	if(istype(I,/obj/item/pestle))
 		if(grinded)
-			if(user.getStaminaLoss() > 50)
+			if(user.get_stamina_loss() > 50)
 				to_chat(user, span_warning("You are too tired to work!"))
 				return
 			var/list/choose_options = list(
@@ -490,7 +490,7 @@
 			if(grinded && in_range(src, user) && user.is_holding(I) && picked_option)
 				to_chat(user, span_notice("You start grinding..."))
 				if(do_after(user, 2.5 SECONDS, target = src))
-					user.adjustStaminaLoss(40)
+					user.adjust_stamina_loss(40)
 					switch(picked_option)
 						if("Juice")
 							return juice_item(grinded, user)

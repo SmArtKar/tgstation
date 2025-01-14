@@ -16,7 +16,7 @@
 /datum/action/cooldown/mob_cooldown/fire_breath/ice/on_burn_mob(mob/living/barbecued, mob/living/source)
 	barbecued.apply_status_effect(/datum/status_effect/ice_block_talisman, 2 SECONDS)
 	to_chat(barbecued, span_userdanger("You're frozen solid by [source]'s icy breath!"))
-	barbecued.adjustFireLoss(fire_damage)
+	barbecued.adjust_burn_loss(fire_damage)
 
 /// Breathe really cold fire in a plus shape, like bomberman
 /datum/action/cooldown/mob_cooldown/fire_breath/ice/cross

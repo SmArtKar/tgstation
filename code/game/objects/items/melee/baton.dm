@@ -492,7 +492,7 @@
 	if(cell?.charge && active)
 		user.visible_message(span_suicide("[user] is putting the live [name] in [user.p_their()] mouth! It looks like [user.p_theyre()] trying to commit suicide!"))
 		attack(user, user)
-		return FIRELOSS
+		return BURNLOSS
 	else
 		user.visible_message(span_suicide("[user] is shoving the [name] down their throat! It looks like [user.p_theyre()] trying to commit suicide!"))
 		return OXYLOSS

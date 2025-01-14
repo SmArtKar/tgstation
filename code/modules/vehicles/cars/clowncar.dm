@@ -135,7 +135,7 @@
 					carbon_occupant.playsound_local(src, 'sound/items/weapons/flash_ring.ogg', 50)
 					carbon_occupant.set_eye_blur_if_lower(rand(10 SECONDS, 20 SECONDS))
 
-			hittarget_living.adjustBruteLoss(200)
+			hittarget_living.adjust_brute_loss(200)
 			new /obj/effect/decal/cleanable/blood/splatter(get_turf(hittarget_living))
 
 			log_combat(src, hittarget_living, "rammed into", null, "injuring all passengers and killing the [hittarget_living]")

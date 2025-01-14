@@ -104,7 +104,7 @@
 		user.visible_message(span_suicide("[user] is putting [src] close to [user.p_their()] eyes and turning it on... but [user.p_theyre()] blind!"))
 		return SHAME
 	user.visible_message(span_suicide("[user] is putting [src] close to [user.p_their()] eyes and turning it on! It looks like [user.p_theyre()] trying to commit suicide!"))
-	return FIRELOSS
+	return BURNLOSS
 
 /obj/item/flashlight/proc/eye_examine(mob/living/carbon/human/M, mob/living/user)
 	. = list()
@@ -209,7 +209,7 @@
 			. += "<span class='notice ml-1'>[M] has [pill_count] pill[pill_count > 1 ? "s" : ""] implanted in [ M.p_their()] teeth.</span>\n"
 
 	//assess any suffocation damage
-	var/hypoxia_status = M.getOxyLoss() > 20
+	var/hypoxia_status = M.get_oxy_loss() > 20
 
 	if(M == user)
 		if(hypoxia_status)
@@ -917,7 +917,7 @@
 		return SHAME
 	user.visible_message(span_suicide("[user] is squirting [src]'s fluids into [user.p_their()] eyes! It looks like [user.p_theyre()] trying to commit suicide!"))
 	burn_loop(get_fuel())
-	return FIRELOSS
+	return BURNLOSS
 
 /obj/item/flashlight/glowstick/red
 	name = "red glowstick"

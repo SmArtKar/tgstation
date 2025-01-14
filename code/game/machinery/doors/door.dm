@@ -571,18 +571,18 @@
 			future_pancake.visible_message(span_warning("[src] closes on [future_pancake], crushing [future_pancake.p_them()]!"), span_userdanger("[src] closes on you and crushes you!"))
 			SEND_SIGNAL(future_pancake, COMSIG_LIVING_DOORCRUSHED, src)
 			if(isalien(future_pancake))  //For xenos
-				future_pancake.adjustBruteLoss(DOOR_CRUSH_DAMAGE * 1.5) //Xenos go into crit after aproximately the same amount of crushes as humans.
+				future_pancake.adjust_brute_loss(DOOR_CRUSH_DAMAGE * 1.5) //Xenos go into crit after aproximately the same amount of crushes as humans.
 				future_pancake.emote("roar")
 			else if(ismonkey(future_pancake)) //For monkeys
 				future_pancake.emote("screech")
-				future_pancake.adjustBruteLoss(DOOR_CRUSH_DAMAGE)
+				future_pancake.adjust_brute_loss(DOOR_CRUSH_DAMAGE)
 				future_pancake.Paralyze(100)
 			else if(ishuman(future_pancake)) //For humans
-				future_pancake.adjustBruteLoss(DOOR_CRUSH_DAMAGE)
+				future_pancake.adjust_brute_loss(DOOR_CRUSH_DAMAGE)
 				future_pancake.emote("scream")
 				future_pancake.Paralyze(100)
 			else //for simple_animals & borgs
-				future_pancake.adjustBruteLoss(DOOR_CRUSH_DAMAGE)
+				future_pancake.adjust_brute_loss(DOOR_CRUSH_DAMAGE)
 				var/turf/location = get_turf(src)
 				//add_blood doesn't work for borgs/xenos, but add_blood_floor does.
 				future_pancake.add_splatter_floor(location)

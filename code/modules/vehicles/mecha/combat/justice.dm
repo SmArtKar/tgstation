@@ -87,7 +87,7 @@
 	if(!ishuman(target))
 		return FALSE
 	var/mob/living/carbon/human/live_or_dead = target
-	if(live_or_dead.stat < UNCONSCIOUS && live_or_dead.getStaminaLoss() < 100)
+	if(live_or_dead.stat < UNCONSCIOUS && live_or_dead.get_stamina_loss() < 100)
 		return FALSE
 	var/obj/item/bodypart/check_head = live_or_dead.get_bodypart(BODY_ZONE_HEAD)
 	if(!check_head)
@@ -331,7 +331,7 @@
 	for(var/mob/living/something_living in range(1, get_turf(chassis)))
 		if(something_living.stat >= UNCONSCIOUS)
 			continue
-		if(something_living.getStaminaLoss() >= 100)
+		if(something_living.get_stamina_loss() >= 100)
 			continue
 		if(something_living == pilot)
 			continue
@@ -479,7 +479,7 @@
 		if(locate(/obj/structure/window) in line_turf)
 			break
 		for(var/mob/living/something_living in line_turf.contents)
-			if(something_living.stat >= UNCONSCIOUS || something_living.getStaminaLoss() >= 100 || something_living == charger)
+			if(something_living.stat >= UNCONSCIOUS || something_living.get_stamina_loss() >= 100 || something_living == charger)
 				continue
 			if(prob(DISMEMBER_CHANCE_LOW))
 				var/obj/item/bodypart/cut_bodypart = something_living.get_bodypart(pick(BODY_ZONE_R_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_HEAD))

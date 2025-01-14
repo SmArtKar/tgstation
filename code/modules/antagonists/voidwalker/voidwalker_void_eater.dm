@@ -59,7 +59,7 @@
 			hewmon.balloon_alert(user, "already voided!")
 			playsound(hewmon, SFX_SHATTER, 60)
 			new /obj/effect/spawner/random/glass_shards/mini (spawnloc)
-			hewmon.adjustBruteLoss(10) // BONUS DAMAGE
+			hewmon.adjust_brute_loss(10) // BONUS DAMAGE
 		else
 			hewmon.balloon_alert(user, "shattering...")
 			if(do_after(user, 4 SECONDS, hewmon))

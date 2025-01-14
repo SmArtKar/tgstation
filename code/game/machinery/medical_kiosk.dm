@@ -225,10 +225,10 @@
 	var/patient_status = "Alive."
 	var/max_health = patient.maxHealth
 	var/total_health = patient.health
-	var/brute_loss = patient.getBruteLoss()
-	var/fire_loss = patient.getFireLoss()
-	var/tox_loss = patient.getToxLoss()
-	var/oxy_loss = patient.getOxyLoss()
+	var/brute_loss = patient.get_brute_loss()
+	var/burn_loss = patient.get_burn_loss()
+	var/tox_loss = patient.get_tox_loss()
+	var/oxy_loss = patient.get_oxy_loss()
 	var/chaos_modifier = 0
 
 	var/sickness = "Patient does not show signs of disease."
@@ -306,13 +306,13 @@
 	if (patient.has_status_effect(/datum/status_effect/hallucination))
 		hallucination_status = "Subject appears to be hallucinating. Suggested treatments: Antipsychotic medication, [/datum/reagent/medicine/haloperidol::name] or [/datum/reagent/medicine/synaptizine::name]."
 
-	if(patient.stat == DEAD || HAS_TRAIT(patient, TRAIT_FAKEDEATH) || ((brute_loss+fire_loss+tox_loss+oxy_loss) >= 200))  //Patient status checks.
+	if(patient.stat == DEAD || HAS_TRAIT(patient, TRAIT_FAKEDEATH) || ((brute_loss+burn_loss+tox_loss+oxy_loss) >= 200))  //Patient status checks.
 		patient_status = "Dead."
-	if((brute_loss+fire_loss+tox_loss+oxy_loss) >= 80)
+	if((brute_loss+burn_loss+tox_loss+oxy_loss) >= 80)
 		patient_status = "Gravely Injured"
-	else if((brute_loss+fire_loss+tox_loss+oxy_loss) >= 40)
+	else if((brute_loss+burn_loss+tox_loss+oxy_loss) >= 40)
 		patient_status = "Injured"
-	else if((brute_loss+fire_loss+tox_loss+oxy_loss) >= 20)
+	else if((brute_loss+burn_loss+tox_loss+oxy_loss) >= 20)
 		patient_status = "Lightly Injured"
 	if(pandemonium || user.has_status_effect(/datum/status_effect/hallucination))
 		patient_status = pick(
@@ -343,7 +343,7 @@
 	data["patient_name"] = patient_name
 	data["patient_health"] = round(((total_health - (chaos_modifier * (rand(1,50)))) / max_health) * 100, 0.001)
 	data["brute_health"] = round(brute_loss+(chaos_modifier * (rand(1,30))),0.001) //To break this down for easy reading, all health values are rounded to the .001 place
-	data["burn_health"] = round(fire_loss+(chaos_modifier * (rand(1,30))),0.001) //then a random number is added, which is multiplied by chaos modifier.
+	data["burn_health"] = round(burn_loss+(chaos_modifier * (rand(1,30))),0.001) //then a random number is added, which is multiplied by chaos modifier.
 	data["toxin_health"] = round(tox_loss+(chaos_modifier * (rand(1,30))),0.001) //That allows for a weaker version of the affect to be applied while hallucinating as opposed to emagged.
 	data["suffocation_health"] = round(oxy_loss+(chaos_modifier * (rand(1,30))),0.001) //It's not the cleanest but it does make for a colorful window.
 	data["brain_health"] = brain_status

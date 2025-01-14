@@ -24,13 +24,13 @@
 /atom/proc/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
 	SHOULD_CALL_PARENT(TRUE)
 
-	if(!uses_integrity)
+	if (!uses_integrity)
 		CRASH("[src] had /atom/proc/process_damage_package() called on it without it being a type that has uses_integrity = TRUE!")
 
-	if(QDELETED(src))
+	if (QDELETED(src))
 		CRASH("[src] taking damage after deletion")
 
-	if(atom_integrity <= 0)
+	if (atom_integrity <= 0)
 		CRASH("[src] taking damage while having <= 0 integrity")
 
 	if (sound_effect)
@@ -39,10 +39,10 @@
 			sound_amount *= package.amount_multiplier
 		play_attack_sound(sound_amount, package.damage_type, package.damage_flag)
 
-	if(resistance_flags & INDESTRUCTIBLE)
+	if (resistance_flags & INDESTRUCTIBLE)
 		return
 
-	if(SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, package) & COMPONENT_NO_TAKE_DAMAGE)
+	if (SEND_SIGNAL(src, COMSIG_ATOM_TAKE_DAMAGE, package) & COMPONENT_NO_TAKE_DAMAGE)
 		return
 
 	// Before armor due to damage_deflection
@@ -50,10 +50,10 @@
 		package.amount *= package.amount_multiplier
 		run_atom_armor(package)
 
-	if(package.amount < DAMAGE_PRECISION)
+	if (package.amount < DAMAGE_PRECISION)
 		return
 
-	if(SEND_SIGNAL(src, COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE, package) & COMPONENT_CANCEL_DAMAGE_PACKAGE)
+	if (SEND_SIGNAL(src, COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE, package) & COMPONENT_CANCEL_DAMAGE_PACKAGE)
 		return
 
 	var/previous_atom_integrity = atom_integrity
@@ -61,11 +61,11 @@
 	var/integrity_failure_amount = integrity_failure * max_integrity
 
 	//BREAKING FIRST
-	if(integrity_failure && previous_atom_integrity > integrity_failure_amount && atom_integrity <= integrity_failure_amount)
+	if (integrity_failure && previous_atom_integrity > integrity_failure_amount && atom_integrity <= integrity_failure_amount)
 		atom_break(package.damage_flag)
 
 	//DESTROYING SECOND
-	if(atom_integrity <= 0 && previous_atom_integrity > 0)
+	if (atom_integrity <= 0 && previous_atom_integrity > 0)
 		atom_destruction(package.damage_flag)
 
 	// Should always either return the modified given package, or nothing at all.
@@ -115,35 +115,36 @@
 /// Modifies a damage package based on atom armor
 /atom/proc/run_atom_armor(datum/damage_package/package)
 	RETURN_TYPE(/datum/damage_package)
-	if(!uses_integrity)
+	if (!uses_integrity)
 		CRASH("/atom/proc/run_atom_armor was called on [src] without being implemented as a type that uses integrity!")
 
-	if(package.damage_flag == MELEE && package.amount < damage_deflection)
+	if (package.damage_flag == MELEE && package.amount < damage_deflection)
 		return
 
-	if(package.damage_type != BRUTE && package.damage_type != BURN)
+	if (package.damage_type != BRUTE && package.damage_type != BURN)
 		return
 
 	var/armor_protection = 0
 
-	if(package.damage_flag)
+	if (package.damage_flag)
 		armor_protection = get_armor_rating(package.damage_flag)
 
-	if(armor_protection) //Only apply weak-against-armor/hollowpoint effects if there actually IS armor.
+	if (armor_protection > 0) //Only apply weak-against-armor/hollowpoint effects if there actually IS armor.
 		armor_protection = clamp(PENETRATE_ARMOR(armor_protection * package.armor_multiplier, package.armor_penetration), min(armor_protection, 0), 100)
 
 	package.amount = round(package.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
+	package.armor_block = armor_protection * 0.01
 	return package
 
 ///the sound played when the atom is damaged.
 /atom/proc/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)
-	switch(damage_type)
-		if(BRUTE)
-			if(damage_amount)
+	switch (damage_type)
+		if (BRUTE)
+			if (damage_amount)
 				playsound(src, 'sound/items/weapons/smash.ogg', 50, TRUE)
 			else
 				playsound(src, 'sound/items/weapons/tap.ogg', 50, TRUE)
-		if(BURN)
+		if (BURN)
 			playsound(src.loc, 'sound/items/tools/welder.ogg', 100, TRUE)
 
 ///Called to get the damage that hulks will deal to the atom.
@@ -151,7 +152,7 @@
 	return 150 //the damage hulks do on punches to this atom, is affected by melee armor
 
 /atom/proc/attack_generic(datum/damage_package/package, mob/user, sound_effect = TRUE)
-	if(!uses_integrity)
+	if (!uses_integrity)
 		CRASH("unimplemented /atom/proc/attack_generic()!")
 
 	user.do_attack_animation(src)

@@ -36,7 +36,7 @@
 		return ..()
 
 	if(damage_type & SHAME)
-		adjustStaminaLoss(200)
+		adjust_stamina_loss(200)
 		set_suicide(FALSE)
 		add_mood_event("shameful_suicide", /datum/mood_event/shameful_suicide)
 		return FALSE
@@ -49,7 +49,7 @@
 		suicide_log(suicide_tool)
 		return FALSE
 
-	if(damage_type & (BRUTELOSS | FIRELOSS | OXYLOSS | TOXLOSS))
+	if(damage_type & (BRUTELOSS | BURNLOSS | OXYLOSS | TOXLOSS))
 		handle_suicide_damage_spread(damage_type)
 		return TRUE
 

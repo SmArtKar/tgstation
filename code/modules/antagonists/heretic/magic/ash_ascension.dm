@@ -154,7 +154,7 @@
 			if((victim in hit_list) || victim == source)
 				continue
 			hit_list += victim
-			victim.adjustFireLoss(20)
+			victim.adjust_burn_loss(20)
 			to_chat(victim, span_userdanger("You're hit by [source]'s eldritch flames!"))
 
 		new /obj/effect/hotspot(target_turf)

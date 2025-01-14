@@ -346,10 +346,10 @@
 	user.adjust_bodytemperature(-300)
 	user.apply_status_effect(/datum/status_effect/freon)
 	if(!ishuman(user))
-		return FIRELOSS
+		return BURNLOSS
 	var/mob/living/carbon/human/humanafterall = user
 	var/datum/disease/advance/cold/pun = new //in the show, arnold survives his stunt, but catches a cold because of it
 	humanafterall.ForceContractDisease(pun, FALSE, TRUE) //this'll show up on health analyzers and the like
-	return FIRELOSS
+	return BURNLOSS
 
 #undef THERMAL_REGULATOR_COST

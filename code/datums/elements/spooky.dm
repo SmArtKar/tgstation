@@ -24,10 +24,10 @@
 	if(ishuman(user)) //this weapon wasn't meant for mortals.
 		var/mob/living/carbon/human/U = user
 		if(!istype(U.dna.species, /datum/species/skeleton))
-			U.adjustStaminaLoss(35) //Extra Damage
+			U.adjust_stamina_loss(35) //Extra Damage
 			U.set_jitter_if_lower(70 SECONDS)
 			U.set_stutter(40 SECONDS)
-			if(U.getStaminaLoss() > 95)
+			if(U.get_stamina_loss() > 95)
 				to_chat(U, "<font color ='red', size ='4'><B>Your ears weren't meant for this spectral sound.</B></font>")
 				INVOKE_ASYNC(src, PROC_REF(spectral_change), U)
 			if(single_use)
@@ -40,12 +40,12 @@
 		if(istype(H.dna.species, /datum/species/skeleton))
 			return //undeads are unaffected by the spook-pocalypse.
 		if(istype(H.dna.species, /datum/species/zombie))
-			H.adjustStaminaLoss(25)
+			H.adjust_stamina_loss(25)
 			H.Paralyze(15) //zombies can't resist the doot
 		C.set_jitter_if_lower(70 SECONDS)
 		C.set_stutter(40 SECONDS)
 		if((!istype(H.dna.species, /datum/species/skeleton)) && (!istype(H.dna.species, /datum/species/golem)) && (!istype(H.dna.species, /datum/species/android)) && (!istype(H.dna.species, /datum/species/jelly)))
-			C.adjustStaminaLoss(18) //boneless humanoids don't lose the will to live
+			C.adjust_stamina_loss(18) //boneless humanoids don't lose the will to live
 		to_chat(C, "<font color='red' size='4'><B>DOOT</B></font>")
 		to_chat(C, span_robot("<font size='4'>You're feeling more bony.</font>"))
 		INVOKE_ASYNC(src, PROC_REF(spectral_change), H)
@@ -60,7 +60,7 @@
 	C.add_mood_event("spooked", /datum/mood_event/spooked)
 
 /datum/element/spooky/proc/spectral_change(mob/living/carbon/human/H, mob/user)
-	if((H.getStaminaLoss() > 95) && (!istype(H.dna.species, /datum/species/skeleton)) && (!istype(H.dna.species, /datum/species/golem)) && (!istype(H.dna.species, /datum/species/android)) && (!istype(H.dna.species, /datum/species/jelly)))
+	if((H.get_stamina_loss() > 95) && (!istype(H.dna.species, /datum/species/skeleton)) && (!istype(H.dna.species, /datum/species/golem)) && (!istype(H.dna.species, /datum/species/android)) && (!istype(H.dna.species, /datum/species/jelly)))
 		H.Paralyze(20)
 		H.set_species(/datum/species/skeleton)
 		H.visible_message(span_warning("[H] has given up on life as a mortal."))

@@ -12,13 +12,13 @@
 		else
 			. += span_notice("Its neural network connection could be <b>cut</b>, its access panel cover can be <b>pried</b> back into place.")
 	if(stat != DEAD)
-		if (getBruteLoss())
-			if (getBruteLoss() < 30)
+		if (get_brute_loss())
+			if (get_brute_loss() < 30)
 				. += span_warning("It looks slightly dented.")
 			else
 				. += span_warning("<B>It looks severely dented!</B>")
-		if (getFireLoss())
-			if (getFireLoss() < 30)
+		if (get_burn_loss())
+			if (get_burn_loss() < 30)
 				. += span_warning("It looks slightly charred.")
 			else
 				. += span_warning("<B>Its casing is melted and heat-warped!</B>")

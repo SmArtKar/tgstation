@@ -26,7 +26,7 @@
 
 /obj/item/banhammer/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] is hitting [user.p_them()]self with [src]! It looks like [user.p_theyre()] trying to ban [user.p_them()]self from life."))
-	return (BRUTELOSS|FIRELOSS|TOXLOSS|OXYLOSS)
+	return (BRUTELOSS|BURNLOSS|TOXLOSS|OXYLOSS)
 /*
 oranges says: This is a meme relating to the english translation of the ss13 russian wiki page on lurkmore.
 mrdoombringer sez: and remember kids, if you try and PR a fix for this item's grammar, you are admitting that you are, indeed, a newfriend.
@@ -1139,7 +1139,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		return
 	if(is_type_in_typecache(target, strong_against) && isliving(target))
 		var/mob/living/living_target = target
-		living_target.adjustBruteLoss(extra_strength_damage)
+		living_target.adjust_brute_loss(extra_strength_damage)
 
 /obj/item/proc/can_trigger_gun(mob/living/user, akimbo_usage)
 	if(!user.can_use_guns(src))

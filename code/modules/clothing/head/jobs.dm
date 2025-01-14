@@ -91,7 +91,7 @@
 	user.visible_message(span_suicide("[user] climbs into an imaginary oven!"))
 	user.say("BOOORK!", forced = "chef hat suicide")
 	playsound(user, 'sound/machines/ding.ogg', 50, TRUE)
-	return FIRELOSS
+	return BURNLOSS
 
 //Captain
 /obj/item/clothing/head/hats/caphat

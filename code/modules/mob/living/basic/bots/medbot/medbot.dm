@@ -342,7 +342,7 @@
 		if(patient.get_total_damage() <= heal_threshold)
 			done_healing = TRUE
 	else
-		patient.heal_damage_type(heal_amount = modified_heal_amount, damagetype = damage_type_healer)
+		patient.heal_damage_type(modified_heal_amount, damage_type = damage_type_healer)
 		log_combat(src, patient, "tended the wounds of", "internal tools")
 		if(patient.get_current_damage_of_type(damage_type_healer) <= heal_threshold)
 			done_healing = TRUE

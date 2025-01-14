@@ -457,7 +457,7 @@
 	else
 		if(istype(eaten_atom, /obj/item/food/grown/banana))
 			var/obj/item/food/grown/banana/banana_morsel = eaten_atom
-			adjustBruteLoss(-banana_morsel.seed.potency * 0.25)
+			adjust_brute_loss(-banana_morsel.seed.potency * 0.25)
 			prank_pouch += banana_morsel.generate_trash(src)
 
 		qdel(eaten_atom)

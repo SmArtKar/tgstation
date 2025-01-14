@@ -128,7 +128,7 @@
 	victim.take_overall_damage(clamp_damage)
 	if(isnull(victim)) //get gibbed stoopid
 		return ..()
-	victim.adjustOxyLoss(round(clamp_damage/2))
+	victim.adjust_oxy_loss(round(clamp_damage/2))
 	victim.visible_message(span_danger("[chassis] squeezes [victim]!"), \
 						span_userdanger("[chassis] squeezes you!"),\
 						span_hear("You hear something crack."))

@@ -291,7 +291,7 @@
 			var/obj/item/ammo_casing/energy/shot = ammo_type[select]
 			cell.use(shot.e_cost)
 			update_appearance()
-			return FIRELOSS
+			return BURNLOSS
 		else
 			user.visible_message(span_suicide("[user] panics and starts choking to death!"))
 			return OXYLOSS

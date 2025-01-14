@@ -394,7 +394,7 @@
 	if(get_dist(owner, beepsky) <= 1)
 		owner.playsound_local(owner, 'sound/items/weapons/egloves.ogg', 50)
 		owner.visible_message(span_warning("[owner]'s body jerks as if it was shocked."), span_userdanger("You feel the fist of the LAW."))
-		owner.adjustStaminaLoss(rand(40, 70))
+		owner.adjust_stamina_loss(rand(40, 70))
 		QDEL_NULL(beepsky)
 
 	if(prob(20) && get_dist(owner, beepsky) <= 8)
@@ -587,18 +587,18 @@
 		to_chat(owner, span_warning("You start having a bad feeling..."))
 		owner.add_mood_event("fireaxe", /datum/mood_event/axe_missing)
 		return
-		
+
 	if(!isarea(axe_location))
 		owner.add_mood_event("fireaxe", /datum/mood_event/axe_gone)
 		return
-		
+
 	if(istype(axe_location, /area/station/command))
 		to_chat(owner, span_notice("You feel a sense of relief..."))
 		if(istype(GLOB.bridge_axe.loc, /obj/structure/fireaxecabinet))
 			return
 		owner.add_mood_event("fireaxe", /datum/mood_event/axe_neutral)
 		return
-		
+
 	to_chat(owner, span_warning("You start having a bad feeling..."))
 	owner.add_mood_event("fireaxe", /datum/mood_event/axe_missing)
 

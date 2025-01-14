@@ -239,7 +239,7 @@
 		to_chat(owner, span_userdanger("You feel an explosion erupt inside your [zone == BODY_ZONE_R_ARM ? "right" : "left"] arm as your implant breaks!"))
 		owner.adjust_fire_stacks(20)
 		owner.ignite_mob()
-		owner.adjustFireLoss(25)
+		owner.adjust_burn_loss(25)
 		organ_flags |= ORGAN_FAILING
 
 

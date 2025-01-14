@@ -8,13 +8,13 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 	if(istype(W, /obj/item/stack/cable_coil) && wiresexposed)
 		user.changeNext_move(CLICK_CD_MELEE)
 		var/obj/item/stack/cable_coil/coil = W
-		if (getFireLoss() > 0 || getToxLoss() > 0)
+		if (get_burn_loss() > 0 || get_tox_loss() > 0)
 			if(src == user)
 				to_chat(user, span_notice("You start fixing yourself..."))
 				if(!do_after(user, 5 SECONDS, target = src))
 					return
 			if (coil.use(1))
-				adjustFireLoss(-30)
+				adjust_burn_loss(-30)
 				user.visible_message(span_notice("[user] fixes some of the burnt wires on [src]."), span_notice("You fix some of the burnt wires on [src]."))
 			else
 				to_chat(user, span_warning("You need more cable to repair [src]!"))
@@ -191,7 +191,7 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 
 /mob/living/silicon/robot/proc/update_damage_particles()
 	var/brute_percent = bruteloss / maxHealth
-	var/burn_percent = fireloss / maxHealth
+	var/burn_percent = burnloss / maxHealth
 
 	var/old_smoke = smoke_particles
 	if (brute_percent > MODERATE_DAMAGE_UPPER_BOUND)
@@ -277,7 +277,7 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 		return FALSE
 	. = TRUE
 	user.changeNext_move(CLICK_CD_MELEE)
-	if (!getBruteLoss())
+	if (!get_brute_loss())
 		to_chat(user, span_warning("[src] is already in good condition!"))
 		return
 	if (!tool.tool_start_check(user, amount=1, heat_required = HIGH_TEMPERATURE_REQUIRED)) //The welder has 1u of fuel consumed by its afterattack, so we don't need to worry about taking any away.
@@ -287,7 +287,7 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 		if(!tool.use_tool(src, user, 50))
 			return
 
-	adjustBruteLoss(-30)
+	adjust_brute_loss(-30)
 	add_fingerprint(user)
 	visible_message(span_notice("[user] fixes some of the dents on [src]."))
 
@@ -438,7 +438,7 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 
 /mob/living/silicon/robot/blob_act(obj/structure/blob/B)
 	if(stat != DEAD)
-		adjustBruteLoss(30)
+		adjust_brute_loss(30)
 	else
 		investigate_log("has been gibbed by a blob.", INVESTIGATE_DEATHS)
 		gib(DROP_ALL_REMAINS)
@@ -452,11 +452,11 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 			return TRUE
 		if(EXPLODE_HEAVY)
 			if (stat != DEAD)
-				adjustBruteLoss(60)
-				adjustFireLoss(60)
+				adjust_brute_loss(60)
+				adjust_burn_loss(60)
 		if(EXPLODE_LIGHT)
 			if (stat != DEAD)
-				adjustBruteLoss(30)
+				adjust_brute_loss(30)
 
 	return TRUE
 

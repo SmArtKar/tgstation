@@ -182,7 +182,7 @@
 
 /obj/item/storage/medkit/fire/suicide_act(mob/living/carbon/user)
 	user.visible_message(span_suicide("[user] begins rubbing \the [src] against [user.p_them()]self! It looks like [user.p_theyre()] trying to start a fire!"))
-	return FIRELOSS
+	return BURNLOSS
 
 /obj/item/storage/medkit/fire/PopulateContents()
 	if(empty)
@@ -784,7 +784,7 @@
 	user.visible_message(span_suicide("[user] is putting [user.p_their()] head inside the [src], it looks like [user.p_theyre()] trying to commit suicide!"))
 	user.adjust_bodytemperature(-300)
 	user.apply_status_effect(/datum/status_effect/freon)
-	return FIRELOSS
+	return BURNLOSS
 
 /// A subtype of organ storage box which starts with a full coolant tank
 /obj/item/storage/organbox/preloaded

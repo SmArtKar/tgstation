@@ -39,13 +39,13 @@
 	var/sharpness = NONE
 	/// Biotype of mob/bodypart that is required for it to be able to take this damage
 	var/required_biotype = ALL
-	/// If set to TRUE, instead of being spent on nothing, damage meant to be dealt to undamageable parts will instead be spread to other targeted/valid bodyparts.
-	var/ignore_undamageable = FALSE
 	/// Damage multiplier, applied last in order to avoid comsig order issues
 	var/amount_multiplier = 1
 	/// Click modifiers if this package was created as a result of a mob attack
 	var/list/modifiers = null
 
+	/// Assigned by armor procs to signify what percentage of this attack was blocked by armor
+	var/armor_block = 0
 	/// Initial amount of damage that the package dealt before any side mods
 	VAR_FINAL/initial_amount = 0
 
@@ -70,7 +70,6 @@
 	src.bare_wound_bonus = bare_wound_bonus
 	src.sharpness = sharpness
 	src.required_biotype = required_biotype
-	src.ignore_undamageable = ignore_undamageable
 	src.amount_multiplier = amount_multiplier
 	src.modifiers = modifiers
 

@@ -540,7 +540,7 @@
 			to_chat(src, span_warning("You are unable to succumb to death! This life continues."), type=MESSAGE_TYPE_INFO)
 			return
 	log_message("Has [whispered ? "whispered his final words" : "succumbed to death"] with [round(health, 0.1)] points of health!", LOG_ATTACK)
-	adjustOxyLoss(health - HEALTH_THRESHOLD_DEAD)
+	adjust_oxy_loss(health - HEALTH_THRESHOLD_DEAD)
 	updatehealth()
 	if(!whispered)
 		to_chat(src, span_notice("You have given up life and succumbed to death."))
@@ -799,7 +799,7 @@
 /mob/living/proc/updatehealth()
 	if(HAS_TRAIT(src, TRAIT_GODMODE))
 		return
-	set_health(maxHealth - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss())
+	set_health(maxHealth - get_oxy_loss() - get_tox_loss() - get_burn_loss() - get_brute_loss())
 	update_stat()
 	med_hud_set_health()
 	med_hud_set_status()
@@ -857,8 +857,8 @@
 		// Bro just like, don't ok
 		return FALSE
 	if(excess_healing)
-		adjustOxyLoss(-excess_healing, updating_health = FALSE)
-		adjustToxLoss(-excess_healing, updating_health = FALSE, forced = TRUE) //slime friendly
+		adjust_oxy_loss(-excess_healing, updating_health = FALSE)
+		adjust_tox_loss(-excess_healing, updating_health = FALSE, forced = TRUE) //slime friendly
 		updatehealth()
 
 	grab_ghost(force_grab_ghost)
@@ -902,18 +902,18 @@
 /mob/living/proc/heal_and_revive(heal_to = 50, revive_message)
 
 	// Heal their brute and burn up to the threshold we're looking for
-	var/brute_to_heal = heal_to - getBruteLoss()
-	var/burn_to_heal = heal_to - getFireLoss()
-	var/oxy_to_heal = heal_to - getOxyLoss()
-	var/tox_to_heal = heal_to - getToxLoss()
+	var/brute_to_heal = heal_to - get_brute_loss()
+	var/burn_to_heal = heal_to - get_burn_loss()
+	var/oxy_to_heal = heal_to - get_oxy_loss()
+	var/tox_to_heal = heal_to - get_tox_loss()
 	if(brute_to_heal < 0)
-		adjustBruteLoss(brute_to_heal, updating_health = FALSE)
+		adjust_brute_loss(brute_to_heal, updating_health = FALSE)
 	if(burn_to_heal < 0)
-		adjustFireLoss(burn_to_heal, updating_health = FALSE)
+		adjust_burn_loss(burn_to_heal, updating_health = FALSE)
 	if(oxy_to_heal < 0)
-		adjustOxyLoss(oxy_to_heal, updating_health = FALSE)
+		adjust_oxy_loss(oxy_to_heal, updating_health = FALSE)
 	if(tox_to_heal < 0)
-		adjustToxLoss(tox_to_heal, updating_health = FALSE, forced = TRUE)
+		adjust_tox_loss(tox_to_heal, updating_health = FALSE, forced = TRUE)
 
 	// Run updatehealth once to set health for the revival check
 	updatehealth()
@@ -944,15 +944,15 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	if(heal_flags & HEAL_TOX)
-		setToxLoss(0, updating_health = FALSE, forced = TRUE)
+		set_tox_loss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_OXY)
-		setOxyLoss(0, updating_health = FALSE, forced = TRUE)
+		set_oxy_loss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BRUTE)
-		setBruteLoss(0, updating_health = FALSE, forced = TRUE)
+		set_brute_loss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BURN)
-		setFireLoss(0, updating_health = FALSE, forced = TRUE)
+		set_burn_loss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_STAM)
-		setStaminaLoss(0, updating_stamina = FALSE, forced = TRUE)
+		set_stamina_loss(0, updating_stamina = FALSE, forced = TRUE)
 
 	// I don't really care to keep this under a flag
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
@@ -983,16 +983,16 @@
  * It uses the healing amount on brute/fire damage, and then uses the excess healing for revive
  */
 /mob/living/proc/do_strange_reagent_revival(healing_amount)
-	var/brute_loss = getBruteLoss()
+	var/brute_loss = get_brute_loss()
 	if(brute_loss)
 		var/brute_healing = min(healing_amount * 0.5, brute_loss) // 50% of the healing goes to brute
-		setBruteLoss(round(brute_loss - brute_healing, DAMAGE_PRECISION), updating_health=FALSE, forced=TRUE)
+		set_brute_loss(round(brute_loss - brute_healing, DAMAGE_PRECISION), updating_health=FALSE, forced=TRUE)
 		healing_amount = max(0, healing_amount - brute_healing)
 
-	var/fire_loss = getFireLoss()
-	if(fire_loss && healing_amount)
-		var/fire_healing = min(healing_amount, fire_loss) // rest of the healing goes to fire
-		setFireLoss(round(fire_loss - fire_healing, DAMAGE_PRECISION), updating_health=TRUE, forced=TRUE)
+	var/burn_loss = get_burn_loss()
+	if(burn_loss && healing_amount)
+		var/fire_healing = min(healing_amount, burn_loss) // rest of the healing goes to fire
+		set_burn_loss(round(burn_loss - fire_healing, DAMAGE_PRECISION), updating_health=TRUE, forced=TRUE)
 		healing_amount = max(0, healing_amount - fire_healing)
 
 	revive(NONE, excess_healing=max(healing_amount, 0), force_grab_ghost=FALSE) // and any excess healing is passed along
@@ -1039,7 +1039,7 @@
 		if(!storage_is_important_recurisve && !can_reach_active_storage)
 			active_storage.hide_contents(src)
 
-	if(body_position == LYING_DOWN && !buckled && prob(getBruteLoss()*200/maxHealth))
+	if(body_position == LYING_DOWN && !buckled && prob(get_brute_loss()*200/maxHealth))
 		makeTrail(newloc, T, old_direction)
 
 ///Called by mob Move() when the lying_angle is different than zero, to better visually simulate crawling.
@@ -1061,7 +1061,7 @@
 	if(!trail_type || !trail_blood_type)
 		return
 
-	var/brute_ratio = round(getBruteLoss() / maxHealth, 0.1)
+	var/brute_ratio = round(get_brute_loss() / maxHealth, 0.1)
 	if(blood_volume < max(BLOOD_VOLUME_NORMAL * (1 - brute_ratio * 0.25), 0))//don't leave trail if blood volume below a threshold
 		return
 
@@ -1115,7 +1115,7 @@
 
 ///Returns how much blood we're losing from being dragged a tile, from [/mob/living/proc/makeTrail]
 /mob/living/proc/bleedDragAmount()
-	var/brute_ratio = round(getBruteLoss() / maxHealth, 0.1)
+	var/brute_ratio = round(get_brute_loss() / maxHealth, 0.1)
 	return max(1, brute_ratio * 2)
 
 /mob/living/carbon/bleedDragAmount()
@@ -1126,7 +1126,7 @@
 	return bleed_amount
 
 /mob/living/proc/getTrail()
-	if(getBruteLoss() < 300)
+	if(get_brute_loss() < 300)
 		return pick("ltrails_1", "ltrails_2")
 	else
 		return pick("trails_1", "trails_2")
@@ -1232,7 +1232,7 @@
 	if(HAS_TRAIT(src, TRAIT_GRABWEAKNESS)) //If we have grab weakness from some source, treat the grab state as one higher
 		effective_grab_state++
 
-	if(get_timed_status_effect_duration(/datum/status_effect/staggered) && (getFireLoss() + getBruteLoss()) >= 40) //If we are staggered, and we have at least 40 damage, treat the grab state as one higher.
+	if(get_timed_status_effect_duration(/datum/status_effect/staggered) && (get_burn_loss() + get_brute_loss()) >= 40) //If we are staggered, and we have at least 40 damage, treat the grab state as one higher.
 		effective_grab_state++
 
 	if(HAS_TRAIT(src, TRAIT_GRABRESISTANCE)) //If we have grab resistance from some source, treat the grab state as one lower.
@@ -1248,7 +1248,7 @@
 		//If our puller is a drunken brawler, they add more damage based on their own damage taken so long as they're drunk and treat the grab state as one higher
 		var/puller_drunkenness = human_puller.get_drunk_amount()
 		if(puller_drunkenness && HAS_TRAIT(human_puller, TRAIT_DRUNKEN_BRAWLER))
-			damage_on_resist_fail += clamp((human_puller.getFireLoss() + human_puller.getBruteLoss()) / 10, 3, 20)
+			damage_on_resist_fail += clamp((human_puller.get_burn_loss() + human_puller.get_brute_loss()) / 10, 3, 20)
 			effective_grab_state ++
 
 	//We only resist our grab state if we are currently in a grab equal to or greater than GRAB_AGGRESSIVE (1). Otherwise, break out immediately!
@@ -1264,7 +1264,7 @@
 			pulledby.stop_pulling()
 			return FALSE
 		else
-			adjustStaminaLoss(damage_on_resist_fail) //Do some stamina damage if we fail to resist
+			adjust_stamina_loss(damage_on_resist_fail) //Do some stamina damage if we fail to resist
 			visible_message(span_danger("[src] struggles as they fail to break free of [pulledby]'s grip!"), \
 							span_warning("You struggle as you fail to break free of [pulledby]'s grip!"), null, null, pulledby)
 			to_chat(pulledby, span_danger("[src] struggles as they fail to break free of your grip!"))
@@ -2117,12 +2117,12 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 	. += {"
 		<br><font size='1'>[VV_HREF_TARGETREF(refid, VV_HK_GIVE_DIRECT_CONTROL, "[ckey || "no ckey"]")] / [VV_HREF_TARGETREF_1V(refid, VV_HK_BASIC_EDIT, "[real_name || "no real name"]", NAMEOF(src, real_name))]</font>
 		<br><font size='1'>
-			BRUTE:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=brute' id='brute'>[getBruteLoss()]</a>
-			FIRE:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=fire' id='fire'>[getFireLoss()]</a>
-			TOXIN:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=toxin' id='toxin'>[getToxLoss()]</a>
-			OXY:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=oxygen' id='oxygen'>[getOxyLoss()]</a>
+			BRUTE:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=brute' id='brute'>[get_brute_loss()]</a>
+			FIRE:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=fire' id='fire'>[get_burn_loss()]</a>
+			TOXIN:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=toxin' id='toxin'>[get_tox_loss()]</a>
+			OXY:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=oxygen' id='oxygen'>[get_oxy_loss()]</a>
 			BRAIN:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=brain' id='brain'>[get_organ_loss(ORGAN_SLOT_BRAIN)]</a>
-			STAMINA:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=stamina' id='stamina'>[getStaminaLoss()]</a>
+			STAMINA:<font size='1'><a href='byond://?_src_=vars;[HrefToken()];mobToDamage=[refid];adjustDamage=stamina' id='stamina'>[get_stamina_loss()]</a>
 		</font>
 	"}
 

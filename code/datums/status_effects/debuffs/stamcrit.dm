@@ -16,9 +16,9 @@
 
 	// This should be in on apply but we need it to happen AFTER being added to the mob
 	// (Because we need to wait until the status effect is in their status effect list, or we'll add two)
-	if(owner.getStaminaLoss() < 120)
+	if(owner.get_stamina_loss() < 120)
 		// Puts you a little further into the initial stamcrit, makes stamcrit harder to outright counter with chems.
-		owner.adjustStaminaLoss(30, FALSE)
+		owner.adjust_stamina_loss(30, FALSE)
 
 	// Same
 	RegisterSignal(owner, COMSIG_LIVING_ADJUST_STAMINA_DAMAGE, PROC_REF(update_diminishing_return))
@@ -74,5 +74,5 @@
 
 /datum/status_effect/incapacitating/stamcrit/proc/check_remove(datum/source, ...)
 	SIGNAL_HANDLER
-	if(owner.maxHealth - owner.getStaminaLoss() > owner.crit_threshold)
+	if(owner.maxHealth - owner.get_stamina_loss() > owner.crit_threshold)
 		qdel(src)

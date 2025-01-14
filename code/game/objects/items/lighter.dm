@@ -77,7 +77,7 @@
 	if (lit)
 		user.visible_message(span_suicide("[user] begins holding \the [src]'s flame up to [user.p_their()] face! It looks like [user.p_theyre()] trying to commit suicide!"))
 		playsound(src, 'sound/items/tools/welder.ogg', 50, TRUE)
-		return FIRELOSS
+		return BURNLOSS
 	else
 		user.visible_message(span_suicide("[user] begins whacking [user.p_them()]self with \the [src]! It looks like [user.p_theyre()] trying to commit suicide!"))
 		return BRUTELOSS

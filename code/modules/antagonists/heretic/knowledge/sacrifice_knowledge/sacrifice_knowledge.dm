@@ -342,7 +342,7 @@
 		sac_target.legcuffed = null
 		sac_target.update_worn_legcuffs()
 
-	sac_target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 85, 150)
+	sac_target.adjust_organ_loss(ORGAN_SLOT_BRAIN, 85, 150)
 	sac_target.do_jitter_animation()
 	log_combat(heretic_mind.current, sac_target, "sacrificed")
 
@@ -351,7 +351,7 @@
 
 	// If our target is dead, try to revive them
 	// and if we fail to revive them, don't proceede the chain
-	sac_target.adjustOxyLoss(-100, FALSE)
+	sac_target.adjust_oxy_loss(-100, FALSE)
 	if(!sac_target.heal_and_revive(50, span_danger("[sac_target]'s heart begins to beat with an unholy force as they return from death!")))
 		return
 
@@ -396,7 +396,7 @@
 	// If our target died during the (short) wait timer,
 	// and we fail to revive them (using a lower number than before),
 	// just disembowel them and stop the chain
-	sac_target.adjustOxyLoss(-100, FALSE)
+	sac_target.adjust_oxy_loss(-100, FALSE)
 	if(!sac_target.heal_and_revive(60, span_danger("[sac_target]'s heart begins to beat with an unholy force as they return from death!")))
 		disembowel_target(sac_target)
 		return
@@ -587,7 +587,7 @@
 	sac_target.set_eye_blur_if_lower(100 SECONDS)
 	sac_target.set_dizzy_if_lower(1 MINUTES)
 	sac_target.AdjustKnockdown(80)
-	sac_target.adjustStaminaLoss(120)
+	sac_target.adjust_stamina_loss(120)
 
 	// Glad i'm outta there, though!
 	sac_target.add_mood_event("shadow_realm_survived", /datum/mood_event/shadow_realm_live)

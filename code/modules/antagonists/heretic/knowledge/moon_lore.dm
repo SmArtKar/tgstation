@@ -128,7 +128,7 @@
 	if(target.can_block_magic(MAGIC_RESISTANCE_MIND))
 		return
 
-	target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 10, 100)
+	target.adjust_organ_loss(ORGAN_SLOT_BRAIN, 10, 100)
 	target.cause_hallucination( \
 			get_random_valid_hallucination_subtype(/datum/hallucination/body), \
 			"upgraded path of moon blades", \
@@ -247,7 +247,7 @@
 		if(carbon_sanity < 30)
 			if(SPT_PROB(20, seconds_per_tick))
 				to_chat(carbon_view, span_warning("you feel your mind beginning to rend!"))
-			carbon_view.adjustOrganLoss(ORGAN_SLOT_BRAIN, 5)
+			carbon_view.adjust_organ_loss(ORGAN_SLOT_BRAIN, 5)
 		if(carbon_sanity < 10)
 			if(SPT_PROB(20, seconds_per_tick))
 				to_chat(carbon_view, span_warning("it echoes through you!"))

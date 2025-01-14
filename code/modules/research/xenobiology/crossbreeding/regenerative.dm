@@ -255,9 +255,9 @@ Regenerative extracts:
 		T.dna.transfer_identity(D)
 		D.updateappearance(mutcolor_update=1)
 		D.real_name = T.real_name
-	dummy.adjustBruteLoss(target.getBruteLoss())
-	dummy.adjustFireLoss(target.getFireLoss())
-	dummy.adjustToxLoss(target.getToxLoss())
+	dummy.adjust_brute_loss(target.get_brute_loss())
+	dummy.adjust_burn_loss(target.get_burn_loss())
+	dummy.adjust_tox_loss(target.get_tox_loss())
 	dummy.death()
 
 /obj/item/slimecross/regenerative/lightpink

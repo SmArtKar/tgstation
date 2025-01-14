@@ -55,7 +55,7 @@
 	if(. & COMSIG_MOB_STOP_REAGENT_CHECK)
 		return
 	if(chem.type == /datum/reagent/toxin/plantbgone/weedkiller)
-		affected.adjustToxLoss(3 * REM * seconds_per_tick)
+		affected.adjust_tox_loss(3 * REM * seconds_per_tick)
 
 /datum/species/mush/get_fixed_hair_color(mob/living/carbon/human/for_mob)
 	return "#FF4B19" //cap color, spot color uses eye color

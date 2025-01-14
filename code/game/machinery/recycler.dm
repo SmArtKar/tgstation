@@ -254,7 +254,7 @@
 
 	// Instantly lie down, also go unconscious from the pain, before you die.
 	L.Unconscious(100)
-	L.adjustBruteLoss(crush_damage)
+	L.adjust_brute_loss(crush_damage)
 
 /obj/machinery/recycler/on_deconstruction(disassembled)
 	safety_mode = TRUE

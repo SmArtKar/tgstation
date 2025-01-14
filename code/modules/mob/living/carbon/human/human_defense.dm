@@ -211,7 +211,7 @@
 		else if(!HAS_TRAIT(src, TRAIT_INCAPACITATED))
 			playsound(loc, 'sound/items/weapons/pierce.ogg', 25, TRUE, -1)
 			var/shovetarget = get_edge_target_turf(user, get_dir(user, get_step_away(src, user)))
-			adjustStaminaLoss(35)
+			adjust_stamina_loss(35)
 			throw_at(shovetarget, 4, 2, user, force = MOVE_FORCE_OVERPOWERING)
 			log_combat(user, src, "shoved")
 			visible_message(span_danger("[user] tackles [src] down!"), \
@@ -595,8 +595,8 @@
 		bleed_text += "!</span>"
 		combined_msg += bleed_text
 
-	if(getStaminaLoss())
-		if(getStaminaLoss() > 30)
+	if(get_stamina_loss())
+		if(get_stamina_loss() > 30)
 			combined_msg += span_info("You're completely exhausted.")
 		else
 			combined_msg += span_info("You feel fatigued.")

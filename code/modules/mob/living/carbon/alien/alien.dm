@@ -92,7 +92,7 @@
 		clear_alert(ALERT_XENO_FIRE)
 
 /mob/living/carbon/alien/getTrail()
-	if(getBruteLoss() < 200)
+	if(get_brute_loss() < 200)
 		return pick (list("xltrails_1", "xltrails2"))
 	else
 		return pick (list("xttrails_1", "xttrails2"))

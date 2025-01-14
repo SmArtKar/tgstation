@@ -206,7 +206,7 @@
 		if(2)
 			if(high_stress)
 				to_chat(owner, span_warning("You feel weak and scared! If only you weren't alone..."))
-				owner.adjustStaminaLoss(50)
+				owner.adjust_stamina_loss(50)
 			else
 				to_chat(owner, span_warning("You can't stop shaking..."))
 
@@ -229,10 +229,10 @@
 					to_chat(H, span_userdanger("You feel a stabbing pain in your heart!"))
 				else
 					to_chat(owner, span_userdanger("You feel your heart lurching in your chest..."))
-					owner.adjustOxyLoss(8)
+					owner.adjust_oxy_loss(8)
 			else
 				to_chat(owner, span_warning("Your heart skips a beat."))
-				owner.adjustOxyLoss(8)
+				owner.adjust_oxy_loss(8)
 
 		else
 			//No effect

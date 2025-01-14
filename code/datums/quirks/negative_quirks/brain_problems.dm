@@ -34,4 +34,4 @@
 	if(HAS_TRAIT(quirk_holder, TRAIT_TUMOR_SUPPRESSED))
 		return
 
-	quirk_holder.adjustOrganLoss(ORGAN_SLOT_BRAIN, 0.2 * seconds_per_tick)
+	quirk_holder.adjust_organ_loss(ORGAN_SLOT_BRAIN, 0.2 * seconds_per_tick)

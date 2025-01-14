@@ -1005,7 +1005,7 @@
 		return
 
 	// Non-heretics instead go crazy
-	human_user?.adjustOrganLoss(ORGAN_SLOT_BRAIN, 10, 190)
+	human_user?.adjust_organ_loss(ORGAN_SLOT_BRAIN, 10, 190)
 	human_user?.add_mood_event("gates_of_mansus", /datum/mood_event/gates_of_mansus)
 	// Hand fires at them from the location
 	fire_curse_hand(user, get_turf(challenge.location))

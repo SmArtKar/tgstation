@@ -186,10 +186,10 @@
 		return BULLET_ACT_HIT
 	var/mob/living/breather = target
 	breather.SetSleeping(3 SECONDS)
-	breather.adjustFireLoss(-30, updating_health = TRUE, required_bodytype = BODYTYPE_ORGANIC)
-	breather.adjustToxLoss(-30, updating_health = TRUE, required_biotype = BODYTYPE_ORGANIC)
-	breather.adjustBruteLoss(-30, updating_health = TRUE, required_bodytype = BODYTYPE_ORGANIC)
-	breather.adjustOxyLoss(-30, updating_health = TRUE, required_biotype = BODYTYPE_ORGANIC, required_respiration_type = ALL)
+	breather.adjust_burn_loss(-30, updating_health = TRUE, required_bodytype = BODYTYPE_ORGANIC)
+	breather.adjust_tox_loss(-30, updating_health = TRUE, required_biotype = BODYTYPE_ORGANIC)
+	breather.adjust_brute_loss(-30, updating_health = TRUE, required_bodytype = BODYTYPE_ORGANIC)
+	breather.adjust_oxy_loss(-30, updating_health = TRUE, required_biotype = BODYTYPE_ORGANIC, required_respiration_type = ALL)
 
 	return BULLET_ACT_HIT
 

@@ -20,7 +20,7 @@
 
 	var/damage_healed = owner.heal_ordered_damage(healing, list(BRUTE, BURN, OXY, STAMINA, TOX))
 	if (damage_healed < healing)
-		owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, damage_healed - healing)
+		owner.adjust_organ_loss(ORGAN_SLOT_BRAIN, damage_healed - healing)
 
 /datum/status_effect/planet_allergy
 	id = "planet_allergy"
@@ -28,7 +28,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/veryhighgravity
 
 /datum/status_effect/planet_allergy/tick()
-	owner.adjustBruteLoss(1)
+	owner.adjust_brute_loss(1)
 
 /atom/movable/screen/alert/status_effect/veryhighgravity
 	name = "Crushing Gravity"

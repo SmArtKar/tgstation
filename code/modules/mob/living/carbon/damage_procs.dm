@@ -1,40 +1,102 @@
-/mob/living/carbon/apply_damage(
-	damage = 0,
-	damagetype = BRUTE,
-	def_zone = null,
+/mob/living/carbon/apply_damage_package/apply_damage_package(
+	datum/damage_package/package,
 	blocked = 0,
-	forced = FALSE,
-	spread_damage = FALSE,
-	wound_bonus = 0,
-	bare_wound_bonus = 0,
-	sharpness = NONE,
-	attack_dir = null,
-	attacking_item,
+	check_armor = FALSE,
 	wound_clothing = TRUE,
+	should_update = TRUE,
+	silent = FALSE,
 )
-	// Spread damage should always have def zone be null
-	if(spread_damage)
-		def_zone = null
-
-	// Otherwise if def zone is null, we'll get a random bodypart / zone to hit.
-	// ALso we'll automatically covnert string def zones into bodyparts to pass into parent call.
-	else if(!isbodypart(def_zone))
-		var/random_zone = check_zone(def_zone || get_random_valid_zone(def_zone))
-		def_zone = get_bodypart(random_zone) || bodyparts[1]
-
-	. = ..()
-	// Taking brute or burn to bodyparts gives a damage flash
-	if(def_zone && (damagetype == BRUTE || damagetype == BURN))
-		damageoverlaytemp += .
-
-	return .
-
-/mob/living/carbon/human/get_damage_mod(damage_type)
-	if (!dna?.species?.damage_modifier)
+	if (package.spread_damage)
+		package.def_zone = null
 		return ..()
-	var/species_mod = (100 - dna.species.damage_modifier) / 100
-	return ..() * species_mod
 
+	if (isbodypart(package.def_zone))
+		return ..()
+
+	if (!islist(package.def_zone) && !isbodypart(package.def_zone))
+		var/random_zone = check_zone(package.def_zone || get_random_valid_zone())
+		package.def_zone = get_bodypart(random_zone) || bodyparts[1]
+		return ..()
+
+	var/list/taken_zones = list()
+	var/list/new_zones = list()
+	for (var/zone in package.def_zone)
+		var/zone_lookup = package.def_zone
+		if (!zone_lookup || (zone_lookup in taken_zones))
+			zone_lookup = get_random_valid_zone(blacklisted_parts = taken_zones)
+		var/random_zone = check_zone(zone_lookup)
+		var/obj/item/bodypart/part = get_bodypart(random_zone)
+		if (part.body_zone in taken_zones) // something went wrong
+			continue
+		taken_zones += part.body_zone // Before the continue so we don't keep picking invalid zones
+		if (!(part.bodytype & package.required_biotype)) // Skip the part if we cannot deal damage to it
+			continue
+		new_zones += part
+
+	package.def_zone = new_zones
+	if (!length(package.def_zone))
+		var/obj/item/bodypart/chest = bodyparts[1] // Deal damage to the chest if we cannot find a valid limb
+		if (!(chest.bodytype & package.required_biotype)) // If chest is invalid, screw it and skip the damage entirely
+			return 0
+		package.def_zone = chest
+	return ..()
+
+/mob/living/carbon/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, should_update = TRUE)
+	if (package.damage_type == TOX)
+		if(AT_TOXIN_VOMIT_THRESHOLD(src))
+			apply_status_effect(/datum/status_effect/tox_vomit)
+		return ..()
+
+	if (package.damage_type == OXY || package.damage_type == STAMINA)
+		return ..()
+
+	var/list/obj/item/bodypart/parts
+	if (isbodypart(package.def_zone))
+		var/obj/item/bodypart/part = package.def_zone
+		if (!(part.bodytype & package.required_biotype) || part.brute_dam + part.burn_dam >= part.max_damage)
+			return 0
+		parts = list(part)
+	else
+		parts = get_damageable_bodyparts(package.required_biotype)
+		if (islist(package.def_zone))
+			parts = (package.def_zone & parts)
+		if (!length(parts))
+			return 0
+
+	var/damage_taken = 0
+	var/should_update = FALSE
+	var/damage_per_part = round(package.amount / length(parts), DAMAGE_PRECISION)
+	for (var/i in 1 to length(parts))
+		var/obj/item/bodypart/part = parts[i]
+		var/cur_damage = part.get_damage()
+		should_update |= part.receive_damage(package, amount = damage_per_part, should_update = FALSE) // Smartkar: unfuck this
+		var/damage_difference = (part.get_damage() - cur_damage)
+		damage_taken += damage_difference
+		// Overheal gets given to other limbs
+		if (damage_per_part < 0 && damage_per_part < damage_difference)
+			damage_per_part += (damage_per_part - damage_difference) / (length(parts) - i + 1)
+
+	if (!damage_taken)
+		return 0
+
+	if(should_update)
+		updatehealth()
+	if(should_update)
+		update_damage_overlays()
+	// Taking brute or burn to bodyparts gives a damage flash
+	damageoverlaytemp += damage_taken
+	return damage_taken
+
+/mob/living/carbon/valid_package(datum/damage_package/package)
+	return TRUE
+
+/mob/living/carbon/get_incoming_damage_modifier(datum/damage_package/package)
+	. = ..()
+	if (!dna?.species?.damage_modifier)
+		return
+	. /= (100 + dna.species.damage_modifier) * 0.01
+
+/*
 /mob/living/carbon/human/apply_damage(
 	damage = 0,
 	damagetype = BRUTE,
@@ -82,69 +144,19 @@
 	return final_mod
 
 //These procs fetch a cumulative total damage from all bodyparts
-/mob/living/carbon/getBruteLoss()
+/mob/living/carbon/get_brute_loss()
 	var/amount = 0
 	for(var/X in bodyparts)
 		var/obj/item/bodypart/BP = X
 		amount += BP.brute_dam
 	return amount
 
-/mob/living/carbon/getFireLoss()
+/mob/living/carbon/get_burn_loss()
 	var/amount = 0
 	for(var/X in bodyparts)
 		var/obj/item/bodypart/BP = X
 		amount += BP.burn_dam
 	return amount
-
-/mob/living/carbon/adjustBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
-	if(!can_adjust_brute_loss(amount, forced, required_bodytype))
-		return 0
-	if(amount > 0)
-		. = take_overall_damage(brute = amount, updating_health = updating_health, forced = forced, required_bodytype = required_bodytype)
-	else
-		. = heal_overall_damage(brute = abs(amount), required_bodytype = required_bodytype, updating_health = updating_health, forced = forced)
-
-/mob/living/carbon/setBruteLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
-	if(!forced && HAS_TRAIT(src, TRAIT_GODMODE))
-		return FALSE
-	var/current = getBruteLoss()
-	var/diff = amount - current
-	if(!diff)
-		return FALSE
-	return adjustBruteLoss(diff, updating_health, forced, required_bodytype)
-
-/mob/living/carbon/adjustFireLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
-	if(!can_adjust_fire_loss(amount, forced, required_bodytype))
-		return 0
-	if(amount > 0)
-		. = take_overall_damage(burn = amount, updating_health = updating_health, forced = forced, required_bodytype = required_bodytype)
-	else
-		. = heal_overall_damage(burn = abs(amount), required_bodytype = required_bodytype, updating_health = updating_health, forced = forced)
-
-/mob/living/carbon/setFireLoss(amount, updating_health = TRUE, forced = FALSE, required_bodytype)
-	if(!forced && HAS_TRAIT(src, TRAIT_GODMODE))
-		return FALSE
-	var/current = getFireLoss()
-	var/diff = amount - current
-	if(!diff)
-		return FALSE
-	return adjustFireLoss(diff, updating_health, forced, required_bodytype)
-
-/mob/living/carbon/human/adjustToxLoss(amount, updating_health = TRUE, forced = FALSE, required_biotype = ALL)
-	. = ..()
-	if(. >= 0) // 0 = no damage, + values = healed damage
-		return .
-
-	if(AT_TOXIN_VOMIT_THRESHOLD(src))
-		apply_status_effect(/datum/status_effect/tox_vomit)
-
-/mob/living/carbon/human/setToxLoss(amount, updating_health, forced, required_biotype)
-	. = ..()
-	if(. >= 0)
-		return .
-
-	if(AT_TOXIN_VOMIT_THRESHOLD(src))
-		apply_status_effect(/datum/status_effect/tox_vomit)
 
 /mob/living/carbon/received_stamina_damage(current_level, amount_actual, amount)
 	. = ..()
@@ -162,7 +174,7 @@
  *
  * Returns: The net change in damage from apply_organ_damage()
  */
-/mob/living/carbon/adjustOrganLoss(slot, amount, maximum, required_organ_flag = NONE)
+/mob/living/carbon/adjust_organ_loss(slot, amount, maximum, required_organ_flag = NONE)
 	var/obj/item/organ/affected_organ = get_organ_slot(slot)
 	if(!affected_organ || HAS_TRAIT(src, TRAIT_GODMODE))
 		return FALSE
@@ -172,7 +184,7 @@
 
 /**
  * If an organ exists in the slot requested, and we are capable of taking damage (we don't have TRAIT_GODMODE), call the set damage proc on that organ, which can
- * set or clear the failing variable on that organ, making it either cease or start functions again, unlike adjustOrganLoss.
+ * set or clear the failing variable on that organ, making it either cease or start functions again, unlike adjust_organ_loss.
  *
  * Arguments:
  * * slot - organ slot, like [ORGAN_SLOT_HEART]
@@ -181,7 +193,7 @@
  *
  * Returns: The net change in damage from set_organ_damage()
  */
-/mob/living/carbon/setOrganLoss(slot, amount, required_organ_flag = NONE)
+/mob/living/carbon/set_organ_loss(slot, amount, required_organ_flag = NONE)
 	var/obj/item/organ/affected_organ = get_organ_slot(slot)
 	if(!affected_organ || HAS_TRAIT(src, TRAIT_GODMODE))
 		return FALSE
@@ -239,114 +251,4 @@
 		if(LAZYLEN(BP.wounds))
 			parts += BP
 	return parts
-
-/**
- * Heals ONE bodypart randomly selected from damaged ones.
-
- * It automatically updates damage overlays if necessary
- *
- * It automatically updates health status
- */
-/mob/living/carbon/heal_bodypart_damage(brute = 0, burn = 0, updating_health = TRUE, required_bodytype = NONE, target_zone = null)
-	. = FALSE
-	var/list/obj/item/bodypart/parts = get_damaged_bodyparts(brute, burn, required_bodytype, target_zone)
-	if(!parts.len)
-		return
-
-	var/obj/item/bodypart/picked = pick(parts)
-	var/damage_calculator = picked.get_damage() //heal_damage returns update status T/F instead of amount healed so we dance gracefully around this
-	if(picked.heal_damage(abs(brute), abs(burn), required_bodytype = required_bodytype))
-		update_damage_overlays()
-	return (damage_calculator - picked.get_damage())
-
-
-/**
- * Damages ONE bodypart randomly selected from damagable ones.
- *
- * It automatically updates damage overlays if necessary
- *
- * It automatically updates health status
- */
-/mob/living/carbon/take_bodypart_damage(brute = 0, burn = 0, updating_health = TRUE, required_bodytype, check_armor = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = NONE)
-	. = FALSE
-	if(HAS_TRAIT(src, TRAIT_GODMODE))
-		return
-	var/list/obj/item/bodypart/parts = get_damageable_bodyparts(required_bodytype)
-	if(!parts.len)
-		return
-
-	var/obj/item/bodypart/picked = pick(parts)
-	var/damage_calculator = picked.get_damage()
-	if(picked.receive_damage(abs(brute), abs(burn), check_armor ? run_armor_check(picked, (brute ? MELEE : burn ? FIRE : null)) : FALSE, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness))
-		update_damage_overlays()
-	return (damage_calculator - picked.get_damage())
-
-/mob/living/carbon/heal_overall_damage(brute = 0, burn = 0, stamina = 0, required_bodytype, updating_health = TRUE, forced = FALSE)
-	. = FALSE
-	// treat negative args as positive
-	brute = abs(brute)
-	burn = abs(burn)
-
-	var/list/obj/item/bodypart/parts = get_damaged_bodyparts(brute, burn, required_bodytype)
-
-	var/update = NONE
-	while(parts.len && (brute > 0 || burn > 0))
-		var/obj/item/bodypart/picked = pick(parts)
-
-		var/brute_was = picked.brute_dam
-		var/burn_was = picked.burn_dam
-		. += picked.get_damage()
-
-		update |= picked.heal_damage(brute, burn, updating_health = FALSE, forced = forced, required_bodytype = required_bodytype)
-
-		. -= picked.get_damage() // return the net amount of damage healed
-
-		brute = round(brute - (brute_was - picked.brute_dam), DAMAGE_PRECISION)
-		burn = round(burn - (burn_was - picked.burn_dam), DAMAGE_PRECISION)
-
-		parts -= picked
-
-	if(!.) // no change? no need to update anything
-		return
-
-	if(updating_health)
-		updatehealth()
-	if(update)
-		update_damage_overlays()
-
-/mob/living/carbon/take_overall_damage(brute = 0, burn = 0, stamina = 0, updating_health = TRUE, forced = FALSE, required_bodytype)
-	. = FALSE
-	if(!forced && HAS_TRAIT(src, TRAIT_GODMODE))
-		return
-	// treat negative args as positive
-	brute = abs(brute)
-	burn = abs(burn)
-
-	var/list/obj/item/bodypart/parts = get_damageable_bodyparts(required_bodytype)
-	var/update = NONE
-	while(parts.len && (brute > 0 || burn > 0))
-		var/obj/item/bodypart/picked = pick(parts)
-		var/brute_per_part = round(brute/parts.len, DAMAGE_PRECISION)
-		var/burn_per_part = round(burn/parts.len, DAMAGE_PRECISION)
-
-		var/brute_was = picked.brute_dam
-		var/burn_was = picked.burn_dam
-		. += picked.get_damage()
-
-		// disabling wounds from these for now cuz your entire body snapping cause your heart stopped would suck
-		update |= picked.receive_damage(brute_per_part, burn_per_part, blocked = FALSE, updating_health = FALSE, forced = forced, required_bodytype = required_bodytype, wound_bonus = CANT_WOUND)
-
-		. -= picked.get_damage() // return the net amount of damage healed
-
-		brute = round(brute - (picked.brute_dam - brute_was), DAMAGE_PRECISION)
-		burn = round(burn - (picked.burn_dam - burn_was), DAMAGE_PRECISION)
-
-		parts -= picked
-
-	if(!.) // no change? no need to update anything
-		return
-
-	if(updating_health)
-		updatehealth()
-	if(update)
-		update_damage_overlays()
+*/

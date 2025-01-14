@@ -65,7 +65,7 @@
 
 	carbon_hit.adjust_timed_status_effect(4 SECONDS, /datum/status_effect/speech/slurring/heretic)
 	carbon_hit.AdjustKnockdown(5 SECONDS)
-	carbon_hit.adjustStaminaLoss(80)
+	carbon_hit.adjust_stamina_loss(80)
 	carbon_hit.apply_status_effect(/datum/status_effect/next_shove_stuns)
 
 	return TRUE
@@ -125,10 +125,10 @@
 		if(QDELETED(src) || QDELETED(user))
 			return SHAME
 		if(escape_our_torment > 20) //Stops us from infinitely stunning ourselves if we're just not taking the damage
-			return FIRELOSS
+			return BURNLOSS
 
 		if(prob(70))
-			carbon_user.adjustFireLoss(20)
+			carbon_user.adjust_burn_loss(20)
 			playsound(carbon_user, 'sound/effects/wounds/sizzle1.ogg', 70, vary = TRUE)
 			if(prob(50))
 				carbon_user.emote("scream")
@@ -138,4 +138,4 @@
 
 		escape_our_torment++
 		stoplag(0.4 SECONDS)
-	return FIRELOSS
+	return BURNLOSS

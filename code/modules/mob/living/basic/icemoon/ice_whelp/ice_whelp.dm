@@ -91,4 +91,4 @@
 	if(!do_after(src, 5 SECONDS, target))
 		return
 	target.gib(DROP_ALL_REMAINS)
-	adjustBruteLoss(-1 * heal_on_cannibalize)
+	adjust_brute_loss(-1 * heal_on_cannibalize)

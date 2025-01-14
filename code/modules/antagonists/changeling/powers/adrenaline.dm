@@ -48,7 +48,7 @@
 
 	// Get us standing up.
 	user.SetAllImmobility(0)
-	user.setStaminaLoss(0)
+	user.set_stamina_loss(0)
 	user.set_resting(FALSE, instant = TRUE)
 
 	// Add fast reagents to go fast.

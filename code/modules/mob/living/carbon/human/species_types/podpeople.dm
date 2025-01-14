@@ -42,8 +42,8 @@
 		if(light_amount > 0.2) //if there's enough light, heal
 			var/need_mob_update = FALSE
 			need_mob_update += podperson.heal_overall_damage(brute = 0.5 * seconds_per_tick, burn = 0.5 * seconds_per_tick, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
-			need_mob_update += podperson.adjustToxLoss(-0.5 * seconds_per_tick, updating_health = FALSE)
-			need_mob_update += podperson.adjustOxyLoss(-0.5 * seconds_per_tick, updating_health = FALSE)
+			need_mob_update += podperson.adjust_tox_loss(-0.5 * seconds_per_tick, updating_health = FALSE)
+			need_mob_update += podperson.adjust_oxy_loss(-0.5 * seconds_per_tick, updating_health = FALSE)
 			if(need_mob_update)
 				podperson.updatehealth()
 
@@ -58,7 +58,7 @@
 	if(. & COMSIG_MOB_STOP_REAGENT_CHECK)
 		return
 	if(chem.type == /datum/reagent/toxin/plantbgone)
-		affected.adjustToxLoss(3 * REM * seconds_per_tick)
+		affected.adjust_tox_loss(3 * REM * seconds_per_tick)
 
 /datum/species/pod/prepare_human_for_preview(mob/living/carbon/human/human)
 	human.dna.features["mcolor"] = "#886600"

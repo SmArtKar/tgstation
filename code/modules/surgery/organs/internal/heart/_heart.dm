@@ -227,7 +227,7 @@
 		var/mob/living/carbon/human/wounded_owner = owner
 		wounded_owner.blood_volume += 2 * seconds_per_tick
 		if(toxification_probability && prob(toxification_probability))
-			wounded_owner.adjustToxLoss(1 * seconds_per_tick, updating_health = FALSE)
+			wounded_owner.adjust_tox_loss(1 * seconds_per_tick, updating_health = FALSE)
 
 		var/datum/wound/bloodiest_wound
 

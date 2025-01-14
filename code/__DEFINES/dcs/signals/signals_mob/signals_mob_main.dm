@@ -106,10 +106,10 @@
 /// allows you to add multiplicative damage modifiers to the damage mods argument to adjust incoming damage
 /// not sent if the apply damage call was forced
 #define COMSIG_MOB_APPLY_DAMAGE_MODIFIERS "mob_apply_damage_modifiers"
-/// from base of /mob/living/proc/apply_damage_package(): (datum/damage_package/package, blocked, check_armor, wound_clothing, no_update)
+/// from base of /mob/living/proc/apply_damage_package(): (datum/damage_package/package, blocked, check_armor, wound_clothing, should_update, silent)
 #define COMSIG_MOB_APPLY_DAMAGE "mob_apply_damage"
 	#define COMSIG_MOB_PREVENT_DAMAGE (1<<0)
-/// from /mob/living/proc/apply_damage(): (datum/damage_package/package, blocked, check_armor, wound_clothing, no_update)
+/// from /mob/living/proc/apply_damage(): (datum/damage_package/package, blocked, check_armor, wound_clothing, should_update, silent)
 /// works like above but after the damage is actually inflicted
 #define COMSIG_MOB_AFTER_APPLY_DAMAGE "mob_after_apply_damage"
 

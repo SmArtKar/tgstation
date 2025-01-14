@@ -212,7 +212,7 @@
 		playsound(our_guy, 'sound/effects/tableheadsmash.ogg', 90, TRUE)
 		our_guy.visible_message(span_danger("[our_guy] hits [our_guy.p_their()] head really badly falling down!"), span_userdanger("You hit your head really badly falling down!"))
 		our_guy.apply_damage(75 * damage_mod, BRUTE, BODY_ZONE_HEAD, hit_by = "slipping")
-		our_guy.adjustOrganLoss(ORGAN_SLOT_BRAIN, 100 * damage_mod)
+		our_guy.adjust_organ_loss(ORGAN_SLOT_BRAIN, 100 * damage_mod)
 		consume_omen()
 
 	return

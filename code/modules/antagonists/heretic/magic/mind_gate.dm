@@ -32,10 +32,10 @@
 		return FALSE
 
 	cast_on.adjust_confusion(10 SECONDS)
-	cast_on.adjustOxyLoss(30)
+	cast_on.adjust_oxy_loss(30)
 	cast_on.cause_hallucination(get_random_valid_hallucination_subtype(/datum/hallucination/body), "Mind gate, cast by [owner]")
 	cast_on.cause_hallucination(/datum/hallucination/delusion/preset/heretic/gate, "Caused by mindgate")
-	cast_on.adjustOrganLoss(ORGAN_SLOT_BRAIN, 30)
+	cast_on.adjust_organ_loss(ORGAN_SLOT_BRAIN, 30)
 
 	var/mob/living/living_owner = owner
-	living_owner.adjustOrganLoss(ORGAN_SLOT_BRAIN, 20, 140)
+	living_owner.adjust_organ_loss(ORGAN_SLOT_BRAIN, 20, 140)

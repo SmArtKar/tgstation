@@ -43,4 +43,4 @@
 		return FALSE
 
 /datum/weather/floor_is_lava/weather_act(mob/living/victim)
-	victim.adjustFireLoss(3)
+	victim.adjust_burn_loss(3)

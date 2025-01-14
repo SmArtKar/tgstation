@@ -220,9 +220,9 @@
 	. = FALSE
 
 	// Damage to heal
-	var/brute_to_heal = min(hurtguy.getBruteLoss(), 35 * heal_multiplier)
+	var/brute_to_heal = min(hurtguy.get_brute_loss(), 35 * heal_multiplier)
 	// no double dipping
-	var/burn_to_heal = min(hurtguy.getFireLoss(), (35 - brute_to_heal) * heal_multiplier)
+	var/burn_to_heal = min(hurtguy.get_burn_loss(), (35 - brute_to_heal) * heal_multiplier)
 
 	// Get at least organic limb to transfer the damage to
 	var/list/mendicant_organic_limbs = list()
@@ -241,11 +241,11 @@
 		mendicant_transfer_limb.receive_damage(brute_to_heal * pain_multiplier, burn_to_heal * pain_multiplier, forced = TRUE, wound_bonus = CANT_WOUND)
 
 	if(brute_to_heal)
-		hurtguy.adjustBruteLoss(-brute_to_heal)
+		hurtguy.adjust_brute_loss(-brute_to_heal)
 		. = TRUE
 
 	if(burn_to_heal)
-		hurtguy.adjustFireLoss(-burn_to_heal)
+		hurtguy.adjust_burn_loss(-burn_to_heal)
 		. = TRUE
 
 	if(!.)
@@ -323,7 +323,7 @@
 		. = TRUE
 		// Because we do our own spin on it!
 		if(hurtguy.get_blood_compatibility(mendicant) == FALSE)
-			hurtguy.adjustToxLoss((blood_to_hurtguy * 0.1) * pain_multiplier) // 1 dmg per 10 blood
+			hurtguy.adjust_tox_loss((blood_to_hurtguy * 0.1) * pain_multiplier) // 1 dmg per 10 blood
 			to_chat(hurtguy, span_notice("Your veins feel thicker, but they itch a bit."))
 		else
 			to_chat(hurtguy, span_notice("Your veins feel thicker!"))
@@ -340,7 +340,7 @@
 		. = TRUE
 		// Because we do our own spin on it!
 		if(mendicant.get_blood_compatibility(hurtguy) == FALSE)
-			mendicant.adjustToxLoss((blood_to_mendicant * 0.1) * pain_multiplier) // 1 dmg per 10 blood
+			mendicant.adjust_tox_loss((blood_to_mendicant * 0.1) * pain_multiplier) // 1 dmg per 10 blood
 			to_chat(mendicant, span_notice("Your veins swell and itch!"))
 		else
 			to_chat(mendicant, span_notice("Your veins swell!"))

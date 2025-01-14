@@ -92,7 +92,7 @@
 	missing_health *= missing_health_ratio //bonus is active at all times, even if you're above 90 health
 	missing_health *= bonus_value //multiply the remaining amount by bonus_value
 	if(missing_health > 0)
-		target.adjustBruteLoss(missing_health) //and do that much damage
+		target.adjust_brute_loss(missing_health) //and do that much damage
 
 // Lobstrosity - Rebukes targets, increasing their click cooldown.
 /obj/item/crusher_trophy/lobster_claw

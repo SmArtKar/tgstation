@@ -232,7 +232,7 @@
 		var/mob/living/carbon/human/M = target
 		if(istype(M.wear_suit))
 			if(M.wear_suit.type in suit_types)
-				M.adjustStaminaLoss(34)
+				M.adjust_stamina_loss(34)
 
 /obj/projectile/beam/lasertag/redtag
 	icon_state = "laser"

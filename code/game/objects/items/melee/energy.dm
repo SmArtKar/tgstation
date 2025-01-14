@@ -73,7 +73,7 @@
 	if(!HAS_TRAIT(src, TRAIT_TRANSFORM_ACTIVE))
 		attack_self(user)
 	user.visible_message(span_suicide("[user] is [pick("slitting [user.p_their()] stomach open with", "falling on")] [src]! It looks like [user.p_theyre()] trying to commit seppuku!"))
-	return (BRUTELOSS|FIRELOSS)
+	return (BRUTELOSS|BURNLOSS)
 
 /obj/item/melee/energy/process(seconds_per_tick)
 	if(heat)
@@ -167,7 +167,7 @@
 
 /obj/item/melee/energy/axe/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] swings [src] towards [user.p_their()] head! It looks like [user.p_theyre()] trying to commit suicide!"))
-	return (BRUTELOSS|FIRELOSS)
+	return (BRUTELOSS|BURNLOSS)
 
 /// Energy swords.
 /datum/embedding/esword
