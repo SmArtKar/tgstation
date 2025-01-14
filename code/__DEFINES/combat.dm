@@ -13,8 +13,6 @@
 #define OXY "oxygen"
 /// Exhaustion and nonlethal damage.
 #define STAMINA "stamina"
-/// Brain damage. Should probably be decommissioned and replaced with proper organ damage.
-#define BRAIN "brain"
 
 //Damage flag defines //
 

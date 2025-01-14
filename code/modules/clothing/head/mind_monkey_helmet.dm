@@ -130,7 +130,7 @@
 			monky_controller.set_trip_mode(mode = FALSE)
 			monky_controller.set_blackboard_key(BB_MONKEY_AGGRESSIVE, TRUE)
 		if(2) //brain death
-			target.apply_damage(500,BRAIN,BODY_ZONE_HEAD,FALSE,FALSE,FALSE)
+			target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 500)
 		if(3) //primal gene (gorilla)
 			target.gorillize()
 		if(4) //genetic mass susceptibility (gib)

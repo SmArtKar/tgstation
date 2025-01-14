@@ -6,7 +6,7 @@
  *
  * Arguments:
  * * damage - Amount of damage
- * * damage_type - Type of damage dealt, can be BRUTE, BURN, TOX, OXY and STAMINA. Also BRAIN but please don't use this. // SMARTKAR: kill BRAIN
+ * * damage_type - Type of damage dealt, can be BRUTE, BURN, TOX, OXY and STAMINA.
  * * damage_flag - Armor which would've protected from this damage, determines the sort of damage we're dealing with.
  * * attack_flags - What sort of an attack this is, melee, blob, ranged, etc.
  * * def_zone - What body zone is being hit. Or a reference to what bodypart is being hit.
@@ -197,8 +197,6 @@
 			damage_dealt = -1 * adjustOxyLoss(damage_amount, forced = forced)
 		if(STAMINA)
 			damage_dealt = -1 * adjustStaminaLoss(damage_amount, forced = forced)
-		if(BRAIN)
-			damage_dealt = -1 * adjustOrganLoss(ORGAN_SLOT_BRAIN, damage_amount)
 
 	SEND_SIGNAL(src, COMSIG_MOB_AFTER_APPLY_DAMAGE, damage_dealt, damage_type, def_zone, blocked, wound_bonus, bare_wound_bonus,sharpness, attack_dir, hit_by, wound_clothing)
 	return damage_dealt
