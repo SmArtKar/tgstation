@@ -16,7 +16,7 @@ const damageTypes = [
   },
   {
     label: 'Burn',
-    type: 'fireLoss',
+    type: 'burnLoss',
   },
   {
     label: 'Toxin',

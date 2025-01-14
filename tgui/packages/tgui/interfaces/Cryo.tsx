@@ -27,7 +27,7 @@ const damageTypes = [
   },
   {
     label: 'Burn',
-    type: 'fireLoss',
+    type: 'burnLoss',
   },
 ] as const;
 
@@ -46,7 +46,7 @@ type Occupant = {
   bruteLoss: number;
   oxyLoss: number;
   toxLoss: number;
-  fireLoss: number;
+  burnLoss: number;
 };
 
 type Data = {

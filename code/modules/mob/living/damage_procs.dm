@@ -134,7 +134,7 @@
  *
  * Returns the amount of damage dealt - does not modify the package itself!
  */
-/mob/living/proc/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, should_update = FALSE)
+/mob/living/proc/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, should_update = TRUE)
 	var/damage_dealt = 0
 	switch (package.damage_type)
 		if (BRUTE)
