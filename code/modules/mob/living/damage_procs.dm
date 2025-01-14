@@ -107,7 +107,9 @@
 	if (!valid_package(package)) // Checks biotype for simplemobs
 		return 0
 
-	package.amount *= CONFIG_GET(number/damage_multiplier)
+	if (package.amount > 0)
+		package.amount *= CONFIG_GET(number/damage_multiplier)
+
 	if (!package.forced)
 		package.amount_multiplier *= get_incoming_damage_modifier(package)
 		package.amount *= package.amount_multiplier
@@ -194,7 +196,7 @@
 		else if (HAS_TRAIT(src, TRAIT_TOXIMMUNE))
 			return 0
 	else if (package.damage_type == OXY)
-		if (HAS_TRAIT(src, TRAIT_NOBREATH))
+		if (HAS_TRAIT(src, TRAIT_NOBREATH) && package.amount > 0)
 			return 0
 
 	for(var/new_mod in damage_mods)

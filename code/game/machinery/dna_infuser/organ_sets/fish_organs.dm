@@ -36,7 +36,7 @@
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human = owner
 		//Fish is slightly weaker to being cooked. oh oh.
-		human.physiology.burn_mod *= 1.15
+		human.physiology.damage_mods[BURN] *= 1.15
 		human.physiology.heat_mod *= 1.15
 		human.physiology.damage_resistance += 8 //base 8% damage resistance, much wow.
 	if(!HAS_TRAIT(owner, TRAIT_IS_WET))
@@ -65,7 +65,7 @@
 	owner.clear_mood_event("fish_organs_bonus")
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human = owner
-		human.physiology.burn_mod /= 1.15
+		human.physiology.damage_mods[BURN] /= 1.15
 		human.physiology.heat_mod /= 1.15
 		human.physiology.damage_resistance -= 8
 	if(HAS_TRAIT(owner, TRAIT_IS_WET) && istype(owner.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL), /obj/item/organ/tail/fish))
@@ -106,12 +106,12 @@
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/human = owner
-	human.physiology.burn_mod *= 1.5
+	human.physiology.damage_mods[BRUTE] *= 1.1
+	human.physiology.damage_mods[BURN] *= 1.5
+	human.physiology.damage_mods[STAMINA] *= 1.1
 	human.physiology.heat_mod *= 1.2
-	human.physiology.brute_mod *= 1.1
 	human.physiology.stun_mod *= 1.1
 	human.physiology.knockdown_mod *= 1.1
-	human.physiology.stamina_mod *= 1.1
 	human.physiology.damage_resistance -= 16 //from +8% to -8%
 
 /datum/status_effect/organ_set_bonus/fish/proc/remove_debuff()
@@ -121,12 +121,12 @@
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/human = owner
-	human.physiology.burn_mod /= 1.5
+	human.physiology.damage_mods[BRUTE] /= 1.1
+	human.physiology.damage_mods[BURN] /= 1.5
+	human.physiology.damage_mods[STAMINA] /= 1.1
 	human.physiology.heat_mod /= 1.2
-	human.physiology.brute_mod /= 1.1
 	human.physiology.stun_mod /= 1.1
 	human.physiology.knockdown_mod /= 1.1
-	human.physiology.stamina_mod /= 1.1
 	human.physiology.damage_resistance += 16 //from -8% to +8%
 
 /datum/status_effect/organ_set_bonus/fish/proc/check_tail(mob/living/carbon/source, obj/item/organ/organ, special)

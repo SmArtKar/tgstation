@@ -457,8 +457,8 @@
 		if(19)
 			//Instrinct Resistance
 			selected_turf.visible_message(span_userdanger("[user] looks very robust!"))
-			user.physiology.brute_mod *= 0.5
-			user.physiology.burn_mod *= 0.5
+			user.physiology.damage_mods[BRUTE] *= 0.5
+			user.physiology.damage_mods[BURN] *= 0.5
 
 		if(20)
 			//Free wizard!

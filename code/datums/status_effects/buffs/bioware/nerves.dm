@@ -17,9 +17,9 @@
 /datum/status_effect/bioware/nerves/spliced/bioware_gained()
 	var/mob/living/carbon/human/human_owner = owner
 	human_owner.physiology.stun_mod *= 0.5
-	human_owner.physiology.stamina_mod *= 0.8
+	human_owner.physiology.damage_mods[STAMINA] *= 0.8
 
 /datum/status_effect/bioware/nerves/spliced/bioware_lost()
 	var/mob/living/carbon/human/human_owner = owner
 	human_owner.physiology.stun_mod *= 2
-	human_owner.physiology.stamina_mod *= 1.25
+	human_owner.physiology.damage_mods[STAMINA] *= 1.25

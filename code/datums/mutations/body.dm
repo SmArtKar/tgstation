@@ -418,12 +418,12 @@
 /datum/mutation/human/fire/on_acquiring(mob/living/carbon/human/owner)
 	if(..())
 		return
-	owner.physiology.burn_mod *= 0.5
+	owner.physiology.damage_mods[BURN] *= 0.5
 
 /datum/mutation/human/fire/on_losing(mob/living/carbon/human/owner)
 	if(..())
 		return
-	owner.physiology.burn_mod *= 2
+	owner.physiology.damage_mods[BURN] *= 2
 
 /datum/mutation/human/badblink
 	name = "Spatial Instability"

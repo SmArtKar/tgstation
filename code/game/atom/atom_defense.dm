@@ -50,7 +50,7 @@
 		package.amount *= package.amount_multiplier
 		run_atom_armor(package)
 
-	if (package.amount < DAMAGE_PRECISION)
+	if (abs(package.amount) < DAMAGE_PRECISION)
 		return
 
 	if (SEND_SIGNAL(src, COMSIG_ATOM_PROCESSING_DAMAGE_PACKAGE, package) & COMPONENT_CANCEL_DAMAGE_PACKAGE)

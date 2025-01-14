@@ -1,19 +1,17 @@
 //Stores several modifiers in a way that isn't cleared by changing species
 /datum/physiology
-	/// Multiplier to brute damage received.
+	/// Multipliers to damage received by type.
 	/// IE: A brute mod of 0.9 = 10% less brute damage.
-	/// Only applies to damage dealt via [apply_damage][/mob/living/proc/apply_damage] unless factored in manually.
-	var/brute_mod = 1
-	/// Multiplier to burn damage received
-	var/burn_mod = 1
-	/// Multiplier to toxin damage received
-	var/tox_mod = 1
-	/// Multiplier to oxygen damage received
-	var/oxy_mod = 1
-	/// Multiplier to stamina damage received
-	var/stamina_mod = 1
-	/// Multiplier to brain damage received
-	var/brain_mod = 1
+	var/list/damage_mods = list(
+		BRUTE = 1,
+		BURN = 1,
+		TOX = 1,
+		OXY = 1,
+		STAMINA = 1,
+		)
+
+	// Multiplier for all damage
+	var/damage_multiplier = 1
 
 	/// Multiplier to damage taken from high / low pressure exposure, stacking with the brute modifier
 	var/pressure_mod = 1

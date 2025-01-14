@@ -194,7 +194,7 @@
 		return
 
 	var/mob/living/carbon/human/human_owner = owner
-	human_owner.physiology.tox_mod *= 2
+	human_owner.physiology.damage_mods[TOX] *= 2
 
 /obj/item/organ/liver/roach/on_mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()
@@ -202,7 +202,7 @@
 		return
 
 	var/mob/living/carbon/human/human_owner = organ_owner
-	human_owner.physiology.tox_mod *= 0.5
+	human_owner.physiology.damage_mods[TOX] *= 0.5
 
 /// Roach appendix:
 /// No appendicitus! weee!

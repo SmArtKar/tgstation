@@ -177,14 +177,14 @@
 	owner.add_traits(list(TRAIT_RESISTHIGHPRESSURE, TRAIT_RESISTHEAT, TRAIT_ASHSTORM_IMMUNE), TRAIT_STATUS_EFFECT(id))
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE, PROC_REF(on_burned))
 	var/mob/living/carbon/human/human_owner = owner
-	human_owner.physiology.burn_mod *= BURN_MULTIPLIER
+	human_owner.physiology.damage_mods[BURN] *= BURN_MULTIPLIER
 	return TRUE
 
 /datum/status_effect/golem/plasma/on_remove()
 	owner.remove_traits(list(TRAIT_RESISTHIGHPRESSURE, TRAIT_RESISTHEAT, TRAIT_ASHSTORM_IMMUNE), TRAIT_STATUS_EFFECT(id))
 	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMAGE)
 	var/mob/living/carbon/human/human_owner = owner
-	human_owner.physiology.burn_mod /= BURN_MULTIPLIER
+	human_owner.physiology.damage_mods[BURN] /= BURN_MULTIPLIER
 	return ..()
 
 /// When we take fire damage (or... technically also cold damage, we don't differentiate), zap a nearby APC
@@ -345,7 +345,7 @@
 		return FALSE
 	var/mob/living/carbon/human/human_owner = owner
 	RegisterSignal(human_owner, COMSIG_LIVING_UNARMED_ATTACK, PROC_REF(on_punched))
-	human_owner.physiology.brute_mod *= brute_modifier
+	human_owner.physiology.damage_mods[BRUTE] *= brute_modifier
 	for (var/obj/item/bodypart/arm/arm in human_owner.bodyparts)
 		if (arm.limb_id != SPECIES_GOLEM)
 			continue
@@ -371,7 +371,7 @@
 /datum/status_effect/golem/titanium/on_remove()
 	var/mob/living/carbon/human/human_owner = owner
 	UnregisterSignal(human_owner, COMSIG_LIVING_UNARMED_ATTACK)
-	human_owner.physiology.brute_mod /= brute_modifier
+	human_owner.physiology.damage_mods[BRUTE] /= brute_modifier
 	for (var/obj/item/bodypart/arm/arm as anything in modified_arms)
 		debuff_arm(arm)
 	LAZYCLEARLIST(modified_arms)

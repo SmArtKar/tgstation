@@ -92,71 +92,19 @@
 
 /mob/living/carbon/get_incoming_damage_modifier(datum/damage_package/package)
 	. = ..()
-	if (!dna?.species?.damage_modifier)
+	if (package.amount < 0 || !dna?.species?.damage_modifier)
 		return
 	. /= (100 + dna.species.damage_modifier) * 0.01
 
-/*
-/mob/living/carbon/human/apply_damage(
-	damage = 0,
-	damagetype = BRUTE,
-	def_zone = null,
-	blocked = 0,
-	forced = FALSE,
-	spread_damage = FALSE,
-	wound_bonus = 0,
-	bare_wound_bonus = 0,
-	sharpness = NONE,
-	attack_dir = null,
-	attacking_item,
-	wound_clothing = TRUE,
-)
-
-	// Add relevant DR modifiers into blocked value to pass to parent
-	blocked += physiology?.damage_resistance
-	blocked += dna?.species?.damage_modifier
-	return ..()
-
-/mob/living/carbon/human/get_incoming_damage_modifier(
-	damage = 0,
-	damagetype = BRUTE,
-	def_zone = null,
-	sharpness = NONE,
-	attack_dir = null,
-	attacking_item,
-)
-	var/final_mod = ..()
-
-	switch(damagetype)
-		if(BRUTE)
-			final_mod *= physiology.brute_mod
-		if(BURN)
-			final_mod *= physiology.burn_mod
-		if(TOX)
-			final_mod *= physiology.tox_mod
-		if(OXY)
-			final_mod *= physiology.oxy_mod
-		if(STAMINA)
-			final_mod *= physiology.stamina_mod
-		if(BRAIN)
-			final_mod *= physiology.brain_mod
-
-	return final_mod
-
-//These procs fetch a cumulative total damage from all bodyparts
 /mob/living/carbon/get_brute_loss()
-	var/amount = 0
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		amount += BP.brute_dam
-	return amount
+	. = 0
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		. += part.brute_dam
 
 /mob/living/carbon/get_burn_loss()
-	var/amount = 0
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		amount += BP.burn_dam
-	return amount
+	. = 0
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		. += part.burn_dam
 
 /mob/living/carbon/received_stamina_damage(current_level, amount_actual, amount)
 	. = ..()
@@ -174,6 +122,7 @@
  *
  * Returns: The net change in damage from apply_organ_damage()
  */
+
 /mob/living/carbon/adjust_organ_loss(slot, amount, maximum, required_organ_flag = NONE)
 	var/obj/item/organ/affected_organ = get_organ_slot(slot)
 	if(!affected_organ || HAS_TRAIT(src, TRAIT_GODMODE))
@@ -193,6 +142,7 @@
  *
  * Returns: The net change in damage from set_organ_damage()
  */
+
 /mob/living/carbon/set_organ_loss(slot, amount, required_organ_flag = NONE)
 	var/obj/item/organ/affected_organ = get_organ_slot(slot)
 	if(!affected_organ || HAS_TRAIT(src, TRAIT_GODMODE))
@@ -209,46 +159,37 @@
  * Arguments:
  * * slot - organ slot, like [ORGAN_SLOT_HEART]
  */
+
 /mob/living/carbon/get_organ_loss(slot)
 	var/obj/item/organ/affected_organ = get_organ_slot(slot)
 	if(affected_organ)
 		return affected_organ.damage
 
-////////////////////////////////////////////
-
-///Returns a list of damaged bodyparts
 /mob/living/carbon/proc/get_damaged_bodyparts(brute = FALSE, burn = FALSE, required_bodytype = NONE, target_zone = null)
 	var/list/obj/item/bodypart/parts = list()
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		if(required_bodytype && !(BP.bodytype & required_bodytype))
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		if(required_bodytype && !(part.bodytype & required_bodytype))
 			continue
-		if(!isnull(target_zone) && BP.body_zone != target_zone)
+		if(!isnull(target_zone) && part.body_zone != target_zone)
 			continue
-		if((brute && BP.brute_dam) || (burn && BP.burn_dam))
-			parts += BP
+		if((brute && part.brute_dam) || (burn && part.burn_dam))
+			parts += part
 	return parts
 
-///Returns a list of damageable bodyparts
 /mob/living/carbon/proc/get_damageable_bodyparts(required_bodytype)
 	var/list/obj/item/bodypart/parts = list()
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		if(required_bodytype && !(BP.bodytype & required_bodytype))
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		if(required_bodytype && !(part.bodytype & required_bodytype))
 			continue
-		if(BP.brute_dam + BP.burn_dam < BP.max_damage)
-			parts += BP
+		if(part.brute_dam + part.burn_dam < part.max_damage)
+			parts += part
 	return parts
 
-
-///Returns a list of bodyparts with wounds (in case someone has a wound on an otherwise fully healed limb)
 /mob/living/carbon/proc/get_wounded_bodyparts(required_bodytype)
 	var/list/obj/item/bodypart/parts = list()
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		if(required_bodytype && !(BP.bodytype & required_bodytype))
+	for(var/obj/item/bodypart/part as anything in bodyparts)
+		if(required_bodytype && !(part.bodytype & required_bodytype))
 			continue
-		if(LAZYLEN(BP.wounds))
-			parts += BP
+		if(LAZYLEN(part.wounds))
+			parts += part
 	return parts
-*/

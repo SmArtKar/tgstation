@@ -19,7 +19,6 @@
 		organnum++
 	return (armorval/max(organnum, 1))
 
-
 /mob/living/carbon/human/proc/check_armor(obj/item/bodypart/def_zone, damage_type)
 	if(!damage_type)
 		return 0
@@ -43,6 +42,15 @@
 			if(C.body_parts_covered & def_zone.body_part)
 				covering_part += C
 	return covering_part
+
+/mob/living/carbon/human/get_incoming_damage_modifier(datum/damage_package/package)
+	. = ..()
+	if (isnull(physiology) || package.amount < 0)
+		return
+	. *= (100 - physiology.damage_resistance) * 0.01
+	. *= physiology.damage_multiplier
+	if (!isnull(physiology.damage_mods[package.damage_type]))
+		. *= physiology.damage_mods[package.damage_type]
 
 /mob/living/carbon/human/bullet_act(obj/projectile/bullet, def_zone, piercing_hit = FALSE)
 	if(bullet.firer == src && bullet.original == src) //can't block or reflect when shooting yourself

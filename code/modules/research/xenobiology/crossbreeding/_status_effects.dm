@@ -280,13 +280,13 @@
 /datum/status_effect/metalcookie/on_apply()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.physiology.brute_mod *= 0.9
+		H.physiology.damage_mods[BRUTE] *= 0.9
 	return ..()
 
 /datum/status_effect/metalcookie/on_remove()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.physiology.brute_mod /= 0.9
+		H.physiology.damage_mods[BRUTE] /= 0.9
 
 /datum/status_effect/sparkcookie
 	id = "sparkcookie"
@@ -426,13 +426,13 @@
 /datum/status_effect/adamantinecookie/on_apply()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.physiology.burn_mod *= 0.9
+		H.physiology.damage_mods[BURN] *= 0.9
 	return ..()
 
 /datum/status_effect/adamantinecookie/on_remove()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.physiology.burn_mod /= 0.9
+		H.physiology.damage_mods[BURN] /= 0.9
 
 ///////////////////////////////////////////////////////
 //////////////////STABILIZED EXTRACTS//////////////////

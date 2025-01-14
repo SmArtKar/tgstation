@@ -41,12 +41,12 @@
 
 /datum/mutation/human/tough/on_acquiring(mob/living/carbon/human/acquirer)
 	. = ..()
-	acquirer.physiology.brute_mod *= 0.7
+	acquirer.physiology.damage_mods[BRUTE] *= 0.7
 	ADD_TRAIT(acquirer, TRAIT_PIERCEIMMUNE, GENETIC_MUTATION)
 
 /datum/mutation/human/tough/on_losing(mob/living/carbon/human/owner)
 	. = ..()
-	owner.physiology.brute_mod /= 0.7
+	owner.physiology.damage_mods[BRUTE] /= 0.7
 	REMOVE_TRAIT(owner, TRAIT_PIERCEIMMUNE, GENETIC_MUTATION)
 
 /datum/mutation/human/dextrous
@@ -75,12 +75,12 @@
 
 /datum/mutation/human/fire_immunity/on_acquiring(mob/living/carbon/human/acquirer)
 	. = ..()
-	acquirer.physiology.burn_mod *= 0.5
+	acquirer.physiology.damage_mods[BURN] *= 0.5
 	acquirer.add_traits(list(TRAIT_RESISTHEAT, TRAIT_NOFIRE), GENETIC_MUTATION)
 
 /datum/mutation/human/fire_immunity/on_losing(mob/living/carbon/human/owner)
 	. = ..()
-	owner.physiology.burn_mod /= 0.5
+	owner.physiology.damage_mods[BURN] /= 0.5
 	owner.remove_traits(list(TRAIT_RESISTHEAT, TRAIT_NOFIRE), GENETIC_MUTATION)
 
 /datum/mutation/human/quick_recovery

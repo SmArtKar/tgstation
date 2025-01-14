@@ -723,8 +723,8 @@
 
 	if(ishuman(user))
 		var/mob/living/carbon/human/human_user = user
-		human_user.physiology.brute_mod *= 0.5
-		human_user.physiology.burn_mod *= 0.5
+		human_user.physiology.damage_mods[BRUTE] *= 0.5
+		human_user.physiology.damage_mods[BURN] *= 0.5
 
 	SSblackbox.record_feedback("tally", "heretic_ascended", 1, GLOB.heretic_research_tree[type][HKT_ROUTE])
 	log_heretic_knowledge("[key_name(user)] completed their final ritual at [worldtime2text()].")
