@@ -10,8 +10,10 @@
  * * damage_flag - Armor which would've protected from this damage, determines the sort of damage we're dealing with.
  * * attack_flags - What sort of an attack this is, melee, blob, ranged, etc.
  * * def_zone - What body zone is being hit. Or a reference to what bodypart is being hit.
- * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced is TRUE, does not apply.
+ * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced or check_armor are TRUE, does not apply.
  * * attack_dir - Direction of the attack from the self to attacker. // SMARTKAR TODO: reverse all directions because this was written by someone with too much free time
+ * * armor_penetration - Flat reduction from armor, only works when check_armor is TRUE.
+ * * armor_multiplier - Armor multiplier, applied before armor_penetration and only works when check_armor is TRUE.
  * * forced - "Force" exactly the damage dealt. This means it skips damage modifier from blocked.
  * * hit_by - Item, mob or projectile that dealt the damage.
  * * source - Who actually dealt the damage - turret that fired the gun, greyshirt hit you with a toolbox, punched you, etc.
@@ -19,20 +21,26 @@
  * * wound_bonus - Bonus modifier for wound chance.
  * * bare_wound_bonus - Bonus modifier for wound chance on bare skin.
  * * sharpness - Sharpness of the weapon.
+ * * required_biotype - Biotype that the mob/bodypart must posess to be able to take this damage.
+ * * amount_multiplier - Total damage multiplier, done last after everything else. Does not apply if forced is true.
+ * * check_armor - If armor checks should be taken into consideration. Does not apply if forced is TRUE.
  * * wound_clothing - If this should cause damage to clothing.
+ * * no_update - Prevents update_health calls from within this proc.
  *
  * Returns the amount of damage dealt.
  */
 
 
 /mob/living/proc/apply_damage(
-	damage = 0,
+	amount = 0,
 	damage_type = BRUTE,
 	damage_flag = null,
 	attack_flags = NONE,
 	def_zone = null,
 	blocked = 0,
 	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
 	forced = FALSE,
 	atom/hit_by = null,
 	atom/source = null,
@@ -40,17 +48,108 @@
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
+	required_biotype = ALL,
+	amount_multiplier = 1,
+	check_armor = FALSE,
 	wound_clothing = TRUE,
+	ignore_undamageable = FALSE,
+	no_update = FALSE,
+)
+	// This is merely a wrapper, and thus should not be overriden
+	SHOULD_NOT_OVERRIDE(TRUE)
+
+	var/datum/damage_package/package = new(
+		amount = amount,
+		damage_type = damage_type,
+		damage_flag = damage_flag,
+		attack_flags = attack_flags,
+		def_zone = def_zone,
+		attack_dir = attack_dir,
+		armor_penetration = armor_penetration,
+		armor_multiplier = armor_multiplier,
+		forced = forced,
+		hit_by = hit_by,
+		source = source,
+		spread_damage = spread_damage,
+		wound_bonus = wound_bonus,
+		bare_wound_bonus = bare_wound_bonus,
+		sharpness = sharpness,
+		required_biotype = required_biotype,
+		ignore_undamageable = ignore_undamageable,
+		amount_multiplier = amount_multiplier,
+	)
+
+	return apply_damage_package(package, blocked, check_armor, wound_clothing, no_update)
+
+/** Calculates armor for a damage package, processes it and then applies the damage.
+ *
+ * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced or check_armor are TRUE, does not apply.
+ * * wound_clothing - If this should cause damage to clothing.
+ * * check_armor - If armor checks should be taken into consideration. Does not apply if forced is TRUE.
+ * * no_update - Prevents update_health calls from within this proc.
+ */
+/mob/living/proc/apply_damage_package(
+	datum/damage_package/package,
+	blocked = 0,
+	check_armor = FALSE,
+	wound_clothing = TRUE,
+	no_update = FALSE,
 )
 	SHOULD_CALL_PARENT(TRUE)
+
+	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, no_update) & COMSIG_MOB_PREVENT_DAMAGE)
+		return 0
+
+	if (package.spread_damage)
+		package.def_zone = null
+	else if (islist(package.def_zone))
+		var/list/taken_zones = list()
+		var/list/new_zones = list()
+		for (var/zone in package.def_zone)
+			var/zone_lookup = package.def_zone
+			if (!zone_lookup || (zone_lookup in taken_zones))
+				zone_lookup = get_random_valid_zone(blacklisted_parts = taken_zones)
+			var/random_zone = check_zone(zone_lookup)
+			var/obj/item/bodypart/part = get_bodypart(random_zone)
+			if (!part)
+				part = bodyparts[1]
+			if (part.body_zone in taken_zones)
+				break
+			taken_zones += part.body_zone
+			new_zones += part
+		package.def_zone = new_zones
+		if (!length(package.def_zone))
+			package.def_zone = null
+	else if (!isbodypart(package.def_zone))
+		var/random_zone = check_zone(package.def_zone || get_random_valid_zone())
+		package.def_zone = get_bodypart(random_zone) || bodyparts[1]
+
+	if (!package.forced)
+		package.amount_multiplier *= get_incoming_damage_modifier(package)
+		package.amount *= package.amount_multiplier
+		if (check_armor)
+			run_armor_check(package)
+		else
+			package.amount *= (100 - blocked) * 0.01
+
+	if (!valid_package(package))
+		return 0
+
+	if(package.amount < DAMAGE_PRECISION)
+		return 0
+
+
+
+	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, no_update)
+	return damage_dealt
+
+	/*
 	var/damage_amount = damage
 	if(!forced)
 		damage_amount *= ((100 - blocked) / 100)
 		damage_amount *= get_incoming_damage_modifier(damage_amount, damage_type, def_zone, sharpness, attack_dir, hit_by)
 	if(damage_amount <= 0)
 		return 0
-
-	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, damage_amount, damage_type, def_zone, blocked, wound_bonus, bare_wound_bonus, sharpness, attack_dir, hit_by, wound_clothing)
 
 	var/damage_dealt = 0
 	switch(damage_type)
@@ -524,3 +623,4 @@
 			amount -= amount_to_heal //remove what we healed from our current amount
 		if(!amount)
 			break
+*/

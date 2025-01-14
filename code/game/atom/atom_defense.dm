@@ -22,6 +22,8 @@
 
 /// Proc that ensures that the atom is in a valid state to take damage, and then actually applies damage based on a damage package
 /atom/proc/process_damage_package(datum/damage_package/package, sound_effect = TRUE)
+	SHOULD_CALL_PARENT(TRUE)
+
 	if(!uses_integrity)
 		CRASH("[src] had /atom/proc/process_damage_package() called on it without it being a type that has uses_integrity = TRUE!")
 
@@ -46,7 +48,7 @@
 	// Before armor due to damage_deflection
 	if (!package.forced)
 		package.amount *= package.amount_multiplier
-	run_atom_armor(package)
+		run_atom_armor(package)
 
 	if(package.amount < DAMAGE_PRECISION)
 		return

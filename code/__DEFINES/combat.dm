@@ -407,6 +407,8 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	wound_bonus = 0,\
 	bare_wound_bonus = 0,\
 	sharpness = NONE,\
+	required_biotype = ALL,\
+	ignore_undamageable = FALSE,\
 	amount_multiplier = 1
 
 /// An easy way to pass all damage proc data into either another proc, or to a new damage package
@@ -428,4 +430,6 @@ GLOBAL_LIST_INIT(leg_zones, list(BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 	wound_bonus = wound_bonus,\
 	bare_wound_bonus = bare_wound_bonus,\
 	sharpness = sharpness,\
+	required_biotype = required_biotype,\
+	ignore_undamageable = ignore_undamageable,\
 	amount_multiplier = amount_multiplier

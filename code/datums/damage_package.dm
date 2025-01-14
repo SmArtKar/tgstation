@@ -10,7 +10,7 @@
 	var/damage_flag = null
 	/// Flags defining what sort of an attack this is: Melee, unarmed, projectile, magical, etc.
 	var/attack_flags = NONE
-	/// Bodypart which this attack was targeting, can be both a bodypart object or just a zone define
+	/// Bodypart which this attack was targeting, can be both a bodypart object, zone define or a list of former 2 in which case damage is evenly spread
 	var/def_zone = null
 	/// If the damage gets spread out evenly between all bodyparts on mobs
 	var/spread_damage = FALSE
@@ -38,6 +38,10 @@
 	var/bare_wound_bonus = 0
 	/// Sharpness of the tool this attack was made with
 	var/sharpness = NONE
+	/// Biotype of mob/bodypart that is required for it to be able to take this damage
+	var/required_biotype = ALL
+	/// If set to TRUE, instead of being spent on nothing, damage meant to be dealt to undamageable parts will instead be spread to other targeted/valid bodyparts.
+	var/ignore_undamageable = FALSE
 	/// Damage multiplier, applied last in order to avoid comsig order issues
 	var/amount_multiplier = 1
 	/// Click modifiers if this package was created as a result of a mob attack
@@ -66,6 +70,8 @@
 	src.wound_bonus = wound_bonus
 	src.bare_wound_bonus = bare_wound_bonus
 	src.sharpness = sharpness
+	src.required_biotype = required_biotype
+	src.ignore_undamageable = ignore_undamageable
 	src.amount_multiplier = amount_multiplier
 	src.modifiers = modifiers
 
