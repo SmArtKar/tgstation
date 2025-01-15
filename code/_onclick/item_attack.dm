@@ -300,7 +300,7 @@
 
 	send_item_attack_message(attacking_item, user, targeting_human_readable, targeting)
 
-	var/armor_block = min(run_armor_check(
+	var/armor_block = min(run_armor_check( // Smartkar TODO
 			def_zone = targeting,
 			attack_flag = MELEE,
 			absorb_text = span_notice("Your armor has protected your [targeting_human_readable]!"),
@@ -487,12 +487,13 @@
 	return ""
 
 /// A simple way to create a damage package targeting an atom
-/obj/item/proc/generate_damage(atom/target, mob/living/user, list/modifiers)
+/obj/item/proc/generate_damage(atom/target, mob/living/user, list/modifiers, thrown = FALSE)
+	RETURN_TYPE(/datum/damage_package)
 	var/datum/damage_package/package = new(
-		amount = force,
+		amount = thrown ? throwforce : force,
 		damage_type = damtype,
 		damage_flag = MELEE,
-		attack_flags = MELEE_ATTACK,
+		attack_flags = thrown ? THROWN_PROJECTILE_ATTACK : MELEE_ATTACK,
 		def_zone = user?.zone_selected,
 		attack_dir = get_dir(target, user || src),
 		armor_penetration = armor_penetration,
@@ -507,5 +508,5 @@
 		amount_multiplier = (isobj(target) ? demolition_mod : 1),
 		modifiers = modifiers,
 	)
-	SEND_SIGNAL(src, COMSIG_ITEM_CREATED_DAMAGE_PACKAGE, package, target, user, modifiers)
+	SEND_SIGNAL(src, COMSIG_ITEM_CREATED_DAMAGE_PACKAGE, package, target, user, modifiers, thrown)
 	return package

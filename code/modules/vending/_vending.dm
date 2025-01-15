@@ -881,7 +881,7 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 			crushed = TRUE
 			var/mob/living/carbon/living_target = atom_target
 			var/was_alive = (living_target.stat != DEAD)
-			var/blocked = living_target.run_armor_check(attack_flag = damage_flag)
+			var/blocked = living_target.run_armor_check(attack_flag = damage_flag) // smartkar todo
 			if (iscarbon(living_target))
 				var/mob/living/carbon/carbon_target = living_target
 				if(prob(30))

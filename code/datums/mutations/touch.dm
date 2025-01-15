@@ -42,37 +42,42 @@
 	drop_message = span_notice("You let the electricity from your hand dissipate.")
 
 /datum/action/cooldown/spell/touch/shock/cast_on_hand_hit(obj/item/melee/touch_attack/hand, atom/victim, mob/living/carbon/caster)
-	if(iscarbon(victim))
-		var/mob/living/carbon/carbon_victim = victim
-		if(carbon_victim.electrocute_act(5, caster, 1, SHOCK_NOGLOVES | SHOCK_NOSTUN))//doesn't stun. never let this stun
+	if (!isliving(victim))
+		to_chat(caster, span_warning("The electricity doesn't seem to affect [victim]..."))
+		return TRUE
 
-			var/obj/item/bodypart/affecting = carbon_victim.get_bodypart(carbon_victim.get_random_valid_zone(caster.zone_selected))
-			var/armor_block = carbon_victim.run_armor_check(affecting, ENERGY)
-			carbon_victim.apply_damage(20, STAMINA, def_zone = affecting, blocked = armor_block)
-
-			carbon_victim.dropItemToGround(carbon_victim.get_active_held_item())
-			carbon_victim.dropItemToGround(carbon_victim.get_inactive_held_item())
-			carbon_victim.adjust_confusion(15 SECONDS)
-			carbon_victim.visible_message(
-				span_danger("[caster] electrocutes [victim]!"),
-				span_userdanger("[caster] electrocutes you!"),
-			)
-			if(stagger)
-				carbon_victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
-			return TRUE
-
-	else if(isliving(victim))
+	if (!iscarbon(victim))
 		var/mob/living/living_victim = victim
-		if(living_victim.electrocute_act(15, caster, 1, SHOCK_NOSTUN)) //We do damage here because non-carbon mobs typically ignore stamina damage.
-			living_victim.visible_message(
-				span_danger("[caster] electrocutes [victim]!"),
-				span_userdanger("[caster] electrocutes you!"),
-			)
-			if(stagger)
-				living_victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
+		// We do damage here because non-carbon mobs typically ignore stamina damage.
+		if(!living_victim.electrocute_act(15, caster, 1, SHOCK_NOSTUN))
 			return TRUE
+		living_victim.visible_message(
+			span_danger("[caster] electrocutes [victim]!"),
+			span_userdanger("[caster] electrocutes you!"),
+		)
+		if(stagger)
+			living_victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
+		return TRUE
 
-	to_chat(caster, span_warning("The electricity doesn't seem to affect [victim]..."))
+	var/mob/living/carbon/carbon_victim = victim
+	// Doesn't stun. Never let this stun
+	if(carbon_victim.electrocute_act(5, caster, 1, SHOCK_NOGLOVES | SHOCK_NOSTUN))
+		return TRUE
+
+	var/obj/item/bodypart/affecting = carbon_victim.get_bodypart(carbon_victim.get_random_valid_zone(caster.zone_selected))
+	var/armor_block = carbon_victim.run_armor_check(affecting, ENERGY) // Smartkar todo
+	carbon_victim.apply_damage(20, STAMINA, def_zone = affecting, blocked = armor_block)
+
+	carbon_victim.dropItemToGround(carbon_victim.get_active_held_item())
+	carbon_victim.dropItemToGround(carbon_victim.get_inactive_held_item())
+	carbon_victim.adjust_confusion(15 SECONDS)
+	carbon_victim.visible_message(
+		span_danger("[caster] electrocutes [victim]!"),
+		span_userdanger("[caster] electrocutes you!"),
+	)
+	if(stagger)
+		carbon_victim.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * 2, 10 SECONDS)
+
 	return TRUE
 
 /obj/item/melee/touch_attack/shock

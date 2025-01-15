@@ -46,7 +46,7 @@
 	organ.visible_message(span_revenwarning("[organ] explodes in a burst of dark energy!"))
 	for(var/mob/living/target in range(1, origin_turf))
 		var/armor = target.run_armor_check(attack_flag = BOMB)
-		target.apply_damage(30, damagetype = BURN, blocked = armor, spread_damage = TRUE)
+		target.apply_damage(30, damagetype = BURN, blocked = armor, spread_damage = TRUE) // Smartkar: todo
 	qdel(organ)
 
 /obj/effect/temp_visual/curse_blast

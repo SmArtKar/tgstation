@@ -87,7 +87,7 @@
 
 			if(istype(impacted_thing, /obj/structure/window))
 				var/obj/structure/window/window_to_damage = impacted_thing
-				window_to_damage.take_damage(rand(60, 90), attack_flags = MAGIC_ATTACK)
+				window_to_damage.take_damage(rand(60, 90), attack_flags = MAGIC_ATTACK) // Its ghosts so lets consider this magic
 				if(window_to_damage?.fulltile)
 					new /obj/effect/temp_visual/revenant/cracks(get_turf(window_to_damage))
 

@@ -176,8 +176,13 @@
 	if (is_harmless())
 		return prob(embed_chance)
 
-	// We'll be nice and take the better of bullet and bomb armor, halved
-	var/armor = max(victim.run_armor_check(hit_zone, BULLET, armor_penetration = parent.armor_penetration, silent = TRUE), victim.run_armor_check(hit_zone, BOMB, armor_penetration = parent.armor_penetration,  silent = TRUE)) * 0.5
+	// We take average of bullet and bomb, so that fully immune mobs keep their immunity
+	var/datum/damage_package/bullet_package = parent.generate_damage(victim, thrown = TRUE)
+	var/datum/damage_package/bomb_package = bullet_package.Copy()
+	bullet_package.damage_flag = BULLET
+	bomb_package.damage_flag = BOMB
+	var/armor = (victim.package_armor_check(bullet_package, silent = TRUE) + victim.package_armor_check(bomb_package, silent = TRUE)) / 2
+
 	// We only care about armor penetration if there's actually armor to penetrate
 	if(!armor)
 		return prob(chance)
@@ -238,7 +243,7 @@
 	var/armor = owner.run_armor_check(owner_limb.body_zone, MELEE, "Your armor has protected your [owner_limb.plaintext_zone].",
 		"Your armor has softened a hit to your [owner_limb.plaintext_zone].", parent.armor_penetration,
 		weak_against_armor = parent.weak_against_armor,
-	)
+	) // Smartkar: todo
 
 	owner.apply_damage(
 		damage = (1 - pain_stam_pct) * damage,

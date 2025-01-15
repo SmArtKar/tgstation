@@ -1357,6 +1357,7 @@
 
 /// Quickly generates a damage package for ease of use
 /obj/projectile/proc/generate_damage(atom/target)
+	RETURN_TYPE(/datum/damage_package)
 	var/datum/damage_package/package = new(
 		amount = damage,
 		damage_type = damage_type,

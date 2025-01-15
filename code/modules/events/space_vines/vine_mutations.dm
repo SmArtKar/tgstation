@@ -170,6 +170,7 @@
 /datum/spacevine_mutation/aggressive_spread/on_buckle(obj/structure/spacevine/holder, mob/living/buckled)
 	aggrospread_act(holder, buckled)
 
+// Smartkar todo unfuck this entire proc jesus christ this hurts
 /// Hurts mobs. To be used when a vine with aggressive spread mutation spreads into the mob's tile or buckles them.
 /datum/spacevine_mutation/aggressive_spread/aggrospread_act(obj/structure/spacevine/vine, mob/living/living_mob)
 	var/mob/living/carbon/victim = living_mob //If the mob is carbon then it now also exists as a victim, and not just an living mob.

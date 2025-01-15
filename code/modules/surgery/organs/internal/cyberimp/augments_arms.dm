@@ -513,9 +513,9 @@
 
 	var/target_zone = living_target.get_random_valid_zone(source.zone_selected)
 	var/armor_block = living_target.run_armor_check(target_zone, MELEE, armor_penetration = attacking_bodypart.unarmed_effectiveness)
-	living_target.apply_damage(potential_damage * 2, attacking_bodypart.attack_type, target_zone, armor_block)
+	living_target.apply_damage(potential_damage * 2, attacking_bodypart.attack_type, target_zone, armor_block) // smartkar todo
 
-	if(source.body_position != LYING_DOWN) //Throw them if we are standing
+	if(source.body_position != LYING_DOWN) // Throw them if we are standing
 		var/atom/throw_target = get_edge_target_turf(living_target, source.dir)
 		living_target.throw_at(throw_target, attack_throw_range, rand(throw_power_min,throw_power_max), source, gentle = non_harmful_throw)
 

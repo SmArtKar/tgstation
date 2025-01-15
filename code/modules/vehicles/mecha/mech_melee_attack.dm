@@ -117,11 +117,11 @@
 			playsound(src, mecha_attacker.burn_attack_sound, 50, TRUE)
 		if(TOX)
 			playsound(src, mecha_attacker.tox_attack_sound, 50, TRUE)
-			var/bio_armor = (100 - run_armor_check(attack_flag = BIO, silent = TRUE)) / 100
-			if((reagents.get_reagent_amount(/datum/reagent/cryptobiolin) + mecha_attacker.force) < mecha_attacker.force * 2)
+			var/bio_armor = (100 - run_armor_check(TOX, BIO, UNARMED_ATTACK, attack_dir = get_dir(src, mecha_attacker), hit_by = mecha_attacker, source = mecha_attacker)) / 100
+			if(reagents.get_reagent_amount(/datum/reagent/cryptobiolin) < mecha_attacker.force)
 				reagents.add_reagent(/datum/reagent/cryptobiolin, mecha_attacker.force / 2 * bio_armor)
-			if((reagents.get_reagent_amount(/datum/reagent/toxin) + mecha_attacker.force) < mecha_attacker.force * 2)
-				reagents.add_reagent(/datum/reagent/toxin, mecha_attacker.force / 2.5 * bio_armor)
+			if(reagents.get_reagent_amount(/datum/reagent/toxin) < mecha_attacker.force)
+				reagents.add_reagent(/datum/reagent/toxin, mecha_attacker.force / 2 * bio_armor)
 		else
 			return
 
@@ -134,7 +134,7 @@
 			attack_flag = MELEE,
 			absorb_text = span_notice("Your armor has protected your [zone_readable]!"),
 			soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!")
-		))
+		)) // smartkar todo
 
 	visible_message(span_danger("[mecha_attacker.name] [mecha_attacker.attack_verbs[1]] [src]!"), \
 		span_userdanger("[mecha_attacker.name] [mecha_attacker.attack_verbs[2]] you!"), span_hear("You hear a sickening sound of flesh [mecha_attacker.attack_verbs[3]] flesh!"), COMBAT_MESSAGE_RANGE, list(mecha_attacker))

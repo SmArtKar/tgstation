@@ -190,7 +190,7 @@
 	target.visible_message(span_danger("[chassis] is drilling [target] with [src]!"), \
 						span_userdanger("[chassis] is drilling you with [src]!"))
 	log_combat(user, target, "drilled", "[name]", "Combat mode: [user.combat_mode ? "On" : "Off"])(DAMTYPE: [uppertext(damtype)])")
-	if(target.stat == DEAD && target.get_brute_loss() >= (target.maxHealth * 2))
+	if(target.stat == DEAD && target.getBruteLoss() >= (target.maxHealth * 2))
 		log_combat(user, target, "gibbed", name)
 		if(LAZYLEN(target.butcher_results) || LAZYLEN(target.guaranteed_butcher_results))
 			SEND_SIGNAL(src, COMSIG_MECHA_DRILL_MOB, chassis, target)
@@ -202,7 +202,7 @@
 	//drill makes a hole
 	var/def_zone = target.get_random_valid_zone(BODY_ZONE_CHEST)
 	var/obj/item/bodypart/target_part = target.get_bodypart(def_zone)
-	var/blocked = target.run_armor_check(def_zone, MELEE)
+	var/blocked = target.run_armor_check(def_zone, MELEE) // smartkar todo
 	target.apply_damage(10, BRUTE, def_zone, blocked)
 
 	//blood splatters

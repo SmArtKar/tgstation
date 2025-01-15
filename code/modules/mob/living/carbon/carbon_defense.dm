@@ -662,7 +662,7 @@
 	if (HAS_TRAIT(src, TRAIT_GENELESS))
 		return FALSE
 
-	if (run_armor_check(attack_flag = BIO, silent = TRUE) >= 100)
+	if (run_armor_check(null, BIO, attack_dir = get_dir(src, scramble_source), source = scramble_source, silent = TRUE) >= 100)
 		to_chat(src, span_warning("Your armor shields you from [scramble_source]!"))
 		return FALSE
 
@@ -689,6 +689,7 @@
 	if (!changed_something)
 		to_chat(src, span_notice("Your augmented body protects you from [scramble_source]!"))
 		return FALSE
+
 	update_body(TRUE)
 	balloon_alert(src, "something has changed about you")
 	return TRUE

@@ -64,24 +64,25 @@
 			return 0
 
 	var/damage_taken = 0
-	var/should_update = FALSE
+	var/update_overlays = FALSE
 	var/damage_per_part = round(package.amount / length(parts), DAMAGE_PRECISION)
+	// Done via indexing for ease of redistributing overheal
 	for (var/i in 1 to length(parts))
 		var/obj/item/bodypart/part = parts[i]
 		var/cur_damage = part.get_damage()
-		should_update |= part.receive_damage(package, amount = damage_per_part, should_update = FALSE) // Smartkar: unfuck this
+		update_overlays |= part.receive_damage(package, amount = damage_per_part, should_update = FALSE) // Smartkar: unfuck this
 		var/damage_difference = (part.get_damage() - cur_damage)
 		damage_taken += damage_difference
 		// Overheal gets given to other limbs
 		if (damage_per_part < 0 && damage_per_part < damage_difference)
-			damage_per_part += (damage_per_part - damage_difference) / (length(parts) - i + 1)
+			damage_per_part = round(damage_per_part + ((damage_per_part - damage_difference) / (length(parts) - i + 1)), DAMAGE_PRECISION)
 
 	if (!damage_taken)
 		return 0
 
 	if(should_update)
 		updatehealth()
-	if(should_update)
+	if(update_overlays)
 		update_damage_overlays()
 	// Taking brute or burn to bodyparts gives a damage flash
 	damageoverlaytemp += damage_taken

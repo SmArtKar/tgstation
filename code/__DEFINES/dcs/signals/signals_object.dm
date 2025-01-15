@@ -554,5 +554,5 @@
 /// Sent from /obj/item/organ/wings/functional/proc/close_wings(): (mob/living/carbon/owner)
 #define COMSIG_WINGS_CLOSED "wings_closed"
 
-// Sent from /obj/item/proc/generate_damage(atom/target, mob/living/user, list/modifiers): (datum/damage_package/package, atom/target, mob/living/user, list/modifiers)
+// Sent from /obj/item/proc/generate_damage(): (datum/damage_package/package, atom/target, mob/living/user, list/modifiers, thrown)
 #define COMSIG_ITEM_CREATED_DAMAGE_PACKAGE "item_created_damage_package"

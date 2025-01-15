@@ -407,7 +407,7 @@
 	for(var/mob/living/carbon/nearby in range(range, get_turf(src)))
 		if(!can_hit_owner && nearby == owner)
 			continue
-		nearby.bioscramble(name)
+		nearby.bioscramble(src)
 
 // When the wearer gets hit, this armor will push people nearby and spawn some blocking objects.
 /obj/item/clothing/suit/armor/reactive/barricade

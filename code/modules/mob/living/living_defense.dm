@@ -1,38 +1,124 @@
+/*
+ * A wrapper to check for armor on a certain bodypart
+ * Returns percentage of damage blocked, 0 - 100, where 100 means that the attack was fully blocked.
+ * * amount - Amount of damage dealt.
+ * * damage_flag - Armor which would've protected from this damage, determines the sort of damage we're dealing with.
+ * * attack_flags - What sort of an attack this is, melee, blob, ranged, etc.
+ * * def_zone - What body zone is being hit. Or a reference to what bodypart is being hit.
+ * * attack_dir - Direction of the attack from the self to attacker.
+ * * armor_penetration - Flat reduction from armor.
+ * * armor_multiplier - Armor multiplier, applied before armor_penetration;
+ * * hit_by - Item, mob or projectile that dealt the damage.
+ * * source - Who actually dealt the damage - turret that fired the gun, greyshirt hit you with a toolbox, punched you, etc.
+ * * sharpness - Sharpness of the weapon.
+ * * penetrated_text - Line displayed when armor gets penetrated.
+ * * soften_text - Line displayed when armor partially negates the attack.
+ * * absorb_text - Line displayed when the attack gets fully negated.
+ * * silent - Prevents armor block/penetration messages from displaying.
+ */
+/mob/living/proc/run_armor_check(
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	atom/hit_by = null,
+	atom/source = null,
+	sharpness = NONE,
+	penetrated_text = null,
+	soften_text = null,
+	absorb_text = null,
+	silent = FALSE,
+)
+	SHOULD_NOT_OVERRIDE(TRUE)
+	var/datum/damage_package/package = new(
+		damage_type = damage_type,
+		damage_flag = damage_flag,
+		attack_flags = attack_flags,
+		def_zone = def_zone,
+		attack_dir = attack_dir,
+		armor_penetration = armor_penetration,
+		armor_multiplier = armor_multiplier,
+		hit_by = hit_by,
+		source = source,
+		sharpness = sharpness,
+	)
+	return package_armor_check(package, penetrated_text = penetrated_text, soften_text = soften_text, absorb_text = absorb_text, silent = silent)
 
-/mob/living/proc/run_armor_check(def_zone = null, attack_flag = MELEE, absorb_text = null, soften_text = null, armor_penetration, penetrated_text, silent=FALSE, weak_against_armor = FALSE)
-	var/our_armor = getarmor(def_zone, attack_flag)
+/*
+ * A proc that processes armor on a package. This modifies the package and returns a percentage (0 - 100) of damage blocked
+ * Should always set package's armor_block value
+ * * package - Damage package to read and modify
+ * * penetrated_text - Line displayed when armor gets penetrated.
+ * * soften_text - Line displayed when armor partially negates the attack.
+ * * absorb_text - Line displayed when the attack gets fully negated.
+ * * silent - Prevents armor block/penetration messages from displaying.
+ */
+/mob/living/proc/package_armor_check(datum/damage_package/package, penetrated_text = null, soften_text = null, absorb_text = null, silent = FALSE)
+	var/armor_protection = get_armor(package)
 
-	if(our_armor <= 0)
-		return our_armor
-	if(weak_against_armor && our_armor >= 0)
-		our_armor *= ARMOR_WEAKENED_MULTIPLIER
+	if (armor_protection > 0)
+		armor_protection = clamp(PENETRATE_ARMOR(armor_protection * package.armor_multiplier, package.armor_penetration), min(armor_protection, 0), 100)
 
-	if(armor_penetration)
-		our_armor = max(PENETRATE_ARMOR(our_armor, armor_penetration), 0)
+	package.amount = round(package.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
+	package.armor_block = armor_protection * 0.01
 
-	if(silent)
-		return our_armor
+	if (silent || armor_protection <= 0)
+		return armor_protection
 
-	//the if "armor" check is because this is used for everything on /living, including humans
-	if(armor_penetration)
-		if(penetrated_text)
-			to_chat(src, span_userdanger("[penetrated_text]"))
-		else
-			to_chat(src, span_userdanger("Your armor was penetrated!"))
-	else if(our_armor >= 100)
-		if(absorb_text)
-			to_chat(src, span_notice("[absorb_text]"))
-		else
-			to_chat(src, span_notice("Your armor absorbs the blow!"))
-	else
-		if(soften_text)
-			to_chat(src, span_warning("[soften_text]"))
-		else
-			to_chat(src, span_warning("Your armor softens the blow!"))
+	var/zone = package.def_zone
+	if (islist(package.def_zone))
+		zone = pick(package.def_zone)
 
-	return our_armor
+	if (zone)
+		zone = parse_zone_with_bodypart(zone)
 
-/mob/living/proc/getarmor(def_zone, type)
+	if (package.armor_penetration > 0 || package.armor_multiplier < 1)
+		if (penetrated_text)
+			to_chat(src, penetrated_text)
+			return armor_protection
+
+		if (zone)
+			to_chat(src, span_danger("Your armor on your [zone] has been penetrated!"))
+			return armor_protection
+
+		to_chat(src, span_danger("Your armor was penetrated!"))
+		return armor_protection
+
+	if (armor_protection >= 100)
+		if (absorb_text)
+			to_chat(src, absorb_text)
+			return armor_protection
+
+		if (zone)
+			to_chat(src, span_notice("Your armor has protected your [zone]!"))
+			return armor_protection
+
+		to_chat(src, span_notice("Your armor absorbs the blow!"))
+		return armor_protection
+
+
+	if (soften_text)
+		to_chat(src, soften_text)
+		return armor_protection
+
+	if (zone)
+		to_chat(src, span_warning("Your armor has softened a hit to your [zone]!"))
+		return armor_protection
+
+	to_chat(src, span_warning("Your armor softens the blow!"))
+
+	return armor_protection
+
+/*
+ * Internal proc that fetches percentage of armor against a specific damage package.
+ * Do not use this directly, use run_armor_check or package_armor_check instead.
+ * Should return percentage of damage blocked, 0 - 100 like run_armor_check.
+ */
+/mob/living/proc/get_armor(datum/damage_package/package)
+	PROTECTED_PROC(TRUE)
 	return 0
 
 //this returns the mob's protection against eye damage (number between -1 and 2) from bright lights
@@ -479,11 +565,10 @@
 						span_userdanger("[user.name] bites you!"), span_hear("You hear a chomp!"), COMBAT_MESSAGE_RANGE, user)
 		to_chat(user, span_danger("You bite [src]!"))
 		return TRUE
-	else
-		visible_message(span_danger("[user.name]'s bite misses [src]!"), \
-						span_danger("You avoid [user.name]'s bite!"), span_hear("You hear the sound of jaws snapping shut!"), COMBAT_MESSAGE_RANGE, user)
-		to_chat(user, span_warning("Your bite misses [src]!"))
 
+	visible_message(span_danger("[user.name]'s bite misses [src]!"), \
+					span_danger("You avoid [user.name]'s bite!"), span_hear("You hear the sound of jaws snapping shut!"), COMBAT_MESSAGE_RANGE, user)
+	to_chat(user, span_warning("Your bite misses [src]!"))
 	return FALSE
 
 /mob/living/attack_larva(mob/living/carbon/alien/larva/L, list/modifiers)

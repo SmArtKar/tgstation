@@ -14,10 +14,46 @@
 	var/resistance_flags = NONE // INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | ON_FIRE | UNACIDABLE | ACID_PROOF
 
 /// Wrapper for taking damage - assembles and processes a damage package, then returns the final taken package
-/atom/proc/take_damage(DAMAGE_PROC_ARGS, sound_effect = TRUE)
+/atom/proc/take_damage(
+	amount = 0,
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	attack_text = null,
+	attack_message_spectator = null,
+	attack_message_attacker = null,
+	sharpness = NONE,
+	amount_multiplier = 1,
+	sound_effect = TRUE
+)
 	// Nothing should override this as this is simply a wrapper for user convinience, do yer logic in process_damage_package
 	SHOULD_NOT_OVERRIDE(TRUE)
-	var/datum/damage_package/package = new(DAMAGE_PROC_PASSING)
+	var/datum/damage_package/package = new(
+		amount = amount,
+		damage_type = damage_type,
+		damage_flag = damage_flag,
+		attack_flags = attack_flags,
+		def_zone = def_zone,
+		attack_dir = attack_dir,
+		armor_penetration = armor_penetration,
+		armor_multiplier = armor_multiplier,
+		forced = forced,
+		hit_by = hit_by,
+		source = source,
+		attack_text = attack_text,
+		attack_message_spectator = attack_message_spectator,
+		attack_message_attacker = attack_message_attacker,
+		sharpness = sharpness,
+		amount_multiplier = amount_multiplier,
+	)
+
 	return process_damage_package(package, sound_effect)
 
 /// Proc that ensures that the atom is in a valid state to take damage, and then actually applies damage based on a damage package
@@ -129,7 +165,7 @@
 	if (package.damage_flag)
 		armor_protection = get_armor_rating(package.damage_flag)
 
-	if (armor_protection > 0) //Only apply weak-against-armor/hollowpoint effects if there actually IS armor.
+	if (armor_protection > 0) // Only apply weak-against-armor / hollow point effects if there actually IS armor.
 		armor_protection = clamp(PENETRATE_ARMOR(armor_protection * package.armor_multiplier, package.armor_penetration), min(armor_protection, 0), 100)
 
 	package.amount = round(package.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)

@@ -901,7 +901,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		else
 			miss_chance = clamp(UNARMED_MISS_CHANCE_BASE - limb_accuracy + (user.get_burn_loss()*0.5 + user.get_brute_loss()*0.5), 0, UNARMED_MISS_CHANCE_MAX) //Limb miss chance + various damage. capped at 80 so there is at least a chance to land a hit.
 
-	if(!damage || !affecting || prob(miss_chance))//future-proofing for species that have 0 damage/weird cases where no zone is targeted
+	if(!damage || !affecting || prob(miss_chance)) // Future-proofing for species that have 0 damage/weird cases where no zone is targeted
 		playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
 		target.visible_message(span_danger("[user]'s [atk_verb] misses [target]!"), \
 						span_danger("You avoid [user]'s [atk_verb]!"), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
@@ -909,7 +909,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		log_combat(user, target, "attempted to punch")
 		return FALSE
 
-	var/armor_block = target.run_armor_check(affecting, MELEE)
+	var/armor_block = target.package_armor_check(user.get_unarmed_package(target))
 
 	// In a brawl, drunkenness is a boon if you're a bit drunk but not too much. Else you're easier to hit.
 	// But, generally, getting hit while drunk is probably a good way to start throwing up
@@ -945,9 +945,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, grappled ? "grapple punched" : "kicked")
-		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_dir = attack_dir)
+		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_dir = attack_dir) // Smartkar todo
 	else // Normal attacks do not gain the benefit of armor penetration.
-		target.apply_damage(damage, attack_type, affecting, armor_block, attack_dir = attack_dir)
+		target.apply_damage(damage, attack_type, affecting, armor_block, attack_dir = attack_dir) // Smartkar todo
 		if(damage >= 9)
 			target.force_say()
 		log_combat(user, target, "punched")

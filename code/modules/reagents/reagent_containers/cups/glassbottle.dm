@@ -175,7 +175,7 @@
 			knockdown_effectiveness = bottle_knockdown_duration + force
 	//Apply the damage!
 	armor_block = min(90,armor_block)
-	living_target.apply_damage(force, BRUTE, affecting, armor_block)
+	living_target.apply_damage(force, BRUTE, affecting, armor_block) // Smartkar todo, comperss the above to get rid of human check
 
 	// You are going to knock someone down for longer if they are not wearing a helmet.
 	var/head_attack_message = ""

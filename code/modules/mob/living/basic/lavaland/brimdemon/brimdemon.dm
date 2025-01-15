@@ -76,7 +76,7 @@
 	new /obj/effect/temp_visual/explosion/fast(origin_turf)
 	var/list/possible_targets = range(1, origin_turf)
 	for(var/mob/living/target in possible_targets)
-		var/armor = target.run_armor_check(attack_flag = BOMB)
+		var/armor = target.run_armor_check(attack_flag = BOMB) // Smartkar todo
 		target.apply_damage(20, damagetype = BURN, blocked = armor, spread_damage = TRUE)
 
 	for (var/atom/movable/thing as anything in contents)

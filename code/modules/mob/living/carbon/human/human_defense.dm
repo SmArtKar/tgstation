@@ -1,47 +1,126 @@
-/mob/living/carbon/human/getarmor(def_zone, type)
-	var/armorval = 0
-	var/organnum = 0
-
-	if(def_zone)
-		if(isbodypart(def_zone))
-			var/obj/item/bodypart/bp = def_zone
-			if(bp)
-				return check_armor(def_zone, type)
-		var/obj/item/bodypart/affecting = get_bodypart(check_zone(def_zone))
-		if(affecting)
-			return check_armor(affecting, type)
-		//If a specific bodypart is targeted, check how that bodypart is protected and return the value.
-
-	//If you don't specify a bodypart, it checks ALL your bodyparts for protection, and averages out the values
-	for(var/X in bodyparts)
-		var/obj/item/bodypart/BP = X
-		armorval += check_armor(BP, type)
-		organnum++
-	return (armorval/max(organnum, 1))
-
-/mob/living/carbon/human/proc/check_armor(obj/item/bodypart/def_zone, damage_type)
-	if(!damage_type)
+/*
+ * Alternate version of apply_damage which individually damages all bodyparts, checking for each one's armor
+ * As we're operating with (probably) 6 packages, this only returns the total amount of damage dealt
+ */
+/mob/living/carbon/human/proc/apply_spread_damage(
+	amount = 0,
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
+	list/def_zones = null,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	wound_bonus = 0,
+	bare_wound_bonus = 0,
+	sharpness = NONE,
+	required_biotype = ALL,
+	amount_multiplier = 1,
+	wound_clothing = TRUE,
+	should_update = TRUE,
+	silent = FALSE,
+)
+	var/damage_dealt = 0
+	var/list/parts = get_damageable_bodyparts(required_biotype)
+	if (!length(parts))
 		return 0
-	var/protection = 100
-	var/list/covering_clothing = list(head, wear_mask, wear_suit, w_uniform, back, gloves, shoes, belt, s_store, glasses, ears, wear_id, wear_neck) //Everything but pockets. Pockets are l_store and r_store. (if pockets were allowed, putting something armored, gloves or hats for example, would double up on the armor)
-	for(var/obj/item/clothing/clothing_item in covering_clothing)
-		if(clothing_item.body_parts_covered & def_zone.body_part)
-			protection *= (100 - min(clothing_item.get_armor_rating(damage_type), 100)) * 0.01
-	protection *= (100 - min(physiology.armor.get_rating(damage_type), 100)) * 0.01
-	return 100 - protection
 
-///Get all the clothing on a specific body part
-/mob/living/carbon/human/proc/get_clothing_on_part(obj/item/bodypart/def_zone)
-	var/list/covering_part = list()
-	var/list/body_parts = list(head, wear_mask, wear_suit, w_uniform, back, gloves, shoes, belt, s_store, glasses, ears, wear_id, wear_neck) //Everything but pockets. Pockets are l_store and r_store. (if pockets were allowed, putting something armored, gloves or hats for example, would double up on the armor)
-	for(var/bp in body_parts)
-		if(!bp)
+	if (islist(def_zones))
+		for (var/i in 1 to length(def_zones))
+			if (!isbodypart(def_zones[i]))
+				def_zones[i] = get_bodypart(def_zones[i])
+		parts = (def_zones & parts)
+
+	for (var/zone in parts)
+		var/datum/damage_package/package = apply_damage(
+			amount = amount / length(parts),
+			damage_type = damage_type,
+			damage_flag = damage_flag,
+			attack_flags = attack_flags,
+			def_zone = zone,
+			attack_dir = attack_dir,
+			armor_penetration = armor_penetration,
+			armor_multiplier = armor_multiplier,
+			forced = forced,
+			hit_by = hit_by,
+			source = source,
+			wound_bonus = wound_bonus,
+			bare_wound_bonus = bare_wound_bonus,
+			sharpness = sharpness,
+			required_biotype = required_biotype,
+			amount_multiplier = amount_multiplier,
+			check_armor = TRUE,
+			wound_clothing = wound_clothing,
+			should_update = FALSE,
+			silent = silent,
+		)
+		if (!package)
 			continue
-		if(bp && istype(bp , /obj/item/clothing))
-			var/obj/item/clothing/C = bp
-			if(C.body_parts_covered & def_zone.body_part)
-				covering_part += C
-	return covering_part
+
+		damage_dealt += package.amount
+		// Prevents multiple armor pen messages from popping up
+		if (package.armor_penetration > 0 || package.armor_multiplier < 1 || package.armor_block > 0)
+			silent = FALSE
+	return damage_dealt
+
+/mob/living/carbon/human/get_armor(datum/damage_package/package)
+	var/physiology_protection = (100 - min(physiology.armor.get_rating(package.damage_type), 100)) * 0.01
+
+	// Its likely (when coming from external calls outside of apply_damage) that def_zone is either a list of zones, or just a zone
+	// In which case we need to convert it to a bodypart/list of bodyparts
+	if (istext(package.def_zone))
+		package.def_zone = get_bodypart(check_zone(package.def_zone))
+		// If we're missing the part, but somehow are attempting to deal damage to it, default to chest armor
+		// Original behavior for this averaged ALL armor values on your body, but that's a bit weird
+		if (!bodypart)
+			bodypart = bodyparts[1]
+			if (!bodypart) // We're somehow lacking a chest, I think we've got worse problem than armor consistency
+				return 0
+
+	if (isbodypart(package.def_zone))
+		return physiology_protection * check_part_armor(package, package.def_zone)
+
+	var/list/parts_to_check = bodyparts
+	if (!islist(package.def_zone))
+		var/list/valid_parts = list()
+		for (var/obj/item/bodypart/part as anything in package.def_zone)
+			if (!isbodypart(part))
+				part = get_bodypart(check_zone(part))
+
+			if (!part)
+				continue
+
+		if (length(valid_parts))
+			parts_to_check = valid_parts
+
+	if (!length(parts_to_check))
+		return 0
+
+	var/total_armor = 0
+	for (var/obj/item/bodypart/part as anything in parts_to_check)
+		total_armor += check_part_armor(package, part)
+
+	return physiology_protection * total_armor / length(parts_to_check)
+
+/// Checks armor on a certain bodypart
+/mob/living/carbon/human/proc/check_part_armor(datum/damage_package/package, obj/item/bodypart/bodypart)
+	var/armor_protection = 100
+	var/list/worn_clothing = get_clothing_on_part(bodypart)
+	for (var/obj/item/clothing/worn_thing as anything in worn_clothing)
+		armor_protection *= (100 - min(worn_thing.get_armor_rating(package.damage_type), 100)) * 0.01
+	return armor_protection
+
+/// Returns all clothing items on a specific body part
+/mob/living/carbon/human/proc/get_clothing_on_part(obj/item/bodypart/bodypart)
+	var/list/covering_clothing = list()
+	var/list/worn_clothing = list(head, wear_mask, wear_suit, w_uniform, back, gloves, shoes, belt, s_store, glasses, ears, wear_id, wear_neck)
+	for (var/obj/item/clothing/worn_thing in worn_clothing)
+		if (worn_thing.body_parts_covered & bodypart.body_part)
+			covering_clothing += worn_thing
+	return covering_clothing
 
 /mob/living/carbon/human/get_incoming_damage_modifier(datum/damage_package/package)
 	. = ..()
@@ -164,26 +243,32 @@
 	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
 
 	if(LAZYACCESS(modifiers, RIGHT_CLICK)) //Always drop item in hand, if no item, get stunned instead.
-		var/obj/item/I = get_active_held_item()
-		if(I && !(I.item_flags & ABSTRACT) && dropItemToGround(I))
+		var/obj/item/held_item = get_active_held_item()
+		if(held_item && !(held_item.item_flags & ABSTRACT) && dropItemToGround(I))
 			playsound(loc, 'sound/items/weapons/slash.ogg', 25, TRUE, -1)
 			visible_message(span_danger("[user] disarmed [src]!"), \
 							span_userdanger("[user] disarmed you!"), span_hear("You hear aggressive shuffling!"), null, user)
 			to_chat(user, span_danger("You disarm [src]!"))
-		else if(!user.client || prob(5)) // only natural monkeys get to stun reliably, (they only do it occasionaly)
-			playsound(loc, 'sound/items/weapons/pierce.ogg', 25, TRUE, -1)
-			if (src.IsKnockdown() && !src.IsParalyzed())
-				Paralyze(40)
-				log_combat(user, src, "pinned")
-				visible_message(span_danger("[user] pins [src] down!"), \
-								span_userdanger("[user] pins you down!"), span_hear("You hear shuffling and a muffled groan!"), null, user)
-				to_chat(user, span_danger("You pin [src] down!"))
-			else
-				Knockdown(30)
-				log_combat(user, src, "tackled")
-				visible_message(span_danger("[user] tackles [src] down!"), \
-								span_userdanger("[user] tackles you down!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), null, user)
-				to_chat(user, span_danger("You tackle [src] down!"))
+			return TRUE
+
+		// only natural monkeys get to stun reliably, (they only do it occasionaly)
+		if(user.client && !prob(5))
+			return TRUE
+
+		playsound(loc, 'sound/items/weapons/pierce.ogg', 25, TRUE, -1)
+		if (IsKnockdown() && !IsParalyzed())
+			Paralyze(40)
+			log_combat(user, src, "pinned")
+			visible_message(span_danger("[user] pins [src] down!"), \
+							span_userdanger("[user] pins you down!"), span_hear("You hear shuffling and a muffled groan!"), null, user)
+			to_chat(user, span_danger("You pin [src] down!"))
+			return TRUE
+
+		Knockdown(30)
+		log_combat(user, src, "tackled")
+		visible_message(span_danger("[user] tackles [src] down!"), \
+						span_userdanger("[user] tackles you down!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), null, user)
+		to_chat(user, span_danger("You tackle [src] down!"))
 		return TRUE
 
 	if(!user.combat_mode)
@@ -193,30 +278,37 @@
 	if(user.limb_destroyer)
 		dismembering_strike(user, affecting.body_zone)
 
-	if(try_inject(user, affecting, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE))//Thick suits can stop monkey bites.
-		if(..()) //successful monkey bite, this handles disease contraction.
-			var/obj/item/bodypart/head/monkey_mouth = user.get_bodypart(BODY_ZONE_HEAD)
-			var/damage = HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) ? monkey_mouth.unarmed_damage_high : rand(monkey_mouth.unarmed_damage_low, monkey_mouth.unarmed_damage_high)
-			if(!damage)
-				return FALSE
-			if(check_block(user, damage, "the [user.name]", attack_type = UNARMED_ATTACK))
-				return FALSE
-			apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE))
-		return TRUE
+	if(!try_inject(user, affecting, injection_flags = INJECT_TRY_SHOW_ERROR_MESSAGE)) // Thick suits can stop monkey bites.
+		return FALSE
+
+	if(!..()) //successful monkey bite, this handles disease contraction.
+		return FALSE
+
+	var/obj/item/bodypart/head/monkey_mouth = user.get_bodypart(BODY_ZONE_HEAD)
+	var/damage = HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) ? monkey_mouth.unarmed_damage_high : rand(monkey_mouth.unarmed_damage_low, monkey_mouth.unarmed_damage_high)
+	if(!damage)
+		return FALSE
+	if(check_block(user, damage, "the [user.name]", attack_type = UNARMED_ATTACK))
+		return FALSE
+	apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE)) // Smartkar todo
+	return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
 	. = ..()
 	if(!.)
 		return
 
-	if(LAZYACCESS(modifiers, RIGHT_CLICK)) //Always drop item in hand if there is one. If there's no item, shove the target. If the target is incapacitated, slam them into the ground to stun them.
-		var/obj/item/I = get_active_held_item()
-		if(I && dropItemToGround(I))
+	// Always drop item in hand if there is one. If there's no item, shove the target. If the target is incapacitated, slam them into the ground to stun them.
+	if(LAZYACCESS(modifiers, RIGHT_CLICK))
+		var/obj/item/held_item = get_active_held_item()
+		if(held_item && dropItemToGround(held_item))
 			playsound(loc, 'sound/items/weapons/slash.ogg', 25, TRUE, -1)
 			visible_message(span_danger("[user] disarms [src]!"), \
 							span_userdanger("[user] disarms you!"), span_hear("You hear aggressive shuffling!"), null, user)
 			to_chat(user, span_danger("You disarm [src]!"))
-		else if(!HAS_TRAIT(src, TRAIT_INCAPACITATED))
+			return TRUE
+
+		if(!HAS_TRAIT(src, TRAIT_INCAPACITATED))
 			playsound(loc, 'sound/items/weapons/pierce.ogg', 25, TRUE, -1)
 			var/shovetarget = get_edge_target_turf(user, get_dir(user, get_step_away(src, user)))
 			adjust_stamina_loss(35)
@@ -225,36 +317,42 @@
 			visible_message(span_danger("[user] tackles [src] down!"), \
 							span_userdanger("[user] shoves you with great force!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), null, user)
 			to_chat(user, span_danger("You shove [src] with great force!"))
-		else
-			Paralyze(5 SECONDS)
-			playsound(loc, 'sound/items/weapons/punch3.ogg', 25, TRUE, -1)
-			visible_message(span_danger("[user] slams [src] into the floor!"), \
-							span_userdanger("[user] slams you into the ground!"), span_hear("You hear something slam loudly onto the floor!"), null, user)
-			to_chat(user, span_danger("You slam [src] into the floor beneath you!"))
-			log_combat(user, src, "slammed into the ground")
+			return TRUE
+
+		Paralyze(5 SECONDS)
+		playsound(loc, 'sound/items/weapons/punch3.ogg', 25, TRUE, -1)
+		visible_message(span_danger("[user] slams [src] into the floor!"), \
+						span_userdanger("[user] slams you into the ground!"), span_hear("You hear something slam loudly onto the floor!"), null, user)
+		to_chat(user, span_danger("You slam [src] into the floor beneath you!"))
+		log_combat(user, src, "slammed into the ground")
 		return TRUE
 
-	if(user.combat_mode)
-		if (w_uniform)
-			w_uniform.add_fingerprint(user)
-		var/damage = prob(90) ? rand(user.melee_damage_lower, user.melee_damage_upper) : 0
-		if(!damage)
-			playsound(loc, 'sound/items/weapons/slashmiss.ogg', 50, TRUE, -1)
-			visible_message(span_danger("[user] lunges at [src]!"), \
-							span_userdanger("[user] lunges at you!"), span_hear("You hear a swoosh!"), null, user)
-			to_chat(user, span_danger("You lunge at [src]!"))
-			return FALSE
-		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE,"","",10)
+	if(!user.combat_mode)
+		return
 
-		playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
-		visible_message(span_danger("[user] slashes at [src]!"), \
-						span_userdanger("[user] slashes at you!"), span_hear("You hear a sickening sound of a slice!"), null, user)
-		to_chat(user, span_danger("You slash at [src]!"))
-		log_combat(user, src, "attacked")
-		if(!dismembering_strike(user, user.zone_selected)) //Dismemberment successful
-			return TRUE
-		apply_damage(damage, BRUTE, affecting, armor_block)
+	if (w_uniform)
+		w_uniform.add_fingerprint(user)
+
+	var/damage = prob(90) ? rand(user.melee_damage_lower, user.melee_damage_upper) : 0
+	if(!damage)
+		playsound(loc, 'sound/items/weapons/slashmiss.ogg', 50, TRUE, -1)
+		visible_message(span_danger("[user] lunges at [src]!"), \
+						span_userdanger("[user] lunges at you!"), span_hear("You hear a swoosh!"), null, user)
+		to_chat(user, span_danger("You lunge at [src]!"))
+		return FALSE
+
+	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
+	var/armor_block = run_armor_check(affecting, MELEE,"","",10) // Smartkar todo
+	playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
+	visible_message(span_danger("[user] slashes at [src]!"), \
+					span_userdanger("[user] slashes at you!"), span_hear("You hear a sickening sound of a slice!"), null, user)
+	to_chat(user, span_danger("You slash at [src]!"))
+	log_combat(user, src, "attacked")
+
+	if(!dismembering_strike(user, user.zone_selected)) //Dismemberment successful
+		return TRUE
+
+	apply_damage(damage, BRUTE, affecting, armor_block)
 
 /mob/living/carbon/human/attack_larva(mob/living/carbon/alien/larva/L, list/modifiers)
 	. = ..()
@@ -268,7 +366,7 @@
 	if(stat != DEAD)
 		L.amount_grown = min(L.amount_grown + damage, L.max_grown)
 		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(L.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE)
+		var/armor_block = run_armor_check(affecting, MELEE) // Smartkar todo
 		apply_damage(damage, BRUTE, affecting, armor_block)
 
 /mob/living/carbon/human/ex_act(severity, target, origin)
@@ -364,7 +462,7 @@
 	show_message(span_userdanger("The blob attacks you!"))
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
-	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE))
+	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE)) // Smartkar todo
 
 
 ///Calculates the siemens coeff based on clothing and species, can also restart hearts.

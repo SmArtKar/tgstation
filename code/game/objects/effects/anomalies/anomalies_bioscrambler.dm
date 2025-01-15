@@ -29,7 +29,7 @@
 	playsound(src, 'sound/effects/magic/cosmic_energy.ogg', vol = 50, vary = TRUE)
 	COOLDOWN_START(src, pulse_cooldown, pulse_delay)
 	for(var/mob/living/carbon/nearby in hearers(range, src))
-		nearby.bioscramble(name)
+		nearby.bioscramble(src)
 
 /obj/effect/anomaly/bioscrambler/move_anomaly()
 	update_target()

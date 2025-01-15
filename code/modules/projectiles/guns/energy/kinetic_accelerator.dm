@@ -271,7 +271,7 @@
 	for(var/turf/closed/mineral/mineral_turf in RANGE_TURFS(1, target) - target)
 		mineral_turf.gets_drilled(firer, TRUE)
 	for(var/mob/living/living_mob in range(1, target) - firer - target)
-		var/armor = living_mob.run_armor_check(def_zone, armor_flag, armor_penetration = armor_penetration)
+		var/armor = living_mob.run_armor_check(def_zone, armor_flag, armor_penetration = armor_penetration) // Smartkar todo
 		living_mob.apply_damage(damage, damage_type, def_zone, armor)
 		to_chat(living_mob, span_userdanger("You're struck by a [name]!"))
 
@@ -445,7 +445,7 @@
 				M.gets_drilled(K.firer, TRUE)
 	if(modifier)
 		for(var/mob/living/L in range(1, target_turf) - K.firer - target)
-			var/armor = L.run_armor_check(K.def_zone, K.armor_flag, "", "", K.armor_penetration)
+			var/armor = L.run_armor_check(K.def_zone, K.armor_flag, "", "", K.armor_penetration) // Smartkar todo
 			L.apply_damage(K.damage*modifier, K.damage_type, K.def_zone, armor)
 			to_chat(L, span_userdanger("You're struck by a [K.name]!"))
 
@@ -574,7 +574,7 @@
 			var/kill_modifier = 1
 			if(K.pressure_decrease_active)
 				kill_modifier *= K.pressure_decrease
-			var/armor = L.run_armor_check(K.def_zone, K.armor_flag, "", "", K.armor_penetration)
+			var/armor = L.run_armor_check(K.def_zone, K.armor_flag, "", "", K.armor_penetration) // Smartkar todo
 			L.apply_damage(bounties_reaped[L.type]*kill_modifier, K.damage_type, K.def_zone, armor)
 
 /obj/item/borg/upgrade/modkit/bounty/proc/get_kill(mob/living/L)

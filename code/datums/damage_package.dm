@@ -49,7 +49,30 @@
 	/// Initial amount of damage that the package dealt before any side mods
 	VAR_FINAL/initial_amount = 0
 
-/datum/damage_package/New(DAMAGE_PROC_ARGS, modifiers = null, initial_amount = null)
+/datum/damage_package/New(
+	amount = 0,
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	attack_text = null,
+	attack_message_spectator = null,
+	attack_message_attacker = null,
+	spread_damage = FALSE,
+	wound_bonus = 0,
+	bare_wound_bonus = 0,
+	sharpness = NONE,
+	required_biotype = ALL,
+	amount_multiplier = 1,
+	modifiers = null,
+	initial_amount = null
+)
 	. = ..()
 	src.amount = amount
 	src.damage_type = damage_type
@@ -82,3 +105,30 @@
 	hit_by = null
 	source = null
 	return ..()
+
+/// Creates a copy of this package, optionally with reduced/increased damage
+/datum/damage_package/proc/Copy(total_mult = 1)
+	return new /datum/damage_package(
+		amount = amount * total_mult,
+		damage_type = damage_type,
+		damage_flag = damage_flag,
+		attack_flags = attack_flags,
+		def_zone = def_zone,
+		spread_damage = spread_damage,
+		attack_dir = attack_dir,
+		armor_penetration = armor_penetration,
+		armor_multiplier = armor_multiplier,
+		forced = forced,
+		hit_by = hit_by,
+		source = source,
+		attack_text = attack_text,
+		attack_message_spectator = attack_message_spectator,
+		attack_message_attacker = attack_message_attacker,
+		wound_bonus = wound_bonus,
+		bare_wound_bonus = bare_wound_bonus,
+		sharpness = sharpness,
+		required_biotype = required_biotype,
+		amount_multiplier = amount_multiplier,
+		modifiers = modifiers,
+		initial_amount = initial_amount * total_mult,
+	)

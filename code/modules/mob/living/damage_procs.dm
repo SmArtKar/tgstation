@@ -28,7 +28,7 @@
  * * should_update - If update_health should be called from within this proc.
  * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
  *
- * Returns the amount of damage dealt.
+ * Returns a damage package if any damage was dealt
  */
 
 /mob/living/proc/apply_damage(
@@ -99,13 +99,13 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	if(!package.forced && HAS_TRAIT(src, TRAIT_GODMODE) && package.amount > 0)
-		return 0
+		return null
 
 	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, should_update, silent) & COMSIG_MOB_PREVENT_DAMAGE)
-		return 0
+		return null
 
 	if (!valid_package(package)) // Checks biotype for simplemobs
-		return 0
+		return null
 
 	if (package.amount > 0)
 		package.amount *= CONFIG_GET(number/damage_multiplier)
@@ -114,17 +114,18 @@
 		package.amount_multiplier *= get_incoming_damage_modifier(package)
 		package.amount *= package.amount_multiplier
 		if (check_armor)
-			package.amount *= run_armor_check(package, silent = silent)
+			blocked = package_armor_check(package, silent = silent)
 		else
-			package.amount *= (100 - blocked) * 0.01
+			package.amount *= round((100 - blocked) * 0.01, DAMAGE_PRECISION)
+			package.armor_block = blocked * 0.01
 
 	if (abs(package.amount) < DAMAGE_PRECISION)
-		return 0
+		return null
 
 	// I'd prefer if we could NOT do this, but carbons have all the fancy logic that basicmobs lack so *shrug*
 	package.amount = finalize_package_damage(package, wound_clothing, should_update)
 	SEND_SIGNAL(src, COMSIG_MOB_AFTER_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, should_update, silent)
-	return package.amount
+	return package
 
 /*
  * Actually applies damage packages to mobs

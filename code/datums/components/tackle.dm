@@ -205,7 +205,7 @@
 	var/potential_outcome = (roll * 10)
 
 	if(ishuman(target))
-		potential_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE)) /100)
+		potential_outcome *= (100 - target.run_armor_check(BRUTE, MELEE, LEAP_ATTACK, BODY_ZONE_CHEST, get_dir(target, user), hit_by = user, source = user)) * 0.01
 	else
 		potential_outcome *= 0.9
 
@@ -299,7 +299,7 @@
 	var/potential_roll_outcome = (roll * -10)
 
 	if(ishuman(user))
-		potential_roll_outcome *= ((100 - target.run_armor_check(BODY_ZONE_CHEST, MELEE)) /100)
+		potential_roll_outcome *= (100 - target.run_armor_check(BRUTE, MELEE, LEAP_ATTACK, BODY_ZONE_CHEST, get_dir(target, user), hit_by = user, source = user)) * 0.01
 	else
 		potential_roll_outcome *= 0.9
 

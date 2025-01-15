@@ -760,7 +760,7 @@
 	new /obj/effect/temp_visual/circle_wave/bioscrambler/light(get_turf(src))
 	playsound(src, 'sound/effects/magic/cosmic_energy.ogg', vol = 50, vary = TRUE)
 	for(var/mob/living/carbon/nearby in range(2, get_turf(src))) //needs get_turf() to work
-		nearby.bioscramble(name)
+		nearby.bioscramble(src)
 		playsound(nearby, SFX_SPARKS, rand(25,50), TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
 		throw_smoke(get_turf(nearby))
 		to_chat(nearby, span_notice("You feel weird."))
