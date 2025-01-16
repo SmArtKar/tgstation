@@ -28,7 +28,7 @@
  * * should_update - If update_health should be called from within this proc.
  * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
  *
- * Returns a damage package if any damage was dealt
+ * Returns the amount of damage dealt, if any
  */
 
 /mob/living/proc/apply_damage(
@@ -82,7 +82,7 @@
 		amount_multiplier = amount_multiplier,
 	)
 
-	return apply_damage_package(package, blocked, check_armor, wound_clothing, should_update, silent)
+	return apply_damage_package(package, blocked, check_armor, wound_clothing, should_update, silent)?.amount
 
 
 /**
@@ -110,7 +110,7 @@
  * * should_update - If update_health should be called from within this proc.
  * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
  *
- * Returns a damage package if any healing was applied - amount will be negative!
+ * Returns the amount of healing dealt
  */
 
 /mob/living/proc/apply_healing(
@@ -158,7 +158,7 @@
 		amount_multiplier = amount_multiplier,
 	)
 
-	return apply_damage_package(package, blocked, check_armor, FALSE, should_update, silent)
+	return -apply_damage_package(package, blocked, check_armor, FALSE, should_update, silent)?.amount
 
 /** Calculates armor for a damage package, processes it and then calls a proc that applies the damage.
  *
@@ -365,7 +365,6 @@
 
 	return apply_multiple_packages(applied_packages, blocked, check_armor, wound_clothing, should_update, silent)
 
-
 /// Applies multiple healing types as a single event, akin to apply_multiple_damages
 /mob/living/proc/apply_multiple_heals(
 	brute = 0,
@@ -560,7 +559,7 @@
 		var/amount_to_heal = min(abs(amount), get_current_damage_of_type(damage_type)) // Heal only up to the amount of damage we have
 		if(!amount_to_heal)
 			continue
-		damage_healed += apply_healing(amount_to_heal, damage_type)?.amount // smartkar figure if this is acceptable
+		damage_healed += apply_healing(amount_to_heal, damage_type)
 		amount -= amount_to_heal // Remove what we healed from our current amount
 		if(!amount)
 			break
