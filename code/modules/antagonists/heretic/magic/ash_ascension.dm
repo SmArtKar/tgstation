@@ -57,7 +57,7 @@
 		flame_tile.alpha = 125
 		nearby_turf.hotspot_expose(750, 25 * seconds_between_ticks, 1)
 		for(var/mob/living/fried_living in nearby_turf.contents - owner)
-			fried_living.apply_damage(2.5 * seconds_between_ticks, BURN)
+			fried_living.apply_damage(2.5 * seconds_between_ticks, BURN, FIRE, MAGIC_ATTACK, source = owner)
 
 /// Creates one, large, expanding ring of fire around the caster, which does not follow them.
 /datum/action/cooldown/spell/fire_cascade
@@ -91,7 +91,7 @@
 			flame_tile.alpha = 125
 			nearby_turf.hotspot_expose(750, 50, 1)
 			for(var/mob/living/fried_living in nearby_turf.contents - owner)
-				fried_living.apply_damage(5, BURN)
+				fried_living.apply_damage(5, BURN, FIRE, MAGIC_ATTACK, source = owner)
 
 		stoplag(0.3 SECONDS)
 

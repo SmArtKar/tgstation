@@ -623,7 +623,7 @@
 	if(heretic_mind)
 		log_combat(heretic_mind.current, sac_target, "disemboweled via sacrifice")
 	sac_target.spill_organs(DROP_ALL_REMAINS)
-	sac_target.apply_damage(250, BRUTE)
+	sac_target.apply_damage(250, BRUTE, null, MAGIC_ATTACK)
 	if(sac_target.stat != DEAD)
 		sac_target.investigate_log("has been killed by heretic sacrifice.", INVESTIGATE_DEATHS)
 		sac_target.death()

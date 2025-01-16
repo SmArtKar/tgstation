@@ -159,7 +159,7 @@
 
 /obj/item/soulstone/proc/hot_potato(mob/living/user)
 	to_chat(user, span_userdanger("Holy magics residing in [src] burn your hand!"))
-	user.apply_damage(10, BURN, user.get_active_hand())
+	user.apply_damage(10, BURN, null, MAGIC_ATTACK, user.get_active_hand()?.body_zone, source = src)
 	user.emote("scream")
 	user.update_damage_overlays()
 	user.dropItemToGround(src)

@@ -6,7 +6,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 	actions_types = list(/datum/action/item_action/organ_action/toggle)
 	///A ref for the arm we're taking up. Mostly for the unregister signal upon removal
-	var/obj/hand
+	var/obj/item/bodypart/hand
 	//A list of typepaths to create and insert into ourself on init
 	var/list/items_to_create = list()
 	/// Used to store a list of all items inside, for multi-item implants.

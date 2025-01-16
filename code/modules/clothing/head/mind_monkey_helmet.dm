@@ -41,7 +41,7 @@
 	if(!ismonkey(user) || user.ckey)
 		var/mob/living/something = user
 		to_chat(something, span_boldnotice("You feel a stabbing pain in the back of your head for a moment."))
-		something.apply_damage(5,BRUTE,BODY_ZONE_HEAD,FALSE,FALSE,FALSE) //notably: no damage resist (it's in your helmet), no damage spread (it's in your helmet)
+		something.apply_damage(5, BRUTE, def_zone = BODY_ZONE_HEAD, source = src)
 		playsound(src, 'sound/machines/buzz/buzz-sigh.ogg', 30, TRUE)
 		return
 	if(!(GLOB.ghost_role_flags & GHOSTROLE_STATION_SENTIENCE))

@@ -109,11 +109,7 @@ Striking a noncultist, however, will tear their flesh."}
 		user.dropItemToGround(src, TRUE)
 		user.visible_message(span_warning("A powerful force shoves [user] away from [target]!"), \
 				span_cult_large("\"You shouldn't play with sharp things. You'll poke someone's eye out.\""))
-		if(ishuman(user))
-			var/mob/living/carbon/human/miscreant = user
-			miscreant.apply_damage(rand(force/2, force), BRUTE, pick(GLOB.arm_zones))
-		else
-			user.adjust_brute_loss(rand(force/2,force))
+		user.apply_damage(rand(force * 0.5, force), BRUTE, null, MAGIC_ATTACK, pick(GLOB.arm_zones), source = src)
 		return
 	..()
 

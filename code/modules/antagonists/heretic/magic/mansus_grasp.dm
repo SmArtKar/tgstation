@@ -37,7 +37,7 @@
 		return FALSE
 
 	var/mob/living/living_hit = victim
-	living_hit.apply_damage(10, BRUTE, wound_bonus = CANT_WOUND)
+	living_hit.apply_damage(10, BRUTE, null, MAGIC_ATTACK, hit_by = hand, source = caster, wound_bonus = CANT_WOUND)
 	if(!iscarbon(victim))
 		return TRUE
 

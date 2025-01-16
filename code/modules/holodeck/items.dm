@@ -59,14 +59,15 @@
 	w_class = WEIGHT_CLASS_BULKY //Stops people from hiding it in their bags/pockets
 
 /obj/item/toy/dodgeball/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	..()
-	if((ishuman(hit_atom)))
-		var/mob/living/carbon/M = hit_atom
-		playsound(src, 'sound/items/dodgeball.ogg', 50, TRUE)
-		M.apply_damage(10, STAMINA)
-		if(prob(5))
-			M.Paralyze(60)
-			visible_message(span_danger("[M] is knocked right off [M.p_their()] feet!"))
+	. = ..()
+	if(!ishuman(hit_atom))
+		return
+	var/mob/living/carbon/M = hit_atom
+	playsound(src, 'sound/items/dodgeball.ogg', 50, TRUE)
+	M.apply_damage(10, STAMINA, MELEE, THROWN_PROJECTILE_ATTACK, hit_by = src, source = throwingdatum?.thrower?.resolve())
+	if(prob(5))
+		M.Paralyze(60)
+		visible_message(span_danger("[M] is knocked right off [M.p_their()] feet!"))
 
 //
 // Machines

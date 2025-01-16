@@ -74,7 +74,7 @@
 		return
 	visible_message(span_warning("[src] goes off, outright decapitating [brian]!"), span_hear("You hear a fleshy boom!"))
 	playsound(src, SFX_EXPLOSION, 30, TRUE)
-	brian.apply_damage(200, BRUTE, BODY_ZONE_HEAD)
+	brian.apply_damage(200, BRUTE, BOMB, def_zone = BODY_ZONE_HEAD, source = src)
 	var/obj/item/bodypart/head/myhead = brian.get_bodypart(BODY_ZONE_HEAD)
 	myhead?.dismember()
 	brian.investigate_log("has been decapitated by [src].", INVESTIGATE_DEATHS)

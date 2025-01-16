@@ -43,7 +43,7 @@
 	if(CAN_SUCCUMB(victim))
 		victim.investigate_log("has been executed by fiery rebirth.", INVESTIGATE_DEATHS)
 		victim.death()
-	victim.apply_damage(20, BURN)
+	victim.apply_damage(20, BURN, FIRE, MAGIC_ATTACK, source = caster)
 
 	// Heal the caster for every victim damaged
 	var/need_mob_update = FALSE

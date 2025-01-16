@@ -28,5 +28,5 @@
 	reac_volume = return_mob_expose_reac_volume(exposed_mob, methods, reac_volume, show_message, touch_protection, overmind)
 	if(prob(reac_volume*2))
 		exposed_mob.emp_act(EMP_LIGHT)
-	if(exposed_mob)
-		exposed_mob.apply_damage(reac_volume, BURN, wound_bonus=CANT_WOUND)
+	if(!QDELETED(exposed_mob))
+		exposed_mob.apply_damage(reac_volume, BURN, ENERGY, BLOB_ATTACK|EMP_ATTACK, wound_bonus = CANT_WOUND)

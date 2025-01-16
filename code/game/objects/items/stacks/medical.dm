@@ -703,7 +703,7 @@
 		var/datum/wound/blunt/bone/critical/oof_OUCH = new
 		oof_OUCH.apply_wound(bone, wound_source = "bone gel")
 	for(var/zone in GLOB.all_body_zones)
-		patient.apply_damage(60, BRUTE, zone)
+		patient.apply_damage(60, BRUTE, def_zone = zone)
 	use(1)
 	return BRUTELOSS
 

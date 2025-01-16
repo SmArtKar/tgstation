@@ -364,7 +364,7 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 		SSblackbox.record_feedback("tally", "station_mess_destroyed", 1, name)
 
 /obj/item/shard/afterattack(atom/target, mob/user, click_parameters)
-	if(!iscarbon(user) || !user.is_holding(src))
+	if(!iscarbon(user) || !user.is_holding(src) || !get_sharpness())
 		return
 
 	var/mob/living/carbon/jab = user
@@ -372,7 +372,7 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 		return
 
 	to_chat(user, span_warning("[src] cuts into your hand!"))
-	jab.apply_damage(force * 0.5, BRUTE, user.get_active_hand(), hit_by = src)
+	jab.apply_damage(force * 0.5, BRUTE, MELEE, def_zone = user.get_active_hand()?.body_zone, hit_by = src, sharpness = get_sharpness())
 
 /obj/item/shard/attackby(obj/item/item, mob/user, params)
 	if(istype(item, /obj/item/lightreplacer))

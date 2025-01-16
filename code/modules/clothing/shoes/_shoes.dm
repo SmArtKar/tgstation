@@ -176,36 +176,38 @@
 				adjust_laces(SHOES_TIED, user)
 			else
 				adjust_laces(SHOES_UNTIED, user)
+		return
 
-	else // if they're someone else's shoes, go knot-wards
-		if(user.body_position == STANDING_UP)
-			to_chat(user, span_warning("You must be on the floor to interact with [src]!"))
-			return
-		if(tied == SHOES_KNOTTED)
-			to_chat(user, span_warning("The laces on [loc]'s [src.name] are already a hopelessly tangled mess!"))
-			return
-		if(DOING_INTERACTION_WITH_TARGET(user, our_guy))
-			to_chat(user, span_warning("You're already interacting with [src]!"))
-			return
+	// if they're someone else's shoes, go knot-wards
+	if(user.body_position == STANDING_UP)
+		to_chat(user, span_warning("You must be on the floor to interact with [src]!"))
+		return
+	if(tied == SHOES_KNOTTED)
+		to_chat(user, span_warning("The laces on [loc]'s [src.name] are already a hopelessly tangled mess!"))
+		return
+	if(DOING_INTERACTION_WITH_TARGET(user, our_guy))
+		to_chat(user, span_warning("You're already interacting with [src]!"))
+		return
 
-		var/mod_time = lace_time
-		to_chat(user, span_notice("You quietly set to work [tied ? "untying" : "knotting"] [loc]'s [src.name]..."))
-		if(HAS_TRAIT(user, TRAIT_CLUMSY)) // based clowns trained their whole lives for this
-			mod_time *= 0.75
+	var/mod_time = lace_time
+	to_chat(user, span_notice("You quietly set to work [tied ? "untying" : "knotting"] [loc]'s [src.name]..."))
+	if(HAS_TRAIT(user, TRAIT_CLUMSY)) // based clowns trained their whole lives for this
+		mod_time *= 0.75
 
-		if(do_after(user, mod_time, target = our_guy, extra_checks = CALLBACK(src, PROC_REF(still_shoed), our_guy), hidden = TRUE))
-			to_chat(user, span_notice("You [tied ? "untie" : "knot"] the laces on [loc]'s [src.name]."))
-			if(tied == SHOES_UNTIED)
-				adjust_laces(SHOES_KNOTTED, user)
-			else
-				adjust_laces(SHOES_UNTIED, user)
-		else // if one of us moved
-			user.visible_message(span_danger("[our_guy] stamps on [user]'s hand, mid-shoelace [tied ? "knotting" : "untying"]!"), span_userdanger("Ow! [our_guy] stamps on your hand!"), list(our_guy))
-			to_chat(our_guy, span_userdanger("You stamp on [user]'s hand! What the- [user.p_they()] [user.p_were()] [tied ? "knotting" : "untying"] your shoelaces!"))
-			user.emote("scream")
-			user.apply_damage(10, BRUTE, user.get_active_hand(), wound_bonus = CANT_WOUND)
-			user.apply_damage(40, STAMINA)
-			user.Paralyze(1 SECONDS)
+	if(do_after(user, mod_time, target = our_guy, extra_checks = CALLBACK(src, PROC_REF(still_shoed), our_guy), hidden = TRUE))
+		to_chat(user, span_notice("You [tied ? "untie" : "knot"] the laces on [loc]'s [src.name]."))
+		if(tied == SHOES_UNTIED)
+			adjust_laces(SHOES_KNOTTED, user)
+		else
+			adjust_laces(SHOES_UNTIED, user)
+		return
+
+	// if one of us moved
+	user.visible_message(span_danger("[our_guy] stamps on [user]'s hand, mid-shoelace [tied ? "knotting" : "untying"]!"), span_userdanger("Ow! [our_guy] stamps on your hand!"), list(our_guy))
+	to_chat(our_guy, span_userdanger("You stamp on [user]'s hand! What the- [user.p_they()] [user.p_were()] [tied ? "knotting" : "untying"] your shoelaces!"))
+	user.emote("scream")
+	user.apply_multiple_damages(brute = 10, stamina = 40, def_zone = user.get_active_hand(), hit_by = our_guy, wound_bonus = CANT_WOUND)
+	user.Paralyze(1 SECONDS)
 
 ///checking to make sure we're still on the person we're supposed to be, for lacing do_after's
 /obj/item/clothing/shoes/proc/still_shoed(mob/living/carbon/our_guy)

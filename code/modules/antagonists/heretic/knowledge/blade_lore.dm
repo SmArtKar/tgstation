@@ -424,7 +424,7 @@
 	// Turns your heretic blades into eswords, pretty much.
 	var/bonus_damage = clamp(30 - blade.force, 0, 12)
 
-	target.apply_damage(
+	target.apply_damage( // smartkar todo: convert into modifiers
 		damage = bonus_damage,
 		damagetype = BRUTE,
 		spread_damage = TRUE,

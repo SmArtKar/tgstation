@@ -359,7 +359,7 @@
 	var/mob/living/victim = punchee
 	if (victim.body_position == LYING_DOWN || (!(FACTION_MINING in victim.faction) && !(FACTION_BOSS in victim.faction)))
 		return NONE
-	victim.apply_damage(mining_bonus, BRUTE)
+	victim.apply_damage(mining_bonus, BRUTE) // smartkar todo: convert to modifiers
 
 /// Make the targeted arm big and strong
 /datum/status_effect/golem/titanium/proc/buff_arm(obj/item/bodypart/arm/arm)

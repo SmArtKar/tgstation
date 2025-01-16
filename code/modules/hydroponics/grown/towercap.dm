@@ -171,7 +171,7 @@
 			return
 		if(buckle_mob(fallen_mob, TRUE))
 			to_chat(fallen_mob, span_userdanger("You are impaled by [src]!"))
-			fallen_mob.apply_damage(25 * levels, BRUTE, sharpness = SHARP_POINTY)
+			fallen_mob.apply_damage(25 * levels, BRUTE, sharpness = SHARP_POINTY, hit_by = src, source = src)
 			if(iscarbon(fallen_mob))
 				var/mob/living/carbon/fallen_carbon = fallen_mob
 				fallen_carbon.emote("scream")

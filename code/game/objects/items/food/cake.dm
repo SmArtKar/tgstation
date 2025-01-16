@@ -283,8 +283,8 @@
 	AddElement(/datum/element/microwavable, /obj/item/clothing/head/utility/hardhat/cakehat/energycake)
 
 /obj/item/food/cake/birthday/energy/proc/energy_bite(mob/living/user)
-	to_chat(user, "<font color='red' size='5'>As you eat the cake, you accidentally hurt yourself on the embedded energy sword!</font>")
-	user.apply_damage(30, BRUTE, BODY_ZONE_HEAD)
+	to_chat(user, span_userdanger("As you eat the cake, you accidentally hurt yourself on the embedded energy sword!"))
+	user.apply_damage(30, BRUTE, MELEE, def_zone = BODY_ZONE_HEAD, source = src)
 	playsound(user, 'sound/items/weapons/blade1.ogg', 5, TRUE)
 
 /obj/item/food/cake/birthday/energy/attack(mob/living/target_mob, mob/living/user)
@@ -321,10 +321,10 @@
 
 /obj/item/food/cakeslice/birthday/energy/proc/bite_taken(datum/source, mob/living/eater, mob/living/feeder)
 	SIGNAL_HANDLER
-	to_chat(eater, "<font color='red' size='5'>As you eat the cake slice, you accidentally hurt yourself on the embedded energy dagger!</font>")
+	to_chat(eater, span_userdanger("As you eat the cake slice, you accidentally hurt yourself on the embedded energy dagger!"))
 	if(eater != feeder)
 		log_combat(feeder, eater, "fed an energy cake to", src)
-	eater.apply_damage(18, BRUTE, BODY_ZONE_HEAD)
+	eater.apply_damage(18, BRUTE, def_zone = BODY_ZONE_HEAD, source = src)
 	playsound(eater, 'sound/items/weapons/blade1.ogg', 5, TRUE)
 
 /obj/item/food/cake/apple

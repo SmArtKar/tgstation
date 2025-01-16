@@ -492,7 +492,7 @@
 			INVOKE_ASYNC(carbon_victim, TYPE_PROC_REF(/mob/living/carbon, equip_to_slot), src, ITEM_SLOT_LEGCUFFED)
 			SSblackbox.record_feedback("tally", "handcuffs", 1, type)
 
-	victim.apply_damage(trap_damage, BRUTE, def_zone)
+	victim.apply_damage(trap_damage, BRUTE, def_zone = def_zone, hit_by = src, source = src)
 
 /**
  * # Energy snare

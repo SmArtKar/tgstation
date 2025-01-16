@@ -210,7 +210,7 @@
 			var/mob/living/carbon/human/human_target = target
 			if(prob(force_say_chance))
 				human_target.force_say()
-		target.apply_damage(stamina_damage, STAMINA)
+		target.apply_damage(stamina_damage, STAMINA) // Smartkar todo: sync up with anne
 		if(!trait_check)
 			target.Knockdown((isnull(stun_override) ? knockdown_time : stun_override))
 		additional_effects_non_cyborg(target, user)
@@ -283,12 +283,12 @@
 			var/mob/living/carbon/human/human_user = user
 			human_user.force_say()
 		user.Knockdown(clumsy_knockdown_time)
-		user.apply_damage(stamina_damage, STAMINA)
+		user.apply_damage(stamina_damage, STAMINA) // smartkar todo: sync up with anne
 		additional_effects_non_cyborg(user, user) // user is the target here
 		if(on_stun_sound)
 			playsound(get_turf(src), on_stun_sound, on_stun_volume, TRUE, -1)
 
-	user.apply_damage(2*force, BRUTE, BODY_ZONE_HEAD, hit_by = src)
+	user.apply_damage(2*force, BRUTE, BODY_ZONE_HEAD, hit_by = src) // smartkar: sync up with anne
 
 	log_combat(user, user, "accidentally stun attacked [user.p_them()]self due to their clumsiness", src)
 	if(stun_animation)

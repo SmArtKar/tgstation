@@ -65,7 +65,7 @@
 		span_hear("You hear a dull thud!"))
 	log_combat(owner, owner, "bopped", src.name, "(self)")
 	owner.do_attack_animation(owner)
-	owner.apply_damage(100, STAMINA)
+	owner.apply_damage(100, STAMINA, hit_by = src, source = owner)
 	owner.Knockdown(10)
 	qdel(src)
 
@@ -96,7 +96,7 @@
 		owner.visible_message(span_danger("[owner] bops [sucker] with [owner.p_their()] [src.name] much harder than intended, sending [sucker.p_them()] flying!"), \
 			span_danger("You bop [sucker] with your [src.name] much harder than intended, sending [sucker.p_them()] flying!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), ignored_mobs=list(sucker))
 		to_chat(sucker, span_userdanger("[owner] bops you incredibly hard with [owner.p_their()] [src.name], sending you flying!"))
-		sucker.apply_damage(50, STAMINA)
+		sucker.apply_damage(50, STAMINA, hit_by = src, source = owner)
 		sucker.Knockdown(50)
 		log_combat(owner, sucker, "bopped", src.name, "(setup- Hulk)")
 		var/atom/throw_target = get_edge_target_turf(sucker, owner.dir)
@@ -104,7 +104,7 @@
 	else
 		owner.visible_message(span_danger("[owner] bops [sucker] with [owner.p_their()] [src.name]!"), span_danger("You bop [sucker] with your [src.name]!"), \
 			span_hear("You hear a dull thud!"), ignored_mobs=list(sucker))
-		sucker.apply_damage(15, STAMINA)
+		sucker.apply_damage(15, STAMINA, hit_by = src, source = owner)
 		log_combat(owner, sucker, "bopped", src.name, "(setup)")
 		to_chat(sucker, span_userdanger("[owner] bops you with [owner.p_their()] [src.name]!"))
 	qdel(src)
@@ -185,7 +185,7 @@
 		target.emote("scream")
 
 	log_combat(user, target, "given a noogie to", addition = "([damage] brute before armor)")
-	target.apply_damage(damage, BRUTE, BODY_ZONE_HEAD)
+	target.apply_damage(damage, BRUTE, MELEE, UNARMED_ATTACK, BODY_ZONE_HEAD, hit_by = user, source = user, check_armor = TRUE)
 	user.adjust_stamina_loss(iteration + 5)
 	playsound(get_turf(user), SFX_RUSTLE, 50)
 

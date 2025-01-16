@@ -160,7 +160,7 @@
 
 
 /// Transfers damage from the avatar to the old_body
-/datum/component/avatar_connection/proc/on_linked_damage(datum/source, damage, damage_type, def_zone, blocked, ...)
+/datum/component/avatar_connection/proc/on_linked_damage(datum/source, damage, damage_type, def_zone, blocked, ...) // todo smartkar
 	SIGNAL_HANDLER
 
 	var/mob/living/carbon/old_body = old_body_ref?.resolve()

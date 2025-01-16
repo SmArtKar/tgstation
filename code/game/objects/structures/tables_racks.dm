@@ -181,8 +181,7 @@
 	if(pushed_mob.loc != loc) //Something prevented the tabling
 		return
 	pushed_mob.Knockdown(30)
-	pushed_mob.apply_damage(10, BRUTE)
-	pushed_mob.apply_damage(40, STAMINA)
+	pushed_mob.apply_multiple_damages(brute = 10, stamina = 40, damage_flag = MELEE, hit_by = src, source = user)
 	if(user.mind?.martial_art?.smashes_tables && user.mind?.martial_art.can_use(user))
 		deconstruct(FALSE)
 	playsound(pushed_mob, 'sound/effects/tableslam.ogg', 90, TRUE)
@@ -197,8 +196,7 @@
 	var/extra_wound = 0
 	if(HAS_TRAIT(user, TRAIT_HULK))
 		extra_wound = 20
-	pushed_mob.apply_damage(30, BRUTE, banged_limb, wound_bonus = extra_wound)
-	pushed_mob.apply_damage(60, STAMINA)
+	pushed_mob.apply_multiple_damages(brute = 30, stamina = 60, damage_flag = MELEE, def_zone = banged_limb.body_zone, hit_by = src, source = user, wound_bonus = extra_wound)
 	take_damage(50, banged_limb.attack_type, MELEE, UNARMED_ATTACK, user.zone_selected, get_dir(src, user), hit_by = banged_limb, source = user)
 	if(user.mind?.martial_art?.smashes_tables && user.mind?.martial_art.can_use(user))
 		deconstruct(FALSE)

@@ -1765,7 +1765,7 @@ GLOBAL_LIST_EMPTY(intento_players)
 			victim.Stun(2 SECONDS)
 		if(HARM)
 			to_chat(victim, span_danger("You're punched by [src]!"))
-			victim.apply_damage(rand(20, 30), BRUTE)
+			victim.apply_damage(rand(20, 30), BRUTE, MELEE, UNARMED_ATTACK, hit_by = src, source = src, spread_damage = FALSE, check_armor = TRUE)
 
 	index += 1
 	COOLDOWN_START(src, next_process, TIME_PER_DEMO_STEP)

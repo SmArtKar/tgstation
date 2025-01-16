@@ -831,7 +831,7 @@
 				H.visible_message(span_danger("[user] headbutts the airlock."), \
 									span_userdanger("You headbutt the airlock!"))
 				H.Paralyze(100)
-				H.apply_damage(10, BRUTE, BODY_ZONE_HEAD)
+				H.apply_damage(10, BRUTE, MELEE, def_zone = BODY_ZONE_HEAD, hit_by = src, source = user)
 			else
 				visible_message(span_danger("[user] headbutts the airlock. Good thing [user.p_theyre()] wearing a helmet."))
 

@@ -160,12 +160,7 @@
 	if(channel != TELEPORT_CHANNEL_MAGIC)
 		return
 
-	owner.apply_damage(
-		damage = tp_damage,
-		damagetype = tp_damage_type,
-		spread_damage = TRUE,
-		forced = TRUE,
-	)
+	owner.apply_damage(tp_damage, tp_damage_type, null, MAGIC_ATTACK, forced = TRUE)
 	log_combat(owner, owner, "teleported too soon")
 
 /datum/status_effect/teleport_flux/update_particles()

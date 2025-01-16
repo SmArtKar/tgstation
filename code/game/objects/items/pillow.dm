@@ -54,7 +54,7 @@
 		hit_sound = 'sound/items/pillow/pillow_hit2.ogg'
 	else
 		hit_sound = 'sound/items/pillow/pillow_hit.ogg'
-	user.apply_damage(5, STAMINA) //Had to be done so one person cannot keep multiple people stam critted
+	user.apply_damage(5, STAMINA) // Had to be done so one person cannot keep multiple people stam critted
 	last_fighter = user
 	playsound(user, hit_sound, 80) //the basic 50 vol is barely audible
 

@@ -188,7 +188,7 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 			// Throw our current heart out of our chest, violently
 			user.visible_message(span_boldwarning("[user]'s [our_new_heart.name] bursts suddenly out of [user.p_their()] chest!"))
 			INVOKE_ASYNC(user, TYPE_PROC_REF(/mob, emote), "scream")
-			user.apply_damage(20, BRUTE, BODY_ZONE_CHEST)
+			user.apply_damage(20, BRUTE, null, MAGIC_ATTACK, BODY_ZONE_CHEST)
 			selected_atoms -= our_new_heart // so we don't delete our old heart while we dramatically toss is out
 			our_new_heart.throw_at(get_edge_target_turf(user, pick(GLOB.alldirs)), 2, 2)
 		our_new_heart = our_replacement_heart
@@ -314,11 +314,11 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 		var/obj/item/bodypart/bodypart = pick(carbody.bodyparts)
 		ripped_thing = bodypart
 
-		carbody.apply_damage(25, BRUTE, bodypart, sharpness = SHARP_EDGED)
+		carbody.apply_damage(25, BRUTE, null, MAGIC_ATTACK, bodypart.body_zone, sharpness = SHARP_EDGED)
 		if(!(bodypart.bodytype & BODYTYPE_ORGANIC))
 			exterior_text = "exterior"
 	else
-		body.apply_damage(25, BRUTE, sharpness = SHARP_EDGED)
+		body.apply_damage(25, BRUTE, null, MAGIC_ATTACK, sharpness = SHARP_EDGED)
 		// If it is not a carbon mob, we will just check biotypes and damage it directly.
 		if(body.mob_biotypes & (MOB_MINERAL|MOB_ROBOTIC))
 			exterior_text = "exterior"

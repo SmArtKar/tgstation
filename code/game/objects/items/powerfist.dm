@@ -23,6 +23,7 @@
 	throw_range = 7
 	w_class = WEIGHT_CLASS_NORMAL
 	armor_type = /datum/armor/melee_powerfist
+	armor_penetration = 50
 	resistance_flags = FIRE_PROOF
 	/// Delay between attacks
 	var/click_delay = 0.15 SECONDS
@@ -117,7 +118,7 @@
 	var/datum/gas_mixture/gas_used = tank.remove_air(gas_per_fist * fist_pressure_setting)
 	if(!gas_used)
 		to_chat(user, span_warning("\The [src]'s tank is empty!"))
-		target.apply_damage((force / 5), BRUTE)
+		target.apply_damage((force / 5), BRUTE, MELEE, MELEE_ATTACK, target.get_random_valid_zone(user.zone_selected), attack_dir = get_dir(target, user), armor_penetration = armor_penetration, hit_by = src, source = user, check_armor = TRUE)
 		playsound(loc, 'sound/items/weapons/punch1.ogg', 50, TRUE)
 		target.visible_message(span_danger("[user]'s powerfist lets out a dull thunk as [user.p_they()] punch[user.p_es()] [target.name]!"), \
 			span_userdanger("[user]'s punches you!"))
@@ -127,7 +128,7 @@
 		our_turf.assume_air(gas_used)
 		to_chat(user, span_warning("\The [src]'s piston-ram lets out a weak hiss, it needs more gas!"))
 		playsound(loc, 'sound/items/weapons/punch4.ogg', 50, TRUE)
-		target.apply_damage((force / 2), BRUTE)
+		target.apply_damage((force / 2), BRUTE, MELEE, MELEE_ATTACK, target.get_random_valid_zone(user.zone_selected), attack_dir = get_dir(target, user), armor_penetration = armor_penetration, hit_by = src, source = user, check_armor = TRUE)
 		target.visible_message(span_danger("[user]'s powerfist lets out a weak hiss as [user.p_they()] punch[user.p_es()] [target.name]!"), \
 			span_userdanger("[user]'s punch strikes with force!"))
 		return
@@ -135,7 +136,7 @@
 	target.visible_message(span_danger("[user]'s powerfist lets out a loud hiss as [user.p_they()] punch[user.p_es()] [target.name]!"), \
 		span_userdanger("You cry out in pain as [user]'s punch flings you backwards!"))
 	new /obj/effect/temp_visual/kinetic_blast(target.loc)
-	target.apply_damage(force * fist_pressure_setting, BRUTE, wound_bonus = CANT_WOUND)
+	target.apply_damage(force * fist_pressure_setting, , BRUTE, MELEE, MELEE_ATTACK, target.get_random_valid_zone(user.zone_selected), attack_dir = get_dir(target, user), armor_penetration = armor_penetration, hit_by = src, source = user, wound_bonus = CANT_WOUND, check_armor = TRUE)
 	playsound(src, 'sound/items/weapons/resonator_blast.ogg', 50, TRUE)
 	playsound(src, 'sound/items/weapons/genhit2.ogg', 50, TRUE)
 

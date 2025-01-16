@@ -165,7 +165,11 @@
 		return
 	// We're officially behind them, apply effects
 	living_target.AdjustParalyzed(1.5 SECONDS)
-	living_target.apply_damage(10, BRUTE, wound_bonus = CANT_WOUND)
+	var/datum/damage_package/package = generate_damage(living_target, user, living_target.get_random_valid_zone(user.zone_selected))
+	package.amount = 10
+	package.wound_bonus = CANT_WOUND
+	package.armor_penetration = 100
+	living_target.apply_damage_package(package, check_armor = TRUE)
 	living_target.balloon_alert(user, "backstab!")
 	playsound(living_target, 'sound/items/weapons/guillotine.ogg', 100, TRUE)
 

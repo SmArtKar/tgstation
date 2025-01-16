@@ -222,7 +222,7 @@
 		if(0)
 			// No check, we always want sharky to bite jerky on 0
 			moc.visible_message(span_bolddanger("[src] bites directly into [moc] and squirms away from [moc.p_their()] grasp!"), span_userdanger("[src] sinks its fangs into you!!"))
-			moc.apply_damage(force, BRUTE, moc.get_active_hand(), wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness, hit_by = src)
+			moc.apply_damage(force, BRUTE, MELEE, MELEE_ATTACK, moc.get_active_hand()?.body_zone, hit_by = src, source = src, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = get_sharpness(), check_armor = TRUE)
 			forceMove(moc.drop_location())
 			moc.painful_scream()
 			patience = max_patience

@@ -780,7 +780,7 @@
 	var/obj/item/bodypart/arm = user.get_active_hand()
 	if(!arm || arm.bodypart_disabled)
 		return
-	user.apply_damage(damage_deflection * 0.1, BRUTE, arm, wound_bonus = CANT_WOUND)
+	user.apply_damage(damage_deflection * 0.1, BRUTE, MELEE, def_zone = arm.body_zone, hit_by = src, source = user, wound_bonus = CANT_WOUND)
 
 /obj/machinery/attack_robot(mob/user)
 	if(!(interaction_flags_machine & INTERACT_MACHINE_ALLOW_SILICON) && !isAdminGhostAI(user))

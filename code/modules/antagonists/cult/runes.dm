@@ -176,7 +176,7 @@ structure_check() searches for nearby cultist structures required for the invoca
 		if(invocation)
 			living_invoker.say(invocation, language = /datum/language/common, ignore_spam = TRUE, forced = "cult invocation")
 		if(invoke_damage)
-			living_invoker.apply_damage(invoke_damage, BRUTE)
+			living_invoker.apply_damage(invoke_damage, BRUTE, null, MELEE_ATTACK, source = src, wound_bonus = CANT_WOUND)
 			to_chat(living_invoker,  span_cult_italic("[src] saps your strength!"))
 
 	do_invoke_glow()
@@ -823,8 +823,7 @@ GLOBAL_VAR_INIT(narsie_summon_count, 0)
 		barrier.parent_rune = src
 	barrier.Toggle()
 	if(iscarbon(user))
-		var/mob/living/carbon/C = user
-		C.apply_damage(2, BRUTE, pick(GLOB.arm_zones))
+		user.apply_damage(2, BRUTE, null, MAGIC_ATTACK, pick(GLOB.arm_zones), source = src)
 
 //Rite of Joined Souls: Summons a single cultist.
 /obj/effect/rune/summon

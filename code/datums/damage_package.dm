@@ -62,7 +62,7 @@
 	attack_text = null,
 	attack_message_spectator = null,
 	attack_message_attacker = null,
-	spread_damage = TRUE,
+	spread_damage = FALSE,
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,

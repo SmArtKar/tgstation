@@ -1313,9 +1313,12 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 	playsound(src, 'sound/items/weapons/zapbang.ogg', 50, vary = TRUE)
 	if(isliving(target))
 		var/mob/living/living_target = target
-		living_target.apply_damage(force*damage_mod, BRUTE, sharpness = SHARP_EDGED, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, def_zone = user.zone_selected)
+		var/datum/damage_package/package = generate_damage(living_target, user, user.zone_selected, params2list(params))
+		package.amount_multiplier *= damage_mod
+		package.armor_penetration = 100
+		living_target.apply_damage_package(package, check_armor = TRUE)
 		log_combat(user, living_target, "slashed", src)
-		if(living_target.stat == DEAD && prob(force*damage_mod*0.5))
+		if(living_target.stat == DEAD && prob(force * damage_mod * living_target.get_total_damage() / living_target.getMaxHealth()))
 			living_target.visible_message(span_danger("[living_target] explodes in a shower of gore!"), blind_message = span_hear("You hear organic matter ripping and tearing!"))
 			living_target.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
 			living_target.gib(DROP_ALL_REMAINS)
@@ -1323,7 +1326,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 		return TRUE
 	else if(target.uses_integrity)
 		var/datum/damage_package/package = generate_damage(target, user, user.zone_selected, params2list(params))
-		package.amount = force * damage_mod * 3
+		package.amount_multiplier *= damage_mod * 3
 		package.armor_penetration = 50
 		target.process_damage_package(package, sound_effect = FALSE)
 		return TRUE

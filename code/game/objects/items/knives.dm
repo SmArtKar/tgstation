@@ -168,7 +168,7 @@
 /obj/item/knife/combat/dropped(mob/living/user, slot)
 	. = ..()
 	if(user.get_item_by_slot(ITEM_SLOT_MASK) == src && !user.has_status_effect(/datum/status_effect/choke) && prob(20))
-		user.apply_damage(5, BRUTE, BODY_ZONE_HEAD)
+		user.apply_damage(5, BRUTE, def_zone = BODY_ZONE_HEAD, hit_by = src, sharpness = get_sharpness())
 		playsound(user, 'sound/items/weapons/slice.ogg', 50, TRUE)
 		user.visible_message(span_danger("[user] accidentally cuts [user.p_them()]self while pulling [src] out of [user.p_them()] teeth! What a doofus!"), span_userdanger("You accidentally cut your mouth with [src]!"))
 

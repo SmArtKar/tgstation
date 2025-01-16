@@ -302,12 +302,11 @@
 	owner.visible_message(span_danger("The reactive teleport system flings [owner] clear of [attack_text] and slams [owner.p_them()] into a fabricated table!"))
 	owner.visible_message("<font color='red' size='3'>[owner] GOES ON THE TABLE!!!</font>")
 	owner.Knockdown(30)
-	owner.apply_damage(10, BRUTE)
-	owner.apply_damage(40, STAMINA)
 	playsound(owner, 'sound/effects/tableslam.ogg', 90, TRUE)
 	owner.add_mood_event("table", /datum/mood_event/table)
 	do_teleport(owner, get_turf(owner), tele_range, no_effects = TRUE, channel = TELEPORT_CHANNEL_BLUESPACE)
-	new /obj/structure/table(get_turf(owner))
+	var/obj/structure/table/mr_tableson = new(get_turf(owner))
+	owner.apply_multiple_damages(brute = 10, stamina = 40, damage_flag = MELEE, attack_flags = MELEE_ATTACK|BLUESPACE_ATTACK, hit_by = mr_tableson, source = src)
 	reactivearmor_cooldown = world.time + reactivearmor_cooldown_duration
 	return TRUE
 

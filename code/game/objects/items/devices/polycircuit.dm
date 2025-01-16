@@ -4,6 +4,7 @@
 	icon_state = "circuit_mess"
 	inhand_icon_state = "rods"
 	w_class = WEIGHT_CLASS_TINY
+	sharpness = SHARP_EDGED
 	max_amount = 8
 	merge_type = /obj/item/stack/circuit_stack
 	singular_name = "circuit aggregate"
@@ -20,7 +21,7 @@
 	else
 		if(is_zero_amount(delete_if_zero = TRUE))
 			return
-		chosen_circuit = tgui_input_list(user, "Circuit to remove", "Circuit Removal", list("airlock","firelock","fire alarm","air alarm","APC"), chosen_circuit)
+		chosen_circuit = tgui_input_list(user, "Circuit to remove", "Circuit Removal", list("airlock", "firelock", "fire alarm", "air alarm", "APC"), chosen_circuit)
 		if(isnull(chosen_circuit))
 			to_chat(user, span_notice("You wisely avoid putting your hands anywhere near [src]."))
 			return
@@ -50,9 +51,9 @@
 				to_chat(user, span_notice("You navigate the sharp edges of circuitry and remove the last board."))
 			else
 				to_chat(user, span_notice("You navigate the sharp edges of circuitry and remove a single board from [src]"))
-		else
-			H.apply_damage(15, BRUTE, pick(GLOB.arm_zones))
-			to_chat(user, span_warning("You give yourself a wicked cut on [src]'s many sharp corners and edges!"))
+		else if (get_sharpness())
+			if (H.apply_damage(15, BRUTE, MELEE, def_zone = pick(GLOB.arm_zones), hit_by = src, sharpness = get_sharpness(), check_armor = TRUE))
+				to_chat(user, span_warning("You give yourself a wicked cut on [src]'s many sharp corners and edges!"))
 
 /obj/item/stack/circuit_stack/full
 	amount = 8

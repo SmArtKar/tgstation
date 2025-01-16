@@ -512,7 +512,7 @@
 ///Damage and stun all mobs in fragging_location turf, called after a teleport
 /obj/item/syndicate_teleporter/proc/telefrag(turf/fragging_location, mob/user) // Don't let this gib. Never let this gib.
 	for(var/mob/living/victim in fragging_location)//Hit everything in the turf
-		victim.apply_damage(20, BRUTE)
+		victim.apply_damage(20, BRUTE, ENERGY, BLUESPACE_ATTACK, source = src)
 		victim.Paralyze(6 SECONDS)
 		to_chat(victim, span_warning("[user] teleports into you, knocking you to the floor with the bluespace wave!"))
 		victim.throw_at(get_step_rand(victim), 1, 1, user, spin = TRUE)
