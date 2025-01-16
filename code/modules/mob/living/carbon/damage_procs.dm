@@ -1,4 +1,4 @@
-/mob/living/carbon/apply_damage_package/apply_damage_package(
+/mob/living/carbon/apply_damage_package(
 	datum/damage_package/package,
 	blocked = 0,
 	check_armor = FALSE,
@@ -6,10 +6,8 @@
 	should_update = TRUE,
 	silent = FALSE,
 )
-	if (package.spread_damage)
-		package.def_zone = null
-		return ..()
-
+	// Smartkar: figure if this is even neccessary or if we can axe this actually
+	/*
 	if (isbodypart(package.def_zone))
 		return ..()
 
@@ -39,29 +37,40 @@
 		if (!(chest.bodytype & package.required_biotype)) // If chest is invalid, screw it and skip the damage entirely
 			return 0
 		package.def_zone = chest
+	*/
 	return ..()
 
 /mob/living/carbon/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, should_update = TRUE)
 	if (package.damage_type == TOX)
+		. = ..()
 		if(AT_TOXIN_VOMIT_THRESHOLD(src))
 			apply_status_effect(/datum/status_effect/tox_vomit)
-		return ..()
+		return .
 
 	if (package.damage_type == OXY || package.damage_type == STAMINA)
 		return ..()
 
-	var/list/obj/item/bodypart/parts
-	if (isbodypart(package.def_zone))
-		var/obj/item/bodypart/part = package.def_zone
-		if (!(part.bodytype & package.required_biotype) || part.brute_dam + part.burn_dam >= part.max_damage)
-			return 0
-		parts = list(part)
+	var/list/parts = null
+	if (package.def_zone)
+		if (!islist(package.def_zone))
+			var/obj/item/bodypart/bodypart = get_bodypart(check_zone(package.def_zone))
+			if (!bodypart)
+				bodypart = bodyparts[1]
+				if (!bodypart) // You have more serious problems tbh
+					return 0
+			if(required_bodytype && !(bodypart.bodytype & required_bodytype))
+				return 0
+			parts = list(bodypart)
+		else
+			parts = get_damageable_bodyparts(package.required_biotype, package.def_zone)
 	else
-		parts = get_damageable_bodyparts(package.required_biotype)
-		if (islist(package.def_zone))
-			parts = (package.def_zone & parts)
-		if (!length(parts))
-			return 0
+		if (package.spread_damage)
+			parts = get_damageable_bodyparts(package.required_biotype)
+		else
+			parts = list(pick(get_damageable_bodyparts(package.required_biotype)))
+
+	if (!length(parts))
+		return 0
 
 	var/damage_taken = 0
 	var/update_overlays = FALSE
@@ -166,30 +175,34 @@
 	if(affected_organ)
 		return affected_organ.damage
 
-/mob/living/carbon/proc/get_damaged_bodyparts(brute = FALSE, burn = FALSE, required_bodytype = NONE, target_zone = null)
+/mob/living/carbon/proc/get_damaged_bodyparts(brute = FALSE, burn = FALSE, required_bodytype = NONE, target_zones = null)
 	var/list/obj/item/bodypart/parts = list()
 	for(var/obj/item/bodypart/part as anything in bodyparts)
 		if(required_bodytype && !(part.bodytype & required_bodytype))
 			continue
-		if(!isnull(target_zone) && part.body_zone != target_zone)
+		if(!isnull(target_zones) && !(part.body_zone in target_zones))
 			continue
 		if((brute && part.brute_dam) || (burn && part.burn_dam))
 			parts += part
 	return parts
 
-/mob/living/carbon/proc/get_damageable_bodyparts(required_bodytype)
+/mob/living/carbon/proc/get_damageable_bodyparts(required_bodytype, target_zones = null)
 	var/list/obj/item/bodypart/parts = list()
 	for(var/obj/item/bodypart/part as anything in bodyparts)
 		if(required_bodytype && !(part.bodytype & required_bodytype))
+			continue
+		if(!isnull(target_zones) && !(part.body_zone in target_zones))
 			continue
 		if(part.brute_dam + part.burn_dam < part.max_damage)
 			parts += part
 	return parts
 
-/mob/living/carbon/proc/get_wounded_bodyparts(required_bodytype)
+/mob/living/carbon/proc/get_wounded_bodyparts(required_bodytype, target_zones = null)
 	var/list/obj/item/bodypart/parts = list()
 	for(var/obj/item/bodypart/part as anything in bodyparts)
 		if(required_bodytype && !(part.bodytype & required_bodytype))
+			continue
+		if(!isnull(target_zones) && !(part.body_zone in target_zones))
 			continue
 		if(LAZYLEN(part.wounds))
 			parts += part

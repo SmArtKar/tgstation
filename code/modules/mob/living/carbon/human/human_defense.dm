@@ -1,5 +1,6 @@
 /*
  * Alternate version of apply_damage which individually damages all bodyparts, checking for each one's armor
+ * Amount passed is dealt to *each* bodypart, not spread between them.
  * As we're operating with (probably) 6 packages, this only returns the total amount of damage dealt
  */
 /mob/living/carbon/human/proc/apply_spread_damage(
@@ -24,23 +25,17 @@
 	silent = FALSE,
 )
 	var/damage_dealt = 0
-	var/list/parts = get_damageable_bodyparts(required_biotype)
+	var/list/parts = get_damageable_bodyparts(required_biotype, def_zones)
 	if (!length(parts))
 		return 0
 
-	if (islist(def_zones))
-		for (var/i in 1 to length(def_zones))
-			if (!isbodypart(def_zones[i]))
-				def_zones[i] = get_bodypart(def_zones[i])
-		parts = (def_zones & parts)
-
-	for (var/zone in parts)
+	for (var/obj/item/bodypart/bodypart as anything in parts)
 		var/datum/damage_package/package = apply_damage(
-			amount = amount / length(parts),
+			amount = amount,
 			damage_type = damage_type,
 			damage_flag = damage_flag,
 			attack_flags = attack_flags,
-			def_zone = zone,
+			def_zone = bodypart.body_zone,
 			attack_dir = attack_dir,
 			armor_penetration = armor_penetration,
 			armor_multiplier = armor_multiplier,
@@ -57,6 +52,7 @@
 			should_update = FALSE,
 			silent = silent,
 		)
+
 		if (!package)
 			continue
 
@@ -69,32 +65,20 @@
 /mob/living/carbon/human/get_armor(datum/damage_package/package)
 	var/physiology_protection = (100 - min(physiology.armor.get_rating(package.damage_type), 100)) * 0.01
 
-	// Its likely (when coming from external calls outside of apply_damage) that def_zone is either a list of zones, or just a zone
-	// In which case we need to convert it to a bodypart/list of bodyparts
-	if (istext(package.def_zone))
-		package.def_zone = get_bodypart(check_zone(package.def_zone))
-		// If we're missing the part, but somehow are attempting to deal damage to it, default to chest armor
-		// Original behavior for this averaged ALL armor values on your body, but that's a bit weird
-		if (!bodypart)
-			bodypart = bodyparts[1]
-			if (!bodypart) // We're somehow lacking a chest, I think we've got worse problem than armor consistency
-				return 0
-
-	if (isbodypart(package.def_zone))
-		return physiology_protection * check_part_armor(package, package.def_zone)
-
 	var/list/parts_to_check = bodyparts
-	if (!islist(package.def_zone))
+	if (islist(package.def_zone))
 		var/list/valid_parts = list()
-		for (var/obj/item/bodypart/part as anything in package.def_zone)
-			if (!isbodypart(part))
-				part = get_bodypart(check_zone(part))
-
-			if (!part)
-				continue
+		for (var/zone in package.def_zone)
+			var/obj/item/bodypart/bodypart = get_bodypart(check_zone(zone))
+			if (bodypart)
+				valid_parts += bodypart
 
 		if (length(valid_parts))
 			parts_to_check = valid_parts
+	else
+		var/obj/item/bodypart/bodypart = get_bodypart(check_zone(zone))
+		if (bodypart)
+			parts_to_check = list(bodypart)
 
 	if (!length(parts_to_check))
 		return 0

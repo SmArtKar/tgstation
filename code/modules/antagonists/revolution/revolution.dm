@@ -58,9 +58,11 @@
 	create_objectives()
 	equip_rev()
 	owner.current.log_message("has been converted to the revolution!", LOG_ATTACK, color="red")
+	RegisterSignal(owner, COMSIG_LIVING_ATTACKED_BY, PROC_REF(on_attacked))
 
 /datum/antagonist/rev/on_removal()
 	remove_objectives()
+	UnregisterSignal(owner, COMSIG_LIVING_ATTACKED_BY)
 	. = ..()
 
 /datum/antagonist/rev/greet()
@@ -132,6 +134,19 @@
 	.["Give flash"] = CALLBACK(src, PROC_REF(admin_give_flash))
 	.["Repair flash"] = CALLBACK(src, PROC_REF(admin_repair_flash))
 	.["Demote"] = CALLBACK(src, PROC_REF(admin_demote))
+
+/// Rev deconversion through blunt trauma.
+/datum/antagonist/rev/proc/on_attacked(mob/living/source, datum/damage_package/package, mob/living/attacker, list/modifiers)
+	SIGNAL_HANDLER
+
+	if (!(BODY_ZONE_HEAD in get_damage_package_zones(package)))
+		return
+
+	if (package.sharpness || HAS_TRAIT(source, TRAIT_HEAD_INJURY_BLOCKED) || package.damage_type != BRUTE)
+		return
+
+	if (source.mind && source.stat == CONSCIOUS && source != attacker && prob(package.amount + ((100 - source.health) * 0.5)))
+		remove_revolutionary(attacker)
 
 /datum/antagonist/rev/head/proc/admin_take_flash(mob/admin)
 	var/list/L = owner.current.get_contents()

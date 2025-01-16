@@ -50,7 +50,7 @@
 	batman.visible_message(span_warning("[batman] gets a slightly too tight hug from [big_guy]!"), span_userdanger("You feel your body break as [big_guy] embraces you!"))
 
 	for(var/zone in GLOB.all_body_zones - BODY_ZONE_HEAD)
-		batman.apply_damage(15, BRUTE, zone, wound_bonus = 35)
+		batman.apply_damage(15, BRUTE, MELEE, UNARMED_ATTACK|BASICMOB_ATTACK, zone, hit_by = big_guy, source = big_guy, wound_bonus = 35)
 
 	return AI_BEHAVIOR_INSTANT | AI_BEHAVIOR_SUCCEEDED
 

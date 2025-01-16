@@ -9,10 +9,10 @@
 	var/damage_flag = null
 	/// Flags defining what sort of an attack this is: Melee, unarmed, projectile, magical, etc.
 	var/attack_flags = NONE
-	/// Bodypart which this attack was targeting, can be both a bodypart object, zone define or a list of former 2 in which case damage is evenly spread
+	/// Bodypart which this attack was targeting. Should be a body_zone define, or a list of body_zone defines - automatically converted to latter by damage procs.
 	var/def_zone = null
-	/// If the damage gets spread out evenly between all bodyparts on mobs
-	var/spread_damage = FALSE
+	/// If the damage gets spread out evenly between all bodyparts on mobs when not passed a bodypart
+	var/spread_damage = TRUE
 	/// Direction from which this attack came
 	var/attack_dir = NONE
 	/// Additive armor penetration of this attack. Anything above 100 will ignore armor completely
@@ -41,8 +41,6 @@
 	var/required_biotype = ALL
 	/// Damage multiplier, applied last in order to avoid comsig order issues
 	var/amount_multiplier = 1
-	/// Click modifiers if this package was created as a result of a mob attack
-	var/list/modifiers = null
 
 	/// Assigned by armor procs to signify what percentage of this attack was blocked by armor
 	var/armor_block = 0
@@ -64,13 +62,12 @@
 	attack_text = null,
 	attack_message_spectator = null,
 	attack_message_attacker = null,
-	spread_damage = FALSE,
+	spread_damage = TRUE,
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
 	required_biotype = ALL,
 	amount_multiplier = 1,
-	modifiers = null,
 	initial_amount = null
 )
 	. = ..()
@@ -94,7 +91,6 @@
 	src.sharpness = sharpness
 	src.required_biotype = required_biotype
 	src.amount_multiplier = amount_multiplier
-	src.modifiers = modifiers
 
 	if (!isnull(initial_amount))
 		src.initial_amount = initial_amount
@@ -129,6 +125,5 @@
 		sharpness = sharpness,
 		required_biotype = required_biotype,
 		amount_multiplier = amount_multiplier,
-		modifiers = modifiers,
 		initial_amount = initial_amount * total_mult,
 	)

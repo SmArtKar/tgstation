@@ -124,7 +124,7 @@
 	return ..()
 
 /// Spears deal bonus damage to lockers
-/obj/item/spear/generate_damage(atom/target, mob/living/user, list/modifiers)
+/obj/item/spear/generate_damage(atom/target, atom/source, def_zone = null, list/modifiers, thrown = FALSE)
 	if (!istype(target, /obj/structure/closet))
 		return ..()
 	var/datum/damage_package/package = ..()

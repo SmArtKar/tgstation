@@ -4,7 +4,7 @@
  * * amount - Amount of damage dealt.
  * * damage_flag - Armor which would've protected from this damage, determines the sort of damage we're dealing with.
  * * attack_flags - What sort of an attack this is, melee, blob, ranged, etc.
- * * def_zone - What body zone is being hit. Or a reference to what bodypart is being hit.
+ * * def_zone - What body zone is being hit, or a list of them.
  * * attack_dir - Direction of the attack from the self to attacker.
  * * armor_penetration - Flat reduction from armor.
  * * armor_multiplier - Armor multiplier, applied before armor_penetration;
@@ -33,6 +33,7 @@
 	silent = FALSE,
 )
 	SHOULD_NOT_OVERRIDE(TRUE)
+
 	var/datum/damage_package/package = new(
 		damage_type = damage_type,
 		damage_flag = damage_flag,
@@ -45,6 +46,7 @@
 		source = source,
 		sharpness = sharpness,
 	)
+
 	return package_armor_check(package, penetrated_text = penetrated_text, soften_text = soften_text, absorb_text = absorb_text, silent = silent)
 
 /*
@@ -57,6 +59,8 @@
  * * silent - Prevents armor block/penetration messages from displaying.
  */
 /mob/living/proc/package_armor_check(datum/damage_package/package, penetrated_text = null, soften_text = null, absorb_text = null, silent = FALSE)
+	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
+	package.def_zone = validate_def_zones(package.def_zone)
 	var/armor_protection = get_armor(package)
 
 	if (armor_protection > 0)
@@ -69,10 +73,9 @@
 		return armor_protection
 
 	var/zone = package.def_zone
-	if (islist(package.def_zone))
-		zone = pick(package.def_zone)
-
 	if (zone)
+		if (islist(zone))
+			zone = pick(zone)
 		zone = parse_zone_with_bodypart(zone)
 
 	if (package.armor_penetration > 0 || package.armor_multiplier < 1)
@@ -98,7 +101,6 @@
 
 		to_chat(src, span_notice("Your armor absorbs the blow!"))
 		return armor_protection
-
 
 	if (soften_text)
 		to_chat(src, soften_text)
@@ -520,7 +522,7 @@
 		bare_wound_bonus = user.bare_wound_bonus,
 		sharpness = user.sharpness,
 		attack_dir = get_dir(user, src),
-	)
+	) // todo smartkar
 	return damage_done
 
 /mob/living/attack_hand(mob/living/carbon/human/user, list/modifiers)
@@ -900,28 +902,27 @@
 	return FAILED_BLOCK
 
 // Creates a new damage package for our unarmed attack. Uses our selected arm's unarmed damage, or falls back to amount arg if such doesn't exist
-// If ignore_custom is TRUE, then deal fixed amount of damage of fixed type, ignoring picked arm or custom logic
-/mob/living/proc/get_unarmed_package(atom/target, amount, damtype = BRUTE, forced = FALSE, ignore_custom = FALSE, list/modifiers = null)
+// If fallback_amount is TRUE, then deal fixed amount of damage of fixed type if given such, ignoring picked arm or custom logic
+/mob/living/proc/get_unarmed_package(atom/target, amount = null, damage_type = BRUTE, def_zone = zone_selected, spread_damage = FALSE, fallback_amount = TRUE, list/modifiers = null)
 	var/obj/item/bodypart/arm = get_active_hand()
 	var/sharpness = NONE
-	if (!isnull(arm) && !ignore_custom)
+	if (!isnull(arm) && (isnull(amount) || !fallback_amount))
 		amount = rand(arm.unarmed_damage_low, arm.unarmed_damage_high)
-		damtype = arm.attack_type
+		damage_type = arm.attack_type
 		sharpness = arm.sharpness
 
 	var/datum/damage_package/package = new(
 		amount = amount,
-		damage_type = damtype,
+		damage_type = damage_type,
 		damage_flag = MELEE,
 		attack_flags = UNARMED_ATTACK,
-		def_zone = zone_selected,
+		def_zone = def_zone,
+		spread_damage = spread_damage,
 		attack_dir = get_dir(target, src),
-		forced = forced,
 		hit_by = src,
 		source = src,
 		sharpness = sharpness,
-		modifiers = modifiers,
 		)
 
-	SEND_SIGNAL(src, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, package, target, amount, damtype, forced, ignore_custom, modifiers)
+	SEND_SIGNAL(src, COMSIG_LIVING_CREATED_DAMAGE_PACKAGE, package, target, amount, damage_type, def_zone, fallback_amount, modifiers)
 	return package

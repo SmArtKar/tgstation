@@ -170,7 +170,7 @@
 
 	package.amount = round(package.amount * (100 - armor_protection) * 0.01, DAMAGE_PRECISION)
 	package.armor_block = armor_protection * 0.01
-	return package
+	return armor_protection
 
 ///the sound played when the atom is damaged.
 /atom/proc/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)

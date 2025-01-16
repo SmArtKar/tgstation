@@ -80,19 +80,20 @@
 	log_combat(user, H, "attempted throat slitting", source)
 
 	playsound(H.loc, butcher_sound, 50, TRUE, -1)
-	if(do_after(user, clamp(500 / source.force, 30, 100), H) && H.Adjacent(source))
-		if(H.has_status_effect(/datum/status_effect/neck_slice))
-			user.show_message(span_warning("[H]'s neck has already been already cut, you can't make the bleeding any worse!"), MSG_VISUAL, \
-							span_warning("Their neck has already been already cut, you can't make the bleeding any worse!"))
-			return
+	if(!do_after(user, clamp(500 / source.force, 30, 100), H) && H.Adjacent(source))
+		return
 
-		H.visible_message(span_danger("[user] slits [H]'s throat!"), \
-					span_userdanger("[user] slits your throat..."))
-		log_combat(user, H, "wounded via throat slitting", source)
-		H.apply_damage(source.force, BRUTE, BODY_ZONE_HEAD, wound_bonus=CANT_WOUND) // easy tiger, we'll get to that in a sec
-		var/obj/item/bodypart/slit_throat = H.get_bodypart(BODY_ZONE_HEAD)
-		if (H.cause_wound_of_type_and_severity(WOUND_SLASH, slit_throat, WOUND_SEVERITY_CRITICAL))
-			H.apply_status_effect(/datum/status_effect/neck_slice)
+	if(H.has_status_effect(/datum/status_effect/neck_slice))
+		user.show_message(span_warning("[H]'s neck has already been already cut, you can't make the bleeding any worse!"), MSG_VISUAL, \
+						span_warning("Their neck has already been already cut, you can't make the bleeding any worse!"))
+		return
+
+	H.visible_message(span_danger("[user] slits [H]'s throat!"), span_userdanger("[user] slits your throat..."))
+	log_combat(user, H, "wounded via throat slitting", source)
+	H.apply_damage(source.force, BRUTE, MELEE, MELEE_ATTACK, BODY_ZONE_HEAD, hit_by = source, source = user, wound_bonus = CANT_WOUND, sharpness = SHARP_EDGED) // easy tiger, we'll get to that in a sec
+	var/obj/item/bodypart/slit_throat = H.get_bodypart(BODY_ZONE_HEAD)
+	if (H.cause_wound_of_type_and_severity(WOUND_SLASH, slit_throat, WOUND_SEVERITY_CRITICAL))
+		H.apply_status_effect(/datum/status_effect/neck_slice)
 
 /**
  * Handles a user butchering a target

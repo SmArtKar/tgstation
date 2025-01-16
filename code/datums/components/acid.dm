@@ -243,7 +243,7 @@ GLOBAL_DATUM_INIT(acid_overlay, /mutable_appearance, mutable_appearance('icons/e
 	if(!iscarbon(user) || user.can_touch_acid(source, acid_power, acid_volume))
 		return NONE
 
-	user.apply_damage(5, BURN, user.get_active_hand())
+	user.apply_damage(5, BURN, ACID, def_zone = user.get_active_hand()?.body_zone, source = parent)
 	to_chat(user, span_userdanger("The acid on \the [source] burns your hand!"))
 	INVOKE_ASYNC(user, TYPE_PROC_REF(/mob, emote), "scream")
 	playsound(source, SFX_SEAR, 50, TRUE)

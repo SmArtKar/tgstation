@@ -23,7 +23,7 @@
 
 	resistance_flags = LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	/// Zone at which the projectile is aimed at
-	var/def_zone = ""
+	var/def_zone = null
 	/// Atom who shot the projectile (Not the gun, the guy who shot the gun)
 	var/atom/movable/firer = null
 	/// The thing that the projectile was fired from (gun, turret, spell)
@@ -1374,8 +1374,16 @@
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,
-		amount_multiplier = (isobj(target) ? demolition_mod : 1),
+		amount_multiplier = 1,
 	)
+
+	if (isliving(target))
+		var/mob/living/as_living = target
+		if (as_living.mob_biotypes & MOB_ROBOTIC)
+			package.amount_multiplier *= demolition_mod
+	else if (isobj(target))
+		package.amount_multiplier *= demolition_mod
+
 	SEND_SIGNAL(src, COMSIG_PROJECTILE_CREATED_DAMAGE_PACKAGE, package, target)
 	return package
 

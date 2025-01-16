@@ -134,7 +134,7 @@
 		playsound(hit_atom, sound_on_success, 50, TRUE)
 
 	var/mob/living/living_target = hit_atom
-	living_target.apply_damage(damage_to_apply)
+	living_target.apply_damage(damage_to_apply) // Smartkar todo convert to modifier
 
 /obj/effect/overlay/windup_bar
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT

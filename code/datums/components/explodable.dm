@@ -92,7 +92,7 @@
 		detonate()
 
 ///Called when you attack a specific body part of the thing this is equipped on. Useful for exploding pants.
-/datum/component/explodable/proc/explodable_attack_zone(datum/source, damage, damagetype, def_zone, ...)
+/datum/component/explodable/proc/explodable_attack_zone(datum/source, damage, damagetype, def_zone, ...) // smartkar todo change all comsigs
 	SIGNAL_HANDLER
 
 	if(!def_zone)

@@ -280,8 +280,7 @@
 /datum/status_effect/choke/proc/deal_damage(seconds_between_ticks)
 	owner.losebreath += 1 * seconds_between_ticks // 1 breath loss a second. This will deal additional breath damage, and prevent breathing
 	if(flaming)
-		owner.apply_damage(2 * seconds_between_ticks, BURN, BODY_ZONE_HEAD, hit_by = "choking")
-		owner.apply_damage(2 * seconds_between_ticks, STAMINA)
+		owner.apply_multiple_damages(burn = 2 * seconds_between_ticks, stamina = 2 * seconds_between_ticks, def_zone = BODY_ZONE_HEAD)
 
 /datum/status_effect/choke/proc/do_vfx(client/vfx_on)
 	var/old_x = delta_x

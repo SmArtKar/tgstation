@@ -211,7 +211,10 @@
 	if(prob(30 * luck_mod) && our_guy.get_bodypart(BODY_ZONE_HEAD)) /// Bonk!
 		playsound(our_guy, 'sound/effects/tableheadsmash.ogg', 90, TRUE)
 		our_guy.visible_message(span_danger("[our_guy] hits [our_guy.p_their()] head really badly falling down!"), span_userdanger("You hit your head really badly falling down!"))
-		our_guy.apply_damage(75 * damage_mod, BRUTE, BODY_ZONE_HEAD, hit_by = "slipping")
+		var/head_mod = 1
+		if (HAS_TRAIT(our_guy, TRAIT_HEAD_INJURY_BLOCKED))
+			head_mod = 0.33
+		our_guy.apply_damage(75 * damage_mod, BRUTE, MELEE, def_zone = BODY_ZONE_HEAD)
 		our_guy.adjust_organ_loss(ORGAN_SLOT_BRAIN, 100 * damage_mod)
 		consume_omen()
 

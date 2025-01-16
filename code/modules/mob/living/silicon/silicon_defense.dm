@@ -148,10 +148,10 @@
 		return
 	apply_status_effect(/datum/status_effect/borg_slow, AM.throwforce / 20)
 
-/mob/living/silicon/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
+/mob/living/silicon/attack_effects(datum/damage_package/package, mob/living/attacker)
 	. = ..()
-	if(damage_done < CYBORG_SLOWDOWN_THRESHOLD)
+	if(package.amount < CYBORG_SLOWDOWN_THRESHOLD)
 		return
-	apply_status_effect(/datum/status_effect/borg_slow, damage_done / 60)
+	apply_status_effect(/datum/status_effect/borg_slow, package.amount / 60)
 
 #undef CYBORG_SLOWDOWN_THRESHOLD

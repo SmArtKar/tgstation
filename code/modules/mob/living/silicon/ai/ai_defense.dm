@@ -153,8 +153,8 @@
 	ai_structure.balloon_alert(user, "disconnected neural network")
 	return ITEM_INTERACT_SUCCESS
 
-/mob/living/silicon/ai/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
-	if(damage_done > 0 && attacking_item.damtype != STAMINA && stat != DEAD)
+/mob/living/silicon/ai/attack_effects(datum/damage_package/package, mob/living/attacker)
+	if(package.amount > 0 && package.damage_type != STAMINA && stat != DEAD)
 		spark_system.start()
 		. = TRUE
 	return ..() || .

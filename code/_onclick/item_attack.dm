@@ -276,7 +276,7 @@
 	if (!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = process_damage_package(attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/package = process_damage_package(attacking_item.generate_damage(src, user, user.zone_selected, modifiers))
 	// Only witnesses close by and the victim see a hit message.
 	if (package.attack_message_spectator)
 		user.visible_message(package.attack_message_spectator, package.attack_message_attacker || package.attack_message_spectator, null, COMBAT_MESSAGE_RANGE)
@@ -289,7 +289,6 @@
 	CRASH("areas are NOT supposed to have attacked_by() called on them!")
 
 /mob/living/attacked_by(obj/item/attacking_item, mob/living/user, list/modifiers)
-
 	var/targeting = check_zone(user.zone_selected)
 	if(user != src)
 		var/zone_hit_chance = 80
@@ -300,51 +299,25 @@
 
 	send_item_attack_message(attacking_item, user, targeting_human_readable, targeting)
 
-	var/armor_block = min(run_armor_check( // Smartkar TODO
-			def_zone = targeting,
-			attack_flag = MELEE,
-			absorb_text = span_notice("Your armor has protected your [targeting_human_readable]!"),
-			soften_text = span_warning("Your armor has softened a hit to your [targeting_human_readable]!"),
-			armor_penetration = attacking_item.armor_penetration,
-			weak_against_armor = attacking_item.weak_against_armor,
-		), ARMOR_MAX_BLOCK)
-
-	var/damage = attacking_item.force
-	if(mob_biotypes & MOB_ROBOTIC)
-		damage *= attacking_item.demolition_mod
-
-	var/wounding = attacking_item.wound_bonus
+	var/datum/damage_package/package = attacking_item.generate_damage(src, user, user.zone_selected, modifiers)
 	if((attacking_item.item_flags & SURGICAL_TOOL) && !user.combat_mode && body_position == LYING_DOWN && (LAZYLEN(surgeries) > 0))
-		wounding = CANT_WOUND
+		package.wound_bonus = CANT_WOUND
 
-	if(user != src)
+	if(user != src) // smartkar todo
 		// This doesn't factor in armor, or most damage modifiers (physiology). Your mileage may vary
 		if(check_block(attacking_item, damage, "the [attacking_item.name]", MELEE_ATTACK, attacking_item.armor_penetration, attacking_item.damtype))
 			return FALSE
 
 	SEND_SIGNAL(attacking_item, COMSIG_ITEM_ATTACK_ZONE, src, user, targeting)
 
-	if(damage <= 0)
-		return TRUE
-
 	if(ishuman(src) || client) // istype(src) is kinda bad, but it's to avoid spamming the blackbox
 		SSblackbox.record_feedback("nested tally", "item_used_for_combat", 1, list("[attacking_item.force]", "[attacking_item.type]"))
 		SSblackbox.record_feedback("tally", "zone_targeted", 1, targeting_human_readable)
 
-	var/damage_done = apply_damage( // Smartkar TODO
-		damage = damage,
-		damagetype = attacking_item.damtype,
-		def_zone = targeting,
-		blocked = armor_block,
-		wound_bonus = wounding,
-		bare_wound_bonus = attacking_item.bare_wound_bonus,
-		sharpness = attacking_item.get_sharpness(),
-		attack_dir = get_dir(user, src),
-		hit_by = attacking_item,
-	)
-
-	attack_effects(damage_done, targeting, armor_block, attacking_item, user)
-
+	package = apply_damage_package(package, check_armor = TRUE)
+	SEND_SIGNAL(src, COMSIG_LIVING_ATTACKED_BY, package, user, modifiers)
+	if (package)
+		attack_effects(package, user)
 	return TRUE
 
 /**
@@ -352,79 +325,84 @@
  *
  * Return TRUE if an effect was done, FALSE otherwise.
  */
-/mob/living/proc/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
-	if(damage_done > 0 && attacking_item.damtype == BRUTE && prob(25 + damage_done * 2))
-		attacking_item.add_mob_blood(src)
-		add_splatter_floor(get_turf(src))
-		if(get_dist(attacker, src) <= 1)
-			attacker.add_mob_blood(src)
-		return TRUE
+/mob/living/proc/attack_effects(datum/damage_package/package, mob/living/attacker)
+	if (package.amount < DAMAGE_PRECISION || package.damage_type != BRUTE)
+		return FALSE
 
-	return FALSE
+	if (!prob(25 + package.amount * 2))
+		return FALSE
 
-/mob/living/carbon/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
-	var/obj/item/bodypart/hit_bodypart = get_bodypart(hit_zone) || bodyparts[1]
+	attacking_item.add_mob_blood(src)
+	add_splatter_floor(get_turf(src))
+	if(get_dist(attacker, src) <= 1)
+		attacker.add_mob_blood(src)
+
+/mob/living/carbon/attack_effects(datum/damage_package/package, mob/living/attacker)
+	var/obj/item/bodypart/hit_bodypart = bodyparts[1]
+	if (package.def_zone)
+		if (islist(package.def_zone))
+			hit_bodypart = get_bodypart(pick(package.def_zone))
+		else
+			hit_bodypart = get_bodypart(package.def_zone)
+
 	if(!hit_bodypart.can_bleed())
 		return FALSE
 
 	return ..()
 
-/mob/living/carbon/human/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
+/mob/living/carbon/human/attack_effects(datum/damage_package/package, mob/living/attacker)
 	. = ..()
-	switch(hit_zone)
-		if(BODY_ZONE_HEAD)
-			if(.)
-				if(wear_mask)
-					wear_mask.add_mob_blood(src)
-					update_worn_mask()
-				if(head)
-					head.add_mob_blood(src)
-					update_worn_head()
-				if(glasses && prob(33))
-					glasses.add_mob_blood(src)
-					update_worn_glasses()
-
-			if(!attacking_item.get_sharpness() && !HAS_TRAIT(src, TRAIT_HEAD_INJURY_BLOCKED) && attacking_item.damtype == BRUTE)
-				if(prob(damage_done))
-					adjust_organ_loss(ORGAN_SLOT_BRAIN, 20)
-					if(stat == CONSCIOUS)
-						visible_message(
-							span_danger("[src] is knocked senseless!"),
-							span_userdanger("You're knocked senseless!"),
-						)
-						set_confusion_if_lower(20 SECONDS)
-						adjust_eye_blur(20 SECONDS)
-					if(prob(10))
-						gain_trauma(/datum/brain_trauma/mild/concussion)
-				else
-					adjust_organ_loss(ORGAN_SLOT_BRAIN, damage_done * 0.2)
-
-				// rev deconversion through blunt trauma.
-				// this can be signalized to the rev datum
-				if(mind && stat == CONSCIOUS && src != attacker && prob(damage_done + ((100 - health) * 0.5)))
-					var/datum/antagonist/rev/rev = mind.has_antag_datum(/datum/antagonist/rev)
-					rev?.remove_revolutionary(attacker)
-
-		if(BODY_ZONE_CHEST)
-			if(.)
-				if(wear_suit)
-					wear_suit.add_mob_blood(src)
-					update_worn_oversuit()
-				if(w_uniform)
-					w_uniform.add_mob_blood(src)
-					update_worn_undersuit()
-
-			if(stat == CONSCIOUS && !attacking_item.get_sharpness() && !HAS_TRAIT(src, TRAIT_BRAWLING_KNOCKDOWN_BLOCKED) && attacking_item.damtype == BRUTE)
-				if(prob(damage_done))
-					visible_message(
-						span_danger("[src] is knocked down!"),
-						span_userdanger("You're knocked down!"),
-					)
-					apply_effect(6 SECONDS, EFFECT_KNOCKDOWN, armor_block)
-
-	// Triggers force say events
-	if(damage_done > 10 || (damage_done >= 5 && prob(33)))
+	if(package.amount > 10 || (package.amount >= 5 && prob(33)))
 		force_say()
+
+	var/list/hit_areas = (islist(package.def_zone) ? pick(package.def_zone) : package.def_zone) || list(BODY_ZONE_CHEST)
+
+	if (BODY_ZONE_CHEST in hit_areas)
+		if (stat == CONSCIOUS && !package.sharpness && !HAS_TRAIT(src, TRAIT_BRAWLING_KNOCKDOWN_BLOCKED) && package.damage_type == BRUTE)
+			if (prob(package.amount))
+				visible_message(span_danger("[src] is knocked down!"), span_userdanger("You're knocked down!"))
+				apply_effect(6 SECONDS, EFFECT_KNOCKDOWN, package.armor_block)
+
+		if (!.)
+			return
+
+		if (wear_suit)
+			wear_suit.add_mob_blood(src)
+			update_worn_oversuit()
+
+		if (w_uniform)
+			w_uniform.add_mob_blood(src)
+			update_worn_undersuit()
+
+	if (!(BODY_ZONE_HEAD in hit_areas))
+		return
+
+	if(.)
+		if (wear_mask)
+			wear_mask.add_mob_blood(src)
+			update_worn_mask()
+		if (head)
+			head.add_mob_blood(src)
+			update_worn_head()
+		if (glasses && prob(33))
+			glasses.add_mob_blood(src)
+			update_worn_glasses()
+
+	if (package.sharpness || HAS_TRAIT(src, TRAIT_HEAD_INJURY_BLOCKED) || package.damage_type != BRUTE)
+		return
+
+	if (!prob(package.amount))
+		adjust_organ_loss(ORGAN_SLOT_BRAIN, package.amount * 0.2)
+		return
+
+	adjust_organ_loss(ORGAN_SLOT_BRAIN, 20)
+	if (stat == CONSCIOUS)
+		visible_message(span_danger("[src] is knocked senseless!"), span_userdanger("You're knocked senseless!"))
+		set_confusion_if_lower(20 SECONDS)
+		adjust_eye_blur(20 SECONDS)
+
+	if (prob(10))
+		gain_trauma(/datum/brain_trauma/mild/concussion)
 
 /**
  * Last proc in the [/obj/item/proc/melee_attack_chain].
@@ -487,26 +465,33 @@
 	return ""
 
 /// A simple way to create a damage package targeting an atom
-/obj/item/proc/generate_damage(atom/target, mob/living/user, list/modifiers, thrown = FALSE)
+/obj/item/proc/generate_damage(atom/target, atom/source, def_zone = null, list/modifiers, thrown = FALSE)
 	RETURN_TYPE(/datum/damage_package)
 	var/datum/damage_package/package = new(
 		amount = thrown ? throwforce : force,
 		damage_type = damtype,
 		damage_flag = MELEE,
 		attack_flags = thrown ? THROWN_PROJECTILE_ATTACK : MELEE_ATTACK,
-		def_zone = user?.zone_selected,
-		attack_dir = get_dir(target, user || src),
+		def_zone = def_zone,
+		attack_dir = get_dir(target, source || src),
 		armor_penetration = armor_penetration,
 		armor_multiplier = weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1,
 		forced = FALSE,
 		hit_by = src,
-		source = user,
-		attack_text = user ? "[user]'s [src]" : "[src]",
+		source = source,
+		attack_text = source ? "[source]'s [src]" : "[src]",
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,
-		amount_multiplier = (isobj(target) ? demolition_mod : 1),
-		modifiers = modifiers,
+		amount_multiplier = 1,
 	)
+
+	if (isliving(target))
+		var/mob/living/as_living = target
+		if (as_living.mob_biotypes & MOB_ROBOTIC)
+			package.amount_multiplier *= demolition_mod
+	else if (isobj(target))
+		package.amount_multiplier *= demolition_mod
+
 	SEND_SIGNAL(src, COMSIG_ITEM_CREATED_DAMAGE_PACKAGE, package, target, user, modifiers, thrown)
 	return package

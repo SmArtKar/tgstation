@@ -133,9 +133,6 @@
 	if(defender.check_block(attacker, damage, "[attacker]'s [current_atk_verb]", UNARMED_ATTACK))
 		return FALSE
 
-	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
-	var/armor_block = defender.run_armor_check(affecting, MELEE, armor_penetration = base_unarmed_effectiveness) // Smartkar todo
-
 	playsound(defender, attack_sound, 25, TRUE, -1)
 
 	defender.visible_message(
@@ -151,11 +148,13 @@
 	// Determines the total amount of experience earned per punch
 	var/experience_earned = round(damage * 0.25, 0.1)
 
-	defender.apply_damage(damage, damage_type, affecting, armor_block)
+	var/datum/damage_package/package = attacker.get_unarmed_package(defender, damage, damage_type, def_zone = defender.get_random_valid_zone(attacker.zone_selected))
+	package.armor_penetration = base_unarmed_effectiveness
+	package = defender.apply_damage_package(package, check_armor = TRUE)
 
 	log_combat(attacker, defender, "punched (boxing) ")
 
-	if(defender.stat == DEAD || !honor_check(defender)) //early returning here so we don't worry about knockout probs or experience gain
+	if(defender.stat == DEAD || !honor_check(defender) || !package) // Early returning here so we don't worry about knockout probs or experience gain
 		return TRUE
 
 	if(grant_experience)
@@ -173,7 +172,7 @@
 	if(!prob(final_knockout_probability))
 		return TRUE
 
-	crit_effect(attacker, defender, armor_block, damage_type, damage)
+	crit_effect(attacker, defender, package?.armor_block, damage_type, damage)
 
 	experience_earned *= 2 //Double our experience gain on a crit hit
 
@@ -197,17 +196,18 @@
 		defender.apply_effect(20 SECONDS, EFFECT_KNOCKDOWN, armor_block)
 		defender.SetSleeping(10 SECONDS)
 		log_combat(attacker, defender, "knocked out (boxing) ")
-	else
-		defender.visible_message(
-			span_danger("[attacker] staggers [defender] with a haymaker!"),
-			span_userdanger("You're nearly knocked off your feet by [attacker]!"),
-			span_hear("You hear a sickening sound of flesh hitting flesh!"),
-			COMBAT_MESSAGE_RANGE,
-			attacker,
-		)
-		defender.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
-		to_chat(attacker, span_danger("You stagger [defender] with a haymaker!"))
-		log_combat(attacker, defender, "staggered (boxing) ")
+		return
+
+	defender.visible_message(
+		span_danger("[attacker] staggers [defender] with a haymaker!"),
+		span_userdanger("You're nearly knocked off your feet by [attacker]!"),
+		span_hear("You hear a sickening sound of flesh hitting flesh!"),
+		COMBAT_MESSAGE_RANGE,
+		attacker,
+	)
+	defender.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
+	to_chat(attacker, span_danger("You stagger [defender] with a haymaker!"))
+	log_combat(attacker, defender, "staggered (boxing) ")
 
 /// Returns whether whoever is checked by this proc is complying with the rules of boxing. The boxer cannot block non-boxers, and cannot apply their scariest moves against non-boxers.
 /datum/martial_art/boxing/proc/honor_check(mob/living/possible_boxer)
@@ -266,7 +266,7 @@
 		return NONE
 
 	if(istype(attacker) && boxer.Adjacent(attacker))
-		attacker.apply_damage(10, default_damage_type)
+		attacker.apply_damage_package(boxer.get_unarmed_package(attacker, 10, BRUTE, def_zone = attacker.get_random_valid_zone(boxer.zone_selected)), check_armor = TRUE)
 		boxer.apply_damage(5, STAMINA)
 		perform_extra_effect(boxer, attacker)
 
@@ -344,19 +344,20 @@
 		var/mob/living/carbon/human/human_attacker = attacker
 		human_attacker.force_say()
 		human_attacker.say("[first_word_pick][second_word_pick]!!!", forced = "hunter boxing enthusiastic battlecry")
+
 	defender.apply_status_effect(/datum/status_effect/rebuked)
-	defender.apply_damage(damage * 2, default_damage_type, BODY_ZONE_CHEST, armor_block) //deals double our damage AGAIN
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, damage * 2, default_damage_type, def_zone = BODY_ZONE_CHEST), blocked = armor_block) //deals double our damage AGAIN
 	attacker.reagents.add_reagent(/datum/reagent/medicine/omnizine/godblood, 3) //Get a little healing in return for a successful crit
 	log_combat(attacker, defender, "hunter crit punched (boxing)")
 
 // Our hunter boxer speeds up their attacks when completing a combo against a valid target, and does a sizable amount of extra damage.
 
 /datum/martial_art/boxing/hunter/perform_extra_effect(mob/living/attacker, mob/living/defender)
-	if(defender.mob_biotypes & MOB_HUMANOID && !istype(defender, /mob/living/simple_animal/hostile/megafauna))
+	if((defender.mob_biotypes & MOB_HUMANOID) && !istype(defender, /mob/living/simple_animal/hostile/megafauna))
 		return // Does not apply to humans (who aren't megafauna)
 
 	attacker.changeNext_move(CLICK_CD_RAPID)
-	defender.apply_damage(rand(15,20), default_damage_type, BODY_ZONE_CHEST)
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, rand(15, 20), default_damage_type, def_zone = BODY_ZONE_CHEST), check_armor = TRUE)
 
 #undef LEFT_RIGHT_COMBO
 #undef RIGHT_LEFT_COMBO

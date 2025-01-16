@@ -164,8 +164,8 @@
 	if(!whacked_by || prob(100 - (8 *  GET_MUTATION_SYNCHRONIZER(src))))
 		return
 	to_chat(parent, span_danger("You hit your head on \the [whacked_by]'s header!"))
-	var/dmg = HAS_TRAIT(parent, TRAIT_HEAD_INJURY_BLOCKED) ? rand(1,4) : rand(2,9)
-	parent.apply_damage(dmg, BRUTE, BODY_ZONE_HEAD)
+	var/dmg = HAS_TRAIT(parent, TRAIT_HEAD_INJURY_BLOCKED) ? rand(1, 4) : rand(2, 9)
+	parent.apply_damage(dmg, BRUTE, MELEE, def_zone = BODY_ZONE_HEAD, hit_by = whacked_by)
 	parent.do_attack_animation(whacked_by, ATTACK_EFFECT_PUNCH)
 	playsound(whacked_by, 'sound/effects/bang.ogg', 10, TRUE)
 	parent.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH, 10 SECONDS)
@@ -620,7 +620,7 @@
 		brain.Insert(owner, special = TRUE, movement_flags = NO_ID_TRANSFER)
 
 	owner.dna.species.regenerate_organs(owner, replace_current = FALSE, excluded_zones = list(BODY_ZONE_CHEST)) //replace_current needs to be FALSE to prevent weird adding and removing mutation healing
-	owner.apply_damage(damage = 50, damagetype = BRUTE, def_zone = BODY_ZONE_HEAD) //and this to DISCOURAGE organ farming, or at least not make it free.
+	owner.apply_damage(50, BRUTE, def_zone = BODY_ZONE_HEAD) //and this to DISCOURAGE organ farming, or at least not make it free.
 	owner.visible_message(span_warning("[owner]'s head returns with a sickening crunch!"), span_warning("Your head regrows with a sickening crack! Ouch."))
 	new /obj/effect/gibspawner/generic(get_turf(owner), owner)
 

@@ -173,7 +173,7 @@
 /// Actually hit someone
 /datum/action/cooldown/mob_cooldown/charge/proc/hit_target(atom/movable/source, mob/living/target, damage_dealt)
 	target.visible_message(span_danger("[source] slams into [target]!"), span_userdanger("[source] tramples you into the ground!"))
-	target.apply_damage(damage_dealt, BRUTE, wound_bonus = CANT_WOUND)
+	target.apply_damage(damage_dealt, BRUTE, MELEE, UNARMED_ATTACK, attack_dir = get_dir(target, source), hit_by = source, source = source, wound_bonus = CANT_WOUND, check_armor = TRUE)
 	playsound(get_turf(target), 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	shake_camera(target, 4, 3)
 	shake_camera(source, 2, 3)

@@ -140,13 +140,8 @@
 	if(human_parent.is_blind())
 		to_chat(human_parent, span_boldwarning("Your [affected_limb.plaintext_zone] feels like it's bubbling, then burns like hell!"))
 
-	human_parent.apply_damage(RADIATION_BURN_SPLOTCH_DAMAGE, BURN, affected_limb, wound_clothing = FALSE)
-	playsound(
-		human_parent,
-		SFX_SIZZLE,
-		50,
-		vary = TRUE,
-	)
+	human_parent.apply_damage(RADIATION_BURN_SPLOTCH_DAMAGE, BURN, def_zone = affected_limb, wound_clothing = FALSE)
+	playsound(human_parent, SFX_SIZZLE, vol = 50, vary = TRUE)
 
 /datum/component/irradiated/proc/create_glow()
 	var/atom/movable/parent_movable = parent

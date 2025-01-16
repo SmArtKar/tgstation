@@ -317,7 +317,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/taken_damage = process_damage_package(attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/taken_damage = process_damage_package(attacking_item.generate_damage(src, user, user.zone_selected, modifiers))
 	if (taken_damage?.amount)
 		try_damage_component(taken_damage.amount, user.zone_selected)
 

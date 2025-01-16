@@ -581,7 +581,7 @@
 /mob/living/simple_animal/compare_sentience_type(compare_type)
 	return sentience_type == compare_type
 
-/mob/living/simple_animal/get_unarmed_package(atom/target, amount = null, damtype = null, forced = FALSE, ignore_custom = FALSE, list/modifiers = null)
+/mob/living/simple_animal/get_unarmed_package(atom/target, amount = null, damage_type = BRUTE, def_zone = zone_selected, spread_damage = FALSE, fallback_amount = TRUE, list/modifiers = null)
 	if (isnull(amount))
 		if (isobj(target))
 			amount = obj_damage
@@ -596,7 +596,8 @@
 		damage_type = damtype,
 		damage_flag = MELEE,
 		attack_flags = UNARMED_ATTACK,
-		def_zone = zone_selected,
+		def_zone = def_zone,
+		spread_damage = spread_damage,
 		attack_dir = get_dir(target, src),
 		armor_penetration = armor_penetration,
 		forced = forced,
@@ -605,8 +606,7 @@
 		sharpness = sharpness,
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
-		modifiers = modifiers,
 		)
 
-	SEND_SIGNAL(src, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, package, target, amount, damtype, forced, ignore_custom, modifiers)
+	SEND_SIGNAL(src, COMSIG_LIVING_CREATED_DAMAGE_PACKAGE, package, target, amount, damtype, forced, fallback_amount, modifiers)
 	return package

@@ -28,4 +28,4 @@
 	var/mob/living/prey = target
 	if (prey.mob_size > target_size)
 		return
-	prey.apply_damage(bonus_damage, BRUTE, hunter.zone_selected)
+	prey.apply_damage(bonus_damage, BRUTE, hunter.zone_selected) // Smartkar todo change to modifiers

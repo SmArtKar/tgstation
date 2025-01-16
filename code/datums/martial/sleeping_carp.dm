@@ -41,8 +41,6 @@
 
 ///Gnashing Teeth: Harm Harm, consistent 20 force punch on every second harm punch
 /datum/martial_art/the_sleeping_carp/proc/strongPunch(mob/living/attacker, mob/living/defender)
-	// this var is so that the strong punch is always aiming for the body part the user is targeting and not trying to apply to the chest before deviating
-	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 	var/atk_verb = pick("precisely kick", "brutally chop", "cleanly hit", "viciously slam")
 	defender.visible_message(
@@ -55,7 +53,7 @@
 	to_chat(attacker, span_danger("You [atk_verb] [defender]!"))
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 	log_combat(attacker, defender, "strong punched (Sleeping Carp)")
-	defender.apply_damage(20, attacker.get_attack_type(), affecting)
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, 20, attacker.get_attack_type(), defender.get_random_valid_zone(attacker.zone_selected)))
 	return TRUE
 
 ///Crashing Wave Kick: Harm Disarm combo, throws people seven tiles backwards
@@ -71,7 +69,7 @@
 	playsound(attacker, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
 	var/atom/throw_target = get_edge_target_turf(defender, attacker.dir)
 	defender.throw_at(throw_target, 7, 4, attacker)
-	defender.apply_damage(15, attacker.get_attack_type(), BODY_ZONE_CHEST, wound_bonus = CANT_WOUND)
+	defender.apply_damage(15, attacker.get_attack_type(), MELEE, UNARMED_ATTACK, BODY_ZONE_CHEST, attack_dir = get_dir(defender, attacker), hit_by = attacker, source = attacker, wound_bonus = CANT_WOUND)
 	log_combat(attacker, defender, "launchkicked (Sleeping Carp)")
 	return TRUE
 
@@ -87,7 +85,7 @@
 		defender.drop_all_held_items()
 		defender.visible_message(span_warning("[attacker] kicks [defender] in the head!"), \
 					span_userdanger("You are kicked in the head by [attacker]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, attacker)
-	defender.apply_damage(40, STAMINA)
+	defender.apply_damage(40, STAMINA, MELEE, UNARMED_ATTACK, attack_dir = get_dir(defender, attacker), hit_by = attacker, source = attacker)
 	defender.adjust_dizzy_up_to(10 SECONDS, 10 SECONDS)
 	defender.adjust_temp_blindness_up_to(2 SECONDS, 10 SECONDS)
 	log_combat(attacker, defender, "dropkicked (Sleeping Carp)")
@@ -114,7 +112,7 @@
 		)
 		grab_log_description = "grabbed and nerve pinched"
 		defender.Unconscious(10 SECONDS)
-	defender.apply_damage(20, STAMINA)
+	defender.apply_damage(20, STAMINA, MELEE, UNARMED_ATTACK, attack_dir = get_dir(defender, attacker), hit_by = attacker, source = attacker)
 	log_combat(attacker, defender, "[grab_log_description] (Sleeping Carp)")
 	return MARTIAL_ATTACK_INVALID // normal grab
 
@@ -135,7 +133,7 @@
 			)
 			to_chat(attacker, span_danger("In a swift motion, you snap the neck of [defender]!"))
 			log_combat(attacker, defender, "snapped neck")
-			defender.apply_damage(100, BRUTE, BODY_ZONE_HEAD, wound_bonus=CANT_WOUND)
+			defender.apply_damage(100, BRUTE, MELEE, UNARMED_ATTACK, BODY_ZONE_HEAD, hit_by = attacker, source = attacker, wound_bonus = CANT_WOUND)
 			if(!HAS_TRAIT(defender, TRAIT_NODEATH))
 				defender.death()
 				defender.investigate_log("has had [defender.p_their()] neck snapped by [attacker].", INVESTIGATE_DEATHS)
@@ -150,7 +148,6 @@
 	if(check_streak(attacker, defender))
 		return MARTIAL_ATTACK_SUCCESS
 
-	var/obj/item/bodypart/affecting = defender.get_bodypart(defender.get_random_valid_zone(attacker.zone_selected))
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 	defender.visible_message(
 		span_danger("[attacker] [atk_verb]s [defender]!"),
@@ -160,7 +157,9 @@
 		attacker,
 	)
 	to_chat(attacker, span_danger("You [atk_verb] [defender]!"))
-	defender.apply_damage(final_damage, attacker.get_attack_type(), affecting, wound_bonus = CANT_WOUND)
+	var/datum/damage_package/package = attacker.get_unarmed_package(defender, final_damage, attacker.get_attack_type(), defender.get_random_valid_zone(attacker.zone_selected))
+	package.wound_bonus = CANT_WOUND
+	defender.apply_damage_package(package)
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 	log_combat(attacker, defender, "punched (Sleeping Carp)")
 	return MARTIAL_ATTACK_SUCCESS
@@ -177,7 +176,7 @@
 
 	attacker.do_attack_animation(defender, ATTACK_EFFECT_PUNCH)
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
-	defender.apply_damage(20, STAMINA)
+	defender.apply_damage(20, STAMINA, MELEE, UNARMED_ATTACK, attack_dir = get_dir(defender, attacker), hit_by = attacker, source = attacker)
 	log_combat(attacker, defender, "disarmed (Sleeping Carp)")
 	return MARTIAL_ATTACK_INVALID // normal disarm
 
@@ -277,7 +276,9 @@
 		user.Paralyze(6 SECONDS)
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
-			H.apply_damage(2*force, BRUTE, BODY_ZONE_HEAD)
+			var/datum/damage_package/package = generate_damage(user, user, BODY_ZONE_HEAD)
+			package.amount_multiplier *= 2
+			H.apply_damage_package(package)
 		else
 			user.take_bodypart_damage(2*force)
 		return

@@ -100,7 +100,7 @@
 			return
 
 	// otherwise deal brute damage
-	owner.apply_damage(rand(2,4) * seconds_between_ticks, damagetype = BRUTE)
+	owner.apply_damage(rand(2,4) * seconds_between_ticks, BRUTE, BIO)
 
 	if(SPT_PROB(10, seconds_between_ticks))
 		var/feedback_text = pick(list(

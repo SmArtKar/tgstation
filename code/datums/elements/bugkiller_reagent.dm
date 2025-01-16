@@ -39,7 +39,7 @@
 		exposed_mob.apply_status_effect(/datum/status_effect/bugkiller_death)
 		return
 
-	if(exposed_mob.apply_damage(damage, TOX) && damage >= 6)
+	if(exposed_mob.apply_damage(damage, TOX, null, REAGENT_ATTACK) && damage >= 6)
 		// yes i know it's not burn damage. the burning is on the inside.
 		to_chat(exposed_mob, span_danger("You feel a burning sensation."))
 

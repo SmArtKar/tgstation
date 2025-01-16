@@ -103,11 +103,11 @@
 		return
 
 	var/turf/target_turf = get_step(user, current_direction)
+	var/obj/item/parent_item = parent
+	var/sharp = parent_item.get_sharpness()
 	if(target in range(1, target_turf))
-		var/obj/item/parent_item = parent
-		var/sharp = parent_item.get_sharpness()
 		var/msg = "[user] [sharp ? "impales" : "slams into"] [target] [sharp ? "on" : "with"] their [parent]"
-		target.apply_damage((damage_boost_per_tile * usable_charge), BRUTE, user.zone_selected, 0)
+		target.apply_damage((damage_boost_per_tile * usable_charge), BRUTE, MELEE, MELEE_ATTACK, user.zone_selected, hit_by = parent, source = user, sharpness = sharp)
 		if(prob(knockdown_chance_per_tile * usable_charge))
 			msg += " and knocks [target] [target.buckled ? "off of [target.buckled]" : "down"]"
 			if(target.buckled)

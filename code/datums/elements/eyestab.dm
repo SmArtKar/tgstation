@@ -51,8 +51,7 @@
 	return COMPONENT_SKIP_ATTACK
 
 /datum/element/eyestab/proc/perform_eyestab(obj/item/item, mob/living/target, mob/living/user)
-	var/obj/item/bodypart/target_limb = target.get_bodypart(BODY_ZONE_HEAD)
-	if (ishuman(target) && isnull(target_limb))
+	if (ishuman(target) && isnull(target.get_bodypart(BODY_ZONE_HEAD)))
 		return
 
 	item.add_fingerprint(user)
@@ -69,10 +68,7 @@
 			span_userdanger("[user] stabs you in the eye with [item]!"),
 		)
 
-	if (target_limb)
-		target.apply_damage(damage, BRUTE, target_limb, hit_by = item)
-	else
-		target.take_bodypart_damage(damage)
+	target.apply_damage(damage, BRUTE, MELEE, MELEE_ATTACK, BODY_ZONE_HEAD, hit_by = item, source = user, sharpness = SHARP_POINTY)
 
 	target.add_mood_event("eye_stab", /datum/mood_event/eye_stab)
 	log_combat(user, target, "attacked", "[item.name]", "(Combat mode: [user.combat_mode ? "On" : "Off"])")

@@ -876,25 +876,28 @@
 
 /datum/status_effect/ants/tick(seconds_between_ticks)
 	var/mob/living/carbon/human/victim = owner
-	victim.apply_damage(max(0.1, round((ants_remaining * damage_per_ant), 0.1)) * seconds_between_ticks, BRUTE, spread_damage = TRUE) //Scales with # of ants (lowers with time). Roughly 10 brute over 50 seconds.
-	if(victim.stat <= SOFT_CRIT) //Makes sure people don't scratch at themselves while they're in a critical condition
+	// Scales with # of ants (lowers with time). Roughly 10 brute over 50 seconds.
+	victim.apply_damage(max(0.1, round((ants_remaining * damage_per_ant), 0.1)) * seconds_between_ticks, BRUTE)
+	// Makes sure people don't scratch at themselves while they're in a critical condition
+	if(victim.stat <= SOFT_CRIT)
 		if(prob(15))
 			switch(rand(1,2))
 				if(1)
 					victim.say(pick(ant_debuff_speech), forced = /datum/status_effect/ants)
 				if(2)
 					victim.emote("scream")
-		if(prob(50)) // Most of the damage is done through random chance. When tested yielded an average 100 brute with 200u ants.
+		// Most of the damage is done through random chance. When tested yielded an average 100 brute with 200u ants.
+		if(prob(50))
 			switch(rand(1,50))
 				if (1 to 8) //16% Chance
 					to_chat(victim, span_danger("You scratch at the ants on your scalp!."))
-					owner.apply_damage(0.4 * seconds_between_ticks, BRUTE, BODY_ZONE_HEAD)
+					owner.apply_damage(0.4 * seconds_between_ticks, BRUTE, MELEE, UNARMED_ATTACK, BODY_ZONE_HEAD, hit_by = victim, sharpness = SHARP_EDGED, wound_bonus = CANT_WOUND)
 				if (9 to 29) //40% chance
 					to_chat(victim, span_danger("You scratch at the ants on your arms!"))
-					owner.apply_damage(1.2 * seconds_between_ticks, BRUTE, pick(GLOB.arm_zones))
+					owner.apply_damage(1.2 * seconds_between_ticks, BRUTE, MELEE, UNARMED_ATTACK, pick(GLOB.arm_zones), hit_by = victim, sharpness = SHARP_EDGED, wound_bonus = CANT_WOUND)
 				if (30 to 49) //38% chance
 					to_chat(victim, span_danger("You scratch at the ants on your leg!"))
-					owner.apply_damage(1.2 * seconds_between_ticks, BRUTE, pick(GLOB.leg_zones))
+					owner.apply_damage(1.2 * seconds_between_ticks, BRUTE, MELEE, UNARMED_ATTACK, pick(GLOB.leg_zones), hit_by = victim, sharpness = SHARP_EDGED, wound_bonus = CANT_WOUND)
 				if(50) // 2% chance
 					to_chat(victim, span_danger("You rub some ants away from your eyes!"))
 					victim.set_eye_blur_if_lower(6 SECONDS)

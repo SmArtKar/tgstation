@@ -413,7 +413,7 @@
 	if(!length(scratcher.get_clothing_on_part(bodypart)))
 		return
 
-	owner.apply_damage(scratch_damage, BRUTE, bodypart)
+	scratcher.apply_damage(scratch_damage, BRUTE, MELEE, UNARMED_ATTACK, bodypart.body_zone, hit_by = scratcher, source = scratcher)
 	if(SPT_PROB(33, seconds_per_tick))
 		to_chat(owner, span_notice("You scratch furiously at your clothed [bodypart.plaintext_zone]!"))
 

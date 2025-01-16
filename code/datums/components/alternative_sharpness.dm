@@ -23,7 +23,7 @@
 
 /datum/component/alternative_sharpness/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_ITEM_CREATED_DAMAGE_PACKAGE, PROC_REF(item_package_created))
-	RegisterSignal(parent, COMSIG_MOB_CREATED_DAMAGE_PACKAGE, PROC_REF(mob_package_created))
+	RegisterSignal(parent, COMSIG_LIVING_CREATED_DAMAGE_PACKAGE, PROC_REF(mob_package_created))
 
 /datum/component/alternative_sharpness/proc/item_package_created(obj/item/source, datum/damage_package/package, atom/target, mob/living/user, list/modifiers)
 	SIGNAL_HANDLER
@@ -56,7 +56,7 @@
 	package.attack_message_spectator = span_danger("[user] [verb_continuous] [target] with [source][no_damage_feedback]!")
 	package.attack_message_attacker = span_danger("You [verb_simple] [target] with [source][no_damage_feedback]!")
 
-/datum/component/alternative_sharpness/proc/mob_package_created(mob/living/source, datum/damage_package/package, atom/target, amount, damtype, forced, ignore_custom, list/modifiers)
+/datum/component/alternative_sharpness/proc/mob_package_created(mob/living/source, datum/damage_package/package, atom/target, amount, damage_type, def_zone, fallback_amount, list/modifiers)
 	SIGNAL_HANDLER
 
 	if (!LAZYACCESS(modifiers, RIGHT_CLICK))

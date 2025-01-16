@@ -145,12 +145,12 @@
 	///no food found, but you're dead: it bites you slightly, and doesn't regain health.
 	if(cursed.stat == DEAD)
 		cursed.visible_message(span_danger("[cursed_item] nibbles on [cursed]."), span_userdanger("[cursed_item] nibbles on you!"))
-		cursed.apply_damage(10, BRUTE, BODY_ZONE_CHEST)
+		cursed.apply_damage(10, BRUTE, MELEE, UNARMED_ATTACK|MAGIC_ATTACK, BODY_ZONE_CHEST, hit_by = parent, source = parent)
 		return
 
 	///no food found: it bites you and regains some health.
 	cursed.visible_message(span_danger("[cursed_item] bites [cursed]!"), span_userdanger("[cursed_item] bites you to sate [cursed_item.p_their()] hunger!"))
-	cursed.apply_damage(60, BRUTE, BODY_ZONE_CHEST, wound_bonus = -20, bare_wound_bonus = 20)
+	cursed.apply_damage(60, BRUTE, MELEE, UNARMED_ATTACK|MAGIC_ATTACK, BODY_ZONE_CHEST, hit_by = parent, source = parent, wound_bonus = -20, bare_wound_bonus = 20)
 	current_health = min(current_health + 1, max_health)
 
 #undef HUNGER_THRESHOLD_WARNING

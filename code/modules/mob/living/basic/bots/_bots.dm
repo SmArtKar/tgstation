@@ -447,8 +447,8 @@ GLOBAL_LIST_INIT(command_strings, list(
 
 	ejectpai(user)
 
-/mob/living/basic/bot/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
-	if(damage_done > 0 && attacking_item.damtype != STAMINA && stat != DEAD)
+/mob/living/basic/bot/attack_effects(datum/damage_package/package, mob/living/attacker)
+	if(package.amount > 0 && package.damage_type != STAMINA && stat != DEAD)
 		do_sparks(5, TRUE, src)
 		. = TRUE
 	return ..() || .

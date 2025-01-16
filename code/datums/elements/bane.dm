@@ -68,7 +68,7 @@
 		return
 
 	var/extra_damage = max(0, (force_boosted * damage_multiplier) + added_damage)
-	baned_target.apply_damage(extra_damage, applied_dam_type, hit_zone)
+	baned_target.apply_damage(extra_damage, applied_dam_type, def_zone = hit_zone) // Smartkar todo convert to modifier
 	SEND_SIGNAL(baned_target, COMSIG_LIVING_BANED, bane_applier, baned_target) // for extra effects when baned.
 	SEND_SIGNAL(element_owner, COMSIG_OBJECT_ON_BANING, baned_target)
 

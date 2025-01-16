@@ -231,35 +231,29 @@
 		playsound(owner,'sound/items/weapons/bladeslice.ogg', 40)
 		if (owner_limb.can_bleed())
 			parent.add_mob_blood(owner) // it embedded itself in you, of course it's bloody!
-		damage += parent.w_class * impact_pain_mult
 		owner.add_mood_event("embedded", /datum/mood_event/embedded)
 
 	SEND_SIGNAL(parent, COMSIG_ITEM_EMBEDDED, victim, target_limb)
 	on_successful_embed(victim, target_limb)
 
-	if (damage <= 0)
+	if (damage <= 0 || impact_pain_mult && !is_harmless())
 		return TRUE
 
-	var/armor = owner.run_armor_check(owner_limb.body_zone, MELEE, "Your armor has protected your [owner_limb.plaintext_zone].",
-		"Your armor has softened a hit to your [owner_limb.plaintext_zone].", parent.armor_penetration,
-		weak_against_armor = parent.weak_against_armor,
-	) // Smartkar: todo
+	var/armor_value = owner.package_armor_check(
+		parent.generate_damage(victim, def_zone = owner_limb.body_zone, thrown = TRUE),
+		soften_text = span_warning("Your armor has softened a hit to your [owner_limb.plaintext_zone]."),
+		absorb_text = span_notice("Your armor has protected your [owner_limb.plaintext_zone]."),
+		)
 
-	owner.apply_damage(
-		damage = (1 - pain_stam_pct) * damage,
-		damagetype = BRUTE,
-		def_zone = owner_limb.body_zone,
-		blocked = armor,
-		wound_bonus = parent.wound_bonus,
-		bare_wound_bonus = parent.bare_wound_bonus,
-		sharpness = parent.get_sharpness(),
-		hit_by = parent,
-	)
-
-	owner.apply_damage(
-		damage = pain_stam_pct * damage,
-		damagetype = STAMINA,
-	)
+	var/datum/damage_package/physical_package = parent.generate_damage(victim, def_zone = owner_limb.body_zone, thrown = TRUE)
+	var/datum/damage_package/stamina_package = physical_package.Copy()
+	physical_package.amount_multiplier *= (1 - pain_stam_pct)
+	stamina_package.amount_multiplier *= pain_stam_pct
+	stamina_package.damage_type = STAMINA
+	if (!is_harmless())
+		physical_package.amount += parent.w_class * impact_pain_mult
+		stamina_package.amount += parent.w_class * impact_pain_mult
+	owner.apply_multiple_packages(list(physical_package, stamina_package), blocked = armor_value)
 	return TRUE
 
 /// Proc which is called upon successfully embedding into someone/something, for children to override
@@ -350,20 +344,7 @@
 /// Handles damage effects upon forceful removal
 /datum/embedding/proc/damaging_removal_effect(ouchies_multiplier)
 	var/damage = parent.w_class * remove_pain_mult * ouchies_multiplier
-	owner.apply_damage(
-		damage = (1 - pain_stam_pct) * damage,
-		damagetype = BRUTE,
-		def_zone = owner_limb,
-		wound_bonus = max(0, parent.wound_bonus), // It hurts to rip it out, get surgery you dingus. unlike the others, this CAN wound + increase slash bloodflow
-		sharpness = parent.get_sharpness() || SHARP_EDGED, // always sharp, even if the object isn't
-		hit_by = parent,
-	)
-
-	owner.apply_damage(
-		damage = pain_stam_pct * damage,
-		damagetype = STAMINA,
-	)
-
+	deal_shared_damage(damage, can_wound = TRUE, forced_sharpness = SHARP_EDGED)
 	owner.emote("scream")
 
 /// The proper proc to call when you want to remove something. If a mob is passed, the item will be put in its hands - otherwise its just dumped onto the ground
@@ -387,20 +368,7 @@
 		return
 
 	var/damage = parent.w_class * jostle_pain_mult
-	owner.apply_damage(
-		damage = (1 - pain_stam_pct) * damage,
-		damagetype = BRUTE,
-		def_zone = owner_limb,
-		wound_bonus = CANT_WOUND,
-		sharpness = parent.get_sharpness(),
-		hit_by = parent,
-	)
-
-	owner.apply_damage(
-		damage = pain_stam_pct * damage,
-		damagetype = STAMINA,
-	)
-
+	deal_shared_damage(damage)
 	to_chat(owner, span_userdanger("[parent] embedded in your [owner_limb.plaintext_zone] jostles and stings!"))
 	jostle_effects()
 
@@ -453,20 +421,7 @@
 	if (is_harmless() || !prob(pain_chance_current))
 		return
 
-	owner.apply_damage(
-		damage = (1 - pain_stam_pct) * damage,
-		damagetype = BRUTE,
-		def_zone = owner_limb,
-		wound_bonus = CANT_WOUND,
-		sharpness = parent.get_sharpness(),
-		hit_by = parent,
-	)
-
-	owner.apply_damage(
-		damage = pain_stam_pct * damage,
-		damagetype = STAMINA,
-	)
-
+	deal_shared_damage(damage)
 	to_chat(owner, span_userdanger("[parent] embedded in your [owner_limb.plaintext_zone] hurts!"))
 
 /// Attempt to pluck out the embedded item using tweezers of some kind
@@ -516,20 +471,7 @@
 		return
 
 	var/damage = parent.w_class * remove_pain_mult
-	owner.apply_damage(
-		damage = (1 - pain_stam_pct) * damage,
-		damagetype = BRUTE,
-		def_zone = owner_limb,
-		wound_bonus = CANT_WOUND,
-		sharpness = parent.get_sharpness(),
-		hit_by = parent,
-	)
-
-	owner.apply_damage(
-		damage = pain_stam_pct * damage,
-		damagetype = STAMINA,
-	)
-
+	deal_shared_damage(damage)
 	owner.visible_message(span_danger("[parent] falls out of [owner.name]'s [owner_limb.plaintext_zone]!"),
 		span_userdanger("[parent] falls out of your [owner_limb.plaintext_zone]!"))
 	remove_embedding()
@@ -565,21 +507,7 @@
 		return
 
 	var/damage = parent.w_class * remove_pain_mult
-
-	owner.apply_damage(
-		damage = (1 - pain_stam_pct) * damage * 1.5,
-		damagetype = BRUTE,
-		def_zone = owner_limb,
-		wound_bonus = max(0, parent.wound_bonus), // Performs exit wounds and flings the user to the caster if nearby
-		sharpness = parent.get_sharpness() || SHARP_EDGED,
-		hit_by = parent,
-	)
-
-	owner.apply_damage(
-		damage = pain_stam_pct * damage,
-		damagetype = STAMINA,
-	)
-
+	deal_shared_damage(damage, can_wound = TRUE, forced_sharpness = SHARP_EDGED, phys_mod = 1.5)
 	owner.cause_wound_of_type_and_severity(WOUND_PIERCE, owner_limb, WOUND_SEVERITY_MODERATE)
 	playsound(owner, 'sound/effects/wounds/blood2.ogg', 50, TRUE)
 
@@ -600,6 +528,17 @@
 	if (owner_limb?.owner != owner)
 		return FALSE
 	return TRUE
+
+/datum/embedding/proc/deal_shared_damage(damage, can_wound = FALSE, forced_sharpness = NONE, phys_mod = 1, stam_mod = 1)
+	owner.apply_multiple_damages(
+		brute = damage * (1 - pain_stam_pct) * phys_mod,
+		stamina = damage * pain_stam_pct * stam_mod,
+		def_zone = owner_limb.body_zone,
+		hit_by = parent,
+		source = parent,
+		wound_bonus = can_wound ? max(0, parent.wound_bonus) : CANT_WOUND,
+		sharpness = parent.get_sharpness() || forced_sharpness,
+		)
 
 #undef RIPPING_OUT_HELP_TIME_MULTIPLIER
 #undef RIPPING_OUT_HELP_DAMAGE_MULTIPLIER

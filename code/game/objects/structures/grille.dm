@@ -154,7 +154,7 @@
 	if(!.)
 		return
 	if(!shock(user, 70) && !QDELETED(src)) //Last hit still shocks but shouldn't deal damage to the grille
-		process_damage_package(user.get_unarmed_package(rand(5, 10), modifiers = modifiers))
+		process_damage_package(user.get_unarmed_package(src, rand(5, 10), modifiers = modifiers))
 
 /obj/structure/grille/attack_paw(mob/user, list/modifiers)
 	return attack_hand(user, modifiers)
@@ -176,7 +176,7 @@
 	user.visible_message(span_warning("[user] kicks [src]."), span_warning("You kick [src]."), null, COMBAT_MESSAGE_RANGE)
 	log_combat(user, src, "hit")
 	if(!shock(user, 70))
-		process_damage_package(user.get_unarmed_package(src, rand(5, 10), ignore_custom = TRUE, modifiers = modifiers)) // You kick using your boots (hopefully)
+		process_damage_package(user.get_unarmed_package(src, rand(5, 10), modifiers = modifiers)) // You kick using your boots (hopefully)
 
 /obj/structure/grille/attack_alien(mob/living/user, list/modifiers)
 	user.do_attack_animation(src)

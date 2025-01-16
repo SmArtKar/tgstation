@@ -5,11 +5,11 @@
  * Sends [COMSIG_MOB_APPLY_DAMAGE]
  *
  * Arguments:
- * * damage - Amount of damage
+ * * amount - Amount of damage
  * * damage_type - Type of damage dealt, can be BRUTE, BURN, TOX, OXY and STAMINA.
  * * damage_flag - Armor which would've protected from this damage, determines the sort of damage we're dealing with.
  * * attack_flags - What sort of an attack this is, melee, blob, ranged, etc.
- * * def_zone - What body zone is being hit. Or a reference to what bodypart is being hit.
+ * * def_zone - Bodypart which this attack was targeting. Should be a body_zone define, or a list of body_zone defines.
  * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced or check_armor are TRUE, does not apply.
  * * attack_dir - Direction of the attack from the self to attacker. // SMARTKAR TODO: reverse all directions because this was written by someone with too much free time
  * * armor_penetration - Flat reduction from armor, only works when check_armor is TRUE.
@@ -17,7 +17,7 @@
  * * forced - "Force" exactly the damage dealt. This means it skips damage modifier from blocked or any armor that could be protecting us from check_armor.
  * * hit_by - Item, mob or projectile that dealt the damage.
  * * source - Who actually dealt the damage - turret that fired the gun, greyshirt hit you with a toolbox, punched you, etc.
- * * spread_damage - For carbons, spreads the damage across all bodyparts rather than just the targeted zone.
+ * * spread_damage - For carbons, spreads the damage across all bodyparts instead of picking a random one when not provided a bodypart.
  * * wound_bonus - Bonus modifier for wound chance.
  * * bare_wound_bonus - Bonus modifier for wound chance on bare skin.
  * * sharpness - Sharpness of the weapon.
@@ -44,7 +44,7 @@
 	forced = FALSE,
 	atom/hit_by = null,
 	atom/source = null,
-	spread_damage = FALSE,
+	spread_damage = TRUE,
 	wound_bonus = 0,
 	bare_wound_bonus = 0,
 	sharpness = NONE,
@@ -57,6 +57,10 @@
 )
 	// This is merely a wrapper, and thus should not be overriden
 	SHOULD_NOT_OVERRIDE(TRUE)
+
+	// Don't accidentally heal folks
+	if (amount <= 0)
+		return null
 
 	var/datum/damage_package/package = new(
 		amount = amount,
@@ -80,6 +84,82 @@
 
 	return apply_damage_package(package, blocked, check_armor, wound_clothing, should_update, silent)
 
+
+/**
+ * Applies damage to this mob.
+ *
+ * Sends [COMSIG_MOB_APPLY_DAMAGE]
+ *
+ * Arguments:
+ * * amount - Amount of healing
+ * * damage_type - Type of healing applied, can be BRUTE, BURN, TOX, OXY and STAMINA.
+ * * damage_flag - Armor which could potentially stop this healing from coming through.
+ * * attack_flags - What sort of an healing this is, melee, magical, ranged, etc.
+ * * def_zone - Bodypart which we are going to heal. Should be a body_zone define, or a list of body_zone defines.
+ * * blocked - Percent modifier to healing from armor. 100 = 100% less healing applied, 50% = 50% less healing applied. If forced or check_armor are TRUE, does not apply.
+ * * attack_dir - Direction of the attack from the self to attacker.
+ * * armor_penetration - Flat reduction from armor, only works when check_armor is TRUE.
+ * * armor_multiplier - Armor multiplier, applied before armor_penetration and only works when check_armor is TRUE.
+ * * forced - "Force" exactly the healing applied. This means it skips the modifier from blocked or any armor that could be preventing us from getting it from check_armor.
+ * * hit_by - Item, mob or projectile that applied the healing.
+ * * source - Who actually applied the healing - guy with a medibeam, wizard with a staff, doctor with sutures, etc.
+ * * spread_damage - For carbons, spreads the healing across all bodyparts instead of picking a random one when missing a bodypart.
+ * * required_biotype - Biotype that the mob/bodypart must posess to be able to take this healing.
+ * * amount_multiplier - Total healing multiplier, done last after everything else. Does not apply if forced is true.
+ * * check_armor - If armor checks should be taken into consideration. Does not apply if forced is TRUE.
+ * * should_update - If update_health should be called from within this proc.
+ * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
+ *
+ * Returns a damage package if any healing was applied - amount will be negative!
+ */
+
+/mob/living/proc/apply_healing(
+	amount = 0,
+	damage_type = BRUTE,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	blocked = 0,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	spread_damage = TRUE,
+	required_biotype = ALL,
+	amount_multiplier = 1,
+	check_armor = FALSE,
+	should_update = TRUE,
+	silent = FALSE,
+)
+	RETURN_TYPE(/datum/damage_package)
+	// This is merely a wrapper, and thus should not be overriden
+	SHOULD_NOT_OVERRIDE(TRUE)
+
+	// Don't accidentally damage folks
+	if (amount <= 0)
+		return null
+
+	var/datum/damage_package/package = new(
+		amount = -amount, // Healing, not damaging
+		damage_type = damage_type,
+		damage_flag = damage_flag,
+		attack_flags = attack_flags,
+		def_zone = def_zone,
+		attack_dir = attack_dir,
+		armor_penetration = armor_penetration,
+		armor_multiplier = armor_multiplier,
+		forced = forced,
+		hit_by = hit_by,
+		source = source,
+		spread_damage = spread_damage,
+		required_biotype = required_biotype,
+		amount_multiplier = amount_multiplier,
+	)
+
+	return apply_damage_package(package, blocked, check_armor, FALSE, should_update, silent)
+
 /** Calculates armor for a damage package, processes it and then calls a proc that applies the damage.
  *
  * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced or check_armor are TRUE, does not apply.
@@ -96,7 +176,10 @@
 	should_update = TRUE,
 	silent = FALSE,
 )
+	RETURN_TYPE(/datum/damage_package)
 	SHOULD_CALL_PARENT(TRUE)
+	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
+	package.def_zone = validate_def_zones(package.def_zone)
 
 	if(!package.forced && HAS_TRAIT(src, TRAIT_GODMODE) && package.amount > 0)
 		return null
@@ -187,7 +270,7 @@
 	SHOULD_BE_PURE(TRUE)
 
 	var/list/damage_mods = list()
-	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, damage_mods, damage, damagetype, def_zone, sharpness, attack_dir, attacking_item)
+	SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_MODIFIERS, damage_mods, package)
 
 	var/final_mod = 1
 
@@ -204,6 +287,180 @@
 		final_mod *= new_mod
 
 	return final_mod
+
+/*
+ * Applies multiple damage types as a single event
+ * This is a wrapper around apply_multiple_packages which allows different components to acknowledge that multiple damage packages
+ * are a single event, and react accordingly. Try to use this whenever possible. Returns the total amount of damage dealt.
+ */
+
+/mob/living/proc/apply_multiple_damages(
+	brute = 0,
+	burn = 0,
+	tox = 0,
+	oxy = 0,
+	stamina = 0,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	blocked = 0,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	spread_damage = TRUE,
+	wound_bonus = 0,
+	bare_wound_bonus = 0,
+	sharpness = NONE,
+	required_biotype = ALL,
+	amount_multiplier = 1,
+	check_armor = FALSE,
+	wound_clothing = TRUE,
+	should_update = TRUE,
+	silent = FALSE,
+)
+	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
+	package.def_zone = validate_def_zones(package.def_zone)
+
+	// Make sure we don't accidentally heal folks
+	if (brute <= 0)
+		brute = 0
+	if (burn <= 0)
+		burn = 0
+	if (tox <= 0)
+		tox = 0
+	if (oxy <= 0)
+		oxy = 0
+	if (stamina <= 0)
+		stamina = 0
+
+	if (!brute && !burn && !tox && !oxy && !stamina)
+		return null
+
+	var/list/applied_packages = list()
+	var/types_assoc = list(BRUTE = brute, BURN = burn, TOX = tox, OXY = oxy, STAMINA = stamina)
+	for (var/damage_type in types_assoc)
+		var/datum/damage_package/package = new(
+			amount = types_assoc[damage_type],
+			damage_type = damage_type,
+			damage_flag = damage_flag,
+			attack_flags = attack_flags,
+			def_zone = def_zone,
+			attack_dir = attack_dir,
+			armor_penetration = armor_penetration,
+			armor_multiplier = armor_multiplier,
+			forced = forced,
+			hit_by = hit_by,
+			source = source,
+			spread_damage = spread_damage,
+			wound_bonus = wound_bonus,
+			bare_wound_bonus = bare_wound_bonus,
+			sharpness = sharpness,
+			required_biotype = required_biotype,
+			amount_multiplier = amount_multiplier,
+		)
+		applied_packages += package
+
+	return apply_multiple_packages(applied_packages, blocked, check_armor, wound_clothing, should_update, silent)
+
+
+/// Applies multiple healing types as a single event, akin to apply_multiple_damages
+/mob/living/proc/apply_multiple_heals(
+	brute = 0,
+	burn = 0,
+	tox = 0,
+	oxy = 0,
+	stamina = 0,
+	damage_flag = null,
+	attack_flags = NONE,
+	def_zone = null,
+	blocked = 0,
+	attack_dir = NONE,
+	armor_penetration = 0,
+	armor_multiplier = 1,
+	forced = FALSE,
+	atom/hit_by = null,
+	atom/source = null,
+	spread_damage = TRUE,
+	required_biotype = ALL,
+	amount_multiplier = 1,
+	check_armor = FALSE,
+	should_update = TRUE,
+	silent = FALSE,
+)
+	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
+	package.def_zone = validate_def_zones(package.def_zone)
+
+	// Make sure we don't accidentally damage folks
+	if (brute <= 0)
+		brute = 0
+	if (burn <= 0)
+		burn = 0
+	if (tox <= 0)
+		tox = 0
+	if (oxy <= 0)
+		oxy = 0
+	if (stamina <= 0)
+		stamina = 0
+
+	if (!brute && !burn && !tox && !oxy && !stamina)
+		return null
+
+	var/list/applied_packages = list()
+	var/types_assoc = list(BRUTE = brute, BURN = burn, TOX = tox, OXY = oxy, STAMINA = stamina)
+	for (var/damage_type in types_assoc)
+		var/datum/damage_package/package = new(
+			amount = -types_assoc[damage_type],
+			damage_type = damage_type,
+			damage_flag = damage_flag,
+			attack_flags = attack_flags,
+			def_zone = def_zone,
+			attack_dir = attack_dir,
+			armor_penetration = armor_penetration,
+			armor_multiplier = armor_multiplier,
+			forced = forced,
+			hit_by = hit_by,
+			source = source,
+			spread_damage = spread_damage,
+			required_biotype = required_biotype,
+			amount_multiplier = amount_multiplier,
+		)
+		applied_packages += package
+
+	return apply_multiple_packages(applied_packages, blocked, check_armor, FALSE, should_update, silent)
+
+/*
+ * Applies multiple damage packages as a single event
+ * This is a wrapper around apply_damage_package which allows different components to acknowledge that multiple damage packages
+ * are a single event, and react accordingly. Try to use this whenever possible. Returns the total amount of damage dealt.
+ */
+/mob/living/proc/apply_multiple_packages(
+	list/datum/damage_package/packages,
+	blocked = 0,
+	check_armor = FALSE,
+	wound_clothing = TRUE,
+	should_update = TRUE,
+	silent = FALSE,
+)
+	SHOULD_CALL_PARENT(TRUE)
+	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_PACKAGES, package, blocked, check_armor, wound_clothing, should_update, silent) & COMSIG_MOB_PREVENT_DAMAGE)
+		return 0
+
+	var/damage_dealt = 0
+	for (var/datum/damage_package/package as anything in packages)
+		package = apply_damage_package(package, blocked, check_armor, wound_clothing, FALSE, silent)
+		if (!package)
+			continue
+		damage_dealt += package.amount
+		// Prevents multiple armor pen messages from popping up
+		if (package.armor_penetration > 0 || package.armor_multiplier < 1 || package.armor_block > 0)
+			silent = FALSE
+
+	if (damage_dealt && should_update)
+		updatehealth()
+	return damage_dealt
 
 /**
  * Simply a wrapper for calling mob getXLoss() procs to get a certain damage type,
@@ -303,7 +560,7 @@
 		var/amount_to_heal = min(abs(amount), get_current_damage_of_type(damage_type)) // Heal only up to the amount of damage we have
 		if(!amount_to_heal)
 			continue
-		damage_healed += -apply_damage(amount_to_heal, amount, spread_damage)
+		damage_healed += apply_healing(amount_to_heal, damage_type)?.amount // smartkar figure if this is acceptable
 		amount -= amount_to_heal // Remove what we healed from our current amount
 		if(!amount)
 			break
@@ -388,3 +645,16 @@
 		adjust_stutter(stutter)
 
 	return TRUE
+
+/// A helper which converts any bodyparts in the passed data into their body zones
+/proc/validate_def_zones(def_zone)
+	if (isbodypart(def_zone))
+		var/obj/item/bodypart/part = def_zone
+		def_zone = part.body_zone
+	else if (islist(def_zone))
+		for (var/i in 1 to length(def_zone))
+			if (!isbodypart(def_zone[i]))
+				continue
+			var/obj/item/bodypart/part = def_zone[i]
+			def_zone[i] = part.body_zone
+	return def_zone

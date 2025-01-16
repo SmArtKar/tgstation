@@ -909,7 +909,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		log_combat(user, target, "attempted to punch")
 		return FALSE
 
-	var/armor_block = target.package_armor_check(user.get_unarmed_package(target))
+	var/armor_block = target.package_armor_check(user.get_unarmed_package(target, def_zone = affecting.body_zone))
 
 	// In a brawl, drunkenness is a boon if you're a bit drunk but not too much. Else you're easier to hit.
 	// But, generally, getting hit while drunk is probably a good way to start throwing up

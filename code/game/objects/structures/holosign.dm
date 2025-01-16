@@ -46,7 +46,7 @@
 /obj/structure/holosign/proc/attack_holosign(mob/living/user, list/modifiers)
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
 	user.changeNext_move(CLICK_CD_MELEE)
-	process_damage_package(user.get_unarmed_package(src, 5, ignore_custom = TRUE, modifiers = modifiers))
+	process_damage_package(user.get_unarmed_package(src, 5, modifiers = modifiers))
 	log_combat(user, src, "swatted")
 
 /obj/structure/holosign/play_attack_sound(damage_amount, damage_type = BRUTE, damage_flag = 0)

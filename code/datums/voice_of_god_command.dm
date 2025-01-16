@@ -187,16 +187,16 @@ GLOBAL_LIST_INIT(voice_of_god_commands, init_voice_of_god_commands())
 
 /datum/voice_of_god_command/heal/execute(list/listeners, mob/living/user, power_multiplier = 1, message)
 	for(var/mob/living/target as anything in listeners)
-		target.heal_overall_damage(10 * power_multiplier, 10 * power_multiplier)
+		target.apply_multiple_heals(brute = 10 * power_multiplier, burn = 10 * power_multiplier, attack_flags = MAGIC_ATTACK, source = user)
 
-/// This command applies 15 points of brute damage to the listeners. There's subtle theological irony in this being more powerful than healing.
+/// This command applies 15 points of brute damage to the listeners. There's subtle theological irony in this being more powerful than healing. // No its not more powerful
 /datum/voice_of_god_command/brute
 	trigger = "die|suffer|hurt|pain|death"
 	cooldown = COOLDOWN_DAMAGE
 
 /datum/voice_of_god_command/brute/execute(list/listeners, mob/living/user, power_multiplier = 1, message)
 	for(var/mob/living/target as anything in listeners)
-		target.apply_damage(15 * power_multiplier, def_zone = BODY_ZONE_CHEST, wound_bonus = CANT_WOUND)
+		target.apply_damage(15 * power_multiplier, BRUTE, null, MAGIC_ATTACK, source = user, wound_bonus = CANT_WOUND, wound_clothing = FALSE, spread_damage = FALSE)
 
 /// This command makes carbon listeners bleed from a random body part.
 /datum/voice_of_god_command/bleed

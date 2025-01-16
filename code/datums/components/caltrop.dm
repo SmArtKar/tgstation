@@ -112,7 +112,11 @@
 			span_userdanger("You step on [parent]!")
 		)
 
-	digitigrade_fan.apply_damage(damage, BRUTE, picked_def_zone, wound_bonus = CANT_WOUND, hit_by = parent)
+	var/sharpness = NONE
+	if (isitem(parent))
+		var/obj/item/as_item = parent
+		sharpness = as_item.get_sharpness()
+	digitigrade_fan.apply_damage(damage, BRUTE, MELEE, def_zone = picked_def_zone, hit_by = parent, wound_bonus = CANT_WOUND, sharpness = sharpness)
 
 	if(!(flags & CALTROP_NOSTUN)) // Won't set off the paralysis.
 		if(!HAS_TRAIT(digitigrade_fan, TRAIT_LIGHT_STEP))

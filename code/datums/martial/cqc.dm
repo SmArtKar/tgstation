@@ -105,7 +105,7 @@
 	)
 	to_chat(attacker, span_danger("You slam [defender] into the ground!"))
 	playsound(attacker, 'sound/items/weapons/slam.ogg', 50, TRUE, -1)
-	defender.apply_damage(10, BRUTE)
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, 10, BRUTE, null, spread_damage = TRUE))
 	defender.Paralyze(12 SECONDS)
 	log_combat(attacker, defender, "slammed (CQC)")
 	return TRUE
@@ -144,7 +144,7 @@
 		playsound(attacker, 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 		var/atom/throw_target = get_edge_target_turf(defender, attacker.dir)
 		defender.throw_at(throw_target, 1, 14, attacker)
-		defender.apply_damage(10, attacker.get_attack_type())
+		defender.apply_damage_package(attacker.get_unarmed_package(defender, 10, attacker.get_attack_type(), BODY_ZONE_CHEST))
 		if(defender.body_position == LYING_DOWN && !defender.IsUnconscious())
 			defender.adjust_stamina_loss(45)
 		log_combat(attacker, defender, "kicked (CQC)")
@@ -206,7 +206,7 @@
 	if(held_item && defender.temporarilyRemoveItemFromInventory(held_item))
 		attacker.put_in_hands(held_item)
 	defender.adjust_stamina_loss(50)
-	defender.apply_damage(25, attacker.get_attack_type())
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, 25, attacker.get_attack_type(), BODY_ZONE_CHEST))
 	return TRUE
 
 /datum/martial_art/cqc/grab_act(mob/living/attacker, mob/living/defender)
@@ -254,7 +254,7 @@
 			)
 			to_chat(attacker, span_danger("In a swift motion, you snap the neck of [defender]!"))
 			log_combat(attacker, defender, "snapped neck")
-			defender.apply_damage(100, BRUTE, BODY_ZONE_HEAD, wound_bonus=CANT_WOUND)
+			defender.apply_damage(100, BRUTE, MELEE, UNARMED_ATTACK, BODY_ZONE_HEAD, hit_by = attacker, source = attacker, wound_bonus = CANT_WOUND)
 			if(!HAS_TRAIT(defender, TRAIT_NODEATH))
 				defender.death()
 				defender.investigate_log("has had [defender.p_their()] neck snapped by [attacker].", INVESTIGATE_DEATHS)
@@ -274,7 +274,7 @@
 		to_chat(attacker, span_danger("You leg sweep [defender]!"))
 		playsound(attacker, 'sound/effects/hit_kick.ogg', 50, TRUE, -1)
 		attacker.do_attack_animation(defender)
-		defender.apply_damage(10, BRUTE)
+		defender.apply_damage_package(attacker.get_unarmed_package(defender, 10, BRUTE, list(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)))
 		defender.Knockdown(5 SECONDS)
 		log_combat(attacker, defender, "sweeped (CQC)")
 		reset_streak()
@@ -289,8 +289,8 @@
 	if(defender.body_position == LYING_DOWN)
 		bonus_damage += 5
 		picked_hit_type = pick("kick", "stomp")
-	defender.apply_damage(bonus_damage, BRUTE)
 
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, bonus_damage, BRUTE, null))
 	playsound(defender, (picked_hit_type == "kick" || picked_hit_type == "stomp") ? 'sound/items/weapons/cqchit2.ogg' : 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 
 	defender.visible_message(
@@ -346,7 +346,7 @@
 		to_chat(attacker, span_danger("You strike [defender]'s jaw,[disarmed_item ? " disarming [defender.p_them()] of [disarmed_item] and" : ""] leaving [defender.p_them()] disoriented!"))
 		playsound(defender, 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 		defender.set_jitter_if_lower(4 SECONDS)
-		defender.apply_damage(5, attacker.get_attack_type())
+		defender.apply_damage_package(attacker.get_unarmed_package(defender, 5, attacker.get_attack_type(), BODY_ZONE_HEAD))
 		log_combat(attacker, defender, "disarmed (CQC)", addition = disarmed_item ? "(disarmed of [disarmed_item])" : null)
 		return MARTIAL_ATTACK_SUCCESS
 

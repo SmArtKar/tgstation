@@ -122,7 +122,7 @@
 	to_chat(user, span_userdanger("The explosion knocks your soul out of your body!"))
 	user.ghostize(FALSE) //prevents... horrible memes just believe me
 
-	user.apply_damage(rand(50, 70), BRUTE, wound_bonus = CANT_WOUND)
+	user.apply_damage(rand(50, 70), BRUTE, null, MAGIC_ATTACK, wound_bonus = CANT_WOUND)
 
 	addtimer(CALLBACK(src, PROC_REF(Apotheosis_end), user), 6 SECONDS)
 	playsound(boomspot, 'sound/items/weapons/punch1.ogg', 50, TRUE, -1)

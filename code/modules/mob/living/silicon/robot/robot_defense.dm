@@ -470,8 +470,8 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 		return
 	spark_system.start()
 
-/mob/living/silicon/robot/attack_effects(damage_done, hit_zone, armor_block, obj/item/attacking_item, mob/living/attacker)
-	if(damage_done > 0 && attacking_item.damtype != STAMINA && stat != DEAD)
+/mob/living/silicon/robot/attack_effects(datum/damage_package/package, mob/living/attacker)
+	if(package.amount > 0 && package.damage_type != STAMINA && stat != DEAD)
 		spark_system.start()
 		. = TRUE
 	return ..() || .

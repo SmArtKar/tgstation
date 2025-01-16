@@ -64,9 +64,8 @@
 	if(carbon_victim.electrocute_act(5, caster, 1, SHOCK_NOGLOVES | SHOCK_NOSTUN))
 		return TRUE
 
-	var/obj/item/bodypart/affecting = carbon_victim.get_bodypart(carbon_victim.get_random_valid_zone(caster.zone_selected))
-	var/armor_block = carbon_victim.run_armor_check(affecting, ENERGY) // Smartkar todo
-	carbon_victim.apply_damage(20, STAMINA, def_zone = affecting, blocked = armor_block)
+	var/obj/item/bodypart/affecting = carbon_victim.get_bodypart()
+	carbon_victim.apply_damage(20, STAMINA, ENERGY, NONE, carbon_victim.get_random_valid_zone(caster.zone_selected), hit_by = hand, source = caster, check_armor = TRUE)
 
 	carbon_victim.dropItemToGround(carbon_victim.get_active_held_item())
 	carbon_victim.dropItemToGround(carbon_victim.get_inactive_held_item())
@@ -353,10 +352,10 @@
 
 /datum/action/cooldown/spell/touch/lay_on_hands/proc/determine_if_this_hurts_instead(mob/living/carbon/mendicant, mob/living/hurtguy)
 
-	if(hurtguy.mob_biotypes & MOB_UNDEAD && mendicant.mob_biotypes & MOB_UNDEAD)
+	if((hurtguy.mob_biotypes & MOB_UNDEAD) && (mendicant.mob_biotypes & MOB_UNDEAD))
 		return FALSE //always return false if we're both undead //undead solidarity
 
-	if(hurtguy.mob_biotypes & MOB_UNDEAD && !HAS_TRAIT(mendicant, TRAIT_EVIL)) //Is the mob undead and we're not evil? If so, hurt.
+	if((hurtguy.mob_biotypes & MOB_UNDEAD) && !HAS_TRAIT(mendicant, TRAIT_EVIL)) //Is the mob undead and we're not evil? If so, hurt.
 		return TRUE
 
 	if(HAS_TRAIT(hurtguy, TRAIT_EVIL) && !HAS_TRAIT(mendicant, TRAIT_EVIL)) //Is the guy evil and we're not evil? If so, hurt.
@@ -400,13 +399,13 @@
 
 	if(evil_smite)
 		motherfucker_to_hurt.visible_message(span_warning("[smiter] snaps [smiter.p_their()] fingers in front of [motherfucker_to_hurt]'s face, and [motherfucker_to_hurt]'s body twists violently from an unseen force!"))
-		motherfucker_to_hurt.apply_damage(10 * our_smite_multiplier, BRUTE, spread_damage = TRUE, wound_bonus = 5 * our_smite_multiplier)
+		motherfucker_to_hurt.apply_damage(10 * our_smite_multiplier, BRUTE, null, MAGIC_ATTACK, source = smiter, wound_bonus = 5 * our_smite_multiplier)
 		motherfucker_to_hurt.adjust_staggered_up_to(STAGGERED_SLOWDOWN_LENGTH * our_smite_multiplier, 25 SECONDS)
 		smiter.emote("snap")
 		smite_text_to_target = "crushes you psychically with a snap of [smiter.p_their()] fingers"
 	else
 		motherfucker_to_hurt.visible_message(span_warning("[smiter] lays hands on [motherfucker_to_hurt], but it shears [motherfucker_to_hurt.p_them()] with a brilliant energy!"))
-		motherfucker_to_hurt.apply_damage(10 * our_smite_multiplier, BURN, spread_damage = TRUE, wound_bonus = 5 * our_smite_multiplier)
+		motherfucker_to_hurt.apply_damage(10 * our_smite_multiplier, BURN, null, MAGIC_ATTACK, source = smiter, wound_bonus = 5 * our_smite_multiplier)
 		motherfucker_to_hurt.adjust_fire_stacks(3 * our_smite_multiplier)
 		motherfucker_to_hurt.ignite_mob()
 

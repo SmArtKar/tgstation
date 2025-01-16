@@ -11,7 +11,7 @@
 	if(!attacking_item.force)
 		return
 
-	var/datum/damage_package/package = process_damage_package(attacking_item.generate_damage(src, user, modifiers))
+	var/datum/damage_package/package = process_damage_package(attacking_item.generate_damage(src, user, user.zone_selected, modifiers))
 	log_combat(user, src, "attacked", attacking_item)
 
 	if (package.attack_message_spectator)
@@ -83,7 +83,7 @@
 		playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	else
 		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-	var/damage = process_damage_package(user.get_unarmed_package(src, hulk_damage(), ignore_custom = TRUE), sound_effect = FALSE)
+	var/damage = process_damage_package(user.get_unarmed_package(src, hulk_damage()), sound_effect = FALSE)
 	user.visible_message(span_danger("[user] smashes [src][damage ? "" : ", [no_damage_feedback]"]!"), span_danger("You smash [src][damage ? "" : ", [no_damage_feedback]"]!"), null, COMBAT_MESSAGE_RANGE)
 	return TRUE
 

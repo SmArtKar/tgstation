@@ -263,7 +263,7 @@
 
 	var/bleeding_wording = (!limb.can_bleed() ? "cuts" : "bleeding")
 	user.visible_message(span_green("[user] cauterizes some of the [bleeding_wording] on [victim]."), span_green("You cauterize some of the [bleeding_wording] on [victim]."))
-	victim.apply_damage(2 + severity, BURN, limb, wound_bonus = CANT_WOUND)
+	victim.apply_damage(2 + severity, BURN, def_zone = limb.body_zone, wound_bonus = CANT_WOUND)
 	if(prob(30))
 		victim.emote("scream")
 	var/blood_cauterized = (0.6 / (self_penalty_mult * improv_penalty_mult))

@@ -112,6 +112,9 @@
 /// from /mob/living/proc/apply_damage(): (datum/damage_package/package, blocked, check_armor, wound_clothing, should_update, silent)
 /// works like above but after the damage is actually inflicted
 #define COMSIG_MOB_AFTER_APPLY_DAMAGE "mob_after_apply_damage"
+/// From apply_multiple_damages(): (list/datum/damage_package/packages, blocked, check_armor, wound_clothing, should_update, silent)
+/// Wrapper that allows multiple damage packages to be attributed to a single attack/event, use this when you want to do something "every time someone is hit"
+#define COMSIG_MOB_APPLY_DAMAGE_PACKAGES "mob_apply_damage_packages"
 
 ///from base of /mob/living/attack_alien(): (user)
 #define COMSIG_MOB_ATTACK_ALIEN "mob_attack_alien"
