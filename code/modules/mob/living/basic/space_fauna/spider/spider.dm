@@ -102,7 +102,7 @@
 /mob/living/basic/spider/expose_reagents(list/reagents, datum/reagents/source, methods=TOUCH, volume_modifier=1, show_message=TRUE)
 	. = ..()
 	for(var/datum/reagent/toxin/pestkiller/current_reagent in reagents)
-		apply_damage(50 * volume_modifier, STAMINA, BODY_ZONE_CHEST)
+		apply_damage(50 * volume_modifier, STAMINA, null, REAGENT_ATTACK, BODY_ZONE_CHEST)
 
 /// Spider which turns into another spider over time
 /mob/living/basic/spider/growing

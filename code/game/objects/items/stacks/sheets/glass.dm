@@ -372,7 +372,7 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 		return
 
 	to_chat(user, span_warning("[src] cuts into your hand!"))
-	jab.apply_damage(force * 0.5, BRUTE, MELEE, def_zone = user.get_active_hand()?.body_zone, hit_by = src, sharpness = get_sharpness())
+	jab.apply_damage(force * 0.5, BRUTE, MELEE, def_zone = user.get_active_hand()?.body_zone, hit_by = src, sharpness = get_sharpness(), spread_damage = FALSE)
 
 /obj/item/shard/attackby(obj/item/item, mob/user, params)
 	if(istype(item, /obj/item/lightreplacer))

@@ -24,13 +24,15 @@
 
 /obj/projectile/leaper/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
-	if (!isliving(target))
-		return
-	var/mob/living/bubbled = target
 	if(iscarbon(target))
+		var/mob/living/bubbled = target
 		bubbled.reagents.add_reagent(/datum/reagent/toxin/leaper_venom, 5)
-		return
-	bubbled.apply_damage(30)
+
+/obj/projectile/leaper/generate_damage(atom/target, def_zone_override = null)
+	var/datum/damage_package/package = ..()
+	if (isliving(target) && !iscarbon(target))
+		package.amount += 30
+	return package
 
 /obj/projectile/leaper/on_range()
 	new /obj/structure/leaper_bubble(get_turf(src))
@@ -104,7 +106,7 @@
 	if(iscarbon(bubbled_mob))
 		bubbled_mob.reagents.add_reagent(/datum/reagent/toxin/leaper_venom, 5)
 	else
-		bubbled_mob.apply_damage(30)
+		bubbled_mob.apply_damage(30, BRUTE, hit_by = src, source = src)
 	qdel(src)
 
 // blood rain ability
@@ -211,7 +213,7 @@
 	for(var/mob/living/victim in oview(1, owner))
 		if(victim in owner.buckled_mobs)
 			continue
-		victim.apply_damage(35)
+		victim.apply_damage(35, BRUTE, MELEE, UNARMED_ATTACK, hit_by = owner, source = owner)
 		if(QDELETED(victim)) // Some mobs are deleted on death
 			continue
 		var/throw_dir = victim.loc == owner.loc ? get_dir(owner, victim) : pick(GLOB.alldirs)

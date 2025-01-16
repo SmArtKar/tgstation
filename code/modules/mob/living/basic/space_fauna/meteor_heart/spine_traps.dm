@@ -96,4 +96,4 @@
 	var/mob/living/victim = arrived
 	flick("spikes_stabbing", src)
 	var/target_zone = victim.resting ? BODY_ZONE_CHEST : pick_weight(standing_damage_zones)
-	victim.apply_damage(impale_damage, damagetype = BRUTE, def_zone = target_zone, sharpness = SHARP_POINTY)
+	victim.apply_damage(impale_damage, BRUTE, def_zone = target_zone, sharpness = SHARP_POINTY)

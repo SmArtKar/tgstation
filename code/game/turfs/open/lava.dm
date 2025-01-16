@@ -231,7 +231,7 @@
 		if(prob(25 * clumsy_modifier) && isliving(user))
 			ciggie.light(span_warning("[user] expertly dips \the [ciggie.name] into [src], along with the rest of [user.p_their()] arm. What a dumbass."))
 			var/mob/living/burned_guy = user
-			burned_guy.apply_damage(90, BURN, FIRE, def_zone = user.get_active_hand()?.body_zone, source = src)
+			burned_guy.apply_damage(90, BURN, FIRE, def_zone = user.get_active_hand()?.body_zone, source = src, spread_damage = FALSE)
 		else
 			ciggie.light(span_rose("[user] expertly dips \the [ciggie.name] into [src], lighting it with the scorching heat of the planet. Witnessing such a feat is almost enough to make you cry."))
 		return TRUE

@@ -631,7 +631,7 @@
 		apply_effect(immobilize, EFFECT_IMMOBILIZE, blocked)
 
 	if(stamina)
-		apply_damage(stamina, STAMINA, null, blocked)
+		apply_damage(stamina, STAMINA, blocked = blocked)
 
 	if(drowsy)
 		adjust_drowsiness(drowsy)

@@ -159,7 +159,7 @@
 	for(var/mob/living/living_target in oview(explosion_radius, src))
 		if(living_target.incorporeal_move)
 			continue
-		living_target.apply_damage(explosion_damage)
+		living_target.apply_damage(explosion_damage, BRUTE, BOMB)
 
 /obj/effect/mine/minebot
 	name = "Landmine"
@@ -175,7 +175,7 @@
 	smoke.set_up(0, holder = src)
 	smoke.start()
 	playsound(src, 'sound/effects/explosion/explosion3.ogg', 100)
-	victim.apply_damage(damage_to_apply)
+	victim.apply_damage(damage_to_apply, BRUTE, BOMB)
 
 /obj/effect/mine/minebot/can_trigger(atom/movable/on_who)
 	if(REF(on_who) in ignore_list)

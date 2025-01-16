@@ -71,7 +71,7 @@
 		beam_parts += new_brimbeam
 		new_brimbeam.assign_creator(owner)
 		for(var/mob/living/hit_mob in affected_turf.contents)
-			hit_mob.apply_damage(damage = 25, damagetype = BURN)
+			hit_mob.apply_damage(25, BURN, null, MAGIC_ATTACK, attack_dir = REVERSE_DIR(owner.dir), source = owner)
 			to_chat(hit_mob, span_userdanger("You're blasted by [owner]'s brimbeam!"))
 		RegisterSignal(new_brimbeam, COMSIG_QDELETING, PROC_REF(extinguish_laser)) // In case idk a singularity eats it or something
 	if(!length(beam_parts))
@@ -122,7 +122,7 @@
 
 /// Hurt the passed mob
 /obj/effect/brimbeam/proc/damage(mob/living/hit_mob)
-	hit_mob.apply_damage(damage = 5, damagetype = BURN)
+	hit_mob.apply_damage(5, BURN, null, MAGIC_ATTACK, attack_dir = REVERSE_DIR(dir), source = creator?.resolve())
 	to_chat(hit_mob, span_danger("You're damaged by [src]!"))
 
 /// Ignore damage dealt to this mob

@@ -21,8 +21,6 @@
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("You don't want to hurt [src]!"))
 		return TRUE
-	var/obj/item/bodypart/arm/active_arm = user.get_active_hand()
-	var/damage = (basic_mob_flags & IMMUNE_TO_FISTS) ? 0 : rand(active_arm.unarmed_damage_low, active_arm.unarmed_damage_high)
 	if(check_block(user, damage, "[user]'s punch", UNARMED_ATTACK, 0, BRUTE))
 		return
 	user.do_attack_animation(src, ATTACK_EFFECT_PUNCH)
@@ -34,9 +32,10 @@
 	)
 	to_chat(user, span_danger("You [response_harm_simple] [src]!"))
 	playsound(loc, attacked_sound, 25, TRUE, -1)
-	apply_damage(damage)
 	log_combat(user, src, "attacked")
-	updatehealth()
+	if (basic_mob_flags & IMMUNE_TO_FISTS)
+		return
+	apply_damage_package(user.get_unarmed_package(src), check_armor = TRUE)
 	return TRUE
 
 /mob/living/basic/get_shoving_message(mob/living/shover, obj/item/weapon, shove_flags)
@@ -60,12 +59,12 @@
 	visible_message(span_danger("[user] punches [src]!"), \
 					span_userdanger("You're punched by [user]!"), null, COMBAT_MESSAGE_RANGE, user)
 	to_chat(user, span_danger("You punch [src]!"))
-	apply_damage(15, damagetype = BRUTE)
+	apply_damage(15, BRUTE, MELEE, MELEE_ATTACK, user.zone_selected, attack_dir = get_dir(src, user), hit_by = user, source = user, check_armor = TRUE)
 
 /mob/living/basic/attack_paw(mob/living/carbon/human/user, list/modifiers)
 	if(..()) //successful monkey bite.
 		if(stat != DEAD)
-			return apply_damage(rand(1, 3))
+			return apply_damage_package(user.get_unarmed_package(src), check_armor = TRUE)
 
 	if (!user.combat_mode)
 		if (health > 0)
@@ -86,18 +85,17 @@
 		to_chat(user, span_danger("You [response_disarm_simple] [name]!"))
 		log_combat(user, src, "disarmed")
 		return
-	var/damage = rand(user.melee_damage_lower, user.melee_damage_upper)
 	visible_message(span_danger("[user] slashes at [src]!"), \
 		span_userdanger("You're slashed at by [user]!"), null, COMBAT_MESSAGE_RANGE, user)
 	to_chat(user, span_danger("You slash at [src]!"))
 	playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
-	apply_damage(damage)
+	apply_damage_package(user.get_unarmed_package(src), check_armor = TRUE)
 	log_combat(user, src, "attacked")
 
 /mob/living/basic/attack_larva(mob/living/carbon/alien/larva/attacking_larva, list/modifiers)
 	. = ..()
 	if(. && stat != DEAD) //successful larva bite
-		var/damage_done = apply_damage(rand(attacking_larva.melee_damage_lower, attacking_larva.melee_damage_upper), BRUTE)
+		var/damage_done = apply_damage_package(user.get_unarmed_package(src), check_armor = TRUE)?.amount
 		if(damage_done > 0)
 			attacking_larva.amount_grown = min(attacking_larva.amount_grown + damage_done, attacking_larva.max_grown)
 
@@ -119,11 +117,11 @@
 	if(!. || QDELETED(src))
 		return FALSE
 
-	var/bomb_armor = getarmor(null, BOMB)
+	var/bomb_armor = run_armor_check(BRUTE, BOMB)
 	switch(severity)
 		if (EXPLODE_DEVASTATE)
 			if(prob(bomb_armor))
-				apply_damage(500, damagetype = BRUTE)
+				apply_damage(500, BRUTE)
 			else
 				investigate_log("has been gibbed by an explosion.", INVESTIGATE_DEATHS)
 				gib(DROP_ALL_REMAINS)
@@ -132,13 +130,13 @@
 			var/bloss = 60
 			if(prob(bomb_armor))
 				bloss = bloss / 1.5
-			apply_damage(bloss, damagetype = BRUTE)
+			apply_damage(bloss, BRUTE)
 
 		if (EXPLODE_LIGHT)
 			var/bloss = 30
 			if(prob(bomb_armor))
 				bloss = bloss / 1.5
-			apply_damage(bloss, damagetype = BRUTE)
+			apply_damage(bloss, BRUTE)
 
 	return TRUE
 
@@ -146,7 +144,7 @@
 	. = ..()
 	if (!.)
 		return
-	apply_damage(20, damagetype = BRUTE)
+	apply_damage(20, BRUTE, BIO, BLOB_ATTACK)
 
 /mob/living/basic/do_attack_animation(atom/attacked_atom, visual_effect_icon, used_item, no_effect)
 	if(!no_effect && !visual_effect_icon && melee_damage_upper)
@@ -177,8 +175,8 @@
 	switch(severity)
 		if(EMP_LIGHT)
 			visible_message(span_danger("[src] shakes violently, its parts coming loose!"))
-			apply_damage(maxHealth * 0.6)
+			apply_damage(maxHealth * 0.6, BRUTE, ENERGY, EMP_ATTACK)
 			Shake(duration = 1 SECONDS)
 		if(EMP_HEAVY)
 			visible_message(span_danger("[src] suddenly bursts apart!"))
-			apply_damage(maxHealth)
+			apply_damage(maxHealth, BRUTE, ENERGY, EMP_ATTACK)

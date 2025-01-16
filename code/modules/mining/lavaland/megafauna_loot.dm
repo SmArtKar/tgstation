@@ -565,7 +565,10 @@
 		var/mob/living/attacked_mob = attacked_atom
 		if(attacked_mob.stat != DEAD)
 			give_blood(15)
-		attacked_mob.apply_damage(damage = force * (ishostile(attacked_mob) ? 2 : 1), sharpness = SHARP_EDGED, bare_wound_bonus = 5)
+		var/datum/damage_package/package = generate_damage(attacked_mob, soul, soul.zone_selected)
+		if (ishostile(attacked_mob))
+			package.amount_multiplier *= 2
+		attacked_mob.apply_damage_package(package, check_armor = TRUE)
 		to_chat(attacked_mob, span_userdanger("You're slashed by [src]!"))
 	else if((ismachinery(attacked_atom) || isstructure(attacked_atom)) && use_blood(5))
 		var/obj/attacked_obj = attacked_atom
@@ -576,7 +579,7 @@
 	animate(src)
 	SpinAnimation(5)
 	addtimer(CALLBACK(src, PROC_REF(reset_spin)), 1 SECONDS)
-	visible_message(span_danger("[src] slashes [attacked_atom]!"), span_notice("You slash [attacked_atom]!"))
+	visible_message(span_danger("[src] slashes [attacked_atom]!"), span_dnager("You slash [attacked_atom]!"), ignored_mobs = attacked_atom)
 	playsound(src, 'sound/items/weapons/bladeslice.ogg', 50, TRUE)
 	do_attack_animation(attacked_atom, ATTACK_EFFECT_SLASH)
 

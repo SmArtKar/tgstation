@@ -306,7 +306,7 @@
 		var/stunprob = our_slime.powerlevel * SLIME_SHOCK_PERCENTAGE_PER_LEVEL + SLIME_BASE_SHOCK_PERCENTAGE
 		if(prob(stunprob) && our_slime.powerlevel >= SLIME_EXTRA_SHOCK_COST)
 			our_slime.powerlevel = clamp(our_slime.powerlevel - SLIME_EXTRA_SHOCK_COST, SLIME_MIN_POWER, SLIME_MAX_POWER)
-			borg_target.apply_damage(our_slime.powerlevel * rand(6, 10), BRUTE, spread_damage = TRUE, wound_bonus = CANT_WOUND)
+			borg_target.apply_damage_package(get_unarmed_package(borg_target, our_slime.powerlevel * rand(6, 10), BRUTE, spread_damage = TRUE))
 			borg_target.visible_message(span_danger("The [our_slime.name] shocks [borg_target]!"), span_userdanger("The [our_slime.name] shocks you!"))
 		else
 			borg_target.visible_message(span_danger("The [our_slime.name] fails to hurt [borg_target]!"), span_userdanger("The [our_slime.name] failed to hurt you!"))
@@ -328,7 +328,7 @@
 		carbon_target.set_stutter_if_lower(power * 2 SECONDS)
 		if (prob(stunprob) && our_slime.powerlevel >= SLIME_EXTRA_SHOCK_COST)
 			our_slime.powerlevel = clamp(our_slime.powerlevel - SLIME_EXTRA_SHOCK_COST, SLIME_MIN_POWER, SLIME_MAX_POWER)
-			carbon_target.apply_damage(our_slime.powerlevel * rand(6, 10), BURN, spread_damage = TRUE, wound_bonus = CANT_WOUND)
+			carbon_target.apply_damage_package(get_unarmed_package(carbon_target, our_slime.powerlevel * rand(6, 10), BURN, spread_damage = TRUE))
 
 	if(isslime(target))
 		if(target == our_slime)
@@ -348,6 +348,11 @@
 		if(target_slime.health > 0)
 			our_slime.adjust_brute_loss(is_adult_slime ? -20 : -10)
 
+/mob/living/basic/slime/get_unarmed_package(atom/target, amount, damage_type, def_zone, spread_damage, fallback_amount, list/modifiers)
+	var/datum/damage_package/package = ..()
+	package.wound_bonus = CANT_WOUND
+	package.damage_flag = BIO
+	return package
 
 ///Spawns a crossed slimecore item
 /mob/living/basic/slime/proc/spawn_corecross()

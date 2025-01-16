@@ -64,13 +64,14 @@
 		return
 
 	target.apply_status_effect(/datum/status_effect/star_mark)
-	target.apply_damage(damage = 5, damagetype = BURN)
+	target.apply_damage(5, BURN, MELEE, MAGIC_ATTACK|BASICMOB_ATTACK, spread_damage = FALSE, hit_by = src, source = src, attack_dir = get_dir(target, src))
 	var/datum/targeting_strategy/target_confirmer = GET_TARGETING_STRATEGY(ai_controller.blackboard[BB_TARGETING_STRATEGY])
 	for(var/mob/living/nearby_mob in range(1, src))
 		if(target == nearby_mob || !target_confirmer?.can_attack(src, nearby_mob))
 			continue
 		nearby_mob.apply_status_effect(/datum/status_effect/star_mark)
-		nearby_mob.apply_damage(10)
+		var/datum/damage_package/package = get_unarmed_package(target, 10, BRUTE)
+		nearby_mob.apply_damage_package(package, check_armor = TRUE)
 		to_chat(nearby_mob, span_userdanger("\The [src] [attack_verb_continuous] you!"))
 		do_attack_animation(nearby_mob, ATTACK_EFFECT_SLASH)
 		log_combat(src, nearby_mob, "slashed")

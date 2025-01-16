@@ -1356,14 +1356,14 @@
 	set_angle(new_angle_s)
 
 /// Quickly generates a damage package for ease of use
-/obj/projectile/proc/generate_damage(atom/target)
+/obj/projectile/proc/generate_damage(atom/target, def_zone_override = null)
 	RETURN_TYPE(/datum/damage_package)
 	var/datum/damage_package/package = new(
 		amount = damage,
 		damage_type = damage_type,
 		damage_flag = armor_flag,
 		attack_flags = PROJECTILE_ATTACK,
-		def_zone = def_zone,
+		def_zone = def_zone_override || def_zone,
 		attack_dir = REVERSE_DIR(dir),
 		armor_penetration = armor_penetration,
 		armor_multiplier = weak_against_armor ? ARMOR_WEAKENED_MULTIPLIER : 1,

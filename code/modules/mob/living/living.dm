@@ -116,10 +116,10 @@
 
 	if(body_position == STANDING_UP)
 		var/damage_for_each_leg = round((incoming_damage / 2) * damage_softening_multiplier)
-		apply_damage(damage_for_each_leg, BRUTE, BODY_ZONE_L_LEG, wound_bonus = -2.5 * levels)
-		apply_damage(damage_for_each_leg, BRUTE, BODY_ZONE_R_LEG, wound_bonus = -2.5 * levels)
+		apply_damage(damage_for_each_leg, BRUTE, def_zone = BODY_ZONE_L_LEG, wound_bonus = -2.5 * levels)
+		apply_damage(damage_for_each_leg, BRUTE, def_zone = BODY_ZONE_R_LEG, wound_bonus = -2.5 * levels)
 	else
-		apply_damage(incoming_damage, BRUTE, spread_damage = TRUE)
+		apply_damage(incoming_damage, BRUTE)
 
 	if(!skip_knockdown)
 		Knockdown(levels * 5 SECONDS)
@@ -1138,7 +1138,7 @@
 	var/will_scratch = can_scratch && !incapacitated
 	var/applied_damage = 0
 	if (will_scratch && damage)
-		applied_damage = apply_damage(damage, damagetype = BRUTE, def_zone = target_part)
+		applied_damage = apply_damage(damage, BRUTE, MELEE, UNARMED_ATTACK, def_zone = target_part?.body_zone, spread_damage = FALSE, hit_by = src, source = src, sharpness = SHARP_EDGED, wound_bonus = CANT_WOUND)
 	if (silent)
 		return applied_damage > 0
 	var/visible_part = isnull(target_part) ? "side" : target_part.plaintext_zone
@@ -2697,13 +2697,13 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 		var/turf/open/floor/smashed_plating = loc
 		visible_message(span_danger("[src] is thrown violently into [smashed_plating], smashing through it and punching straight through!"),
 				span_userdanger("You're thrown violently into [smashed_plating], smashing through it and punching straight through!"))
-		apply_damage(rand(5,20), BRUTE, BODY_ZONE_CHEST)
+		apply_damage(rand(5, 20), BRUTE, MELEE, LEAP_ATTACK, BODY_ZONE_CHEST, hit_by = smashed_plating)
 		smashed_plating.ScrapeAway(1, CHANGETURF_INHERIT_AIR)
 
 	for(var/obj/structure/lattice/lattice in loc)
 		visible_message(span_danger("[src] is thrown violently into [lattice], smashing through it and punching straight through!"),
 			span_userdanger("You're thrown violently into [lattice], smashing through it and punching straight through!"))
-		apply_damage(rand(5,10), BRUTE, BODY_ZONE_CHEST)
+		apply_damage(rand(5, 10), BRUTE, MELEE, LEAP_ATTACK, BODY_ZONE_CHEST, hit_by = lattice)
 		lattice.deconstruct(FALSE)
 
 /// Prints an ominous message if something bad is going to happen to you

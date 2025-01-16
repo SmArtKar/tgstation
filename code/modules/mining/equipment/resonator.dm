@@ -130,7 +130,7 @@
 			log_combat(creator, attacked_living, "used a resonator field on", "resonator")
 			SEND_SIGNAL(creator, COMSIG_LIVING_RESONATOR_BURST, creator, attacked_living)
 		to_chat(attacked_living, span_userdanger("[src] ruptured with you in it!"))
-		attacked_living.apply_damage(resonance_damage, BRUTE)
+		attacked_living.apply_damage(resonance_damage, BRUTE, hit_by = src, source = src)
 		attacked_living.add_movespeed_modifier(/datum/movespeed_modifier/resonance)
 		addtimer(CALLBACK(attacked_living, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/resonance), 10 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
 	for(var/obj/effect/temp_visual/resonance/field in orange(1, src))

@@ -113,8 +113,8 @@
 	for(var/mob/living/victim in range(ability_range, caster))
 		if(faction_check(victim.faction, immune_factions) && owner.CanReach(victim))
 			continue
-		to_chat(caster, span_warning("You slice [victim]!"))
-		to_chat(victim, span_warning("You are cut by [caster]'s blades!"))
-		victim.apply_damage(damage = damage_dealt, damagetype = BRUTE, def_zone = pick(valid_targets), sharpness = SHARP_EDGED)
+		to_chat(caster, span_danger("You slice [victim]!"))
+		to_chat(victim, span_userdanger("You are cut by [caster]'s blades!"))
+		victim.apply_damage(damage_dealt, BRUTE, MELEE, MELEE_ATTACK, pick_weight(valid_targets), attack_dir = get_dir(victim, caster), hit_by = caster, source = caster, sharpness = SHARP_EDGED)
 
 #undef SPIN_SLASH_ABILITY_TYPEPATH

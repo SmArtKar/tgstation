@@ -588,19 +588,18 @@
 		else
 			amount = rand(melee_damage_lower, melee_damage_upper)
 
-	if (isnull(damtype))
-		damtype = melee_damage_type
+	if (isnull(damage_type))
+		damage_type = melee_damage_type
 
 	var/datum/damage_package/package = new(
 		amount = amount,
-		damage_type = damtype,
+		damage_type = damage_type,
 		damage_flag = MELEE,
 		attack_flags = UNARMED_ATTACK,
 		def_zone = def_zone,
 		spread_damage = spread_damage,
 		attack_dir = get_dir(target, src),
 		armor_penetration = armor_penetration,
-		forced = forced,
 		hit_by = src,
 		source = src,
 		sharpness = sharpness,

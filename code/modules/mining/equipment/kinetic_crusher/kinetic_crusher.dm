@@ -186,7 +186,6 @@
 	new /obj/effect/temp_visual/kinetic_blast(get_turf(target))
 	var/backstabbed = FALSE
 	var/combined_damage = detonation_damage
-	var/def_check = target.getarmor(type = BOMB)
 	// Backstab bonus
 	if(check_behind(user, target) || boosted_mark)
 		backstabbed = TRUE
@@ -195,7 +194,7 @@
 	if(!QDELETED(crusher_damage_effect))
 		crusher_damage_effect.total_damage += combined_damage
 	SEND_SIGNAL(user, COMSIG_LIVING_CRUSHER_DETONATE, target, src, backstabbed)
-	target.apply_damage(combined_damage, BRUTE, blocked = def_check)
+	target.apply_damage(combined_damage, BRUTE, BOMB, MELEE_ATTACK, attack_dir = get_dir(target, user), hit_by = src, source = user, check_armor = TRUE)
 
 /obj/item/kinetic_crusher/interact_with_atom_secondary(atom/interacting_with, mob/living/user, list/modifiers)
 	if(!HAS_TRAIT(src, TRAIT_WIELDED))

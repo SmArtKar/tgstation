@@ -189,8 +189,7 @@
 		return .
 
 	if(blocked >= 100)
-		if(proj.is_hostile_projectile())
-			apply_projectile_effects(proj, def_zone, blocked)
+		apply_projectile_effects(proj, def_zone, blocked)
 		return .
 
 	var/hit_limb_zone = check_hit_limb_zone_name(def_zone)
@@ -207,21 +206,10 @@
 			if(is_blind())
 				to_chat(src, span_userdanger("You feel something hit you[organ_hit_text]!"))
 
-	if(proj.is_hostile_projectile())
-		apply_projectile_effects(proj, def_zone, blocked)
+	apply_projectile_effects(proj, def_zone, blocked)
 
 /mob/living/proc/apply_projectile_effects(obj/projectile/proj, def_zone, armor_check)
-	apply_damage(
-		damage = proj.damage,
-		damagetype = proj.damage_type,
-		def_zone = def_zone,
-		blocked = min(ARMOR_MAX_BLOCK, armor_check),  //cap damage reduction at 90%
-		wound_bonus = proj.wound_bonus,
-		bare_wound_bonus = proj.bare_wound_bonus,
-		sharpness = proj.sharpness,
-		attack_dir = get_dir(proj.starting, src),
-		hit_by = proj,
-	)
+	apply_damage_package(proj.generate_damage(src, def_zone), check_armor = TRUE)
 
 	apply_effects(
 		stun = proj.stun,
@@ -339,8 +327,10 @@
 					span_userdanger("You're hit by [thrown_item]!"))
 	if(!thrown_item.throwforce)
 		return
-	var/armor = run_armor_check(zone, MELEE, "Your armor has protected your [parse_zone_with_bodypart(zone)].", "Your armor has softened hit to your [parse_zone_with_bodypart(zone)].", thrown_item.armor_penetration, "", FALSE, thrown_item.weak_against_armor)
-	apply_damage(thrown_item.throwforce, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
+	var/datum/damage_package/package = thrown_item.generate_damage(src, null, zone, thrown = TRUE)
+	if (nosell_hit)
+		package.wound_bonus = CANT_WOUND
+	apply_damage_package(package, check_armor = TRUE)
 	if(QDELETED(src)) //Damage can delete the mob.
 		return
 	if(body_position == LYING_DOWN) // physics says it's significantly harder to push someone by constantly chucking random furniture at them if they are down on the floor.
@@ -513,17 +503,7 @@
 
 	to_chat(user, span_danger("You [user.attack_verb_simple] [src]!"))
 	log_combat(user, src, "attacked")
-	var/damage_done = apply_damage(
-		damage = damage,
-		damagetype = user.melee_damage_type,
-		def_zone = user.zone_selected,
-		blocked = armor_block,
-		wound_bonus = user.wound_bonus,
-		bare_wound_bonus = user.bare_wound_bonus,
-		sharpness = user.sharpness,
-		attack_dir = get_dir(user, src),
-	) // todo smartkar
-	return damage_done
+	return apply_damage_package(user.get_unarmed_package(src), check_armor = TRUE)
 
 /mob/living/attack_hand(mob/living/carbon/human/user, list/modifiers)
 	. = ..()
