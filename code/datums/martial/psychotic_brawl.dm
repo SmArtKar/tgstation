@@ -92,7 +92,7 @@
 				attacker,
 			)
 			to_chat(attacker, span_danger("You [atk_verb] [defender] with such inhuman strength that it sends [defender.p_them()] flying backwards!"))
-			defender.apply_damage_package(attacker.get_unarmed_package(defender, rand(15, 30), attacker.get_attack_type(), BODY_ZONE_CHEST))
+			defender.apply_damage_package(attacker.get_unarmed_package(defender, rand(15, 30), null, BODY_ZONE_CHEST))
 			playsound(defender, 'sound/effects/meteorimpact.ogg', 25, TRUE, -1)
 			var/throwtarget = get_edge_target_turf(attacker, get_dir(attacker, get_step_away(defender, attacker)))
 			defender.throw_at(throwtarget, 4, 2, attacker)//So stuff gets tossed around at the same time.

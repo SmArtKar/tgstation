@@ -152,6 +152,8 @@ DEFINE_BITFIELD(status_flags, list(
 #define EMP_ATTACK (1<<11)
 /// This damage is from teleportation, or other bluespace or scifi shenanigans
 #define BLUESPACE_ATTACK (1<<12)
+/// This damage came from a mecha
+#define MECHA_ATTACK (1<<13)
 
 /// Used in check block to get what mob is attacking the blocker.
 #define GET_ASSAILANT(weapon) (get(weapon, /mob/living))

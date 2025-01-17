@@ -82,7 +82,7 @@
 		span_notice("[user] successfully realigns some of the blood vessels in  [target]'s [target.parse_zone_with_bodypart(target_zone)]!"),
 	)
 	log_combat(user, target, "realigned blood vessels in", addition="COMBAT MODE: [uppertext(user.combat_mode)]")
-	target.apply_damage(3, BRUTE, surgery.operated_bodypart, wound_bonus = CANT_WOUND, sharpness = SHARP_EDGED, hit_by = tool)
+	target.apply_damage(3, BRUTE, def_zone = target_zone, hit_by = tool, source = user, wound_bonus = CANT_WOUND, sharpness = SHARP_EDGED)
 	pierce_wound.adjust_blood_flow(-0.25)
 	return ..()
 
@@ -95,7 +95,7 @@
 		span_notice("[user] jerks apart some of the blood vessels in [target]'s [target.parse_zone_with_bodypart(target_zone)] with [tool]!"),
 		span_notice("[user] jerk apart some of the blood vessels in [target]'s [target.parse_zone_with_bodypart(target_zone)]!"),
 	)
-	target.apply_damage(rand(4, 8), BRUTE, surgery.operated_bodypart, wound_bonus = 10, sharpness = SHARP_EDGED, hit_by = tool)
+	target.apply_damage(rand(4, 8), BRUTE, def_zone = target_zone, hit_by = tool, source = user, wound_bonus = 10, sharpness = SHARP_EDGED)
 
 ///// Sealing the vessels back together
 /datum/surgery_step/seal_veins

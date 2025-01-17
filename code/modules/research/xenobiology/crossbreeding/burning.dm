@@ -210,20 +210,19 @@ Burning extracts:
 	colour = SLIME_TYPE_GREEN
 	effect_desc = "The user gets a dull arm blade in the hand it is used in."
 
-/obj/item/slimecross/burning/green/do_effect(mob/user)
-	var/mob/living/L = user
+/obj/item/slimecross/burning/green/do_effect(mob/living/user)
 	if(!istype(user))
 		return
-	var/obj/item/held = L.get_active_held_item() //This should be itself, but just in case...
-	L.dropItemToGround(held)
+	var/obj/item/held = user.get_active_held_item() //This should be itself, but just in case...
+	user.dropItemToGround(held)
 	var/obj/item/melee/arm_blade/slime/blade = new(user)
-	if(!L.put_in_hands(blade))
+	if(!user.put_in_hands(blade))
 		qdel(blade)
 		user.visible_message(span_warning("[src] melts onto [user]'s arm, boiling the flesh horribly!"))
 	else
 		user.visible_message(span_danger("[src] sublimates the flesh around [user]'s arm, transforming the bone into a gruesome blade!"))
 	user.emote("scream")
-	L.apply_damage(30, BURN, L.get_active_hand())
+	user.apply_damage(30, BURN, null, MAGIC_ATTACK, user.get_active_hand()?.body_zone, source = src)
 	..()
 
 /obj/item/slimecross/burning/pink

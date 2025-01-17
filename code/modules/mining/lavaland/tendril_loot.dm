@@ -1077,7 +1077,7 @@
 	if(!isclosedturf(hit_atom))
 		return NONE
 
-	source.apply_damage(5, BRUTE)
+	source.apply_damage(5, BRUTE, spread_damage = FALSE)
 	if(ishostile(source))
 		var/mob/living/simple_animal/hostile/target = source
 		target.ranged_cooldown += 5 SECONDS

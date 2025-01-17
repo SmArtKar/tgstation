@@ -239,7 +239,7 @@
 		damage = 15
 	if(isliving(hit_atom))
 		var/mob/living/living_atom = hit_atom
-		living_atom.apply_damage(damage, BRUTE)
+		living_atom.apply_damage(damage, BRUTE, MELEE, THROWN_PROJECTILE_ATTACK, attack_dir = get_dir(living_atom, source), hit_by = source, def_zone = BODY_ZONE_CHEST, check_armor = TRUE)
 	else if(hit_atom.uses_integrity)
 		hit_atom.take_damage(damage, BRUTE, MELEE, THROWN_PROJECTILE_ATTACK, attack_dir = get_dir(hit_atom, source), hit_by = source, source = thrownthing?.thrower?.resolve() || src, sound_effect = FALSE)
 	if(damage_self && source.uses_integrity)

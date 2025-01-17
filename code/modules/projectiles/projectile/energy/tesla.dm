@@ -7,6 +7,11 @@
 	var/zap_range = 3
 	var/power = 1e4
 
+/obj/projectile/energy/tesla/generate_damage(atom/target, ricochet)
+	var/datum/damage_package/package = ..()
+	package.attack_flags |= SHOCK_ATTACK
+	return package
+
 /obj/projectile/energy/tesla/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
 	tesla_zap(source = src, zap_range = zap_range, power = power, cutoff = 1e3, zap_flags = zap_flags)

@@ -144,7 +144,7 @@
 		playsound(attacker, 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 		var/atom/throw_target = get_edge_target_turf(defender, attacker.dir)
 		defender.throw_at(throw_target, 1, 14, attacker)
-		defender.apply_damage_package(attacker.get_unarmed_package(defender, 10, attacker.get_attack_type(), BODY_ZONE_CHEST))
+		defender.apply_damage_package(attacker.get_unarmed_package(defender, 10, null, BODY_ZONE_CHEST))
 		if(defender.body_position == LYING_DOWN && !defender.IsUnconscious())
 			defender.adjust_stamina_loss(45)
 		log_combat(attacker, defender, "kicked (CQC)")
@@ -206,7 +206,7 @@
 	if(held_item && defender.temporarilyRemoveItemFromInventory(held_item))
 		attacker.put_in_hands(held_item)
 	defender.adjust_stamina_loss(50)
-	defender.apply_damage_package(attacker.get_unarmed_package(defender, 25, attacker.get_attack_type(), BODY_ZONE_CHEST))
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, 25, null, BODY_ZONE_CHEST))
 	return TRUE
 
 /datum/martial_art/cqc/grab_act(mob/living/attacker, mob/living/defender)
@@ -346,7 +346,7 @@
 		to_chat(attacker, span_danger("You strike [defender]'s jaw,[disarmed_item ? " disarming [defender.p_them()] of [disarmed_item] and" : ""] leaving [defender.p_them()] disoriented!"))
 		playsound(defender, 'sound/items/weapons/cqchit1.ogg', 50, TRUE, -1)
 		defender.set_jitter_if_lower(4 SECONDS)
-		defender.apply_damage_package(attacker.get_unarmed_package(defender, 5, attacker.get_attack_type(), BODY_ZONE_HEAD))
+		defender.apply_damage_package(attacker.get_unarmed_package(defender, 5, null, BODY_ZONE_HEAD))
 		log_combat(attacker, defender, "disarmed (CQC)", addition = disarmed_item ? "(disarmed of [disarmed_item])" : null)
 		return MARTIAL_ATTACK_SUCCESS
 

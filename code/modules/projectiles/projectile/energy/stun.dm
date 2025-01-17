@@ -224,18 +224,18 @@
 
 	// You are damp, that's bad when you're being tased
 	if(owner.fire_stacks < 0)
-		owner.apply_damage(max(1, owner.fire_stacks * -0.5 * seconds_between_ticks), FIRE, spread_damage = TRUE)
+		owner.apply_damage(max(1, owner.fire_stacks * -0.5 * seconds_between_ticks), BURN, null, SHOCK_ATTACK)
 		if(SPT_PROB(25, seconds_between_ticks))
 			do_sparks(1, FALSE, owner)
 
 	// clumsy people might hit their head while being tased
 	if(HAS_TRAIT(owner, TRAIT_CLUMSY) && owner.body_position == LYING_DOWN && SPT_PROB(20, seconds_between_ticks))
-		owner.apply_damage(10, BRUTE, BODY_ZONE_HEAD)
+		owner.apply_damage(10, BRUTE, def_zone = BODY_ZONE_HEAD)
 		playsound(owner, 'sound/effects/tableheadsmash.ogg', 75, TRUE)
 
 	// the actual stunning is here
 	if(!owner.check_stun_immunity(CANSTUN|CANKNOCKDOWN))
-		owner.apply_damage(stamina_per_second * seconds_between_ticks, STAMINA)
+		owner.apply_damage(stamina_per_second * seconds_between_ticks, STAMINA, null, SHOCK_ATTACK)
 
 /// Sets the passed atom as the "taser"
 /datum/status_effect/tased/proc/set_taser(datum/new_taser)
@@ -359,7 +359,7 @@
 		span_warning("You get tangled in [electrode_name]!"),
 	)
 	if(!disruptor.check_stun_immunity(CANSTUN|CANKNOCKDOWN))
-		disruptor.apply_damage(90, STAMINA)
+		disruptor.apply_damage(90, STAMINA, null, SHOCK_ATTACK)
 		disruptor.Knockdown(5 SECONDS)
 	disruptor.adjust_jitter_up_to(10 SECONDS, 30 SECONDS)
 	qdel(src)

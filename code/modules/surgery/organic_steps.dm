@@ -187,7 +187,7 @@
 	return TRUE
 
 /datum/surgery_step/saw/success(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery, default_display_results)
-	target.apply_damage(50, BRUTE, "[target_zone]", wound_bonus=CANT_WOUND)
+	target.apply_damage(50, BRUTE, def_zone = target_zone, hit_by = tool, source = user, wound_bonus = CANT_WOUND)
 	display_results(
 		user,
 		target,

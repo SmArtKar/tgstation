@@ -47,7 +47,7 @@
 		var/obj/item/research_notes/hand_dossier = user.get_inactive_held_item()
 		hand_dossier.merge(the_dossier)
 
-	target.apply_damage(80, BRUTE, BODY_ZONE_CHEST)
+	target.apply_damage(80, BRUTE, def_zone = BODY_ZONE_CHEST, hit_by = tool, source = user)
 	ADD_TRAIT(target, TRAIT_DISSECTED, EXPERIMENTAL_SURGERY_TRAIT)
 	return ..()
 
@@ -63,7 +63,7 @@
 		var/obj/item/research_notes/hand_dossier = user.get_inactive_held_item()
 		hand_dossier.merge(the_dossier)
 
-	target.apply_damage(80, BRUTE, BODY_ZONE_CHEST)
+	target.apply_damage(80, BRUTE, def_zone = BODY_ZONE_CHEST, hit_by = tool, source = user)
 	return TRUE
 
 ///Calculates how many research points dissecting 'target' is worth.

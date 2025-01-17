@@ -58,12 +58,12 @@
 		return
 	to_chat(src, span_userdanger("You feel your skin ripping off!"))
 	emote("scream")
-	apply_damage(30, BRUTE, BODY_ZONE_HEAD)
+	apply_damage(30, BRUTE, def_zone = BODY_ZONE_HEAD)
 	sleep(5 SECONDS)
 	if(!psykerize())
 		to_chat(src, span_warning("The transformation subsides..."))
 		return
-	apply_damage(50, BRUTE, BODY_ZONE_HEAD)
+	apply_damage(50, BRUTE, def_zone = BODY_ZONE_HEAD)
 	to_chat(src, span_userdanger("Your head splits open! Your brain mutates!"))
 	new /obj/effect/gibspawner/generic(drop_location(), src)
 	emote("scream")

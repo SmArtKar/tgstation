@@ -195,18 +195,18 @@ Difficulty: Hard
 				else
 					bloodsmack(target_one_turf, handedness)
 
-/mob/living/simple_animal/hostile/megafauna/bubblegum/proc/bloodsmack(turf/T, handedness)
+/mob/living/simple_animal/hostile/megafauna/bubblegum/proc/bloodsmack(turf/target_turf, handedness)
 	if(handedness)
-		new /obj/effect/temp_visual/bubblegum_hands/rightsmack(T)
+		new /obj/effect/temp_visual/bubblegum_hands/rightsmack(target_turf)
 	else
-		new /obj/effect/temp_visual/bubblegum_hands/leftsmack(T)
+		new /obj/effect/temp_visual/bubblegum_hands/leftsmack(target_turf)
 	SLEEP_CHECK_DEATH(4, src)
-	for(var/mob/living/L in T)
-		if(!faction_check_atom(L))
-			to_chat(L, span_userdanger("[src] rends you!"))
-			playsound(T, attack_sound, 100, TRUE, -1)
-			var/limb_to_hit = L.get_bodypart(L.get_random_valid_zone(even_weights = TRUE))
-			L.apply_damage(10, BRUTE, limb_to_hit, L.run_armor_check(limb_to_hit, MELEE, null, null, armor_penetration), wound_bonus = CANT_WOUND) // Smartkar todo
+	for(var/mob/living/victim in target_turf)
+		if(faction_check_atom(victim))
+			continue
+		to_chat(victim, span_userdanger("[src] rends you!"))
+		playsound(victim, attack_sound, 100, TRUE, -1)
+		victim.apply_damage(10, BRUTE, MELEE, UNARMED_ATTACK|MAGIC_ATTACK|BASICMOB_ATTACK, victim.get_random_valid_zone(even_weights = TRUE), armor_penetration = armor_penetration, source = src, wound_bonus = CANT_WOUND, check_armor = TRUE) // Smartkar todo
 	SLEEP_CHECK_DEATH(3, src)
 
 /mob/living/simple_animal/hostile/megafauna/bubblegum/proc/bloodgrab(turf/T, handedness)

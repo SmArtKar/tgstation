@@ -512,8 +512,19 @@
 	playsound(living_target.loc, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 
 	var/target_zone = living_target.get_random_valid_zone(source.zone_selected)
-	var/armor_block = living_target.run_armor_check(target_zone, MELEE, armor_penetration = attacking_bodypart.unarmed_effectiveness)
-	living_target.apply_damage(potential_damage * 2, attacking_bodypart.attack_type, target_zone, armor_block) // smartkar todo
+	living_target.apply_damage(
+		amount = potential_damage * 2,
+		damage_type = attacking_bodypart.attack_type,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		def_zone = target_zone,
+		attack_dir = get_dir(target, source),
+		armor_penetration = attacking_bodypart.unarmed_effectiveness,
+		hit_by = source,
+		source = source,
+		sharpness = attacking_bodypart.get_sharpness(),
+		check_armor = TRUE,
+	)
 
 	if(source.body_position != LYING_DOWN) // Throw them if we are standing
 		var/atom/throw_target = get_edge_target_turf(living_target, source.dir)

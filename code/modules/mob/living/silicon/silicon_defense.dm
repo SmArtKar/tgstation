@@ -49,11 +49,11 @@
 	. = ..()
 	if(!.)
 		return
-	adjust_brute_loss(rand(10, 15))
 	playsound(loc, SFX_PUNCH, 25, TRUE, -1)
 	visible_message(span_danger("[user] punches [src]!"), \
 					span_userdanger("[user] punches you!"), null, COMBAT_MESSAGE_RANGE, user)
 	to_chat(user, span_danger("You punch [src]!"))
+	apply_damage(rand(10, 15), BRUTE, MELEE, MELEE_ATTACK, user.zone_selected, attack_dir = get_dir(src, user), hit_by = user, source = user, check_armor = TRUE)
 
 /mob/living/silicon/attack_hand(mob/living/carbon/human/user, list/modifiers)
 	. = ..()

@@ -74,7 +74,7 @@
 	playsound(mod.wearer, 'sound/effects/snap.ogg', 75, TRUE, frequency = 0.5)
 	playsound(mod.wearer, 'sound/effects/splat.ogg', 50, TRUE, frequency = 0.5)
 	mod.wearer.client?.give_award(/datum/award/achievement/misc/springlock, mod.wearer)
-	mod.wearer.apply_damage(500, BRUTE, forced = TRUE, spread_damage = TRUE, sharpness = SHARP_POINTY) //boggers, bogchamp, etc
+	mod.wearer.apply_damage(5000, BRUTE, hit_by = src, source = src, forced = TRUE, sharpness = SHARP_POINTY) //boggers, bogchamp, etc
 	if(!HAS_TRAIT(mod.wearer, TRAIT_NODEATH))
 		mod.wearer.investigate_log("has been killed by [src].", INVESTIGATE_DEATHS)
 		mod.wearer.death() //just in case, for some reason, they're still alive

@@ -271,8 +271,7 @@
 	for(var/turf/closed/mineral/mineral_turf in RANGE_TURFS(1, target) - target)
 		mineral_turf.gets_drilled(firer, TRUE)
 	for(var/mob/living/living_mob in range(1, target) - firer - target)
-		var/armor = living_mob.run_armor_check(def_zone, armor_flag, armor_penetration = armor_penetration) // Smartkar todo
-		living_mob.apply_damage(damage, damage_type, def_zone, armor)
+		living_mob.apply_damage_package(generate_damage(target), check_armor = TRUE)
 		to_chat(living_mob, span_userdanger("You're struck by a [name]!"))
 
 //Modkits
@@ -443,11 +442,11 @@
 			if(ismineralturf(T))
 				var/turf/closed/mineral/M = T
 				M.gets_drilled(K.firer, TRUE)
+
 	if(modifier)
-		for(var/mob/living/L in range(1, target_turf) - K.firer - target)
-			var/armor = L.run_armor_check(K.def_zone, K.armor_flag, "", "", K.armor_penetration) // Smartkar todo
-			L.apply_damage(K.damage*modifier, K.damage_type, K.def_zone, armor)
-			to_chat(L, span_userdanger("You're struck by a [K.name]!"))
+		for(var/mob/living/living_mob in range(1, target_turf) - K.firer - target)
+			living_mob.apply_damage_package(K.generate_damage(target, amount_multiplier = modifier), check_armor = TRUE)
+			to_chat(living_mob, span_userdanger("You're struck by a [K.name]!"))
 
 /obj/item/borg/upgrade/modkit/aoe/turfs
 	name = "mining explosion"
@@ -569,13 +568,13 @@
 
 /obj/item/borg/upgrade/modkit/bounty/projectile_strike(obj/projectile/kinetic/K, turf/target_turf, atom/target, obj/item/gun/energy/recharge/kinetic_accelerator/KA)
 	if(isliving(target))
-		var/mob/living/L = target
-		if(bounties_reaped[L.type])
+		var/mob/living/living_mob = target
+		if(bounties_reaped[living_mob.type])
 			var/kill_modifier = 1
 			if(K.pressure_decrease_active)
 				kill_modifier *= K.pressure_decrease
-			var/armor = L.run_armor_check(K.def_zone, K.armor_flag, "", "", K.armor_penetration) // Smartkar todo
-			L.apply_damage(bounties_reaped[L.type]*kill_modifier, K.damage_type, K.def_zone, armor)
+
+			living_mob.apply_damage(bounties_reaped[living_mob.type] * kill_modifier, K.damage_type, K.armor_flag, PROJECTILE_ATTACK, K.def_zone, REVERSE_DIR(K.dir), armor_penetration = K.armor_penetration, hit_by = K, source = K.firer, checK_armor = TRUE)
 
 /obj/item/borg/upgrade/modkit/bounty/proc/get_kill(mob/living/L)
 	var/bonus_mod = 1

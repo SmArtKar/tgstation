@@ -86,3 +86,20 @@
 /// Don't scramble a larva's body parts, it doesn't have any
 /mob/living/carbon/alien/larva/bioscramble(scramble_source)
 	return TRUE
+
+/mob/living/carbon/alien/larva/get_unarmed_package(atom/target, amount = null, damage_type = BRUTE, def_zone = zone_selected, spread_damage = FALSE, fallback_amount = TRUE, list/modifiers = null)
+	var/datum/damage_package/package = new(
+		amount = isnull(amount) ? rand(melee_damage_lower, melee_damage_upper) : amount, // Not || because 0 is still a valid amount of damage... yeah.
+		damage_type = damage_type,
+		damage_flag = MELEE,
+		attack_flags = UNARMED_ATTACK,
+		def_zone = def_zone,
+		spread_damage = spread_damage,
+		attack_dir = get_dir(target, src),
+		hit_by = src,
+		source = src,
+		sharpness = SHARP_POINTY, // Teeth
+		)
+
+	SEND_SIGNAL(src, COMSIG_LIVING_CREATED_DAMAGE_PACKAGE, package, target, amount, damage_type, def_zone, fallback_amount, modifiers)
+	return package

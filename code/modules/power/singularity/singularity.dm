@@ -103,22 +103,24 @@
 		)
 	jedi.Stun(3 SECONDS)
 	new /obj/effect/gibspawner/generic(get_turf(jedi), jedi)
-	jedi.apply_damage(30, BRUTE, BODY_ZONE_HEAD)
+	jedi.apply_damage(30, BRUTE, null, BLUESPACE_ATTACK, BODY_ZONE_HEAD, forced = TRUE, source = src)
 	if(QDELETED(jedi))
 		return // damage was too much
+
 	if(jedi.stat == DEAD)
 		jedi.ghostize()
 		var/obj/item/bodypart/head/rip_u = jedi.get_bodypart(BODY_ZONE_HEAD)
 		rip_u.dismember(BURN) //nice try jedi
 		qdel(rip_u)
 		return
+
 	addtimer(CALLBACK(src, PROC_REF(carbon_tk_part_two), jedi), 0.1 SECONDS)
 
 /obj/singularity/proc/carbon_tk_part_two(mob/living/carbon/jedi)
 	if(QDELETED(jedi))
 		return
 	new /obj/effect/gibspawner/generic(get_turf(jedi), jedi)
-	jedi.apply_damage(30, BRUTE, BODY_ZONE_HEAD)
+	jedi.apply_damage(30, BRUTE, null, BLUESPACE_ATTACK, BODY_ZONE_HEAD, forced = TRUE, source = src)
 	if(QDELETED(jedi))
 		return // damage was too much
 	if(jedi.stat == DEAD)
@@ -134,7 +136,7 @@
 	if(QDELETED(jedi))
 		return
 	new /obj/effect/gibspawner/generic(get_turf(jedi), jedi)
-	jedi.apply_damage(30, BRUTE, BODY_ZONE_HEAD)
+	jedi.apply_damage(30, BRUTE, null, BLUESPACE_ATTACK, BODY_ZONE_HEAD, forced = TRUE, source = src)
 	if(QDELETED(jedi))
 		return // damage was too much
 	jedi.ghostize()

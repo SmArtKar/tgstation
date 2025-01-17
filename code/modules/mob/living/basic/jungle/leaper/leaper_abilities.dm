@@ -28,7 +28,7 @@
 		var/mob/living/bubbled = target
 		bubbled.reagents.add_reagent(/datum/reagent/toxin/leaper_venom, 5)
 
-/obj/projectile/leaper/generate_damage(atom/target, def_zone_override = null)
+/obj/projectile/leaper/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
 	var/datum/damage_package/package = ..()
 	if (isliving(target) && !iscarbon(target))
 		package.amount += 30

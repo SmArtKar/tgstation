@@ -116,7 +116,6 @@
 	playsound(owner, 'sound/effects/emotes/assslap.ogg', 90)
 	var/atom/throw_target = get_edge_target_turf(to_slap, owner.dir)
 	living_to_slap.throw_at(throw_target, 6, 4, owner)
-	living_to_slap.apply_damage(30, BRUTE)
-
+	living_to_slap.apply_damage(30, BRUTE, MELEE, UNARMED_ATTACK|BASICMOB_ATTACK, living_to_slap.get_random_valid_zone(owner.zone_selected), attack_dir = get_dir(living_to_slap, owner), hit_by = owner, source = owner, check_armor = TRUE)
 	StartCooldown()
 	return TRUE

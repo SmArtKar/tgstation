@@ -171,7 +171,7 @@
 			return
 		if(buckle_mob(fallen_mob, TRUE))
 			to_chat(fallen_mob, span_userdanger("You are impaled by [src]!"))
-			fallen_mob.apply_damage(25 * levels, BRUTE, sharpness = SHARP_POINTY, hit_by = src, source = src)
+			fallen_mob.apply_damage(25 * levels, BRUTE, def_zone = BODY_ZONE_CHEST, sharpness = SHARP_POINTY, hit_by = src, source = src)
 			if(iscarbon(fallen_mob))
 				var/mob/living/carbon/fallen_carbon = fallen_mob
 				fallen_carbon.emote("scream")
@@ -182,7 +182,7 @@
 	if(force)
 		return ..()
 	to_chat(buckled_mob, span_warning("You begin climbing out of [src]."))
-	buckled_mob.apply_damage(5, BRUTE, sharpness = SHARP_POINTY)
+	buckled_mob.apply_damage(5, BRUTE, spread_damage = FALSE, sharpness = SHARP_POINTY)
 	if(!do_after(buckled_mob, 5 SECONDS, target = src))
 		to_chat(buckled_mob, span_userdanger("You fail to detach yourself from [src]."))
 		return

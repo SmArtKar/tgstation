@@ -318,6 +318,15 @@
 	var/list/entering_locs = dest_locs - locs
 	var/list/exited_locs = locs - dest_locs
 
+	var/list/zone_list = list(
+		BODY_ZONE_HEAD = 30,
+		BODY_ZONE_CHEST = 20,
+		BODY_ZONE_L_LEG = 15,
+		BODY_ZONE_R_LEG = 15,
+		BODY_ZONE_L_ARM = 15,
+		BODY_ZONE_R_ARM = 15,
+	)
+
 	if(travel_direction == DOWN)
 		for(var/turf/dest_turf as anything in entering_locs)
 			SEND_SIGNAL(dest_turf, COMSIG_TURF_INDUSTRIAL_LIFT_ENTER, things_to_move)
@@ -336,15 +345,22 @@
 					// Violent landing = gibbed. But the nicest kind of gibbing, keeping everything intact.
 					crushed.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
 					crushed.gib(DROP_ALL_REMAINS)
-				else
-					// Less violent landing simply crushes every bone in your body.
-					crushed.Paralyze(30 SECONDS, ignore_canstun = TRUE)
-					crushed.apply_damage(30, BRUTE, BODY_ZONE_CHEST, wound_bonus = 30)
-					crushed.apply_damage(20, BRUTE, BODY_ZONE_HEAD, wound_bonus = 25)
-					crushed.apply_damage(15, BRUTE, BODY_ZONE_L_LEG, wound_bonus = 15)
-					crushed.apply_damage(15, BRUTE, BODY_ZONE_R_LEG, wound_bonus = 15)
-					crushed.apply_damage(15, BRUTE, BODY_ZONE_L_ARM, wound_bonus = 15)
-					crushed.apply_damage(15, BRUTE, BODY_ZONE_R_ARM, wound_bonus = 15)
+					continue
+
+				// Less violent landing simply crushes every bone in your body.
+				crushed.Paralyze(30 SECONDS, ignore_canstun = TRUE)
+				var/list/packages = list()
+				for (var/body_zone in zone_list)
+					packages += new /datum/damage_package(
+						amount = zone_list[body_zone],
+						damage_type = BRUTE,
+						damage_flag = MELEE,
+						def_zone = body_zone,
+						hit_by = src,
+						source = src,
+						wound_bonus = zone_list[body_zone]
+					)
+				crushed.apply_multiple_packages(packages)
 
 	else if(travel_direction == UP)
 		for(var/turf/dest_turf as anything in entering_locs)

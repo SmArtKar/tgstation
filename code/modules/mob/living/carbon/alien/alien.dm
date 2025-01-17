@@ -80,14 +80,14 @@
 		throw_alert(ALERT_XENO_FIRE, /atom/movable/screen/alert/alien_fire)
 		switch(bodytemperature)
 			if(360 to 400)
-				apply_damage(HEAT_DAMAGE_LEVEL_1 * seconds_per_tick, BURN)
+				apply_damage(HEAT_DAMAGE_LEVEL_1 * seconds_per_tick, BURN, FIRE, ATMOS_ATTACK)
 			if(400 to 460)
-				apply_damage(HEAT_DAMAGE_LEVEL_2 * seconds_per_tick, BURN)
+				apply_damage(HEAT_DAMAGE_LEVEL_2 * seconds_per_tick, BURN, FIRE, ATMOS_ATTACK)
 			if(460 to INFINITY)
 				if(on_fire)
-					apply_damage(HEAT_DAMAGE_LEVEL_3 * seconds_per_tick, BURN)
+					apply_damage(HEAT_DAMAGE_LEVEL_3 * seconds_per_tick, BURN, FIRE, ATMOS_ATTACK)
 				else
-					apply_damage(HEAT_DAMAGE_LEVEL_2 * seconds_per_tick, BURN)
+					apply_damage(HEAT_DAMAGE_LEVEL_2 * seconds_per_tick, BURN, FIRE, ATMOS_ATTACK)
 	else
 		clear_alert(ALERT_XENO_FIRE)
 

@@ -71,7 +71,7 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 	SIGNAL_HANDLER
 
 	if(avail())
-		king.apply_damage(10)
+		king.apply_damage(10, BURN, null, SHOCK_ATTACK)
 		playsound(king, 'sound/effects/sparks/sparks2.ogg', 100, TRUE)
 	deconstruct()
 

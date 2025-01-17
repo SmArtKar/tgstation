@@ -18,7 +18,8 @@
 			span_warning("[target] violently flinches!"),
 			span_revendanger("You feel your essence draining away from having your picture taken!"),
 		)
-		target.apply_damage(rand(10, 15))
+
+		target.apply_damage(rand(10, 15), BRUTE, null, MAGIC_ATTACK, source = src, wound_bonus = CANT_WOUND)
 
 /obj/item/camera/spooky/badmin
 	desc = "A polaroid camera, some say it can see ghosts! It seems to have an extra magnifier on the end."

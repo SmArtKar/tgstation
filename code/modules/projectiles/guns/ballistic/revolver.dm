@@ -266,7 +266,7 @@
 			if(AC.fire_casing(user, user, params, distro = 0, quiet = 0, zone_override = null, spread = 0, fired_from = src))
 				playsound(user, fire_sound, fire_sound_volume, vary_fire_sound)
 				if(is_target_face)
-					shoot_self(user, affecting)
+					shoot_self(user, affecting.body_zone)
 				else if(tk_controlled) // the consequence of you doing the telekinesis stuff
 					to_chat(user, span_userdanger("As your mind concentrates on the revolver, you realize that it's pointing towards your head a little too late!"))
 					shoot_self(user, BODY_ZONE_HEAD)
@@ -283,7 +283,7 @@
 		playsound(src, dry_fire_sound, 30, TRUE)
 
 /obj/item/gun/ballistic/revolver/russian/proc/shoot_self(mob/living/carbon/human/user, affecting = BODY_ZONE_HEAD)
-	user.apply_damage(300, BRUTE, affecting)
+	user.apply_damage(300, BRUTE, BULLET, PROJECTILE_ATTACK, affecting)
 	user.visible_message(span_danger("[user.name] fires [src] at [user.p_their()] head!"), span_userdanger("You fire [src] at your head!"), span_hear("You hear a gunshot!"))
 
 /obj/item/gun/ballistic/revolver/russian/soul

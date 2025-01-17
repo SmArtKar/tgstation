@@ -61,7 +61,7 @@
 /mob/living/proc/package_armor_check(datum/damage_package/package, penetrated_text = null, soften_text = null, absorb_text = null, silent = FALSE)
 	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
 	package.def_zone = validate_def_zones(package.def_zone)
-	var/armor_protection = get_armor(package)
+	var/armor_protection = get_package_armor(package)
 
 	if (armor_protection > 0)
 		armor_protection = clamp(PENETRATE_ARMOR(armor_protection * package.armor_multiplier, package.armor_penetration), min(armor_protection, 0), 100)
@@ -119,7 +119,7 @@
  * Do not use this directly, use run_armor_check or package_armor_check instead.
  * Should return percentage of damage blocked, 0 - 100 like run_armor_check.
  */
-/mob/living/proc/get_armor(datum/damage_package/package)
+/mob/living/proc/get_package_armor(datum/damage_package/package)
 	PROTECTED_PROC(TRUE)
 	return 0
 
@@ -616,7 +616,7 @@
 	return ..()
 
 /mob/living/acid_act(acidpwr, acid_volume)
-	take_bodypart_damage(acidpwr * min(1, acid_volume * 0.1))
+	user.apply_damage(acidpwr * min(1, acid_volume * 0.1), BURN, ACID)
 	return TRUE
 
 ///As the name suggests, this should be called to apply electric shocks.
@@ -886,10 +886,12 @@
 /mob/living/proc/get_unarmed_package(atom/target, amount = null, damage_type = BRUTE, def_zone = zone_selected, spread_damage = FALSE, fallback_amount = TRUE, list/modifiers = null)
 	var/obj/item/bodypart/arm = get_active_hand()
 	var/sharpness = NONE
-	if (!isnull(arm) && (isnull(amount) || !fallback_amount))
-		amount = rand(arm.unarmed_damage_low, arm.unarmed_damage_high)
-		damage_type = arm.attack_type
-		sharpness = arm.sharpness
+	if (!isnull(arm))
+		if (isnull(amount) || !fallback_amount)
+			amount = rand(arm.unarmed_damage_low, arm.unarmed_damage_high)
+		if (isnull(amount) || isnull(damage_type) || !fallback_amount)
+			damage_type = arm.attack_type
+			sharpness = arm.sharpness
 
 	var/datum/damage_package/package = new(
 		amount = amount,

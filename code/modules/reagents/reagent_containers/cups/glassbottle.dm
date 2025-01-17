@@ -153,8 +153,8 @@
 	var/obj/item/bodypart/affecting = user.zone_selected //Find what the player is aiming at
 
 	var/armor_block = 0 //Get the target's armor values for normal attack damage.
-	var/knockdown_effectiveness = 0 //The more force the bottle has, the longer the duration.
 
+	/*
 	//Calculating duration and calculating damage.
 	if(ishuman(target))
 
@@ -176,11 +176,17 @@
 	//Apply the damage!
 	armor_block = min(90,armor_block)
 	living_target.apply_damage(force, BRUTE, affecting, armor_block) // Smartkar todo, comperss the above to get rid of human check
+	*/
+
+	var/datum/damage_package/package = generate_damage(living_target, user, user.zone_selected)
+	living_target.apply_damage_package(package, check_armor = TRUE)
 
 	// You are going to knock someone down for longer if they are not wearing a helmet.
 	var/head_attack_message = ""
 	if(affecting == BODY_ZONE_HEAD && iscarbon(target) && !HAS_TRAIT(target, TRAIT_HEAD_INJURY_BLOCKED))
 		head_attack_message = " on the head"
+		// The more force the bottle has, the longer the duration.
+		var/knockdown_effectiveness = (bottle_knockdown_duration - package.armor_block) + force
 		if(knockdown_effectiveness && prob(knockdown_effectiveness))
 			living_target.apply_effect(min(knockdown_effectiveness, 200) , EFFECT_KNOCKDOWN)
 

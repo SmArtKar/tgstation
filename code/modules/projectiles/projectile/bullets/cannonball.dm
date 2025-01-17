@@ -37,7 +37,7 @@
 			hit_turf.ScrapeAway()
 	return ..()
 
-/obj/projectile/bullet/cannonball/generate_damage(atom/target, def_zone_override = null)
+/obj/projectile/bullet/cannonball/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
 	var/datum/damage_package/package = ..()
 	if (isobj(target))
 		package.amount += object_damage

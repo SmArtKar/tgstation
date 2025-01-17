@@ -40,7 +40,7 @@
 		S.take_overall_damage(anti_armor_damage*0.75, anti_armor_damage*0.25)
 	return BULLET_ACT_HIT
 
-/obj/projectile/bullet/rocket/generate_damage(atom/target, def_zone_override = null)
+/obj/projectile/bullet/rocket/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
 	var/datum/damage_package/package = ..()
 	if (ismecha(target))
 		package.amount += anti_armor_damage

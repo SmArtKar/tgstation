@@ -228,7 +228,7 @@
 		return
 	if(isnull(jaunt_damage_timer))
 		return
-	lazy_demon.apply_damage(lazy_demon.maxHealth * 0.05, BRUTE)
+	lazy_demon.apply_damage(lazy_demon.maxHealth * 0.05, BRUTE, null, MAGIC_ATTACK)
 	jaunt_damage_timer = addtimer(CALLBACK(src, PROC_REF(damage_for_lazy_demon), lazy_demon), 20 SECONDS, TIMER_STOPPABLE)
 	to_chat(lazy_demon, span_warning("You feel your flesh dissolving into the sea of blood. You shouldn't stay in Blood Crawl for too long!"))
 
@@ -253,7 +253,7 @@
 	jaunter.revive(HEAL_ALL)
 
 	// No defib possible after laughter
-	victim.apply_damage(1000, BRUTE, wound_bonus = CANT_WOUND)
+	victim.apply_damage(1000, BRUTE, null, MAGIC_ATTACK, source = jaunter, wound_bonus = CANT_WOUND)
 	if(victim.stat != DEAD)
 		victim.investigate_log("has been killed by being consumed by a slaugter demon.", INVESTIGATE_DEATHS)
 	victim.death()

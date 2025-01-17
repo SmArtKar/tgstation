@@ -254,7 +254,7 @@
 		span_warning("You try to pet [src], but it sinks its fangs into your hand!"),
 		vision_distance = DEFAULT_MESSAGE_RANGE - 3,
 		)
-	user.apply_damage(force, BRUTE, user.get_active_hand(), wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = sharpness, hit_by = src)
+	user.apply_damage(force, BRUTE, def_zone = user.get_active_hand()?.body_zone, wound_bonus = wound_bonus, bare_wound_bonus = bare_wound_bonus, sharpness = get_sharpness(), hit_by = src)
 	if(!in_aquarium)
 		forceMove(user.drop_location())
 	user.painful_scream()

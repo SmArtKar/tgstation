@@ -66,7 +66,7 @@
 	playsound(target_mob, 'sound/items/weapons/slice.ogg', 100, TRUE)
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	Insert(user)
-	user.apply_damage(100, BRUTE, BODY_ZONE_CHEST)
+	user.apply_damage(100, BRUTE, def_zone = BODY_ZONE_CHEST, source = src)
 	user.emote("scream")
 	return TRUE
 

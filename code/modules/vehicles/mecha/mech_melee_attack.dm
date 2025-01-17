@@ -129,12 +129,17 @@
 	if (mecha_attacker.damtype == BRUTE || mecha_attacker.damtype == FIRE)
 		var/def_zone = get_random_valid_zone(user.zone_selected, even_weights = TRUE)
 		var/zone_readable = parse_zone_with_bodypart(def_zone)
-		apply_damage(damage, mecha_attacker.damtype, def_zone, run_armor_check(
+		apply_damage(
+			amount = damage,
+			damage_type = mecha_attacker.damtype,
+			damage_flag = MELEE,
+			attack_flags = MELEE_ATTACK|MECHA_ATTACK,
 			def_zone = def_zone,
-			attack_flag = MELEE,
-			absorb_text = span_notice("Your armor has protected your [zone_readable]!"),
-			soften_text = span_warning("Your armor has softened a hit to your [zone_readable]!")
-		)) // smartkar todo
+			attack_dir = get_dir(src, mecha_attacker),
+			hit_by = mecha_attacker,
+			source = mecha_attacker,
+			check_armor = TRUE
+		)
 
 	visible_message(span_danger("[mecha_attacker.name] [mecha_attacker.attack_verbs[1]] [src]!"), \
 		span_userdanger("[mecha_attacker.name] [mecha_attacker.attack_verbs[2]] you!"), span_hear("You hear a sickening sound of flesh [mecha_attacker.attack_verbs[3]] flesh!"), COMBAT_MESSAGE_RANGE, list(mecha_attacker))

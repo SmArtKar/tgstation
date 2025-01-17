@@ -64,10 +64,14 @@
 
 /mob/living/carbon/check_projectile_dismemberment(obj/projectile/proj, def_zone)
 	var/obj/item/bodypart/affecting = get_bodypart(def_zone)
-	if(affecting && affecting.can_dismember() && !(affecting.bodypart_flags & BODYPART_UNREMOVABLE) && affecting.get_damage() >= (affecting.max_damage - proj.dismemberment))
-		affecting.dismember(proj.damtype)
-		if(proj.catastropic_dismemberment)
-			apply_damage(proj.damage, proj.damtype, BODY_ZONE_CHEST, wound_bonus = proj.wound_bonus) //stops a projectile blowing off a limb effectively doing no damage. Mostly relevant for sniper rifles.
+	if (!affecting || !affecting.can_dismember() || (affecting.bodypart_flags & BODYPART_UNREMOVABLE))
+		return
+	if (affecting.get_damage() < (affecting.max_damage - proj.dismemberment))
+		return
+	affecting.dismember(proj.damtype)
+	//stops a projectile blowing off a limb effectively doing no damage. Mostly relevant for sniper rifles.
+	if (proj.catastropic_dismemberment)
+		apply_damage_package(proj.generate_damage(src, BODY_ZONE_CHEST))
 
 /mob/living/carbon/try_catch_item(obj/item/item, skip_throw_mode_check = FALSE, try_offhand = FALSE)
 	. = ..()
@@ -235,12 +239,11 @@
 
 	return dam_zone
 
-/mob/living/carbon/blob_act(obj/structure/blob/B)
+/mob/living/carbon/blob_act(obj/structure/blob/blob)
 	if (stat == DEAD)
 		return
-	else
-		show_message(span_userdanger("The blob attacks!"))
-		adjust_brute_loss(10)
+	show_message(span_userdanger("[blob] attacks you!"))
+	apply_damage(15, BRUTE, MELEE, BLOB_ATTACK, get_random_valid_zone(), attack_dir = get_dir(src, blob), hit_by = blob, source = blob, check_armor = TRUE)
 
 ///Adds to the parent by also adding functionality to propagate shocks through pulling and doing some fluff effects.
 /mob/living/carbon/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE, jitter_time = 20 SECONDS, stutter_time = 4 SECONDS, stun_duration = 4 SECONDS)

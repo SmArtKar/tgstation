@@ -53,7 +53,7 @@
 	to_chat(attacker, span_danger("You [atk_verb] [defender]!"))
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)
 	log_combat(attacker, defender, "strong punched (Sleeping Carp)")
-	defender.apply_damage_package(attacker.get_unarmed_package(defender, 20, attacker.get_attack_type(), defender.get_random_valid_zone(attacker.zone_selected)))
+	defender.apply_damage_package(attacker.get_unarmed_package(defender, 20, null, defender.get_random_valid_zone(attacker.zone_selected)))
 	return TRUE
 
 ///Crashing Wave Kick: Harm Disarm combo, throws people seven tiles backwards
@@ -157,7 +157,7 @@
 		attacker,
 	)
 	to_chat(attacker, span_danger("You [atk_verb] [defender]!"))
-	var/datum/damage_package/package = attacker.get_unarmed_package(defender, final_damage, attacker.get_attack_type(), defender.get_random_valid_zone(attacker.zone_selected))
+	var/datum/damage_package/package = attacker.get_unarmed_package(defender, final_damage, null, defender.get_random_valid_zone(attacker.zone_selected))
 	package.wound_bonus = CANT_WOUND
 	defender.apply_damage_package(package)
 	playsound(defender, 'sound/items/weapons/punch1.ogg', 25, TRUE, -1)

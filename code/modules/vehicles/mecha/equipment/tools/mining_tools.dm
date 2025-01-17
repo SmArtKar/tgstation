@@ -202,8 +202,7 @@
 	//drill makes a hole
 	var/def_zone = target.get_random_valid_zone(BODY_ZONE_CHEST)
 	var/obj/item/bodypart/target_part = target.get_bodypart(def_zone)
-	var/blocked = target.run_armor_check(def_zone, MELEE) // smartkar todo
-	target.apply_damage(10, BRUTE, def_zone, blocked)
+	target.apply_damage(10, BRUTE, MELEE, MELEE_ATTACK|MECHA_ATTACK, def_zone = def_zone, hit_by = src, source = chassis, check_armor = TRUE)
 
 	//blood splatters
 	target.create_splatter(get_dir(chassis, target))

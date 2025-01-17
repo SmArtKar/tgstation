@@ -29,6 +29,7 @@
 					organ_owner.manual_emote(pick("oofs silently.", "looks like [organ_owner.p_their()] bones hurt.", "grimaces, as though [organ_owner.p_their()] bones hurt."))
 				if(3)
 					to_chat(organ_owner, span_warning("Your bones hurt!"))
+
 		if(chem.overdosed)
 			if(SPT_PROB(2, seconds_per_tick)) //big oof
 				var/selected_part = pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG) //God help you if the same limb gets picked twice quickly...
@@ -37,12 +38,14 @@
 					playsound(organ_owner, SFX_DESECRATION, 50, vary = TRUE) //You just want to socialize
 					organ_owner.visible_message(span_warning("[organ_owner] rattles loudly and flails around!!"), span_danger("Your bones hurt so much that your missing muscles spasm!!"))
 					INVOKE_ASYNC(organ_owner, TYPE_PROC_REF(/atom/movable, say), "OOF!!", forced = chem.type)
-					organ_owner.apply_damage(200, BRUTE, bodypart)
+					organ_owner.apply_damage(200, BRUTE, null, REAGENT_ATTACK, selected_part)
 				else
 					to_chat(organ_owner, span_warning("Your missing [parse_zone(selected_part)] aches from wherever you left it."))
 					INVOKE_ASYNC(organ_owner, TYPE_PROC_REF(/mob, emote), "sigh")
+
 		organ_owner.reagents.remove_reagent(chem.type, chem.metabolization_rate * seconds_per_tick)
 		return COMSIG_MOB_STOP_REAGENT_CHECK // Stop metabolism
+
 	if(chem.type == /datum/reagent/consumable/milk)
 		if(chem.volume > 50)
 			organ_owner.reagents.remove_reagent(chem.type, (chem.volume - 50))

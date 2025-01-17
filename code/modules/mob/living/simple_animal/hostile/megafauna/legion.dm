@@ -122,10 +122,13 @@
 ///Deals some extra damage on throw impact.
 /mob/living/simple_animal/hostile/megafauna/legion/throw_impact(mob/living/hit_atom, datum/thrownthing/throwingdatum)
 	. = ..()
-	if(istype(hit_atom))
-		playsound(src, attack_sound, 100, TRUE)
-		hit_atom.apply_damage(22 * size / 2, wound_bonus = CANT_WOUND) //It gets pretty hard to dodge the skulls when there are a lot of them. Scales down with size
-		hit_atom.safe_throw_at(get_step(src, get_dir(src, hit_atom)), 2) //Some knockback. Prevent the legion from melee directly after the throw.
+	if(!isliving(hit_atom))
+		return
+	playsound(src, attack_sound, 100, TRUE)
+	// It gets pretty hard to dodge the skulls when there are a lot of them. Scales down with size
+	hit_atom.apply_damage(22 * size / 2, BRUTE, MELEE, LEAP_ATTACK|BASICMOB_ATTACK, BODY_ZONE_CHEST, attack_dir = get_dir(hit_atom, src), hit_by = src, source = src, wound_bonus = CANT_WOUND)
+	//Some knockback. Prevent the legion from melee directly after the throw
+	hit_atom.safe_throw_at(get_step(src, get_dir(src, hit_atom)), 2)
 
 /mob/living/simple_animal/hostile/megafauna/legion/GiveTarget(new_target)
 	. = ..()

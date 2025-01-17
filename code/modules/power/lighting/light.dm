@@ -579,12 +579,12 @@
 		to_chat(user, span_notice("You telekinetically remove the light [fitting]."))
 	else
 		var/obj/item/bodypart/affecting = user.get_active_hand()
-		user.apply_damage(5, BURN, affecting, wound_bonus = CANT_WOUND)
+		user.apply_damage(5, BURN, FIRE, def_zone = affecting.body_zone, source = src)
 		if(HAS_TRAIT(user, TRAIT_LIGHTBULB_REMOVER))
 			to_chat(user, span_notice("You feel your [affecting.plaintext_zone] burning, but the light begins to budge..."))
 			if(!do_after(user, 5 SECONDS, target = src))
 				return
-			user.apply_damage(10, BURN, user.get_active_hand(), wound_bonus = CANT_WOUND)
+			user.apply_damage(10, BURN, FIRE, def_zone = affecting.body_zone, source = src)
 			to_chat(user, span_notice("You manage to remove the light [fitting], shattering it in process."))
 			break_light_tube()
 		else

@@ -692,12 +692,28 @@
 	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
 
 	var/damage = rand(5, 15)
-	crushed.apply_damage(2 * damage, BRUTE, BODY_ZONE_HEAD, run_armor_check(BODY_ZONE_HEAD, MELEE)) // Smartkar todo all of these
-	crushed.apply_damage(2 * damage, BRUTE, BODY_ZONE_CHEST, run_armor_check(BODY_ZONE_CHEST, MELEE))
-	crushed.apply_damage(0.5 * damage, BRUTE, BODY_ZONE_L_LEG, run_armor_check(BODY_ZONE_L_LEG, MELEE))
-	crushed.apply_damage(0.5 * damage, BRUTE, BODY_ZONE_R_LEG, run_armor_check(BODY_ZONE_R_LEG, MELEE))
-	crushed.apply_damage(0.5 * damage, BRUTE, BODY_ZONE_L_ARM, run_armor_check(BODY_ZONE_L_ARM, MELEE))
-	crushed.apply_damage(0.5 * damage, BRUTE, BODY_ZONE_R_ARM, run_armor_check(BODY_ZONE_R_ARM, MELEE))
+	var/list/packages = list()
+	var/list/zone_list = list(
+		BODY_ZONE_HEAD = 2,
+		BODY_ZONE_CHEST = 2,
+		BODY_ZONE_L_LEG = 0.5,
+		BODY_ZONE_R_LEG = 0.5,
+		BODY_ZONE_L_ARM = 0.5,
+		BODY_ZONE_R_ARM = 0.5,
+	)
+
+	for (var/body_zone in zone_list)
+		packages += new /datum/damage_package(
+			amount = damage * zone_list[body_zone],
+			damage_type = BRUTE,
+			damage_flag = MELEE,
+			attack_flags = MELEE_ATTACK|BASICMOB_ATTACK,
+			def_zone = body_zone,
+			hit_by = src,
+			source = src,
+		)
+
+	crushed.apply_multiple_packages(packages, check_armor = TRUE)
 
 	add_mob_blood(crushed)
 

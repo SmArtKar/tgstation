@@ -40,7 +40,7 @@
 	if(!crash_all)
 		rammed.throw_at(get_edge_target_turf(bumped, dir), 4, 3)
 		visible_message(span_danger("[src] crashes into [rammed]!"))
-		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
+		playsound(src, 'sound/effects/bang.ogg', 50, TRUE, hit_by = src, source = src)
 
 /obj/vehicle/sealed/car/speedwagon/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()

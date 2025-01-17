@@ -192,7 +192,7 @@
 	visible_message(span_danger("[user] [hulk_verb]ed [src]!"), \
 					span_userdanger("[user] [hulk_verb]ed [src]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), null, user)
 	to_chat(user, span_danger("You [hulk_verb] [src]!"))
-	apply_damage(15, BRUTE, wound_bonus=10)
+	apply_damage(20, BRUTE, MELEE, MELEE_ATTACK, user.zone_selected, attack_dir = get_dir(src, user), hit_by = user, source = user, wound_bonus = 10, check_armor = TRUE)
 
 /mob/living/carbon/human/attack_hand(mob/user, list/modifiers)
 	. = ..()
@@ -272,9 +272,9 @@
 	var/damage = HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) ? monkey_mouth.unarmed_damage_high : rand(monkey_mouth.unarmed_damage_low, monkey_mouth.unarmed_damage_high)
 	if(!damage)
 		return FALSE
-	if(check_block(user, damage, "the [user.name]", attack_type = UNARMED_ATTACK))
+	if(check_block(user, damage, "the [user.name]", attack_type = UNARMED_ATTACK)) // Smartkar todo into package mod
 		return FALSE
-	apply_damage(damage, BRUTE, affecting, run_armor_check(affecting, MELEE)) // Smartkar todo
+	apply_damage_package(user.get_unarmed_package(src, damage, monkey_mouth.attack_type, affecting.body_zone), check_armor = TRUE)
 	return TRUE
 
 /mob/living/carbon/human/attack_alien(mob/living/carbon/alien/adult/user, list/modifiers)
@@ -317,16 +317,14 @@
 	if (w_uniform)
 		w_uniform.add_fingerprint(user)
 
-	var/damage = prob(90) ? rand(user.melee_damage_lower, user.melee_damage_upper) : 0
-	if(!damage)
+	if(prob(10))
 		playsound(loc, 'sound/items/weapons/slashmiss.ogg', 50, TRUE, -1)
 		visible_message(span_danger("[user] lunges at [src]!"), \
 						span_userdanger("[user] lunges at you!"), span_hear("You hear a swoosh!"), null, user)
 		to_chat(user, span_danger("You lunge at [src]!"))
 		return FALSE
 
-	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(user.zone_selected))
-	var/armor_block = run_armor_check(affecting, MELEE,"","",10) // Smartkar todo
+	 // smartkar todo, add a block check here
 	playsound(loc, 'sound/items/weapons/slice.ogg', 25, TRUE, -1)
 	visible_message(span_danger("[user] slashes at [src]!"), \
 					span_userdanger("[user] slashes at you!"), span_hear("You hear a sickening sound of a slice!"), null, user)
@@ -336,22 +334,23 @@
 	if(!dismembering_strike(user, user.zone_selected)) //Dismemberment successful
 		return TRUE
 
-	apply_damage(damage, BRUTE, affecting, armor_block)
+	apply_damage_package(user.get_unarmed_package(src, def_zone = get_random_valid_zone(user.zone_selected)), check_armor)
 
-/mob/living/carbon/human/attack_larva(mob/living/carbon/alien/larva/L, list/modifiers)
+/mob/living/carbon/human/attack_larva(mob/living/carbon/alien/larva/user, list/modifiers)
 	. = ..()
 	if(!.)
 		return //successful larva bite.
-	var/damage = rand(L.melee_damage_lower, L.melee_damage_upper)
+
+	var/damage = rand(user.melee_damage_lower, user.melee_damage_upper)
 	if(!damage)
 		return
-	if(check_block(L, damage, "the [L.name]", attack_type = UNARMED_ATTACK))
+
+	if(check_block(user, damage, "the [user.name]", attack_type = UNARMED_ATTACK)) // smartkar todo, package this
 		return FALSE
+
+	apply_damage_package(user.get_unarmed_package(src, damage, null, get_random_valid_zone(user.zone_selected)), check_armor = TRUE)
 	if(stat != DEAD)
 		L.amount_grown = min(L.amount_grown + damage, L.max_grown)
-		var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(L.zone_selected))
-		var/armor_block = run_armor_check(affecting, MELEE) // Smartkar todo
-		apply_damage(damage, BRUTE, affecting, armor_block)
 
 /mob/living/carbon/human/ex_act(severity, target, origin)
 	if(HAS_TRAIT(src, TRAIT_BOMBIMMUNE))
@@ -440,13 +439,12 @@
 	return TRUE
 
 
-/mob/living/carbon/human/blob_act(obj/structure/blob/B)
+/mob/living/carbon/human/blob_act(obj/structure/blob/blob)
 	if(stat == DEAD)
 		return
-	show_message(span_userdanger("The blob attacks you!"))
+	show_message(span_userdanger("[blob] attacks you!"))
 	var/dam_zone = pick(BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-	var/obj/item/bodypart/affecting = get_bodypart(get_random_valid_zone(dam_zone))
-	apply_damage(5, BRUTE, affecting, run_armor_check(affecting, MELEE)) // Smartkar todo
+	apply_damage(5, BRUTE, MELEE, BLOB_ATTACK, get_random_valid_zone(dam_zone), attack_dir = get_dir(src, blob), hit_by = blob, source = blob, check_armor = TRUE)
 
 
 ///Calculates the siemens coeff based on clothing and species, can also restart hearts.
@@ -488,7 +486,7 @@
 /mob/living/carbon/human/acid_act(acidpwr, acid_volume, bodyzone_hit) //todo: update this to utilize check_obscured_slots() //and make sure it's check_obscured_slots(TRUE) to stop aciding through visors etc
 	var/list/damaged = list()
 	var/list/inventory_items_to_kill = list()
-	var/acidity = acidpwr * min(acid_volume*0.005, 0.1)
+	var/acidity = acidpwr * min(acid_volume * 0.005, 0.1)
 	//HEAD//
 	if(!bodyzone_hit || bodyzone_hit == BODY_ZONE_HEAD) //only if we didn't specify a zone or if that zone is the head.
 		var/obj/item/clothing/head_clothes = null
@@ -607,8 +605,7 @@
 			set_hairstyle("Bald") //This calls update_body_parts()
 			ADD_TRAIT(src, TRAIT_DISFIGURED, TRAIT_GENERIC)
 
-		apply_damage(acidity * damage_mod, BRUTE, affecting)
-		apply_damage(acidity * damage_mod * 2, BURN, affecting)
+		apply_multiple_damages(brute = acidity * damage_mod, burn = acidity * damage_mod * 2, damage_flag = ACID, def_zone = affecting.body_zone)
 
 	//MELTING INVENTORY ITEMS//
 	//these items are all outside of armour visually, so melt regardless.

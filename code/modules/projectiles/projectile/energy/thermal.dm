@@ -51,6 +51,6 @@
 	var/danger_zone = hot_target.dna.species.bodytemp_heat_damage_limit + 300
 	if(how_hot_is_target > danger_zone)
 		hot_target.Knockdown(100)
-		hot_target.apply_damage(20, BURN)
+		hot_target.apply_damage(20, BURN, null, PROJECTILE_ATTACK)
 		hot_target.bodytemperature = hot_target.dna.species.bodytemp_normal //avoids repeat knockdowns, maybe could be used to cool down again?
 		playsound(hot_target, 'sound/items/weapons/sonic_jackhammer.ogg', 30, TRUE, -1)

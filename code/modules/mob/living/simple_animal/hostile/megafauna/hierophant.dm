@@ -709,41 +709,44 @@ Difficulty: Hard
 	if(bursting)
 		do_damage(get_turf(src))
 
-/obj/effect/temp_visual/hierophant/blast/damaging/proc/do_damage(turf/T)
+/obj/effect/temp_visual/hierophant/blast/damaging/proc/do_damage(turf/target_turf)
 	if(!damage)
 		return
-	for(var/mob/living/L in T.contents - hit_things) //find and damage mobs...
-		hit_things += L
-		if((friendly_fire_check && caster?.faction_check_atom(L)) || L.stat == DEAD)
+
+	for(var/mob/living/victim in target_turf.contents - hit_things) //find and damage mobs...
+		hit_things += victim
+		if((friendly_fire_check && caster?.faction_check_atom(victim)) || victim.stat == DEAD)
 			continue
-		if(L.client)
-			flash_color(L.client, "#660099", 1)
-		playsound(L,'sound/items/weapons/sear.ogg', 50, TRUE, -4)
-		to_chat(L, span_userdanger("You're struck by a [name]!"))
-		var/limb_to_hit = L.get_bodypart(L.get_random_valid_zone(even_weights = TRUE))
-		var/armor = L.run_armor_check(limb_to_hit, MELEE, "Your armor absorbs [src]!", "Your armor blocks part of [src]!", FALSE, 50, "Your armor was penetrated by [src]!")
-		L.apply_damage(damage, BURN, limb_to_hit, armor, wound_bonus=CANT_WOUND) // smartkar todo
-		if(ishostile(L))
-			var/mob/living/simple_animal/hostile/H = L //mobs find and damage you...
-			if(H.stat == CONSCIOUS && !H.target && H.AIStatus != AI_OFF && !H.client)
+		if(victim.client)
+			flash_color(victim.client, "#660099", 1)
+		playsound(victim,'sound/items/weapons/sear.ogg', 50, TRUE, -4)
+		to_chat(victim, span_userdanger("You're struck by \a [name]!"))
+		victim.apply_damage(damage, BURN, MELEE, MAGIC_ATTACK, victim.get_random_valid_zone(even_weights = TRUE), armor_penetration = 50, hit_by = src, source = caster, wound_bonus = CANT_WOUND, check_armor = TRUE)
+		if(ishostile(victim))
+			var/mob/living/simple_animal/hostile/hostile = victim // mobs find and damage you...
+			if(hostile.stat == CONSCIOUS && !hostile.target && hostile.AIStatus != AI_OFF && !hostile.client)
 				if(!QDELETED(caster))
-					if(get_dist(H, caster) <= H.aggro_vision_range)
-						H.FindTarget(list(caster))
+					if(get_dist(hostile, caster) <= hostile.aggro_vision_range)
+						hostile.FindTarget(list(caster))
 					else
-						H.Goto(get_turf(caster), H.move_to_delay, 3)
-		if(monster_damage_boost && (ismegafauna(L) || istype(L, /mob/living/simple_animal/hostile/asteroid)))
-			L.adjust_brute_loss(damage)
+						hostile.Goto(get_turf(caster), hostile.move_to_delay, 3)
+
+		if(monster_damage_boost && (ismegafauna(victim) || istype(victim, /mob/living/simple_animal/hostile/asteroid)))
+			victim.adjust_brute_loss(damage)
+
 		if(caster)
-			log_combat(caster, L, "struck with a [name]")
-	for(var/obj/vehicle/sealed/mecha/M in T.contents - hit_things) //also damage mechs.
-		hit_things += M
-		for(var/O in M.occupants)
-			var/mob/living/occupant = O
+			log_combat(caster, victim, "struck with \a [name]")
+
+	for(var/obj/vehicle/sealed/mecha/mech in target_turf.contents - hit_things) //also damage mechs.
+		hit_things += mech
+
+		for(var/mob/living/occupant as anything in mech.occupants)
 			if(friendly_fire_check && caster?.faction_check_atom(occupant))
 				continue
-			to_chat(occupant, span_userdanger("Your [M.name] is struck by a [name]!"))
-			playsound(M,'sound/items/weapons/sear.ogg', 50, TRUE, -4)
-			M.take_damage(damage, BURN, null, hit_by = src, source = caster, sound_effect = FALSE)
+			to_chat(occupant, span_userdanger("Your [mech.name] is struck by a [name]!"))
+
+		playsound(mech,'sound/items/weapons/sear.ogg', 50, TRUE, -4)
+		mech.take_damage(damage, BURN, null, MAGIC_ATTACK, hit_by = src, source = caster, sound_effect = FALSE)
 
 /obj/effect/temp_visual/hierophant/blast/visual
 	icon_state = "hierophant_blast"

@@ -140,7 +140,7 @@
 	if(!do_after(escapee, 20 SECONDS, get_turf(loc)))
 		return
 	for(var/mob/living/jailbird in contents)
-		jailbird.apply_damage(rand(5,15), damagetype = BRUTE)
+		jailbird.apply_damage(rand(5, 15), BRUTE, spread_damage = FALSE)
 	transport_cylinder.spew_forth()
 	transport_cylinder.take_damage(transport_cylinder.max_integrity, BRUTE, null, UNARMED_ATTACK, hit_by = escapee, source = escapee)
 

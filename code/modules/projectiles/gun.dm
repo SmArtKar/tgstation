@@ -143,7 +143,7 @@
 	if(!HAS_TRAIT(thrower, TRAIT_TOSS_GUN_HARD))
 		return FALSE
 	target.Knockdown(0.5 SECONDS)
-	target.apply_damage(damage = max(w_class * 5 - throwforce, 10), damagetype = BRUTE, def_zone = thrower.zone_selected, wound_bonus = CANT_WOUND, hit_by = src)
+	target.apply_damage(max(w_class * 5 - throwforce, 10), BRUTE, MELEE, THROWN_PROJECTILE_ATTACK, def_zone = thrower.zone_selected, hit_by = src, wound_bonus = CANT_WOUND)
 	return TRUE
 
 /obj/item/gun/examine(mob/user)

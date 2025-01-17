@@ -1356,7 +1356,7 @@
 	set_angle(new_angle_s)
 
 /// Quickly generates a damage package for ease of use
-/obj/projectile/proc/generate_damage(atom/target, def_zone_override = null)
+/obj/projectile/proc/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
 	RETURN_TYPE(/datum/damage_package)
 	var/datum/damage_package/package = new(
 		amount = damage,
@@ -1374,7 +1374,7 @@
 		wound_bonus = wound_bonus,
 		bare_wound_bonus = bare_wound_bonus,
 		sharpness = sharpness,
-		amount_multiplier = 1,
+		amount_multiplier = amount_multiplier,
 	)
 
 	if (isliving(target))

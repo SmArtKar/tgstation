@@ -909,7 +909,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		log_combat(user, target, "attempted to punch")
 		return FALSE
 
-	var/armor_block = target.package_armor_check(user.get_unarmed_package(target, def_zone = affecting.body_zone))
+	var/armor_block = target.package_armor_check(user.get_unarmed_package(target, null, def_zone = affecting.body_zone))
 
 	// In a brawl, drunkenness is a boon if you're a bit drunk but not too much. Else you're easier to hit.
 	// But, generally, getting hit while drunk is probably a good way to start throwing up
@@ -939,17 +939,16 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(user.limb_destroyer)
 		target.dismembering_strike(user, affecting.body_zone)
 
-	var/attack_dir = get_dir(user, target)
+	if(damage >= 9)
+		target.force_say()
+
 	var/attack_type = attacking_bodypart.attack_type
 	if(atk_effect == ATTACK_EFFECT_KICK || grappled) //kicks and punches when grappling bypass armor slightly.
-		if(damage >= 9)
-			target.force_say()
+		// We have to generate a second package because we modified the first one already
+		target.apply_damage_package(user.get_unarmed_package(target, damage, attack_type, def_zone = affecting.body_zone), blocked = armor_block - limb_accuracy)
 		log_combat(user, target, grappled ? "grapple punched" : "kicked")
-		target.apply_damage(damage, attack_type, affecting, armor_block - limb_accuracy, attack_dir = attack_dir) // Smartkar todo
 	else // Normal attacks do not gain the benefit of armor penetration.
-		target.apply_damage(damage, attack_type, affecting, armor_block, attack_dir = attack_dir) // Smartkar todo
-		if(damage >= 9)
-			target.force_say()
+		target.apply_damage_package(user.get_unarmed_package(target, damage, attack_type, def_zone = affecting.body_zone), blocked = armor_block)
 		log_combat(user, target, "punched")
 
 	// If our target is staggered and has sustained enough damage, we can apply a randomly determined status effect to inflict when we punch them.
@@ -959,7 +958,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		return
 
 	// If our target is staggered, the target's armor, minus our limb effectiveness sets the minimum necessary amount of damage sustained to cause an effect. Minimum 40, max 200 for sanity reasons
-	if(staggered && (target.get_burn_loss()*0.5 + target.get_brute_loss()*0.5) >= min(armor_block - limb_accuracy, 40, 200))
+	if(staggered && (target.get_burn_loss() * 0.5 + target.get_brute_loss() * 0.5) >= min(armor_block - limb_accuracy, 40, 200))
 		stagger_combo(user, target, atk_verb, limb_accuracy, armor_block)
 
 /// Handles the stagger combo effect of our punch. Follows the same logic as the above proc, target is our owner, user is our attacker.
@@ -1004,8 +1003,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 		if (46 to INFINITY)
 			target.apply_effect(4 SECONDS, EFFECT_KNOCKDOWN, armor_block)
-			var/obj/item/bodypart/affecting = target.get_bodypart(target.get_random_valid_zone(user.zone_selected))
-			target.apply_damage(5, BRUTE, affecting, armor_block, wound_bonus = limb_accuracy * 2) //Mostly for the crunchy wounding effect than actually doing damage
+			var/datum/damage_package/attack_package = user.get_unarmed_package(target, 5, null, target.get_random_valid_zone(user.zone_selected))
+			attack_package.wound_bonus += limb_accuracy * 2
+			target.apply_damage_package(attack_package, blocked = armor_block)
 			target.visible_message(span_warning("[user]'s [atk_verb] hits [target] so hard, you hit them off their feet with a loud crunch! Fucking hell!"), \
 				span_warning("You are hit viciously by [user]'s [atk_verb], and suddenly feel an overwhelming pain as you topple head over heels!"), span_hear("You hear a sickening crack and a loud thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_warning("Your [atk_verb] lands, and [target] is sent crashing to the floor with the immense force! Good god!"))
@@ -1250,7 +1250,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			INVOKE_ASYNC(humi, TYPE_PROC_REF(/mob, emote), "scream")
 
 		// Apply the damage to all body parts
-		humi.apply_damage(burn_damage, BURN, spread_damage = TRUE, wound_clothing = FALSE)
+		humi.apply_damage(burn_damage, BURN, wound_clothing = FALSE)
 
 	// For cold damage, we cap at the threshold if you're dead
 	if(humi.get_burn_loss() >= abs(HEALTH_THRESHOLD_DEAD) && humi.stat == DEAD)
@@ -1319,7 +1319,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(humi.bodytemperature > BODYTEMP_HEAT_WOUND_LIMIT + 2800)
 		burn_damage = HEAT_DAMAGE_LEVEL_3
 
-	humi.apply_damage(burn_damage * seconds_per_tick, BURN, bodypart, wound_clothing = FALSE)
+	humi.apply_damage(burn_damage * seconds_per_tick, BURN, def_zone = bodypart, wound_clothing = FALSE)
 
 /// Handle the air pressure of the environment
 /datum/species/proc/handle_environment_pressure(mob/living/carbon/human/H, datum/gas_mixture/environment, seconds_per_tick, times_fired)

@@ -142,7 +142,7 @@
 	else
 		to_chat(victim, span_boldwarning("[src] injects you!"))
 
-	victim.apply_damage(5, BRUTE, BODY_ZONE_HEAD)
+	victim.apply_damage(5, BRUTE, def_zone = BODY_ZONE_HEAD, source = src)
 	reagents?.trans_to(victim, round(reagents.total_volume*(2/3)), transferred_by = user, methods = INJECT)
 
 	return discover_after

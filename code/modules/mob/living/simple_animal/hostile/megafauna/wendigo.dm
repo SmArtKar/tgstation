@@ -163,7 +163,7 @@ Difficulty: Hard
 	if(!origin)
 		return
 	var/list/all_turfs = RANGE_TURFS(range, origin)
-	for(var/sound_range = 0 to range)
+	for(var/sound_range in 0 to range)
 		playsound(origin,'sound/effects/bamf.ogg', 600, TRUE, 10)
 		for(var/turf/stomp_turf in all_turfs)
 			if(get_dist(origin, stomp_turf) > sound_range)
@@ -175,7 +175,7 @@ Difficulty: Hard
 				to_chat(hit_mob, span_userdanger("[owner]'s ground slam shockwave sends you flying!"))
 				var/turf/thrownat = get_ranged_target_turf_direct(owner, hit_mob, throw_range, rand(-10, 10))
 				hit_mob.throw_at(thrownat, 8, 2, null, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
-				hit_mob.apply_damage(20, BRUTE, wound_bonus=CANT_WOUND)
+				hit_mob.apply_damage(20, BRUTE, MELEE, def_zone = BODY_ZONE_CHEST, source = owner, wound_bonus = CANT_WOUND)
 				shake_camera(hit_mob, 2, 1)
 			all_turfs -= stomp_turf
 		SLEEP_CHECK_DEATH(delay, owner)

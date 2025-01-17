@@ -21,6 +21,10 @@
 	if(casing)
 		gun = casing.gun
 
+/obj/projectile/beam/wormhole/generate_damage(atom/target, ricochet)
+	var/datum/damage_package/package = ..()
+	package.attack_flags |= BLUESPACE_ATTACK
+	return package
 
 /obj/projectile/beam/wormhole/on_hit(atom/target, blocked = 0, pierce_hit)
 	var/obj/item/gun/energy/wormhole_projector/projector = gun.resolve()

@@ -282,7 +282,7 @@
 	if(!owner || . & EMP_PROTECT_SELF)
 		return
 	to_chat(owner, span_warning("You feel sheering pain as your body is crushed like a soda can!"))
-	owner.apply_damage(20/severity, BRUTE, def_zone = BODY_ZONE_CHEST)
+	owner.apply_damage(20 / severity, BRUTE, null, EMP_ATTACK, def_zone = BODY_ZONE_CHEST, source = src)
 
 /obj/item/organ/cyberimp/chest/spine/on_mob_insert(mob/living/carbon/organ_owner, special, movement_flags)
 	. = ..()

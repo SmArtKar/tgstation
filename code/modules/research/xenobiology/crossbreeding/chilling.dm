@@ -251,20 +251,19 @@ Chilling extracts:
 	colour = SLIME_TYPE_GREEN
 	effect_desc = "Creates a bone gun in the hand it is used in, which uses blood as ammo."
 
-/obj/item/slimecross/chilling/green/do_effect(mob/user)
-	var/mob/living/L = user
+/obj/item/slimecross/chilling/green/do_effect(mob/living/user)
 	if(!istype(user))
 		return
-	var/obj/item/held = L.get_active_held_item() //This should be itself, but just in case...
-	L.dropItemToGround(held)
+	var/obj/item/held = user.get_active_held_item() //This should be itself, but just in case...
+	user.dropItemToGround(held)
 	var/obj/item/gun/magic/bloodchill/gun = new(user)
-	if(!L.put_in_hands(gun))
+	if(!user.put_in_hands(gun))
 		qdel(gun)
 		user.visible_message(span_warning("[src] flash-freezes [user]'s arm, cracking the flesh horribly!"))
 	else
 		user.visible_message(span_danger("[src] chills and snaps off the front of the bone on [user]'s arm, leaving behind a strange, gun-like structure!"))
 	user.emote("scream")
-	L.apply_damage(30, BURN, L.get_active_hand())
+	user.apply_damage(30, BURN, null, MAGIC_ATTACK, user.get_active_hand()?.body_zone)
 	..()
 
 /obj/item/slimecross/chilling/pink

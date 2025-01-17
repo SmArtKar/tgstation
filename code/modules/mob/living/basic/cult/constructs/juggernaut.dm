@@ -42,7 +42,7 @@
 	if(!prob(40 - round(bullet.damage / 3))) // reflect chance
 		return ..()
 
-	apply_damage(bullet.damage * 0.5, bullet.damage_type)
+	apply_damage_package(bullet.generate_damage(src, amount_multiplier = 0.5))
 	visible_message(
 		span_danger("The [bullet.name] is reflected by [src]'s armored shell!"),
 		span_userdanger("The [bullet.name] is reflected by your armored shell!"),

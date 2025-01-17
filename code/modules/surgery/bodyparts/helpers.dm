@@ -44,6 +44,7 @@
 	return FALSE
 
 /mob/living/carbon/get_active_hand()
+	RETURN_TYPE(/obj/item/bodypart)
 	var/which_hand = BODY_ZONE_PRECISE_L_HAND
 	if(IS_RIGHT_INDEX(active_hand_index))
 		which_hand = BODY_ZONE_PRECISE_R_HAND
@@ -51,9 +52,11 @@
 
 /// Gets the inactive hand of the mob. Returns FALSE on non-carbons, otherwise returns the /obj/item/bodypart.
 /mob/proc/get_inactive_hand()
+	RETURN_TYPE(/obj/item/bodypart)
 	return null
 
 /mob/living/carbon/get_inactive_hand()
+	RETURN_TYPE(/obj/item/bodypart)
 	var/which_hand = BODY_ZONE_PRECISE_R_HAND
 	if(IS_RIGHT_INDEX(active_hand_index))
 		which_hand = BODY_ZONE_PRECISE_L_HAND

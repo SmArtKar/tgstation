@@ -47,14 +47,17 @@
 	mecha_damage = 100
 	var/emp_radius = 2
 
+/obj/projectile/bullet/p50/disruptor/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
+	var/datum/damage_package/package = ..()
+	if (issilicon(target))
+		package.amount_multiplier *= 2
+	return package
+
 /obj/projectile/bullet/p50/disruptor/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
 	if((blocked != 100) && isliving(target))
 		var/mob/living/living_guy = target
-		living_guy.Sleeping(40 SECONDS) //Yes, its really 40 seconds of sleep, I hope you had your morning coffee.
-	if(issilicon(target)) //also especially good against borgs
-		var/mob/living/silicon/borg_boy = target
-		borg_boy.apply_damage(damage, BRUTE)
+		living_guy.Sleeping(40 SECONDS) // Yes, its really 40 seconds of sleep, I hope you had your morning coffee.
 	empulse(target, emp_radius, emp_radius)
 
 /obj/projectile/bullet/p50/incendiary

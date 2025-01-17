@@ -12,5 +12,10 @@
 	empulse(target, emp_radius, emp_radius)
 	return BULLET_ACT_HIT
 
+/obj/projectile/ion/generate_damage(atom/target, ricochet)
+	var/datum/damage_package/package = ..()
+	package.attack_flags |= EMP_ATTACK
+	return package
+
 /obj/projectile/ion/weak
 	emp_radius = 0

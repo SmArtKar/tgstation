@@ -7,26 +7,36 @@
 	embed_type = /datum/embedding/bullet_junk
 	/// What biotype does our junk projectile especially harm?
 	var/extra_damage_mob_biotypes = MOB_ROBOTIC
+	/// What bodytypes does our projectile harm
+	var/extra_damage_bodytypes = BODYTYPE_ROBOTIC
 	/// How much do we multiply our total base damage?
 	var/extra_damage_multiplier = 1.5
 	/// How much extra damage do we do on top of this total damage? Separate from the multiplier and unaffected by it.
 	var/extra_damage_added_damage = 0
-	/// What damage type is our extra damage?
-	var/extra_damage_type = BRUTE
 
-/obj/projectile/bullet/junk/on_hit(atom/target, blocked = 0, pierce_hit)
-	. = ..()
-
+/obj/projectile/bullet/junk/proc/valid_target(atom/target)
 	if(!isliving(target))
-		return
-	var/mob/living/living_target = target
+		return FALSE
 
-	var/is_correct_biotype = living_target.mob_biotypes & extra_damage_mob_biotypes
-	if(extra_damage_mob_biotypes && is_correct_biotype)
-		var/multiplied_damage = extra_damage_multiplier ? ((damage * extra_damage_multiplier) - damage) : 0
-		var/finalized_damage = multiplied_damage + extra_damage_added_damage
-		if(finalized_damage)
-			living_target.apply_damage(finalized_damage, damagetype = extra_damage_type, def_zone = BODY_ZONE_CHEST, wound_bonus = wound_bonus)
+	var/mob/living/living_target = target
+	if (iscarbon(living_target))
+		var/mob/living/carbon/carbon_target = living_target
+		var/obj/item/bodypart/part = carbon_target.get_bodypart(package.def_zone)
+		if (part && (part.bodytype & extra_damage_bodytypes))
+			return TRUE
+
+	if (living_target.mob_biotypes & extra_damage_mob_biotypes)
+		return TRUE
+
+	return FALSE
+
+/obj/projectile/bullet/junk/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
+	var/datum/damage_package/package = ..()
+	if(!valid_target(target))
+		return package
+	package.amount += extra_damage_added_damage / extra_damage_multiplier
+	package.amount_multiplier *= extra_damage_multiplier
+	return package
 
 /datum/embedding/bullet_junk
 	embed_chance = 15
@@ -55,14 +65,16 @@
 	damage = 15
 	embed_type = null
 	shrapnel_type = null
-	extra_damage_added_damage = 30
-	extra_damage_type = BURN
+	extra_damage_added_damage = 0
 
 /obj/projectile/bullet/junk/shock/on_hit(atom/target, blocked = 0, pierce_hit)
 	. = ..()
 	if(isliving(target))
 		var/mob/living/victim = target
 		victim.electrocute_act(damage, src, siemens_coeff = 1, flags = SHOCK_NOSTUN)
+
+	if (valid_target(target))
+		target.apply_damage(30, BURN, BULLET, PROJECTILE_ATTACK|SHOCK_ATTACK, BODY_ZONE_CHEST, hit_by = src, source = src, armor_penetration = armor_penetration, wound_bonus = wound_bonus, check_armor = TRUE)
 
 /obj/projectile/bullet/junk/hunter
 	name = "junk hunter bullet"
