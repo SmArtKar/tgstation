@@ -856,6 +856,7 @@
 	if(QDELETED(src))
 		// Bro just like, don't ok
 		return FALSE
+
 	if(excess_healing)
 		adjust_oxy_loss(-excess_healing, updating_health = FALSE)
 		adjust_tox_loss(-excess_healing, updating_health = FALSE, forced = TRUE) //slime friendly
@@ -943,16 +944,16 @@
 /mob/living/proc/fully_heal(heal_flags = HEAL_ALL)
 	SHOULD_CALL_PARENT(TRUE)
 
-	if(heal_flags & HEAL_TOX)
-		set_tox_loss(0, updating_health = FALSE, forced = TRUE)
-	if(heal_flags & HEAL_OXY)
-		set_oxy_loss(0, updating_health = FALSE, forced = TRUE)
 	if(heal_flags & HEAL_BRUTE)
-		set_brute_loss(0, updating_health = FALSE, forced = TRUE)
+		apply_healing(get_brute_loss(), forced = TRUE, should_update = FALSE)
 	if(heal_flags & HEAL_BURN)
-		set_burn_loss(0, updating_health = FALSE, forced = TRUE)
+		apply_healing(get_burn_loss(), forced = TRUE, should_update = FALSE)
+	if(heal_flags & HEAL_TOX)
+		apply_healing(get_tox_loss(), forced = TRUE, should_update = FALSE)
+	if(heal_flags & HEAL_OXY)
+		apply_healing(get_oxy_loss(), forced = TRUE, should_update = FALSE)
 	if(heal_flags & HEAL_STAM)
-		set_stamina_loss(0, updating_stamina = FALSE, forced = TRUE)
+		apply_healing(get_stamina_loss(), forced = TRUE, should_update = FALSE)
 
 	// I don't really care to keep this under a flag
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
@@ -986,16 +987,19 @@
 	var/brute_loss = get_brute_loss()
 	if(brute_loss)
 		var/brute_healing = min(healing_amount * 0.5, brute_loss) // 50% of the healing goes to brute
-		set_brute_loss(round(brute_loss - brute_healing, DAMAGE_PRECISION), updating_health=FALSE, forced=TRUE)
+		brute_healing = apply_healing(brute_healing, BRUTE, forced = TRUE, should_update = FALSE)
 		healing_amount = max(0, healing_amount - brute_healing)
 
 	var/burn_loss = get_burn_loss()
 	if(burn_loss && healing_amount)
-		var/fire_healing = min(healing_amount, burn_loss) // rest of the healing goes to fire
-		set_burn_loss(round(burn_loss - fire_healing, DAMAGE_PRECISION), updating_health=TRUE, forced=TRUE)
-		healing_amount = max(0, healing_amount - fire_healing)
+		var/burn_healing = min(healing_amount, burn_loss) // rest of the healing goes to fire
+		burn_healing = apply_healing(burn_healing, BURN, forced = TRUE, should_update = FALSE)
+		healing_amount = max(0, healing_amount - burn_healing)
 
-	revive(NONE, excess_healing=max(healing_amount, 0), force_grab_ghost=FALSE) // and any excess healing is passed along
+	if (!healing_amount)
+		updatehealth()
+
+	revive(NONE, excess_healing = max(healing_amount, 0), force_grab_ghost=  FALSE) // and any excess healing is passed along
 
 /// Checks if we are actually able to ressuscitate this mob.
 /// (We don't want to revive then to have them instantly die again)

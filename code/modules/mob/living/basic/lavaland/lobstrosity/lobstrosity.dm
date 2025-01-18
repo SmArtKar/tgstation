@@ -231,8 +231,7 @@
 		grown.tamed()
 	for(var/friend in ai_controller?.blackboard?[BB_FRIENDS_LIST])
 		grown.befriend(friend)
-	grown.set_brute_loss(get_brute_loss())
-	grown.set_burn_loss(get_burn_loss())
+	grown.apply_multiple_damages(brute = get_brute_loss(), burn = get_burn_loss(), forced = TRUE)
 	qdel(src) //We called change_mob_type without 'delete_old_mob = TRUE' since we had to pass down friends and damage
 
 /mob/living/basic/mining/lobstrosity/juvenile/lava

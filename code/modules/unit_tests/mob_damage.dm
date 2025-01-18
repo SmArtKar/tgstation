@@ -60,31 +60,6 @@
 	return TRUE
 
 /**
- * Test whether the set damage procs return the correct values and that the mob's health is the expected value afterwards.
- *
- * By default this calls set_damage(amount) followed by verify_damage(amount_after) and returns TRUE if both succeeded.
- * amount_after defaults to the mob's current stamina loss but can be overridden as needed.
- *
- * Arguments:
- * * testing_mob - the mob to apply the damage to
- * * amount - the amount of damage to apply to the mob
- * * expected - what the expected return value of the damage proc is
- * * amount_after - in case you want to specify what the damage amount on the mob should be afterwards
- * * included_types - Bitflag of damage types to apply
- * * biotypes - the biotypes of damage to apply
- * * bodytypes - the bodytypes of damage to apply
- * * forced - whether or not this is forced damage
- */
-/datum/unit_test/mob_damage/proc/test_set_damage(mob/living/testing_mob, amount, expected, amount_after, included_types, biotypes, bodytypes, forced)
-	if(isnull(amount_after))
-		amount_after = testing_mob.get_stamina_loss() - expected
-	if(!set_damage(testing_mob, amount, expected, included_types, biotypes, bodytypes, forced))
-		return FALSE
-	if(!verify_damage(testing_mob, amount_after, included_types))
-		return FALSE
-	return TRUE
-
-/**
  * Check that the mob has a specific amount of damage
  *
  * By default this checks that the mob has <amount> of every type of damage.
@@ -148,43 +123,6 @@
 			"adjust_stamina_loss() should have returned [expected], but returned [damage_returned] instead!")
 	return TRUE
 
-/**
- * Set a specific amount of damage for the mob using set_brute_loss(), set_tox_loss(), etc.
- *
- * By default this sets every type of damage to <amount> for the mob, and checks that the damage procs return the <expected> value
- * Arguments:
- * * testing_mob - the mob to apply the damage to
- * * amount - the amount of damage to apply to the mob
- * * expected - what the expected return value of the damage proc is
- * * included_types - Bitflag of damage types to apply
- * * biotypes - the biotypes of damage to apply
- * * bodytypes - the bodytypes of damage to apply
- * * forced - whether or not this is forced damage
- */
-/datum/unit_test/mob_damage/proc/set_damage(mob/living/testing_mob, amount, expected = -amount, included_types = ALL, biotypes = ALL, bodytypes = ALL, forced = FALSE)
-	var/damage_returned
-	if(included_types & TOXLOSS)
-		damage_returned = testing_mob.set_tox_loss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
-		TEST_ASSERT_EQUAL(damage_returned, expected, \
-			"set_tox_loss() should have returned [expected], but returned [damage_returned] instead!")
-	if(included_types & BRUTELOSS)
-		damage_returned = round(testing_mob.set_brute_loss(amount, updating_health = FALSE, forced = forced), 1)
-		TEST_ASSERT_EQUAL(damage_returned, expected, \
-			"set_brute_loss() should have returned [expected], but returned [damage_returned] instead!")
-	if(included_types & BURNLOSS)
-		damage_returned = round(testing_mob.set_burn_loss(amount, updating_health = FALSE, forced = forced), 1)
-		TEST_ASSERT_EQUAL(damage_returned, expected, \
-			"set_burn_loss() should have returned [expected], but returned [damage_returned] instead!")
-	if(included_types & OXYLOSS)
-		damage_returned = testing_mob.set_oxy_loss(amount, updating_health = FALSE, forced = forced, required_biotype = biotypes)
-		TEST_ASSERT_EQUAL(damage_returned, expected, \
-			"set_oxy_loss() should have returned [expected], but returned [damage_returned] instead!")
-	if(included_types & STAMINALOSS)
-		damage_returned = testing_mob.set_stamina_loss(amount, updating_stamina = FALSE, forced = forced, required_biotype = biotypes)
-		TEST_ASSERT_EQUAL(damage_returned, expected, \
-			"set_stamina_loss() should have returned [expected], but returned [damage_returned] instead!")
-	return TRUE
-
 ///	Sanity tests damage and healing using adjust_tox_loss, adjust_brute_loss, etc
 /datum/unit_test/mob_damage/proc/test_sanity_simple(mob/living/carbon/human/consistent/dummy)
 	// Apply 5 damage and then heal it
@@ -205,15 +143,6 @@
 
 	if(!test_apply_damage(dummy, amount = -666, expected = 12))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! overhealing was not applied correctly")
-
-	// Now test the damage setter procs
-
-	// set all types of damage to 5
-	if(!test_set_damage(dummy, amount = 5, expected = -5))
-		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! failed to set damage to 5")
-	// now try healing 5
-	if(!test_set_damage(dummy, amount = 0, expected = 5))
-		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! failed to set damage to 0")
 
 ///	Sanity tests damage and healing using the more complex procs like take_overall_damage(), heal_overall_damage(), etc
 /datum/unit_test/mob_damage/proc/test_sanity_complex(mob/living/carbon/human/consistent/dummy)
