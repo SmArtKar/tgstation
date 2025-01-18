@@ -503,8 +503,6 @@
 	if(!dam_zone) //Dismemberment successful
 		return FALSE
 
-	var/armor_block = run_armor_check(user.zone_selected, MELEE, armor_penetration = user.armor_penetration)
-
 	to_chat(user, span_danger("You [user.attack_verb_simple] [src]!"))
 	log_combat(user, src, "attacked")
 	return apply_damage_package(user.get_unarmed_package(src), check_armor = TRUE)
