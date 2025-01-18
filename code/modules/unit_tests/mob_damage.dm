@@ -353,9 +353,9 @@
 		"Mouse should have 0 burn damage, instead they have [gusgus.burnloss]!")
 
 	// heal 4 brute, 1 burn
-	damage_returned = gusgus.heal_bodypart_damage(4, 1, updating_health = FALSE)
+	damage_returned = gusgus.apply_multiple_heals(4, 1, spread_damage = FALSE, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 5, \
-		"heal_bodypart_damage() should have returned 5, but returned [damage_returned] instead!")
+		"apply_multiple_heals() should have returned 5, but returned [damage_returned] instead!")
 
 	TEST_ASSERT_EQUAL(gusgus.bruteloss, 2, \
 		"Mouse should have 2 brute damage, instead they have [gusgus.bruteloss]!")
@@ -363,9 +363,9 @@
 		"Mouse should have 0 burn damage, instead they have [gusgus.burnloss]!")
 
 	// heal 1 brute, 1 burn
-	damage_returned = gusgus.heal_overall_damage(1, 1, updating_health = FALSE)
+	damage_returned = gusgus.apply_multiple_heals(1, 1, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead!")
+		"apply_multiple_heals() should have returned 2, but returned [damage_returned] instead!")
 
 	TEST_ASSERT_EQUAL(gusgus.bruteloss, 0, \
 		"Mouse should have 0 brute damage, instead they have [gusgus.bruteloss]!")

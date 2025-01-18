@@ -419,7 +419,7 @@ GLOBAL_LIST_INIT(command_strings, list(
 	if(!tool.use_tool(src, user, 0 SECONDS, volume=40))
 		return
 
-	heal_overall_damage(10)
+	apply_healing(10)
 	user.visible_message(span_notice("[user] repairs [src]!"),span_notice("You repair [src]."))
 
 /mob/living/basic/bot/attackby(obj/item/attacking_item, mob/living/user, params)

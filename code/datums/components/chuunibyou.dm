@@ -96,11 +96,15 @@
 	SIGNAL_HANDLER
 
 	casting_spell = FALSE
+
+	if (!heal_amount)
+		return
+
 	if(!COOLDOWN_FINISHED(src, heal_cooldown))
 		return
 	COOLDOWN_START(src, heal_cooldown, CHUUNIBYOU_COOLDOWN_TIME)
 
-	source.heal_overall_damage(heal_amount)
+	source.heal_ordered_damage(heal_amount, list(BRUTE, BURN))
 	playsound(source, 'sound/effects/magic/staff_healing.ogg', 30)
 	to_chat(source, span_danger("You feel slightly healed by your chuuni powers."))
 

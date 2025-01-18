@@ -268,7 +268,7 @@ GLOBAL_LIST_EMPTY(virtual_pets_list)
 			return PROCESS_KILL
 		if(pet.stat == DEAD)
 			pet.revive(ADMIN_HEAL_ALL)
-		pet.heal_overall_damage(5)
+		pet.apply_healing(5)
 		return
 
 	if(hunger > 0)

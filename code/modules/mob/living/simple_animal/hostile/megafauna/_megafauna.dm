@@ -141,7 +141,7 @@
 		return FALSE
 	celebrate_kill(victim)
 	if(!is_station_level(z) || client) //NPC monsters won't heal while on station
-		heal_overall_damage(victim.maxHealth * 0.5)
+		apply_healing(victim.maxHealth * 0.5)
 	victim.investigate_log("has been devoured by [src].", INVESTIGATE_DEATHS)
 	if(iscarbon(victim))
 		qdel(victim.get_organ_slot(ORGAN_SLOT_LUNGS))

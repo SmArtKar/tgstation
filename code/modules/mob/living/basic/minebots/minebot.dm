@@ -264,7 +264,7 @@
 	do_sparks(5, FALSE, source = my_target)
 	if(!do_after(src, 6 SECONDS, my_target))
 		return
-	my_target.heal_overall_damage(brute = 50)
+	my_target.apply_healing(50)
 
 /mob/living/basic/mining_drone/update_overlays()
 	. = ..()

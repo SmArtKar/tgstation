@@ -77,4 +77,4 @@
 		return
 
 	recent_examiner_refs -= mob_ref
-	heal_overall_damage(5)
+	apply_healing(5)

@@ -172,11 +172,8 @@
 
 /datum/status_effect/voltaic_overdrive/tick(seconds_between_ticks)
 	. = ..()
-
 	if(owner.health <= owner.crit_threshold)
-		owner.heal_overall_damage(5, 5)
-		owner.adjust_oxy_loss(-5)
-		owner.adjust_tox_loss(-5)
+		owner.apply_multiple_heals(brute = 5, burn = 5, tox = 5, oxy = 5)
 
 /datum/status_effect/voltaic_overdrive/on_apply()
 	. = ..()

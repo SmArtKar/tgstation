@@ -189,7 +189,7 @@ GLOBAL_LIST_EMPTY(raptor_population)
 	melee_damage_lower += inherited_stats.attack_modifier
 	melee_damage_upper += melee_damage_lower + 5
 	maxHealth += inherited_stats.health_modifier
-	heal_overall_damage(maxHealth)
+	apply_healing(maxHealth)
 
 /mob/living/basic/raptor/proc/add_breeding_component()
 	var/static/list/partner_types = typecacheof(list(/mob/living/basic/raptor))

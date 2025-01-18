@@ -190,15 +190,17 @@
 	if (complete_text)
 		healer.visible_message(span_notice("[format_string(complete_text, healer, target)]"))
 
-	var/healed = target.heal_overall_damage(
+	var/healed = target.apply_multiple_heals(
 		brute = heal_brute,
 		burn = heal_burn,
+		tox = heal_tox,
+		oxy = heal_oxy,
 		stamina = heal_stamina,
-		required_bodytype = required_bodytype,
+		source = healer,
+		required_biotype = required_bodytype,
 		updating_health = FALSE,
 	)
-	healed += target.adjust_oxy_loss(-heal_oxy, updating_health = FALSE, required_biotype = valid_biotypes)
-	healed += target.adjust_tox_loss(-heal_tox, updating_health = FALSE, required_biotype = valid_biotypes)
+
 	if (healed <= 0)
 		return
 

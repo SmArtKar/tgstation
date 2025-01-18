@@ -40,10 +40,7 @@
 		light_amount = min(1, turf_loc.get_lumcount()) - 0.5
 		podperson.adjust_nutrition(5 * light_amount * seconds_per_tick)
 		if(light_amount > 0.2) //if there's enough light, heal
-			var/need_mob_update = FALSE
-			need_mob_update += podperson.heal_overall_damage(brute = 0.5 * seconds_per_tick, burn = 0.5 * seconds_per_tick, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
-			need_mob_update += podperson.adjust_tox_loss(-0.5 * seconds_per_tick, updating_health = FALSE)
-			need_mob_update += podperson.adjust_oxy_loss(-0.5 * seconds_per_tick, updating_health = FALSE)
+			var/need_mob_update = podperson.apply_multiple_heals(brute = 0.5 * seconds_per_tick, burn = 0.5 * seconds_per_tick, tox = 0.5 * seconds_per_tick, oxy = 0.5 * seconds_per_tick, updating_health = FALSE, required_biotype = BODYTYPE_ORGANIC)
 			if(need_mob_update)
 				podperson.updatehealth()
 

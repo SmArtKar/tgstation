@@ -55,7 +55,7 @@
 
 	if(!SSmapping.lazy_load_template(LAZY_TEMPLATE_KEY_VOIDWALKER_VOID) || !GLOB.voidwalker_void.len)
 		victim.forceMove(get_random_station_turf())
-		victim.heal_overall_damage(brute = 80, burn = 20)
+		victim.apply_multiple_heals(brute = 80, burn = 20)
 		CRASH("[victim] was instantly dumped after being voidwalker kidnapped due to a missing landmark!")
 	else
 		victim.heal_and_revive(90)

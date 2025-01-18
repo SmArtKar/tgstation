@@ -618,7 +618,7 @@
 
 /// Regenerate health whenever this status effect is applied or reapplied
 /datum/status_effect/shadow_regeneration/proc/heal_owner()
-	owner.heal_overall_damage(brute = 1, burn = 1, required_bodytype = BODYTYPE_ORGANIC)
+	owner.apply_multiple_heals(brute = 1, burn = 1, required_biotype = BODYTYPE_ORGANIC)
 
 /atom/movable/screen/alert/status_effect/shadow_regeneration
 	name = "Shadow Regeneration"

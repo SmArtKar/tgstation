@@ -89,8 +89,7 @@
 		return
 
 	maxHealth += 100
-	heal_overall_damage(maxHealth - health)
-
+	apply_healing(maxHealth - health)
 
 /mob/living/basic/orbie/update_overlays()
 	. = ..()

@@ -112,7 +112,7 @@
 	for(var/i in 1 to 2)
 		var/obj/effect/temp_visual/heal/heal_effect = new /obj/effect/temp_visual/heal(get_turf(parent)) // hello yes you are being healed
 		heal_effect.color = isnull(overmind) ? COLOR_BLACK : overmind.blobstrain.complementary_color
-	minion.heal_overall_damage(minion.maxHealth * BLOBMOB_HEALING_MULTIPLIER)
+	minion.apply_healing(minion.maxHealth * BLOBMOB_HEALING_MULTIPLIER)
 	return COMPONENT_CANCEL_BLOB_ACT
 
 /// If we feel the fearsome bite of open flame, we feel worse

@@ -58,12 +58,12 @@
 	else
 		var/particle_colour = atom_colours[FIXED_COLOUR_PRIORITY] || COLOR_BLACK
 		if (locate(/obj/structure/blob/special/core) in blobs_in_area)
-			heal_overall_damage(maxHealth * BLOBMOB_BLOBBERNAUT_HEALING_CORE * seconds_per_tick)
+			apply_healing(maxHealth * BLOBMOB_BLOBBERNAUT_HEALING_CORE * seconds_per_tick)
 			var/obj/effect/temp_visual/heal/heal_effect = new /obj/effect/temp_visual/heal(get_turf(src))
 			heal_effect.color = particle_colour
 
 		if (locate(/obj/structure/blob/special/node) in blobs_in_area)
-			heal_overall_damage(maxHealth * BLOBMOB_BLOBBERNAUT_HEALING_NODE * seconds_per_tick)
+			apply_healing(maxHealth * BLOBMOB_BLOBBERNAUT_HEALING_NODE * seconds_per_tick)
 			var/obj/effect/temp_visual/heal/heal_effect = new /obj/effect/temp_visual/heal(get_turf(src))
 			heal_effect.color = particle_colour
 

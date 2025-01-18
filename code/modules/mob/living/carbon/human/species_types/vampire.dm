@@ -44,10 +44,7 @@
 /datum/species/human/vampire/spec_life(mob/living/carbon/human/vampire, seconds_per_tick, times_fired)
 	. = ..()
 	if(istype(vampire.loc, /obj/structure/closet/crate/coffin))
-		var/need_mob_update = FALSE
-		need_mob_update += vampire.heal_overall_damage(brute = 2 * seconds_per_tick, burn = 2 * seconds_per_tick, updating_health = FALSE, required_bodytype = BODYTYPE_ORGANIC)
-		need_mob_update += vampire.adjust_tox_loss(-2 * seconds_per_tick, updating_health = FALSE,)
-		need_mob_update += vampire.adjust_oxy_loss(-2 * seconds_per_tick, updating_health = FALSE,)
+		var/need_mob_update = vampire.apply_multiple_heals(brute = 2 * seconds_per_tick, burn = 2 * seconds_per_tick, tox = 2 * seconds_per_tick, oxy = 2 * seconds_per_tick, updating_health = FALSE, required_biotype = BODYTYPE_ORGANIC)
 		if(need_mob_update)
 			vampire.updatehealth()
 		return

@@ -148,6 +148,6 @@
 	if (living_parent.health == living_parent.maxHealth)
 		stop_regenerating()
 		return
-	living_parent.heal_overall_damage(health_per_second * seconds_per_tick)
+	living_parent.apply_healing(health_per_second * seconds_per_tick)
 
 #undef REGENERATION_FILTER

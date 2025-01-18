@@ -435,4 +435,4 @@
 
 	if(target.stat != DEAD)
 		// And! Get some free healing for a portion of the bonus damage dealt.
-		source.heal_overall_damage(bonus_damage / 2, bonus_damage / 2)
+		source.apply_multiple_heals(bonus_damage / 2, bonus_damage / 2, attack_flags = MAGIC_ATTACK)
