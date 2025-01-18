@@ -170,16 +170,31 @@
 		affected_human.dna.features["mcolor"] = "#a8e61d"
 	affected_human.update_body(is_creating = TRUE)
 
-/datum/reagent/consumable/ethanol/kahlua
+/datum/reagent/consumable/ethanol/caffeinated
+	metabolized_traits = list(TRAIT_STIMULATED)
+	var/caffeine_potency = 1
+
+/datum/reagent/consumable/ethanol/caffeinated/proc/get_caffeine_effect_mult()
+	var/mob/living/owner = holder.my_atom
+	if (!istype(owner))
+		return 0
+	return HAS_TRAIT(owner, TRAIT_SLOW_CAFFEINE_METABOLISM) ? 0.35 : 1
+
+/datum/reagent/consumable/ethanol/caffeinated/on_mob_metabolize(mob/living/affected_mob)
+	. = ..()
+	if (HAS_TRAIT(owner, TRAIT_SLOW_CAFFEINE_METABOLISM))
+		metabolization_rate *= 0.35
+
+/datum/reagent/consumable/ethanol/caffeinated/kahlua
 	name = "Kahlua"
 	description = "A widely known, Mexican coffee-flavoured liqueur. In production since 1936!"
 	color = "#8e8368" // rgb: 142,131,104
 	boozepwr = 45
 	ph = 6
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	metabolized_traits = list(TRAIT_STIMULATED)
+	caffeine_potency = 0.5
 
-/datum/reagent/consumable/ethanol/kahlua/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
+/datum/reagent/consumable/ethanol/caffeinated/kahlua/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
 	. = ..()
 	drinker.set_dizzy_if_lower(10 SECONDS * REM * seconds_per_tick)
 	drinker.adjust_drowsiness(-6 SECONDS * REM * seconds_per_tick)
@@ -216,7 +231,7 @@
 	if(SPT_PROB(5, seconds_per_tick))
 		drinker.adjust_hallucinations(4 SECONDS * REM * seconds_per_tick)
 
-/datum/reagent/consumable/ethanol/thirteenloko
+/datum/reagent/consumable/ethanol/caffeinated/thirteenloko
 	name = "Thirteen Loko"
 	description = "A potent mixture of caffeine and alcohol."
 	color = "#102000" // rgb: 16, 32, 0
@@ -226,9 +241,9 @@
 	overdose_threshold = 60
 	taste_description = "jitters and death"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	metabolized_traits = list(TRAIT_STIMULATED)
+	caffeine_potency = 2
 
-/datum/reagent/consumable/ethanol/thirteenloko/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
+/datum/reagent/consumable/ethanol/caffeinated/thirteenloko/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
 	. = ..()
 	drinker.adjust_drowsiness(-14 SECONDS * REM * seconds_per_tick)
 	drinker.AdjustSleeping(-4 SECONDS * REM * seconds_per_tick)
@@ -236,13 +251,13 @@
 	if(!HAS_TRAIT(drinker, TRAIT_ALCOHOL_TOLERANCE))
 		drinker.set_jitter_if_lower(10 SECONDS)
 
-/datum/reagent/consumable/ethanol/thirteenloko/overdose_start(mob/living/drinker)
+/datum/reagent/consumable/ethanol/caffeinated/thirteenloko/overdose_start(mob/living/drinker)
 	. = ..()
 	to_chat(drinker, span_userdanger("Your entire body violently jitters as you start to feel queasy. You really shouldn't have drank all of that [name]!"))
 	drinker.set_jitter_if_lower(40 SECONDS)
 	drinker.Stun(1.5 SECONDS)
 
-/datum/reagent/consumable/ethanol/thirteenloko/overdose_process(mob/living/drinker, seconds_per_tick, times_fired)
+/datum/reagent/consumable/ethanol/caffeinated/thirteenloko/overdose_process(mob/living/drinker, seconds_per_tick, times_fired)
 	. = ..()
 	if(SPT_PROB(3.5, seconds_per_tick) && iscarbon(drinker))
 		var/obj/item/held_item = drinker.get_active_held_item()
@@ -878,7 +893,7 @@
 	. = ..()
 	playsound(drinker, 'sound/effects/explosion/explosion_distant.ogg', 100, FALSE)
 
-/datum/reagent/consumable/ethanol/irishcoffee
+/datum/reagent/consumable/ethanol/caffeinated/irishcoffee
 	name = "Irish Coffee"
 	description = "Coffee, and alcohol. More fun than a Mimosa to drink in the morning."
 	color = "#874010" // rgb: 135,64,16
@@ -886,7 +901,7 @@
 	quality = DRINK_NICE
 	taste_description = "giving up on the day"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	metabolized_traits = list(TRAIT_STIMULATED)
+	caffeine_potency = 0.5
 
 /datum/reagent/consumable/ethanol/margarita
 	name = "Margarita"
@@ -2895,7 +2910,7 @@
 	taste_description = "spicy nutty rum"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 
-/datum/reagent/consumable/ethanol/konococo_rumtini //todo: add espresso | coffee, coffee liqueur, coconut rum, sugar
+/datum/reagent/consumable/ethanol/caffeinated/konococo_rumtini //todo: add espresso | coffee, coffee liqueur, coconut rum, sugar
 	name = "Konococo Rumtini"
 	description = "Coconut rum, coffee liqueur, and espresso- an odd combination, to be sure, but a welcomed one."
 	boozepwr = 20
@@ -2903,7 +2918,6 @@
 	quality = DRINK_VERYGOOD
 	taste_description = "coconut coffee"
 	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	metabolized_traits = list(TRAIT_STIMULATED)
 
 /datum/reagent/consumable/ethanol/blue_hawaiian //pineapple juice, lemon juice, coconut rum, blue curacao
 	name = "Blue Hawaiian"
