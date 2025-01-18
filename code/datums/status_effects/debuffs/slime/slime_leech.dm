@@ -26,7 +26,7 @@
 /datum/status_effect/slime_leech/proc/on_buckle_end()
 	SIGNAL_HANDLER
 
-	var/bio_protection = 100 - owner.getarmor(null, BIO)
+	var/bio_protection = 100 - owner.get_armor_value(null, BIO)
 	if(prob(bio_protection))
 		owner.apply_status_effect(/datum/status_effect/slimed, our_slime.slime_type.rgb_code, our_slime.slime_type.colour == SLIME_TYPE_RAINBOW)
 

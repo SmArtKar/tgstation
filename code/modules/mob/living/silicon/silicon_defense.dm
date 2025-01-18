@@ -105,11 +105,7 @@
 	to_chat(src, span_danger("Warning: Electromagnetic pulse detected."))
 	if(. & EMP_PROTECT_SELF || QDELETED(src))
 		return
-	switch(severity)
-		if(1)
-			src.take_bodypart_damage(20)
-		if(2)
-			src.take_bodypart_damage(10)
+	apply_damage(20 / severity, BRUTE, ENERGY, EMP_ATTACK, spread_damage = FALSE)
 	to_chat(src, span_userdanger("*BZZZT*"))
 	for(var/mob/living/M in buckled_mobs)
 		if(prob(severity*50))

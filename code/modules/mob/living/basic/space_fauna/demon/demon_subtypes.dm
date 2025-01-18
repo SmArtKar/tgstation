@@ -80,7 +80,8 @@
 	face_atom(attack_target)
 
 	var/mob/living/victim = attack_target
-	victim.take_bodypart_damage(brute = 20, wound_bonus = wound_bonus) // don't worry, there's more punishment when they hit something
+	// Don't worry, there's more punishment when they hit something
+	victim.apply_damage(25, BRUTE, MELEE, UNARMED_ATTACK|BASICMOB_ATTACK, attack_dir = get_dir(attack_target, src), hit_by = src, source = src, spread_damage = FALSE, wound_bonus = wound_bonus, check_armor = TRUE)
 
 	visible_message(
 		span_danger("[src] slams into [victim] with monstrous strength!"),

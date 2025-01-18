@@ -313,7 +313,7 @@
 					// technically this only checks armor worn the moment that all the pellets resolve rather than as each one hits you,
 					// but this isn't important enough to warrant all the extra loops of mostly redundant armor checks
 					var/mob/living/carbon/hit_carbon = target
-					var/armor_factor = hit_carbon.getarmor(hit_part, initial(proj_type.armor_flag))
+					var/armor_factor = hit_carbon.get_armor_value(hit_part, initial(proj_type.armor_flag))
 					armor_factor = min(ARMOR_MAX_BLOCK, armor_factor) //cap damage reduction at 90%
 					if(armor_factor > 0)
 						if(initial(proj_type.weak_against_armor) && armor_factor >= 0)

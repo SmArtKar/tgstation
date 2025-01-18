@@ -58,18 +58,18 @@
 				step_towards(A,pull)
 
 /obj/item/singularityhammer/afterattack(atom/target, mob/user, click_parameters)
-	if(!HAS_TRAIT(src, TRAIT_WIELDED))
+	if(!HAS_TRAIT(src, TRAIT_WIELDED) || !charged)
 		return
-	if(!charged)
-		return
-
 	charged = FALSE
-	if(isliving(target))
-		var/mob/living/smacked = target
-		smacked.take_bodypart_damage(20, 0)
 	playsound(user, 'sound/items/weapons/marauder.ogg', 50, TRUE)
 	vortex(get_turf(target), user)
 	addtimer(VARSET_CALLBACK(src, charged, TRUE), 10 SECONDS)
+
+/obj/item/singularityhammer/generate_damage(atom/target, atom/source, def_zone, list/modifiers, thrown)
+	var/datum/damage_package/package = ..()
+	if(!HAS_TRAIT(src, TRAIT_WIELDED) || !charged)
+		package.amount += 20
+	return package
 
 /obj/item/mjollnir
 	name = "Mjollnir"

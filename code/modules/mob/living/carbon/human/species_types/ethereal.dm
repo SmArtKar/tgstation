@@ -129,7 +129,7 @@
 	EMPeffect = TRUE
 	refresh_light_color(source)
 	to_chat(source, span_warning("Something inside of you crackles in a bad way."))
-	source.take_bodypart_damage(burn = 3, wound_bonus = CANT_WOUND)
+	source.apply_damage(3, BURN, ENERGY, EMP_ATTACK, spread_damage = FALSE, wound_bonus = CANT_WOUND)
 	addtimer(CALLBACK(src, PROC_REF(stop_emp), source), disrupt_duration, TIMER_UNIQUE|TIMER_OVERRIDE)
 	return TRUE
 

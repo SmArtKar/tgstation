@@ -48,7 +48,7 @@
 	// Total damage to epicenter mob of 0.7*reac_volume, like a mid-tier strain
 	brute_loss = reac_volume*0.35
 
-	bomb_armor = exposed_mob.getarmor(null, BOMB)
+	bomb_armor = exposed_mob.get_armor_value(null, BOMB)
 	if(bomb_armor) // Same calculation and proc that ex_act uses on mobs
 		brute_loss = brute_loss*(2 - round(bomb_armor*0.01, 0.05))
 
@@ -65,7 +65,7 @@
 		brute_loss = reac_volume*0.25
 		burn_loss = brute_loss
 
-		bomb_armor = nearby_mob.getarmor(null, BOMB)
+		bomb_armor = nearby_mob.get_armor_value(null, BOMB)
 		if(bomb_armor) // Same calculation and prod that ex_act uses on mobs
 			brute_loss = brute_loss*(2 - round(bomb_armor*0.01, 0.05))
 			burn_loss = brute_loss

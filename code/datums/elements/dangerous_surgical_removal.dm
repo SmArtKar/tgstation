@@ -35,7 +35,7 @@
 		return
 	if(user?.Adjacent(source))
 		source.audible_message("[source] explodes on [user]'s face!")
-		user.take_bodypart_damage(15)
+		user.apply_damage(15, BRUTE, BOMB, spread_damage = FALSE)
 	else
 		source.audible_message("[source] explodes into tiny pieces!")
 

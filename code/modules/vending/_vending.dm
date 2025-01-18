@@ -886,10 +886,11 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 				if(prob(30))
 					carbon_target.apply_damage(max(0, adjusted_damage), damage_type, damage_flag, forced = TRUE, hit_by = src, source = src, attack_dir = REVERSE_DIR(crush_dir), check_armor = TRUE) // the 30% chance to spread the damage means you escape breaking any bones
 				else
+					// Otherwise, deal it to 2 random limbs (or the same one) which will likely shatter something
 					var/brute = (damage_type == BRUTE ? damage : 0) * 0.5
 					var/burn = (damage_type == BURN ? damage : 0) * 0.5
-					carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5) // otherwise, deal it to 2 random limbs (or the same one) which will likely shatter something
-					carbon_target.take_bodypart_damage(brute, burn, check_armor = TRUE, wound_bonus = 5)
+					carbon_target.apply_multiple_damages(brute, burn, damage_flag = MELEE, hit_by = src, source = src, spread_damage = FALSE, check_armor = TRUE, wound_bonus = 5)
+					carbon_target.apply_multiple_damages(brute, burn, damage_flag = MELEE, hit_by = src, source = src, spread_damage = FALSE, check_armor = TRUE, wound_bonus = 5)
 				carbon_target.AddElement(/datum/element/squish, 80 SECONDS)
 			else
 				living_target.apply_damage(adjusted_damage, damage_type, damage_flag, forced = TRUE, hit_by = src, source = src, attack_dir = REVERSE_DIR(crush_dir), check_armor = TRUE)

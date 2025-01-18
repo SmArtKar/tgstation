@@ -185,7 +185,7 @@
 
 
 	if(!sterile)
-		victim.take_bodypart_damage(strength,0) //done here so that humans in helmets take damage
+		victim.apply_damage(strength, BRUTE, def_zone = BODY_ZONE_HEAD, hit_by = src, source = src)
 	if(real && !sterile)
 		victim.Knockdown(5 SECONDS)
 	GoIdle() //so it doesn't jump the people that tear it off

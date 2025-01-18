@@ -116,9 +116,8 @@
 /mob/living/basic/drone/transferItemToLoc(obj/item/item, newloc, force, silent)
 	return !(item.type in drone_item_whitelist_flat) && ..()
 
-/mob/living/basic/drone/getarmor(def_zone, type)
+/mob/living/basic/drone/get_package_armor(datum/damage_package/package)
 	var/armorval = 0
-
 	if(head)
 		armorval = head.get_armor_rating(type)
 	return (armorval * get_armor_effectiveness()) //armor is reduced for tiny fragile drones

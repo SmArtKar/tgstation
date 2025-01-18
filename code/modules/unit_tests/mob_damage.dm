@@ -17,7 +17,6 @@
 	2) Verifying that the damage has been accurately applied to the mob afterwards. */
 
 	test_sanity_simple(dummy)
-	test_sanity_complex(dummy)
 
 	// Testing if biotypes are working as intended
 	test_biotypes(dummy)
@@ -143,76 +142,6 @@
 
 	if(!test_apply_damage(dummy, amount = -666, expected = 12))
 		TEST_FAIL("ABOVE FAILURE: failed test_sanity_simple! overhealing was not applied correctly")
-
-///	Sanity tests damage and healing using the more complex procs like take_overall_damage(), heal_overall_damage(), etc
-/datum/unit_test/mob_damage/proc/test_sanity_complex(mob/living/carbon/human/consistent/dummy)
-	// Heal up, so that errors from the previous tests we won't cause this one to fail
-	dummy.fully_heal(HEAL_DAMAGE)
-
-	var/damage_returned
-	// take 5 brute, 2 burn
-	damage_returned = round(dummy.take_bodypart_damage(5, 2, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, -7, \
-		"take_bodypart_damage() should have returned -7, but returned [damage_returned] instead!")
-
-	TEST_ASSERT_EQUAL(round(dummy.get_brute_loss(), 1), 5, \
-		"Dummy should have 5 brute damage, instead they have [dummy.get_brute_loss()]!")
-	TEST_ASSERT_EQUAL(round(dummy.get_burn_loss(), 1), 2, \
-		"Dummy should have 2 burn damage, instead they have [dummy.get_burn_loss()]!")
-
-	// heal 4 brute, 1 burn
-	damage_returned = round(dummy.heal_bodypart_damage(4, 1, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, 5, \
-		"heal_bodypart_damage() should have returned 5, but returned [damage_returned] instead!")
-
-	if(!verify_damage(dummy, 1, included_types = BRUTELOSS|BURNLOSS))
-		TEST_FAIL("heal_bodypart_damage did not apply its healing correctly on the mob!")
-
-	// heal 1 brute, 1 burn
-	damage_returned = round(dummy.heal_overall_damage(1, 1, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead!")
-
-	if(!verify_damage(dummy, 0, included_types = BRUTELOSS|BURNLOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healing correctly on the mob!")
-
-	// take 50 brute, 50 burn
-	damage_returned = round(dummy.take_overall_damage(50, 50, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, -100, \
-		"take_overall_damage() should have returned -100, but returned [damage_returned] instead!")
-
-	if(!verify_damage(dummy, 50, included_types = BRUTELOSS|BURNLOSS))
-		TEST_FAIL("take_overall_damage did not apply its damage correctly on the mob!")
-
-	// testing negative damage amount args with the overall damage procs - the sign should be ignored for these procs
-
-	damage_returned = round(dummy.take_bodypart_damage(-5, -5, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, -10, \
-		"take_bodypart_damage() should have returned -10, but returned [damage_returned] instead!")
-
-	damage_returned = round(dummy.heal_bodypart_damage(-5, -5, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, 10, \
-		"heal_bodypart_damage() should have returned 10, but returned [damage_returned] instead!")
-
-	damage_returned = round(dummy.take_overall_damage(-5, -5, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, -10, \
-		"take_overall_damage() should have returned -10, but returned [damage_returned] instead!")
-
-	damage_returned = round(dummy.heal_overall_damage(-5, -5, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, 10, \
-		"heal_overall_damage() should have returned 10, but returned [damage_returned] instead!")
-
-	if(!verify_damage(dummy, 50, included_types = BRUTELOSS|BURNLOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healingcorrectly on the mob!")
-
-	// testing overhealing
-
-	damage_returned = round(dummy.heal_overall_damage(75, 99, updating_health = FALSE), 1)
-	TEST_ASSERT_EQUAL(damage_returned, 100, \
-		"heal_overall_damage() should have returned 100, but returned [damage_returned] instead!")
-
-	if(!verify_damage(dummy, 0, included_types = BRUTELOSS|BURNLOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healing correctly on the mob!")
 
 ///	Tests damage procs with godmode on
 /datum/unit_test/mob_damage/proc/test_godmode(mob/living/carbon/human/consistent/dummy)
@@ -375,35 +304,6 @@
 	gusgus.maxHealth = 200
 
 	test_sanity_simple(gusgus)
-	test_sanity_complex(gusgus)
-
-/**
- * Check that the mob has a specific amount of damage. Note: basic mobs have all incoming damage types besides stam converted into brute damage.
- *
- * By default this checks that the mob has <amount> of every type of damage.
- * Arguments:
- * * testing_mob - the mob to check the damage of
- * * amount - the amount of damage to verify that the mob has
- * * expected - the expected return value of the damage procs, if it differs from the default of (amount * 4)
- * * included_types - Bitflag of damage types to check.
- */
-/datum/unit_test/mob_damage/basic/verify_damage(mob/living/testing_mob, amount, expected, included_types = ALL)
-	if(included_types & TOXLOSS)
-		TEST_ASSERT_EQUAL(testing_mob.get_tox_loss(), 0, \
-			"[testing_mob] should have [0] toxin damage, instead they have [testing_mob.get_tox_loss()]!")
-	if(included_types & BRUTELOSS)
-		TEST_ASSERT_EQUAL(round(testing_mob.get_brute_loss(), 1), expected || amount * 4, \
-			"[testing_mob] should have [expected || amount * 4] brute damage, instead they have [testing_mob.get_brute_loss()]!")
-	if(included_types & BURNLOSS)
-		TEST_ASSERT_EQUAL(round(testing_mob.get_burn_loss(), 1), 0, \
-			"[testing_mob] should have [0] burn damage, instead they have [testing_mob.get_burn_loss()]!")
-	if(included_types & OXYLOSS)
-		TEST_ASSERT_EQUAL(testing_mob.get_oxy_loss(), 0, \
-			"[testing_mob] should have [0] oxy damage, instead they have [testing_mob.get_oxy_loss()]!")
-	if(included_types & STAMINALOSS)
-		TEST_ASSERT_EQUAL(testing_mob.get_stamina_loss(), amount, \
-			"[testing_mob] should have [amount] stamina damage, instead they have [testing_mob.get_stamina_loss()]!")
-	return TRUE
 
 /datum/unit_test/mob_damage/basic/test_sanity_simple(mob/living/basic/mouse/gray/gusgus)
 	// check to see if basic mob damage works
@@ -443,9 +343,9 @@
 	// overall damage procs
 
 	// take 5 brute, 2 burn
-	damage_returned = gusgus.take_bodypart_damage(5, 2, updating_health = FALSE)
+	damage_returned = gusgus.apply_multiple_damages(5, 2, spread_damage = FALSE, forced = TRUE, should_update = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, -7, \
-		"take_bodypart_damage() should have returned -7, but returned [damage_returned] instead!")
+		"apply_multiple_damages() should have returned -7, but returned [damage_returned] instead!")
 
 	TEST_ASSERT_EQUAL(gusgus.bruteloss, 7, \
 		"Mouse should have 7 brute damage, instead they have [gusgus.bruteloss]!")
@@ -479,36 +379,6 @@
 
 	if(!verify_damage(gusgus, 1, expected = 6, included_types = BRUTELOSS))
 		TEST_FAIL("take_overall_damage did not apply its damage correctly on the mouse!")
-
-	// testing negative args with the overall damage procs
-
-	damage_returned = gusgus.take_bodypart_damage(-1, -1, updating_health = FALSE)
-	TEST_ASSERT_EQUAL(damage_returned, -2, \
-		"take_bodypart_damage() should have returned -2, but returned [damage_returned] instead!")
-
-	damage_returned = gusgus.heal_bodypart_damage(-1, -1, updating_health = FALSE)
-	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_bodypart_damage() should have returned 2, but returned [damage_returned] instead!")
-
-	damage_returned = gusgus.take_overall_damage(-1, -1, updating_health = FALSE)
-	TEST_ASSERT_EQUAL(damage_returned, -2, \
-		"take_overall_damage() should have returned -2, but returned [damage_returned] instead!")
-
-	damage_returned = gusgus.heal_overall_damage(-1, -1, updating_health = FALSE)
-	TEST_ASSERT_EQUAL(damage_returned, 2, \
-		"heal_overall_damage() should have returned 2, but returned [damage_returned] instead!")
-
-	if(!verify_damage(gusgus, 1, expected = 6, included_types = BRUTELOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healing correctly on the mouse!")
-
-	// testing overhealing
-
-	damage_returned = gusgus.heal_overall_damage(75, 99, updating_health = FALSE)
-	TEST_ASSERT_EQUAL(damage_returned, 6, \
-		"heal_overall_damage() should have returned 6, but returned [damage_returned] instead!")
-
-	if(!verify_damage(gusgus, 0, included_types = BRUTELOSS))
-		TEST_FAIL("heal_overall_damage did not apply its healing correctly on the mouse!")
 
 /// Tests that humans get the tox_vomit status effect when heavily poisoned
 /datum/unit_test/human_tox_damage

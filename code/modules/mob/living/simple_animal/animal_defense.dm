@@ -125,7 +125,7 @@
 
 /// Called when a devastating explosive acts on this mob
 /mob/living/simple_animal/proc/ex_act_devastate()
-	var/bomb_armor = getarmor(null, BOMB)
+	var/bomb_armor = get_armor_value(null, BOMB)
 	if(prob(bomb_armor))
 		adjust_brute_loss(500)
 	else
@@ -134,7 +134,7 @@
 
 /// Called when a heavy explosive acts on this mob
 /mob/living/simple_animal/proc/ex_act_heavy()
-	var/bomb_armor = getarmor(null, BOMB)
+	var/bomb_armor = get_armor_value(null, BOMB)
 	var/bloss = 60
 	if(prob(bomb_armor))
 		bloss = bloss / 1.5
@@ -142,7 +142,7 @@
 
 /// Called when a light explosive acts on this mob
 /mob/living/simple_animal/proc/ex_act_light()
-	var/bomb_armor = getarmor(null, BOMB)
+	var/bomb_armor = get_armor_value(null, BOMB)
 	var/bloss = 30
 	if(prob(bomb_armor))
 		bloss = bloss / 1.5

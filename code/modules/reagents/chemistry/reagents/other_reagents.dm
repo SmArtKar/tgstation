@@ -1105,7 +1105,7 @@
 
 /datum/reagent/chlorine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	if(affected_mob.take_bodypart_damage(0.5*REM*seconds_per_tick, 0))
+	if(affected_mob.apply_damage(0.5 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/fluorine

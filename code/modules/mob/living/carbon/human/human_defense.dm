@@ -62,7 +62,7 @@
 			silent = FALSE
 	return damage_dealt
 
-/mob/living/carbon/human/get_armor(datum/damage_package/package)
+/mob/living/carbon/human/get_package_armor(datum/damage_package/package)
 	var/physiology_protection = (100 - min(physiology.armor.get_rating(package.damage_type), 100)) * 0.01
 
 	var/list/parts_to_check = bodyparts
@@ -76,7 +76,7 @@
 		if (length(valid_parts))
 			parts_to_check = valid_parts
 	else
-		var/obj/item/bodypart/bodypart = get_bodypart(check_zone(zone))
+		var/obj/item/bodypart/bodypart = get_bodypart(check_zone(package.def_zone))
 		if (bodypart)
 			parts_to_check = list(bodypart)
 
@@ -361,7 +361,7 @@
 		return FALSE
 	var/brute_loss = 0
 	var/burn_loss = 0
-	var/bomb_armor = getarmor(null, BOMB)
+	var/bomb_armor = get_armor_value(null, BOMB)
 
 //200 max knockdown for EXPLODE_HEAVY
 //160 max knockdown for EXPLODE_LIGHT
@@ -429,7 +429,7 @@
 				probability = 50
 		for(var/X in bodyparts)
 			var/obj/item/bodypart/BP = X
-			if(prob(probability) && !prob(getarmor(BP, BOMB)) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
+			if(prob(probability) && !prob(get_armor_value(BP, BOMB)) && BP.body_zone != BODY_ZONE_HEAD && BP.body_zone != BODY_ZONE_CHEST)
 				BP.receive_damage(INFINITY, wound_bonus = CANT_WOUND) //Capped by proc
 				BP.dismember()
 				max_limb_loss--

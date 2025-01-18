@@ -146,9 +146,9 @@
 /obj/item/dualsaber/proc/impale(mob/living/user)
 	to_chat(user, span_warning("You twirl around a bit before losing your balance and impaling yourself on [src]."))
 	if(HAS_TRAIT(src, TRAIT_WIELDED))
-		user.take_bodypart_damage(20,25,check_armor = TRUE)
+		user.apply_multiple_damages(brute = 20, burn = 25, damage_flag = MELEE, attack_flags = MELEE_ATTACK, hit_by = src, source = src, spread_damage = FALSE, check_armor = TRUE)
 	else
-		user.adjust_stamina_loss(25)
+		user.apply_damage(25, STAMINA, MELEE, MELEE_ATTACK, hit_by = src, source = src)
 
 /obj/item/dualsaber/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK, damage_type = BRUTE)
 	if(!HAS_TRAIT(src, TRAIT_WIELDED))

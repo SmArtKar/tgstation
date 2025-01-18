@@ -123,6 +123,10 @@
 	PROTECTED_PROC(TRUE)
 	return 0
 
+/// A wrapper for get_package_armor for ease of use
+/mob/living/proc/get_armor_value(def_zone, damage_flag)
+	return get_package_armor(new /datum/damage_package(damage_flag = damage_flag, def_zone = def_zone))
+
 //this returns the mob's protection against eye damage (number between -1 and 2) from bright lights
 /mob/living/proc/get_eye_protection()
 	return 0
@@ -752,7 +756,7 @@
 	if(methods & (INGEST | INHALE))
 		taste_list(reagents)
 
-	var/touch_protection = (methods & VAPOR) ? getarmor(null, BIO) * 0.01 : 0
+	var/touch_protection = (methods & VAPOR) ? get_armor_value(null, BIO) * 0.01 : 0
 	SEND_SIGNAL(source, COMSIG_REAGENTS_EXPOSE_MOB, src, reagents, methods, volume_modifier, show_message, touch_protection)
 	for(var/datum/reagent/reagent as anything in reagents)
 		var/reac_volume = reagents[reagent]

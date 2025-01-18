@@ -113,7 +113,7 @@
 		if(HAS_TRAIT(user, TRAIT_CLUMSY) && prob(clumsy_chance))
 			playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
 			to_chat(user, span_warning("Your hand slips, causing the [name] to smash you!"))
-			user.take_bodypart_damage(rand(2, 5))
+			user.apply_damage(rand(2, 5), BRUTE, MELEE, UNARMED_ATTACK, attack_dir = get_dir(user, src), hit_by = src, source = src, spread_damage = FALSE, check_armor = TRUE)
 			end_workout()
 			return
 
@@ -121,7 +121,8 @@
 		if(user.get_drunk_amount() > SAFE_DRUNK_LEVEL && prob(min(user.get_drunk_amount(), 99)))
 			playsound(src,'sound/effects/bang.ogg', 50, TRUE)
 			to_chat(user, span_warning(drunk_message))
-			user.take_bodypart_damage(rand(5, 10), wound_bonus = 10)
+			// Armor won't protect you from your poor choices in life, why should it protect you from being drunk?
+			user.apply_damage(rand(5, 10), BRUTE, MELEE, UNARMED_ATTACK, attack_dir = get_dir(user, src), hit_by = src, source = src, spread_damage = FALSE, wound_bonus = 10)
 			end_workout()
 			return
 
