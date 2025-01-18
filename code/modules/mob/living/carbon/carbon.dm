@@ -58,12 +58,12 @@
 	if(hurt && hit_atom.density)
 		if(isturf(hit_atom))
 			Paralyze(2 SECONDS)
-			apply_damage(10 + 5 * extra_speed, BRUTE, MELEE, LEAP_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
+			apply_damage(10 + 5 * extra_speed, BRUTE, MELEE, THROWN_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
 		else if(isstructure(hit_atom) && extra_speed)
 			Paralyze(1 SECONDS)
-			apply_damage(5 + 5 * extra_speed, BRUTE, MELEE, LEAP_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
+			apply_damage(5 + 5 * extra_speed, BRUTE, MELEE, THROWN_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
 		else if(!iscarbon(hit_atom) && extra_speed)
-			apply_damage(5 * extra_speed, BRUTE, MELEE, LEAP_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
+			apply_damage(5 * extra_speed, BRUTE, MELEE, THROWN_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
 		visible_message(span_danger("[src] crashes into [hit_atom][extra_speed ? " really hard" : ""]!"),\
 			span_userdanger("You violently crash into [hit_atom][extra_speed ? " extra hard" : ""]!"))
 		log_combat(hit_atom, src, "crashes ")
@@ -80,7 +80,7 @@
 		if(. == SUCCESSFUL_BLOCK || victim.check_block(src, 0, "[name]", LEAP_ATTACK))
 			blocked = TRUE
 
-		apply_damage(10 + 5 * extra_speed, BRUTE, MELEE, LEAP_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
+		apply_damage(10 + 5 * extra_speed, BRUTE, MELEE, THROWN_ATTACK, hit_by = hit_atom, spread_damage = FALSE, wound_bonus = extra_speed * 5, check_armor = TRUE)
 		Paralyze(2 SECONDS)
 		oof_noise = TRUE
 

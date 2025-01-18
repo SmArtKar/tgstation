@@ -67,7 +67,7 @@
 
 /datum/reagent/medicine/adminordrazine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	affected_mob.apply_multiple_heals(brute = 5 * REM * seconds_per_tick, burn = 5 * REM * seconds_per_tick, tox = -5 * REM * seconds_per_tick, should_update = FALSE, required_bodytype = affected_bodytype, forced = TRUE, should_update = FALSE)
+	affected_mob.apply_multiple_heals(brute = 5 * REM * seconds_per_tick, burn = 5 * REM * seconds_per_tick, tox = -5 * REM * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype, forced = TRUE, updating_health = FALSE)
 	// Heal everything! That we want to. But really don't heal reagents. Otherwise we'll lose ... us.
 	affected_mob.fully_heal(full_heal_flags & ~HEAL_ALL_REAGENTS) // there is no need to return UPDATE_MOB_HEALTH because this proc calls updatehealth()
 
@@ -220,7 +220,7 @@
 		burn = 1 * REM * seconds_per_tick,
 		attack_flags = REAGENT_ATTACK,
 		spread_damage = FALSE,
-		should_update = FALSE,
+		updating_health = FALSE,
 		required_bodytype = affected_biotype
 	))
 		. = UPDATE_MOB_HEALTH

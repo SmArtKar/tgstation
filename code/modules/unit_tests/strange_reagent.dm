@@ -74,7 +74,7 @@
 
 /datum/unit_test/strange_reagent/proc/damage_target_to_percentage(mob/living/target, percent)
 	var/damage = target_max_health * percent * 0.5
-	target.apply_damage_package(new /datum/damage_package(damage - get_brute_loss(), BRUTE, forced = TRUE), should_update = FALSE) // No point running health update logic here
+	target.apply_damage_package(new /datum/damage_package(damage - get_brute_loss(), BRUTE, forced = TRUE), updating_health = FALSE) // No point running health update logic here
 	target.apply_damage_package(new /datum/damage_package(damage - get_burn_loss(), BRUTE, forced = TRUE)) // Since we do it here
 	update_amounts(target)
 	if(percent >= 1)

@@ -90,7 +90,7 @@
 		. += span_info("Someone appears to have attached a saddle to this one.")
 
 // Goliaths can summon tentacles more frequently as they take damage, scary.
-/mob/living/basic/mining/goliath/apply_damage_package(datum/damage_package/package, blocked = 0, check_armor = FALSE, wound_clothing = TRUE, should_update = TRUE, silent = FALSE)
+/mob/living/basic/mining/goliath/apply_damage_package(datum/damage_package/package, blocked = 0, check_armor = FALSE, wound_clothing = TRUE, updating_health = TRUE, silent = FALSE)
 	var/datum/damage_package/package = ..()
 	if (package?.amount > 0 && tentacles.cooldown_time > 1 SECONDS)
 		tentacles.cooldown_time -= 1 SECONDS

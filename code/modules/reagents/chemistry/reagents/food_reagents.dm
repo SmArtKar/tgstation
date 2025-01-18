@@ -77,7 +77,7 @@
 /datum/reagent/consumable/nutriment/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	if(SPT_PROB(30, seconds_per_tick))
-		if(affected_mob.apply_multiple_heals(brute = brute_heal * REM * seconds_per_tick, burn = burn_heal * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, required_bodytype = BODYTYPE_ORGANIC, should_update = FALSE))
+		if(affected_mob.apply_multiple_heals(brute = brute_heal * REM * seconds_per_tick, burn = burn_heal * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, required_bodytype = BODYTYPE_ORGANIC, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/nutriment/on_new(list/supplied_data)
@@ -555,7 +555,7 @@
 		var/obj/item/organ/liver/liver = affected_mob.get_organ_slot(ORGAN_SLOT_LIVER)
 		if(liver && HAS_TRAIT(liver, TRAIT_CULINARY_METABOLISM))
 			if(SPT_PROB(10, seconds_per_tick)) //stays in the system much longer than sprinkles/banana juice, so heals slower to partially compensate
-				if(affected_mob.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
+				if(affected_mob.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, updating_health = FALSE))
 					return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/tearjuice

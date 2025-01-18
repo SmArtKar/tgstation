@@ -25,7 +25,7 @@
  * * amount_multiplier - Total damage multiplier, done last after everything else. Does not apply if forced is true.
  * * check_armor - If armor checks should be taken into consideration. Does not apply if forced is TRUE.
  * * wound_clothing - If this should cause damage to clothing.
- * * should_update - If update_health should be called from within this proc.
+ * * updating_health - If update_health should be called from within this proc.
  * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
  *
  * Returns the amount of damage dealt, if any
@@ -52,7 +52,7 @@
 	amount_multiplier = 1,
 	check_armor = FALSE,
 	wound_clothing = TRUE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	// This is merely a wrapper, and thus should not be overriden
@@ -82,7 +82,7 @@
 		amount_multiplier = amount_multiplier,
 	)
 
-	return apply_damage_package(package, blocked, check_armor, wound_clothing, should_update, silent)?.amount
+	return apply_damage_package(package, blocked, check_armor, wound_clothing, updating_health, silent)?.amount
 
 
 /**
@@ -107,7 +107,7 @@
  * * required_biotype - Biotype that the mob/bodypart must posess to be able to take this healing.
  * * amount_multiplier - Total healing multiplier, done last after everything else. Does not apply if forced is true.
  * * check_armor - If armor checks should be taken into consideration. Does not apply if forced is TRUE.
- * * should_update - If update_health should be called from within this proc.
+ * * updating_health - If update_health should be called from within this proc.
  * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
  *
  * Returns the amount of healing dealt
@@ -130,7 +130,7 @@
 	required_biotype = ALL,
 	amount_multiplier = 1,
 	check_armor = FALSE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	RETURN_TYPE(/datum/damage_package)
@@ -158,14 +158,14 @@
 		amount_multiplier = amount_multiplier,
 	)
 
-	return -apply_damage_package(package, blocked, check_armor, FALSE, should_update, silent)?.amount
+	return -apply_damage_package(package, blocked, check_armor, FALSE, updating_health, silent)?.amount
 
 /** Calculates armor for a damage package, processes it and then calls a proc that applies the damage.
  *
  * * blocked - Percent modifier to damage from armor. 100 = 100% less damage dealt, 50% = 50% less damage dealt. If forced or check_armor are TRUE, does not apply.
  * * wound_clothing - If this should cause damage to clothing.
  * * check_armor - If armor checks should be taken into consideration. Does not apply if forced is TRUE.
- * * should_update - If update_health should be called from within this proc.
+ * * updating_health - If update_health should be called from within this proc.
  * * silent - Prevents armor messages. Only applies if check_armor is TRUE.
  */
 /mob/living/proc/apply_damage_package(
@@ -173,7 +173,7 @@
 	blocked = 0,
 	check_armor = FALSE,
 	wound_clothing = TRUE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	RETURN_TYPE(/datum/damage_package)
@@ -184,7 +184,7 @@
 	if(!package.forced && HAS_TRAIT(src, TRAIT_GODMODE) && package.amount > 0)
 		return null
 
-	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, should_update, silent) & COMSIG_MOB_PREVENT_DAMAGE)
+	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, updating_health, silent) & COMSIG_MOB_PREVENT_DAMAGE)
 		return null
 
 	if (!valid_package(package)) // Checks biotype for simplemobs
@@ -206,19 +206,19 @@
 		return null
 
 	// I'd prefer if we could NOT do this, but carbons have all the fancy logic that basicmobs lack so *shrug*
-	package.amount = finalize_package_damage(package, wound_clothing, should_update)
-	SEND_SIGNAL(src, COMSIG_MOB_AFTER_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, should_update, silent)
+	package.amount = finalize_package_damage(package, wound_clothing, updating_health)
+	SEND_SIGNAL(src, COMSIG_MOB_AFTER_APPLY_DAMAGE, package, blocked, check_armor, wound_clothing, updating_health, silent)
 	return package
 
 /*
  * Actually applies damage packages to mobs
  *
  * * wound_clothing - If this should cause damage to clothing.
- * * should_update - If update_health should be called from within this proc.
+ * * updating_health - If update_health should be called from within this proc.
  *
  * Returns the amount of damage dealt - does not modify the package itself!
  */
-/mob/living/proc/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, should_update = TRUE)
+/mob/living/proc/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, updating_health = TRUE)
 	var/damage_dealt = 0
 	switch (package.damage_type)
 		if (BRUTE)
@@ -258,7 +258,7 @@
 			if(damage_dealt >= 0)
 				received_stamina_damage(staminaloss, damage_dealt)
 
-	if (damage_dealt && should_update)
+	if (damage_dealt && updating_health)
 		updatehealth()
 	return damage_dealt
 
@@ -318,7 +318,7 @@
 	amount_multiplier = 1,
 	check_armor = FALSE,
 	wound_clothing = TRUE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
@@ -363,7 +363,7 @@
 		)
 		applied_packages += package
 
-	return apply_multiple_packages(applied_packages, blocked, check_armor, wound_clothing, should_update, silent)
+	return apply_multiple_packages(applied_packages, blocked, check_armor, wound_clothing, updating_health, silent)
 
 /// Applies multiple healing types as a single event, akin to apply_multiple_damages
 /mob/living/proc/apply_multiple_heals(
@@ -386,7 +386,7 @@
 	required_biotype = ALL,
 	amount_multiplier = 1,
 	check_armor = FALSE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	// Ensure that def_zone is valid first, and if its not - convert it into a valid format
@@ -428,7 +428,7 @@
 		)
 		applied_packages += package
 
-	return apply_multiple_packages(applied_packages, blocked, check_armor, FALSE, should_update, silent)
+	return apply_multiple_packages(applied_packages, blocked, check_armor, FALSE, updating_health, silent)
 
 /*
  * Applies multiple damage packages as a single event
@@ -440,11 +440,11 @@
 	blocked = 0,
 	check_armor = FALSE,
 	wound_clothing = TRUE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	SHOULD_CALL_PARENT(TRUE)
-	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_PACKAGES, package, blocked, check_armor, wound_clothing, should_update, silent) & COMSIG_MOB_PREVENT_DAMAGE)
+	if (SEND_SIGNAL(src, COMSIG_MOB_APPLY_DAMAGE_PACKAGES, package, blocked, check_armor, wound_clothing, updating_health, silent) & COMSIG_MOB_PREVENT_DAMAGE)
 		return 0
 
 	var/damage_dealt = 0
@@ -457,7 +457,7 @@
 		if (package.armor_penetration > 0 || package.armor_multiplier < 1 || package.armor_block > 0)
 			silent = FALSE
 
-	if (damage_dealt && should_update)
+	if (damage_dealt && updating_health)
 		updatehealth()
 	return damage_dealt
 

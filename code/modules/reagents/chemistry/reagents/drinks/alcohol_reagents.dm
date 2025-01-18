@@ -1298,7 +1298,7 @@
 	. = ..()
 	var/obj/item/organ/liver/liver = drinker.get_organ_slot(ORGAN_SLOT_LIVER)
 	if((liver && HAS_TRAIT(liver, TRAIT_COMEDY_METABOLISM)) || is_simian(drinker))
-		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
+		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/silencer
@@ -1315,7 +1315,7 @@
 	. = ..()
 	if(ishuman(drinker) && HAS_MIND_TRAIT(drinker, TRAIT_MIMING))
 		drinker.set_silence_if_lower(MIMEDRINK_SILENCE_DURATION)
-		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
+		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/drunkenblumpkin
@@ -1608,7 +1608,7 @@
 	//Securidrink in line with the Screwdriver for engineers or Nothing for mimes
 	var/obj/item/organ/liver/liver = drinker.get_organ_slot(ORGAN_SLOT_LIVER)
 	if(liver && HAS_TRAIT(liver, TRAIT_LAW_ENFORCEMENT_METABOLISM))
-		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
+		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/quintuple_sec
@@ -1626,7 +1626,7 @@
 	var/obj/item/organ/liver/liver = drinker.get_organ_slot(ORGAN_SLOT_LIVER)
 	if(liver && HAS_TRAIT(liver, TRAIT_LAW_ENFORCEMENT_METABOLISM))
 		var/need_mob_update
-		need_mob_update = drinker.apply_multiple_heals(brute = 2 * REM * seconds_per_tick, burn = 2 * REM * seconds_per_tick, stamina = 5 * REM * seconds_per_tick, required_bodytype = affected_bodytype, spread_damage = FALSE, attack_flags = REAGENT_ATTACK, should_update = FALSE)
+		need_mob_update = drinker.apply_multiple_heals(brute = 2 * REM * seconds_per_tick, burn = 2 * REM * seconds_per_tick, stamina = 5 * REM * seconds_per_tick, required_bodytype = affected_bodytype, spread_damage = FALSE, attack_flags = REAGENT_ATTACK, updating_health = FALSE)
 		if(need_mob_update)
 			return UPDATE_MOB_HEALTH
 
@@ -1966,7 +1966,7 @@
 	. = ..()
 	if(ishuman(drinker) && HAS_MIND_TRAIT(drinker, TRAIT_MIMING))
 		drinker.set_silence_if_lower(MIMEDRINK_SILENCE_DURATION)
-		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
+		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/fruit_wine
@@ -2106,7 +2106,7 @@
 			stamina = 5 * REM * seconds_per_tick,
 			attack_flags = REAGENT_ATTACK,
 			spread_damage = FALSE,
-			should_update = FALSE,
+			updating_health = FALSE,
 		)
 		if(need_mob_update)
 			return UPDATE_MOB_HEALTH
@@ -2364,7 +2364,7 @@
 /datum/reagent/consumable/ethanol/kortara/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, times_fired)
 	. = ..()
 	if(drinker.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		if(drinker.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, should_update = FALSE))
+		if(drinker.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/sea_breeze

@@ -343,7 +343,7 @@
 	// overall damage procs
 
 	// take 5 brute, 2 burn
-	damage_returned = gusgus.apply_multiple_damages(5, 2, spread_damage = FALSE, forced = TRUE, should_update = FALSE)
+	damage_returned = gusgus.apply_multiple_damages(5, 2, spread_damage = FALSE, forced = TRUE, updating_health = FALSE)
 	TEST_ASSERT_EQUAL(damage_returned, -7, \
 		"apply_multiple_damages() should have returned -7, but returned [damage_returned] instead!")
 

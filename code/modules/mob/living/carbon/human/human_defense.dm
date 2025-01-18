@@ -21,7 +21,7 @@
 	required_biotype = ALL,
 	amount_multiplier = 1,
 	wound_clothing = TRUE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	var/damage_dealt = 0
@@ -49,7 +49,7 @@
 			amount_multiplier = amount_multiplier,
 			check_armor = TRUE,
 			wound_clothing = wound_clothing,
-			should_update = FALSE,
+			updating_health = FALSE,
 			silent = silent,
 		)
 

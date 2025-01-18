@@ -945,15 +945,15 @@
 	SHOULD_CALL_PARENT(TRUE)
 
 	if(heal_flags & HEAL_BRUTE)
-		apply_healing(get_brute_loss(), forced = TRUE, should_update = FALSE)
+		apply_healing(get_brute_loss(), forced = TRUE, updating_health = FALSE)
 	if(heal_flags & HEAL_BURN)
-		apply_healing(get_burn_loss(), forced = TRUE, should_update = FALSE)
+		apply_healing(get_burn_loss(), forced = TRUE, updating_health = FALSE)
 	if(heal_flags & HEAL_TOX)
-		apply_healing(get_tox_loss(), forced = TRUE, should_update = FALSE)
+		apply_healing(get_tox_loss(), forced = TRUE, updating_health = FALSE)
 	if(heal_flags & HEAL_OXY)
-		apply_healing(get_oxy_loss(), forced = TRUE, should_update = FALSE)
+		apply_healing(get_oxy_loss(), forced = TRUE, updating_health = FALSE)
 	if(heal_flags & HEAL_STAM)
-		apply_healing(get_stamina_loss(), forced = TRUE, should_update = FALSE)
+		apply_healing(get_stamina_loss(), forced = TRUE, updating_health = FALSE)
 
 	// I don't really care to keep this under a flag
 	set_nutrition(NUTRITION_LEVEL_FED + 50)
@@ -987,13 +987,13 @@
 	var/brute_loss = get_brute_loss()
 	if(brute_loss)
 		var/brute_healing = min(healing_amount * 0.5, brute_loss) // 50% of the healing goes to brute
-		brute_healing = apply_healing(brute_healing, BRUTE, forced = TRUE, should_update = FALSE)
+		brute_healing = apply_healing(brute_healing, BRUTE, forced = TRUE, updating_health = FALSE)
 		healing_amount = max(0, healing_amount - brute_healing)
 
 	var/burn_loss = get_burn_loss()
 	if(burn_loss && healing_amount)
 		var/burn_healing = min(healing_amount, burn_loss) // rest of the healing goes to fire
-		burn_healing = apply_healing(burn_healing, BURN, forced = TRUE, should_update = FALSE)
+		burn_healing = apply_healing(burn_healing, BURN, forced = TRUE, updating_health = FALSE)
 		healing_amount = max(0, healing_amount - burn_healing)
 
 	if (!healing_amount)
@@ -2701,13 +2701,13 @@ GLOBAL_LIST_EMPTY(fire_appearances)
 		var/turf/open/floor/smashed_plating = loc
 		visible_message(span_danger("[src] is thrown violently into [smashed_plating], smashing through it and punching straight through!"),
 				span_userdanger("You're thrown violently into [smashed_plating], smashing through it and punching straight through!"))
-		apply_damage(rand(5, 20), BRUTE, MELEE, LEAP_ATTACK, BODY_ZONE_CHEST, hit_by = smashed_plating)
+		apply_damage(rand(5, 20), BRUTE, MELEE, THROWN_ATTACK, BODY_ZONE_CHEST, hit_by = smashed_plating)
 		smashed_plating.ScrapeAway(1, CHANGETURF_INHERIT_AIR)
 
 	for(var/obj/structure/lattice/lattice in loc)
 		visible_message(span_danger("[src] is thrown violently into [lattice], smashing through it and punching straight through!"),
 			span_userdanger("You're thrown violently into [lattice], smashing through it and punching straight through!"))
-		apply_damage(rand(5, 10), BRUTE, MELEE, LEAP_ATTACK, BODY_ZONE_CHEST, hit_by = lattice)
+		apply_damage(rand(5, 10), BRUTE, MELEE, THROWN_ATTACK, BODY_ZONE_CHEST, hit_by = lattice)
 		lattice.deconstruct(FALSE)
 
 /// Prints an ominous message if something bad is going to happen to you

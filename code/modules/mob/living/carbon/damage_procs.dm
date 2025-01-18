@@ -3,7 +3,7 @@
 	blocked = 0,
 	check_armor = FALSE,
 	wound_clothing = TRUE,
-	should_update = TRUE,
+	updating_health = TRUE,
 	silent = FALSE,
 )
 	// Smartkar: figure if this is even neccessary or if we can axe this actually
@@ -40,7 +40,7 @@
 	*/
 	return ..()
 
-/mob/living/carbon/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, should_update = TRUE)
+/mob/living/carbon/finalize_package_damage(datum/damage_package/package, wound_clothing = TRUE, updating_health = TRUE)
 	if (package.damage_type == TOX)
 		. = ..()
 		if(AT_TOXIN_VOMIT_THRESHOLD(src))
@@ -79,7 +79,7 @@
 	for (var/i in 1 to length(parts))
 		var/obj/item/bodypart/part = parts[i]
 		var/cur_damage = part.get_damage()
-		update_overlays |= part.receive_damage(package, amount = damage_per_part, should_update = FALSE) // Smartkar: unfuck this
+		update_overlays |= part.receive_damage(package, amount = damage_per_part, updating_health = FALSE) // Smartkar: unfuck this
 		var/damage_difference = (part.get_damage() - cur_damage)
 		damage_taken += damage_difference
 		// Overheal gets given to other limbs
@@ -89,7 +89,7 @@
 	if (!damage_taken)
 		return 0
 
-	if(should_update)
+	if(updating_health)
 		updatehealth()
 	if(update_overlays)
 		update_damage_overlays()

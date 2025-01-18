@@ -106,13 +106,13 @@
 /// allows you to add multiplicative damage modifiers to the damage mods argument to adjust incoming damage
 /// not sent if the apply damage call was forced
 #define COMSIG_MOB_APPLY_DAMAGE_MODIFIERS "mob_apply_damage_modifiers"
-/// from base of /mob/living/proc/apply_damage_package(): (datum/damage_package/package, blocked, check_armor, wound_clothing, should_update, silent)
+/// from base of /mob/living/proc/apply_damage_package(): (datum/damage_package/package, blocked, check_armor, wound_clothing, updating_health, silent)
 #define COMSIG_MOB_APPLY_DAMAGE "mob_apply_damage"
 	#define COMSIG_MOB_PREVENT_DAMAGE (1<<0)
-/// from /mob/living/proc/apply_damage(): (datum/damage_package/package, blocked, check_armor, wound_clothing, should_update, silent)
+/// from /mob/living/proc/apply_damage(): (datum/damage_package/package, blocked, check_armor, wound_clothing, updating_health, silent)
 /// works like above but after the damage is actually inflicted
 #define COMSIG_MOB_AFTER_APPLY_DAMAGE "mob_after_apply_damage"
-/// From apply_multiple_damages(): (list/datum/damage_package/packages, blocked, check_armor, wound_clothing, should_update, silent)
+/// From apply_multiple_damages(): (list/datum/damage_package/packages, blocked, check_armor, wound_clothing, updating_health, silent)
 /// Wrapper that allows multiple damage packages to be attributed to a single attack/event, use this when you want to do something "every time someone is hit"
 #define COMSIG_MOB_APPLY_DAMAGE_PACKAGES "mob_apply_damage_packages"
 
