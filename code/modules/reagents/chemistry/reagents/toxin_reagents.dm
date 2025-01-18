@@ -223,11 +223,15 @@
 /datum/reagent/toxin/slimejelly/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	if(SPT_PROB(5, seconds_per_tick))
-		to_chat(affected_mob, span_danger("Your insides are burning!"))
-		if(affected_mob.adjust_tox_loss(rand(20, 60), updating_health = FALSE, required_biotype = affected_biotype))
+		var/damage_dealt = affected_mob.adjust_tox_loss(rand(20, 60), updating_health = FALSE, required_biotype = affected_biotype)
+		if (damage_dealt > 0)
+			to_chat(affected_mob, span_danger("Your insides are burning!"))
+		else if (damage_dealt < 0)
+			to_chat(affected_mob, span_notice("You feel a nice, soothing sensation in your stomach."))
+		if(damage_dealt)
 			return UPDATE_MOB_HEALTH
 	else if(SPT_PROB(23, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(5))
+		if(affected_mob.apply_healing(5, attack_flags = REAGENT_ATTACK, spread_damage = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/toxin/carpotoxin

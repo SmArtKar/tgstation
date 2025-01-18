@@ -99,7 +99,8 @@
 		burn_healed *= 0.55
 		user_msg += " as best as you can while [target.p_they()] [target.p_have()] clothing on"
 		target_msg += " as best as [user.p_they()] can while [target.p_they()] [target.p_have()] clothing on"
-	target.heal_bodypart_damage(brute_healed,burn_healed)
+
+	target.apply_multiple_heals(brute = brute_healed, burn = burn_healed, spread_damage = FALSE)
 
 	user_msg += get_progress(user, target, brute_healed, burn_healed)
 

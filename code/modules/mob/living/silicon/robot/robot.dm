@@ -1007,7 +1007,7 @@
 		if(sendmats)
 			model.restock_consumable()
 	if(repairs)
-		heal_bodypart_damage(repairs, repairs)
+		apply_multiple_heals(repairs, repairs)
 	charge_cell.Invoke(cell, seconds_per_tick)
 
 /mob/living/silicon/robot/proc/set_connected_ai(new_ai)

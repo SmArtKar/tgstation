@@ -67,8 +67,7 @@
 
 /datum/reagent/medicine/adminordrazine/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	affected_mob.heal_bodypart_damage(brute = 5 * REM * seconds_per_tick, burn = 5 * REM * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype)
-	affected_mob.adjust_tox_loss(-5 * REM * seconds_per_tick, updating_health = FALSE, forced = TRUE, required_biotype = affected_biotype)
+	affected_mob.apply_multiple_heals(brute = 5 * REM * seconds_per_tick, burn = 5 * REM * seconds_per_tick, tox = -5 * REM * seconds_per_tick, should_update = FALSE, required_bodytype = affected_bodytype, forced = TRUE, should_update = FALSE)
 	// Heal everything! That we want to. But really don't heal reagents. Otherwise we'll lose ... us.
 	affected_mob.fully_heal(full_heal_flags & ~HEAL_ALL_REAGENTS) // there is no need to return UPDATE_MOB_HEALTH because this proc calls updatehealth()
 
@@ -216,10 +215,12 @@
 // Rezadone is almost never used in favor of cryoxadone. Hopefully this will change that. // No such luck so far // with clone damage gone, someone will find a better use for rezadone... right?
 /datum/reagent/medicine/rezadone/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	if(affected_mob.heal_bodypart_damage(
+	if(affected_mob.apply_multiple_heals(
 		brute = 1 * REM * seconds_per_tick,
 		burn = 1 * REM * seconds_per_tick,
-		updating_health = FALSE,
+		attack_flags = REAGENT_ATTACK,
+		spread_damage = FALSE,
+		should_update = FALSE,
 		required_bodytype = affected_biotype
 	))
 		. = UPDATE_MOB_HEALTH

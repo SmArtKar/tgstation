@@ -24,7 +24,7 @@
 /datum/reagent/consumable/tomatojuice/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	if(affected_mob.get_burn_loss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(brute = 0, burn = 1 * REM * seconds_per_tick, updating_health = FALSE))
+		if(affected_mob.apply_healing(1 * REM * seconds_per_tick, BURN, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/limejuice
@@ -115,7 +115,7 @@
 	. = ..()
 	var/obj/item/organ/liver/liver = affected_mob.get_organ_slot(ORGAN_SLOT_LIVER)
 	if((liver && HAS_TRAIT(liver, TRAIT_COMEDY_METABOLISM)) || is_simian(affected_mob))
-		if(affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, updating_health = FALSE))
+		if(affected_mob.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/nothing
@@ -132,7 +132,7 @@
 	. = ..()
 	if(ishuman(drinker) && HAS_MIND_TRAIT(drinker, TRAIT_MIMING))
 		drinker.set_silence_if_lower(MIMEDRINK_SILENCE_DURATION)
-		if(drinker.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, updating_health = FALSE))
+		if(drinker.apply_multiple_heals(brute = 1 * REM * seconds_per_tick, burn = 1 * REM * seconds_per_tick, attack_flags = REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/laughter
@@ -220,7 +220,7 @@
 
 /datum/reagent/consumable/milk/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	if(affected_mob.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE))
+		if(affected_mob.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 			. = UPDATE_MOB_HEALTH
 	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
 		holder.remove_reagent(/datum/reagent/consumable/capsaicin, seconds_per_tick)
@@ -243,7 +243,7 @@
 /datum/reagent/consumable/soymilk/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
 	if(affected_mob.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(1, 0))
+		if(affected_mob.apply_healing(1, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/cream
@@ -256,7 +256,7 @@
 
 /datum/reagent/consumable/cream/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	. = ..()
-	if(SPT_PROB(10, seconds_per_tick) && affected_mob.heal_bodypart_damage(1, 0))
+	if(SPT_PROB(10, seconds_per_tick) && affected_mob.apply_healing(1, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 		return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/coffee
@@ -733,7 +733,7 @@
 	need_mob_update = affected_mob.SetSleeping(0)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
 	if(affected_mob.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		need_mob_update += affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE)
+		need_mob_update += affected_mob.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 
@@ -760,7 +760,7 @@
 	need_mob_update = affected_mob.SetSleeping(0)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
 	if(affected_mob.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		need_mob_update += affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE)
+		need_mob_update += affected_mob.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 
@@ -891,7 +891,7 @@
 	need_mob_update = affected_mob.SetSleeping(0)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
 	if(affected_mob.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		need_mob_update += affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE)
+		need_mob_update += affected_mob.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 
@@ -956,7 +956,7 @@
 /datum/reagent/consumable/hot_coco/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
 	affected_mob.adjust_bodytemperature(5 * REM * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, 0, affected_mob.get_body_temp_normal())
 	if(affected_mob.get_brute_loss() && SPT_PROB(10, seconds_per_tick))
-		if(affected_mob.heal_bodypart_damage(brute = 1 * REM * seconds_per_tick, burn = 0, updating_health = FALSE))
+		if(affected_mob.apply_healing(1 * REM * seconds_per_tick, BRUTE, null, REAGENT_ATTACK, spread_damage = FALSE, should_update = FALSE))
 			. = UPDATE_MOB_HEALTH
 	if(holder.has_reagent(/datum/reagent/consumable/capsaicin))
 		holder.remove_reagent(/datum/reagent/consumable/capsaicin, 2 * REM * seconds_per_tick)
