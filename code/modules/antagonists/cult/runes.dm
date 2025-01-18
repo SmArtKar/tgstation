@@ -949,7 +949,7 @@ GLOBAL_VAR_INIT(narsie_summon_count, 0)
 		if(!IS_CULTIST(target) && target.blood_volume)
 			if(target.can_block_magic(charge_cost = 0))
 				continue
-			target.take_overall_damage(tick_damage*multiplier, tick_damage*multiplier)
+			target.apply_multiple_damages(brute = tick_damage * multiplier, burn = tick_damage * multiplier, attack_flags = MAGIC_ATTACK)
 
 //Rite of Spectral Manifestation: Summons a ghost on top of the rune as a cultist human with no items. User must stand on the rune at all times, and takes damage for each summoned ghost.
 /obj/effect/rune/manifest

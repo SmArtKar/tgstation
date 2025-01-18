@@ -48,7 +48,7 @@
 	. = ..()
 	if(gone == petrified_mob)
 		petrified_mob.remove_traits(list(TRAIT_GODMODE, TRAIT_MUTE, TRAIT_NOBLOOD), STATUE_MUTE)
-		petrified_mob.take_overall_damage((petrified_mob.health - atom_integrity + 100)) //any new damage the statue incurred is transferred to the mob
+		petrified_mob.apply_damage(petrified_mob.health - atom_integrity + 100, BRUTE) //any new damage the statue incurred is transferred to the mob
 		petrified_mob.faction -= FACTION_MIMIC
 		petrified_mob = null
 

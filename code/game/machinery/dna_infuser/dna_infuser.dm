@@ -91,7 +91,7 @@
 		fail_explanation = "DNA too complicated to infuse. The machine needs to infuse simpler DNA first."
 	playsound(src, 'sound/machines/blender.ogg', 50, vary = TRUE)
 	to_chat(human_occupant, span_danger("Little needles repeatedly prick you!"))
-	human_occupant.take_overall_damage(10)
+	human_occupant.apply_damage(10, BRUTE, source = src)
 	human_occupant.add_mob_memory(/datum/memory/dna_infusion, protagonist = human_occupant, deuteragonist = infusing_from, mutantlike = infusing_into.infusion_desc)
 	Shake(duration = INFUSING_TIME)
 	addtimer(CALLBACK(human_occupant, TYPE_PROC_REF(/mob, emote), "scream"), INFUSING_TIME - 1 SECONDS)

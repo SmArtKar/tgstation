@@ -78,12 +78,12 @@ In all, this is a lot like the monkey code. /N
 			gib(DROP_ALL_REMAINS)
 
 		if (EXPLODE_HEAVY)
-			take_overall_damage(60, 60)
+			apply_multiple_damages(brute = 60, burn = 60, damage_flag = BOMB)
 			if(ears)
 				ears.adjustEarDamage(30,120)
 
 		if(EXPLODE_LIGHT)
-			take_overall_damage(30,0)
+			apply_damage(30, BRUTE, BOMB)
 			if(prob(50))
 				Unconscious(20)
 			if(ears)

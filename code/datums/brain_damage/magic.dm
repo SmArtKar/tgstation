@@ -28,7 +28,7 @@
 	if(COOLDOWN_FINISHED(src, damage_warning_cooldown))
 		to_chat(owner, span_warning("<b>The light burns you!</b>"))
 		COOLDOWN_START(src, damage_warning_cooldown, 10 SECONDS)
-	owner.take_overall_damage(burn = 1.5 * seconds_per_tick)
+	owner.apply_damage(1.5 * seconds_per_tick, BURN, null, MAGIC_ATTACK)
 
 /datum/brain_trauma/magic/poltergeist
 	name = "Poltergeist"

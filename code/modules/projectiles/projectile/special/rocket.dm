@@ -36,8 +36,8 @@
 
 	do_boom(target, random_crit_gib)
 	if(issilicon(target))
-		var/mob/living/silicon/S = target
-		S.take_overall_damage(anti_armor_damage*0.75, anti_armor_damage*0.25)
+		var/mob/living/silicon/sillycone = target
+		sillycone.apply_multiple_damages(anti_armor_damage * 0.75, anti_armor_damage * 0.25, BOMB, PROJECTILE_ATTACK, attack_dir = get_dir(sillycone, src), hit_by = src, source = firer, blocked = blocked)
 	return BULLET_ACT_HIT
 
 /obj/projectile/bullet/rocket/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)

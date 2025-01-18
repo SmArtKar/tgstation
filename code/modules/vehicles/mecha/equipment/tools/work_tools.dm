@@ -125,10 +125,9 @@
 			log_combat(source, carbon_victim, "removed both arms with a real clamp,", "[name]", "(COMBAT MODE: [uppertext(source.combat_mode)] (DAMTYPE: [uppertext(damtype)])")
 			return ..()
 
-	victim.take_overall_damage(clamp_damage)
+	victim.apply_multiple_damages(brute = clamp_damage, oxy = round(clamp_damage * 0.5, DAMAGE_PRECISION), damage_flag = MELEE, attack_flags = MELEE_ATTACK, hit_by = src, source = chassis)
 	if(isnull(victim)) //get gibbed stoopid
 		return ..()
-	victim.adjust_oxy_loss(round(clamp_damage/2))
 	victim.visible_message(span_danger("[chassis] squeezes [victim]!"), \
 						span_userdanger("[chassis] squeezes you!"),\
 						span_hear("You hear something crack."))

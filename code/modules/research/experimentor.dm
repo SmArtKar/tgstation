@@ -256,7 +256,7 @@
 		else if(prob(EFFECT_PROB_VERYLOW * (100 - malfunction_probability_coeff) * 0.01))
 			visible_message(span_danger("[src] malfunctions and destroys [exp_on], lashing its arms out at nearby people!"))
 			for(var/mob/living/m in oview(1, src))
-				m.apply_damage(15, BRUTE, MELEE, MELEE_ATTACK, pick_weight(BODY_ZONE_HEAD = 1, BODY_ZONE_CHEST = 2), hit_by = src, source = src, check_armor = TRUE)
+				m.apply_damage(15, BRUTE, MELEE, MELEE_ATTACK, pick_weight(list(BODY_ZONE_HEAD = 1, BODY_ZONE_CHEST = 2)), hit_by = src, source = src, check_armor = TRUE)
 				investigate_log("Experimentor dealt minor brute to [m].", INVESTIGATE_EXPERIMENTOR)
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_LOW * (100 - malfunction_probability_coeff) * 0.01))
@@ -383,7 +383,7 @@
 			visible_message(span_warning("[src] malfunctions, activating its emergency coolant systems!"))
 			throwSmoke(loc)
 			for(var/mob/living/m in oview(1, src))
-				m.apply_damage(5, BURN, FIRE, def_zone = pick(BODY_ZONE_HEAD = 1, BODY_ZONE_CHEST = 2), source = src, check_armor = TRUE)
+				m.apply_damage(5, BURN, FIRE, def_zone = pick_weight(list(BODY_ZONE_HEAD = 1, BODY_ZONE_CHEST = 2)), source = src, check_armor = TRUE)
 				investigate_log("Experimentor has dealt minor burn damage to [key_name(m)]", INVESTIGATE_EXPERIMENTOR)
 			ejectItem()
 	////////////////////////////////////////////////////////////////////////////////////////////////

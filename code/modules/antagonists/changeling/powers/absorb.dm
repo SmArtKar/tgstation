@@ -151,7 +151,7 @@
 				absorbing_loop = new(owner, start_immediately = TRUE)
 				owner.visible_message(span_danger("[owner] stabs [target] with the proboscis!"), span_notice("We stab [target] with the proboscis."))
 				to_chat(target, span_userdanger("You feel a sharp stabbing pain!"))
-				target.take_overall_damage(40)
+				target.apply_damage(40, BRUTE, source = owner)
 
 		SSblackbox.record_feedback("nested tally", "changeling_powers", 1, list("Absorb DNA", "[absorbing_iteration]"))
 		if(!do_after(owner, 15 SECONDS, target, hidden = TRUE))

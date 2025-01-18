@@ -27,7 +27,7 @@
 			visible_message(span_warning("[src] fizzles on contact with [plant_tray]!"))
 			return PROJECTILE_DELETE_WITHOUT_HITTING
 
-/obj/projectile/magic/generate_damage(atom/target, ricochet)
+/obj/projectile/magic/generate_damage(atom/target, def_zone_override = null, amount_multiplier = 1)
 	var/datum/damage_package/package = ..()
 	package.attack_flags |= MAGIC_ATTACK
 	return package
@@ -495,12 +495,10 @@
 		var/mob/living/mob_target = target
 		// between this 10 burn, the 10 brute, the explosion brute, and the onfire burn,
 		// you are at about 65 damage if you stop drop and roll immediately
-		mob_target.take_overall_damage(burn = 10)
-
-	var/turf/target_turf = get_turf(target)
+		mob_target.apply_damage(10, BURN, BOMB, MAGIC_ATTACK|PROJECTILE_ATTACK, attack_dir = get_dir(target, src), hit_by = src, source = firer, blocked = blocked)
 
 	explosion(
-		target_turf,
+		get_turf(target),
 		devastation_range = -1,
 		heavy_impact_range = exp_heavy,
 		light_impact_range = exp_light,

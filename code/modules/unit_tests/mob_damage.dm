@@ -373,12 +373,12 @@
 		"Mouse should have 0 burn damage, instead they have [gusgus.burnloss]!")
 
 	// take 50 brute, 50 burn
-	damage_returned = gusgus.take_overall_damage(3, 3, updating_health = FALSE)
-	TEST_ASSERT_EQUAL(damage_returned, -6, \
-		"take_overall_damage() should have returned -6, but returned [damage_returned] instead!")
+	damage_returned = gusgus.apply_multiple_damages(3, 3, updating_health = FALSE)
+	TEST_ASSERT_EQUAL(damage_returned, 6, \
+		"apply_multiple_damages() should have returned 6, but returned [damage_returned] instead!")
 
 	if(!verify_damage(gusgus, 1, expected = 6, included_types = BRUTELOSS))
-		TEST_FAIL("take_overall_damage did not apply its damage correctly on the mouse!")
+		TEST_FAIL("apply_multiple_damages did not apply its damage correctly on the mouse!")
 
 /// Tests that humans get the tox_vomit status effect when heavily poisoned
 /datum/unit_test/human_tox_damage

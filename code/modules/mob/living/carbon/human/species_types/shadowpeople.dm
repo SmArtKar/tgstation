@@ -116,4 +116,4 @@
 	if (light_amount < SHADOW_SPECIES_LIGHT_THRESHOLD) //heal in the dark
 		owner.apply_status_effect(applied_status)
 	if (!owner.has_status_effect(applied_status))
-		owner.take_overall_damage(brute = 0.5 * seconds_per_tick, burn = 0.5 * seconds_per_tick, required_bodytype = BODYTYPE_ORGANIC)
+		owner.apply_multiple_damages(brute = 0.5 * seconds_per_tick, burn = 0.5 * seconds_per_tick, attack_flags = MAGIC_ATTACK, required_bodytype = BODYTYPE_ORGANIC, source = src)

@@ -152,32 +152,6 @@
 	var/mob/living/living_target = target
 	var/obj/item/bodypart/affecting = user.zone_selected //Find what the player is aiming at
 
-	var/armor_block = 0 //Get the target's armor values for normal attack damage.
-
-	/*
-	//Calculating duration and calculating damage.
-	if(ishuman(target))
-
-		var/mob/living/carbon/human/H = target
-		var/headarmor = 0 // Target's head armor
-		armor_block = H.run_armor_check(affecting, MELEE, "", "", armor_penetration) // For normal attack damage
-
-		//If they have a hat/helmet and the user is targeting their head.
-		if(istype(H.head, /obj/item/clothing/head) && affecting == BODY_ZONE_HEAD)
-			headarmor = H.head.get_armor_rating(MELEE)
-		//Calculate the knockdown duration for the target.
-		knockdown_effectiveness = (bottle_knockdown_duration - headarmor) + force
-
-	else
-		//Only humans can have armor, right?
-		armor_block = living_target.run_armor_check(affecting, MELEE)
-		if(affecting == BODY_ZONE_HEAD)
-			knockdown_effectiveness = bottle_knockdown_duration + force
-	//Apply the damage!
-	armor_block = min(90,armor_block)
-	living_target.apply_damage(force, BRUTE, affecting, armor_block) // Smartkar todo, comperss the above to get rid of human check
-	*/
-
 	var/datum/damage_package/package = generate_damage(living_target, user, user.zone_selected)
 	living_target.apply_damage_package(package, check_armor = TRUE)
 

@@ -24,7 +24,7 @@
 	for(var/mob/living/actor in orange(get_turf(spore), 1))
 		if(ROLE_BLOB in actor.faction) // No friendly fire
 			continue
-		actor.take_overall_damage(10, 10)
+		actor.apply_multiple_damages(brute = 10, burn = 10, damage_flag = BIO, attack_flags = BLOB_ATTACK)
 
 /datum/reagent/blob/explosive_lattice
 	name = "Explosive Lattice"
@@ -54,7 +54,7 @@
 
 	burn_loss = brute_loss
 
-	exposed_mob.take_overall_damage(brute_loss, burn_loss)
+	exposed_mob.apply_multiple_damages(brute = brute_loss, burn = burn_loss, attack_flags = REAGENT_ATTACK)
 
 	for(var/mob/living/nearby_mob in orange(epicenter_turf, 1))
 		if(ROLE_BLOB in nearby_mob.faction) // No friendly fire.
@@ -70,4 +70,4 @@
 			brute_loss = brute_loss*(2 - round(bomb_armor*0.01, 0.05))
 			burn_loss = brute_loss
 
-		nearby_mob.take_overall_damage(brute_loss, burn_loss)
+		nearby_mob.apply_multiple_damages(brute = brute_loss, burn = burn_loss, damage_flag = BIO, attack_flags = BLOB_ATTACK)

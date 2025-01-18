@@ -55,7 +55,7 @@
 		else
 			var/advanced_stage = A.stage > 4
 			living_mob.adjust_fire_stacks((advanced_stage ? 3 : 1) * power)
-			living_mob.take_overall_damage(burn = ((advanced_stage ? 5 : 3) * power), required_bodytype = BODYTYPE_ORGANIC)
+			living_mob.apply_damage((advanced_stage ? 5 : 3) * power, BURN, required_bodytype = BODYTYPE_ORGANIC)
 			living_mob.ignite_mob(silent = TRUE)
 			if(living_mob.on_fire) //check to make sure they actually caught on fire, or if it was prevented cause they were wet.
 				living_mob.visible_message(span_warning("[living_mob] catches fire!"), ignored_mobs = living_mob)
@@ -152,7 +152,7 @@ Bonus
 /datum/symptom/alkali/proc/Alkali_fire_stage_4(mob/living/M, datum/disease/advance/A)
 	var/get_stacks = 6 * power
 	M.adjust_fire_stacks(get_stacks)
-	M.take_overall_damage(burn = get_stacks / 2, required_bodytype = BODYTYPE_ORGANIC)
+	M.apply_damage(get_stacks / 2, BURN, required_bodytype = BODYTYPE_ORGANIC)
 	if(chems)
 		M.reagents.add_reagent(/datum/reagent/clf3, 2 * power)
 	return 1
@@ -160,7 +160,7 @@ Bonus
 /datum/symptom/alkali/proc/Alkali_fire_stage_5(mob/living/M, datum/disease/advance/A)
 	var/get_stacks = 8 * power
 	M.adjust_fire_stacks(get_stacks)
-	M.take_overall_damage(burn = get_stacks, required_bodytype = BODYTYPE_ORGANIC)
+	M.apply_damage(get_stacks, BURN, required_bodytype = BODYTYPE_ORGANIC)
 	if(chems)
 		M.reagents.add_reagent_list(list(/datum/reagent/napalm = 4 * power, /datum/reagent/clf3 = 4 * power))
 	return 1

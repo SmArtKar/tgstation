@@ -51,7 +51,7 @@
 		podperson.set_nutrition(NUTRITION_LEVEL_ALMOST_FULL)
 
 	if(podperson.nutrition < NUTRITION_LEVEL_STARVING + 50)
-		podperson.take_overall_damage(brute = 1 * seconds_per_tick, required_bodytype = BODYTYPE_ORGANIC)
+		podperson.apply_damage(1 * seconds_per_tick, BRUTE, required_bodytype = BODYTYPE_ORGANIC)
 
 /datum/species/pod/handle_chemical(datum/reagent/chem, mob/living/carbon/human/affected, seconds_per_tick, times_fired)
 	. = ..()

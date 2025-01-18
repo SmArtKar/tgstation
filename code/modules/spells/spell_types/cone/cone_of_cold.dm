@@ -53,7 +53,7 @@
 			freeze.duration = world.time + unfreeze_mob_duration
 
 	if(on_freeze_brute_damage || on_freeze_burn_damage)
-		target_mob.take_overall_damage(on_freeze_brute_damage, on_freeze_burn_damage)
+		target_mob.apply_multiple_damages(brute = on_freeze_brute_damage, burn = on_freeze_burn_damage, attack_flags = MAGIC_ATTACK, source = caster)
 
 	to_chat(target_mob, span_userdanger("You feel a bitter cold!"))
 

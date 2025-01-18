@@ -408,7 +408,7 @@
 				ears.adjustEarDamage(15,60)
 			Knockdown(160 - (bomb_armor * 1.6)) //100 bomb armor will prevent knockdown altogether
 
-	take_overall_damage(brute_loss,burn_loss)
+	apply_multiple_damages(brute = brute_loss, burn = burn_loss, damage_flag = BOMB)
 
 	//attempt to dismember bodyparts
 	if(severity >= EXPLODE_HEAVY || !bomb_armor)
