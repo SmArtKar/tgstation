@@ -626,6 +626,7 @@
 	desc = "A blue medical surgery cap to prevent the surgeon's hair from entering the insides of the patient!"
 	flags_inv = HIDEHAIR //Cover your head doctor!
 	w_class = WEIGHT_CLASS_SMALL //surgery cap can be easily crumpled
+	hair_mask = HAIR_MASK_HIDE_SURGICALCAP
 
 /obj/item/clothing/head/utility/surgerycap/Initialize(mapload)
 	. = ..()
