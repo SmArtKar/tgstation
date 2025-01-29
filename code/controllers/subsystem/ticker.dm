@@ -235,10 +235,10 @@ SUBSYSTEM_DEF(ticker)
 	CHECK_TICK
 	//Configure mode and assign player to antagonists
 	var/can_continue = FALSE
-	can_continue = SSdynamic.pre_setup() //Choose antagonists
+	can_continue = SSdynamic.pre_setup() // Choose antagonists
 	CHECK_TICK
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_PRE_JOBS_ASSIGNED, src)
-	can_continue = can_continue && SSjob.divide_occupations() //Distribute jobs
+	can_continue = can_continue && SSjob.divide_occupations() // Distribute jobs
 	CHECK_TICK
 
 	if(!GLOB.Debug2)

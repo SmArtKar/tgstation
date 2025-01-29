@@ -1,14 +1,18 @@
-// Are HIGH_IMPACT_RULESETs allowed to stack?
-GLOBAL_VAR_INIT(dynamic_no_stacking, TRUE)
 // If enabled does not accept or execute any rulesets.
 GLOBAL_VAR_INIT(dynamic_forced_extended, FALSE)
-// How high threat is required for HIGH_IMPACT_RULESETs stacking.
-// This is independent of dynamic_no_stacking.
-GLOBAL_VAR_INIT(dynamic_stacking_limit, 90)
+// Forced threat tier, 0-5
+GLOBAL_VAR_INIT(dynamic_forced_threat_tier, null)
 // List of forced roundstart rulesets.
 GLOBAL_LIST_EMPTY(dynamic_forced_roundstart_ruleset)
-// Forced threat level, setting this to zero or higher forces the roundstart threat to the value.
-GLOBAL_VAR_INIT(dynamic_forced_threat_level, -1)
+// Ordered list of all threat tier types, to check as fallbacks
+GLOBAL_LIST_INIT(dynamic_threat_tier_types, list(
+	THREAT_TIER_ZERO = /datum/threat_tier/zero,
+	THREAT_TIER_ONE = /datum/threat_tier/one,
+	THREAT_TIER_TWO = /datum/threat_tier/two,
+	THREAT_TIER_THREE = /datum/threat_tier/three,
+	THREAT_TIER_FOUR = /datum/threat_tier/four,
+	THREAT_TIER_FIVE = /datum/threat_tier/five,
+))
 /// Modify the threat level for station traits before dynamic can be Initialized. List(instance = threat_reduction)
 GLOBAL_LIST_EMPTY(dynamic_station_traits)
 /// Rulesets which have been forcibly enabled or disabled
@@ -21,6 +25,214 @@ SUBSYSTEM_DEF(dynamic)
 	flags = SS_NO_INIT
 	wait = 1 SECONDS
 
+	/// Shift threat tier
+	/// Defines how many rulesets can roll in a round, and how likely specific rulesets are to occur
+	var/threat_tier = THREAT_TIER_ZERO
+
+
+	/// How many more light midrounds have we summoned already
+	var/midrounds_spent = 0
+	/// How many heavy midrounds have we summoned already
+	var/heavy_midrounds_spent = 0
+	/// How many latejoins have we summoned already
+	var/latejoins_spent = 0
+
+	/// When world.time is over this number the mode tries to inject a latejoin ruleset.
+	var/latejoin_injection_cooldown = 0
+	/// The minimum time the recurring latejoin ruleset timer is allowed to be.
+	var/latejoin_delay_min = (5 MINUTES)
+	/// The maximum time the recurring latejoin ruleset timer is allowed to be.
+	var/latejoin_delay_max = (25 MINUTES)
+
+	/// What is the lower bound of when the roundstart announcement is sent out?
+	var/roundstart_announcement_min = 1 MINUTE
+	/// What is the higher bound of when the roundstart announcement is sent out?
+	var/roundstart_announcement_max = 3 MINUTES
+
+	// ----------- Automatically generated values ------------
+	// Do not edit anything below this line, its all fetched from configs or generated on runtime
+	/// Dynamic configuration, loaded on pre_setup
+	var/list/configuration = null
+	/// All threat tier datums, loaded and modified from config
+	var/list/dynamic_threat_tiers = null
+	/// All midround rulesets
+	var/list/midround_rulesets = null
+	/// All heavy midround rulesets
+	var/list/heavy_midround_rulesets = null
+	/// All latejoin rulesets
+	var/list/latejoin_rulesets = null
+
+	/// Number of players who were ready on roundstart.
+	var/roundstart_pop_ready = 0
+	/// List of candidates used on roundstart rulesets.
+	var/list/candidates = list()
+	/// Rules that are processed, rule_process is called on the rules in this list.
+	var/list/current_rules = list()
+	/// List of executed rulesets.
+	var/list/executed_rules = list()
+
+/// Dynamic initialization proc. Called BEFORE everyone is equipped with their job
+/datum/controller/subsystem/dynamic/proc/pre_setup()
+	if (CONFIG_GET(flag/dynamic_config_enabled))
+		var/json_file = file("[global.config.directory]/dynamic.json")
+		if (fexists(json_file))
+			configuration = json_decode(file2text(json_file))
+			if (configuration["Dynamic"])
+				for (var/variable in configuration["Dynamic"])
+					if (!(variable in vars))
+						stack_trace("Invalid dynamic configuration variable [variable] in game mode variable changes.")
+						continue
+					vars[variable] = configuration["Dynamic"][variable]
+
+	configure_station_trait_costs()
+	configure_threat_levels()
+
+	setup_parameters()
+	setup_rulesets()
+	setup_hijacking()
+
+	// We do this here instead of with the midround rulesets and such because these rules can hang refs
+	// To new_player and such, and we want the datums to just free when the roundstart work is done
+	var/list/roundstart_rules = init_rulesets(/datum/dynamic_ruleset/roundstart)
+	SSjob.divide_occupations(pure = TRUE, allow_all = TRUE)
+
+	for(var/mob/dead/new_player/player as anything in GLOB.new_player_list)
+		if(player.ready == PLAYER_READY_TO_PLAY && player.mind && player.check_preferences())
+			if(is_unassigned_job(player.mind.assigned_role))
+				var/list/job_data = list()
+				var/job_prefs = player.client.prefs.job_preferences
+				for(var/job in job_prefs)
+					var/priority = job_prefs[job]
+					job_data += "[job]: [SSjob.job_priority_level_to_string(priority)]"
+				to_chat(player, span_danger("You were unable to qualify for any roundstart antagonist role this round because your job preferences presented a high chance of all of your selected jobs being unavailable, along with 'return to lobby if job is unavailable' enabled. Increase the number of roles set to medium or low priority to reduce the chances of this happening."))
+				log_admin("[player.ckey] failed to qualify for any roundstart antagonist role because their job preferences presented a high chance of all of their selected jobs being unavailable, along with 'return to lobby if job is unavailable' enabled and has [player.client.prefs.be_special.len] antag preferences enabled. They will be unable to qualify for any roundstart antagonist role. These are their job preferences - [job_data.Join(" | ")]")
+			else
+				roundstart_pop_ready++
+				candidates.Add(player)
+
+	SSjob.reset_occupations()
+	log_dynamic("Listing [roundstart_rules.len] round start rulesets, and [candidates.len] players ready.")
+	if (candidates.len <= 0)
+		log_dynamic("[candidates.len] candidates.")
+		return TRUE
+
+	if(GLOB.dynamic_forced_roundstart_ruleset.len > 0)
+		rigged_roundstart()
+	else
+		roundstart(roundstart_rules)
+
+	var/starting_rulesets = list()
+	for (var/datum/dynamic_ruleset/roundstart/rule as antyhing in executed_rules)
+		starting_rulesets += rule.name
+	log_dynamic("Picked the following roundstart rules: [english_list(starting_rulesets)].")
+	candidates.Cut()
+	return TRUE
+
+/// Called AFTER everyone is equipped with their job
+/datum/controller/subsystem/dynamic/proc/post_setup(report)
+	for(var/datum/dynamic_ruleset/roundstart/rule as anything in executed_rules)
+		rule.candidates.Cut() // The rule should not use candidates at this point as they all are null.
+		addtimer(CALLBACK(src, PROC_REF(execute_roundstart_rule), rule), rule.delay)
+
+	if (!CONFIG_GET(flag/no_intercept_report))
+		addtimer(CALLBACK(src, PROC_REF(send_intercept)), rand(roundstart_announcement_min, roundstart_announcement_max))
+
+	addtimer(CALLBACK(src, PROC_REF(display_roundstart_logout_report)), ROUNDSTART_LOGOUT_REPORT_TIME)
+
+	if(CONFIG_GET(flag/reopen_roundstart_suicide_roles))
+		var/delay = CONFIG_GET(number/reopen_roundstart_suicide_roles_delay)
+		if(delay)
+			delay *= (1 SECONDS)
+		else
+			delay = (4 MINUTES) //default to 4 minutes if the delay isn't defined.
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reopen_roundstart_suicide_roles)), delay)
+
+	if(!SSdbcore.Connect())
+		return TRUE
+
+	var/list/to_set = list()
+	var/arguments = list()
+	if(GLOB.revdata.originmastercommit)
+		to_set += "commit_hash = :commit_hash"
+		arguments["commit_hash"] = GLOB.revdata.originmastercommit
+	if(to_set.len)
+		arguments["round_id"] = GLOB.round_id
+		var/datum/db_query/query_round_game_mode = SSdbcore.NewQuery(
+			"UPDATE [format_table_name("round")] SET [to_set.Join(", ")] WHERE id = :round_id",
+			arguments
+		)
+		query_round_game_mode.Execute()
+		qdel(query_round_game_mode)
+	return TRUE
+
+/// Configre all possible threat levels
+/datum/controller/subsystem/dynamic/proc/configure_threat_levels()
+	for (var/tier_id in GLOB.dynamic_threat_tier_types)
+		var/tier_type = GLOB.dynamic_threat_tier_types[tier_id]
+		var/datum/dynamic_tier/tier = new tier_type()
+		dynamic_threat_tiers[tier_type] = tier
+
+		if (!CONFIG_GET(flag/dynamic_config_enabled))
+			continue
+
+		var/list/tier_config = LAZYACCESSASSOC(configuration, "Threat", tier_id)
+		if (!tier_config)
+			continue
+		for (var/variable in tier_config)
+			if (!(variable in tier.vars))
+				stack_trace("Invalid dynamic configuration variable [variable] in threat variable changes.")
+				continue
+			tier.vars[variable] = tier_config[variable]
+
+/// Get station traits and call for their config
+/datum/controller/subsystem/dynamic/proc/configure_station_trait_costs()
+	if (!CONFIG_GET(flag/dynamic_config_enabled))
+		return
+	for (var/datum/station_trait/station_trait as anything in GLOB.dynamic_station_traits)
+		configure_station_trait(station_trait)
+
+/// Apply configuration for station trait costs
+/datum/controller/subsystem/dynamic/proc/configure_station_trait(datum/station_trait/station_trait)
+	var/list/station_trait_config = LAZYACCESSASSOC(configuration, "Station", station_trait.dynamic_threat_id)
+	var/cost = station_trait_config["cost"]
+
+	if (isnull(cost)) // 0 is valid so check for null specifically
+		return
+
+	if (cost != GLOB.dynamic_station_traits[station_trait])
+		log_dynamic("Config set [station_trait.dynamic_threat_id] cost from [station_trait.threat_reduction] to [cost]")
+
+	GLOB.dynamic_station_traits[station_trait] = cost
+
+/datum/controller/subsystem/dynamic/proc/setup_parameters()
+	log_dynamic("Dynamic mode parameters for the round:")
+	if(GLOB.dynamic_forced_threat_tier)
+		threat_tier = GLOB.dynamic_threat_tier_types[GLOB.dynamic_forced_threat_tier]
+	else
+		generate_threat()
+
+	set_cooldowns()
+	log_dynamic("Dynamic Mode initialized with a Threat Tier of... [threat_tier]!")
+	SSblackbox.record_feedback(
+		"associative",
+		"dynamic_threat",
+		1,
+		list(
+			"server_name" = CONFIG_GET(string/serversqlname),
+			"dynamic_forced_threat_tier" = GLOB.dynamic_forced_threat_tier,
+			"threat_tier" = threat_tier,
+			"player_count" = SSticker.totalPlayersReady,
+		),
+	)
+
+	return TRUE
+
+/datum/controller/subsystem/dynamic/proc/set_cooldowns()
+	var/latejoin_injection_cooldown_middle = 0.5 * (latejoin_delay_max + latejoin_delay_min)
+	latejoin_injection_cooldown = round(clamp(EXP_DISTRIBUTION(latejoin_injection_cooldown_middle), latejoin_delay_min, latejoin_delay_max)) + world.time
+
+
+/*
 	// Threat logging vars
 	/// The "threat cap", threat shouldn't normally go above this and is used in ruleset calculations
 	var/threat_level = 0
@@ -51,14 +263,6 @@ SUBSYSTEM_DEF(dynamic)
 	  * 0-6, 7-13, 14-20, 21-27, 28-34, 35-41, 42-48, 49-55, 56-62, 63+
 	  */
 	var/pop_per_requirement = 6
-	/// Number of players who were ready on roundstart.
-	var/roundstart_pop_ready = 0
-	/// List of candidates used on roundstart rulesets.
-	var/list/candidates = list()
-	/// Rules that are processed, rule_process is called on the rules in this list.
-	var/list/current_rules = list()
-	/// List of executed rulesets.
-	var/list/executed_rules = list()
 	/// If TRUE, the next player to latejoin will guarantee roll for a random latejoin antag
 	/// (this does not guarantee they get said antag roll, depending on preferences and circumstances)
 	var/late_forced_injection = FALSE
@@ -72,17 +276,6 @@ SUBSYSTEM_DEF(dynamic)
 	var/high_impact_ruleset_executed = FALSE
 	/// If a only ruleset has been executed.
 	var/only_ruleset_executed = FALSE
-	/// Dynamic configuration, loaded on pre_setup
-	var/list/configuration = null
-
-	/// When world.time is over this number the mode tries to inject a latejoin ruleset.
-	var/latejoin_injection_cooldown = 0
-
-	/// The minimum time the recurring latejoin ruleset timer is allowed to be.
-	var/latejoin_delay_min = (5 MINUTES)
-
-	/// The maximum time the recurring latejoin ruleset timer is allowed to be.
-	var/latejoin_delay_max = (25 MINUTES)
 
 	/// The low bound for the midround roll time splits.
 	/// This number influences where to place midround rolls, making this smaller
@@ -136,11 +329,6 @@ SUBSYSTEM_DEF(dynamic)
 	/// The maximum amount of time for antag random events to be hijacked.
 	var/random_event_hijack_maximum = 18 MINUTES
 
-	/// What is the lower bound of when the roundstart announcement is sent out?
-	var/waittime_l = 600
-
-	/// What is the higher bound of when the roundstart announcement is sent out?
-	var/waittime_h = 1800
 
 	/// A number between 0 and 100. The maximum amount of threat allowed to generate.
 	var/max_threat_level = 100
@@ -418,193 +606,6 @@ SUBSYSTEM_DEF(dynamic)
 		log_dynamic("Threat reduced by [GLOB.dynamic_station_traits[station_trait]]. Source: [type].")
 
 	peaceful_percentage = (threat_level/max_threat_level)*100
-
-/// Generates the midround and roundstart budgets
-/datum/controller/subsystem/dynamic/proc/generate_budgets()
-	round_start_budget = lorentz_to_amount(roundstart_split_curve_centre, roundstart_split_curve_width, threat_level, 0.1)
-	initial_round_start_budget = round_start_budget
-	mid_round_budget = threat_level - round_start_budget
-
-/datum/controller/subsystem/dynamic/proc/setup_parameters()
-	log_dynamic("Dynamic mode parameters for the round:")
-	log_dynamic("Centre is [threat_curve_centre], Width is [threat_curve_width], Forced extended is [GLOB.dynamic_forced_extended ? "Enabled" : "Disabled"], No stacking is [GLOB.dynamic_no_stacking ? "Enabled" : "Disabled"].")
-	log_dynamic("Stacking limit is [GLOB.dynamic_stacking_limit].")
-	if(GLOB.dynamic_forced_threat_level >= 0)
-		threat_level = round(GLOB.dynamic_forced_threat_level, 0.1)
-	else
-		generate_threat()
-	generate_budgets()
-	set_cooldowns()
-	log_dynamic("Dynamic Mode initialized with a Threat Level of... [threat_level]! ([round_start_budget] round start budget)")
-	SSblackbox.record_feedback(
-		"associative",
-		"dynamic_threat",
-		1,
-		list(
-			"server_name" = CONFIG_GET(string/serversqlname),
-			"forced_threat_level" = GLOB.dynamic_forced_threat_level,
-			"threat_level" = threat_level,
-			"max_threat" = (SSticker.totalPlayersReady < low_pop_player_threshold) ? LERP(low_pop_maximum_threat, max_threat_level, SSticker.totalPlayersReady / low_pop_player_threshold) : max_threat_level,
-			"player_count" = SSticker.totalPlayersReady,
-			"round_start_budget" = round_start_budget,
-			"parameters" = list(
-				"threat_curve_centre" = threat_curve_centre,
-				"threat_curve_width" = threat_curve_width,
-				"forced_extended" = GLOB.dynamic_forced_extended,
-				"no_stacking" = GLOB.dynamic_no_stacking,
-				"stacking_limit" = GLOB.dynamic_stacking_limit,
-			),
-		),
-	)
-	return TRUE
-
-
-/datum/controller/subsystem/dynamic/proc/set_cooldowns()
-	var/latejoin_injection_cooldown_middle = 0.5*(latejoin_delay_max + latejoin_delay_min)
-	latejoin_injection_cooldown = round(clamp(EXP_DISTRIBUTION(latejoin_injection_cooldown_middle), latejoin_delay_min, latejoin_delay_max)) + world.time
-
-// Called BEFORE everyone is equipped with their job
-/datum/controller/subsystem/dynamic/proc/pre_setup()
-	if(CONFIG_GET(flag/dynamic_config_enabled))
-		var/json_file = file("[global.config.directory]/dynamic.json")
-		if(fexists(json_file))
-			configuration = json_decode(file2text(json_file))
-			if(configuration["Dynamic"])
-				for(var/variable in configuration["Dynamic"])
-					if(!(variable in vars))
-						stack_trace("Invalid dynamic configuration variable [variable] in game mode variable changes.")
-						continue
-					vars[variable] = configuration["Dynamic"][variable]
-
-	configure_station_trait_costs()
-	setup_parameters()
-	setup_hijacking()
-	setup_rulesets()
-
-	//We do this here instead of with the midround rulesets and such because these rules can hang refs
-	//To new_player and such, and we want the datums to just free when the roundstart work is done
-	var/list/roundstart_rules = init_rulesets(/datum/dynamic_ruleset/roundstart)
-
-	SSjob.divide_occupations(pure = TRUE, allow_all = TRUE)
-	for(var/i in GLOB.new_player_list)
-		var/mob/dead/new_player/player = i
-		if(player.ready == PLAYER_READY_TO_PLAY && player.mind && player.check_preferences())
-			if(is_unassigned_job(player.mind.assigned_role))
-				var/list/job_data = list()
-				var/job_prefs = player.client.prefs.job_preferences
-				for(var/job in job_prefs)
-					var/priority = job_prefs[job]
-					job_data += "[job]: [SSjob.job_priority_level_to_string(priority)]"
-				to_chat(player, span_danger("You were unable to qualify for any roundstart antagonist role this round because your job preferences presented a high chance of all of your selected jobs being unavailable, along with 'return to lobby if job is unavailable' enabled. Increase the number of roles set to medium or low priority to reduce the chances of this happening."))
-				log_admin("[player.ckey] failed to qualify for any roundstart antagonist role because their job preferences presented a high chance of all of their selected jobs being unavailable, along with 'return to lobby if job is unavailable' enabled and has [player.client.prefs.be_special.len] antag preferences enabled. They will be unable to qualify for any roundstart antagonist role. These are their job preferences - [job_data.Join(" | ")]")
-			else
-				roundstart_pop_ready++
-				candidates.Add(player)
-	SSjob.reset_occupations()
-	log_dynamic("Listing [roundstart_rules.len] round start rulesets, and [candidates.len] players ready.")
-	if (candidates.len <= 0)
-		log_dynamic("[candidates.len] candidates.")
-		return TRUE
-
-	if(GLOB.dynamic_forced_roundstart_ruleset.len > 0)
-		rigged_roundstart()
-	else
-		roundstart(roundstart_rules)
-
-	log_dynamic("[round_start_budget] round start budget was left, donating it to midrounds.")
-	threat_log += "[worldtime2text()]: [round_start_budget] round start budget was left, donating it to midrounds."
-	mid_round_budget += round_start_budget
-
-	var/starting_rulesets = ""
-	for (var/datum/dynamic_ruleset/roundstart/DR in executed_rules)
-		starting_rulesets += "[DR.name], "
-	log_dynamic("Picked the following roundstart rules: [starting_rulesets]")
-	candidates.Cut()
-	return TRUE
-
-// Called AFTER everyone is equipped with their job
-/datum/controller/subsystem/dynamic/proc/post_setup(report)
-	for(var/datum/dynamic_ruleset/roundstart/rule in executed_rules)
-		rule.candidates.Cut() // The rule should not use candidates at this point as they all are null.
-		addtimer(CALLBACK(src, PROC_REF(execute_roundstart_rule), rule), rule.delay)
-
-	if (!CONFIG_GET(flag/no_intercept_report))
-		addtimer(CALLBACK(src, PROC_REF(send_intercept)), rand(waittime_l, waittime_h))
-
-		addtimer(CALLBACK(src, PROC_REF(display_roundstart_logout_report)), ROUNDSTART_LOGOUT_REPORT_TIME)
-
-	if(CONFIG_GET(flag/reopen_roundstart_suicide_roles))
-		var/delay = CONFIG_GET(number/reopen_roundstart_suicide_roles_delay)
-		if(delay)
-			delay *= (1 SECONDS)
-		else
-			delay = (4 MINUTES) //default to 4 minutes if the delay isn't defined.
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reopen_roundstart_suicide_roles)), delay)
-
-	if(SSdbcore.Connect())
-		var/list/to_set = list()
-		var/arguments = list()
-		if(GLOB.revdata.originmastercommit)
-			to_set += "commit_hash = :commit_hash"
-			arguments["commit_hash"] = GLOB.revdata.originmastercommit
-		if(to_set.len)
-			arguments["round_id"] = GLOB.round_id
-			var/datum/db_query/query_round_game_mode = SSdbcore.NewQuery(
-				"UPDATE [format_table_name("round")] SET [to_set.Join(", ")] WHERE id = :round_id",
-				arguments
-			)
-			query_round_game_mode.Execute()
-			qdel(query_round_game_mode)
-	return TRUE
-
-/datum/controller/subsystem/dynamic/proc/display_roundstart_logout_report()
-	var/list/msg = list("[span_boldnotice("Roundstart logout report")]\n\n")
-	for(var/i in GLOB.mob_living_list)
-		var/mob/living/L = i
-		var/mob/living/carbon/C = L
-		if (istype(C) && !C.last_mind)
-			continue  // never had a client
-
-		if(L.ckey && !GLOB.directory[L.ckey])
-			msg += "<b>[L.name]</b> ([L.key]), the [L.job] (<font color='#ffcc00'><b>Disconnected</b></font>)\n"
-
-
-		if(L.ckey && L.client)
-			var/failed = FALSE
-			if(L.client.inactivity >= ROUNDSTART_LOGOUT_AFK_THRESHOLD) //Connected, but inactive (alt+tabbed or something)
-				msg += "<b>[L.name]</b> ([L.key]), the [L.job] (<font color='#ffcc00'><b>Connected, Inactive</b></font>)\n"
-				failed = TRUE //AFK client
-			if(!failed && L.stat)
-				if(HAS_TRAIT(L, TRAIT_SUICIDED)) //Suicider
-					msg += "<b>[L.name]</b> ([L.key]), the [L.job] ([span_bolddanger("Suicide")])\n"
-					failed = TRUE //Disconnected client
-				if(!failed && (L.stat == UNCONSCIOUS || L.stat == HARD_CRIT))
-					msg += "<b>[L.name]</b> ([L.key]), the [L.job] (Dying)\n"
-					failed = TRUE //Unconscious
-				if(!failed && L.stat == DEAD)
-					msg += "<b>[L.name]</b> ([L.key]), the [L.job] (Dead)\n"
-					failed = TRUE //Dead
-
-			continue //Happy connected client
-		for(var/mob/dead/observer/D in GLOB.dead_mob_list)
-			if(D.mind && D.mind.current == L)
-				if(L.stat == DEAD)
-					if(HAS_TRAIT(L, TRAIT_SUICIDED)) //Suicider
-						msg += "<b>[L.name]</b> ([ckey(D.mind.key)]), the [L.job] ([span_bolddanger("Suicide")])\n"
-						continue //Disconnected client
-					else
-						msg += "<b>[L.name]</b> ([ckey(D.mind.key)]), the [L.job] (Dead)\n"
-						continue //Dead mob, ghost abandoned
-				else
-					if(D.can_reenter_corpse)
-						continue //Adminghost, or cult/wizard ghost
-					else
-						msg += "<b>[L.name]</b> ([ckey(D.mind.key)]), the [L.job] ([span_bolddanger("Ghosted")])\n"
-						continue //Ghosted while alive
-
-	var/concatenated_message = msg.Join()
-	log_admin(concatenated_message)
-	to_chat(GLOB.admins, concatenated_message)
 
 /// Initializes the internal ruleset variables
 /datum/controller/subsystem/dynamic/proc/setup_rulesets()
@@ -905,25 +906,6 @@ SUBSYSTEM_DEF(dynamic)
 	if(!(ruleset.ruleset_category & GLOB.dynamic_ruleset_categories))
 		ruleset.requirements = list(101,101,101,101,101,101,101,101,101,101)
 
-/// Get station traits and call for their config
-/datum/controller/subsystem/dynamic/proc/configure_station_trait_costs()
-	if(!CONFIG_GET(flag/dynamic_config_enabled))
-		return
-	for(var/datum/station_trait/station_trait as anything in GLOB.dynamic_station_traits)
-		configure_station_trait(station_trait)
-
-/// Apply configuration for station trait costs
-/datum/controller/subsystem/dynamic/proc/configure_station_trait(datum/station_trait/station_trait)
-	var/list/station_trait_config = LAZYACCESSASSOC(configuration, "Station", station_trait.dynamic_threat_id)
-	var/cost = station_trait_config["cost"]
-
-	if(isnull(cost)) //0 is valid so check for null specifically
-		return
-
-	if(cost != GLOB.dynamic_station_traits[station_trait])
-		log_dynamic("Config set [station_trait.dynamic_threat_id] cost from [station_trait.threat_reduction] to [cost]")
-
-	GLOB.dynamic_station_traits[station_trait] = cost
 
 /// Refund threat, but no more than threat_level.
 /datum/controller/subsystem/dynamic/proc/refund_threat(regain)
@@ -972,11 +954,64 @@ SUBSYSTEM_DEF(dynamic)
 	var/upper_deviation = max((max_threat - std_threat) * (centre-location)/MAXIMUM_DYN_DISTANCE, 0)
 	return clamp(round(std_threat + upper_deviation - lower_deviation, interval), 0, 100)
 
+#undef MAXIMUM_DYN_DISTANCE
+
+*/
+
+
+/datum/controller/subsystem/dynamic/proc/display_roundstart_logout_report()
+	var/list/msg = list("[span_boldnotice("Roundstart logout report")]\n\n")
+	for(var/mob/living/player as anything in GLOB.mob_living_list)
+		if (iscarbon(player) && !player.last_mind)
+			continue  // never had a client
+
+		if(player.ckey && !GLOB.directory[player.ckey])
+			msg += "<b>[player.name]</b> ([player.key]), the [player.job] (<font color='#ffcc00'><b>Disconnected</b></font>)\n"
+
+
+		if(player.ckey && player.client)
+			var/failed = FALSE
+			if(player.client.inactivity >= ROUNDSTART_LOGOUT_AFK_THRESHOLD) //Connected, but inactive (alt+tabbed or something)
+				msg += "<b>[player.name]</b> ([player.key]), the [player.job] (<font color='#ffcc00'><b>Connected, Inactive</b></font>)\n"
+				failed = TRUE //AFK client
+			if(!failed && player.stat)
+				if(HAS_TRAIT(player, TRAIT_SUICIDED)) //Suicider
+					msg += "<b>[player.name]</b> ([player.key]), the [player.job] ([span_bolddanger("Suicide")])\n"
+					failed = TRUE //Disconnected client
+				if(!failed && (player.stat == UNCONSCIOUS || player.stat == HARD_CRIT))
+					msg += "<b>[player.name]</b> ([player.key]), the [player.job] (Dying)\n"
+					failed = TRUE //Unconscious
+				if(!failed && player.stat == DEAD)
+					msg += "<b>[player.name]</b> ([player.key]), the [player.job] (Dead)\n"
+					failed = TRUE //Dead
+
+			continue //Happy connected client
+
+		for(var/mob/dead/observer/ghost as anything in GLOB.dead_mob_list)
+			if(ghost.mind && ghost.mind.current == player)
+				if(player.stat == DEAD)
+					if(HAS_TRAIT(player, TRAIT_SUICIDED)) //Suicider
+						msg += "<b>[player.name]</b> ([ckey(ghost.mind.key)]), the [player.job] ([span_bolddanger("Suicide")])\n"
+						continue //Disconnected client
+					else
+						msg += "<b>[player.name]</b> ([ckey(ghost.mind.key)]), the [player.job] (Dead)\n"
+						continue //Dead mob, ghost abandoned
+				else
+					if(ghost.can_reenter_corpse)
+						continue //Adminghost, or cult/wizard ghost
+					else
+						msg += "<b>[player.name]</b> ([ckey(ghost.mind.key)]), the [player.job] ([span_bolddanger("Ghosted")])\n"
+						continue //Ghosted while alive
+
+	var/concatenated_message = msg.Join()
+	log_admin(concatenated_message)
+	to_chat(GLOB.admins, concatenated_message)
+
 /proc/reopen_roundstart_suicide_roles()
 	var/include_command = CONFIG_GET(flag/reopen_roundstart_suicide_roles_command_positions)
 	var/list/reopened_jobs = list()
 
-	for(var/mob/living/quitter in GLOB.suicided_mob_list)
+	for(var/mob/living/quitter as anything in GLOB.suicided_mob_list)
 		var/datum/job/job = SSjob.get_job(quitter.job)
 		if(!job || !(job.job_flags & JOB_REOPEN_ON_ROUNDSTART_LOSS))
 			continue
@@ -1008,6 +1043,3 @@ SUBSYSTEM_DEF(dynamic)
 			"}
 
 			print_command_report(suicide_command_report, "Central Command Personnel Update")
-
-
-#undef MAXIMUM_DYN_DISTANCE
