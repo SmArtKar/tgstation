@@ -1,3 +1,23 @@
+// Threat tiers
+/// Core sector, no antags
+#define THREAT_TIER_ZERO "core_sector"
+/// Yellow star, low threat for lowpop
+#define THREAT_TIER_ONE "yellow_star"
+/// Orange star, low-mid threat
+#define THREAT_TIER_TWO "orange_star"
+/// Red star, mid-high threat
+#define THREAT_TIER_THREE "red_star"
+/// Black orbit, extreme threat
+#define THREAT_TIER_FOUR "black_orbit"
+/// Midnight sun, may god have mercy on your soul
+#define THREAT_TIER_FIVE "midnight_sun"
+
+// Ruleset flags
+/// This is a very impactful ruleset, and in most rounds only one should be picked
+#define HIGH_IMPACT_RULESET (1<<0)
+/// This is a "heavy" midround ruleset, and should be run later into the round
+#define HEAVY_RULESET (1<<1)
+
 /*
 /// This is the only ruleset that should be picked this round, used by admins and should not be on rulesets in code.
 #define ONLY_RULESET (1<<0)
@@ -33,21 +53,6 @@
 #define RULESET_CATEGORY_DEFAULT (1 << 0)
 /// Rulesets not including crew antagonists, non-witting referring to antags like obsessed which aren't really enemies of the station
 #define RULESET_CATEGORY_NO_WITTING_CREW_ANTAGONISTS (1 << 1)
-
-// Threat tiers
-/// Core sector, no antags
-#define THREAT_TIER_ZERO "core_sector"
-/// Yellow star, low threat for lowpop
-#define THREAT_TIER_ONE "yellow_star"
-/// Orange star, low-mid threat
-#define THREAT_TIER_TWO "orange_star"
-/// Red star, mid-high threat
-#define THREAT_TIER_THREE "red_star"
-/// Black orbit, extreme threat
-#define THREAT_TIER_FOUR "black_orbit"
-/// Midnight sun, may god have mercy on your soul
-#define THREAT_TIER_FIVE "midnight_sun"
-
 /*
 /// No round event was hijacked this cycle
 #define HIJACKED_NOTHING "HIJACKED_NOTHING"

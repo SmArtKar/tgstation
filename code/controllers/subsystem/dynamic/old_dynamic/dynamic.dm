@@ -1,22 +1,3 @@
-// If enabled does not accept or execute any rulesets.
-GLOBAL_VAR_INIT(dynamic_forced_extended, FALSE)
-// Forced threat tier, 0-5
-GLOBAL_VAR_INIT(dynamic_forced_threat_tier, null)
-// List of forced roundstart rulesets.
-GLOBAL_LIST_EMPTY(dynamic_forced_roundstart_ruleset)
-// Ordered list of all threat tier types, to check as fallbacks
-GLOBAL_LIST_INIT(dynamic_threat_tier_types, list(
-	THREAT_TIER_ZERO = /datum/threat_tier/zero,
-	THREAT_TIER_ONE = /datum/threat_tier/one,
-	THREAT_TIER_TWO = /datum/threat_tier/two,
-	THREAT_TIER_THREE = /datum/threat_tier/three,
-	THREAT_TIER_FOUR = /datum/threat_tier/four,
-	THREAT_TIER_FIVE = /datum/threat_tier/five,
-))
-/// Modify the threat level for station traits before dynamic can be Initialized. List(instance = threat_reduction)
-GLOBAL_LIST_EMPTY(dynamic_station_traits)
-/// Rulesets which have been forcibly enabled or disabled
-GLOBAL_LIST_EMPTY(dynamic_forced_rulesets)
 /// Bitflags used during init by Dynamic to determine which rulesets we're allowed to use, used by station traits for gamemode-esque experiences
 GLOBAL_VAR_INIT(dynamic_ruleset_categories, RULESET_CATEGORY_DEFAULT)
 

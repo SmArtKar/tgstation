@@ -2,7 +2,7 @@
 /datum/threat_tier
 	// Name and description shown in the roundstart report
 	var/name = "Hole in Reality"
-	var/description = "A coder has messed with your sector, resulting in a broken threat tier. Report this."
+	var/desc = "A coder has messed with your sector, resulting in a broken threat tier. Report this."
 	/// How likely is this threat tier to be picked, relative to the others
 	var/weight = 0
 	/// How many roundstart rulesets can get executed, list(min, max)
