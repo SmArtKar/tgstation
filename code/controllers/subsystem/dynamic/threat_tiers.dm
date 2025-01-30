@@ -13,6 +13,8 @@
 	var/heavy_midround_rulesets = list("min" = 0, "max" = 0)
 	/// How many latejoin rulesets can get executed, list(min, max)
 	var/latejoin_rulesets = list("min" = 0, "max" = 0)
+	/// Can multiple high impact rulesets roll together?
+	var/high_impact_stacking = FALSE
 
 	/// Time before heavy midrounds can start rolling
 	var/heavy_midround_delay = 0
@@ -22,7 +24,7 @@
 	var/ideal_population = 0
 
 /datum/threat_tier/zero
-	name = "Core Sector"
+	name = "Sector Core"
 	desc = "Your station is positioned in the core of the Spinward Sector. Surveillance information shows no credible threats to Nanotrasen assets within the area at this time. \
 		As always, the Department of Intelligence advises maintaining vigilance against potential threats, regardless of a lack of known threats."
 	weight = 3
@@ -40,6 +42,7 @@
 	latejoin_rulesets = list("min" = 1, "max" = 1)
 
 	heavy_midround_delay = 60 MINUTES
+	ideal_population = 20
 
 /datum/threat_tier/two
 	name = "Orange Star"
@@ -54,6 +57,7 @@
 	latejoin_rulesets = list("min" = 1, "max" = 2)
 
 	heavy_midround_delay = 60 MINUTES
+	ideal_population = 25
 
 /datum/threat_tier/three
 	name = "Red Star"
@@ -68,6 +72,7 @@
 	latejoin_rulesets = list("min" = 1, "max" = 3)
 
 	heavy_midround_delay = 60 MINUTES
+	ideal_population = 30
 
 /datum/threat_tier/four
 	name = "Black Orbit"
@@ -82,6 +87,9 @@
 	latejoin_rulesets = list("min" = 2, "max" = 3)
 
 	heavy_midround_delay = 30 MINUTES
+	minimum_population = 25
+	ideal_population = 35
+	high_impact_stacking = TRUE
 
 /datum/threat_tier/five
 	name = "Midnight Sun"
@@ -96,3 +104,6 @@
 	latejoin_rulesets = list("min" = 1, "max" = 2)
 
 	heavy_midround_delay = 15 MINUTES
+	minimum_population = 35
+	ideal_population = 45
+	high_impact_stacking = TRUE
