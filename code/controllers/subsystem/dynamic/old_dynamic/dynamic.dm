@@ -78,7 +78,7 @@ SUBSYSTEM_DEF(dynamic)
 	SSjob.divide_occupations(pure = TRUE, allow_all = TRUE)
 
 	for(var/mob/dead/new_player/player as anything in GLOB.new_player_list)
-		if(player.ready == PLAYER_READY_TO_PLAY && player.mind && player.check_preferences())
+
 			if(is_unassigned_job(player.mind.assigned_role))
 				var/list/job_data = list()
 				var/job_prefs = player.client.prefs.job_preferences
