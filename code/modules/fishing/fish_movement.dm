@@ -31,6 +31,10 @@
 	var/can_interrupt_move = TRUE
 	/// The current speed the fish is moving at
 	var/fish_velocity = 0
+	/// Acceleration multiplier, used by the wrestling phase
+	var/acceleration_multiplier = 1
+	/// How much the fish can jump each tick during wrestling
+	var/wrestling_jump = 50
 
 /datum/fish_movement/New(datum/fishing_challenge/master)
 	src.master = master
@@ -58,7 +62,7 @@
 	long_jump_chance = initial(long_jump_chance)
 
 ///The main proc, called by minigame every SSfishing tick while it's in the 'active' phase.
-/datum/fish_movement/proc/move_fish(seconds_per_tick)
+/datum/fish_movement/proc/move_fish(seconds_per_tick, wrestling = FALSE)
 	times_fired++
 	/**
 	 * The jump chances are meant to run every odd tick (each every decisecond)
@@ -66,7 +70,10 @@
 	 * and we cannot cut the chances in half to fit on each tick, because the maximum probability
 	 *  would go from 100% to 75%.
 	 */
-	var/can_roll = times_fired % 2
+
+	var/can_roll = FALSE
+	if (!wrestling)
+		can_roll = times_fired % 2
 
 	var/long_chance = long_jump_chance * seconds_per_tick * (1/seconds_per_tick)
 	var/short_chance = short_jump_chance * seconds_per_tick * (1/seconds_per_tick)
@@ -142,13 +149,29 @@
 	fish_velocity = clamp(fish_velocity, -current_velocity_limit, current_velocity_limit)
 	set_fish_position(seconds_per_tick)
 
+///Second proc called by the "wrestling" phase of the minigame, used by harder fishes
+/datum/fish_movement/proc/move_wrestle(seconds_per_tick, bait_slot_position)
+	var/can_roll = times_fired % 2
+	if (can_roll && prob(long_jump_chance * seconds_per_tick))
+		var/below = prob(bait_slot_position / FISHING_MINIGAME_AREA)
+		var/max_dist = below ? bait_slot_position : (FISHING_MINIGAME_AREA - bait_slot_position)
+		var/rand_val = rand(1, max_dist * (max_dist - 1) * 0.5) // Linear distribution so we pick a number on a trianglular distribution
+		var/chosen_dist = sqrt(rand_val * 2) // Losing precision but its 0.05%, who cares. Totally not me.
+		target_position = below ? (bait_slot_position - bait_slot_position) : (bait_slot_position + bait_slot_position)
+	target_position += rand(-wrestling_jump, wrestling_jump)
+	move_fish(seconds_per_tick, wrestling = FALSE)
+
 ///Proc that returns the acceleration of the fish during the minigame.
 /datum/fish_movement/proc/get_acceleration(seconds_per_tick)
-	return 0.3 * master.difficulty + 0.5
+	return (0.3 * master.difficulty + 0.5) * acceleration_multiplier
 
 ///Called at the end of move_fish(), for updating the position of the fish in the fishing minigame.
 /datum/fish_movement/proc/set_fish_position(seconds_per_tick)
 	master.fish_position = clamp(master.fish_position + fish_velocity * seconds_per_tick, 0, FISHING_MINIGAME_AREA - master.fish_height)
+
+/// Animates fish movement
+/datum/fish_movement/proc/animate_hud(atom/movable/screen/hud_element, datum/fishing_challenge/challenge, seconds_per_tick, pixel_y)
+	animate(hud_element, pixel_y = pixel_y, time = seconds_per_tick SECONDS)
 
 ///Generic fish movement datum that only performs slow, uninterrupted long jumps
 /datum/fish_movement/slow
@@ -156,6 +179,7 @@
 	long_jump_chance = 1.5
 	long_jump_velocity_limit = 150
 	can_interrupt_move = FALSE
+	wrestling_jump = 20
 
 ///Generic fish movement datum with triple the short jump chance.
 /datum/fish_movement/zippy
@@ -170,7 +194,7 @@
 	///Time to reach full speed, in seconds.
 	var/accel_time_cap = 30
 
-/datum/fish_movement/accelerando/move_fish(seconds_per_tick)
+/datum/fish_movement/accelerando/move_fish(seconds_per_tick, wrestling = TRUE)
 	var/seconds_elapsed = (times_fired * seconds_per_tick)
 	if(seconds_elapsed >= accel_time_cap)
 		return ..()
@@ -205,6 +229,10 @@
 	if(!((times_fired * SSfishing.wait) % (0.5 SECONDS)))
 		master.fish_position = faux_position
 
+// Smooth movement? For my legacy fish?
+/datum/fish_movement/choppy/animate_hud(atom/movable/screen/hud_element, datum/fishing_challenge/challenge, seconds_per_tick, pixel_y)
+	hud_element.pixel_y = pixel_y
+
 ///Fish movement datum that weakly pushes the fish up and then down with greater force once it reaches the top of the minigame.
 /datum/fish_movement/plunger
 	///Is the fish plunging to the bottom of the minigame area, or should it swim up?
@@ -224,7 +252,7 @@
 		fish_idle_velocity -= plunging_speed
 	plunging_speed = initial(plunging_speed)
 
-/datum/fish_movement/plunger/move_fish(seconds_per_tick)
+/datum/fish_movement/plunger/move_fish(seconds_per_tick, wrestling = TRUE)
 	var/fish_area = FISHING_MINIGAME_AREA - master.fish_height
 	if(is_plunging)
 		if(target_position > master.fish_position) //nothing should stop us from plunging.

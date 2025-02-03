@@ -30,6 +30,11 @@
 
 #define FISH_TRAIT_MINOR_DIFFICULTY_BOOST 5
 
+/// Difficulty above which you need to wrestle with your catch
+#define FISH_DIFFICULTY_WRESTLE 45
+/// Fish acceleration multiplier during wrestling
+#define WRESTLING_ACCELERATION_MULTIPLIER 1 //2.5
+
 ///Slot defines for the fishing rod and its equipment
 #define ROD_SLOT_BAIT "bait"
 #define ROD_SLOT_LINE "line"

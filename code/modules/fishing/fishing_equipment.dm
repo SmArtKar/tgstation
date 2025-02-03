@@ -194,6 +194,24 @@
 /obj/item/fishing_hook/proc/reason_we_cant_fish(datum/fish_source/target_fish_source)
 	return null
 
+/obj/item/fishing_hook/corked
+	name = "corked hook"
+	icon_state = "corked"
+	rod_overlay_icon_state = "corked_overlay"
+	wiki_desc = "An easy to control hook which provides a wider bait bar."
+
+/obj/item/fishing_hook/corked/Initialize(mapload)
+	. = ..()
+	RegisterSignal(src, COMSIG_ITEM_FISHING_ROD_SLOTTED, PROC_REF(on_fishing_rod_slotted))
+	RegisterSignal(src, COMSIG_ITEM_FISHING_ROD_UNSLOTTED, PROC_REF(on_fishing_rod_unslotted))
+
+/obj/item/fishing_hook/corked/proc/on_fishing_rod_slotted(datum/source, obj/item/fishing_rod/rod, slot)
+	SIGNAL_HANDLER
+	rod.bait_height_mult *= 1.25
+
+/obj/item/fishing_hook/corked/proc/on_fishing_rod_unslotted(datum/source, obj/item/fishing_rod/rod, slot)
+	SIGNAL_HANDLER
+	rod.bait_height_mult /= 1.25
 
 /obj/item/fishing_hook/magnet
 	name = "magnetic hook"

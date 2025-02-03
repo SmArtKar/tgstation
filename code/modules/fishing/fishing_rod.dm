@@ -783,7 +783,7 @@
 	bounciness_mult = 0.3
 	gravity_mult = 1.2
 	material_fish_chance = 33 //if somehow you metalgen it.
-	bait_height_mult = 1.4
+	bait_height_mult = 1.2
 
 /obj/item/fishing_rod/tech
 	name = "advanced fishing rod"

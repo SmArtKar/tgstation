@@ -3,20 +3,30 @@
 // Click now to start tgui part
 #define BITING_PHASE 2
 // UI minigame phase
-#define MINIGAME_PHASE 3
+#define MINIGAME_PHASE_CATCH 3
+// Second phase of the minigame for high difficulty fishes
+#define MINIGAME_PHASE_WRESTLE 4
 
 // Acceleration mod when bait is over fish
 #define FISH_ON_BAIT_ACCELERATION_MULT 0.6
 /// The minimum velocity required for the bait to bounce
 #define BAIT_MIN_VELOCITY_BOUNCE 150
 
+#define GREAT_BAIT_HEIGHT_MULT 1.2
+#define GOOD_BAIT_HEIGHT_MULT 1.1
+
 /// Reduce initial completion rate depending on difficulty
 #define MAX_FISH_COMPLETION_MALUS 15
 /// The window of time between biting phase and back to baiting phase
 #define BITING_TIME_WINDOW 4 SECONDS
 
-/// The multiplier of how much the difficulty negatively impacts the bait height
-#define BAIT_HEIGHT_DIFFICULTY_MALUS 1.3
+/// Percentage at which the completion bar starts
+#define COMPLETION_START 30
+
+/// Value by which the bait moves every time you click during the wrestling phase, in minigame units
+#define WRESTLE_CLICK_MOVE 70
+/// Maximum deduction from fishing difficulty
+#define WRESTLE_DIFFICULTY_MOVE_REDUCTION WRESTLE_CLICK_MOVE * 0.5
 
 /// Defines to know how the bait is moving on the minigame slider.
 #define REELING_STATE_IDLE 0
@@ -27,6 +37,10 @@
 #define MINIGAME_SLIDER_HEIGHT 76
 /// The standard pixel height of the bait
 #define MINIGAME_BAIT_HEIGHT 27
+/// The pixel height of the wrestling phase bait
+#define MINIGAME_WRESTLING_BAIT_HEIGHT 11
+/// Pixel offset for the fish during the wrestling phase
+#define MINIGAME_WRESTLING_FISH_OFFSET 35
 /// How many pixels bottom and top parts of the bait take up
 #define MINIGAME_BAIT_TOP_AND_BOTTOM_HEIGHT 6
 /// The standard pixel height of the fish (minus a pixel on each direction for the sake of a better looking sprite)
@@ -95,7 +109,7 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	var/bait_velocity = 0
 
 	/// The completion score. If it reaches 100, it's a win. If it reaches 0, it's a loss.
-	var/completion = 30
+	var/completion = COMPLETION_START
 	/// How much completion is lost per second when the bait area is not intersecting with the fish's
 	var/completion_loss = 6
 	/// How much completion is gained per second when the bait area is intersecting with the fish's
@@ -113,6 +127,8 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	var/bait_bounce_mult = 0.6
 	/// The multiplier of deceleration of velocity that happens when the bait switches direction
 	var/deceleration_mult = 1.8
+	/// Last time the player clicked during the wrestling phase
+	var/last_wrestling_click = 0
 
 	///The background as shown in the minigame, and the holder of the other visual overlays
 	var/atom/movable/screen/fishing_hud/fishing_hud
@@ -297,6 +313,8 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 
 /datum/fishing_challenge/proc/handle_click(mob/source, atom/target, modifiers)
 	SIGNAL_HANDLER
+	if(target == used_rod) // Stops the minigame
+		return
 	if(HAS_TRAIT(source, TRAIT_HANDS_BLOCKED)) //blocked, can't do stuff
 		return
 	//Doing other stuff
@@ -322,6 +340,9 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 			start_baiting_phase(TRUE) //Add in another 3 to 5 seconds for that blunder.
 	else if(phase == BITING_PHASE)
 		start_minigame_phase()
+	else if (phase == MINIGAME_PHASE_WRESTLE)
+		handle_wrestle_click(modifiers)
+		source.changeNext_move(CLICK_CD_HYPER_RAPID)
 	return COMSIG_MOB_CANCEL_CLICKON
 
 /// Challenge interrupted by something external
@@ -334,8 +355,11 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	SIGNAL_HANDLER
 	INVOKE_ASYNC(src, PROC_REF(stop_fishing), source, user)
 
+/datum/fishing_challenge/proc/minigame_active()
+	return phase == MINIGAME_PHASE_CATCH || phase == MINIGAME_PHASE_WRESTLE
+
 /datum/fishing_challenge/proc/stop_fishing(obj/item/rod, mob/user)
-	if((phase != MINIGAME_PHASE || do_after(user, 3 SECONDS, rod)) && !QDELETED(src) && !completed)
+	if((!minigame_active() || do_after(user, 3 SECONDS, rod)) && !QDELETED(src) && !completed)
 		experience_multiplier *= 0.5
 		send_alert("stopped fishing")
 		complete(FALSE)
@@ -348,7 +372,7 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 		return
 	deltimer(next_phase_timer)
 	completed = TRUE
-	if(phase == MINIGAME_PHASE)
+	if(minigame_active())
 		remove_minigame_hud()
 	if(!QDELETED(user) && user.mind && start_time && !(special_effects & FISHING_MINIGAME_RULE_NO_EXP))
 		var/seconds_spent = (world.time - start_time) * 0.1
@@ -502,32 +526,29 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	return TRUE
 
 /datum/fishing_challenge/proc/update_difficulty()
-	if(phase != MINIGAME_PHASE)
+	if(!minigame_active())
 		return
 	var/old_difficulty = difficulty
 	//early return if the difficulty is the same or we crush the minigame all the way to 0 difficulty
 	if(!get_difficulty() || difficulty == old_difficulty)
 		return
-	bait_height = initial(bait_height) * used_rod.bait_height_mult
 	experience_multiplier -= difficulty * FISHING_SKILL_DIFFIULTY_EXP_MULT
 	mover.reset_difficulty_values()
 	adjust_to_difficulty()
 
 /datum/fishing_challenge/proc/adjust_to_difficulty()
 	mover.adjust_to_difficulty()
-	bait_height -= round(difficulty * BAIT_HEIGHT_DIFFICULTY_MALUS)
-	bait_pixel_height = round(MINIGAME_BAIT_HEIGHT * (bait_height/initial(bait_height)), 1)
 	experience_multiplier += difficulty * FISHING_SKILL_DIFFIULTY_EXP_MULT
-	fishing_hud.hud_bait.adjust_to_difficulty(src)
 
 ///Get the difficulty and other variables, than start the minigame
 /datum/fishing_challenge/proc/start_minigame_phase(auto_reel = FALSE)
 	SEND_SIGNAL(user, COMSIG_MOB_BEGIN_FISHING_MINIGAME, src)
+
 	if(!get_difficulty()) //we totalized 0 or less difficulty, instant win.
 		return
 
 	if(difficulty > FISHING_DEFAULT_DIFFICULTY)
-		completion -= MAX_FISH_COMPLETION_MALUS * (difficulty * 0.01)
+		completion -= MAX_FISH_COMPLETION_MALUS * clamp(difficulty, 0, 100) * 0.01
 
 	var/is_fish_instance = isfish(reward_path)
 
@@ -559,6 +580,7 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 				completion *= 1.2
 			if(BITING_TIME_WINDOW - 0.5 SECONDS to BITING_TIME_WINDOW)
 				completion *= 1.4
+
 	//randomize the position of the fish a little
 	fish_position = rand(0, (FISHING_MINIGAME_AREA - fish_height) * 0.8)
 	var/diff_dist = 100 + difficulty
@@ -571,7 +593,19 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 
 	adjust_to_difficulty()
 
-	phase = MINIGAME_PHASE
+	bait_height *= used_rod.bait_height_mult
+
+	if(used_rod.bait)
+		var/obj/item/bait = used_rod.bait
+		if (HAS_TRAIT(bait, TRAIT_GREAT_QUALITY_BAIT))
+			bait_height *= GREAT_BAIT_HEIGHT_MULT
+		else if (HAS_TRAIT(bait, TRAIT_GOOD_QUALITY_BAIT))
+			bait_height *= GOOD_BAIT_HEIGHT_MULT
+
+	bait_pixel_height = round(MINIGAME_BAIT_HEIGHT * (bait_height / initial(bait_height)), 1)
+	fishing_hud.hud_bait.adjust_height(src)
+
+	phase = MINIGAME_PHASE_CATCH
 	deltimer(next_phase_timer)
 	if((FISHING_MINIGAME_RULE_KILL in special_effects) && ispath(reward_path,/obj/item/fish))
 		var/obj/item/fish/fish = reward_path
@@ -621,6 +655,9 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 /datum/fishing_challenge/proc/remove_minigame_hud()
 	STOP_PROCESSING(SSfishing, src)
 	QDEL_NULL(fishing_hud)
+	UnregisterSignal(user, COMSIG_MOB_LOGOUT)
+	if (user.client)
+		UnregisterSignal(user.client, list(COMSIG_CLIENT_MOUSEDOWN, COMSIG_CLIENT_MOUSEUP))
 
 ///While the mouse button is held down, the bait will be reeling up (or down on r-click if the bidirectional rule is enabled)
 /datum/fishing_challenge/proc/start_reeling(client/source, datum/object, location, control, params)
@@ -641,8 +678,14 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 /datum/fishing_challenge/process(seconds_per_tick)
 	if(length(active_effects) && COOLDOWN_FINISHED(src, active_effect_cd))
 		select_active_effect()
-	mover.move_fish(seconds_per_tick)
-	move_bait(seconds_per_tick)
+
+	if (phase == MINIGAME_PHASE_WRESTLE)
+		mover.move_wrestle(seconds_per_tick)
+		move_wrestle(seconds_per_tick)
+	else
+		mover.move_fish(seconds_per_tick)
+		move_bait(seconds_per_tick)
+
 	if(!QDELETED(fishing_hud))
 		update_visuals(seconds_per_tick)
 
@@ -666,6 +709,8 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 				SEND_SOUND(user, sound('sound/effects/nightmare_poof.ogg', volume = 15))
 				COOLDOWN_START(src, active_effect_cd, rand(6, 8) SECONDS)
 				animate(fishing_hud.hud_fish, alpha = 7, time = 2 SECONDS)
+				if (phase == MINIGAME_PHASE_WRESTLE)
+					animate(fishing_hud.hud_wresling, alpha = 7, time = 2 SECONDS)
 		return
 
 	///go back to normal
@@ -725,7 +770,7 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	velocity_change = round(velocity_change)
 
 	if(current_active_effect == FISHING_MINIGAME_RULE_ANTIGRAV)
-		velocity_change = -velocity_change
+		velocity_change *= -1
 
 	/**
 	 * Pull the brake on the velocity if the current velocity and the acceleration
@@ -746,17 +791,72 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 		bait_velocity += velocity_change
 
 	//check that the fish area is still intersecting the bait now that it has moved
-	if(is_fish_on_bait())
-		completion += completion_gain * seconds_per_tick
-		if(completion >= 100)
-			complete(TRUE)
-	else
-		completion -= completion_loss * seconds_per_tick
+	if(!is_fish_on_bait())
+		completion = clamp(completion - completion_loss * seconds_per_tick, 0, 100)
 		if(completion <= 0 && !(special_effects & FISHING_MINIGAME_RULE_NO_ESCAPE))
 			user.balloon_alert(user, "it got away!")
 			complete(FALSE)
+		return
 
-	completion = clamp(completion, 0, 100)
+	completion = clamp(completion + completion_gain * seconds_per_tick, 0, 100)
+	if(completion < 100)
+		return
+
+	if (difficulty < 0) //FISH_DIFFICULTY_WRESTLE)
+		complete(TRUE)
+	else
+		start_wrestling()
+
+/datum/fishing_challenge/proc/start_wrestling()
+	phase = MINIGAME_PHASE_WRESTLE
+	completion = COMPLETION_START
+	fishing_hud.start_wrestling(src)
+	fishing_hud.hud_wresling.adjust_height(src)
+	fishing_hud.hud_completion.set_state(0)
+	bait_position = fish_position - MINIGAME_WRESTLING_FISH_OFFSET
+	bait_velocity = 0
+	bait_height = MINIGAME_WRESTLING_BAIT_HEIGHT / MINIGAME_BAIT_HEIGHT * initial(bait_height)
+	bait_pixel_height = MINIGAME_WRESTLING_BAIT_HEIGHT
+	mover.acceleration_multiplier = WRESTLING_ACCELERATION_MULTIPLIER
+	if (current_active_effect == FISHING_MINIGAME_RULE_CAMO)
+		animate(fishing_hud.hud_wresling, alpha = 7, time = 0.5 SECONDS)
+
+/datum/fishing_challenge/proc/move_wrestle(seconds_per_tick)
+	var/should_bounce = abs(bait_velocity) > BAIT_MIN_VELOCITY_BOUNCE
+	// Clicks slightly dampen fish movement
+	if (world.time - last_wrestling_click > 0.2 SECONDS)
+		bait_position = fish_position - MINIGAME_WRESTLING_FISH_OFFSET
+	else
+		bait_position = bait_position + (fish_position - bait_position) * (world.time - last_wrestling_click) / (0.3 SECONDS) - MINIGAME_WRESTLING_FISH_OFFSET
+
+	// Hitting the top bound
+	if(bait_position > FISHING_MINIGAME_AREA - bait_height)
+		if (should_bounce)
+			bait_velocity = (-bait_velocity - (bait_position - FISHING_MINIGAME_AREA - bait_height)) * bait_bounce_mult
+		bait_position = FISHING_MINIGAME_AREA - bait_height
+	// Hitting rock bottom
+	else if(bait_position < 0)
+		if (should_bounce)
+			bait_velocity = (-bait_velocity - bait_position) * bait_bounce_mult
+		bait_position = 0
+
+	fish_position = bait_position + MINIGAME_WRESTLING_FISH_OFFSET
+	if (completion >= 100)
+		complete(TRUE)
+
+/datum/fishing_challenge/proc/handle_wrestle_click(list/modifiers)
+	var/movement = WRESTLE_CLICK_MOVE - (WRESTLE_DIFFICULTY_MOVE_REDUCTION * clamp(difficulty - FISH_DIFFICULTY_WRESTLE, 0, 100 - FISH_DIFFICULTY_WRESTLE) / (100 - FISH_DIFFICULTY_WRESTLE))
+	if (LAZYACCESS(modifiers, RIGHT_CLICK))
+		movement *= -1
+	if(current_active_effect == FISHING_MINIGAME_RULE_ANTIGRAV)
+		movement *= -1
+
+	if ((bait_velocity > 0 && movement < 0) || (bait_velocity < 0 && movement > 0))
+		bait_velocity = 0
+
+	bait_position += movement // out of bounds positions are handled by bouncing
+	fish_position = bait_position + MINIGAME_WRESTLING_FISH_OFFSET
+	last_wrestling_click = world.time
 
 ///Returns TRUE if the fish and the bait are intersecting
 /datum/fishing_challenge/proc/is_fish_on_bait()
@@ -765,9 +865,12 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 ///update the vertical pixel position of both fish and bait, and the icon state of the completion bar
 /datum/fishing_challenge/proc/update_visuals(seconds_per_tick)
 	var/bait_offset_mult = bait_position / FISHING_MINIGAME_AREA
-	animate(fishing_hud.hud_bait, pixel_y = MINIGAME_SLIDER_HEIGHT * bait_offset_mult, time = seconds_per_tick SECONDS)
+	if (phase == MINIGAME_PHASE_WRESTLE)
+		animate(fishing_hud.hud_wresling, pixel_y = MINIGAME_SLIDER_HEIGHT * bait_offset_mult, time = seconds_per_tick SECONDS)
+	else
+		animate(fishing_hud.hud_bait, pixel_y = MINIGAME_SLIDER_HEIGHT * bait_offset_mult, time = seconds_per_tick SECONDS)
 	var/fish_offset_mult = fish_position / FISHING_MINIGAME_AREA
-	animate(fishing_hud.hud_fish, pixel_y = MINIGAME_SLIDER_HEIGHT * fish_offset_mult, time = seconds_per_tick SECONDS)
+	mover.animate_hud(fishing_hud.hud_fish, src, seconds_per_tick, MINIGAME_SLIDER_HEIGHT * fish_offset_mult)
 	fishing_hud.hud_completion.update_state(completion, seconds_per_tick)
 
 ///The screen object which bait, fish, and completion bar are visually attached to.
@@ -777,11 +880,15 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	name = "fishing minigame"
 	appearance_flags = APPEARANCE_UI|KEEP_TOGETHER
 	///The fish as shown in the minigame
-	var/atom/movable/screen/hud_fish/hud_fish
+	var/atom/movable/screen/fishing/hud_fish/hud_fish
 	///The bait as shown in the minigame
-	var/atom/movable/screen/hud_bait/hud_bait
+	var/atom/movable/screen/fishing/hud_bait/hud_bait
 	///The completion bar as shown in the minigame
-	var/atom/movable/screen/hud_completion/hud_completion
+	var/atom/movable/screen/fishing/hud_completion/hud_completion
+	///Alternate bait for the wrestling phase
+	var/atom/movable/screen/fishing/hud_bait/wrestling/hud_wresling
+	///The bait slot for the wrestling phase
+	var/atom/movable/screen/fishing/hud_bait_slot/hud_slot
 
 ///Initialize bait, fish and completion bar and add them to the visual appearance of this screen object.
 /atom/movable/screen/fishing_hud/proc/prepare_minigame(datum/fishing_challenge/challenge)
@@ -797,33 +904,50 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 
 /atom/movable/screen/fishing_hud/Destroy()
 	var/datum/fishing_challenge/challenge = master_ref?.resolve()
-	if(!isnull(challenge))
+	if(!isnull(challenge) && challenge.user.client)
 		challenge.user.client.screen -= src
 	QDEL_NULL(hud_fish)
 	QDEL_NULL(hud_bait)
 	QDEL_NULL(hud_completion)
+	QDEL_NULL(hud_wresling)
+	QDEL_NULL(hud_slot)
 	return ..()
 
-/atom/movable/screen/hud_bait
+/atom/movable/screen/fishing_hud/proc/start_wrestling(datum/fishing_challenge/challenge)
+	QDEL_NULL(hud_bait)
+	hud_wresling = new(null, null, challenge)
+	hud_slot = new(null, null, challenge)
+	hud_completion.icon_state = "completion_overlay_hard"
+	// Fish needs to be above the wrestling hud
+	vis_contents -= hud_fish
+	vis_contents += list(hud_slot, hud_wresling, hud_fish)
+
+/atom/movable/screen/fishing
 	icon = 'icons/hud/fishing_hud.dmi'
-	icon_state = "bait_bottom"
 	vis_flags = VIS_INHERIT_ID
+
+/atom/movable/screen/fishing/hud_bait
+	icon_state = "bait_bottom"
 	var/cur_height = MINIGAME_BAIT_HEIGHT
 
-/atom/movable/screen/hud_bait/Initialize(mapload, datum/hud/hud_owner, datum/fishing_challenge/challenge)
+/atom/movable/screen/fishing/hud_bait/Initialize(mapload, datum/hud/hud_owner, datum/fishing_challenge/challenge)
 	. = ..()
 	if(!challenge || challenge.bait_pixel_height == MINIGAME_BAIT_HEIGHT)
 		update_icon()
 		return
 
-	adjust_to_difficulty(challenge)
+	adjust_height(challenge)
 
-/atom/movable/screen/hud_bait/proc/adjust_to_difficulty(datum/fishing_challenge/challenge)
+/atom/movable/screen/fishing/hud_bait/proc/adjust_height(datum/fishing_challenge/challenge)
 	cur_height = challenge.bait_pixel_height
 	update_icon()
 
-/atom/movable/screen/hud_bait/update_overlays()
+/atom/movable/screen/fishing/hud_bait/update_overlays()
 	. = ..()
+	. += adjust_bait_height()
+
+/atom/movable/screen/fishing/hud_bait/proc/adjust_bait_height()
+	. = list()
 	var/mutable_appearance/bait_top = mutable_appearance(icon, "bait_top")
 	bait_top.pixel_y += cur_height - MINIGAME_BAIT_TOP_AND_BOTTOM_HEIGHT
 	. += bait_top
@@ -832,27 +956,35 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 		bait_bar.pixel_y += i
 		. += bait_bar
 
-/atom/movable/screen/hud_fish
-	icon = 'icons/hud/fishing_hud.dmi'
-	icon_state = "fish"
-	vis_flags = VIS_INHERIT_ID
+/atom/movable/screen/fishing/hud_bait/wrestling
+	icon_state = "bait_hard"
 
-/atom/movable/screen/hud_fish/Initialize(mapload, datum/hud/hud_owner, datum/fishing_challenge/challenge)
+/atom/movable/screen/fishing/hud_bait/wrestling/adjust_bait_height()
+	return
+
+/atom/movable/screen/fishing/hud_fish
+	icon_state = "fish"
+
+/atom/movable/screen/fishing/hud_fish/Initialize(mapload, datum/hud/hud_owner, datum/fishing_challenge/challenge)
 	. = ..()
 	if(challenge)
 		icon_state = challenge.fish_icon
 
-/atom/movable/screen/hud_completion
-	icon = 'icons/hud/fishing_hud.dmi'
+/atom/movable/screen/fishing/hud_completion
 	icon_state = "completion_overlay"
-	vis_flags = VIS_INHERIT_ID
 
-/atom/movable/screen/hud_completion/Initialize(mapload, datum/hud/hud_owner)
+/atom/movable/screen/fishing/hud_completion/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
 	add_filter("completion_mask", 1, alpha_mask_filter(icon = icon(icon, "completion_overlay")))
 
-/atom/movable/screen/hud_completion/proc/update_state(completion, seconds_per_tick)
+/atom/movable/screen/fishing/hud_completion/proc/set_state(completion)
+	animate(get_filter("completion_mask"), y = -MINIGAME_COMPLETION_BAR_HEIGHT * (1 - completion * 0.01), time = 0)
+
+/atom/movable/screen/fishing/hud_completion/proc/update_state(completion, seconds_per_tick)
 	animate(get_filter("completion_mask"), y = -MINIGAME_COMPLETION_BAR_HEIGHT * (1 - completion * 0.01), time = seconds_per_tick SECONDS)
+
+/atom/movable/screen/fishing/hud_bait_slot
+	icon_state = "bait_slot"
 
 /// The visual that appears over the fishing spot
 /obj/effect/fishing_float
@@ -894,15 +1026,14 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 
 #undef WAIT_PHASE
 #undef BITING_PHASE
-#undef MINIGAME_PHASE
+#undef MINIGAME_PHASE_CATCH
+#undef MINIGAME_PHASE_WRESTLE
 
 #undef MINIGAME_SLIDER_HEIGHT
 #undef MINIGAME_BAIT_HEIGHT
 #undef MINIGAME_FISH_HEIGHT
 #undef MINIGAME_BAIT_TOP_AND_BOTTOM_HEIGHT
 #undef MINIGAME_COMPLETION_BAR_HEIGHT
-
-#undef BAIT_HEIGHT_DIFFICULTY_MALUS
 
 #undef REELING_STATE_IDLE
 #undef REELING_STATE_UP
@@ -913,3 +1044,12 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 
 #undef MAX_FISH_COMPLETION_MALUS
 #undef BITING_TIME_WINDOW
+
+#undef GREAT_BAIT_HEIGHT_MULT
+#undef GOOD_BAIT_HEIGHT_MULT
+
+#undef COMPLETION_START
+#undef WRESTLE_CLICK_MOVE
+#undef WRESTLE_DIFFICULTY_MOVE_REDUCTION
+#undef MINIGAME_WRESTLING_BAIT_HEIGHT
+#undef MINIGAME_WRESTLING_FISH_OFFSET
