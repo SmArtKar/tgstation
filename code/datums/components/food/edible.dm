@@ -212,12 +212,15 @@ Behavior that's still missing from this component that original food items had t
 
 	for(var/rid in reagents)
 		var/amount = reagents[rid]
+		var/set_purity = 1
+		if (ispath(rid, /datum/reagnet/consumable))
+			set_purity = reagent_purity
 		if(length(tastes) && ispath(rid, /datum/reagent/consumable/nutriment))
 			var/datum/reagent/consumable/nutriment/nid = rid
 			if(initial(nid.carry_food_tastes))
-				owner.reagents.add_reagent(rid, amount, tastes.Copy(), added_purity = reagent_purity)
+				owner.reagents.add_reagent(rid, amount, tastes.Copy(), added_purity = set_purity)
 				continue
-		owner.reagents.add_reagent(rid, amount, added_purity = reagent_purity)
+		owner.reagents.add_reagent(rid, amount, added_purity = set_purity)
 
 /datum/component/edible/proc/examine(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
