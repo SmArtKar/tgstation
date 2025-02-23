@@ -272,7 +272,12 @@
 	heat_g /= 255
 	heat_b /= 255
 
-	color = list(LERP(0.3, 1, 1-greyscale_fire) * heat_r,0.3 * heat_g * greyscale_fire,0.3 * heat_b * greyscale_fire, 0.59 * heat_r * greyscale_fire,LERP(0.59, 1, 1-greyscale_fire) * heat_g,0.59 * heat_b * greyscale_fire, 0.11 * heat_r * greyscale_fire,0.11 * heat_g * greyscale_fire,LERP(0.11, 1, 1-greyscale_fire) * heat_b, 0,0,0)
+	color = list(
+		LERP(PERCEPTION_COEFF_RED, 1, 1 - greyscale_fire) * heat_r, PERCEPTION_COEFF_RED * heat_g * greyscale_fire, PERCEPTION_COEFF_RED * heat_b * greyscale_fire,
+		PERCEPTION_COEFF_GREEN * heat_r * greyscale_fire, LERP(PERCEPTION_COEFF_GREEN, 1, 1 - greyscale_fire) * heat_g, PERCEPTION_COEFF_GREEN * heat_b * greyscale_fire,
+		PERCEPTION_COEFF_BLUE * heat_r * greyscale_fire, PERCEPTION_COEFF_BLUE * heat_g * greyscale_fire, LERP(PERCEPTION_COEFF_BLUE, 1, 1-greyscale_fire) * heat_b,
+		0,0,0
+	)
 	alpha = heat_a
 
 #define INSUFFICIENT(path) (!location.air.gases[path] || location.air.gases[path][MOLES] < 0.5)

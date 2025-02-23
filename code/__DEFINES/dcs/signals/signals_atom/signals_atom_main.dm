@@ -151,3 +151,6 @@
 
 /// From /datum/component/tether/UnregisterFromParent()
 #define COMSIG_ATOM_TETHER_SNAPPED "atom_tether_snapped"
+
+/// From /atom/proc/update_atom_colour() : (color_changed)
+#define COMSIG_ATOM_COLOR_UPDATED "atom_color_updated"

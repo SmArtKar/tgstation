@@ -488,3 +488,9 @@ GLOBAL_LIST_INIT(heretic_path_to_color, list(
 #define EYE_COLOR_WEED_PRIORITY 20
 #define EYE_COLOR_LUMINESCENT_PRIORITY 30
 #define EYE_COLOR_CULT_PRIORITY 40
+
+// Human eye percieves colors unevenly, green being brighter than red and red being brighter than blue
+// These are coefficients for greyscaling icons based off said numbers
+#define PERCEPTION_COEFF_RED 0.3
+#define PERCEPTION_COEFF_GREEN 0.59
+#define PERCEPTION_COEFF_BLUE 0.11

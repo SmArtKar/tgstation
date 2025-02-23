@@ -208,13 +208,18 @@ world
 
 // Convert to grayscale
 /icon/proc/GrayScale()
-	MapColors(0.3,0.3,0.3, 0.59,0.59,0.59, 0.11,0.11,0.11, 0,0,0)
+	MapColors(
+		PERCEPTION_COEFF_RED, PERCEPTION_COEFF_RED, PERCEPTION_COEFF_RED,
+		PERCEPTION_COEFF_GREEN, PERCEPTION_COEFF_GREEN, PERCEPTION_COEFF_GREEN,
+		PERCEPTION_COEFF_BLUE, PERCEPTION_COEFF_BLUE, PERCEPTION_COEFF_BLUE,
+		0, 0, 0,
+	)
 
 /icon/proc/ColorTone(tone)
 	GrayScale()
 
 	var/list/TONE = rgb2num(tone)
-	var/gray = round(TONE[1]*0.3 + TONE[2]*0.59 + TONE[3]*0.11, 1)
+	var/gray = round(TONE[1]*PERCEPTION_COEFF_RED + TONE[2]*PERCEPTION_COEFF_GREEN + TONE[3]*PERCEPTION_COEFF_BLUE, 1)
 
 	var/icon/upper = (255-gray) ? new(src) : null
 
@@ -259,7 +264,7 @@ world
 // I.e., black -> transparent, gray -> translucent white, white -> solid white
 /icon/proc/BecomeAlphaMask()
 	SwapColor(null, "#000000ff") // don't let transparent become gray
-	MapColors(0,0,0,0.3, 0,0,0,0.59, 0,0,0,0.11, 0,0,0,0, 1,1,1,0)
+	MapColors(0,0,0,PERCEPTION_COEFF_RED, 0,0,0,PERCEPTION_COEFF_GREEN, 0,0,0,PERCEPTION_COEFF_BLUE, 0,0,0,0, 1,1,1,0)
 
 /icon/proc/UseAlphaMask(mask)
 	Opaque()
@@ -360,7 +365,7 @@ world
 // Convert an rgb color to grayscale
 /proc/GrayScale(rgb)
 	var/list/RGB = rgb2num(rgb)
-	var/gray = RGB[1]*0.3 + RGB[2]*0.59 + RGB[3]*0.11
+	var/gray = RGB[1]*PERCEPTION_COEFF_RED + RGB[2]*PERCEPTION_COEFF_GREEN + RGB[3]*PERCEPTION_COEFF_BLUE
 	return (RGB.len > 3) ? rgb(gray, gray, gray, RGB[4]) : rgb(gray, gray, gray)
 
 // Change grayscale color to black->tone->white range
@@ -368,8 +373,8 @@ world
 	var/list/RGB = rgb2num(rgb)
 	var/list/TONE = rgb2num(tone)
 
-	var/gray = RGB[1]*0.3 + RGB[2]*0.59 + RGB[3]*0.11
-	var/tone_gray = TONE[1]*0.3 + TONE[2]*0.59 + TONE[3]*0.11
+	var/gray = RGB[1]*PERCEPTION_COEFF_RED + RGB[2]*PERCEPTION_COEFF_GREEN + RGB[3]*PERCEPTION_COEFF_BLUE
+	var/tone_gray = TONE[1]*PERCEPTION_COEFF_RED + TONE[2]*PERCEPTION_COEFF_GREEN + TONE[3]*PERCEPTION_COEFF_BLUE
 
 	if(gray <= tone_gray)
 		return BlendRGB(COLOR_BLACK, tone, gray/(tone_gray || 1))
