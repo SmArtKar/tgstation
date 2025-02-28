@@ -8,18 +8,32 @@
 	icon_state = "blob"
 	icon = 'icons/mob/nonhuman-player/blob.dmi'
 	color = rgb(145, 150, 0)
+	/// Balloons/animations are on a short cooldown as otherwise they can get really spammy, since CanAllowThrough can be called every tick
+	COOLDOWN_DECLARE(message_cooldown)
 
-/obj/effect/gluttony/CanAllowThrough(atom/movable/mover, border_dir)//So bullets will fly over and stuff.
+/obj/effect/gluttony/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()
-	if(ishuman(mover))
-		var/mob/living/carbon/human/H = mover
-		if(H.nutrition >= NUTRITION_LEVEL_FAT)
-			H.visible_message(span_warning("[H] pushes through [src]!"), span_notice("You've seen and eaten worse than this."))
-			return TRUE
-		else
-			to_chat(H, span_warning("You're repulsed by even looking at [src]. Only a pig could force themselves to go through it."))
-	if(istype(mover, /mob/living/basic/morph))
+	if (istype(mover, /mob/living/basic/morph))
 		return TRUE
+
+	if (!ishuman(mover))
+		return
+
+	var/mob/living/carbon/human/as_human = mover
+	if (as_human.nutrition >= NUTRITION_LEVEL_FAT)
+		as_human.visible_message(span_warning("[as_human] pushes through [src]!"), span_notice("You've seen and eaten worse than this."))
+		return TRUE
+
+	if	(!COOLDOWN_FINISHED(src, message_cooldown))
+		return
+
+	COOLDOWN_START(src, message_cooldown, 1 SECONDS)
+	to_chat(as_human, span_warning("You're repulsed by even looking at [src]. Only a pig could force themselves to go through it."))
+	balloon_alert(as_human, "not fat enough!")
+	add_filter("gluttony_ripple", 2, list("type" = "ripple", "flags" = WAVE_BOUNDED, "radius" = 0, "size" = 2))
+	animate(get_filter("gluttony_ripple"), radius = 32, time = 0.7 SECONDS, size = 0)
+	animate(src, transform = matrix() * 1.5, time = 0.3 SECONDS, flags = ELASTIC_EASING|EASE_OUT)
+	animate(transform = matrix(), time = 0.4 SECONDS, flags = BOUNCE_EASING|EASE_OUT)
 
 //can't be bothered to do sloth right now, will make later
 
