@@ -525,7 +525,6 @@ Difficulty: Hard
 /obj/effect/temp_visual/hierophant
 	name = "vortex energy"
 	layer = BELOW_MOB_LAYER
-	plane = GAME_PLANE
 	var/mob/living/caster //who made this, anyway
 
 /obj/effect/temp_visual/hierophant/Initialize(mapload, new_caster)
@@ -647,6 +646,7 @@ Difficulty: Hard
 /obj/effect/temp_visual/hierophant/telegraph
 	icon = 'icons/effects/96x96.dmi'
 	icon_state = "hierophant_telegraph"
+	plane = WALL_PLANE // Will go under structures, but prevents these from going ontop of mobs so worth it.
 	pixel_x = -32
 	pixel_y = -32
 	duration = 3

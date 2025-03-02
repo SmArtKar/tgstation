@@ -41,13 +41,13 @@
 	dashing_item.attack_self(owner) //Used to toggle dash behavior in the dashing item
 
 /// Teleports user to target using do_teleport. Returns TRUE if teleport successful, FALSE otherwise.
-/datum/action/innate/dash/proc/teleport(mob/user, atom/target)
+/datum/action/innate/dash/proc/teleport(mob/user, atom/teleport_to)
 	if(!IsAvailable(feedback = TRUE))
 		return FALSE
 
 	var/turf/current_turf = get_turf(user)
-	var/turf/target_turf = get_turf(target)
-	if(!(target in view(user.client.view, user)))
+	var/turf/target_turf = get_turf(teleport_to)
+	if(!(teleport_to in view(user.client.view, user)))
 		user.balloon_alert(user, "out of view!")
 		return FALSE
 
@@ -59,15 +59,18 @@
 	// caused our owner to be unassigned by this point.
 	// (Such as dropping our item after landing.)
 
-	var/obj/spot_one = new phaseout(current_turf, user.dir)
-	var/obj/spot_two = new phasein(target_turf, user.dir)
-	spot_one.Beam(spot_two, beam_effect, time = beam_length)
-	playsound(target_turf, dash_sound, 25, TRUE)
+	dash_effects(current_turf, target_turf, user, teleport_to)
 	current_charges--
 	addtimer(CALLBACK(src, PROC_REF(charge)), charge_rate)
 	owner?.update_mob_action_buttons()
 
 	return TRUE
+
+/datum/action/innate/dash/proc/dash_effects(turf/current_turf, turf/target_turf, mob/user, atom/teleport_to)
+	var/obj/spot_one = new phaseout(current_turf, user.dir)
+	var/obj/spot_two = new phasein(target_turf, user.dir)
+	spot_one.Beam(spot_two, beam_effect, time = beam_length)
+	playsound(target_turf, dash_sound, 25, TRUE)
 
 /// Callback for [/proc/teleport] to increment our charges after  use.
 /datum/action/innate/dash/proc/charge()

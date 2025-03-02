@@ -237,13 +237,13 @@
 	// It's a simple purple beam, works well enough for the purple hiero effects.
 	beam_effect = "plasmabeam"
 
-/datum/action/innate/dash/hierophant/teleport(mob/user, atom/target)
-	var/dist = get_dist(user, target)
+/datum/action/innate/dash/hierophant/teleport(mob/user, atom/teleport_to)
+	var/dist = get_dist(user, teleport_to)
 	if(dist > HIEROPHANT_BLINK_RANGE)
 		user.balloon_alert(user, "destination out of range!")
 		return FALSE
 
-	var/turf/target_turf = get_turf(target)
+	var/turf/target_turf = get_turf(teleport_to)
 	if(target_turf.is_blocked_turf_ignore_climbable())
 		user.balloon_alert(user, "destination blocked!")
 		return FALSE
@@ -251,7 +251,7 @@
 	. = ..()
 
 	var/obj/item/hierophant_club/club = target
-	if(!istype(club))
+	if(istype(club))
 		club.update_appearance(UPDATE_ICON_STATE)
 
 /datum/action/innate/dash/hierophant/charge()
@@ -259,6 +259,29 @@
 	var/obj/item/hierophant_club/club = target
 	if(istype(club))
 		club.update_appearance(UPDATE_ICON_STATE)
+
+/datum/action/innate/dash/hierophant/dash_effects(turf/current_turf, turf/target_turf, mob/user, atom/teleport_to)
+	new phaseout(current_turf, user.dir)
+	new phasein(target_turf, user.dir)
+	playsound(target_turf, dash_sound, 25, TRUE)
+	INVOKE_ASYNC(src, PROC_REF(spawn_afterimages), current_turf, target_turf, user)
+
+/datum/action/innate/dash/hierophant/proc/spawn_afterimages(turf/current_turf, turf/target_turf, mob/user)
+	for (var/turf/spot as anything in get_line(current_turf, target_turf) - target_turf)
+		var/obj/effect/temp_visual/hierophant/afterimage/afterimage = new(spot, user)
+		afterimage.dir = user.dir
+		sleep(0.03 SECONDS)
+
+/obj/effect/temp_visual/hierophant/afterimage
+	duration = 0.3 SECONDS
+
+/obj/effect/temp_visual/hierophant/afterimage/Initialize(mapload, new_caster)
+	. = ..()
+	appearance = caster.appearance
+	color = COLOR_MAGENTA
+	alpha = 0
+	animate(src, alpha = 150, time = 0.03 SECONDS)
+	animate(alpha = 0, time = 0.27 SECONDS)
 
 #undef HIEROPHANT_BLINK_RANGE
 #undef HIEROPHANT_BLINK_COOLDOWN
