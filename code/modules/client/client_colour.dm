@@ -233,11 +233,17 @@
 /datum/client_colour/monochrome/colorblind
 	priority = PRIORITY_HIGH
 
+/datum/client_colour/monochrome/quirk
+	priority = PRIORITY_HIGH
+
 /datum/client_colour/monochrome/trance
 	priority = PRIORITY_NORMAL
 
 /datum/client_colour/monochrome/blind
 	priority = PRIORITY_NORMAL
+
+/datum/client_colour/monochrome/glasses
+	priority = PRIORITY_LOW
 
 /datum/client_colour/bloodlust
 	priority = PRIORITY_ABSOLUTE // Only anger.
