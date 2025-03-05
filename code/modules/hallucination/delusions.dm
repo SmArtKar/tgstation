@@ -29,7 +29,7 @@
 	var/delusion_name
 
 	/// A list of all images we've made
-	var/list/image/delusions
+	var/list/delusions
 
 /datum/hallucination/delusion/New(
 	mob/living/hallucinator,
@@ -55,7 +55,7 @@
 
 /datum/hallucination/delusion/Destroy()
 	if(!QDELETED(hallucinator) && LAZYLEN(delusions))
-		hallucinator.client?.images -= delusions
+		hallucinator.client?.images -= flatten_list(delusions)
 		LAZYNULL(delusions)
 
 	return ..()
@@ -89,7 +89,9 @@
 
 	for(var/mob/living/carbon/human/found_human in funny_looking_mobs)
 		var/image/funny_image = make_delusion_image(found_human)
-		LAZYADD(delusions, funny_image)
+		RegisterSignal(found_human, COMSIG_QDELETING, PROC_REF(on_mob_delete))
+		RegisterSignal(found_human, COMSIG_ATOM_UPDATE_APPEARANCE, PROC_REF(on_update_appearance))
+		LAZYSET(delusions, found_human, funny_image)
 		hallucinator.client.images |= funny_image
 
 	if(play_wabbajack)
@@ -109,6 +111,15 @@
 	funny_image.name = delusion_name
 	funny_image.override = TRUE
 	return funny_image
+
+/datum/hallucination/delusion/proc/on_mob_delete(mob/living/carbon/human/source)
+	SIGNAL_HANDLER
+	hallucinator.client.images -= delusions[source]
+	LAZYREMOVE(delusions, source)
+
+/datum/hallucination/delusion/proc/on_update_appearance(mob/living/carbon/human/source)
+	SIGNAL_HANDLER
+	return
 
 /// Used for making custom delusions.
 /datum/hallucination/delusion/custom
@@ -285,3 +296,65 @@
 	delusion_name = "Mind Gate"
 	duration = 60 SECONDS
 	affects_us = TRUE
+
+/datum/hallucination/delusion/preset/target_lock
+	delusion_name = "Target Lock"
+	affects_others = TRUE
+	affects_us = FALSE
+	dynamic_delusion = TRUE
+	random_hallucination_weight = 0
+	duration = 10 MINUTES
+	/// Used to detect when unmasked mobs enter range
+	var/datum/proximity_monitor/target_lock/proximity_monitor
+
+/datum/hallucination/delusion/preset/target_lock/start()
+	. = ..()
+	if (!.)
+		return
+	proximity_monitor = new(hallucinator, world.view)
+	proximity_monitor.owner = src
+
+/datum/hallucination/delusion/preset/target_lock/Destroy()
+	QDEL_NULL(proximity_monitor)
+	return ..()
+
+/datum/hallucination/delusion/preset/target_lock/make_delusion_image(mob/over_who)
+	var/mutable_appearance/appearance_copy = new(over_who.appearance)
+	appearance_copy.appearance_flags |= KEEP_APART|KEEP_TOGETHER
+	//appearance_copy.add_filter("target_lock_color", -1, color_matrix_filter(list(0,0,0,0,0,0,0,0,0,55/255,54/255,66/255)))
+	appearance_copy.add_filter("target_lock_outline", 2, outline_filter(1, "#ffd500CC"))
+	var/mutable_appearance/static_effect = mutable_appearance('icons/effects/effects.dmi', "static_base")
+	static_effect.color = "#373642"
+	static_effect.blend_mode = BLEND_INSET_OVERLAY
+	appearance_copy.overlays += static_effect
+	appearance_copy.override = TRUE
+	delusion_appearance = appearance_copy
+	var/image/delusion = ..()
+	return delusion
+
+/datum/hallucination/delusion/preset/target_lock/on_update_appearance(mob/living/carbon/human/source)
+	if (delusions[source])
+		hallucinator.client.images -= delusions[source]
+	else
+		RegisterSignal(source, COMSIG_QDELETING, PROC_REF(on_mob_delete))
+		RegisterSignal(source, COMSIG_ATOM_UPDATE_APPEARANCE, PROC_REF(on_update_appearance))
+	delusions[source] = make_delusion_image(source)
+	hallucinator.client.images += delusions[source]
+
+/datum/proximity_monitor/target_lock
+	var/datum/hallucination/delusion/preset/target_lock/owner
+
+/datum/proximity_monitor/target_lock/Destroy()
+	owner = null
+	return ..()
+
+/datum/proximity_monitor/target_lock/on_moved(atom/movable/source, atom/old_loc)
+	return
+
+/datum/proximity_monitor/target_lock/on_entered(atom/source, atom/movable/arrived, turf/old_loc)
+	if (arrived != host && source != host)
+		owner.on_update_appearance(arrived)
+
+/datum/proximity_monitor/target_lock/on_initialized(turf/location, atom/created, init_flags)
+	if (location != host)
+		owner.on_update_appearance(created)
