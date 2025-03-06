@@ -313,15 +313,23 @@
 		return
 	proximity_monitor = new(hallucinator, world.view)
 	proximity_monitor.owner = src
+	for(var/atom/movable/screen/plane_master/game_plane as anything in hallucinator.hud_used?.get_true_plane_masters(RENDER_PLANE_GAME))
+		game_plane.add_filter("target_lock_color", 1, color_matrix_filter(list(
+			1, 0, 0,
+			0, 1.75, 0,
+			0, 0, 0.75,
+			0, -0.75, 0,
+		), COLORSPACE_HSL))
 
 /datum/hallucination/delusion/preset/target_lock/Destroy()
 	QDEL_NULL(proximity_monitor)
+	for(var/atom/movable/screen/plane_master/game_plane as anything in hallucinator.hud_used?.get_true_plane_masters(RENDER_PLANE_GAME))
+		game_plane.remove_filter("target_lock_color")
 	return ..()
 
 /datum/hallucination/delusion/preset/target_lock/make_delusion_image(mob/over_who)
 	var/mutable_appearance/appearance_copy = new(over_who.appearance)
 	appearance_copy.appearance_flags |= KEEP_APART|KEEP_TOGETHER
-	//appearance_copy.add_filter("target_lock_color", -1, color_matrix_filter(list(0,0,0,0,0,0,0,0,0,55/255,54/255,66/255)))
 	appearance_copy.add_filter("target_lock_outline", 2, outline_filter(1, "#ffd500CC"))
 	var/mutable_appearance/static_effect = mutable_appearance('icons/effects/effects.dmi', "static_base")
 	static_effect.color = "#373642"
