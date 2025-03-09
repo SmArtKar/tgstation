@@ -102,10 +102,13 @@
 	var/list/failed_special_equipment
 	/// A list to keep track of which books a person has read (to prevent people from reading the same book again and again for positive mood events)
 	var/list/book_titles_read
+	/// List of all of our active attributes
+	var/list/datum/attribute/attributes = list()
 
 /datum/mind/New(_key)
 	key = _key
 	init_known_skills()
+	init_attributes()
 	set_assigned_role(SSjob.get_job_type(/datum/job/unassigned)) // Unassigned by default.
 
 /datum/mind/Destroy()
