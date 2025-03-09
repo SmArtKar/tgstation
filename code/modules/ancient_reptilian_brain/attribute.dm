@@ -45,26 +45,36 @@
 	RETURN_TYPE(/datum/aspect)
 	return locate(aspect_type) in aspects
 
-// Mind procs
+// Mind and mob procs
 
 /datum/mind/proc/init_attributes()
 	for (var/attribute_type in subtypesof(/datum/attribute))
 		attributes += new attribute_type(src)
 
-/datum/mind/proc/get_attribute(attribute_type)
+/mob/living/proc/get_attribute(attribute_type)
 	RETURN_TYPE(/datum/attribute)
-	return locate(attribute_type) in attributes
+	return locate(attribute_type) in mind?.attributes
 
-/datum/mind/proc/get_aspect(datum/aspect/aspect_type)
+/mob/living/proc/get_aspect(datum/aspect/aspect_type)
 	RETURN_TYPE(/datum/aspect)
 	var/datum/attribute/linked_attribute = get_attribute(initial(aspect_type.attribute))
-	return linked_attribute.get_aspect(aspect_type)
+	return linked_attribute?.get_aspect(aspect_type)
 
-/datum/mind/proc/get_aspect_level(datum/aspect/aspect_type)
-	return get_aspect(aspect_type).level
+/mob/living/proc/get_aspect_level(datum/aspect/aspect_type)
+	return get_aspect(aspect_type)?.get_level()
 
-/datum/mind/proc/active_check(aspect_type, difficulty, show_visual = TRUE)
+/mob/living/proc/active_check(aspect_type, difficulty, show_visual = TRUE)
+	if (!mind)
+		return prob(difficulty * 5) ? CHECK_FAILURE : CHECK_SUCCESS
 	return get_aspect(aspect_type).active_check(difficulty, show_visual)
 
-/datum/mind/proc/passive_check(aspect_type, difficulty)
+/mob/living/proc/passive_check(aspect_type, difficulty)
+	if (!mind)
+		return !prob(difficulty * 5)
 	return get_aspect(aspect_type).passive_check(difficulty)
+
+/mob/living/proc/add_aspect_modifier(aspect_type, value, source)
+	get_aspect(aspect_type).add_modifier(value, source)
+
+/mob/living/proc/remove_aspect_modifier(aspect_type, source)
+	get_aspect(aspect_type).remove_modifier(source)

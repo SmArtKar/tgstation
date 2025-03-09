@@ -25,7 +25,9 @@
 	return ..()
 
 /datum/aspect/proc/adjust_level(change)
+	var/prev_level = get_level()
 	level += change
+	update_effects(prev_level)
 
 /datum/aspect/proc/get_level()
 	. = level
@@ -36,6 +38,8 @@
 	stored_exp += exp_gained
 	var/required_exp = get_exp_to_level()
 	if (stored_exp < required_exp || !can_level)
+		return
+	if (attribute.level + attribute.level_modifier <= level)
 		return
 	stored_exp -= required_exp
 	adjust_level(1)
@@ -48,10 +52,27 @@
 /datum/aspect/proc/get_exp_to_level()
 	return ASPECT_LEVEL_EXP_FLOOR + ASPECT_LEVEL_EXP_ADDITIONAL * (level ** ASPECT_LEVEL_EXP_POWER)
 
+/datum/aspect/proc/add_modifier(value, source)
+	var/prev_level = get_level()
+	modifiers[source] = value
+	update_effects(prev_level)
+
+/datum/aspect/proc/remove_modifier(source)
+	var/prev_level = get_level()
+	modifiers -= source
+	update_effects(get_level())
+
+/datum/aspect/proc/update_effects(prev_level)
+	return
+
+/datum/aspect/proc/get_body()
+	RETURN_TYPE(/mob/living)
+	return attribute.owner.current
+
 /// Passive skillchecks that shouldn't affect you too much, as you can fail them purely by being too low level
 /// Return simple TRUE or FALSE, no critical failures or successes
 /datum/aspect/proc/passive_check(difficulty)
-	if (difficulty > 2 + get_level() * 2)
+	if (difficulty > 2 + get_level() * 3)
 		return FALSE
 
 	var/pass_required = PASS_BASE_VALUE + difficulty
@@ -80,33 +101,34 @@
 	if (!show_visual)
 		return result
 
-	SEND_SOUND(attribute.owner, sound('sound/items/dice_roll.ogg', volume = 50))
+	SEND_SOUND(attribute.owner.current, sound('sound/items/dice_roll.ogg', volume = 50))
 	var/obj/effect/abstract/die_back/die = new(attribute.owner)
 	var/obj/effect/abstract/die_number/number = new(attribute.owner)
 	QDEL_IN(die, 0.7 SECONDS)
 	QDEL_IN(number, 0.7 SECONDS)
 
 	die.vis_contents += number
+	die.pixel_y += 1
 	attribute.owner.current.vis_contents += die
 
-	animate(die, pixel_z = 28, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT)
+	animate(die, pixel_y = 28, alpha = 175, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT)
 	if (result == CHECK_CRIT_FAILURE)
 		animate(color = "#101010", time = 0)
 	else if (result == CHECK_CRIT_SUCCESS)
 		animate(color = "#ffe600", time = 0)
-	animate(alpha = 0, pixel_z = 32, time = 0.2 SECONDS)
+	animate(alpha = 0, pixel_y = 32, time = 0.2 SECONDS)
 
 	animate(number, icon_state = "d20-[rand(1, 20)]", time = 0.1 SECONDS)
-	for (var/i in 1 to 3)
+	for (var/i in 1 to 2)
 		animate(icon_state = "d20-[rand(1, 20)]", time = 0.1 SECONDS)
-	animate(icon_state = "d20-[die_roll]", time = 0.1 SECONDS)
+	animate(icon_state = "d20-[die_roll]", time = 0)
 	return result
 
 /obj/effect/abstract/die_back
 	icon = 'icons/obj/toys/dice.dmi'
 	icon_state = "d20"
-	appearance_flags = KEEP_APART|RESET_COLOR|RESET_ALPHA|RESET_TRANSFORM|PIXEL_SCALE|KEEP_TOGETHER
-	layer = BELOW_MOB_LAYER
+	alpha = 200
+	appearance_flags = KEEP_APART|RESET_COLOR|RESET_ALPHA|RESET_TRANSFORM|PIXEL_SCALE
 
 /obj/effect/abstract/die_back/update_overlays()
 	. = ..()

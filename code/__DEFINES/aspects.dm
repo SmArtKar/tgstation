@@ -18,3 +18,8 @@
 #define CHECK_FAILURE 2
 #define CHECK_SUCCESS 3
 #define CHECK_CRIT_SUCCESS 4
+
+// Aspect constants
+// Health added per level of endurance
+#define ENDURANCE_HEALTH_BOOST 10
+#define ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION 7.5

@@ -838,7 +838,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	user.do_cpr(target)
 
 ///This proc handles punching damage. IMPORTANT: Our owner is the TARGET and not the USER in this proc. For whatever reason...
-/datum/species/proc/harm(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/martial_art/attacker_style)
+/datum/species/proc/harm(mob/living/carbon/human/user, mob/living/carbon/human/target, datum/martial_art/attacker_style, roll_aspect = TRUE)
 	if(HAS_TRAIT(user, TRAIT_PACIFISM) && !attacker_style?.pacifist_style)
 		to_chat(user, span_warning("You don't want to harm [target]!"))
 		return FALSE
@@ -858,7 +858,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			return FALSE
 	user.do_attack_animation(target, atk_effect)
 
-	//has our target been shoved recently? If so, they're staggered and we get an easy hit.
+	// has our target been shoved recently? If so, they're staggered and we get an easy hit.
 	var/staggered = target.has_status_effect(/datum/status_effect/staggered)
 
 	//Someone in a grapple is much more vulnerable to being harmed by punches.
@@ -898,15 +898,21 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			user.adjust_disgust(2)
 
 	var/obj/item/bodypart/affecting = target.get_bodypart(target.get_random_valid_zone(user.zone_selected))
+	var/result = CHECK_SUCCESS
+	if (roll_aspect)
+		// Puncher's half light contesting against target's reaction speed
+		var/difficulty = SKILLCHECK_EASY + target.get_aspect_level(/datum/aspect/reaction_speed)
+		result = user.active_check(/datum/aspect/half_light, difficulty, FALSE)
+		if(HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) && result < CHECK_SUCCESS)
+			result = CHECK_SUCCESS
+		else if (result == CHECK_CRIT_FAILURE)
+			log_combat(user, target, "attempted to punch")
+			harm(user, user, attacker_style, FALSE)
+			return
+		else if (result == CHECK_FAILURE && (target.body_position == LYING_DOWN || staggered || user_drunkenness && HAS_TRAIT(user, TRAIT_DRUNKEN_BRAWLER)))
+			result = CHECK_SUCCESS
 
-	var/miss_chance = 100//calculate the odds that a punch misses entirely. considers stamina and brute damage of the puncher. punches miss by default to prevent weird cases
-	if(attacking_bodypart.unarmed_damage_low)
-		if((target.body_position == LYING_DOWN) || HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) || staggered || user_drunkenness && HAS_TRAIT(user, TRAIT_DRUNKEN_BRAWLER)) //kicks and attacks against staggered targets never miss (provided your species deals more than 0 damage). Drunken brawlers while drunk also don't miss
-			miss_chance = 0
-		else
-			miss_chance = clamp(UNARMED_MISS_CHANCE_BASE - limb_accuracy + (puncher_brute_and_burn / 2), 0, UNARMED_MISS_CHANCE_MAX) //Limb miss chance + various damage. capped at 80 so there is at least a chance to land a hit.
-
-	if(!damage || !affecting || prob(miss_chance))//future-proofing for species that have 0 damage/weird cases where no zone is targeted
+	if(!damage || !affecting || result == CHECK_FAILURE) // future-proofing for species that have 0 damage/weird cases where no zone is targeted
 		playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
 		target.visible_message(span_danger("[user]'s [atk_verb] misses [target]!"), \
 						span_danger("You avoid [user]'s [atk_verb]!"), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
@@ -967,7 +973,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	// If our target is staggered, the target's armor, minus our limb effectiveness sets the minimum necessary amount of damage sustained to cause an effect. We clamp the value for sanity reasons.
 	var/effective_armor = max(armor_block, UNARMED_COMBO_HIT_HEALTH_BASE) - limb_accuracy
-	if(staggered && target_brute_and_burn >= clamp(effective_armor, 0, 200))
+	if(result == CHECK_CRIT_SUCCESS || (staggered && target_brute_and_burn >= clamp(effective_armor, 0, 200)))
 		stagger_combo(user, target, atk_verb, limb_accuracy, armor_block)
 
 /// Handles the stagger combo effect of our punch. Follows the same logic as the above proc, target is our owner, user is our attacker.
