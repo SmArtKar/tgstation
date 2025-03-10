@@ -75,9 +75,13 @@
 		throw_mode_off(THROW_MODE_TOGGLE)
 
 /mob/living/carbon/can_catch_item(obj/item/item, skip_throw_mode_check = FALSE, try_offhand = FALSE)
-	switch (active_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_CHALLENGING, die_delay = 0.3 SECONDS))
+	// Allows you to automatically catch stuff
+	var/datum/check_result/result = aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_FORMIDDABLE, max(item.w_class - 2, 0))
+	switch (result.outcome)
 		if (CHECK_CRIT_FAILURE)
-			to_chat(src, span_motorics("You fumble and fail to catch [item]!"))
+			if (throw_mode)
+				to_chat(src, result.show_message("You stumble as you try and fail to catch [item]!"))
+				Knockdown(0.1 SECONDS)
 			return FALSE
 		if (CHECK_FAILURE)
 			if(!skip_throw_mode_check && !throw_mode)
@@ -86,9 +90,10 @@
 		if (CHECK_SUCCESS)
 			return ..()
 		if (CHECK_CRIT_SUCCESS)
+			var/hand_index = get_active_hand()
 			. = ..(item, skip_throw_mode_check, TRUE)
-			if (.)
-				to_chat(src, span_motorics("You manage to catch [item]!"))
+			if (. && hand_index != get_active_hand()) // Swapped hands to catch it which means it was the crit success that did it
+				to_chat(src, result.show_message("Your body reacts before your mind, catching [item] with your other hand!"))
 
 /mob/living/carbon/hitby(atom/movable/movable, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
 	if(!skipcatch && try_catch_item(movable))

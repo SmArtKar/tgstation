@@ -199,7 +199,7 @@
 	else
 		playsound(src, fire_sound, fire_sound_volume, vary_fire_sound)
 
-/obj/item/gun/proc/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE)
+/obj/item/gun/proc/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result)
 	if(recoil && !tk_firing(user))
 		shake_camera(user, recoil + 1, recoil)
 	fire_sounds()
@@ -212,9 +212,16 @@
 				vision_distance = COMBAT_MESSAGE_RANGE
 		)
 	else if(pointblank)
+		var/user_message = span_danger("You fire [src] point blank at [pbtarget]!")
+		if (check_result)
+			if (check_result.outcome == CHECK_CRIT_SUCCESS)
+				user_message = null // We already said our line
+			else
+				user_message = check_result.show_message("You fire [src] point blank at [pbtarget].") // Aspect speech is confident and doesn't have a lot of exclamations
+
 		user.visible_message(
 				span_danger("[user] fires [src] point blank at [pbtarget]!"),
-				span_danger("You fire [src] point blank at [pbtarget]!"),
+				user_message,
 				span_hear("You hear a gunshot!"), COMBAT_MESSAGE_RANGE, pbtarget
 		)
 		to_chat(pbtarget, span_userdanger("[user] fires [src] point blank at you!"))
@@ -223,9 +230,17 @@
 			var/atom/throw_target = get_edge_target_turf(PBT, user.dir)
 			PBT.throw_at(throw_target, pb_knockback, 2)
 	else if(!tk_firing(user))
+		var/user_message = span_danger("You fire [src]!")
+		if (check_result)
+			if (check_result.outcome == CHECK_CRIT_SUCCESS)
+				user_message = null
+			else
+				user_message = check_result.show_message("You fire [src].")
+
 		user.visible_message(
 				span_danger("[user] fires [src]!"),
-				blind_message = span_hear("You hear a gunshot!"),
+				user_message,
+				span_hear("You hear a gunshot!"),
 				vision_distance = COMBAT_MESSAGE_RANGE,
 				ignored_mobs = user
 		)
@@ -415,7 +430,7 @@
 /obj/item/gun/proc/recharge_newshot()
 	return
 
-/obj/item/gun/proc/process_burst(mob/living/user, atom/target, message = TRUE, params=null, zone_override = "", random_spread = 0, burst_spread_mult = 0, iteration = 0)
+/obj/item/gun/proc/process_burst(mob/living/user, atom/target, message = TRUE, params=null, zone_override = "", random_spread = 0, burst_spread_mult = 0, iteration = 0, datum/check_result/check_result = null)
 	if(!user || !firing_burst)
 		firing_burst = FALSE
 		return FALSE
@@ -424,7 +439,7 @@
 			firing_burst = FALSE
 			return FALSE
 	if(chambered?.loaded_projectile)
-		if(HAS_TRAIT(user, TRAIT_PACIFISM)) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
+		if(HAS_TRAIT(user, TRAIT_PACIFISM) && !check_result?.outcome == CHECK_CRIT_FAILURE) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
 			if(chambered.harmful) // Is the bullet chambered harmful?
 				to_chat(user, span_warning("[src] is lethally chambered! You don't want to risk harming anyone..."))
 				firing_burst = FALSE
@@ -441,9 +456,9 @@
 			return FALSE
 		else
 			if(get_dist(user, target) <= 1) //Making sure whether the target is in vicinity for the pointblank shot
-				shoot_live_shot(user, TRUE, target, message)
+				shoot_live_shot(user, TRUE, target, message, check_result = check_result)
 			else
-				shoot_live_shot(user, FALSE, target, message)
+				shoot_live_shot(user, FALSE, target, message, check_result = check_result)
 			if (iteration >= burst_size)
 				firing_burst = FALSE
 	else
@@ -457,29 +472,34 @@
 ///returns true if the gun successfully fires
 /obj/item/gun/proc/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	var/base_bonus_spread = 0
-	var/check_result = CHECK_SUCCESS
+	var/datum/check_result/check_result
 	if(user)
 		var/list/bonus_spread_values = list(base_bonus_spread, bonus_spread)
 		SEND_SIGNAL(user, COMSIG_MOB_FIRED_GUN, src, target, params, zone_override, bonus_spread_values)
 		base_bonus_spread = bonus_spread_values[MIN_BONUS_SPREAD_INDEX]
 		bonus_spread = bonus_spread_values[MAX_BONUS_SPREAD_INDEX]
-		check_result = user.active_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_TRIVIAL)
+		check_result = user.aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_EASY, crit_fail_modifier = -3, show_visual = TRUE, die_delay = 0.3 SECONDS)
+		var/forced_crit = FALSE
+		if (check_result.outcome == CHECK_SUCCESS && user.get_aspect_level(/datum/aspect/hand_eye_coordination) >= HAND_EYE_ALWAYS_CRIT_LEVEL)
+			check_result.outcome = CHECK_CRIT_SUCCESS
+			check_result.roll = clamp(check_result.crit_success - check_result.modifier, check_result.roll, 18)
+			forced_crit = TRUE
+
 		switch (check_result)
 			if (CHECK_CRIT_FAILURE)
-				to_chat(user, span_motorics("[src] goes off in your hand!"))
-				target = user // Lol
+				to_chat(user, check_result.show_message("Your [user.get_active_hand()?.plaintext_zone || "hand"] flinches as you fire [src], making you shoot yourself like a doofus."))
+				target = user
 				zone_override = pick(BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_ARM, BODY_ZONE_R_LEG)
+
 			if (CHECK_FAILURE)
 				target = pick(RANGE_TURFS(2, target))
-			if (CHECK_SUCCESS)
-				if (user.get_aspect_level(/datum/aspect/hand_eye_coordination) >= HAND_EYE_ALWAYS_CRIT_LEVEL)
-					check_result = CHECK_CRIT_SUCCESS
-					if (isturf(target))
-						target = locate(/mob/living) in range(2, target)
+
 			if (CHECK_CRIT_SUCCESS)
+				if (!forced_crit)
+					to_chat(user, check_result.show_message("A bit higher, slightly to the right. Perfect. [burst_size > 1 ? "Each shot, s" : "S"]traight between the eyes."))
+				zone_override = BODY_ZONE_HEAD
 				if (isturf(target))
 					target = locate(/mob/living) in range(2, target)
-				to_chat(user, span_motorics("You feel a slight tug at the barrel of [src], as if something is helping you guide your shot!"))
 
 	SEND_SIGNAL(src, COMSIG_GUN_FIRED, user, target, params, zone_override)
 
@@ -503,23 +523,23 @@
 	if(burst_size > 1)
 		firing_burst = TRUE
 		for(var/i = 1 to burst_size)
-			addtimer(CALLBACK(src, PROC_REF(process_burst), user, target, message, params, zone_override, total_random_spread, burst_spread_mult, i), modified_burst_delay * (i - 1))
+			addtimer(CALLBACK(src, PROC_REF(process_burst), user, target, message, params, zone_override, total_random_spread, burst_spread_mult, i, check_result), modified_burst_delay * (i - 1))
 	else
 		if(chambered)
-			if(HAS_TRAIT(user, TRAIT_PACIFISM)) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
+			if(user && HAS_TRAIT(user, TRAIT_PACIFISM) && check_result?.outcome != CHECK_CRIT_FAILURE) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
 				if(chambered.harmful) // Is the bullet chambered harmful?
 					to_chat(user, span_warning("[src] is lethally chambered! You don't want to risk harming anyone..."))
 					return
 			var/sprd = round((rand(0, 1) - 0.5) * DUALWIELD_PENALTY_EXTRA_MULTIPLIER * total_random_spread)
 			before_firing(target,user)
-			if(!chambered.fire_casing(target, user, params, , suppressed, zone_override, sprd, src, autoaim = (check_result == CHECK_CRIT_SUCCESS)))
+			if(!chambered.fire_casing(target, user, params, , suppressed, zone_override, sprd, src, check_result = check_result))
 				shoot_with_empty_chamber(user)
 				return
 			else
 				if(get_dist(user, target) <= 1) //Making sure whether the target is in vicinity for the pointblank shot
-					shoot_live_shot(user, TRUE, target, message)
+					shoot_live_shot(user, TRUE, target, message, check_result = check_result)
 				else
-					shoot_live_shot(user, FALSE, target, message)
+					shoot_live_shot(user, FALSE, target, message, check_result = check_result)
 		else
 			shoot_with_empty_chamber(user)
 			return

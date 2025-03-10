@@ -898,26 +898,64 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			user.adjust_disgust(2)
 
 	var/obj/item/bodypart/affecting = target.get_bodypart(target.get_random_valid_zone(user.zone_selected))
-	var/result = CHECK_SUCCESS
+	var/always_crit = FALSE
+	var/datum/check_result/dodge_result
+	var/datum/check_result/attack_result
 	if (roll_aspect)
 		// Puncher's half light contesting against target's reaction speed
-		var/difficulty = SKILLCHECK_EASY + target.get_aspect_level(/datum/aspect/reaction_speed)
-		result = user.active_check(/datum/aspect/half_light, difficulty, FALSE)
-		if(HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) && result < CHECK_SUCCESS)
-			result = CHECK_SUCCESS
-		else if (result == CHECK_CRIT_FAILURE)
-			log_combat(user, target, "attempted to punch")
-			to_chat(user, span_physique("You fumble and end up [atk_verb]ing yourself!"))
-			harm(user, user, attacker_style, FALSE)
-			return
-		else if (result == CHECK_FAILURE && (target.body_position == LYING_DOWN || staggered || user_drunkenness && HAS_TRAIT(user, TRAIT_DRUNKEN_BRAWLER)))
-			result = CHECK_SUCCESS
+		dodge_result = target.aspect_check(/datum/aspect/reaction_speed, SKILLCHECK_EASY)
+		attack_result = user.aspect_check(/datum/aspect/half_light, SKILLCHECK_EASY)
+		var/force_success = (attack_result.outcome == CHECK_CRIT_SUCCESS && dodge_result.outcome != CHECK_CRIT_SUCCESS)
+		if (HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) || attack_result.outcome != CHECK_CRIT_FAILURE && (target.body_position == LYING_DOWN || staggered || user_drunkenness && HAS_TRAIT(user, TRAIT_DRUNKEN_BRAWLER)))
+			force_success = TRUE
 
-	if(!damage || !affecting || result == CHECK_FAILURE) // future-proofing for species that have 0 damage/weird cases where no zone is targeted
+		// Attacker has an advantage
+		var/datum/check_result/winner = dodge_result
+		var/datum/check_result/loser = attack_result
+		if (force_success || attack_result.roll + attack_result.modifier > dodge_result.roll + dodge_result.modifier && attack_result.outcome != CHECK_CRIT_FAILURE)
+			winner = attack_result
+			loser = dodge_result
+
+		if (winner.outcome == CHECK_CRIT_SUCCESS)
+			loser.outcome = CHECK_CRIT_FAILURE
+			loser.roll = clamp(loser.crit_fail - loser.modifier, 3, loser.roll)
+		else
+			if (loser.outcome == CHECK_CRIT_FAILURE)
+				winner = CHECK_CRIT_SUCCESS
+				winner.roll = clamp(winner.crit_success - winner.modifier, winner.roll, 18)
+			else
+				winner = CHECK_SUCCESS
+				winner.roll = clamp(winner.difficulty - winner.modifier, winner.roll, winner.crit_success - 1)
+
+			loser.outcome = CHECK_FAILURE
+			loser.roll = clamp(loser.difficulty - loser.modifier - 1, loser.crit_fail, loser.roll)
+
+		switch (attack_result.outcome)
+			if (CHECK_CRIT_FAILURE)
+				log_combat(user, target, "attempted to punch")
+				to_chat(user, attack_result.show_message("You fumble and end up hitting yourself."))
+				harm(user, user, attacker_style, FALSE)
+				return
+
+			if (CHECK_FAILURE)
+				playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
+				target.visible_message(span_danger("[user]'s [atk_verb] misses [target]!"), \
+								dodge_result.show_message("You avoid [user]'s [atk_verb]."), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
+				to_chat(user, attack_result.show_message("Your [atk_verb] misses [target]."))
+				log_combat(user, target, "attempted to punch")
+
+			if (CHECK_CRIT_SUCCESS)
+				var/what_do_i_do_wattson = pick("Distract target.", "Block [target.p_their()] blind jab.", "Counter with cross to left cheek.",
+					"Discombobulate.", "Employ elbow block.", "And body shot.", "Block feral left.", "Weaken right jaw.", "Now fracture.",
+					"Break cracked ribs.", "Traumatize solar plexus.", "Dislocate jaw entirely.", "Heel kick to diaphragm.")
+				to_chat(user, attack_result.show_message(what_do_i_do_wattson))
+				always_crit = TRUE
+
+	if(!damage || !affecting) // future-proofing for species that have 0 damage/weird cases where no zone is targeted
 		playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
 		target.visible_message(span_danger("[user]'s [atk_verb] misses [target]!"), \
-						span_danger("You avoid [user]'s [atk_verb]!"), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
-		to_chat(user, span_physique("Your [atk_verb] misses [target]!"))
+						dodge_result?.show_message("You avoid [user]'s [atk_verb].") || span_danger("You avoid [user]'s [atk_verb]!"), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
+		to_chat(user, attack_result?.show_message("Your [atk_verb] misses [target].") || span_physique("Your [atk_verb] misses [target]!"))
 		log_combat(user, target, "attempted to punch")
 		return FALSE
 
@@ -944,8 +982,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(grappled && attacking_bodypart.grappled_attack_verb)
 		atk_verb = attacking_bodypart.grappled_attack_verb
 	target.visible_message(span_danger("[user] [atk_verb]ed [target]!"), \
-					span_userdanger("You're [atk_verb]ed by [user]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, user)
-	to_chat(user, span_danger("You [atk_verb] [target]!"))
+					span_big(dodge_result?.show_message("You're [atk_verb]ed by [user]!")) || span_userdanger("You're [atk_verb]ed by [user]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, user)
+
+	if (!always_crit)
+		to_chat(user, attack_result?.show_message("You [atk_verb] [target].") || span_danger("You [atk_verb] [target]!"))
 
 	target.lastattacker = user.real_name
 	target.lastattackerckey = user.ckey
@@ -974,7 +1014,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	// If our target is staggered, the target's armor, minus our limb effectiveness sets the minimum necessary amount of damage sustained to cause an effect. We clamp the value for sanity reasons.
 	var/effective_armor = max(armor_block, UNARMED_COMBO_HIT_HEALTH_BASE) - limb_accuracy
-	if(result == CHECK_CRIT_SUCCESS || (staggered && target_brute_and_burn >= clamp(effective_armor, 0, 200)))
+	if(always_crit || (staggered && target_brute_and_burn >= clamp(effective_armor, 0, 200)))
 		stagger_combo(user, target, atk_verb, limb_accuracy, armor_block)
 
 /// Handles the stagger combo effect of our punch. Follows the same logic as the above proc, target is our owner, user is our attacker.
@@ -985,13 +1025,13 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	switch(roll_them_bones)
 		if (-INFINITY to 0) //Mostly a gimmie, this one just keeps them staggered briefly
 			target.adjust_staggered_up_to(1 SECONDS, 10 SECONDS)
-			target.visible_message(span_physique("[user]'s [atk_verb] briefly winds [target]!"), \
-				span_physique("You are briefly winded by [user]'s [atk_verb]!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
+			target.visible_message(span_danger("[user]'s [atk_verb] briefly winds [target]!"), \
+				span_userdanger("You are briefly winded by [user]'s [atk_verb]!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_physique("Your [atk_verb] briefly winds [target]!"))
 
 		if (1 to 10)
 			target.adjust_eye_blur_up_to(5 SECONDS, 10 SECONDS)
-			target.visible_message(span_physique("[user]'s [atk_verb] hits [target] so hard, their eyes water! Ouch!"), \
+			target.visible_message(span_danger("[user]'s [atk_verb] hits [target] so hard, their eyes water! Ouch!"), \
 				span_physique("You are hit viciously by [user]'s [atk_verb], and your eyes begin to water!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_physique("Your [atk_verb] causes [target] to tear up!"))
 
@@ -999,30 +1039,30 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			target.adjust_dizzy_up_to(5 SECONDS, 10 SECONDS)
 			target.adjust_eye_blur_up_to(5 SECONDS, 10 SECONDS)
 			target.adjust_confusion_up_to(5 SECONDS, 10 SECONDS)
-			target.visible_message(span_physique("[user]'s [atk_verb] hits [target] so hard, they are sent reeling in agony! Damn!"), \
-				span_physique("You are hit viciously by [user]'s [atk_verb], and everything becomes a dizzying blur!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
+			target.visible_message(span_danger("[user]'s [atk_verb] hits [target] so hard, they are sent reeling in agony! Damn!"), \
+				span_userdanger("You are hit viciously by [user]'s [atk_verb], and everything becomes a dizzying blur!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_physique("Your [atk_verb] causes [target] to go stumbling about in a confuzed daze!"))
 
 		if(31 to 40)
 			target.adjust_dizzy_up_to(5 SECONDS, 10 SECONDS)
 			target.adjust_confusion_up_to(5 SECONDS, 10 SECONDS)
 			target.adjust_temp_blindness_up_to(5 SECONDS, 10 SECONDS)
-			target.visible_message(span_physique("[user]'s [atk_verb] hits [target] so hard, they are sent reeling blindly in agony! Goddamn!"), \
-				span_physique("You are hit viciously by [user]'s [atk_verb], and everything becomes a dizzying, blinding blur!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
+			target.visible_message(span_danger("[user]'s [atk_verb] hits [target] so hard, they are sent reeling blindly in agony! Goddamn!"), \
+				span_userdanger("You are hit viciously by [user]'s [atk_verb], and everything becomes a dizzying, blinding blur!"), span_hear("You hear a thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_physique("Your [atk_verb] causes [target] to go stumbling about in a confuzed, blind daze!"))
 
 		if (41 to 45)
 			target.apply_effect(4 SECONDS, EFFECT_KNOCKDOWN, armor_block)
-			target.visible_message(span_physique("[user]'s [atk_verb] hits [target] so hard, you knock them off their feet! Holy shit!"), \
-				span_physique("You are hit viciously by [user]'s [atk_verb] and sent toppling head over heels!"), span_hear("You hear a sickening thud!"), COMBAT_MESSAGE_RANGE, user)
+			target.visible_message(span_danger("[user]'s [atk_verb] hits [target] so hard, you knock them off their feet! Holy shit!"), \
+				span_userdanger("You are hit viciously by [user]'s [atk_verb] and sent toppling head over heels!"), span_hear("You hear a sickening thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_physique("Your [atk_verb] lands, and you send [target] sailing off their feet!"))
 
 		if (46 to INFINITY)
 			target.apply_effect(4 SECONDS, EFFECT_KNOCKDOWN, armor_block)
 			var/obj/item/bodypart/affecting = target.get_bodypart(target.get_random_valid_zone(user.zone_selected))
 			target.apply_damage(5, BRUTE, affecting, armor_block, wound_bonus = limb_accuracy * 2) //Mostly for the crunchy wounding effect than actually doing damage
-			target.visible_message(span_physique("[user]'s [atk_verb] hits [target] so hard, you hit them off their feet with a loud crunch! Fucking hell!"), \
-				span_physique("You are hit viciously by [user]'s [atk_verb], and suddenly feel an overwhelming pain as you topple head over heels!"), span_hear("You hear a sickening crack and a loud thud!"), COMBAT_MESSAGE_RANGE, user)
+			target.visible_message(span_danger("[user]'s [atk_verb] hits [target] so hard, you hit them off their feet with a loud crunch! Fucking hell!"), \
+				span_userdanger("You are hit viciously by [user]'s [atk_verb], and suddenly feel an overwhelming pain as you topple head over heels!"), span_hear("You hear a sickening crack and a loud thud!"), COMBAT_MESSAGE_RANGE, user)
 			to_chat(user, span_physique("Your [atk_verb] lands, and [target] is sent crashing to the floor with the immense force! Good god!"))
 
 

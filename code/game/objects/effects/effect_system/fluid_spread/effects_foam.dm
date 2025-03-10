@@ -38,7 +38,7 @@
 /obj/effect/particle_effect/fluid/foam/Initialize(mapload)
 	. = ..()
 	if(slippery_foam)
-		AddComponent(/datum/component/slippery, 100, check_difficulty = SKILLCHECK_MEDIUM)
+		AddComponent(/datum/component/slippery, 100, check_difficulty = SKILLCHECK_CHALLENGING)
 	if(HAS_TRAIT(loc, TRAIT_ELEVATED_TURF))
 		layer = WATER_LEVEL_LAYER
 	create_reagents(1000, REAGENT_HOLDER_INSTANT_REACT)

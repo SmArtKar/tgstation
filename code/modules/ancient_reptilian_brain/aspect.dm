@@ -9,7 +9,7 @@
 	var/name = "Shitcoding"
 	var/desc = "The aspect of Shitcoding, existing solely so you can yell at coders."
 	var/icon_state = ""
-	var/level = 0
+	var/level = ASPECT_NEUTRAL_LEVEL
 	var/stored_exp = 0
 	/// Attribute we are bound to, or its type (initially)
 	var/datum/attribute/attribute = /datum/attribute
@@ -79,40 +79,38 @@
 	RETURN_TYPE(/mob/living)
 	return attribute.owner.current
 
-/// Passive skillchecks that shouldn't affect you too much, as you can fail them purely by being too low level
-/// Return simple TRUE or FALSE, no critical failures or successes
-/datum/aspect/proc/passive_check(difficulty)
-	if (difficulty > 2 + get_level() * 3)
-		return FALSE
-
-	var/pass_required = PASS_BASE_VALUE + difficulty
-	var/result = (rand(1, 20) + get_level()) >= pass_required
-	if (result)
-		gain_exp(PASSIVE_CHECK_SUCCESS_EXP)
-
-	return result
-
-/// Active checks reserved for actions, can pop up a die visual.
+/// Roll for success on a skillcheck, optionally with a die visual
 /// Capable of critical failures and successes, so returns aren't binary
-/datum/aspect/proc/active_check(difficulty, show_visual = TRUE, die_delay = 0.5 SECONDS)
-	var/pass_required = PASS_BASE_VALUE + difficulty
-	var/die_roll = rand(1, 20)
-	var/result = CHECK_FAILURE
-	if (die_roll == 1)
-		result = CHECK_CRIT_FAILURE
-	else if (die_roll == 20)
-		result = CHECK_CRIT_SUCCESS
-	else if (die_roll + get_level() > pass_required)
-		result = CHECK_SUCCESS
+/datum/aspect/proc/roll_check(difficulty, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
+	var/dice_roll = roll("3d6")
+	var/level = get_level() - ASPECT_NEUTRAL_LEVEL
+	var/roll_value = dice_roll + level
+	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
+	var/crit_success = min(difficulty + 7, 17)
+
+	var/result
+	// 3 always fails, 18 always wins
+	if (roll_value >= difficulty && dice_roll != 3 || dice_roll == 18)
+		if (roll_value >= crit_success)
+			result = CHECK_CRIT_SUCCESS
+		else
+			result = CHECK_SUCCESS
+	else
+		if (roll_value <= crit_fail)
+			result = CHECK_CRIT_FAILURE
+		else
+			result = CHECK_FAILURE
 
 	if (result >= CHECK_SUCCESS)
-		gain_exp(ACTIVE_CHECK_SUCCESS_EXP)
+		gain_exp(SKILLCHECK_SUCCESS_EXP + SKILLCHECK_DIFFICULTY_BONUS * difficulty)
 
+	var/datum/check_result/check_result = new(result, src, difficulty, dice_roll, level, crit_fail, crit_success)
 	if (!show_visual)
-		return result
+		return check_result
 
-	SEND_SOUND(attribute.owner.current, sound('sound/items/dice_roll.ogg', volume = 50))
+	SEND_SOUND(attribute.owner.current, sound('sound/items/dice_roll.ogg', volume = 25))
 	var/obj/effect/abstract/die_back/die = new(attribute.owner)
+	die.color = attribute.color
 	var/obj/effect/abstract/die_number/number = new(attribute.owner)
 	QDEL_IN(die, die_delay + 0.2 SECONDS)
 	QDEL_IN(number, die_delay + 0.2 SECONDS)
@@ -128,11 +126,126 @@
 		animate(color = "#ffe600", time = 0)
 	animate(alpha = 0, pixel_y = 32, time = 0.2 SECONDS)
 
-	animate(number, icon_state = "d20-[rand(1, 20)]", time = (die_delay) / 5)
+	animate(number, icon_state = "d20-[roll("3d6")]", time = (die_delay) / 5)
 	for (var/i in 1 to 2)
-		animate(icon_state = "d20-[rand(1, 20)]", time = (die_delay) / 5)
-	animate(icon_state = "d20-[die_roll]", time = 0)
+		animate(icon_state = "d20-[roll("3d6")]", time = (die_delay) / 5)
+	animate(icon_state = "d20-[dice_roll]", time = 0)
+	return check_result
+
+/// Check result datum, used for easier message formatting
+
+/datum/check_result
+	/// Return value of the check
+	var/outcome = CHECK_FAILURE
+	/// Aspect utilized to make the check
+	var/datum/aspect/aspect
+	/// Difficulty of the check
+	var/difficulty
+	/// Value rolled on the die
+	var/roll
+	/// Value at or below which we get a critical failure
+	var/crit_fail
+	/// Value at or above which we get a critical success
+	var/crit_success
+	/// Aspect level + additional modifiers
+	var/modifier
+
+/datum/check_result/New(outcome, aspect, difficulty, roll, modifier, crit_fail, crit_success)
+	. = ..()
+	src.outcome = outcome
+	src.aspect = aspect
+	src.difficulty = difficulty
+	src.roll = roll
+	src.modifier = modifier
+	src.crit_fail = crit_fail
+	src.crit_success = crit_success
+
+/datum/check_result/proc/show_message(text)
+	var/success_prob = round(dice_roll_probabilbity(3, 6, difficulty - modifier), 0.1)
+
+	var/diff_string = "Error"
+	switch(success_prob)
+		if(0)
+			diff_string = "Impossible"
+		if(0.1 to 12)
+			diff_string = "Godly"
+		if(13 to 24)
+			diff_string = "Legendary"
+		if(25 to 36)
+			diff_string = "Formidable"
+		if(37 to 48)
+			diff_string = "Challenging"
+		if(49 to 60)
+			diff_string = "Hard"
+		if(61 to 72)
+			diff_string = "Medium"
+		if(73 to 84)
+			diff_string = "Easy"
+		if(85 to 100)
+			diff_string = "Trivial"
+
+	var/outcome_string = "Error"
+	switch (outcome)
+		if (CHECK_CRIT_FAILURE)
+			outcome_string = "Critical Failure"
+		if (CHECK_FAILURE)
+			outcome_string = "Failure"
+		if (CHECK_SUCCESS)
+			outcome_string = "Success"
+		if (CHECK_CRIT_SUCCESS)
+			outcome_string = "Critical Success"
+
+	var/tooltip = span_tooltip("<b>[success_prob]</b>% | Result: <b>[roll]</b> (+<b>[modifier]</b>) | Check: <b>[difficulty]</b>", span_italics("\[[diff_string]: [outcome_string]\]"))
+	return "<span style='color:[aspect.attribute.color]'>[aspect.name] [tooltip]<i>:</i> [text]</span>"
+
+/proc/dice_roll_probabilbity(dice, sides, difficulty)
+	var/static/list/probability_cache
+	var/static/list/dice_roll_cache
+	if (isnull(dice_roll_cache))
+		dice_roll_cache = list()
+	else if (dice_roll_cache["[dice]d[sides]d[difficulty]"])
+		return dice_roll_cache["[dice]d[sides]d[difficulty]"]
+
+	if (difficulty <= dice)
+		return 100
+
+	if (difficulty > dice * sides)
+		return 0
+
+	if (isnull(probability_cache))
+		var/list/dice_cache = dice_map(3, 6)
+		var/chance_value = 100
+		probability_cache = new(18)
+		for (var/i in 3 to 18)
+			probability_cache[i] = chance_value
+			chance_value -= dice_cache[i] * 100 / (dice ** sides)
+
+	var/result = round(probability_cache[difficulty], 0.1)
+	dice_roll_cache["[dice]d[sides]d[difficulty]"] = result
 	return result
+
+/proc/dice_map(dice, sides)
+	var/static/list/dice_cache
+	if (isnull(dice_cache))
+		dice_cache = list()
+	else if (dice_cache["[dice]d[sides]"])
+		return dice_cache["[dice]d[sides]"]
+	var/list/outcomes = new(sides)
+	var/list/next
+	for (var/i in 1 to sides)
+		outcomes[i] = 1
+	for (var/i in 2 to dice)
+		next = new(i * sides)
+		for (var/j in 1 to (i - 1))
+			next[j] = 0
+		for (var/j in 1 to sides)
+			for (var/k in (i - 1) to length(outcomes))
+				next[j + k] += outcomes[k]
+		outcomes = next
+	dice_cache["[dice]d[sides]"] = outcomes
+	return outcomes
+
+// VFX objects
 
 /obj/effect/abstract/die_back
 	icon = 'icons/obj/toys/dice.dmi'

@@ -118,22 +118,34 @@
 	if(victim.get_active_hand() != limb || !proximity || !victim.combat_mode || !ismob(target) || severity <= WOUND_SEVERITY_MODERATE)
 		return NONE
 
-	// With a severe or critical wound, you have a 15% or 30% chance to proc pain on hit
-	if(prob((severity - 1) * 15))
-		// And you have a 70% or 50% chance to actually land the blow, respectively
-		if(HAS_TRAIT(victim, TRAIT_ANALGESIA) || prob(70 - 20 * (severity - 1)))
-			if(!HAS_TRAIT(victim, TRAIT_ANALGESIA))
-				to_chat(victim, span_danger("The fracture in your [limb.plaintext_zone] shoots with pain as you strike [target]!"))
-			victim.apply_damage(rand(1, 5), BRUTE, limb, wound_bonus = CANT_WOUND, wound_clothing = FALSE)
-		else
-			victim.visible_message(span_danger("[victim] weakly strikes [target] with [victim.p_their()] broken [limb.plaintext_zone], recoiling from pain!"), \
-			span_userdanger("You fail to strike [target] as the fracture in your [limb.plaintext_zone] lights up in unbearable pain!"), vision_distance=COMBAT_MESSAGE_RANGE)
-			INVOKE_ASYNC(victim, TYPE_PROC_REF(/mob, emote), "scream")
-			victim.Stun(0.5 SECONDS)
-			victim.apply_damage(rand(3, 7), BRUTE, limb, wound_bonus = CANT_WOUND, wound_clothing = FALSE)
-			return COMPONENT_CANCEL_ATTACK_CHAIN
+	var/ignore_ouchies = prob(70 - 20 * (severity - 1))
+	var/datum/check_result/result = victim.aspect_check(/datum/aspect/endurance, SKILLCHECK_HARD, severity)
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			ignore_ouchies = FALSE
+		if (CHECK_FAILURE)
+			if(!prob((severity - 1) * 25))
+				return NONE
+		if (CHECK_SUCCESS)
+			if(!prob((severity - 1) * 10))
+				return NONE
+		if (CHECK_CRIT_SUCCESS)
+			to_chat(victim, result.show_message("Punch. Punch again. This pain is just temporary."))
+			return NONE
 
-	return NONE
+	// And you have a 70% or 50% chance to actually land the blow, respectively
+	if(HAS_TRAIT(victim, TRAIT_ANALGESIA) || ignore_ouchies)
+		if(!HAS_TRAIT(victim, TRAIT_ANALGESIA))
+			to_chat(victim, result.show_message("The fracture in your [limb.plaintext_zone] shoots with searing pain as you strike [target]."))
+		victim.apply_damage(rand(1, 5), BRUTE, limb, wound_bonus = CANT_WOUND, wound_clothing = FALSE)
+		return NONE
+
+	victim.visible_message(span_danger("[victim] weakly strikes [target] with [victim.p_their()] broken [limb.plaintext_zone], recoiling from pain!"), \
+	span_big(result.show_message("You fail to strike [target] as the fracture in your [limb.plaintext_zone] lights up in unbearable pain.")), vision_distance=COMBAT_MESSAGE_RANGE)
+	INVOKE_ASYNC(victim, TYPE_PROC_REF(/mob, emote), "scream")
+	victim.Stun(0.5 SECONDS)
+	victim.apply_damage(rand(3, 7), BRUTE, limb, wound_bonus = CANT_WOUND, wound_clothing = FALSE)
+	return COMPONENT_CANCEL_ATTACK_CHAIN
 
 /// If we're a human who's firing a gun with a broken arm, we might hurt ourselves doing so
 /datum/wound/blunt/bone/proc/firing_with_messed_up_hand(datum/source, obj/item/gun/gun, atom/firing_at, params, zone, bonus_spread_values)
@@ -156,17 +168,20 @@
 			// This is not arm wound, so we don't care
 			return
 
-	var/result = victim.active_check(/datum/aspect/endurance, SKILLCHECK_MEDIUM + gun.recoil)
+	var/datum/check_result/result = victim.aspect_check(/datum/aspect/endurance, SKILLCHECK_CHALLENGING, gun.recoil)
 	var/break_hand = FALSE
 	if (gun.recoil > 0 && severity >= WOUND_SEVERITY_SEVERE)
 		break_hand = TRUE
-	switch(result)
+
+	switch(result.outcome)
 		if (CHECK_CRIT_FAILURE)
+			to_chat(victim, result.show_message("The recoil dislodges something in your broken [limb.plaintext_zone]."))
 			break_hand = TRUE
 		if (CHECK_SUCCESS)
 			if (!prob(25 * (severity - 1)))
 				break_hand = FALSE
 		if (CHECK_CRIT_SUCCESS)
+			to_chat(victim, result.show_message("One more moment, one more bullet. Fire."))
 			return
 
 	if(break_hand)

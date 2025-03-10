@@ -63,15 +63,31 @@
 /mob/living/proc/get_aspect_level(datum/aspect/aspect_type)
 	return get_aspect(aspect_type)?.get_level()
 
-/mob/living/proc/active_check(aspect_type, difficulty, show_visual = TRUE, die_delay = 0.5 SECONDS)
-	if (!mind)
-		return prob(difficulty * 5) ? CHECK_FAILURE : CHECK_SUCCESS
-	return get_aspect(aspect_type).active_check(difficulty, show_visual, die_delay)
+/mob/living/proc/aspect_check(aspect_type, difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
+	RETURN_TYPE(/datum/check_result)
+	difficulty += modifier
+	if (mind)
+		return get_aspect(aspect_type).roll_check(difficulty, crit_fail_modifier, show_visual, die_delay)
 
-/mob/living/proc/passive_check(aspect_type, difficulty)
-	if (!mind)
-		return !prob(difficulty * 5)
-	return get_aspect(aspect_type).passive_check(difficulty)
+	var/dice_roll = roll("3d6")
+	var/roll_value = dice_roll + ASPECT_NEUTRAL_LEVEL
+	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
+	var/crit_success = min(difficulty + 7, 17)
+
+	var/result
+	// 3 always fails, 18 always wins
+	if (roll_value >= difficulty && dice_roll != 3 || dice_roll == 18)
+		if (roll_value >= crit_success)
+			result = CHECK_CRIT_SUCCESS
+		else
+			result = CHECK_SUCCESS
+	else
+		if (roll_value <= crit_fail)
+			result = CHECK_CRIT_FAILURE
+		else
+			result = CHECK_FAILURE
+
+	return new(result, aspect_type, difficulty, dice_roll, ASPECT_NEUTRAL_LEVEL, crit_fail, crit_success)
 
 /mob/living/proc/add_aspect_modifier(aspect_type, value, source)
 	get_aspect(aspect_type).add_modifier(value, source)

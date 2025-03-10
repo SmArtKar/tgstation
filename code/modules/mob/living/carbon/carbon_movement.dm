@@ -1,4 +1,4 @@
-/mob/living/carbon/slip(knockdown_amount, obj/slipped_on, lube_flags, paralyze, daze, force_drop = FALSE)
+/mob/living/carbon/slip(knockdown_amount, obj/slipped_on, lube_flags, paralyze, daze, force_drop = FALSE, check_difficulty = SKILLCHECK_FORMIDDABLE)
 	if(movement_type & MOVETYPES_NOT_TOUCHING_GROUND)
 		return FALSE
 	if(!(lube_flags & SLIDE_ICE))

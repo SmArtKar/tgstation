@@ -1,4 +1,4 @@
-/obj/item/ammo_casing/proc/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, autoaim = FALSE)
+/obj/item/ammo_casing/proc/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, datum/check_result/check_result)
 	distro += variance
 	var/targloc = get_turf(target)
 	ready_proj(target, user, quiet, zone_override, fired_from)
@@ -16,7 +16,7 @@
 		if(isnull(loaded_projectile))
 			return FALSE
 		AddComponent(/datum/component/pellet_cloud, projectile_type, pellets)
-	if (autoaim && thrown_proj)
+	if (thrown_proj && check_result.outcome == CHECK_CRIT_SUCCESS)
 		thrown_proj.set_homing_target(target)
 		thrown_proj.homing_turn_speed = max(thrown_proj.homing_turn_speed, 15)
 

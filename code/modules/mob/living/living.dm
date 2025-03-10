@@ -60,25 +60,38 @@
  * * levels - the number of levels we are falling
  */
 /mob/living/proc/ZImpactDamage(turf/impacted_turf, levels)
-	if(passive_check(/datum/aspect/savoir_faire, SKILLCHECK_CHALLENGING))
-		visible_message(span_motorics("[src] gracefully lands on their feet, remaining completely unharmed!"), span_motorics("You gracefully land on your feet, remaining completely unharmed!"), span_hear("You hear distant applause."))
-		return TRUE
 	. = SEND_SIGNAL(src, COMSIG_LIVING_Z_IMPACT, levels, impacted_turf)
 	if(. & ZIMPACT_CANCEL_DAMAGE)
 		return .
+	. |= ZIMPACT_NO_MESSAGE
 	// multiplier for the damage taken from falling
 	var/damage_softening_multiplier = 1
+	var/graceful_landing = HAS_TRAIT(src, TRAIT_CATLIKE_GRACE)
 
 	var/obj/item/organ/cyberimp/chest/spine/potential_spine = get_organ_slot(ORGAN_SLOT_SPINE)
 	if(istype(potential_spine))
 		damage_softening_multiplier *= potential_spine.athletics_boost_multiplier
+
+	var/datum/check_result/result = aspect_check(/datum/aspect/savoir_faire, SKILLCHECK_LEGENDARY, levels)
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			visible_message(span_danger("[src] crashes into [impacted_turf] head-first!"), result.show_message("Landing face-first is usually considered an inferior strategy compared to using your feet to dampen your fall, but you seem to disagree."))
+			levels += 1
+			graceful_landing = FALSE
+
+		if (CHECK_SUCCESS)
+			graceful_landing = TRUE
+
+		if (CHECK_CRIT_SUCCESS)
+			visible_message(span_motorics("[src] gracefully lands on their feet, remaining completely unharmed!"), result.show_message("You gracefully land on your feet, no harm done to your shell."), span_hear("You hear distant applause."))
+			new /obj/effect/temp_visual/mook_dust(impacted_turf)
+			return
 
 	// If you are incapped, you probably can't brace yourself
 	var/can_help_themselves = !INCAPACITATED_IGNORING(src, INCAPABLE_RESTRAINTS)
 	if(levels <= 1 && can_help_themselves)
 		var/obj/item/organ/wings/gliders = get_organ_by_type(/obj/item/organ/wings)
 		if(HAS_TRAIT(src, TRAIT_FREERUNNING) || gliders?.can_soften_fall()) // the power of parkour or wings allows falling short distances unscathed
-			var/graceful_landing = HAS_TRAIT(src, TRAIT_CATLIKE_GRACE)
 
 			if(graceful_landing)
 				add_movespeed_modifier(/datum/movespeed_modifier/landed_on_feet)
@@ -89,21 +102,22 @@
 
 			visible_message(
 				span_notice("[src] makes a hard landing on [impacted_turf] but remains unharmed from the fall[graceful_landing ? " and stays on [p_their()] feet" : " by tucking in rolling into the landing"]."),
-				span_notice("You brace for the fall. You make a hard landing on [impacted_turf], but remain unharmed[graceful_landing ? " while landing on your feet" : " by tucking in and rolling into the landing"]."),
+				result.show_message("You brace for the fall. You make a hard landing on [impacted_turf], but remain unharmed[graceful_landing ? " while landing on your feet" : " by tucking in and rolling into the landing"]."),
 			)
-			return . | ZIMPACT_NO_MESSAGE
+			return
 
 	var/incoming_damage = (levels * 5) ** 1.5
 	// Smaller mobs with catlike grace can ignore damage (EG: cats)
 	var/small_surface_area = mob_size <= MOB_SIZE_SMALL
 	var/skip_knockdown = FALSE
-	if(HAS_TRAIT(src, TRAIT_CATLIKE_GRACE) && (small_surface_area || usable_legs >= 2) && body_position == STANDING_UP && can_help_themselves)
-		. |= ZIMPACT_NO_MESSAGE|ZIMPACT_NO_SPIN
+	var/skipped_message = FALSE
+	if(graceful_landing && (small_surface_area || usable_legs >= 2) && body_position == STANDING_UP && can_help_themselves)
+		. |= ZIMPACT_NO_SPIN
 		skip_knockdown = TRUE
 		if(small_surface_area)
 			visible_message(
 				span_notice("[src] makes a hard landing on [impacted_turf], but lands safely on [p_their()] feet!"),
-				span_notice("You make a hard landing on [impacted_turf], but land safely on your feet!"),
+				result.show_message("You make a hard landing on [impacted_turf], but land safely on your feet."),
 			)
 			new /obj/effect/temp_visual/mook_dust/small(impacted_turf)
 			return .
@@ -113,8 +127,9 @@
 		addtimer(CALLBACK(src, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/landed_on_feet), levels * 2 SECONDS)
 		visible_message(
 			span_danger("[src] makes a hard landing on [impacted_turf], landing on [p_their()] feet painfully!"),
-			span_userdanger("You make a hard landing on [impacted_turf], and instinctively land on your feet - painfully!"),
+			result.show_message("Your instincts betray you as you make a hard landing on [impacted_turf], pain shooting through your stretched out legs."),
 		)
+		skipped_message = TRUE
 		new /obj/effect/temp_visual/mook_dust(impacted_turf)
 
 	if(body_position == STANDING_UP)
@@ -126,7 +141,12 @@
 
 	if(!skip_knockdown)
 		Knockdown(levels * 5 SECONDS)
-	return .
+
+	if(!skipped_message)
+		visible_message(
+			span_danger("[src] crashes into [impacted_turf]!"),
+			span_big(result.show_message("You painfully crash into [impacted_turf].")),
+		)
 
 /// Modifier for mobs landing on their feet after a fall
 /datum/movespeed_modifier/landed_on_feet
