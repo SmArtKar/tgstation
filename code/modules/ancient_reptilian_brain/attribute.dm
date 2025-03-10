@@ -87,7 +87,7 @@
 		else
 			result = CHECK_FAILURE
 
-	return new(result, aspect_type, difficulty, dice_roll, ASPECT_NEUTRAL_LEVEL, crit_fail, crit_success)
+	return new /datum/check_result(result, aspect_type, difficulty, dice_roll, ASPECT_NEUTRAL_LEVEL, crit_fail, crit_success)
 
 /mob/living/proc/add_aspect_modifier(aspect_type, value, source)
 	get_aspect(aspect_type).add_modifier(value, source)
