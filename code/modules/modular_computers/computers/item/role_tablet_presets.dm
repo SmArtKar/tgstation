@@ -310,6 +310,7 @@
 		on_slip_callback = CALLBACK(src, PROC_REF(AfterSlip)),\
 		can_slip_callback = CALLBACK(src, PROC_REF(try_slip)),\
 		slot_whitelist = list(ITEM_SLOT_ID, ITEM_SLOT_BELT),\
+		check_difficulty = SKILLCHECK_HEROIC,\
 	)
 	AddComponent(/datum/component/wearertargeting/sitcomlaughter, CALLBACK(src, PROC_REF(after_sitcom_laugh)))
 

@@ -14,6 +14,7 @@
 	attribute = /datum/attribute/physique
 
 // How well you handle damage, each level gives max HP and negates some damage slowdown
+// Had to mix endurance and pain threshold together for this one
 /datum/aspect/endurance
 	name = "Endurance"
 	desc = "Shrug off the pain. They'll have to hurt you more."
@@ -21,4 +22,9 @@
 
 /datum/aspect/endurance/update_effects(prev_level)
 	var/mob/living/owner = get_body()
-	owner.maxHealth += (get_level() - prev_level) * ENDURANCE_HEALTH_BOOST
+	if (!isnull(prev_level))
+		owner.maxHealth -= (prev_level - ENDURANCE_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+	owner.maxHealth += (get_level() - ENDURANCE_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+
+/datum/aspect/endurance/unregister_body(mob/living/old_body)
+	old_body.maxHealth -= (get_level() - ENDURANCE_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST

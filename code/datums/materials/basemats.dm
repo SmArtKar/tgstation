@@ -373,7 +373,7 @@ Unless you know what you're doing, only use the first three numbers. They're in 
 /datum/material/bananium/on_applied(atom/source, mat_amount, multiplier)
 	. = ..()
 	source.LoadComponent(/datum/component/squeak, list('sound/items/bikehorn.ogg'=1), 50 * multiplier, falloff_exponent = 20)
-	source.AddComponent(/datum/component/slippery, min(mat_amount / 10 * multiplier, 80 * multiplier))
+	source.AddComponent(/datum/component/slippery, min(mat_amount / 10 * multiplier, 80 * multiplier), check_difficulty = SKILLCHECK_HEROIC)
 
 /datum/material/bananium/on_main_applied(atom/source, mat_amount, multiplier)
 	. = ..()

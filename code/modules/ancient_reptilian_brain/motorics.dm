@@ -12,3 +12,26 @@
 	name = "Reaction Speed"
 	desc = "The quickest to react. An untouchable man."
 	attribute = /datum/attribute/motorics
+
+// Increases your melee attack and movement speed
+/datum/aspect/savoir_faire
+	name = "Savoir Faire"
+	desc = "Sneak under their noses. Stun with immense panache."
+	attribute = /datum/attribute/motorics
+
+/datum/aspect/savoir_faire/register_body(datum/mind/source, mob/living/old_current)
+	. = ..()
+	var/mob/living/owner = get_body()
+	RegisterSignals(owner, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_LIVING_ATTACK_ATOM, COMSIG_MOB_ATTACK_HAND), PROC_REF(adjust_melee_cd))
+
+/datum/aspect/savoir_faire/unregister_body(mob/living/old_body)
+	UnregisterSignal(old_body, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_LIVING_ATTACK_ATOM, COMSIG_MOB_ATTACK_HAND))
+	old_body.remove_movespeed_modifier(/datum/movespeed_modifier/savoir_faire)
+
+/datum/aspect/savoir_faire/proc/adjust_melee_cd(mob/living/source)
+	SIGNAL_HANDLER
+	source.changeNext_move(CLICK_CD_MELEE - (level - SAVOIR_FAIRE_NEUTRAL_LEVEL) * SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION)
+
+/datum/aspect/savoir_faire/update_effects(prev_level)
+	var/mob/living/owner = get_body()
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/savoir_faire, TRUE, (level - SAVOIR_FAIRE_NEUTRAL_LEVEL) * SAVOIR_FAIRE_MOVESPEED_MULTIPLIER)

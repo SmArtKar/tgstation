@@ -20,6 +20,16 @@
 #define CHECK_CRIT_SUCCESS 4
 
 // Aspect constants
-// Health added per level of endurance
+/// Level of Endurance at which we have 100 health and no slowdown mod
+#define ENDURANCE_NEUTRAL_LEVEL 2
+/// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 10
+/// Increase to divider of damage slowdown per level of enduracne
 #define ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION 7.5
+
+/// Level of Savoir Faire at which attack and movement speed becomes neutral
+#define SAVOIR_FAIRE_NEUTRAL_LEVEL 2
+/// Movespeed increase per level of Savoir Faire
+#define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.05
+/// Attack speed reduction per level of Savoir Faire
+#define SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION 0.5

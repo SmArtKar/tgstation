@@ -57,6 +57,10 @@ em						{font-style: normal;	font-weight: bold;}
 .greenteamradio			{color: #00ff00;}
 .yellowteamradio		{color: #d1ba22;}
 .captaincast			{color: #00ff99;}
+.intellect				{color: #5f84b8;}
+.psyche					{color: #817aa6;}
+.physique				{color: #d13b3b;}
+.motorics				{color: #d8b653;}
 
 .yell					{					font-weight: bold;}
 

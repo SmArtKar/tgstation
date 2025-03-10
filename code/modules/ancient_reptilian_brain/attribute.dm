@@ -25,8 +25,8 @@
 		aspects += aspect
 
 /datum/attribute/Destroy(force)
-	owner = null
 	QDEL_LIST(aspects)
+	owner = null
 	return ..()
 
 /datum/attribute/proc/on_owner_del(datum/source)
@@ -63,10 +63,10 @@
 /mob/living/proc/get_aspect_level(datum/aspect/aspect_type)
 	return get_aspect(aspect_type)?.get_level()
 
-/mob/living/proc/active_check(aspect_type, difficulty, show_visual = TRUE)
+/mob/living/proc/active_check(aspect_type, difficulty, show_visual = TRUE, die_delay = 0.5 SECONDS)
 	if (!mind)
 		return prob(difficulty * 5) ? CHECK_FAILURE : CHECK_SUCCESS
-	return get_aspect(aspect_type).active_check(difficulty, show_visual)
+	return get_aspect(aspect_type).active_check(difficulty, show_visual, die_delay)
 
 /mob/living/proc/passive_check(aspect_type, difficulty)
 	if (!mind)

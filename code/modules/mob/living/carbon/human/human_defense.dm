@@ -48,9 +48,9 @@
 	if(bullet.firer == src && bullet.original == src) //can't block or reflect when shooting yourself
 		return ..()
 
-	if(isturf(loc) && body_position == STANDING_UP && !INCAPACITATED_IGNORING(src, INCAPABLE_GRAB) && (carp_user.mobility_flags & MOBILITY_USE))
+	if(isturf(loc) && body_position == STANDING_UP && !INCAPACITATED_IGNORING(src, INCAPABLE_GRAB) && (mobility_flags & MOBILITY_USE))
 		if (passive_check(/datum/aspect/reaction_speed, SKILLCHECK_HEROIC))
-			visible_message(span_danger("[src] masterfully dodges \the [bullet]!"), span_userdanger("You manage to dodge \the [bullet]!"))
+			visible_message(span_motorics("[src] masterfully dodges \the [bullet]!"), span_motorics("You manage to dodge \the [bullet]!"))
 			return BULLET_ACT_FORCE_PIERCE
 
 	if(bullet.reflectable)

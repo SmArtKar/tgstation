@@ -33,6 +33,8 @@
 	var/datum/callback/on_slip_callback
 	/// If parent is an item, this is the person currently holding/wearing the parent (or the parent if no one is holding it)
 	var/mob/living/holder
+	/// How hard is it to resist the slip?
+	var/check_difficulty = SKILLCHECK_CHALLENGING
 	/// Whitelist of item slots the parent can be equipped in that make the holder slippery. If null or empty, it will always make the holder slippery.
 	var/list/slot_whitelist = list(ITEM_SLOT_OCLOTHING, ITEM_SLOT_ICLOTHING, ITEM_SLOT_GLOVES, ITEM_SLOT_FEET, ITEM_SLOT_HEAD, ITEM_SLOT_MASK, ITEM_SLOT_BELT, ITEM_SLOT_NECK)
 	///what we give to connect_loc by default, makes slippable mobs moving over us slip
@@ -69,6 +71,7 @@
 	force_drop = FALSE,
 	slot_whitelist,
 	datum/callback/can_slip_callback,
+	check_difficulty = SKILLCHECK_FORMIDDABLE,
 )
 	src.knockdown_time = max(knockdown, 0)
 	src.paralyze_time = max(paralyze, 0)
@@ -77,6 +80,7 @@
 	src.lube_flags = lube_flags
 	src.can_slip_callback = can_slip_callback
 	src.on_slip_callback = on_slip_callback
+	src.check_difficulty = check_difficulty
 	if(slot_whitelist)
 		src.slot_whitelist = slot_whitelist
 
@@ -172,6 +176,8 @@
 			return
 	var/mob/living/victim = arrived
 	if(victim.movement_type & MOVETYPES_NOT_TOUCHING_GROUND)
+		return
+	if(victim.passive_check(/datum/aspect/savoir_faire, check_difficulty))
 		return
 	if(can_slip_callback && !can_slip_callback.Invoke(holder, victim))
 		return

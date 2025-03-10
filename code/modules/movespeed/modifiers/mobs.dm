@@ -32,6 +32,10 @@
 	movetypes = FLYING
 	variable = TRUE
 
+/datum/movespeed_modifier/savoir_faire
+	blacklisted_movetypes = FLOATING
+	variable = TRUE
+
 /// Movespeed modifier applied by worn equipment.
 /datum/movespeed_modifier/equipment_speedmod
 	variable = TRUE

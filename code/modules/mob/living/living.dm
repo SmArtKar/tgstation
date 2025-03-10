@@ -60,6 +60,9 @@
  * * levels - the number of levels we are falling
  */
 /mob/living/proc/ZImpactDamage(turf/impacted_turf, levels)
+	if(passive_check(/datum/aspect/savoir_faire, SKILLCHECK_CHALLENGING))
+		visible_message(span_motorics("[src] gracefully lands on their feet, remaining completely unharmed!"), span_motorics("You gracefully land on your feet, remaining completely unharmed!"), span_hear("You hear distant applause."))
+		return TRUE
 	. = SEND_SIGNAL(src, COMSIG_LIVING_Z_IMPACT, levels, impacted_turf)
 	if(. & ZIMPACT_CANCEL_DAMAGE)
 		return .

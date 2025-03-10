@@ -19,10 +19,20 @@
 /datum/aspect/New(datum/attribute/new_attribute)
 	. = ..()
 	attribute = new_attribute
+	RegisterSignal(attribute.owner, COMSIG_MIND_TRANSFERRED, PROC_REF(register_body))
 
 /datum/aspect/Destroy(force)
+	unregister_body(get_body())
 	attribute = null
 	return ..()
+
+/datum/aspect/proc/register_body(datum/mind/source, mob/living/old_current)
+	if (isliving(old_current))
+		unregister_body(old_current)
+	update_effects()
+
+/datum/aspect/proc/unregister_body(mob/living/old_body)
+	return
 
 /datum/aspect/proc/adjust_level(change)
 	var/prev_level = get_level()
@@ -60,7 +70,7 @@
 /datum/aspect/proc/remove_modifier(source)
 	var/prev_level = get_level()
 	modifiers -= source
-	update_effects(get_level())
+	update_effects(prev_level)
 
 /datum/aspect/proc/update_effects(prev_level)
 	return
@@ -84,7 +94,7 @@
 
 /// Active checks reserved for actions, can pop up a die visual.
 /// Capable of critical failures and successes, so returns aren't binary
-/datum/aspect/proc/active_check(difficulty, show_visual = TRUE)
+/datum/aspect/proc/active_check(difficulty, show_visual = TRUE, die_delay = 0.5 SECONDS)
 	var/pass_required = PASS_BASE_VALUE + difficulty
 	var/die_roll = rand(1, 20)
 	var/result = CHECK_FAILURE
@@ -104,23 +114,23 @@
 	SEND_SOUND(attribute.owner.current, sound('sound/items/dice_roll.ogg', volume = 50))
 	var/obj/effect/abstract/die_back/die = new(attribute.owner)
 	var/obj/effect/abstract/die_number/number = new(attribute.owner)
-	QDEL_IN(die, 0.7 SECONDS)
-	QDEL_IN(number, 0.7 SECONDS)
+	QDEL_IN(die, die_delay + 0.2 SECONDS)
+	QDEL_IN(number, die_delay + 0.2 SECONDS)
 
 	die.vis_contents += number
 	die.pixel_y += 1
 	attribute.owner.current.vis_contents += die
 
-	animate(die, pixel_y = 28, alpha = 175, time = 0.5 SECONDS, easing = SINE_EASING|EASE_OUT)
+	animate(die, pixel_y = 28, alpha = 175, time = die_delay, easing = SINE_EASING|EASE_OUT)
 	if (result == CHECK_CRIT_FAILURE)
 		animate(color = "#101010", time = 0)
 	else if (result == CHECK_CRIT_SUCCESS)
 		animate(color = "#ffe600", time = 0)
 	animate(alpha = 0, pixel_y = 32, time = 0.2 SECONDS)
 
-	animate(number, icon_state = "d20-[rand(1, 20)]", time = 0.1 SECONDS)
+	animate(number, icon_state = "d20-[rand(1, 20)]", time = (die_delay) / 5)
 	for (var/i in 1 to 2)
-		animate(icon_state = "d20-[rand(1, 20)]", time = 0.1 SECONDS)
+		animate(icon_state = "d20-[rand(1, 20)]", time = (die_delay) / 5)
 	animate(icon_state = "d20-[die_roll]", time = 0)
 	return result
 
