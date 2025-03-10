@@ -74,10 +74,21 @@
 	if(.)
 		throw_mode_off(THROW_MODE_TOGGLE)
 
-/mob/living/carbon/can_catch_item(skip_throw_mode_check = FALSE, try_offhand = FALSE)
-	if(!skip_throw_mode_check && !throw_mode)
-		return FALSE
-	return ..()
+/mob/living/carbon/can_catch_item(obj/item/item, skip_throw_mode_check = FALSE, try_offhand = FALSE)
+	switch (active_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_CHALLENGING, die_delay = 0.3 SECONDS))
+		if (CHECK_CRIT_FAILURE)
+			to_chat(src, span_motorics("You fumble and fail to catch [item]!"))
+			return FALSE
+		if (CHECK_FAILURE)
+			if(!skip_throw_mode_check && !throw_mode)
+				return FALSE
+			return ..()
+		if (CHECK_SUCCESS)
+			return ..()
+		if (CHECK_CRIT_SUCCESS)
+			. = ..(item, skip_throw_mode_check, TRUE)
+			if (.)
+				to_chat(src, span_motorics("You manage to catch [item]!"))
 
 /mob/living/carbon/hitby(atom/movable/movable, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
 	if(!skipcatch && try_catch_item(movable))

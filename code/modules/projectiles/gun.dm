@@ -362,7 +362,7 @@
 		return
 
 	var/obj/item/bodypart/other_hand = user.has_hand_for_held_index(user.get_inactive_hand_index()) //returns non-disabled inactive hands
-	if(weapon_weight == WEAPON_HEAVY && (user.get_inactive_held_item() || !other_hand))
+	if(weapon_weight == WEAPON_HEAVY && (user.get_inactive_held_item() || !other_hand) && (!istype(user) || user.get_aspect_level(/datum/aspect/hand_eye_coordination) < HAND_EYE_FREE_WIELD_LEVEL))
 		balloon_alert(user, "use both hands!")
 		return
 	//DUAL (or more!) WIELDING
@@ -370,7 +370,7 @@
 	var/loop_counter = 0
 	if(user.combat_mode && !HAS_TRAIT(user, TRAIT_NO_GUN_AKIMBO))
 		for(var/obj/item/gun/gun in user.held_items)
-			if(gun == src || gun.weapon_weight >= WEAPON_MEDIUM)
+			if(gun == src || (gun.weapon_weight >= WEAPON_MEDIUM && user.get_aspect_level(/datum/aspect/hand_eye_coordination) < HAND_EYE_AKIMBO_ANY_LEVEL))
 				continue
 			else if(gun.can_trigger_gun(user, akimbo_usage = TRUE))
 				bonus_spread += dual_wield_spread
@@ -457,11 +457,29 @@
 ///returns true if the gun successfully fires
 /obj/item/gun/proc/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0)
 	var/base_bonus_spread = 0
+	var/check_result = CHECK_SUCCESS
 	if(user)
 		var/list/bonus_spread_values = list(base_bonus_spread, bonus_spread)
 		SEND_SIGNAL(user, COMSIG_MOB_FIRED_GUN, src, target, params, zone_override, bonus_spread_values)
 		base_bonus_spread = bonus_spread_values[MIN_BONUS_SPREAD_INDEX]
 		bonus_spread = bonus_spread_values[MAX_BONUS_SPREAD_INDEX]
+		check_result = user.active_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_TRIVIAL)
+		switch (check_result)
+			if (CHECK_CRIT_FAILURE)
+				to_chat(user, span_motorics("[src] goes off in your hand!"))
+				target = user // Lol
+				zone_override = pick(BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_ARM, BODY_ZONE_R_LEG)
+			if (CHECK_FAILURE)
+				target = pick(RANGE_TURFS(2, target))
+			if (CHECK_SUCCESS)
+				if (user.get_aspect_level(/datum/aspect/hand_eye_coordination) >= HAND_EYE_ALWAYS_CRIT_LEVEL)
+					check_result = CHECK_CRIT_SUCCESS
+					if (isturf(target))
+						target = locate(/mob/living) in range(2, target)
+			if (CHECK_CRIT_SUCCESS)
+				if (isturf(target))
+					target = locate(/mob/living) in range(2, target)
+				to_chat(user, span_motorics("You feel a slight tug at the barrel of [src], as if something is helping you guide your shot!"))
 
 	SEND_SIGNAL(src, COMSIG_GUN_FIRED, user, target, params, zone_override)
 
@@ -494,7 +512,7 @@
 					return
 			var/sprd = round((rand(0, 1) - 0.5) * DUALWIELD_PENALTY_EXTRA_MULTIPLIER * total_random_spread)
 			before_firing(target,user)
-			if(!chambered.fire_casing(target, user, params, , suppressed, zone_override, sprd, src))
+			if(!chambered.fire_casing(target, user, params, , suppressed, zone_override, sprd, src, autoaim = (check_result == CHECK_CRIT_SUCCESS)))
 				shoot_with_empty_chamber(user)
 				return
 			else

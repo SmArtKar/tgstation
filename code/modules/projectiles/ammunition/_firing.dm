@@ -1,4 +1,4 @@
-/obj/item/ammo_casing/proc/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from)
+/obj/item/ammo_casing/proc/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, autoaim = FALSE)
 	distro += variance
 	var/targloc = get_turf(target)
 	ready_proj(target, user, quiet, zone_override, fired_from)
@@ -16,6 +16,9 @@
 		if(isnull(loaded_projectile))
 			return FALSE
 		AddComponent(/datum/component/pellet_cloud, projectile_type, pellets)
+	if (autoaim && thrown_proj)
+		thrown_proj.set_homing_target(target)
+		thrown_proj.homing_turn_speed = max(thrown_proj.homing_turn_speed, 15)
 
 	var/next_delay = click_cooldown_override || CLICK_CD_RANGE
 	if(HAS_TRAIT(user, TRAIT_DOUBLE_TAP))

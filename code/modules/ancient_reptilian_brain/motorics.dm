@@ -30,8 +30,15 @@
 
 /datum/aspect/savoir_faire/proc/adjust_melee_cd(mob/living/source)
 	SIGNAL_HANDLER
-	source.changeNext_move(CLICK_CD_MELEE - (level - SAVOIR_FAIRE_NEUTRAL_LEVEL) * SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION)
+	source.changeNext_move(CLICK_CD_MELEE - (level - ASPECT_NEUTRAL_LEVEL) * SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION)
 
 /datum/aspect/savoir_faire/update_effects(prev_level)
 	var/mob/living/owner = get_body()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/savoir_faire, TRUE, (level - SAVOIR_FAIRE_NEUTRAL_LEVEL) * SAVOIR_FAIRE_MOVESPEED_MULTIPLIER)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/savoir_faire, TRUE, (level - ASPECT_NEUTRAL_LEVEL) * SAVOIR_FAIRE_MOVESPEED_MULTIPLIER)
+
+// Improves your firing skills, high levels can give you autoaim
+// Also allows you to automatically catch stuff
+/datum/aspect/hand_eye_coordination
+	name = "Hand/Eye Coordination"
+	desc = "Ready? Aim and fire."
+	attribute = /datum/attribute/motorics

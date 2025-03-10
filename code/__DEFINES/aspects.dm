@@ -20,16 +20,24 @@
 #define CHECK_CRIT_SUCCESS 4
 
 // Aspect constants
-/// Level of Endurance at which we have 100 health and no slowdown mod
-#define ENDURANCE_NEUTRAL_LEVEL 2
+/// Level of aspects which non-disco spessmen have (aka normal stats)
+#define ASPECT_NEUTRAL_LEVEL 2
+
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 10
-/// Increase to divider of damage slowdown per level of enduracne
+/// Increase to divider of damage slowdown per level of endurance
 #define ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION 7.5
+/// Level of endurance at which you get analgesia
+#define ENDURANCE_ANALGESIA_LEVEL 6
 
-/// Level of Savoir Faire at which attack and movement speed becomes neutral
-#define SAVOIR_FAIRE_NEUTRAL_LEVEL 2
 /// Movespeed increase per level of Savoir Faire
 #define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.05
 /// Attack speed reduction per level of Savoir Faire
 #define SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION 0.5
+
+/// Hand/eye level at which you don't need to wield heavy guns
+#define HAND_EYE_FREE_WIELD_LEVEL 4
+/// Hand/eye level at which gun successes turn into critical successes
+#define HAND_EYE_ALWAYS_CRIT_LEVEL 6
+/// Hand/eye level at which you can akimbo fire *any* guns
+#define HAND_EYE_AKIMBO_ANY_LEVEL 8

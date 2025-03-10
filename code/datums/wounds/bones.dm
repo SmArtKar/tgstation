@@ -156,7 +156,20 @@
 			// This is not arm wound, so we don't care
 			return
 
-	if(gun.recoil > 0 && severity >= WOUND_SEVERITY_SEVERE && prob(25 * (severity - 1)))
+	var/result = victim.active_check(/datum/aspect/endurance, SKILLCHECK_MEDIUM + gun.recoil)
+	var/break_hand = FALSE
+	if (gun.recoil > 0 && severity >= WOUND_SEVERITY_SEVERE)
+		break_hand = TRUE
+	switch(result)
+		if (CHECK_CRIT_FAILURE)
+			break_hand = TRUE
+		if (CHECK_SUCCESS)
+			if (!prob(25 * (severity - 1)))
+				break_hand = FALSE
+		if (CHECK_CRIT_SUCCESS)
+			return
+
+	if(break_hand)
 		if(!HAS_TRAIT(victim, TRAIT_ANALGESIA))
 			to_chat(victim, span_danger("The fracture in your [limb.plaintext_zone] explodes with pain as [gun] kicks back!"))
 		victim.apply_damage(rand(1, 3) * (severity - 1) * gun.weapon_weight, BRUTE, limb, wound_bonus = CANT_WOUND, wound_clothing = FALSE)

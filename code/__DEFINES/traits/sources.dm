@@ -34,6 +34,8 @@
 #define CHANGELING_TRAIT "changeling"
 #define CULT_TRAIT "cult"
 #define LICH_TRAIT "lich"
+/// Gained from having aspect leveled to a certain stage
+#define ASPECT_TRAIT "aspect"
 
 #define VENDING_MACHINE_TRAIT "vending_machine"
 

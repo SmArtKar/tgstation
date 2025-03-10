@@ -23,8 +23,11 @@
 /datum/aspect/endurance/update_effects(prev_level)
 	var/mob/living/owner = get_body()
 	if (!isnull(prev_level))
-		owner.maxHealth -= (prev_level - ENDURANCE_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
-	owner.maxHealth += (get_level() - ENDURANCE_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+		owner.maxHealth -= (prev_level - ASPECT_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+	owner.maxHealth += (get_level() - ASPECT_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+	if (get_level() >= ENDURANCE_ANALGESIA_LEVEL)
+		ADD_TRAIT(owner, TRAIT_ANALGESIA, ASPECT_TRAIT)
 
 /datum/aspect/endurance/unregister_body(mob/living/old_body)
-	old_body.maxHealth -= (get_level() - ENDURANCE_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+	old_body.maxHealth -= (get_level() - ASPECT_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
+	REMOVE_TRAIT(old_body, TRAIT_ANALGESIA, ASPECT_TRAIT)
