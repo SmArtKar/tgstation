@@ -141,7 +141,7 @@
 		return NONE
 
 	victim.visible_message(span_danger("[victim] weakly strikes [target] with [victim.p_their()] broken [limb.plaintext_zone], recoiling from pain!"), \
-	span_big(result.show_message("You fail to strike [target] as the fracture in your [limb.plaintext_zone] lights up in unbearable pain.")), vision_distance=COMBAT_MESSAGE_RANGE)
+		result.show_message("You fail to strike [target] as the fracture in your [limb.plaintext_zone] lights up in unbearable pain."), vision_distance=COMBAT_MESSAGE_RANGE)
 	INVOKE_ASYNC(victim, TYPE_PROC_REF(/mob, emote), "scream")
 	victim.Stun(0.5 SECONDS)
 	victim.apply_damage(rand(3, 7), BRUTE, limb, wound_bonus = CANT_WOUND, wound_clothing = FALSE)

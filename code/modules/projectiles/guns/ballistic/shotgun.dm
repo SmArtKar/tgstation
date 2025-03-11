@@ -53,7 +53,7 @@
 
 // Automatic Shotguns//
 
-/obj/item/gun/ballistic/shotgun/automatic/shoot_live_shot(mob/living/user)
+/obj/item/gun/ballistic/shotgun/automatic/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result = null)
 	..()
 	rack()
 

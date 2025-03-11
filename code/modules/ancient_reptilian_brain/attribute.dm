@@ -63,12 +63,14 @@
 /mob/living/proc/get_aspect_level(datum/aspect/aspect_type)
 	return get_aspect(aspect_type)?.get_level()
 
-/mob/living/proc/aspect_check(aspect_type, difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
+/mob/living/proc/aspect_check(aspect_type, difficulty, modifier, skill_modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
 	RETURN_TYPE(/datum/check_result)
-	difficulty += modifier
 	if (mind)
-		return get_aspect(aspect_type).roll_check(difficulty, crit_fail_modifier, show_visual, die_delay)
+		var/datum/aspect/rolled_aspect = get_aspect(aspect_type)
+		var/level_modifier = rolled_aspect.get_level() - ASPECT_NEUTRAL_LEVEL
+		return rolled_aspect.roll_check(difficulty + modifier, level_modifier + skill_modifier, crit_fail_modifier, show_visual, die_delay)
 
+	difficulty += modifier
 	var/dice_roll = roll("3d6")
 	var/roll_value = dice_roll + ASPECT_NEUTRAL_LEVEL
 	var/crit_fail = max(difficulty + crit_fail_modifier, 4)

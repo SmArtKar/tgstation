@@ -199,7 +199,7 @@
 	else
 		playsound(src, fire_sound, fire_sound_volume, vary_fire_sound)
 
-/obj/item/gun/proc/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result)
+/obj/item/gun/proc/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result = null)
 	if(recoil && !tk_firing(user))
 		shake_camera(user, recoil + 1, recoil)
 	fire_sounds()

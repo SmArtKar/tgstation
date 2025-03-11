@@ -278,7 +278,7 @@
 	. = ..()
 	projectile_damage_multiplier /= dmg_multiplier
 
-/obj/item/gun/ballistic/automatic/pistol/doorhickey/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE)
+/obj/item/gun/ballistic/automatic/pistol/doorhickey/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result = null)
 	. = ..()
 	if (!.)
 		return

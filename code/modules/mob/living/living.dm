@@ -72,7 +72,7 @@
 	if(istype(potential_spine))
 		damage_softening_multiplier *= potential_spine.athletics_boost_multiplier
 
-	var/datum/check_result/result = aspect_check(/datum/aspect/savoir_faire, SKILLCHECK_LEGENDARY, levels)
+	var/datum/check_result/result = aspect_check(/datum/aspect/savoir_faire, SKILLCHECK_LEGENDARY, levels - 1)
 	switch (result.outcome)
 		if (CHECK_CRIT_FAILURE)
 			visible_message(span_danger("[src] crashes into [impacted_turf] head-first!"), result.show_message("Landing face-first is usually considered an inferior strategy compared to using your feet to dampen your fall, but you seem to disagree."))

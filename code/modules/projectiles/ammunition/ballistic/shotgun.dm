@@ -96,7 +96,7 @@
 	misfire_increment = 2
 	integrity_damage = 4
 
-/obj/item/ammo_casing/shotgun/buckshot/old/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from)
+/obj/item/ammo_casing/shotgun/buckshot/old/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, datum/check_result/check_result)
 	. = ..()
 	if(!fired_from)
 		return

@@ -37,7 +37,7 @@
 	/// The minimum distance required to gain a damage bonus from aiming
 	var/min_distance = 4
 
-/obj/item/ammo_casing/strilka310/lionhunter/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from)
+/obj/item/ammo_casing/strilka310/lionhunter/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, datum/check_result/check_result)
 	if(!loaded_projectile)
 		return
 	if(!check_fire(target, user))

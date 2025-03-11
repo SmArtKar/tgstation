@@ -32,7 +32,7 @@
 		empty()
 	AddElement(/datum/element/empprotection, EMP_PROTECT_ALL)
 
-/obj/item/gun/energy/recharge/shoot_live_shot(mob/living/user, pointblank = 0, atom/pbtarget = null, message = 1)
+/obj/item/gun/energy/recharge/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result = null)
 	. = ..()
 	attempt_reload()
 

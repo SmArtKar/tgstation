@@ -234,7 +234,7 @@
 	bolt_locked = FALSE
 	update_appearance()
 
-/obj/item/gun/ballistic/rifle/rebarxbow/shoot_live_shot(mob/living/user)
+/obj/item/gun/ballistic/rifle/rebarxbow/shoot_live_shot(mob/living/user, pointblank = FALSE, atom/pbtarget = null, message = TRUE, datum/check_result/check_result = null)
 	..()
 	rack()
 

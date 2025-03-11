@@ -304,7 +304,7 @@
 	if(!isturf(target))
 		dueling_projectile.set_homing_target(target)
 
-/obj/item/ammo_casing/energy/duel/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from)
+/obj/item/ammo_casing/energy/duel/fire_casing(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, datum/check_result/check_result)
 	. = ..()
 	var/obj/effect/temp_visual/dueling_chaff/chaff = new(get_turf(user))
 	chaff.setting = setting

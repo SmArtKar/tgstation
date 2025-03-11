@@ -901,48 +901,58 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/always_crit = FALSE
 	var/datum/check_result/dodge_result
 	var/datum/check_result/attack_result
+	var/hit_message = span_userdanger("You're [atk_verb]ed by [user]!")
 	if (roll_aspect)
+		var/datum/aspect/reaction = target.get_aspect(/datum/aspect/reaction_speed)
 		// Puncher's half light contesting against target's reaction speed
-		dodge_result = target.aspect_check(/datum/aspect/reaction_speed, SKILLCHECK_EASY)
-		attack_result = user.aspect_check(/datum/aspect/half_light, SKILLCHECK_EASY)
-		var/force_success = (attack_result.outcome == CHECK_CRIT_SUCCESS && dodge_result.outcome != CHECK_CRIT_SUCCESS)
+		attack_result = user.aspect_check(/datum/aspect/half_light, SKILLCHECK_PRIMITIVE, reaction.get_level())
 		if (HAS_TRAIT(user, TRAIT_PERFECT_ATTACKER) || attack_result.outcome != CHECK_CRIT_FAILURE && (target.body_position == LYING_DOWN || staggered || user_drunkenness && HAS_TRAIT(user, TRAIT_DRUNKEN_BRAWLER)))
-			force_success = TRUE
+			if (attack_result.outcome < CHECK_SUCCESS)
+				attack_result.outcome = CHECK_SUCCESS
+				attack_result.roll = attack_result.difficulty - attack_result.modifier
 
-		// Attacker has an advantage
-		var/datum/check_result/winner = dodge_result
-		var/datum/check_result/loser = attack_result
-		if (force_success || attack_result.roll + attack_result.modifier > dodge_result.roll + dodge_result.modifier && attack_result.outcome != CHECK_CRIT_FAILURE)
-			winner = attack_result
-			loser = dodge_result
-
-		if (winner.outcome == CHECK_CRIT_SUCCESS)
-			loser.outcome = CHECK_CRIT_FAILURE
-			loser.roll = clamp(loser.crit_fail - loser.modifier, 3, loser.roll)
-		else
-			if (loser.outcome == CHECK_CRIT_FAILURE)
-				winner = CHECK_CRIT_SUCCESS
-				winner.roll = clamp(winner.crit_success - winner.modifier, winner.roll, 18)
-			else
-				winner = CHECK_SUCCESS
-				winner.roll = clamp(winner.difficulty - winner.modifier, winner.roll, winner.crit_success - 1)
-
-			loser.outcome = CHECK_FAILURE
-			loser.roll = clamp(loser.difficulty - loser.modifier - 1, loser.crit_fail, loser.roll)
-
+		var/attack_roll = attack_result.roll + attack_result.modifier
+		var/dodge_roll = roll("3d6")
+		var/crit_fail = max(attack_roll - 10, 4)
+		var/crit_success = min(attack_roll + 7, 17)
 		switch (attack_result.outcome)
 			if (CHECK_CRIT_FAILURE)
 				log_combat(user, target, "attempted to punch")
 				to_chat(user, attack_result.show_message("You fumble and end up hitting yourself."))
-				harm(user, user, attacker_style, FALSE)
-				return
+				return harm(user, user, attacker_style, FALSE)
 
 			if (CHECK_FAILURE)
+				var/dodge_string = "You avoid [user]'s [atk_verb]."
+				dodge_result = new(CHECK_SUCCESS, reaction, attack_roll + 1, dodge_roll, rand(attack_roll + 1 - dodge_roll, attack_roll), crit_fail, crit_success)
+
+				if (dodge_result.roll + dodge_result.modifier >= crit_success)
+					dodge_result.outcome = CHECK_CRIT_SUCCESS
+					dodge_string = "You duck and roll, swiftly avoiding [user]'s [atk_verb]."
+					target.emote("flip")
+					new /obj/effect/temp_visual/mook_dust(target.loc)
+					target.add_movespeed_modifier(/datum/movespeed_modifier/duck_n_roll)
+					addtimer(CALLBACK(target, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/duck_n_roll), 3 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
+					var/valid_dirs = list()
+					for (var/roll_dir in GLOB.cardinals)
+						var/turf/roll_turf = get_step(target, roll_dir)
+						if (isopenspaceturf(roll_turf) || ischasm(roll_turf))
+							continue
+						if (!roll_turf.is_blocked_turf(FALSE, target))
+							valid_dirs += roll_dir
+
+					while (length(valid_dirs))
+						if (step(target, pick_n_take(valid_dirs)))
+							break
+
 				playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
 				target.visible_message(span_danger("[user]'s [atk_verb] misses [target]!"), \
-								dodge_result.show_message("You avoid [user]'s [atk_verb]."), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
+								dodge_result.show_message(dodge_string), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
 				to_chat(user, attack_result.show_message("Your [atk_verb] misses [target]."))
 				log_combat(user, target, "attempted to punch")
+				return FALSE
+
+			if (CHECK_SUCCESS)
+				dodge_result = new(CHECK_FAILURE, reaction, attack_roll + 1, dodge_roll, rand(attack_roll - 18, min(dodge_roll - attack_roll - 1, 0)), crit_fail, crit_success)
 
 			if (CHECK_CRIT_SUCCESS)
 				var/what_do_i_do_wattson = pick("Distract target.", "Block [target.p_their()] blind jab.", "Counter with cross to left cheek.",
@@ -950,6 +960,14 @@ GLOBAL_LIST_EMPTY(features_by_species)
 					"Break cracked ribs.", "Traumatize solar plexus.", "Dislocate jaw entirely.", "Heel kick to diaphragm.")
 				to_chat(user, attack_result.show_message(what_do_i_do_wattson))
 				always_crit = TRUE
+				dodge_result = new(CHECK_FAILURE, reaction, attack_roll + 1, dodge_roll, rand(attack_roll - 18, min(dodge_roll - attack_roll - 1, -3)), crit_fail, crit_success)
+
+		if (dodge_result.roll + dodge_result.modifier <= crit_fail)
+			dodge_result.outcome = CHECK_CRIT_FAILURE
+			hit_message = dodge_result.show_message("You misstep and fall off-balance as [user] [atk_verb][user.p_s()] you!")
+			target.adjust_staggered_up_to(1 SECONDS, 10 SECONDS)
+		else
+			hit_message = dodge_result.show_message("You're [atk_verb]ed by [user]!")
 
 	if(!damage || !affecting) // future-proofing for species that have 0 damage/weird cases where no zone is targeted
 		playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
@@ -981,11 +999,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 
 	if(grappled && attacking_bodypart.grappled_attack_verb)
 		atk_verb = attacking_bodypart.grappled_attack_verb
-	target.visible_message(span_danger("[user] [atk_verb]ed [target]!"), \
-					span_big(dodge_result?.show_message("You're [atk_verb]ed by [user]!")) || span_userdanger("You're [atk_verb]ed by [user]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, user)
 
-	if (!always_crit)
-		to_chat(user, attack_result?.show_message("You [atk_verb] [target].") || span_danger("You [atk_verb] [target]!"))
+	target.visible_message(span_danger("[user] [atk_verb]ed [target]!"), hit_message, span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, user)
+	if (!always_crit && roll_aspect)
+		to_chat(user, attack_result.show_message("You [atk_verb] [target]."))
 
 	target.lastattacker = user.real_name
 	target.lastattackerckey = user.ckey

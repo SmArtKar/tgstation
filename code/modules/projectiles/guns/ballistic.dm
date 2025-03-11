@@ -484,7 +484,7 @@
 
 	return ..()
 
-/obj/item/gun/ballistic/shoot_live_shot(mob/living/user, pointblank = 0, atom/pbtarget = null, message = 1)
+/obj/item/gun/ballistic/shoot_live_shot(mob/living/user, pointblank = 0, atom/pbtarget = null, message = 1, datum/check_result/check_result = null)
 	if(isnull(chambered))
 		return ..()
 	if(can_misfire)

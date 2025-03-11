@@ -22,7 +22,8 @@
 	RegisterSignal(attribute.owner, COMSIG_MIND_TRANSFERRED, PROC_REF(register_body))
 
 /datum/aspect/Destroy(force)
-	unregister_body(get_body())
+	if (isliving(get_body()))
+		unregister_body(get_body())
 	attribute = null
 	return ..()
 
@@ -81,10 +82,9 @@
 
 /// Roll for success on a skillcheck, optionally with a die visual
 /// Capable of critical failures and successes, so returns aren't binary
-/datum/aspect/proc/roll_check(difficulty, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
+/datum/aspect/proc/roll_check(difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
 	var/dice_roll = roll("3d6")
-	var/level = get_level() - ASPECT_NEUTRAL_LEVEL
-	var/roll_value = dice_roll + level
+	var/roll_value = dice_roll + modifier
 	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
 	var/crit_success = min(difficulty + 7, 17)
 
@@ -104,7 +104,7 @@
 	if (result >= CHECK_SUCCESS)
 		gain_exp(SKILLCHECK_SUCCESS_EXP + SKILLCHECK_DIFFICULTY_BONUS * difficulty)
 
-	var/datum/check_result/check_result = new(result, src, difficulty, dice_roll, level, crit_fail, crit_success)
+	var/datum/check_result/check_result = new(result, src, difficulty, dice_roll, modifier, crit_fail, crit_success)
 	if (!show_visual)
 		return check_result
 
@@ -195,8 +195,8 @@
 		if (CHECK_CRIT_SUCCESS)
 			outcome_string = "Critical Success"
 
-	var/tooltip = span_tooltip("<b>[success_prob]</b>% | Result: <b>[roll]</b> (+<b>[modifier]</b>) | Check: <b>[difficulty]</b>", span_italics("\[[diff_string]: [outcome_string]\]"))
-	return "<span style='color:[aspect.attribute.color]'>[aspect.name] [tooltip]<i>:</i> [text]</span>"
+	var/tooltip = span_tooltip("[success_prob]% | Result: [roll] [modifier ? "([modifier > 0 ? "+" : ""][modifier])" : ""] | Check: [difficulty]", span_italics("\[[diff_string]: [outcome_string]\]"))
+	return "<span style='color:[aspect.attribute.color]'><i><b>[aspect.name]</b></i> [tooltip]<i>:</i> [text]</span>"
 
 /proc/dice_roll_probabilbity(dice, sides, difficulty)
 	var/static/list/probability_cache

@@ -187,3 +187,7 @@
 
 /datum/movespeed_modifier/tail_dragger
 	multiplicative_slowdown = 4
+
+/datum/movespeed_modifier/duck_n_roll
+	multiplicative_slowdown = -0.4
+	blacklisted_movetypes = FLOATING|FLYING
