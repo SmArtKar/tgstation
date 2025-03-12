@@ -240,7 +240,10 @@
 
 /obj/item/food/ready_donk/examine_more(mob/user)
 	. = ..()
-	. += span_notice("<i>You browse the back of the box...</i>")
+	var/datum/check_result/result = user.examine_check("donkbox", SKILLCHECK_TRIVIAL)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("You browse the back of the box...")
 	. += "\t[span_info("Ready-Donk: a product of Donk Co.")]"
 	. += "\t[span_info("Heating instructions: open box and pierce film, heat in microwave on high for 2 minutes. Allow to stand for 60 seconds prior to eating. Product will be hot.")]"
 	. += "\t[span_info("Per 200g serving contains: 8g Sodium; 25g Fat, of which 22g are saturated; 2g Sugar.")]"

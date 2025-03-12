@@ -575,17 +575,28 @@
 
 /mob/living/carbon/human/examine_more(mob/user)
 	. = ..()
+	if (!user.aspect_ready("[REF(src)]_examine"))
+		return
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/perception, SKILLCHECK_EASY, show_visual = TRUE)
+	if (result.outcome == CHECK_CRIT_FAILURE)
+		user.aspect_cooldown("[REF(src)]_examine", 30 SECONDS)
+		return
+	user.aspect_cooldown("[REF(src)]_examine", 10 SECONDS)
 
 	if(istype(w_uniform, /obj/item/clothing/under) && !(check_obscured_slots() & ITEM_SLOT_ICLOTHING) && !HAS_TRAIT(w_uniform, TRAIT_EXAMINE_SKIP))
 		var/obj/item/clothing/under/undershirt = w_uniform
-		if(undershirt.has_sensor == BROKEN_SENSORS)
-			. += list(span_notice("\The [undershirt]'s medical sensors are sparking."))
+		if(undershirt.has_sensor == BROKEN_SENSORS && result.outcome >= CHECK_SUCCESS)
+			. += result.show_message("\The [undershirt]'s medical sensors are sparking.")
 
-	if(HAS_TRAIT(src, TRAIT_UNKNOWN) || HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
+	if (result.outcome == CHECK_FAILURE)
 		return
 
-	if((wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE)))
-		return
+	if (result.outcome != CHECK_CRIT_SUCCESS)
+		if(HAS_TRAIT(src, TRAIT_UNKNOWN) || HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
+			return
+
+		if((wear_mask && (wear_mask.flags_inv & HIDEFACE)) || (head && (head.flags_inv & HIDEFACE)))
+			return
 
 	var/age_text
 	switch(age)
@@ -601,7 +612,7 @@
 			age_text = "very old"
 		if(101 to INFINITY)
 			age_text = "withering away"
-	. += list(span_notice("[p_They()] appear[p_s()] to be [age_text]."))
+	. += result.show_message("[p_They()] appear[p_s()] to be [age_text].")
 
 #undef ADD_NEWLINE_IF_NECESSARY
 #undef CARBON_EXAMINE_EMBEDDING_MAX_DIST

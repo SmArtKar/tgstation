@@ -538,7 +538,10 @@
 
 /obj/item/fish/babbelfish/examine_more(mob/user)
 	. = ..()
-	. += span_smallnoticeital(
+	var/datum/check_result/result = user.examine_check("babbel", SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message(span_small(
 		"“Sorry, you <i>speak Anglish</i>, how is that possible?\n\
 		“I speak many languages,” the pile of octopuses replied. It was hard to get a handle on where it was speaking from, or how, and that was with me using vibration magic to check. “Those are babel fish in front of you. They're very rare, and available for a good trade.”\n\
 		“Babel fish,” I said, pointing down at the tank with the bright yellow fish. “Meaning … fish capable of letting you hear any language?” That still wouldn't have explained how the octopus pile spoke Anglish.\n\
@@ -548,7 +551,7 @@
 		“I don't know your business,” replied the octopus pile. “Why <i>do</i> you want them?”\n\
 		I looked down at the fish. “Uh,” I said. “I guess … it would help to keep me from hearing things I didn't want to hear?”\n\
 		They burst into applause, which in this case was a bunch of tentacles wetly slapping against equally wet flesh. “Very good! I hadn't thought of that.”\n\
-		“But then why,” I began, then thought better of it. “Alright, I''ll buy one. <i>But</i>, you need to explain to me how you speak Anglish.”")
+		“But then why,” I began, then thought better of it. “Alright, I''ll buy one. <i>But</i>, you need to explain to me how you speak Anglish.”"))
 
 /**
  * In the suicide:

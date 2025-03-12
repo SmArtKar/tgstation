@@ -45,7 +45,7 @@
 #define ASPECT_NEUTRAL_LEVEL 2
 
 /// Health added per level of Endurance
-#define ENDURANCE_HEALTH_BOOST 5
+#define ENDURANCE_HEALTH_BOOST 7.5
 /// Increase to divider of damage slowdown per level of endurance
 #define ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION 5
 /// Level of endurance at which you get analgesia

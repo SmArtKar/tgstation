@@ -513,7 +513,9 @@
 
 /obj/item/survivalcapsule/fishing/examine_more(mob/user)
 	. = ..()
-	. += span_tinynotice("A tiny print on the side reads: \"Use a cryptographic sequencer to disable safeties\".")
+	var/datum/check_result/result = user.examine_check("fish_capsule", SKILLCHECK_FORMIDDABLE)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("A tiny print on the side reads: \"Use a cryptographic sequencer to disable safeties\".")
 
 /obj/item/survivalcapsule/fishing/emag_act(mob/user, obj/item/card/emag/emag_card)
 	if(obj_flags & EMAGGED)

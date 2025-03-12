@@ -82,7 +82,7 @@
 
 /// Roll for success on a skillcheck, optionally with a die visual
 /// Capable of critical failures and successes, so returns aren't binary
-/datum/aspect/proc/roll_check(difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
+/datum/aspect/proc/roll_check(difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS)
 	var/dice_roll = roll("3d6")
 	var/roll_value = dice_roll + modifier
 	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
@@ -110,10 +110,9 @@
 
 	SEND_SOUND(attribute.owner.current, sound('sound/items/dice_roll.ogg', volume = 25))
 	var/obj/effect/abstract/die_back/die = new(attribute.owner)
-	die.color = attribute.color
 	var/obj/effect/abstract/die_number/number = new(attribute.owner)
-	QDEL_IN(die, die_delay + 0.2 SECONDS)
-	QDEL_IN(number, die_delay + 0.2 SECONDS)
+	QDEL_IN(die, die_delay + 0.4 SECONDS)
+	QDEL_IN(number, die_delay + 0.4 SECONDS)
 
 	die.vis_contents += number
 	die.pixel_y += 1
@@ -124,11 +123,11 @@
 		animate(color = "#101010", time = 0)
 	else if (result == CHECK_CRIT_SUCCESS)
 		animate(color = "#ffe600", time = 0)
-	animate(alpha = 0, pixel_y = 32, time = 0.2 SECONDS)
+	animate(alpha = 0, pixel_y = 32, time = 0.4 SECONDS)
 
-	animate(number, icon_state = "d20-[roll("3d6")]", time = (die_delay) / 5)
+	animate(number, icon_state = "d20-[roll("3d6")]", time = (die_delay) / 3)
 	for (var/i in 1 to 2)
-		animate(icon_state = "d20-[roll("3d6")]", time = (die_delay) / 5)
+		animate(icon_state = "d20-[roll("3d6")]", time = (die_delay) / 3)
 	animate(icon_state = "d20-[dice_roll]", time = 0)
 	return check_result
 

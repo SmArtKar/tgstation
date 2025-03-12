@@ -45,11 +45,14 @@
 
 /obj/item/food/egg/watcher/examine_more(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if (steps_travelled < (steps_to_hatch * WATCHER_EGG_ACTIVE_MOD))
-		return . + span_notice("Something stirs listlessly inside.")
+		return . + result.show_message("Something stirs listlessly inside.")
 	if (steps_travelled < steps_to_hatch * WATCHER_EGG_LIVELY_MOD)
-		return . + span_notice("Something is moving actively inside.")
-	return . + span_boldnotice("It's jiggling wildly, it's about to hatch!")
+		return . + result.show_message("Something is moving actively inside.")
+	return . + result.show_message("It's jiggling wildly, it's about to hatch!")
 
 /// Called when we are moved, whether inside an inventory or by ourself somehow
 /obj/item/food/egg/watcher/proc/on_stepped(atom/movable/egg, atom/mover, atom/old_loc, direction)

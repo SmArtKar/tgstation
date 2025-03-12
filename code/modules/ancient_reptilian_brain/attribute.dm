@@ -51,19 +51,19 @@
 	for (var/attribute_type in subtypesof(/datum/attribute))
 		attributes += new attribute_type(src)
 
-/mob/living/proc/get_attribute(attribute_type)
+/mob/proc/get_attribute(attribute_type)
 	RETURN_TYPE(/datum/attribute)
 	return locate(attribute_type) in mind?.attributes
 
-/mob/living/proc/get_aspect(datum/aspect/aspect_type)
+/mob/proc/get_aspect(datum/aspect/aspect_type)
 	RETURN_TYPE(/datum/aspect)
 	var/datum/attribute/linked_attribute = get_attribute(initial(aspect_type.attribute))
 	return linked_attribute?.get_aspect(aspect_type)
 
-/mob/living/proc/get_aspect_level(datum/aspect/aspect_type)
+/mob/proc/get_aspect_level(datum/aspect/aspect_type)
 	return get_aspect(aspect_type)?.get_level()
 
-/mob/living/proc/aspect_check(aspect_type, difficulty, modifier, skill_modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.5 SECONDS)
+/mob/proc/aspect_check(aspect_type, difficulty, modifier, skill_modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS)
 	RETURN_TYPE(/datum/check_result)
 	if (mind)
 		var/datum/aspect/rolled_aspect = get_aspect(aspect_type)
@@ -91,8 +91,36 @@
 
 	return new /datum/check_result(result, aspect_type, difficulty, dice_roll, ASPECT_NEUTRAL_LEVEL, crit_fail, crit_success)
 
-/mob/living/proc/add_aspect_modifier(aspect_type, value, source)
+/mob/proc/add_aspect_modifier(aspect_type, value, source)
 	get_aspect(aspect_type).add_modifier(value, source)
 
-/mob/living/proc/remove_aspect_modifier(aspect_type, source)
+/mob/proc/remove_aspect_modifier(aspect_type, source)
 	get_aspect(aspect_type).remove_modifier(source)
+
+// Use generic names like wraith_examine when looking for titbits of lore or doing generic actions, and refs when looking for object-specific details
+/mob/proc/aspect_ready(cooldown_id)
+	return COOLDOWN_FINISHED(src, mind?.aspect_cooldowns[cooldown_id])
+
+/mob/proc/aspect_cooldown(cooldown_id, duration)
+	if (!mind)
+		return
+	COOLDOWN_START(src, mind.aspect_cooldowns[cooldown_id], duration)
+
+/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, show_visual = TRUE)
+	if (!aspect_ready("[check_id]_examine"))
+		return null
+	var/datum/check_result/result = aspect_check(aspect, difficulty, show_visual = show_visual)
+	if (result.outcome < CHECK_SUCCESS)
+		aspect_cooldown("[check_id]_examine", 30 SECONDS)
+		return result
+	aspect_cooldown("[check_id]_examine", 10 SECONDS)
+	return result
+
+/mob/dead/aspect_ready(cooldown_id)
+	return TRUE
+
+/mob/dead/aspect_cooldown(cooldown_id, duration)
+	return
+
+/mob/dead/examine_check(id, difficulty, aspect)
+	return null

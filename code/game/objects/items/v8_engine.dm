@@ -35,12 +35,30 @@
 /obj/item/v8_engine/proc/start_learning_recipe(mob/user)
 	if(!user.mind)
 		return
+
 	if(user.mind.has_crafting_recipe(user = user, potential_recipe = /datum/crafting_recipe/house_edge))
 		return
-	to_chat(user, span_notice("You peer at the label on the side, reading about some unique modifications that could be made to the engine..."))
-	if(do_after(user, 15 SECONDS, src))
+
+	if (!user.aspect_ready("v8_examine"))
+		return
+
+	var/wait_time = 15 SECONDS
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/perception, SKILLCHECK_MEDIUM, show_visual = TRUE)
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			wait_time *= 4
+		if (CHECK_FAILURE)
+			wait_time *= 2
+		if (CHECK_CRIT_SUCCESS)
+			wait_time *= 0.5
+	to_chat(user, result.show_message("You peer at the label on the side, reading about some unique modifications that could be made to the engine..."))
+	user.aspect_cooldown("v8_examine", wait_time)
+
+	if(do_after(user, wait_time, src))
 		user.mind.teach_crafting_recipe(/datum/crafting_recipe/house_edge)
 		to_chat(user, span_notice("You learned how to make the House Edge."))
+	else
+		user.aspect_cooldown("v8_examine", 15 SECONDS)
 
 /obj/item/house_edge
 	name = "House Edge"

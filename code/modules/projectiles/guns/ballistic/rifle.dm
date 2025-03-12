@@ -312,7 +312,10 @@
 
 /obj/item/gun/ballistic/rifle/boltaction/pipegun/examine_more(mob/user)
 	. = ..()
-	. += span_notice("<b><i>Looking down at \the [src], you recall a tale told to you in some distant memory...</i></b>")
+	var/datum/check_result/result = user.examine_check("pipegun", SKILLCHECK_HARD, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("Looking down at \the [src], you recall a tale told to you in some distant memory...")
 
 	. += span_info("It's said that the first slaying committed on a Nanotrasen space station was by an assistant.")
 	. += span_info("That this act, done by toolbox, maybe spear, was what consigned their kind to a life of destitution, rejection and violence.")

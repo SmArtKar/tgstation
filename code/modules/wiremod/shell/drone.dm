@@ -22,6 +22,9 @@
 
 /mob/living/circuit_drone/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_PRIMITIVE)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(health < maxHealth)
 		if(health > maxHealth/3)
 			. += "[src]'s parts look loose."

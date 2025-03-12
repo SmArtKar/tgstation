@@ -7,3 +7,8 @@
 
 // Aspects
 
+// Random bullshit trivia, go
+/datum/aspect/encyclopedia
+	name = "Encyclopedia"
+	desc = "Call upon all your knowledge. Produce fascinating trivia."
+	attribute = /datum/attribute/intellect

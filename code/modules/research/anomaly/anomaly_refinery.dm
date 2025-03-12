@@ -44,9 +44,11 @@
 
 /obj/machinery/research/anomaly_refinery/examine_more(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if (obj_flags & EMAGGED)
-		. += span_notice("A small panel on [p_their()] side is dislaying a notice. Something about firmware?")
-
+		. += result.show_message("A small panel on [p_their()] side is dislaying a notice. Something about [result.outcome == CHECK_CRIT_SUCCESS ? "installation of illegal" : ""] firmware?")
 
 /obj/machinery/research/anomaly_refinery/assume_air(datum/gas_mixture/giver)
 	return null // Required to make the TTV not vent directly into the air.

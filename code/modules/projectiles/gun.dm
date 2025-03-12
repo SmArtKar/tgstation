@@ -478,7 +478,7 @@
 		SEND_SIGNAL(user, COMSIG_MOB_FIRED_GUN, src, target, params, zone_override, bonus_spread_values)
 		base_bonus_spread = bonus_spread_values[MIN_BONUS_SPREAD_INDEX]
 		bonus_spread = bonus_spread_values[MAX_BONUS_SPREAD_INDEX]
-		check_result = user.aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_EASY, crit_fail_modifier = -3, show_visual = TRUE, die_delay = 0.3 SECONDS)
+		check_result = user.aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_TRIVIAL, crit_fail_modifier = -4, show_visual = TRUE, die_delay = 0.3 SECONDS)
 		var/forced_crit = FALSE
 		if (check_result.outcome == CHECK_SUCCESS && user.get_aspect_level(/datum/aspect/hand_eye_coordination) >= HAND_EYE_ALWAYS_CRIT_LEVEL)
 			check_result.outcome = CHECK_CRIT_SUCCESS

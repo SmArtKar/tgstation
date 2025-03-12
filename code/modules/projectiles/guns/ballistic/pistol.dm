@@ -72,7 +72,10 @@
 
 /obj/item/gun/ballistic/automatic/pistol/clandestine/fisher/examine_more(mob/user)
 	. = ..()
-	. += span_notice("The Ansem/SC is a Scarborough Arms-manufactured overhaul suite for the also Scarborough Arms-manufactured Ansem handgun, designed for special \
+	var/datum/check_result/result = user.examine_check("ansem_fisher", SKILLCHECK_FORMIDDABLE, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The Ansem/SC is a Scarborough Arms-manufactured overhaul suite for the also Scarborough Arms-manufactured Ansem handgun, designed for special \
 	operators who like to operate operationally, and/or people who really, really hate lightbulbs, and tend to fight people who really like lightbulbs. \
 	The slide is lengthened and has an integrated suppressor, while a compact kinetic light disruptor was mounted underneath the barrel. \
 	Scarborough Arms has never actually officially responded to allegations that they're involved with the modification and/or manufacture \

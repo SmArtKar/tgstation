@@ -32,8 +32,15 @@
 
 /mob/living/basic/snake/banded/examine_more(mob/user)
 	. = ..()
-	. += span_notice("<i>You examine the bands on the snake very closely...</i>")
-	if(src.poison_reagent == (/datum/reagent/consumable/milk))
+	if (!user.aspect_ready("[REF(src)]_examine"))
+		return
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/perception, SKILLCHECK_MEDIUM, show_visual = TRUE)
+	if (result.outcome == CHECK_FAILURE)
+		user.aspect_cooldown("[REF(src)]_examine", 30 SECONDS)
+		return
+	user.aspect_cooldown("[REF(src)]_examine", 10 SECONDS)
+	. += result.show_message("You examine the bands on the snake very closely...")
+	if((src.poison_reagent == (/datum/reagent/consumable/milk)) == (result.outcome != CHECK_CRIT_FAILURE)) // Crit failures invert message
 		. += span_info("[pick(src.rhymes_harmless)]")
 		. += span_notice("This snake is not dangerous!")
 	else

@@ -150,7 +150,10 @@
 
 /obj/item/gun/energy/recharge/fisher/examine_more(mob/user)
 	. = ..()
-	. += span_notice("The SC/FISHER is an illegally-modified kinetic accelerator cut down and refit into a disassembled miniature energy gun chassis, \
+	var/datum/check_result/result = user.examine_check("fisher", SKILLCHECK_FORMIDDABLE, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The SC/FISHER is an illegally-modified kinetic accelerator cut down and refit into a disassembled miniature energy gun chassis, \
 	with its pressure chamber attenuated to launch kinetic bolts that <b>temporarily disrupt flashlights, cameras, and certain other electronics</b>. \
 	This effect also works on <b>cyborg headlamps<b>, and works longer in melee.<br><br>\
 	While some would argue that this is a really terrible design choice, others argue that it is very funny to be able to shoot at light sources.<br>\

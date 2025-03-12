@@ -159,11 +159,11 @@
 
 /obj/item/reagent_containers/cup/soda_cans/examine_more(mob/user)
 	. = ..()
-	if(!in_range(user, src))
+	if(!in_range(user, src) || fizziness < 30)
 		return
-	if(fizziness > 30 && prob(fizziness * 2))
-		. += span_notice("<i>You examine [src] closer, and note the following...</i>")
-		. += "\t[span_warning("You get a menacing aura of fizziness from it...")]"
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_GODLY - floor(fizziness * 0.1))
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("You get a menacing aura of fizziness from it...")
 
 #undef SODA_FIZZINESS_THROWN
 #undef SODA_FIZZINESS_SHAKE

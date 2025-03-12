@@ -42,3 +42,17 @@
 	name = "Hand/Eye Coordination"
 	desc = "Ready? Aim and fire."
 	attribute = /datum/attribute/motorics
+
+// Gives you dark vision, can sometimes drop info about people and their posessions when you examine, or go by them.
+/datum/aspect/perception
+	name = "Perception"
+	desc = "See, hear and smell everything. Let no detail go unnoticed."
+	attribute = /datum/attribute/motorics
+
+/*
+/datum/aspect/perception/register_body(datum/mind/source, mob/living/old_current)
+	. = ..()
+	var/mob/living/owner = get_body()
+	RegisterSignal(owner, COMSIG_MOB_EXAMINING, PROC_REF(on_examine))
+	RegisterSignal(owner, COMSIG_LIVING_MOB_BUMPED, PROC_REF(on_living_bump))
+*/

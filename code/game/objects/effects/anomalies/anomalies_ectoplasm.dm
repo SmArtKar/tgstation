@@ -20,20 +20,32 @@
 
 /obj/effect/anomaly/ectoplasm/examine(mob/user)
 	. = ..()
-
 	if(isobserver(user))
 		. += span_info("Orbiting this anomaly will increase the size and intensity of its effects.")
 
 /obj/effect/anomaly/ectoplasm/examine_more(mob/user)
 	. = ..()
+	if (!user.aspect_ready("ectoplasm_examine"))
+		return
+	user.aspect_cooldown("ectoplasm_examine", 30 SECONDS)
+	var/shown_power = effect_power
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/perception, SKILLCHECK_CHALLENGING, show_visual = TRUE)
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			shown_power = rand(0, 100)
+		if (CHECK_FAILURE)
+			shown_power = clamp(effect_power + rand(-20, 20), 0, 100)
 
-	switch(effect_power)
-		if(0 to 25)
-			. += span_notice("The space around the anomaly faintly resonates. It doesn't seem very powerful at the moment.")
-		if(26 to 49)
-			. += span_notice("The space around the anomaly seems to vibrate, letting out a noise that sounds like ghastly moaning. Someone should probably do something about that.")
-		if(50 to 100)
-			. += span_alert("The anomaly pulsates heavily, about to burst with unearthly energy. This can't be good.")
+	var/display_text = "Error."
+	switch (shown_power)
+		if (0 to 25)
+			display_text = "The space around the anomaly faintly resonates. It doesn't seem very powerful at the moment."
+		if (26 to 49)
+			display_text = "The space around the anomaly seems to vibrate, letting out a noise that sounds like ghastly moaning. Someone should probably do something about that."
+		if (50 to 100)
+			display_text = "The anomaly pulsates heavily, about to burst with unearthly energy. This can't be good."
+
+	. += result.show_message(display_text)
 
 /obj/effect/anomaly/ectoplasm/anomalyEffect(seconds_per_tick)
 	. = ..()

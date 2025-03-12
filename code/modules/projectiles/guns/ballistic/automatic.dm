@@ -401,9 +401,13 @@
 
 /obj/item/gun/ballistic/automatic/battle_rifle/examine_more(mob/user)
 	. = ..()
-	. += span_notice("<b><i>Looking down at \the [src], you recall something you read in a promotional pamphlet... </i></b>")
+	var/datum/check_result/result = user.examine_check("battle_rifle", SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 
-	. += span_info("The BR-38 possesses an acceleration rail that launches bullets at higher than typical velocity.\
+	. += result.show_message("Looking down at \the [src], you recall something you read in a promotional pamphlet...")
+
+	. += span_info("The BR-38 possesses an acceleration rail that launches bullets at higher than typical velocity. \
 		This allows even less powerful cartridges to put out significant amounts of stopping power.")
 
 	. += span_notice("<b><i>However, you also remember some of the rumors...  </i></b>")

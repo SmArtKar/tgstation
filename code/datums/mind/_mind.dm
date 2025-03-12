@@ -104,6 +104,8 @@
 	var/list/book_titles_read
 	/// List of all of our active attributes
 	var/list/datum/attribute/attributes = list()
+	/// List of aspect action cooldowns
+	var/list/aspect_cooldowns = list()
 
 /datum/mind/New(_key)
 	key = _key

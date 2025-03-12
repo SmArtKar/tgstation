@@ -106,6 +106,9 @@
 	. = ..()
 	if(!HAS_MIND_TRAIT(user, TRAIT_EXAMINE_FISHING_SPOT))
 		return
+	var/datum/check_result/result = user.examine_check("lure", SKILLCHECK_EASY, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 
 	var/list/known_fishes = list()
 	for(var/obj/item/fish/fish_type as anything in SSfishing.lure_catchables[type])
@@ -115,7 +118,7 @@
 	if(!length(known_fishes))
 		return
 
-	. += span_info("You can catch the following fish with this lure: [english_list(known_fishes)].")
+	. += result.show_message("You can catch the following fish with this lure: [english_list(known_fishes)].")
 
 ///Check if the fish is in the list of catchable fish for this fishing lure. Return value is a multiplier.
 /obj/item/fishing_lure/check_bait(obj/item/fish/fish)

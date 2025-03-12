@@ -646,7 +646,11 @@
 
 /obj/item/mod/module/stealth/wraith/examine_more(mob/user)
 	. = ..()
-	. += span_info( \
+	var/datum/check_result/result = user.examine_check("wraith", SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+
+	. += result.show_message( \
 		"The Wraith Module does not simply bend light around the user to obscure their visual pattern, \
 		but actively attacks and overloads surrounding light emitting objects, repurposing this energy to power the suit. \
 		It is possible that this technology has its origins in Spider Clan advancements, \
