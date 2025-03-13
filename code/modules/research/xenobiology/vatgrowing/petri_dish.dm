@@ -18,7 +18,7 @@
 		update_appearance()
 
 /obj/item/petri_dish/examine(mob/user)
-	. = ..(
+	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/cognition)
 	if (result?.outcome < CHECK_SUCCESS)
 		return
