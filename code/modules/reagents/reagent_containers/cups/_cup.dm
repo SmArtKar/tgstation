@@ -26,9 +26,12 @@
 
 /obj/item/reagent_containers/cup/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(drink_type)
 		var/list/types = bitfield_to_list(drink_type, FOOD_FLAGS)
-		. += span_notice("The label says it contains [LOWER_TEXT(english_list(types))] ingredients.")
+		. += result.show_message("The label says it contains [LOWER_TEXT(english_list(types))] ingredients.")
 
 /**
  * Checks if the mob actually liked drinking this cup.

@@ -82,7 +82,7 @@
 
 /// Roll for success on a skillcheck, optionally with a die visual
 /// Capable of critical failures and successes, so returns aren't binary
-/datum/aspect/proc/roll_check(difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS)
+/datum/aspect/proc/roll_check(difficulty, modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS, exp_modifier = 1)
 	var/dice_roll = roll("3d6")
 	var/roll_value = dice_roll + modifier
 	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
@@ -102,7 +102,7 @@
 			result = CHECK_FAILURE
 
 	if (result >= CHECK_SUCCESS)
-		gain_exp(SKILLCHECK_SUCCESS_EXP + SKILLCHECK_DIFFICULTY_BONUS * difficulty)
+		gain_exp((SKILLCHECK_SUCCESS_EXP + SKILLCHECK_DIFFICULTY_BONUS * difficulty) * exp_modifier)
 
 	var/datum/check_result/check_result = new(result, src, difficulty, dice_roll, modifier, crit_fail, crit_success)
 	if (!show_visual)

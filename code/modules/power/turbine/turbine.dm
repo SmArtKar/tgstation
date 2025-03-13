@@ -88,17 +88,20 @@
 
 /obj/machinery/power/turbine/examine(mob/user)
 	. = ..()
-	if(installed_part)
-		. += span_notice("Currently at tier [installed_part.current_tier].")
-		if(installed_part.current_tier + 1 < TURBINE_PART_TIER_FOUR)
-			. += span_notice("Can be upgraded by using a tier [installed_part.current_tier + 1] part.")
-		. += span_notice("\The [installed_part] can be [EXAMINE_HINT("pried")] out.")
-	else
-		. += span_warning("Is missing a [initial(part_path.name)].")
 	. += span_notice("Its maintainence panel can be [EXAMINE_HINT("screwed")] [panel_open ? "closed" : "open"].")
 	if(panel_open)
 		. += span_notice("It can rotated with a [EXAMINE_HINT("wrench")]")
 		. += span_notice("The full machine can be [EXAMINE_HINT("pried")] apart")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	if(installed_part)
+		. += result.show_message("Currently at tier [installed_part.current_tier].")
+		if(installed_part.current_tier + 1 < TURBINE_PART_TIER_FOUR)
+			. += result.show_message("Can be upgraded by using a tier [installed_part.current_tier + 1] part.")
+		. += result.show_message("\The [installed_part] can be [EXAMINE_HINT("pried")] out.")
+	else
+		. += span_warning("Is missing a [initial(part_path.name)].")
 
 ///Is this machine currently running
 /obj/machinery/power/turbine/proc/is_active()

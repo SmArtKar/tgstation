@@ -64,20 +64,25 @@
 
 /obj/machinery/chem_heater/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: Heating reagents at <b>[heater_coefficient * 1000]%</b> speed.")
-		if(!QDELETED(beaker))
-			. += span_notice("It has a beaker of [beaker.reagents.total_volume] units capacity.")
-			if(beaker.reagents.is_reacting)
-				. += span_notice("Its contents are currently reacting.")
-		else
-			. += span_warning("There is no beaker inserted.")
-		. += span_notice("Its heating is turned [on ? "On" : "Off"].")
-		. += span_notice("The status display reads: Heating reagents at <b>[heater_coefficient * 1000]%</b> speed.")
-		if(panel_open)
-			. += span_notice("Its panel is open and can now be [EXAMINE_HINT("pried")] apart.")
-		else
-			. += span_notice("Its panel can be [EXAMINE_HINT("pried")] open")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("The status display reads: Heating reagents at <b>[heater_coefficient * 1000]%</b> speed.")
+
+	if(!QDELETED(beaker))
+		. += span_notice("It has a beaker of [beaker.reagents.total_volume] units capacity.")
+		if(beaker.reagents.is_reacting)
+			. += span_notice("Its contents are currently reacting.")
+	else
+		. += span_warning("There is no beaker inserted.")
+	. += span_notice("Its heating is turned [on ? "On" : "Off"].")
+	. += span_notice("The status display reads: Heating reagents at <b>[heater_coefficient * 1000]%</b> speed.")
+	if(panel_open)
+		. += span_notice("Its panel is open and can now be [EXAMINE_HINT("pried")] apart.")
+	else
+		. += span_notice("Its panel can be [EXAMINE_HINT("pried")] open")
 
 /obj/machinery/chem_heater/update_icon_state()
 	icon_state = "[base_icon_state][beaker ? 1 : 0]b"

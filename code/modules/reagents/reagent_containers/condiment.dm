@@ -103,11 +103,14 @@
 
 /obj/item/reagent_containers/condiment/enzyme/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	var/datum/chemical_reaction/recipe = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cheesewheel]
 	var/milk_required = recipe.required_reagents[/datum/reagent/consumable/milk]
 	var/enzyme_required = recipe.required_catalysts[/datum/reagent/consumable/enzyme]
-	. += span_notice("[milk_required] milk, [enzyme_required] enzyme and you got cheese.")
-	. += span_warning("Remember, the enzyme isn't used up, so return it to the bottle, dingus!")
+	. += result.show_message("[milk_required] milk, [enzyme_required] enzyme and you got cheese.")
+	. += result.show_message("Remember, the enzyme isn't used up, so return it to the bottle, dingus!")
 
 /obj/item/reagent_containers/condiment/sugar
 	name = "sugar sack"
@@ -121,11 +124,14 @@
 
 /obj/item/reagent_containers/condiment/sugar/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	var/datum/chemical_reaction/recipe = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cakebatter]
 	var/flour_required = recipe.required_reagents[/datum/reagent/consumable/flour]
 	var/eggyolk_required = recipe.required_reagents[/datum/reagent/consumable/eggyolk]
 	var/sugar_required = recipe.required_reagents[/datum/reagent/consumable/sugar]
-	. += span_notice("[flour_required] flour, [eggyolk_required] egg yolk (or soy milk), [sugar_required] sugar makes cake dough. You can make pie dough from it.")
+	. += result.show_message("[flour_required] flour, [eggyolk_required] egg yolk (or soy milk), [sugar_required] sugar makes cake dough. You can make pie dough from it.")
 
 /obj/item/reagent_containers/condiment/saltshaker //Separate from above since it's a small shaker rather then
 	name = "salt shaker" // a large one.
@@ -186,11 +192,14 @@
 
 /obj/item/reagent_containers/condiment/milk/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	var/datum/chemical_reaction/recipe = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cheesewheel]
 	var/milk_required = recipe.required_reagents[/datum/reagent/consumable/milk]
 	var/enzyme_required = recipe.required_catalysts[/datum/reagent/consumable/enzyme]
-	. += span_notice("[milk_required] milk, [enzyme_required] enzyme and you got cheese.")
-	. += span_warning("Remember, the enzyme isn't used up, so return it to the bottle, dingus!")
+	. += result.show_message("[milk_required] milk, [enzyme_required] enzyme and you got cheese.")
+	. += result.show_message("Remember, the enzyme isn't used up, so return it to the bottle, dingus!")
 
 /obj/item/reagent_containers/condiment/flour
 	name = "flour sack"
@@ -204,6 +213,9 @@
 
 /obj/item/reagent_containers/condiment/flour/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	var/datum/chemical_reaction/recipe_dough = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/dough]
 	var/datum/chemical_reaction/recipe_cakebatter = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cakebatter]
 	var/dough_flour_required = recipe_dough.required_reagents[/datum/reagent/consumable/flour]
@@ -211,9 +223,9 @@
 	var/cakebatter_flour_required = recipe_cakebatter.required_reagents[/datum/reagent/consumable/flour]
 	var/cakebatter_eggyolk_required = recipe_cakebatter.required_reagents[/datum/reagent/consumable/eggyolk]
 	var/cakebatter_sugar_required = recipe_cakebatter.required_reagents[/datum/reagent/consumable/sugar]
-	. += "<b><i>You retreat inward and recall the teachings of... Making Dough...</i></b>"
-	. += span_notice("[dough_flour_required] flour, [dough_water_required] water makes normal dough. You can make flat dough from it.")
-	. += span_notice("[cakebatter_flour_required] flour, [cakebatter_eggyolk_required] egg yolk (or soy milk), [cakebatter_sugar_required] sugar makes cake dough. You can make pie dough from it.")
+	. += result.show_message("<b><i>You retreat inward and recall the teachings of... Making Dough...</i></b>")
+	. += result.show_message("[dough_flour_required] flour, [dough_water_required] water makes normal dough. You can make flat dough from it.")
+	. += result.show_message("[cakebatter_flour_required] flour, [cakebatter_eggyolk_required] egg yolk (or soy milk), [cakebatter_sugar_required] sugar makes cake dough. You can make pie dough from it.")
 
 /obj/item/reagent_containers/condiment/soymilk
 	name = "soy milk"

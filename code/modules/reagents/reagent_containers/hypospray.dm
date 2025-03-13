@@ -151,12 +151,13 @@
 
 /obj/item/reagent_containers/hypospray/medipen/Initialize(mapload)
 	. = ..()
-	label_text = span_notice("There is a sticker pasted onto the side which reads, 'WARNING: This medipen contains [pretty_string_from_reagent_list(reagents.reagent_list, names_only = TRUE, join_text = ", ", final_and = TRUE, capitalize_names = TRUE)], do not use if allergic to any listed chemicals.")
+	label_text = "There is a sticker pasted onto the side which reads, 'WARNING: This medipen contains [pretty_string_from_reagent_list(reagents.reagent_list, names_only = TRUE, join_text = ", ", final_and = TRUE, capitalize_names = TRUE)], do not use if allergic to any listed chemicals."
 
-/obj/item/reagent_containers/hypospray/medipen/examine()
+/obj/item/reagent_containers/hypospray/medipen/examine(mob/user)
 	. = ..()
-	if (label_examine)
-		. += label_text
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
+	if (result?.outcome >= CHECK_SUCCESS && label_examine)
+		. += result.show_message(label_text)
 	if(length(reagents?.reagent_list))
 		. += span_notice("It is loaded.")
 	else

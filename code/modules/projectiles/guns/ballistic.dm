@@ -589,22 +589,30 @@
 
 /obj/item/gun/ballistic/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	var/count_chambered = !(bolt_type == BOLT_TYPE_NO_BOLT || bolt_type == BOLT_TYPE_OPEN)
-	. += "It has <b>[get_ammo(count_chambered)]</b> round\s remaining."
+	. += result.show_message("It has <b>[get_ammo(count_chambered)]</b> round\s remaining.")
 
 	if (!chambered && !hidden_chambered)
-		. += "It does not seem to have a round chambered."
+		. += result.show_message("It does not seem to have a round chambered.")
 	if (bolt_locked)
-		. += "The [bolt_wording] is locked back and needs to be released before firing or de-fouling."
+		. += result.show_message("The [bolt_wording] is locked back and needs to be released before firing or de-fouling.")
 	if (suppressed)
-		. += "It has a suppressor [can_unsuppress ? "attached that can be removed with <b>alt+click</b>." : "that is integral or can't otherwise be removed."]"
+		. += result.show_message("It has a suppressor [can_unsuppress ? "attached that can be removed with <b>alt+click</b>." : "that is integral or can't otherwise be removed."]")
+
+	result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/hand_eye_coordination) //...gun knowledge?
+	if (result.outcome < CHECK_SUCCESS)
+		return
+
 	if(can_misfire)
-		. += span_danger("You get the feeling this might explode if you fire it...")
+		. += result.show_message("You get the feeling this might explode if you fire it...")
 		if(misfire_probability > 0)
-			. += span_danger("Given the state of the gun, there is a [misfire_probability]% chance it'll misfire.")
+			. += result.show_message("Given the state of the gun, there is a [misfire_probability]% chance it'll misfire.")
 	else if(misfire_probability > 0)
-		. += span_warning("You get a feeling this might explode if you fire it with the wrong ammunitions...")
-		. += span_warning("Given the state of the gun, there is a [EXAMINE_HINT("[misfire_probability]%")] chance it'll misfire.")
+		. += result.show_message("You get a feeling this might explode if you fire it with the wrong ammunitions...")
+		. += result.show_message("Given the state of the gun, there is a [EXAMINE_HINT("[misfire_probability]%")] chance it'll misfire.")
 
 ///Gets the number of bullets in the gun
 /obj/item/gun/ballistic/proc/get_ammo(countchambered = TRUE)

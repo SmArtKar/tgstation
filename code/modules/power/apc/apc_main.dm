@@ -314,6 +314,7 @@
 
 /obj/machinery/power/apc/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/mental_clockwork)
 	if(machine_stat & BROKEN)
 		if(opened != APC_COVER_REMOVED)
 			. += "The cover is broken and can probably be <i>pried</i> off with enough force."
@@ -328,10 +329,13 @@
 			. += {"It's [ !terminal ? "not" : "" ] wired up.\n
 			The electronics are[!has_electronics?"n't":""] installed."}
 	else
+		if(result?.outcome < CHECK_SUCCESS)
+			. += "The cover is closed"
+			return
 		if(machine_stat & MAINT)
-			. += "The cover is closed. Something is wrong with it. It doesn't work."
+			. += result.show_message("The cover is closed. Something is wrong with it. It doesn't work.")
 		else if(malfhack)
-			. += "The cover is broken. It may be hard to force it open."
+			. += result.show_message("The cover is broken. It may be hard to force it open.")
 		else
 			. += "The cover is closed."
 

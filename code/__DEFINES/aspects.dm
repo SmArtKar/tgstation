@@ -40,8 +40,9 @@
 #define CHECK_CRIT_SUCCESS 4
 
 // Aspect constants
-/// Level of aspects which non-disco spessmen have (aka normal stats)
-/// Multiply this by amount of attributes, divide by 2 - that's amount of points jobs should give, and amount of points people should be allowed to allocate
+/// Level of aspects which non-disco spessmen have (aka normal stats).
+/// We have slightly roughly 75% (on per-job basis) allocated roundstart, slightly worse if you exclude player-allocated points
+/// Multiply this by amount of attributes, divide by 2 - that's the amount of points people should be allowed to allocate
 #define ASPECT_NEUTRAL_LEVEL 2
 
 /// Health added per level of Endurance

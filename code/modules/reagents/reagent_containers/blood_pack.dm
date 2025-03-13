@@ -75,26 +75,32 @@
 	blood_type = "S"
 	unique_blood = /datum/reagent/lube
 
-/obj/item/reagent_containers/blood/snail/examine()
+/obj/item/reagent_containers/blood/snail/examine(mob/user)
 	. = ..()
-	. += span_notice("It's a bit slimy... The label indicates that this is meant for snails.")
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("It's a bit slimy... The label indicates that this is meant for snails.")
 
 /obj/item/reagent_containers/blood/podperson
 	blood_type = "H2O"
 	unique_blood = /datum/reagent/water
 
-/obj/item/reagent_containers/blood/podperson/examine()
+/obj/item/reagent_containers/blood/podperson/examine(mob/user)
 	. = ..()
-	. += span_notice("This appears to be some very overpriced water.")
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("This appears to be some very overpriced water.")
 
 // for slimepeople
 /obj/item/reagent_containers/blood/toxin
 	blood_type = "TOX"
 	unique_blood = /datum/reagent/toxin/slimejelly
 
-/obj/item/reagent_containers/blood/toxin/examine()
+/obj/item/reagent_containers/blood/toxin/examine(mob/user)
 	. = ..()
-	. += span_notice("There is a toxin warning on the label. This is for slimepeople.")
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += span_notice("There is a toxin warning on the label. This is for slimepeople.")
 
 /obj/item/reagent_containers/blood/universal
 	blood_type = "U"

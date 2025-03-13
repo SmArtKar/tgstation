@@ -123,11 +123,16 @@
 
 	if(!active)
 		. += span_notice("Its status display is currently turned off.")
-	else if(!powered)
+		return
+
+	if(!powered)
 		. += span_notice("Its status display is glowing faintly.")
-	else
-		. += span_notice("Its status display reads: Emitting one beam between <b>[DisplayTimeText(minimum_fire_delay)]</b> and <b>[DisplayTimeText(maximum_fire_delay)]</b>.")
-		. += span_notice("Power consumption at <b>[display_power(active_power_usage, convert = FALSE)]</b>.")
+		return
+
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("Its status display reads: Emitting one beam between <b>[DisplayTimeText(minimum_fire_delay)]</b> and <b>[DisplayTimeText(maximum_fire_delay)]</b>.")
+		. += result.show_message("Power consumption at <b>[display_power(active_power_usage, convert = FALSE)]</b>.")
 
 /obj/machinery/power/emitter/should_have_node()
 	return welded

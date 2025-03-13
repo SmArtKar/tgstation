@@ -97,7 +97,11 @@
 /obj/item/gun/ballistic/revolver/examine(mob/user)
 	. = ..()
 	var/live_ammo = get_ammo(FALSE, FALSE)
-	. += "[live_ammo ? live_ammo : "None"] of those are live rounds."
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	if (result.outcome != CHECK_FAILURE)
+		if (result.outcome == CHECK_CRIT_FAILURE)
+			live_ammo = live_ammo ? 0 : rand(1, magazine.max_ammo)
+		. += result.show_message("[live_ammo ? live_ammo : "None"] of those are live rounds.")
 	if (current_skin)
 		. += "It can be spun with <b>alt+click</b>"
 

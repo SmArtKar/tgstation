@@ -119,13 +119,17 @@
 
 /obj/machinery/chem_dispenser/examine(mob/user)
 	. = ..()
+	. += span_notice("Use <b>RMB</b> to eject a stored beaker.")
 	if(panel_open)
 		. += span_notice("[src]'s maintenance hatch is open!")
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads:\n\
-		Recharge rate: <b>[display_power(recharge_amount, convert = FALSE)]</b>.\n\
-		Energy cost: <b>[siunit(power_cost, "J/u", 3)]</b>.")
-	. += span_notice("Use <b>RMB</b> to eject a stored beaker.")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The status display reads:\n\
+	Recharge rate: <b>[display_power(recharge_amount, convert = FALSE)]</b>.\n\
+	Energy cost: <b>[siunit(power_cost, "J/u", 3)]</b>.")
 
 /obj/machinery/chem_dispenser/on_set_is_operational(old_value)
 	if(old_value) //Turned off

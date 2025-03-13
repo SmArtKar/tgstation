@@ -74,8 +74,10 @@
 /obj/machinery/smoke_machine/examine(mob/user)
 	. = ..()
 
-	. += span_notice("Reagent capacity <b>[reagents.total_volume]/[reagents.maximum_volume]</b>.")
-	. += span_notice("Operating at <b>[round((efficiency / 26) * 100)]%</b> efficiency.")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("Reagent capacity <b>[reagents.total_volume]/[reagents.maximum_volume]</b>.")
+		. += result.show_message("Operating at <b>[round((efficiency / 26) * 100)]%</b> efficiency.")
 
 	. += span_notice("Its maintainence panel can be [EXAMINE_HINT("screwed")] [panel_open ? "closed" : "open"].")
 	if(panel_open)

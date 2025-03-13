@@ -166,14 +166,19 @@
 		else
 			. += "It doesn't have a <b>firing pin</b> installed, and won't fire."
 
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
+	if (result?.outcome == CHECK_CRIT_FAILURE)
+		return
 	var/healthpercent = (atom_integrity/max_integrity) * 100
+	if (result.outcome == CHECK_FAILURE)
+		healthpercent = clamp(healthpercent + rand(-25, 25), 0, 100)
 	switch(healthpercent)
 		if(60 to 95)
-			. += span_info("It looks slightly damaged.")
+			. += result.show_message("It looks slightly damaged.")
 		if(25 to 60)
-			. += span_warning("It appears heavily damaged.")
+			. += result.show_message("It appears heavily damaged.")
 		if(0 to 25)
-			. += span_boldwarning("It's falling apart!")
+			. += result.show_message("It's falling apart!")
 
 //called after the gun has successfully fired its chambered ammo.
 /obj/item/gun/proc/process_chamber(empty_chamber = TRUE, from_firing = TRUE, chamber_next_round = TRUE)

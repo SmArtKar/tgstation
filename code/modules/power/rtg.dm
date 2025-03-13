@@ -34,8 +34,11 @@
 
 /obj/machinery/power/rtg/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: Power generation at <b>[display_power(power_gen, convert = FALSE)]</b>.")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("The status display reads: Power generation at <b>[display_power(power_gen, convert = FALSE)]</b>.")
 
 /obj/machinery/power/rtg/attackby(obj/item/I, mob/user, params)
 	if(default_deconstruction_screwdriver(user, "[initial(icon_state)]-open", initial(icon_state), I))

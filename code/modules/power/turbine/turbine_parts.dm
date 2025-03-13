@@ -14,8 +14,10 @@
 
 /obj/item/turbine_parts/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	. += span_notice("This is a tier [current_tier] turbine part, rated for [get_tier_value(TURBINE_MAX_RPM)] rpm and [get_tier_value(TURBINE_MAX_TEMP)] K.")
-
 	var/list/required_parts = get_tier_upgrades()
 	if(length(required_parts))
 		var/obj/item/stack/material = required_parts[TURBINE_UPGRADE_PART]

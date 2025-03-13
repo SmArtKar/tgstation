@@ -470,7 +470,7 @@
 				continue
 			. += span_notice("[icon2html(ME, user)] \A [ME].")
 	if(mecha_flags & PANEL_OPEN)
-		var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/mental_clockwork)
+		var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/four_legged_wheelbarrel)
 		if (result?.outcome >= CHECK_SUCCESS)
 			. += result.show_message("You peek into [src]'s open panel...")
 			if(servo)

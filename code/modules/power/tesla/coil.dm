@@ -53,12 +53,16 @@
 
 /obj/machinery/power/energy_accumulator/tesla_coil/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads:<br>" + \
-		  "Power generation at <b>[input_power_multiplier*100]%</b>.<br>" + \
-			"Shock interval at <b>[zap_cooldown*0.1]</b> seconds.<br>" + \
-			"Stored <b>[display_energy(get_stored_joules())]</b>.<br>" + \
-			"Processing <b>[display_power(processed_energy)]</b>.")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The status display reads:<br>" + \
+		"Power generation at <b>[input_power_multiplier*100]%</b>.<br>" + \
+		"Shock interval at <b>[zap_cooldown*0.1]</b> seconds.<br>" + \
+		"Stored <b>[display_energy(get_stored_joules())]</b>.<br>" + \
+		"Processing <b>[display_power(processed_energy)]</b>.")
 
 /obj/machinery/power/energy_accumulator/tesla_coil/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
 	. = ..()
@@ -138,10 +142,14 @@
 
 /obj/machinery/power/energy_accumulator/grounding_rod/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads:<br>" + \
-			"Recently grounded <b>[display_energy(get_stored_joules())]</b>.<br>" + \
-			"This energy would sustainably release <b>[display_power(calculate_sustainable_power(), convert = FALSE)]</b>.")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The status display reads:<br>" + \
+		"Recently grounded <b>[display_energy(get_stored_joules())]</b>.<br>" + \
+		"This energy would sustainably release <b>[display_power(calculate_sustainable_power(), convert = FALSE)]</b>.")
 
 /obj/machinery/power/energy_accumulator/grounding_rod/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
 	. = ..()

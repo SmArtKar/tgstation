@@ -275,7 +275,6 @@
 	if(cover_open && magazine)
 		. += span_notice("It seems like you could use an <b>empty hand</b> to remove the magazine.")
 
-
 /obj/item/gun/ballistic/automatic/l6_saw/click_alt(mob/user)
 	cover_open = !cover_open
 	balloon_alert(user, "cover [cover_open ? "opened" : "closed"]")
@@ -419,6 +418,9 @@
 
 /obj/item/gun/ballistic/automatic/battle_rifle/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(shots_before_degradation)
 		. += span_notice("[src] can fire [shots_before_degradation] more times before risking system degradation.")
 	else

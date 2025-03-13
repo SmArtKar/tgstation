@@ -63,12 +63,12 @@
 /mob/proc/get_aspect_level(datum/aspect/aspect_type)
 	return get_aspect(aspect_type)?.get_level()
 
-/mob/proc/aspect_check(aspect_type, difficulty, modifier, skill_modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS)
+/mob/proc/aspect_check(aspect_type, difficulty, modifier, skill_modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS, exp_modifier = 1)
 	RETURN_TYPE(/datum/check_result)
 	if (mind)
 		var/datum/aspect/rolled_aspect = get_aspect(aspect_type)
 		var/level_modifier = rolled_aspect.get_level() - ASPECT_NEUTRAL_LEVEL
-		return rolled_aspect.roll_check(difficulty + modifier, level_modifier + skill_modifier, crit_fail_modifier, show_visual, die_delay)
+		return rolled_aspect.roll_check(difficulty + modifier, level_modifier + skill_modifier, crit_fail_modifier, show_visual, die_delay, exp_modifier)
 
 	difficulty += modifier
 	var/dice_roll = roll("3d6")
@@ -125,9 +125,9 @@
 	var/check_key = "[check_id]_[aspect]_examine"
 
 	if (!aspect_ready(check_key))
-		return aspect_stash_get(check_id)
+		return aspect_stash_get(check_key)
 
-	var/datum/check_result/result = aspect_check(aspect, difficulty, 0, modifier, show_visual = show_visual)
+	var/datum/check_result/result = aspect_check(aspect, difficulty, 0, skill_modifier, show_visual = show_visual, exp_modifier = 0.1)
 	if (result.outcome < CHECK_SUCCESS)
 		aspect_cooldown(check_key, 30 SECONDS)
 		return result

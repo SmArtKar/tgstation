@@ -57,11 +57,12 @@
 
 /obj/item/delivery/examine(mob/user)
 	. = ..()
-	if(note)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
+	if (result?.outcome >= CHECK_SUCCESS && note)
 		if(!in_range(user, src))
-			. += span_info("There's a [EXAMINE_HINT(note.name)] attached to it. You can't read it from here.")
+			. += result.show_message("There's a [EXAMINE_HINT(note.name)] attached to it. You can't read it from here.")
 		else
-			. += span_info("There's a [EXAMINE_HINT(note.name)] attached to it...")
+			. += result.show_message("There's a [EXAMINE_HINT(note.name)] attached to it...")
 			. += note.examine(user)
 	if(sticker)
 		. += span_notice("There's a [EXAMINE_HINT("barcode")] attached to the side. The package is marked for [EXAMINE_HINT("export.")]")

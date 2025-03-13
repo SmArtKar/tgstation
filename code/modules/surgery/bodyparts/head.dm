@@ -115,7 +115,7 @@
 	if(!show_organs_on_examine)
 		return
 
-	var/check_aspect = IS_ROBOTIC_ORGAN(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
+	var/check_aspect = IS_ROBOTIC_LIMB(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, check_aspect)
 	if (result?.outcome < CHECK_SUCCESS)
 		return
