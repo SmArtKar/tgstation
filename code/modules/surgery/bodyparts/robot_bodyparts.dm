@@ -335,16 +335,19 @@
 
 /obj/item/bodypart/chest/robot/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/four_legged_wheelbarrel)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+
 	if(cell)
-		. += {"It has a [cell] inserted.\n
-		[span_info("You can use a <b>screwdriver</b> to remove [cell].")]"}
+		. += result.show_message("It has a [cell] inserted. It can be removed with a <b>screwdriver</b>.")
 	else
-		. += span_info("It has an empty port for a <b>power cell</b>.")
+		. += result.show_message("It has an empty port for a <b>power cell</b>.")
+
 	if(wired)
-		. += "Its all wired up[cell ? " and ready for usage" : ""].\n"+\
-		span_info("You can use <b>wirecutters</b> to remove the wiring.")
+		. += result.show_message("Its all wired up[cell ? " and ready for usage" : ""] You can cut it away with a pair of <b>wirecutters</b>.")
 	else
-		. += span_info("It has a couple spots that still need to be <b>wired</b>.")
+		. += result.show_message("It has a couple spots that still need to be <b>wired</b>.")
 
 /obj/item/bodypart/chest/robot/drop_organs(mob/user, violent_removal)
 	var/atom/drop_loc = drop_location()
@@ -425,17 +428,23 @@
 
 /obj/item/bodypart/head/robot/examine(mob/user)
 	. = ..()
+	// We actually should already have a result stashed from the parent head call
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/four_legged_wheelbarrel)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+
 	if(!flash1 && !flash2)
-		. += span_info("It has two empty eye sockets for <b>flashes</b>.")
+		. += result.show_message("It has two empty eye sockets for <b>flashes</b>.")
+		return
+
+	var/single_flash = FALSE
+	if(!flash1 || !flash2)
+		single_flash = TRUE
+		. += result.show_message("One of its eye sockets is currently occupied by a flash.")
+		. += result.show_message("It has an empty eye socket for another <b>flash</b>.")
 	else
-		var/single_flash = FALSE
-		if(!flash1 || !flash2)
-			single_flash = TRUE
-			. += {"One of its eye sockets is currently occupied by a flash.\n
-			[span_info("It has an empty eye socket for another <b>flash</b>.")]"}
-		else
-			. += "It has two eye sockets occupied by flashes."
-		. += span_notice("You can remove the seated flash[single_flash ? "":"es"] with a <b>crowbar</b>.")
+		. += result.show_message("It has two eye sockets occupied by flashes.")
+	. += result.show_message("You can remove the seated flash[single_flash ? "":"es"] with a <b>crowbar</b>.")
 
 /obj/item/bodypart/head/robot/attackby(obj/item/weapon, mob/user, params)
 	if(istype(weapon, /obj/item/assembly/flash/handheld))

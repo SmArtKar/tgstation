@@ -112,32 +112,38 @@
 
 /obj/item/bodypart/head/examine(mob/user)
 	. = ..()
-	if(show_organs_on_examine && IS_ORGANIC_LIMB(src))
-		var/obj/item/organ/brain/brain = locate(/obj/item/organ/brain) in src
-		if(!brain)
-			. += span_info("The brain has been removed from [src].")
-		else if(brain.suicided || (brain.brainmob && HAS_TRAIT(brain.brainmob, TRAIT_SUICIDED)))
-			. += span_info("There's a miserable expression on [real_name]'s face; they must have really hated life. There's no hope of recovery.")
-		else if(brain.brainmob)
-			if(brain.brainmob?.health <= HEALTH_THRESHOLD_DEAD)
-				. += span_info("It's leaking some kind of... clear fluid? The brain inside must be in pretty bad shape.")
-			if(brain.brainmob.key || brain.brainmob.get_ghost(FALSE, TRUE))
-				. += span_info("Its muscles are twitching slightly... It seems to have some life still in it.")
-			else
-				. += span_info("It's completely lifeless. Perhaps there'll be a chance for them later.")
-		else if(brain?.decoy_override)
-			. += span_info("It's completely lifeless. Perhaps there'll be a chance for them later.")
+	if(!show_organs_on_examine)
+		return
+
+	var/check_aspect = IS_ROBOTIC_ORGAN(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, check_aspect)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	var/obj/item/organ/brain/brain = locate(/obj/item/organ/brain) in src
+	if(!brain)
+		. += result.show_message("The brain has been removed from [src].")
+	else if(brain.suicided || (brain.brainmob && HAS_TRAIT(brain.brainmob, TRAIT_SUICIDED)))
+		. += result.show_message("There's a miserable expression on [real_name]'s face; they must have really hated life. There's no hope of recovery.")
+	else if(brain.brainmob)
+		if(brain.brainmob?.health <= HEALTH_THRESHOLD_DEAD)
+			. += result.show_message("It's leaking some kind of... clear fluid? The brain inside must be in pretty bad shape.")
+		if(brain.brainmob.key || brain.brainmob.get_ghost(FALSE, TRUE))
+			. += result.show_message("Its muscles are twitching slightly... It seems to have some life still in it.")
 		else
-			. += span_info("It's completely lifeless.")
+			. += result.show_message("It's completely lifeless. Perhaps there'll be a chance for them later.")
+	else if(brain?.decoy_override)
+		. += result.show_message("It's completely lifeless. Perhaps there'll be a chance for them later.")
+	else
+		. += result.show_message("It's completely lifeless.")
 
-		if(!(locate(/obj/item/organ/eyes) in src))
-			. += span_info("[real_name]'s eyes have been removed.")
+	if(!(locate(/obj/item/organ/eyes) in src))
+		. += result.show_message("[real_name]'s eyes have been removed.")
 
-		if(!(locate(/obj/item/organ/ears) in src))
-			. += span_info("[real_name]'s ears have been removed.")
+	if(!(locate(/obj/item/organ/ears) in src))
+		. += result.show_message("[real_name]'s ears have been removed.")
 
-		if(!(locate(/obj/item/organ/tongue) in src))
-			. += span_info("[real_name]'s tongue has been removed.")
+	if(!(locate(/obj/item/organ/tongue) in src))
+		. += result.show_message("[real_name]'s tongue has been removed.")
 
 /obj/item/bodypart/head/can_dismember(obj/item/item)
 	if (!can_dismember)

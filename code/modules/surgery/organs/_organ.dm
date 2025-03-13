@@ -179,22 +179,26 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 /obj/item/organ/examine(mob/user)
 	. = ..()
-
 	. += zones_tip()
 
-	if(HAS_MIND_TRAIT(user, TRAIT_ENTRAILS_READER) || isobserver(user))
+	var/check_aspect = IS_ROBOTIC_ORGAN(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, check_aspect)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+
+	if(HAS_MIND_TRAIT(user, TRAIT_ENTRAILS_READER) || isobserver(user) || result.outcome == CHECK_CRIT_SUCCESS)
 		if(HAS_TRAIT(src, TRAIT_CLIENT_STARTING_ORGAN))
-			. += span_info("Lived in and homely. Proven to work. This should fetch a high price on the market.")
+			. += result.show_message("Lived in and homely. Proven to work. This should fetch a high price on the market.")
 
 	if(organ_flags & ORGAN_FAILING)
-		. += span_warning("[src] [failing_desc]")
+		. += result.show_message("[src] [failing_desc]")
 		return
 
 	if(damage > high_threshold)
 		if(IS_ROBOTIC_ORGAN(src))
-			. += span_warning("[src] seems to be malfunctioning.")
-			return
-		. += span_warning("[src] is starting to look discolored.")
+			. += result.show_message("[src] seems to be malfunctioning.")
+		else
+			. += result.show_message("[src] is starting to look discolored.")
 
 /// Returns a line to be displayed regarding valid insertion zones
 /obj/item/organ/proc/zones_tip()

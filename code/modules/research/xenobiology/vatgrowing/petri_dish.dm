@@ -18,13 +18,16 @@
 		update_appearance()
 
 /obj/item/petri_dish/examine(mob/user)
-	. = ..()
-	if(!sample)
+	. = ..(
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/cognition)
+	if (result?.outcome < CHECK_SUCCESS)
 		return
-	. += span_notice("You can see the following micro-organisms:")
-	for(var/i in sample.micro_organisms)
-		var/datum/micro_organism/MO = i
-		. += MO.get_details()
+	if(!sample)
+		. += result.show_message("It is empty, like the part of your soul that at some point harbored hope for the future of cytology.")
+		return
+	. += result.show_message("You can see the following micro-organisms:")
+	for(var/datum/micro_organism/organism in sample.micro_organisms)
+		. += result.show_message(organism.get_details())
 
 /obj/item/petri_dish/pre_attack(atom/A, mob/living/user, params)
 	. = ..()

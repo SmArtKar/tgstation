@@ -115,7 +115,9 @@
 
 /obj/item/research_notes/examine(mob/user)
 	. = ..()
-	. += span_notice("It is worth [value] research points.")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/cognition)
+	if (result?.outcome >= CHECK_SUCCESS)
+		. += result.show_message("It is worth [value] research points.")
 
 /obj/item/research_notes/attackby(obj/item/attacking_item, mob/living/user, params)
 	if(istype(attacking_item, /obj/item/research_notes))

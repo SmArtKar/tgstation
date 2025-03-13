@@ -54,13 +54,19 @@
 
 /obj/item/organ/tongue/examine(mob/user)
 	. = ..()
-	if(HAS_MIND_TRAIT(user, TRAIT_ENTRAILS_READER)|| isobserver(user))
-		if(liked_foodtypes)
-			. += span_info("This tongue has an affinity for the taste of [english_list(bitfield_to_list(liked_foodtypes, FOOD_FLAGS_IC))].")
-		if(disliked_foodtypes)
-			. += span_info("This tongue has an aversion for the taste of [english_list(bitfield_to_list(disliked_foodtypes, FOOD_FLAGS_IC))].")
-		if(toxic_foodtypes)
-			. += span_info("This tongue's physiology makes [english_list(bitfield_to_list(toxic_foodtypes, FOOD_FLAGS_IC))] toxic.")
+	var/check_aspect = IS_ROBOTIC_ORGAN(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, check_aspect)
+	var/success_outcome = CHECK_CRIT_SUCCESS
+	if(HAS_MIND_TRAIT(user, TRAIT_ENTRAILS_READER))
+		success_outcome = CHECK_SUCCESS
+	if (result?.outcome < success_outcome)
+		return
+	if(liked_foodtypes)
+		. += result.show_message("This tongue has an affinity for the taste of [english_list(bitfield_to_list(liked_foodtypes, FOOD_FLAGS_IC))].")
+	if(disliked_foodtypes)
+		. += result.show_message("This tongue has an aversion for the taste of [english_list(bitfield_to_list(disliked_foodtypes, FOOD_FLAGS_IC))].")
+	if(toxic_foodtypes)
+		. += result.show_message("This tongue's physiology makes [english_list(bitfield_to_list(toxic_foodtypes, FOOD_FLAGS_IC))] toxic.")
 
 /**
  * Used in setting up the "languages possible" list.

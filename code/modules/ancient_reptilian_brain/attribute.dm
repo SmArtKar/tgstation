@@ -106,14 +106,34 @@
 		return
 	COOLDOWN_START(src, mind.aspect_cooldowns[cooldown_id], duration)
 
-/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, show_visual = TRUE)
-	if (!aspect_ready("[check_id]_examine"))
-		return null
-	var/datum/check_result/result = aspect_check(aspect, difficulty, show_visual = show_visual)
+/mob/proc/aspect_stash(check_id, datum/check_result/result, duration)
+	mind?.aspect_stash_push(check_id, result, duration)
+
+/mob/proc/aspect_stash_get(check_id)
+	return mind?.aspect_stash[check_id]
+
+/datum/mind/proc/aspect_stash_push(check_id, datum/check_result/result, duration)
+	aspect_stash[check_id] = result
+	addtimer(CALLBACK(src, PROC_REF(aspect_stash_pop), check_id), duration, TIMER_UNIQUE|TIMER_OVERRIDE)
+
+/datum/mind/proc/aspect_stash_pop(check_id)
+	QDEL_NULL(aspect_stash[check_id])
+	aspect_stash -= check_id
+
+// Examine checks "buffer" your check result for a certain amount of time, allowing you to skip repeated checks if you won the previous one
+/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, skill_modifier = 0, show_visual = TRUE)
+	var/check_key = "[check_id]_[aspect]_examine"
+
+	if (!aspect_ready(check_key))
+		return aspect_stash_get(check_id)
+
+	var/datum/check_result/result = aspect_check(aspect, difficulty, 0, modifier, show_visual = show_visual)
 	if (result.outcome < CHECK_SUCCESS)
-		aspect_cooldown("[check_id]_examine", 30 SECONDS)
+		aspect_cooldown(check_key, 30 SECONDS)
 		return result
-	aspect_cooldown("[check_id]_examine", 10 SECONDS)
+
+	aspect_cooldown(check_key, 180 SECONDS)
+	aspect_stash(check_key, result, 180 SECONDS)
 	return result
 
 /mob/dead/aspect_ready(cooldown_id)
@@ -123,4 +143,4 @@
 	return
 
 /mob/dead/examine_check(id, difficulty, aspect)
-	return null
+	return new /datum/check_result(CHECK_CRIT_SUCCESS, get_aspect(aspect), difficulty, 18, difficulty, 0, 99)

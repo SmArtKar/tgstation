@@ -117,12 +117,15 @@
 ///Adds text for when there is a sample in the vat
 /obj/machinery/vatgrower/examine(mob/user)
 	. = ..()
-	if(!biological_sample)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/cognition)
+	if (result?.outcome < CHECK_SUCCESS)
 		return
-	. += span_notice("It seems to have a sample in it!")
-	for(var/i in biological_sample.micro_organisms)
-		var/datum/micro_organism/MO = i
-		. += MO.get_details(HAS_TRAIT(user, TRAIT_RESEARCH_SCANNER))
+	if(!biological_sample)
+		. += result.show_message("It is empty, like the part of your soul that at some point harbored hope for the future of cytology.")
+		return
+	. += result.show_message("It seems to have a sample in it!")
+	for(var/datum/micro_organism/organism in biological_sample.micro_organisms)
+		. += result.show_message(organism.get_details(HAS_TRAIT(user, TRAIT_RESEARCH_SCANNER) || result.outcome == CHECK_CRIT_SUCCESS))
 
 /// Call update icon when reagents change to update the reagent content icons. Eats signal args.
 /obj/machinery/vatgrower/proc/on_reagent_change(datum/reagents/holder)

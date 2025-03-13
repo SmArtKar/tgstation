@@ -500,13 +500,15 @@
 
 /obj/structure/tram/spoiler/examine(mob/user)
 	. = ..()
-	if(obj_flags & EMAGGED)
-		. += span_warning("The electronics panel is sparking occasionally. It can be reset with a [EXAMINE_HINT("multitool.")]")
-
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	if (result.outcome == CHECK_CRIT_SUCCESS && (obj_flags & EMAGGED))
+		. += result.show_message("The electronics panel is sparking occasionally. It can be reset with a [EXAMINE_HINT("multitool.")]")
 	if(locked)
-		. += span_warning("The spoiler is [EXAMINE_HINT("welded")] in place!")
+		. += result.show_message("The spoiler is [EXAMINE_HINT("welded")] in place!")
 	else
-		. += span_notice("The spoiler can be locked in place with a [EXAMINE_HINT("welder.")]")
+		. += result.show_message("The spoiler can be locked in place with a [EXAMINE_HINT("welder.")]")
 
 /obj/structure/tram/spoiler/proc/set_spoiler(source, controller, controller_active, controller_status, travel_direction)
 	SIGNAL_HANDLER

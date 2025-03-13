@@ -104,8 +104,10 @@
 	var/list/book_titles_read
 	/// List of all of our active attributes
 	var/list/datum/attribute/attributes = list()
-	/// List of aspect action cooldowns
+	/// Assoc list of aspect action cooldowns
 	var/list/aspect_cooldowns = list()
+	/// Assoc list of stashed aspect check results, for things like examining objects
+	var/list/aspect_stash = list()
 
 /datum/mind/New(_key)
 	key = _key
@@ -119,6 +121,7 @@
 	QDEL_LIST(memories)
 	QDEL_NULL(memory_panel)
 	QDEL_LIST(antag_datums)
+	QDEL_LIST_ASSOC(aspect_stash)
 	set_current(null)
 	return ..()
 

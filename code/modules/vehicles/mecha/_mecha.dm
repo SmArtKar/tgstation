@@ -470,30 +470,39 @@
 				continue
 			. += span_notice("[icon2html(ME, user)] \A [ME].")
 	if(mecha_flags & PANEL_OPEN)
-		if(servo)
-			. += span_notice("Servo reduces movement power usage by [100 - round(100 / servo.rating)]%")
+		var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/mental_clockwork)
+		if (result?.outcome >= CHECK_SUCCESS)
+			. += result.show_message("You peek into [src]'s open panel...")
+			if(servo)
+				. += result.show_message("Servo reduces movement power usage by [100 - round(100 / servo.rating)]%")
+			else
+				. += result.show_message("It's missing a servo.")
+			if(capacitor)
+				. += result.show_message("Capacitor increases armor against energy attacks by [capacitor.rating * 5].")
+			else
+				. += result.show_message("It's missing a capacitor.")
+			if(!scanmod)
+				. += result.show_message("It's missing a scanning module.")
 		else
-			. += span_warning("It's missing a servo.")
-		if(capacitor)
-			. += span_notice("Capacitor increases armor against energy attacks by [capacitor.rating * 5].")
-		else
-			. += span_warning("It's missing a capacitor.")
-		if(!scanmod)
-			. += span_warning("It's missing a scanning module.")
+			. += result.show_message("You peek into [src]'s open panel, but fail to navigate through the mess of wires inside.")
 	if(mecha_flags & IS_ENCLOSED)
 		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(mecha_flags & SILICON_PILOT)
-		. += span_notice("[src] appears to be piloting itself...")
-	else
-		for(var/occupante in occupants)
-			. += span_notice("You can see [occupante] inside.")
-		if(ishuman(user))
-			var/mob/living/carbon/human/H = user
-			for(var/held_item in H.held_items)
-				if(!isgun(held_item))
-					continue
-				. += span_warning("It looks like you can hit the pilot directly if you target the center or above.")
-				break //in case user is holding two guns
+		. += result.show_message("[src] appears to be piloting itself...")
+		return
+	for(var/occupante in occupants)
+		. += result.show_message("You can see [occupante] inside.")
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	for(var/held_item in H.held_items)
+		if(!isgun(held_item))
+			continue
+		. += result.show_message("It looks like you can hit the pilot directly if you target the center or above.")
+		break //in case user is holding two guns
 
 /obj/vehicle/sealed/mecha/generate_integrity_message()
 	var/examine_text = ""

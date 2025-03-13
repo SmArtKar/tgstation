@@ -148,6 +148,8 @@
 	var/crit_success
 	/// Aspect level + additional modifiers
 	var/modifier
+	/// Have we already shown the tooltip bit of the message?
+	var/tooltip_shown = FALSE
 
 /datum/check_result/New(outcome, aspect, difficulty, roll, modifier, crit_fail, crit_success)
 	. = ..()
@@ -160,6 +162,10 @@
 	src.crit_success = crit_success
 
 /datum/check_result/proc/show_message(text)
+	if (tooltip_shown)
+		return  "<span style='color:[aspect.attribute?.color || COLOR_PALE_PURPLE_GRAY]'>[text]</span>"
+
+	tooltip_shown = TRUE
 	var/success_prob = round(dice_roll_probabilbity(3, 6, difficulty - modifier), 0.1)
 
 	var/diff_string = "Error"
@@ -195,7 +201,7 @@
 			outcome_string = "Critical Success"
 
 	var/tooltip = span_tooltip("[success_prob]% | Result: [roll] [modifier ? "([modifier > 0 ? "+" : ""][modifier])" : ""] | Check: [difficulty]", span_italics("\[[diff_string]: [outcome_string]\]"))
-	return "<span style='color:[aspect.attribute.color]'><i><b>[aspect.name]</b></i> [tooltip]<i>:</i> [text]</span>"
+	return "<span style='color:[aspect.attribute?.color || COLOR_PALE_PURPLE_GRAY]'><i><b>[aspect.name || "Spiritual Knowledge"]</b></i> [tooltip]<i>:</i> [text]</span>"
 
 /proc/dice_roll_probabilbity(dice, sides, difficulty)
 	var/static/list/probability_cache

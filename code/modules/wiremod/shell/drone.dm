@@ -27,11 +27,11 @@
 		return
 	if(health < maxHealth)
 		if(health > maxHealth/3)
-			. += "[src]'s parts look loose."
+			. += result.show_message("[src]'s parts look loose.")
 		else
-			. += "[src]'s parts look very loose!"
+			. += result.show_message("[src]'s parts look very loose!")
 	else
-		. += "[src] is in pristine condition."
+		. += result.show_message("[src] is in pristine condition.")
 
 /mob/living/circuit_drone/updatehealth()
 	. = ..()

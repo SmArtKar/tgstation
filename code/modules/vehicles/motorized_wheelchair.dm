@@ -166,14 +166,19 @@
 
 /obj/vehicle/ridden/wheelchair/motorized/examine(mob/user)
 	. = ..()
-	if((obj_flags & EMAGGED) && panel_open)
-		. += "There is a bomb under the maintenance panel."
 	. += "There is a small screen on it, [(in_range(user, src) || isobserver(user)) ? "[power_cell ? "it reads:" : "but it is dark."]" : "but you can't see it from here."]"
 	if(!power_cell || (!in_range(user, src) && !isobserver(user)))
 		return
 	. += "Speed: [speed]"
 	. += "Energy efficiency: [power_efficiency]"
 	. += "Power: [power_cell.charge] out of [power_cell.maxcharge]"
+	if (!panel_open)
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	if(obj_flags & EMAGGED)
+		. += result.show_message("There is a bomb under the maintenance panel.")
 
 /obj/vehicle/ridden/wheelchair/motorized/Move(newloc, direct)
 	. = ..()

@@ -78,16 +78,19 @@
 
 /obj/machinery/satellite/meteor_shield/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_PRIMITIVE, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(active)
-		. += span_notice("It is currently active. You can interact with it to shut it down.")
-		if(obj_flags & EMAGGED)
-			. += span_warning("Rather than the usual sounds of beeps and pings, it produces a weird and constant hiss of white noise…")
+		. += result.show_message("It is currently active. You can interact with it to shut it down.")
+		if((obj_flags & EMAGGED) && result.outcome == CHECK_CRIT_SUCCESS)
+			. += result.show_message("Rather than the usual sounds of beeps and pings, it produces a weird and constant hiss of white noise…")
 		else
-			. += span_notice("It emits periodic beeps and pings as it communicates with the satellite network.")
+			. += result.show_message("It emits periodic beeps and pings as it communicates with the satellite network.")
 	else
-		. += span_notice("It is currently disabled. You can interact with it to set it up.")
-		if(obj_flags & EMAGGED)
-			. += span_warning("But something seems off about it...?")
+		. += result.show_message("It is currently disabled. You can interact with it to set it up.")
+		if((obj_flags & EMAGGED) && result.outcome == CHECK_CRIT_SUCCESS)
+			. += result.show_message("But something seems off about it...?")
 
 /obj/machinery/satellite/meteor_shield/proc/space_los(meteor)
 	for(var/turf/T in get_line(src,meteor))

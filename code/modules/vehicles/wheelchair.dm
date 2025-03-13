@@ -158,7 +158,8 @@
 
 /obj/vehicle/ridden/wheelchair/examine(mob/user)
 	. =..()
-	if(bell_attached)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
+	if (result?.outcome > CHECK_SUCCESS && bell_attached)
 		. += span_notice("There is \a [bell_attached] attached to the handle.")
 
 /obj/vehicle/ridden/wheelchair/Destroy()
