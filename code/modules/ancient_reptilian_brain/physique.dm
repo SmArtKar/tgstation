@@ -31,3 +31,27 @@
 /datum/aspect/endurance/unregister_body(mob/living/old_body)
 	old_body.maxHealth -= (get_level() - ASPECT_NEUTRAL_LEVEL) * ENDURANCE_HEALTH_BOOST
 	REMOVE_TRAIT(old_body, TRAIT_ANALGESIA, ASPECT_TRAIT)
+
+// Handling paranormal items, holy stuff
+/datum/aspect/shivers
+	name = "Shivers"
+	desc = "Raise the hair on your neck. Tune in to the forces beyond this world."
+	attribute = /datum/attribute/physique
+
+// Affects your metabolization and resistance to chemicals, positive and negative
+/datum/aspect/electrochemistry
+	name = "Electrochemistry"
+	desc = "Go to party planet. Love and be loved by drugs."
+	attribute = /datum/attribute/physique
+
+// Unarmed damage, lifting/dragging heavy things, prying doors open with your bare hands. Also being a racist, for some reason.
+/datum/aspect/physical_instrument
+	name = "Physical Instrument"
+	desc = "Flex powerful muscles. Enjoy healthy organs."
+	attribute = /datum/attribute/physique
+
+// How good are you with working heavy tools, also provides buffs to hand-eye for more precise ones
+/datum/aspect/handicraft
+	name = "Handicraft"
+	desc = "Work with your hands. Lift heavy equipment."
+	attribute = /datum/attribute/physique

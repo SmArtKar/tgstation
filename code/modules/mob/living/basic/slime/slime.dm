@@ -228,22 +228,21 @@
 
 /mob/living/basic/slime/examine(mob/user)
 	. = ..()
-
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/cognition)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	switch(powerlevel)
 		if(SLIME_MIN_POWER to SLIME_EXTRA_SHOCK_COST)
-			. += "It is flickering gently with harmless levels of electrical activity."
-
+			. += result.show_message("It is flickering gently with harmless levels of electrical activity.")
 		if(SLIME_EXTRA_SHOCK_COST to SLIME_MEDIUM_POWER)
-			. += "It is glowing brightly with medium levels electrical activity."
-
-
+			. += result.show_message("It is glowing brightly with medium levels electrical activity.")
 		if(SLIME_MEDIUM_POWER to SLIME_MAX_POWER)
-			. += "It is glowing alarmingly with high levels of electrical activity."
-
+			. += result.show_message("It is glowing alarmingly with high levels of electrical activity.")
 		if(SLIME_MAX_POWER)
-			. += span_boldwarning("It is radiating with massive levels of electrical activity!")
+			. += result.show_message("It is radiating with massive levels of electrical activity!")
+
 	if(overcrowded)
-		. += span_warning("It seems too overcroweded to properly reproduce!")
+		. += result.show_message("It seems too overcroweded to properly reproduce!")
 
 ///Changes the slime's current life state
 /mob/living/basic/slime/proc/set_life_stage(new_life_stage = SLIME_LIFE_STAGE_BABY)

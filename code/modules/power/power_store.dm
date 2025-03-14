@@ -193,8 +193,9 @@
 
 /obj/item/stock_parts/power_store/examine(mob/user)
 	. = ..()
-	if(rigged)
-		. += span_danger("This [name] seems to be faulty!")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_HARD, /datum/aspect/wire_rat)
+	if(result?.outcome >= CHECK_SUCCESS && rigged)
+		. += result.show_message("This [name] seems to be faulty!")
 	else if(!isnull(charge_light_type))
 		. += "The charge meter reads [CEILING(percent(), 0.1)]%." //so it doesn't say 0% charge when the overlay indicates it still has charge
 

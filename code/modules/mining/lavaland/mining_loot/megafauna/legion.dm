@@ -25,10 +25,13 @@
 
 /obj/item/storm_staff/examine(mob/user)
 	. = ..()
-	. += span_notice("It has [thunder_charges] charges remaining.")
-	. += span_notice("Use it in hand to dispel storms.")
-	. += span_notice("Use it on targets to summon thunderbolts from the sky.")
-	. += span_notice("The thunderbolts are boosted if in an area with weather effects.")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("It has [thunder_charges] charges remaining.")
+	. += result.show_message("Use it in hand to dispel storms.")
+	. += result.show_message("Use it on targets to summon thunderbolts from the sky.")
+	. += result.show_message("The thunderbolts are boosted if in an area with weather effects.")
 
 /obj/item/storm_staff/attack_self(mob/user)
 	var/area/user_area = get_area(user)

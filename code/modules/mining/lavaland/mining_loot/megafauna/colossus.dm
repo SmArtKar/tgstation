@@ -108,7 +108,8 @@
 
 /obj/machinery/anomalous_crystal/examine(mob/user)
 	. = ..()
-	if(isobserver(user))
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_GODLY, /datum/aspect/shivers)
+	if(isobserver(user) || result.outcome >= CHECK_SUCCESS)
 		. += observer_desc
 		. += "It is activated by [activation_method]."
 

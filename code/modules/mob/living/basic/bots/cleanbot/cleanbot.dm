@@ -185,9 +185,9 @@
 	. = ..()
 	if(ascended && user.stat == CONSCIOUS && user.client)
 		user.client.give_award(/datum/award/achievement/misc/cleanboss, user)
-	if(isnull(weapon))
-		return
-	. += span_warning("Is that \a [weapon] taped to it...?")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
+	if(result?.outcome >= CHECK_SUCCESS && weapon)
+		. += result.show_message("Is that \a [weapon] taped to it...?")
 
 /mob/living/basic/bot/cleanbot/update_icon_state()
 	. = ..()

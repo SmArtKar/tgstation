@@ -42,6 +42,7 @@
 // Examining them will harm them, on a cooldown.
 /mob/living/basic/heretic_summon/maid_in_the_mirror/examine(mob/user)
 	. = ..()
+
 	if(!harmed_by_examine || user == src || user.stat == DEAD || !isliving(user) || IS_HERETIC_OR_MONSTER(user))
 		return
 
@@ -49,28 +50,34 @@
 	if(user_ref in recent_examiner_refs)
 		return
 
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
+	if (result?.outcome < CHECK_SUCCESS)
+		. += result.show_message("Its form is constantly shifting, evading your gaze as if the universe itself doesn't want you to witness it.")
+		return
+
+	. += result.show_message("Its fragile form is distorting under your gaze.")
 	// If we have health, we take some damage
 	if(health > (maxHealth * 0.125))
 		visible_message(
-				span_warning("[src] seems to fade in and out slightly."),
-				span_userdanger("[user]'s gaze pierces your every being!"),
+			span_warning("[src] seems to fade in and out slightly."),
+			span_userdanger("[user]'s gaze pierces your every being!"),
+			ignored_mobs = user,
 		)
-
 		recent_examiner_refs += user_ref
 		apply_damage(maxHealth * 0.1) // We take 10% of our health as damage upon being examined
 		playsound(src, 'sound/effects/ghost2.ogg', 40, TRUE)
 		addtimer(CALLBACK(src, PROC_REF(clear_recent_examiner), user_ref), recent_examine_damage_cooldown, TIMER_DELETE_ME)
 		animate(src, alpha = 120, time = 0.5 SECONDS, easing = ELASTIC_EASING, loop = 2, flags = ANIMATION_PARALLEL)
 		animate(alpha = 255, time = 0.5 SECONDS, easing = ELASTIC_EASING)
+		return
 
 	// If we're examined on low enough health we die straight up
-	else
-		visible_message(
-				span_danger("[src] vanishes from existence!"),
-				span_userdanger("[user]'s gaze shatters your form, destroying you!"),
-		)
-
-		death()
+	visible_message(
+		span_danger("[src] vanishes from existence!"),
+		span_userdanger("[user]'s gaze shatters your form, destroying you!"),
+		ignored_mobs = user,
+	)
+	death()
 
 /mob/living/basic/heretic_summon/maid_in_the_mirror/proc/clear_recent_examiner(mob_ref)
 	if(!(mob_ref in recent_examiner_refs))

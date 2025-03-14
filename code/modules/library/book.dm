@@ -38,7 +38,8 @@
 
 /obj/item/book/examine(mob/user)
 	. = ..()
-	if(carved)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
+	if(result && carved)
 		. += span_notice("[src] has been hollowed out.")
 
 /obj/item/book/ui_static_data(mob/user)

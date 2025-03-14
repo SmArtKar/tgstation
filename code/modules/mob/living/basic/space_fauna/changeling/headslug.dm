@@ -40,13 +40,16 @@
 
 /mob/living/basic/headslug/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/faveur_de_lame)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(stat != DEAD)
 		if(isnull(client))
-			. += span_notice("It appears to be moving around listlessly.")
+			. += result.show_message("It appears to be moving around listlessly.")
 		else
-			. += span_warning("It's moving around intelligently!")
+			. += result.show_message("It's moving around intelligently!")
 	if (egg_lain)
-		. += span_notice("Its reproductive equipment appears to have withered.")
+		. += result.show_message("Its reproductive equipment appears to have withered.")
 
 /// Signal Handler proc that runs on every attack and checks to see if this is a valid target for implantation. If so, it implants the egg and starts the countdown to death.
 /mob/living/basic/headslug/proc/check_and_implant(mob/living/basic/attacker, atom/target)

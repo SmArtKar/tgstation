@@ -56,3 +56,15 @@
 	RegisterSignal(owner, COMSIG_MOB_EXAMINING, PROC_REF(on_examine))
 	RegisterSignal(owner, COMSIG_LIVING_MOB_BUMPED, PROC_REF(on_living_bump))
 */
+
+// Allows you to handle emergencies better
+/datum/aspect/in_and_out
+	name = "In and Out"
+	desc = "Dash through fires and breaches. Save the day."
+	attribute = /datum/attribute/motorics
+
+// The actual hacking/power handling skill
+/datum/aspect/wire_rat
+	name = "Wire Rat"
+	desc = "Cut the right wires. Chew through the wrong ones."
+	attribute = /datum/attribute/motorics

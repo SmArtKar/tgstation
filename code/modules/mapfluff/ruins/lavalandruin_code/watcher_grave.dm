@@ -41,7 +41,9 @@
 	new /obj/effect/spawner/random/lavaland_mob/watcher(spawn_turf)
 
 /obj/item/food/egg/watcher/examine(mob/user)
-	return ..() + span_notice("<i>Watch it more closely to see how it is doing...</i>")
+	// Okay this is weird but basically we buffer the check for examine_more to use, so we don't show the watch closely line if we fudged it
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	return ..() + result?.outcome >= CHECK_SUCCESS ? result.show_message("<i>Watch it more closely to see how it is doing...</i>") : null
 
 /obj/item/food/egg/watcher/examine_more(mob/user)
 	. = ..()

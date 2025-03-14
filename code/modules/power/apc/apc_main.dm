@@ -314,7 +314,7 @@
 
 /obj/machinery/power/apc/examine(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/mental_clockwork)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/wire_rat)
 	if(machine_stat & BROKEN)
 		if(opened != APC_COVER_REMOVED)
 			. += "The cover is broken and can probably be <i>pried</i> off with enough force."

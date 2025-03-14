@@ -12,3 +12,33 @@
 	name = "Faveur de l'Âme"
 	desc = "Feel the heartbeat, the rhytm of the soul. Revive the dead, and cure the living."
 	attribute = /datum/attribute/psyche
+
+// Looting maintenance, tiding departments, sort-of-hacking-related but in a weirder way
+/datum/aspect/grey_tide
+	name = "Grey Tide"
+	desc = "Toolbelt, to wear. Toolbox, to apply to skulls."
+	attribute = /datum/attribute/psyche
+
+// Intimidating others, being more efficient in stun combat
+/datum/aspect/authority
+	name = "Authority"
+	desc = "Intimidate the public. Assert yourself."
+	attribute = /datum/attribute/psyche
+
+// Gives you constant information about the state of your department and your colleagues
+/datum/aspect/esprit_de_opus
+	name = "Esprit de Opus"
+	desc = "Connect to your department. Understand the spacer culture."
+	attribute = /datum/attribute/psyche
+
+// Decreases effects of low sanity or negative moodlets, helps with addictions
+/datum/aspect/volition
+	name = "Volition"
+	desc = "Hold yourself together. Keep your Morale up."
+	attribute = /datum/attribute/psyche
+
+// See stuff that happened previously, useful for detectives or when you want to hunt someone down
+/datum/aspect/rewind
+	name = "Rewind"
+	desc = "Move back in time, just a bit. Here, a drop of blood was spilled."
+	attribute = /datum/attribute/psyche

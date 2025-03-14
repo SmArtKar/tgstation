@@ -28,11 +28,23 @@
 // Knowledge related to robotics, implants, mechs, etc.
 /datum/aspect/four_legged_wheelbarrel
 	name = "Four Legged Wheelbarrel"
-	desc = "Construct cyborgs. Be angry about nobody wanting MODsuits."
+	desc = "Create cyborgs. Turn yourself into one."
 	attribute = /datum/attribute/intellect
 
 /datum/aspect/four_legged_wheelbarrel/New(datum/attribute/new_attribute)
 	. = ..()
-	if (prob(25))
+	if (prob(15))
 		var/list/owner_name = splittext(attribute.owner.name, regex("\[ -\]"))
-		desc += " Get in the goddamn mech, [owner_name[1]]."
+		desc += " And get in the goddamn mech, [owner_name[1]]."
+
+// Social camouflage, neat tricks, be a better clown
+/datum/aspect/drama
+	name = "Drama"
+	desc = "Play the actor. Lie and detect lies."
+	attribute = /datum/attribute/intellect
+
+// Handles everything under art, cuisine, botany
+/datum/aspect/conceptualization
+	name = "Conceptualization"
+	desc = "Understand creativity. See Art in the world."
+	attribute = /datum/attribute/intellect

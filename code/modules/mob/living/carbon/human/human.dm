@@ -990,10 +990,10 @@
 /mob/living/carbon/human/updatehealth()
 	. = ..()
 	var/health_deficiency = max((maxHealth - health), staminaloss)
-	var/endurance = get_aspect_level(/datum/aspect/endurance) - ASPECT_NEUTRAL_LEVEL
+	var/aspect = get_aspect_level(/datum/aspect/endurance) - ASPECT_NEUTRAL_LEVEL
 	if(health_deficiency >= 40)
-		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/damage_slowdown, TRUE, multiplicative_slowdown = health_deficiency / (60 + endurance * ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION))
-		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/damage_slowdown_flying, TRUE, multiplicative_slowdown = health_deficiency / (20 + endurance * ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION))
+		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/damage_slowdown, TRUE, multiplicative_slowdown = health_deficiency / (60 + aspect * ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION))
+		add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/damage_slowdown_flying, TRUE, multiplicative_slowdown = health_deficiency / (20 + aspect * ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION))
 	else
 		remove_movespeed_modifier(/datum/movespeed_modifier/damage_slowdown)
 		remove_movespeed_modifier(/datum/movespeed_modifier/damage_slowdown_flying)

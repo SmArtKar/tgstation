@@ -226,31 +226,34 @@
 
 /obj/item/organ/brain/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/faveur_de_lame)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(length(skillchips))
-		. += span_info("It has a skillchip embedded in it.")
-	. += brain_damage_examine()
+		. += result.show_message("It has a skillchip embedded in it.")
+	. += result.show_message(brain_damage_examine())
 	if (smooth_brain)
-		. += span_notice("All the pesky wrinkles are gone. Now it just needs a good drying...")
+		. += result.show_message("All the pesky wrinkles are gone. Now it just needs a good drying...")
 	if(brain_size < 1)
-		. += span_notice("It is a bit on the smaller side...")
+		. += result.show_message("It is a bit on the smaller side...")
 	if(brain_size > 1)
-		. += span_notice("It is bigger than average...")
+		. += result.show_message("It is bigger than average...")
 	if(GetComponent(/datum/component/ghostrole_on_revive))
-		. += span_notice("Its soul might yet come back...")
+		. += result.show_message("Its soul might yet come back...")
 
 /// Needed so subtypes can override examine text while still calling parent
 /obj/item/organ/brain/proc/brain_damage_examine()
 	if(suicided)
-		return span_info("It's started turning slightly grey. They must not have been able to handle the stress of it all.")
+		return "It's started turning slightly grey. They must not have been able to handle the stress of it all."
 	if(brainmob && (decoy_override || brainmob.client || brainmob.get_ghost()))
 		if(organ_flags & ORGAN_FAILING)
-			return span_info("It seems to still have a bit of energy within it, but it's rather damaged... You may be able to restore it with some <b>mannitol</b>.")
+			return "It seems to still have a bit of energy within it, but it's rather damaged... You may be able to restore it with some <b>mannitol</b>."
 		else if(damage >= BRAIN_DAMAGE_DEATH*0.5)
-			return span_info("You can feel the small spark of life still left in this one, but it's got some bruises. You may be able to restore it with some <b>mannitol</b>.")
+			return "You can feel the small spark of life still left in this one, but it's got some bruises. You may be able to restore it with some <b>mannitol</b>."
 		else
-			return span_info("You can feel the small spark of life still left in this one.")
+			return "You can feel the small spark of life still left in this one."
 	else
-		return span_info("This one is completely devoid of life.")
+		return "This one is completely devoid of life."
 
 /obj/item/organ/brain/get_status_appendix(advanced, add_tooltips)
 	var/list/trauma_text

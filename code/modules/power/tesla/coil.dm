@@ -55,7 +55,7 @@
 	. = ..()
 	if(!in_range(user, src) && !isobserver(user))
 		return
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/wire_rat)
 	if (result?.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("The status display reads:<br>" + \
@@ -144,7 +144,7 @@
 	. = ..()
 	if(!in_range(user, src) && !isobserver(user))
 		return
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/wire_rat)
 	if (result?.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("The status display reads:<br>" + \
