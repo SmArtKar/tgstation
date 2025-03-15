@@ -70,10 +70,13 @@
 
 /obj/machinery/portable_atmospherics/examine(mob/user)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(nob_crystal_inserted)
-		. += "There is a hypernoblium crystal inside it that allows for reactions inside to be suppressed."
+		. += result.show_message("There is a hypernoblium crystal inside it that allows for reactions inside to be suppressed.")
 	if(suppress_reactions)
-		. += "The hypernoblium crystal inside is glowing with a faint blue colour, indicating reactions inside are currently being suppressed."
+		. += result.show_message("The hypernoblium crystal inside is glowing with a faint blue colour, indicating reactions inside are currently being suppressed.")
 
 /obj/machinery/portable_atmospherics/ex_act(severity, target)
 	if(resistance_flags & INDESTRUCTIBLE)

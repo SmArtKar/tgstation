@@ -43,7 +43,7 @@
 	desc = "Play the actor. Lie and detect lies."
 	attribute = /datum/attribute/intellect
 
-// Handles everything under art, cuisine, botany
+// Handles everything under art and cuisine
 /datum/aspect/conceptualization
 	name = "Conceptualization"
 	desc = "Understand creativity. See Art in the world."

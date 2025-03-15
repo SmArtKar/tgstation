@@ -34,9 +34,9 @@
 
 /obj/item/clothing/neck/collar_bomb/examine(mob/user)
 	. = ..()
-	if(user.get_item_by_slot(ITEM_SLOT_NECK) == src)
-		return
-	. += span_tinynotice("It has a [EXAMINE_HINT("wire")] panel that could be interacted with...")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_HARD, /datum/aspect/wire_rat)
+	if (result?.outcome >= CHECK_SUCCESS && (user.get_item_by_slot(ITEM_SLOT_NECK) != src || result.outcome == CHECK_CRIT_SUCCESS))
+		. += span_tinynotice("It has a [EXAMINE_HINT("wire")] panel that could be interacted with...")
 
 /obj/item/clothing/neck/collar_bomb/attackby(obj/item/item, mob/user, params)
 	if(is_wire_tool(item))

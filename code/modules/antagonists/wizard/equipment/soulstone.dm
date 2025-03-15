@@ -260,16 +260,18 @@
 	icon = 'icons/mob/shells.dmi'
 	icon_state = "construct_cult"
 	desc = "A wicked machine used by those skilled in magical arts. It is inactive."
-	var/extra_desc = span_cult("A construct shell, used to house bound souls from a soulstone.\n\
+	var/extra_desc = "A construct shell, used to house bound souls from a soulstone.\n\
 		Placing a soulstone with a soul into this shell allows you to produce your choice of the following:\n\
 		An <b>Artificer</b>, which can produce <b>more shells and soulstones</b>, as well as fortifications.\n\
 		A <b>Wraith</b>, which does high damage and can jaunt through walls, though it is quite fragile.\n\
-		A <b>Juggernaut</b>, which is very hard to kill and can produce temporary walls, but is slow.")
+		A <b>Juggernaut</b>, which is very hard to kill and can produce temporary walls, but is slow."
 
 /obj/structure/constructshell/examine(mob/user)
 	. = ..()
-	if(IS_CULTIST(user) || HAS_MIND_TRAIT(user, TRAIT_MAGICALLY_GIFTED) || user.stat == DEAD)
-		. += extra_desc
+	var/valid_user = IS_CULTIST(user) || HAS_MIND_TRAIT(user, TRAIT_MAGICALLY_GIFTED)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_GODLY, /datum/aspect/shivers, valid_user ? SKILLCHECK_GODLY : 0)
+	if(valid_user || user.stat == DEAD || result.outcome >= CHECK_SUCCESS)
+		. += result.show_message(extra_desc)
 
 /obj/structure/constructshell/attackby(obj/item/O, mob/user, params)
 	if(istype(O, /obj/item/soulstone))

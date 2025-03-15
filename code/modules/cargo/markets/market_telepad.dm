@@ -91,11 +91,16 @@
 
 /obj/machinery/ltsrbt/examine(mob/user)
 	. = ..()
+	// What is stock market but a stage? said literally noone
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/drama)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+
 	if(!(machine_stat & NOPOWER))
-		. += span_info("A small display reads:")
-		. += span_tinynoticeital("Current market restock price: [EXAMINE_HINT("[restock_cost] cr")].")
-		. += span_tinynoticeital("Market placement fee: [EXAMINE_HINT("[PLACE_ON_MARKET_COST] cr")].")
-		. += span_tinynoticeital("Withholding tax on local items: [EXAMINE_HINT("[MARKET_WITHHOLDING_TAX * 100]%")].")
+		. += result.show_message("A small display reads:")
+		. += result.show_message("Current market restock price: [EXAMINE_HINT("[restock_cost] cr")].")
+		. += result.show_message("Market placement fee: [EXAMINE_HINT("[PLACE_ON_MARKET_COST] cr")].")
+		. += result.show_message("Withholding tax on local items: [EXAMINE_HINT("[MARKET_WITHHOLDING_TAX * 100]%")].")
 
 /obj/machinery/ltsrbt/update_icon_state()
 	. = ..()

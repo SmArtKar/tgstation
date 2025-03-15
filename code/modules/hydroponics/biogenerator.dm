@@ -149,16 +149,20 @@
 
 /obj/machinery/biogenerator/examine(mob/user)
 	. = ..()
-
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads:")
-		. += span_notice(" - Productivity at <b>[productivity * 100]%</b>.")
-		. += span_notice(" - Converting <b>[processed_items_per_cycle]</b> pieces of food per cycle.")
-		. += span_notice(" - Matter consumption at <b>[1 / efficiency * 100]</b>%.")
-		. += span_notice(" - Internal biomass converter capacity at <b>[max_items]</b> pieces of food, and currently holding <b>[current_item_count]</b>.")
-
 	if(welded_down)
 		. += span_info("It's moored firmly to the floor. You can unsecure its moorings with a <b>welder</b>.")
+
+	if(!in_range(user, src) && !isobserver(user))
+		return
+
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The status display reads:")
+	. += result.show_messagew(" - Productivity at <b>[productivity * 100]%</b>.")
+	. += result.show_message(" - Converting <b>[processed_items_per_cycle]</b> pieces of food per cycle.")
+	. += result.show_message(" - Matter consumption at <b>[1 / efficiency * 100]</b>%.")
+	. += result.show_message(" - Internal biomass converter capacity at <b>[max_items]</b> pieces of food, and currently holding <b>[current_item_count]</b>.")
 
 /obj/machinery/biogenerator/update_appearance()
 	. = ..()

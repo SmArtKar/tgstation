@@ -39,11 +39,15 @@
 
 /obj/machinery/gibber/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: Outputting <b>[meat_produced]</b> meat slab(s) after <b>[gibtime*0.1]</b> seconds of processing.")
-		for(var/datum/stock_part/servo/servo in component_parts)
-			if(servo.tier >= 2)
-				. += span_notice("[src] has been upgraded to process inorganic materials.")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The status display reads: Outputting <b>[meat_produced]</b> meat slab(s) after <b>[gibtime*0.1]</b> seconds of processing.")
+	for(var/datum/stock_part/servo/servo in component_parts)
+		if(servo.tier >= 2)
+			. += result.show_message("[src] has been upgraded to process inorganic materials.")
 
 /obj/machinery/gibber/update_overlays()
 	. = ..()

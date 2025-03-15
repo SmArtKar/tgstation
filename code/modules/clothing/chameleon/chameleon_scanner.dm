@@ -36,13 +36,14 @@
 
 /obj/item/chameleon_scanner/examine(mob/user)
 	. = ..()
-	if(!IS_TRAITOR(user))
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_GODLY, /datum/aspect/encyclopedia, IS_TRAITOR(user) ? SKILLCHECK_GODLY : 0)
+	if(!IS_TRAITOR(user) || result?.outcome >= CHECK_SUCCESS)
 		return
 	// similar to context, we don't want a bunch of text revealing "THIS IS A DISGUISED ITEM" to everyone on examine.
 	// despite the fact that anyone can use it, we'll only show it to traitors, everyone else just has to figure it out.
-	. += span_red("There's a small button on the bottom side of it. You recognize this as a hidden <i>Chameleon Scanner 6000</i>.")
-	. += span_red("<b>Left click</b> will stealthily scan a target up to [scan_range] meters away and upload their getup as a custom outfit for you to use.")
-	. += span_red("<b>Right click</b> will do the same, but instantly equip the outfit you obtain.")
+	. += result.show_message("There's a small button on the bottom side of it. You recognize this as a hidden <i>Chameleon Scanner 6000</i>.")
+	. += result.show_message("<b>Left click</b> will stealthily scan a target up to [scan_range] meters away and upload their getup as a custom outfit for you to use.")
+	. += result.show_message("<b>Right click</b> will do the same, but instantly equip the outfit you obtain.")
 
 /obj/item/chameleon_scanner/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	return scan_target(interacting_with, user) ? ITEM_INTERACT_SUCCESS : ITEM_INTERACT_BLOCKING

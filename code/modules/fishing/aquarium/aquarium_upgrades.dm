@@ -55,9 +55,11 @@
 
 /obj/structure/aquarium/bioelec_gen/examine(mob/user)
 	. = ..()
-	. += span_boldwarning("WARNING! WARNING! WARNING!")
-	. += span_warning("The bioelectric potential of the fish inside is magnified to dangerous levels by the generator.")
-	. += span_notice("Tesla coils are required to collect this magnified energy... and you'll want a grounding rod to protect yourself as well.")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/wire_rat)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("The bioelectric potential of the fish inside is magnified to dangerous levels by the generator.")
+	. += result.show_message("Tesla coils are required to collect this magnified energy... and you'll want a grounding rod to protect yourself as well.")
 
 /obj/item/aquarium_upgrade/bluespace_tank
 	name = "bluespace fish tank kit"

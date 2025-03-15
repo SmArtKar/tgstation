@@ -12,7 +12,7 @@
 
 	if(is_anchored)
 		if(!opened)
-			if(!emagged || result.outcome )
+			if(!emagged)
 				. += result.show_message("Its access panel is [stat == DEAD ? "damaged" : "closed and locked"], but could be <b>pried</b> open.")
 			else
 				. += result.show_message("Its access panel lock is sparking, the cover can be <b>pried</b> open.")

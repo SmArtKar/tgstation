@@ -113,10 +113,11 @@
 /obj/item/seeds/examine(mob/user)
 	. = ..()
 	. += span_notice("Use a pen on it to rename it or change its description.")
-	if(reagents_add && user.can_see_reagents())
-		. += span_notice("- Plant Reagents -")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
+	if(reagents_add && (user.can_see_reagents() || check.outcome == CHECK_CRIT_SUCCESS))
+		. += result.show_message("You recall this breed of [plantname] having the following reagents:")
 		for(var/datum/plant_gene/reagent/reagent_gene in genes)
-			. += span_notice("- [reagent_gene.get_name()] -")
+			. += result.show_message("- [reagent_gene.get_name()] -")
 
 /// Copy all the variables from one seed to a new instance of the same seed and return it.
 /obj/item/seeds/proc/Copy()

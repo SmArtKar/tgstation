@@ -40,10 +40,14 @@
 
 /obj/structure/spacevine/examine(mob/user)
 	. = ..()
-	if(!length(mutations))
-		. += "This vine has no mutations."
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
+	if (result?.outcome < CHECK_SUCCESS)
+		. += result.show_message("It seems to be a perfectly ordinary vine. In space. On a space station.")
 		return
-	var/text = "This vine has the following mutations:\n"
+	if(!length(mutations))
+		. += result.show_message("This vine has no mutations.")
+		return
+	var/text = result.show_message("This vine has the following mutations:\n")
 	for(var/datum/spacevine_mutation/mutation as anything in mutations)
 		if(mutation.name == "transparent") /// Transparent has no hue
 			text += "<font color='#346751'>Transparent</font> "

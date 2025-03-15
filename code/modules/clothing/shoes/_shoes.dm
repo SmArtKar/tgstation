@@ -71,10 +71,13 @@
 	if(!ishuman(loc))
 		return
 
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	if (result?.outcome < CHECK_SUCCESS)
+		return
 	if(tied == SHOES_UNTIED)
-		. += "The [fastening_type] are [untied_adjective()]."
+		. += result.show_message("The [fastening_type] are [untied_adjective()].")
 	else if(tied == SHOES_KNOTTED)
-		. += "The [fastening_type] are all knotted together."
+		. += result.show_message("The [fastening_type] are all knotted together.")
 
 /obj/item/clothing/shoes/visual_equipped(mob/user, slot)
 	..()

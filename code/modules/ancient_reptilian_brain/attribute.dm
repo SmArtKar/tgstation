@@ -75,10 +75,11 @@
 	var/roll_value = dice_roll + ASPECT_NEUTRAL_LEVEL
 	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
 	var/crit_success = min(difficulty + 7, 17)
+	var/force_failure = (dice_roll == 3 && skill_modifier < difficulty)
 
 	var/result
 	// 3 always fails, 18 always wins
-	if (roll_value >= difficulty && dice_roll != 3 || dice_roll == 18)
+	if ((roll_value >= difficulty|| dice_roll == 18) && !force_failure )
 		if (roll_value >= crit_success)
 			result = CHECK_CRIT_SUCCESS
 		else
