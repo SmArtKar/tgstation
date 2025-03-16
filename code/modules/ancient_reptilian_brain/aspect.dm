@@ -9,7 +9,7 @@
 	var/name = "Shitcoding"
 	var/desc = "The aspect of Shitcoding, existing solely so you can yell at coders."
 	var/icon_state = ""
-	var/level = ASPECT_NEUTRAL_LEVEL
+	var/level = ASPECT_LEVEL_NEUTRAL
 	var/stored_exp = 0
 	/// Attribute we are bound to, or its type (initially)
 	var/datum/attribute/attribute = /datum/attribute

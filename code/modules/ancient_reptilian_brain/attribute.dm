@@ -67,12 +67,12 @@
 	RETURN_TYPE(/datum/check_result)
 	if (mind)
 		var/datum/aspect/rolled_aspect = get_aspect(aspect_type)
-		var/level_modifier = rolled_aspect.get_level() - ASPECT_NEUTRAL_LEVEL
+		var/level_modifier = rolled_aspect.get_level() - ASPECT_LEVEL_NEUTRAL
 		return rolled_aspect.roll_check(difficulty + modifier, level_modifier + skill_modifier, crit_fail_modifier, show_visual, die_delay, exp_modifier)
 
 	difficulty += modifier
 	var/dice_roll = roll("3d6")
-	var/roll_value = dice_roll + ASPECT_NEUTRAL_LEVEL
+	var/roll_value = dice_roll + ASPECT_LEVEL_NEUTRAL
 	var/crit_fail = max(difficulty + crit_fail_modifier, 4)
 	var/crit_success = min(difficulty + 7, 17)
 	var/force_failure = (dice_roll == 3 && skill_modifier < difficulty)
@@ -90,7 +90,7 @@
 		else
 			result = CHECK_FAILURE
 
-	return new /datum/check_result(result, aspect_type, difficulty, dice_roll, ASPECT_NEUTRAL_LEVEL, crit_fail, crit_success)
+	return new /datum/check_result(result, aspect_type, difficulty, dice_roll, ASPECT_LEVEL_NEUTRAL, crit_fail, crit_success)
 
 /mob/proc/add_aspect_modifier(aspect_type, value, source)
 	get_aspect(aspect_type).add_modifier(value, source)

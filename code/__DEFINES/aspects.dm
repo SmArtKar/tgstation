@@ -21,7 +21,7 @@
 // 17 - 1.85   | 98.15
 // 18 - 0.46   | 99.54
 
-// These are probabilities that would be shown at ASPECT_NEUTRAL_LEVEL
+// These are probabilities that would be shown at ASPECT_LEVEL_NEUTRAL
 #define SKILLCHECK_GUARANTEED 4 // Just for crit failures, not displayed as separate difficulty
 #define SKILLCHECK_PRIMITIVE 6 // Hard to lose, but possible. Also not displayed, for the same reason
 #define SKILLCHECK_TRIVIAL 7
@@ -43,7 +43,7 @@
 /// Level of aspects which non-disco spessmen have (aka normal stats).
 /// We have slightly roughly 75% (on per-job basis) allocated roundstart, slightly worse if you exclude player-allocated points
 /// Multiply this by amount of attributes, divide by 2 - that's the amount of points people should be allowed to allocate
-#define ASPECT_NEUTRAL_LEVEL 2
+#define ASPECT_LEVEL_NEUTRAL 2
 
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 7.5
@@ -63,3 +63,6 @@
 #define HAND_EYE_AKIMBO_ANY_LEVEL 8
 /// Hand/eye level at which gun successes turn into critical successes
 #define HAND_EYE_ALWAYS_CRIT_LEVEL 10
+
+/// How much night vision do we gain per level of perception past ASPECT_LEVEL_NEUTRAL
+#define PERCEPTION_NIGHTVIS_MULT 2.5
