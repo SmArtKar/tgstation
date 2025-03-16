@@ -145,7 +145,7 @@
 			if (wire[1] == "_")
 				continue
 
-			if (prob((result.roll + result.modifier) * 7.5)) // 13 roll guarantees all wires
+			if (prob((result.roll + result.modifier) * 8)) // 13 roll guarantees all wires
 				wires += "<a href='byond://?src=[REF(src)];target=[REF(target)];wire=[wire];examine_time=[world.time]' style='border-bottom: 1px dotted;color: inherit;text-decoration: none;'>[wire]</a>"
 			else
 				skipped = TRUE
