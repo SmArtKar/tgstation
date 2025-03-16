@@ -86,7 +86,7 @@
 /obj/vehicle/ridden/secway/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_HARD)
-	if (result?.outcome >= CHECK_SUCCESS && eddie_murphy)
+	if (result.outcome >= CHECK_SUCCESS && eddie_murphy)
 		. += result.show_message("Something appears to be stuck in its exhaust...")
 
 /obj/vehicle/ridden/secway/atom_destruction()

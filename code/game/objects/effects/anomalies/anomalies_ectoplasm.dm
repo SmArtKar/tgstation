@@ -29,7 +29,7 @@
 		return
 	user.aspect_cooldown("ectoplasm_examine", 30 SECONDS)
 	var/shown_power = effect_power
-	var/datum/check_result/result = user.aspect_check(/datum/aspect/perception, SKILLCHECK_CHALLENGING, show_visual = TRUE)
+	var/datum/check_result/result = user.examine_check(REF(src), /datum/aspect/perception, SKILLCHECK_CHALLENGING)
 	switch (result.outcome)
 		if (CHECK_CRIT_FAILURE)
 			shown_power = rand(0, 100)

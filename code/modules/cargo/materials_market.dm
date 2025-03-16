@@ -359,11 +359,11 @@
 
 	// What is stock market but a stage? said literally noone
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/drama)
-	if (result?.outcome <= CHECK_CRIT_FAILURE)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
 		return
 
 	var/shown_value = export_value
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		shown_value *= rand(0.66, 1.5)
 
 	. += span_notice("\The [src] is worth [export_value] cr, from selling [quantity] sheets of [initial(export_mat?.name)].")

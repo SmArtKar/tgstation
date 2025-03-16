@@ -363,7 +363,7 @@
 	if(can_adjust)
 		. += "Alt-click on [src] to wear it [adjusted == ALT_STYLE ? "normally" : "casually"]."
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/wire_rat)
-	if(has_sensor == BROKEN_SENSORS && result?.outcome >= CHECK_SUCCESS)
+	if(has_sensor == BROKEN_SENSORS && result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("The medical sensors appear to be shorted out. You could repair it with some cabling.")
 	else if(has_sensor > NO_SENSORS)
 		switch(sensor_mode)

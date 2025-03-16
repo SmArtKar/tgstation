@@ -63,8 +63,15 @@
 	. = ..()
 	if(!iscarbon(user))
 		return
+
 	if(HAS_TRAIT(user, TRAIT_ELDRITCH_PAINTING_EXAMINE))
 		return
+
+	if (!IS_HERETIC(user))
+		var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/shivers)
+		if (result.outcome >= CHECK_SUCCESS)
+			. += result.show_message("This painting is not meant to your eyes.")
+			return
 
 	ADD_TRAIT(user, TRAIT_ELDRITCH_PAINTING_EXAMINE, REF(src))
 	addtimer(TRAIT_CALLBACK_REMOVE(user, TRAIT_ELDRITCH_PAINTING_EXAMINE, REF(src)), 3 MINUTES)

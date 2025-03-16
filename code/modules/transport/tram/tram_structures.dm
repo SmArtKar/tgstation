@@ -501,7 +501,7 @@
 /obj/structure/tram/spoiler/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if (result.outcome == CHECK_CRIT_SUCCESS && (obj_flags & EMAGGED))
 		. += result.show_message("The electronics panel is sparking occasionally. It can be reset with a [EXAMINE_HINT("multitool.")]")

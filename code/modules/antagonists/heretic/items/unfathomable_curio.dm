@@ -82,18 +82,28 @@
 	if(IS_HERETIC(wearer))
 		return
 
-	to_chat(wearer, span_warning("Laughter echoes in your mind...."))
+	var/datum/check_result/result = wearer.examine_check(REF(src), SKILLCHECK_LEGENDARY, /datum/aspect/shivers)
+	if (result.outcome >= CHECK_SUCCESS)
+		to_chat(wearer, result.show_message("Anchor yourself, don't let your grip on reality slip. Ignore their laughter."))
+		return
+
+	to_chat(wearer, result.show_message("Laughter echoes in your mind...."))
 	wearer.adjustOrganLoss(ORGAN_SLOT_BRAIN, 40)
 	wearer.dropItemToGround(src, TRUE)
-	wearer.gain_trauma(pick(brain_traumas) ,TRAUMA_RESILIENCE_ABSOLUTE)
+	wearer.gain_trauma(pick(brain_traumas), TRAUMA_RESILIENCE_ABSOLUTE)
 
 /obj/item/storage/belt/unfathomable_curio/examine(mob/living/carbon/user)
 	. = ..()
 	if(IS_HERETIC(user))
 		return
 
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/shivers)
+	if (result.outcome >= CHECK_SUCCESS)
+		. += result.show_message("You know better than to peer into the depths of the Mansus.")
+		return
+
 	user.adjustOrganLoss(ORGAN_SLOT_BRAIN, 10, 160)
 	user.adjust_temp_blindness(5 SECONDS)
-	. += span_notice("It. It looked. IT WRAPS ITSELF AROUND ME.")
+	. += result.show_message("It. It looked. IT WRAPS ITSELF AROUND ME.")
 
 

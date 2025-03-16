@@ -4,7 +4,7 @@
 		. += "[desc]"
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/four_legged_wheelbarrel)
-	if (result?.outcome <= CHECK_CRIT_FAILURE)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
 		return . + ..()
 
 	var/model_name = model ? "\improper [model.name]" : "\improper Default"
@@ -14,13 +14,13 @@
 	if(act_module)
 		. += result.show_message("It is holding [icon2html(act_module, user)] \a [act_module].")
 
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		var/list/statuses = get_status_effect_examinations()
 		for (var/status in statuses)
 			. += result.show_message(status)
 
 	var/assumed_health = maxHealth
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		assumed_health *= rand(1.5, -1.5)
 
 	if (getBruteLoss())

@@ -70,7 +70,7 @@
 		. = form_reference.examine(user)
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(get_dist(user, src) <= 3) // always add this because if the form_reference somehow nulls out we still want to have something look "weird" about an item when someone is close
 		. += result.show_message("It doesn't look quite right...")

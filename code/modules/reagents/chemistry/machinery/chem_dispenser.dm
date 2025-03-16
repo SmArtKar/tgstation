@@ -125,7 +125,7 @@
 	if(!in_range(user, src) && !isobserver(user))
 		return
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("The status display reads:\n\
 	Recharge rate: <b>[display_power(recharge_amount, convert = FALSE)]</b>.\n\

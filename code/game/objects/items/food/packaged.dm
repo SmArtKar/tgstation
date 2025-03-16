@@ -241,7 +241,7 @@
 /obj/item/food/ready_donk/examine_more(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check("donkbox", SKILLCHECK_TRIVIAL)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("You browse the back of the box...")
 	. += "\t[span_info("Ready-Donk: a product of Donk Co.")]"

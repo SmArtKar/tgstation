@@ -146,7 +146,7 @@
 	if(panel_open)
 		. += span_notice("It can be flipped or rotated with a [EXAMINE_HINT("wrench.")]")
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("You locate and check the tiny status display:")
 	switch(operating_status)
@@ -513,7 +513,7 @@
 	if(panel_open)
 		. += span_notice("It can be rotated with a [EXAMINE_HINT("wrench.")]")
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("You locate and check the tiny status display:")
 	switch(operating_status)

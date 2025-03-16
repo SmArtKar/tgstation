@@ -30,6 +30,9 @@
 
 /obj/item/ai_module/examine(mob/user as mob)
 	. = ..()
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/four_legged_wheelbarrel)
+	if (result.outcome < CHECK_SUCCESS)
+		return
 	var/examine_laws = display_laws()
 	if(examine_laws)
 		. += "\n" + examine_laws

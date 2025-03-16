@@ -49,7 +49,7 @@
 	if(!AI)
 		return
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("The AI recovery beacon is active.")
 
 /obj/structure/mecha_wreckage/welder_act(mob/living/user, obj/item/I)

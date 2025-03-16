@@ -183,7 +183,7 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 	var/check_aspect = IS_ROBOTIC_ORGAN(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, check_aspect)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	if(HAS_MIND_TRAIT(user, TRAIT_ENTRAILS_READER) || isobserver(user) || result.outcome == CHECK_CRIT_SUCCESS)

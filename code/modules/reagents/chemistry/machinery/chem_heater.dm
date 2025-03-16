@@ -68,7 +68,7 @@
 		return
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("The status display reads: Heating reagents at <b>[heater_coefficient * 1000]%</b> speed.")
 
 	if(!QDELETED(beaker))

@@ -329,7 +329,7 @@
 			. += {"It's [ !terminal ? "not" : "" ] wired up.\n
 			The electronics are[!has_electronics?"n't":""] installed."}
 	else
-		if(result?.outcome < CHECK_SUCCESS)
+		if(result.outcome < CHECK_SUCCESS)
 			. += "The cover is closed"
 			return
 		if(machine_stat & MAINT)

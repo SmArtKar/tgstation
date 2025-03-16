@@ -89,9 +89,16 @@
 	if(IS_HERETIC(user))
 		. += span_info("Can be used to cast a curse with blood in your offhand by right clicking a rune.")
 		return
-	. += span_danger("The eyes stop blinking. They stare at you. Their gaze burns...")
+
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/shivers)
+	if (result.outcome >= CHECK_SUCCESS)
+		. += result.show_message("You know better than to peer into the depths of the Mansus.")
+		return
+
+	. += result.show_message("The eyes stop blinking. They stare at you. Their gaze burns...")
 	if(!ishuman(user))
 		return
+
 	var/mob/living/carbon/human/human_user = user
 	to_chat(human_user, span_userdanger("Your mind burns as you stare at the pages!"))
 	human_user.adjustOrganLoss(ORGAN_SLOT_BRAIN, 10, 190)

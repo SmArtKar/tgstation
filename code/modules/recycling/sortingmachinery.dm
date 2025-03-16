@@ -58,7 +58,7 @@
 /obj/item/delivery/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
-	if (result?.outcome >= CHECK_SUCCESS && note)
+	if (result.outcome >= CHECK_SUCCESS && note)
 		if(!in_range(user, src))
 			. += result.show_message("There's a [EXAMINE_HINT(note.name)] attached to it. You can't read it from here.")
 		else

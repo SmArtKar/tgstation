@@ -95,7 +95,7 @@
 /mob/living/basic/mining_drone/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/four_legged_wheelbarrel)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		if(health < maxHealth)
 			if(health >= maxHealth * 0.5)
 				. += span_warning("[p_They()] look slightly dented.")

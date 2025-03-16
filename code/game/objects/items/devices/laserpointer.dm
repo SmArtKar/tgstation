@@ -158,29 +158,36 @@
 
 /obj/item/laser_pointer/examine(mob/user)
 	. = ..()
-	if(in_range(user, src) || isobserver(user))
-		if(isnull(diode))
-			. += span_notice("The diode is missing.")
-		else
-			. += span_notice("A class <b>[diode.rating]</b> laser diode is installed. It is <i>screwed</i> in place.")
-		. += span_notice("A small display reads out that[recharge_locked ? " it is currently recharging to full, and" : ""] there is <b>[energy * 10]%</b> total charge remaining.")
-		if(crystal_lens)
-			. += span_notice("There is a <b>[crystal_lens.name]</b> fit neatly before the focus lens. It can be <i>plucked out</i> with some <i>wirecutters</i>.")
-		else if(diode) //hint at the ability to modify the pointer with a crystal only if we have a diode
-			. += span_notice("<i>You could examine it more thoroughly...</i>")
+	if(!in_range(user, src) && !isobserver(user))
+		return
+	if(isnull(diode))
+		. += span_notice("The diode is missing.")
+	else
+		. += span_notice("A class <b>[diode.rating]</b> laser diode is installed. It is <i>screwed</i> in place.")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("A small display reads out that[recharge_locked ? " it is currently recharging to full, and" : ""] there is <b>[energy * 10]%</b> total charge remaining.")
+	if(crystal_lens)
+		. += result.show_message("There is a <b>[crystal_lens.name]</b> fit neatly before the focus lens. It can be <i>plucked out</i> with some <i>wirecutters</i>.")
+	else if(diode) //hint at the ability to modify the pointer with a crystal only if we have a diode
+		. += result.show_message("<i>You could examine it more thoroughly...</i>")
 
 /obj/item/laser_pointer/examine_more(mob/user)
 	. = ..()
 	if(!isnull(crystal_lens) || isnull(diode))
 		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result.outcome < CHECK_SUCCESS)
+		return
 	switch(diode.rating)
 		if(1)
-			. += "<i>\The [diode.name] is fit neatly into the casing.</i>"
+			. += result.show_message("<i>\The [diode.name] is fit neatly into the casing.</i>")
 		if(2)
-			. += "<i>\The [diode.name] is secured in place, with a little bit of room left between it and the focus lens.</i>"
+			. += result.show_message("<i>\The [diode.name] is secured in place, with a little bit of room left between it and the focus lens.</i>")
 		if(3 to 4)
-			. += "<i>\The [diode.name]'s size is much smaller compared to the previous generation lasers, \
-			and the wide margin between it and the focus lens could probably house <b>a crystal</b> of some sort.</i>"
+			. += result.show_message("<i>\The [diode.name]'s size is much smaller compared to the previous generation lasers, \
+			and the wide margin between it and the focus lens could probably house <b>a crystal</b> of some sort.</i>")
 
 /obj/item/laser_pointer/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	laser_act(interacting_with, user, modifiers)

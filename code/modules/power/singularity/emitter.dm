@@ -130,7 +130,7 @@
 		return
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/wire_rat)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("Its status display reads: Emitting one beam between <b>[DisplayTimeText(minimum_fire_delay)]</b> and <b>[DisplayTimeText(maximum_fire_delay)]</b>.")
 		. += result.show_message("Power consumption at <b>[display_power(active_power_usage, convert = FALSE)]</b>.")
 

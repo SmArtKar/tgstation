@@ -93,7 +93,7 @@
 	. = ..()
 	// What is stock market but a stage? said literally noone
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/drama)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	if(!(machine_stat & NOPOWER))

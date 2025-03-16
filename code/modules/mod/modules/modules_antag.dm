@@ -647,7 +647,7 @@
 /obj/item/mod/module/stealth/wraith/examine_more(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check("wraith", SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	. += result.show_message( \

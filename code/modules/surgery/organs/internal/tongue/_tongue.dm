@@ -59,7 +59,7 @@
 	var/success_outcome = CHECK_CRIT_SUCCESS
 	if(HAS_MIND_TRAIT(user, TRAIT_ENTRAILS_READER))
 		success_outcome = CHECK_SUCCESS
-	if (result?.outcome < success_outcome)
+	if (result.outcome < success_outcome)
 		return
 	if(liked_foodtypes)
 		. += result.show_message("This tongue has an affinity for the taste of [english_list(bitfield_to_list(liked_foodtypes, FOOD_FLAGS_IC))].")

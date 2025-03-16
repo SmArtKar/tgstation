@@ -2,7 +2,7 @@
 	. = list()
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/four_legged_wheelbarrel)
-	if (result?.outcome <= CHECK_CRIT_FAILURE)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
 		return ..()
 
 	if(stat == DEAD)

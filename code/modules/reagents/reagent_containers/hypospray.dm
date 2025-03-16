@@ -156,7 +156,7 @@
 /obj/item/reagent_containers/hypospray/medipen/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
-	if (result?.outcome >= CHECK_SUCCESS && label_examine)
+	if (result.outcome >= CHECK_SUCCESS && label_examine)
 		. += result.show_message(label_text)
 	if(length(reagents?.reagent_list))
 		. += span_notice("It is loaded.")

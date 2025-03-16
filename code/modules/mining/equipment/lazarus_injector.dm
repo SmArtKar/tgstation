@@ -64,5 +64,5 @@
 	if(!loaded)
 		. += span_info("[src] is empty.")
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING)
-	if (result?.outcome >= CHECK_SUCCESS && malfunctioning)
+	if (result.outcome >= CHECK_SUCCESS && malfunctioning)
 		. += span_info("The display on [src] seems to be flickering.")

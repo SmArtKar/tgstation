@@ -72,7 +72,7 @@
 		return
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(tied == SHOES_UNTIED)
 		. += result.show_message("The [fastening_type] are [untied_adjective()].")

@@ -471,7 +471,7 @@
 			. += span_notice("[icon2html(ME, user)] \A [ME].")
 	if(mecha_flags & PANEL_OPEN)
 		var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/four_legged_wheelbarrel)
-		if (result?.outcome >= CHECK_SUCCESS)
+		if (result.outcome >= CHECK_SUCCESS)
 			. += result.show_message("You peek into [src]'s open panel...")
 			if(servo)
 				. += result.show_message("Servo reduces movement power usage by [100 - round(100 / servo.rating)]%")
@@ -488,7 +488,7 @@
 	if(mecha_flags & IS_ENCLOSED)
 		return
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(mecha_flags & SILICON_PILOT)
 		. += result.show_message("[src] appears to be piloting itself...")

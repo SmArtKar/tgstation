@@ -27,7 +27,7 @@
 /obj/item/reagent_containers/cup/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(drink_type)
 		var/list/types = bitfield_to_list(drink_type, FOOD_FLAGS)

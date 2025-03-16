@@ -93,7 +93,7 @@
 		. += span_notice("It can rotated with a [EXAMINE_HINT("wrench")]")
 		. += span_notice("The full machine can be [EXAMINE_HINT("pried")] apart")
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(installed_part)
 		. += result.show_message("Currently at tier [installed_part.current_tier].")

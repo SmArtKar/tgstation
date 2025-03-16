@@ -37,7 +37,7 @@
 /obj/item/chameleon_scanner/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_GODLY, /datum/aspect/encyclopedia, IS_TRAITOR(user) ? SKILLCHECK_GODLY : 0)
-	if(!IS_TRAITOR(user) || result?.outcome >= CHECK_SUCCESS)
+	if(!IS_TRAITOR(user) || result.outcome >= CHECK_SUCCESS)
 		return
 	// similar to context, we don't want a bunch of text revealing "THIS IS A DISGUISED ITEM" to everyone on examine.
 	// despite the fact that anyone can use it, we'll only show it to traitors, everyone else just has to figure it out.

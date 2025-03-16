@@ -64,7 +64,7 @@ If the scythe isn't empowered when you sheath it, you take a heap of damage and 
 	. += span_notice("[src] seems to have quite a bit of reach. You might be able to hit things from further away.")
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/shivers)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	var/current_empowerment = empowerment

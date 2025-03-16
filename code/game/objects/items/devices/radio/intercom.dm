@@ -58,11 +58,15 @@
 	if(anonymize)
 		. += span_notice("Speaking through this intercom will anonymize your voice.")
 
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+
 	if(freqlock == RADIO_FREQENCY_UNLOCKED)
 		if(obj_flags & EMAGGED)
-			. += span_warning("Its frequency lock has been shorted...")
+			. += result.show_message("Its frequency lock has been shorted...")
 	else
-		. += span_notice("It has a frequency lock set to [frequency/10].")
+		. += result.show_message("It has a frequency lock set to [frequency/10].")
 
 /obj/item/radio/intercom/screwdriver_act(mob/living/user, obj/item/tool)
 	if(unscrewed)

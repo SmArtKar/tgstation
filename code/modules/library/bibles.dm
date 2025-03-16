@@ -374,7 +374,7 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 /obj/item/book/bible/syndicate/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/shivers)
-	if(owner_name && result?.outcome >= CHECK_SUCCESS)
+	if(owner_name && result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("The name [owner_name] is written in blood inside the cover.")
 
 /obj/item/book/bible/syndicate/attack(mob/living/target_mob, mob/living/carbon/human/user, params, heal_mode = TRUE)

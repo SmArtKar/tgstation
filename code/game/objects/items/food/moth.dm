@@ -905,17 +905,17 @@
 /obj/item/storage/box/gum/wake_up/examine_more(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check("mothgum", SKILLCHECK_MEDIUM)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("You read some of the health and safety information...")
-	. += "\t[span_info("For the relief of tiredness and drowsiness while working.")]"
-	. += "\t[span_info("Do not chew more than one strip every 12 hours. Do not use as a complete substitute for sleep.")]"
-	. += "\t[span_info("Do not give to children under 16. Do not exceed the maximum dosage. Do not ingest. Do not take for more than 3 days consecutively. Do not take in conjunction with other medication. May cause adverse reactions in patients with pre-existing heart conditions.")]"
-	. += "\t[span_info("Side effects of Activin use may include twitchy antennae, overactive wings, loss of keratin sheen, loss of setae coverage, arrythmia, blurred vision, and euphoria. Cease taking the medication if side effects occur.")]"
-	. += "\t[span_info("Repeated use may cause addiction.")]"
-	. += "\t[span_info("If the maximum dosage is exceeded, inform a member of your assigned vessel's medical staff immediately. Do not induce vomiting.")]"
-	. += "\t[span_info("Ingredients: each strip contains 500mg of Activin (dextro-methamphetamine). Other ingredients include Green Dye 450 (Verdant Meadow) and artificial herb flavouring.")]"
-	. += "\t[span_info("Storage: keep in a cool dry place. Do not use after the use-by date: 32/4/350.")]"
+	. += result.show_message("For the relief of tiredness and drowsiness while working.")
+	. += result.show_message("Do not chew more than one strip every 12 hours. Do not use as a complete substitute for sleep.")
+	. += result.show_message("Do not give to children under 16. Do not exceed the maximum dosage. Do not ingest. Do not take for more than 3 days consecutively. Do not take in conjunction with other medication. May cause adverse reactions in patients with pre-existing heart conditions.")
+	. += result.show_message("Side effects of Activin use may include twitchy antennae, overactive wings, loss of keratin sheen, loss of setae coverage, arrythmia, blurred vision, and euphoria. Cease taking the medication if side effects occur.")
+	. += result.show_message("Repeated use may cause addiction.")
+	. += result.show_message("If the maximum dosage is exceeded, inform a member of your assigned vessel's medical staff immediately. Do not induce vomiting.")
+	. += result.show_message("Ingredients: each strip contains 500mg of Activin (dextro-methamphetamine). Other ingredients include Green Dye 450 (Verdant Meadow) and artificial herb flavouring.")
+	. += result.show_message("Storage: keep in a cool dry place. Do not use after the use-by date: 32/4/350.")
 	return .
 
 /obj/item/storage/box/gum/wake_up/PopulateContents()

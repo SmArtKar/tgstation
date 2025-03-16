@@ -51,7 +51,7 @@
 		return
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		. += result.show_message("Its form is constantly shifting, evading your gaze as if the universe itself doesn't want you to witness it.")
 		return
 

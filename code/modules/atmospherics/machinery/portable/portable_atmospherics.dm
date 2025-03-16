@@ -71,7 +71,7 @@
 /obj/machinery/portable_atmospherics/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(nob_crystal_inserted)
 		. += result.show_message("There is a hypernoblium crystal inside it that allows for reactions inside to be suppressed.")

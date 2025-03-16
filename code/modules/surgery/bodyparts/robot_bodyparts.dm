@@ -336,7 +336,7 @@
 /obj/item/bodypart/chest/robot/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/four_legged_wheelbarrel)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	if(cell)
@@ -430,7 +430,7 @@
 	. = ..()
 	// We actually should already have a result stashed from the parent head call
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/four_legged_wheelbarrel)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	if(!flash1 && !flash2)

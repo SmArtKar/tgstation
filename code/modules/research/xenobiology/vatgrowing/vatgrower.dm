@@ -118,7 +118,7 @@
 /obj/machinery/vatgrower/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/cognition)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(!biological_sample)
 		. += result.show_message("It is empty, like the part of your soul that at some point harbored hope for the future of cytology.")

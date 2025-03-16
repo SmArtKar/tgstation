@@ -24,9 +24,9 @@
 /obj/item/toy/singlecard/wizoff_ruleset/examine(mob/living/carbon/human/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
-	. += result.showow_message("Remember the rules of Wiz-Off!")
+	. += result.show_message("Remember the rules of Wiz-Off!")
 	. += result.show_message("Each player draws 5 cards.")
 	. += result.show_message("There are five rounds. Each round, a player selects a card to play, and the winner is selected based on the following rules:")
 	. += result.show_message("Defensive beats Offensive!")

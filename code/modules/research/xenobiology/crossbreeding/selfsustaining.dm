@@ -58,7 +58,7 @@ Self-sustaining extracts:
 /obj/item/autoslime/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia, user.get_aspect_level(/datum/aspect/cognition))
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(effect_desc)
 		. += result.show_message("[effect_desc]")

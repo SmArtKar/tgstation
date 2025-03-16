@@ -79,7 +79,7 @@
 /obj/machinery/satellite/meteor_shield/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_PRIMITIVE, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(active)
 		. += result.show_message("It is currently active. You can interact with it to shut it down.")

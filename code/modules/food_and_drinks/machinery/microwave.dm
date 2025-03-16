@@ -168,7 +168,7 @@
 	. = ..()
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
-	if (result?.outcome >= CHECK_SUCCESS && vampire_charging_capable || result?.outcome == CHECK_CRIT_FAILURE && !vampire_charging_capable)
+	if (result.outcome >= CHECK_SUCCESS && vampire_charging_capable || result.outcome == CHECK_CRIT_FAILURE && !vampire_charging_capable)
 		. += result.show_message("This model features Wave™: a Nanotrasen exclusive. Our latest and greatest, Wave™ allows your PDA to be charged wirelessly through microwave frequencies! You can Wave-charge your device by placing it inside and selecting the charge mode.")
 		. += result.show_message("Because nothing says 'future' like charging your PDA while overcooking your leftovers. Nanotrasen Wave™ - Multitasking, redefined.")
 

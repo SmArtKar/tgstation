@@ -118,16 +118,14 @@
 /obj/structure/mounted_gun/pipe/examine_more(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check("pipe_organ_gun", SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
-
 	. += result.show_message("Looking down at \the [src], you recall a tale told to you in some distant memory...")
-
-	. += span_info("To commit an act of vengeance is not unlike to enter a blood pact with a devil, ending the life of another, at the cost of your own.")
-	. += span_info("When humanity first spilled the blood of its own kind, with likely nothing more than a rock, the seal was broken. Vengeance was borne unto the world.")
-	. += span_info("However, vengeance alone is not enough to carry through the grim deed of murder. One must gain an advantage over their adversary.")
-	. += span_info("As such, the man who ended another's life with a stone, was in turn smote himself by another wielding a spear. After spears, bows. Swords. Guns. Tanks. Missiles. And on and on Vengeance fed. Growing stronger. Growing Worse.")
-	. += span_info("Vengeance persists to this day. It sometimes may slumber, seemingly content with having gorged itself, but in the end, its ceaseless hunger can be neither numbed nor sated.")
+	. += result.show_message("To commit an act of vengeance is not unlike to enter a blood pact with a devil, ending the life of another, at the cost of your own.")
+	. += result.show_message("When humanity first spilled the blood of its own kind, with likely nothing more than a rock, the seal was broken. Vengeance was borne unto the world.")
+	. += result.show_message("However, vengeance alone is not enough to carry through the grim deed of murder. One must gain an advantage over their adversary.")
+	. += result.show_message("As such, the man who ended another's life with a stone, was in turn smote himself by another wielding a spear. After spears, bows. Swords. Guns. Tanks. Missiles. And on and on Vengeance fed. Growing stronger. Growing Worse.")
+	. += result.show_message("Vengeance persists to this day. It sometimes may slumber, seemingly content with having gorged itself, but in the end, its ceaseless hunger can be neither numbed nor sated.")
 
 /obj/structure/mounted_gun/pipe/fire()
 	if (!loaded_gun)

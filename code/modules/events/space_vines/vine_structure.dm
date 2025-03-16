@@ -41,7 +41,7 @@
 /obj/structure/spacevine/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		. += result.show_message("It seems to be a perfectly ordinary vine. In space. On a space station.")
 		return
 	if(!length(mutations))

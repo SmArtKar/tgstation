@@ -74,7 +74,7 @@
 /obj/item/clothing/under/syndicate/tacticool/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("It has a label that says cleaning this 'genuine' Waffle Corp. product with cleaning solutions other than Grime Liberator telelocational podcrystals will void the warranty.")
 	. += result.show_message("What on earth is a <font color='red'>tele</font>locational pod<font color='red'>crystal</font>?")

@@ -111,8 +111,10 @@
 		ADD_TRAIT(src, TRAIT_NODROP, STICKY_NODROP)
 
 	var/clumsy = HAS_TRAIT(user, TRAIT_CLUMSY)
-	if(clumsy && (clumsy_check == GRENADE_CLUMSY_FUMBLE) && prob(50))
-		to_chat(user, span_warning("Huh? How does this thing work?"))
+	var/force_fail = clumsy && (clumsy_check == GRENADE_CLUMSY_FUMBLE) && prob(50)
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_PRIMITIVE, 0, force_fail ? -99 : 0)
+	if (result.outcome < CHECK_SUCCESS)
+		to_chat(user, result.show_message("Huh? How does this thing work?"))
 		arm_grenade(user, 5, FALSE)
 		return TRUE
 	else if(!clumsy && (clumsy_check == GRENADE_NONCLUMSY_FUMBLE))

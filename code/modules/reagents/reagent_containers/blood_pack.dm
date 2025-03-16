@@ -78,7 +78,7 @@
 /obj/item/reagent_containers/blood/snail/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("It's a bit slimy... The label indicates that this is meant for snails.")
 
 /obj/item/reagent_containers/blood/podperson
@@ -88,7 +88,7 @@
 /obj/item/reagent_containers/blood/podperson/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("This appears to be some very overpriced water.")
 
 // for slimepeople
@@ -99,7 +99,7 @@
 /obj/item/reagent_containers/blood/toxin/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_TRIVIAL)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += span_notice("There is a toxin warning on the label. This is for slimepeople.")
 
 /obj/item/reagent_containers/blood/universal

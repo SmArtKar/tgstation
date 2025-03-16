@@ -115,7 +115,7 @@
 	if(!in_range(user, src) && !isobserver(user))
 		return
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/cognition)
-	if (result?.outcome >= CHECK_SUCCESS)
+	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("The status display reads: Malfunction probability reduced by <b>[malfunction_probability_coeff]%</b>.<br>Cooldown interval between experiments at <b>[resetTime*0.1]</b> seconds.")
 
 /obj/machinery/rnd/experimentor/attackby(obj/item/weapon, mob/living/user, params)

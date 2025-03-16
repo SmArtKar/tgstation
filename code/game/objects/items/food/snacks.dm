@@ -49,12 +49,15 @@
 
 /obj/item/food/candy/bronx/examine(mob/user)
 	. = ..()
-	if(!revelation && !isobserver(user))
-		. += span_notice("Geeze, you need to get to get your eyes checked. You should look again...")
-
-		name = "\improper South Bronx Parasite bar"
-		desc = "Lose weight, guaranteed! Caramel Mocha Flavor! WARNING: PRODUCT NOT FIT FOR HUMAN CONSUMPTION. CONTAINS LIVE DIAMPHIDIA SPECIMENS."
-		revelation = TRUE
+	if(revelation || isobserver(user))
+		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("Geeze, you need to get to get your eyes checked. You should look again...")
+	name = "\improper South Bronx Parasite bar"
+	desc = "Lose weight, guaranteed! Caramel Mocha Flavor! WARNING: PRODUCT NOT FIT FOR HUMAN CONSUMPTION. CONTAINS LIVE DIAMPHIDIA SPECIMENS."
+	revelation = TRUE
 
 /obj/item/food/sosjerky
 	name = "\improper Scaredy's Private Reserve Beef Jerky"

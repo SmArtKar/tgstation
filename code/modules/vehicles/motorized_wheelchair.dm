@@ -175,7 +175,7 @@
 	if (!panel_open)
 		return
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(obj_flags & EMAGGED)
 		. += result.show_message("There is a bomb under the maintenance panel.")

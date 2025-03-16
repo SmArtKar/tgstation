@@ -302,6 +302,9 @@
 	. = ..()
 	if(HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
 		return
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, cooldown_mult = 0.33)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
+		return
 	for(var/datum/scar/iter_scar as anything in all_scars)
 		if(iter_scar.is_visible(user))
 			. += iter_scar.get_examine_description(user)
@@ -569,14 +572,9 @@
 
 /mob/living/carbon/human/examine_more(mob/user)
 	. = ..()
-	if (!user.aspect_ready("[REF(src)]_examine"))
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, cooldown_mult = 0.33)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
 		return
-	var/datum/check_result/result = user.aspect_check(/datum/aspect/perception, SKILLCHECK_EASY, show_visual = TRUE)
-	if (result.outcome == CHECK_CRIT_FAILURE)
-		user.aspect_cooldown("[REF(src)]_examine", 30 SECONDS)
-		return
-	user.aspect_cooldown("[REF(src)]_examine", 10 SECONDS)
-
 	if(istype(w_uniform, /obj/item/clothing/under) && !(check_obscured_slots() & ITEM_SLOT_ICLOTHING) && !HAS_TRAIT(w_uniform, TRAIT_EXAMINE_SKIP))
 		var/obj/item/clothing/under/undershirt = w_uniform
 		if(undershirt.has_sensor == BROKEN_SENSORS && result.outcome >= CHECK_SUCCESS)

@@ -178,7 +178,8 @@
 
 	. += span_notice("It feels [descriptive].")
 
-	if(tank_assembly)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	if(result.outcome >= CHECK_SUCCESS && tank_assembly)
 		. += span_warning("There is some kind of device [EXAMINE_HINT("rigged")] to the tank!")
 
 /obj/item/tank/atom_deconstruct(disassembled = TRUE)

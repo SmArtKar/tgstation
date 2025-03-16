@@ -111,7 +111,9 @@
 	mind?.aspect_stash_push(check_id, result, duration)
 
 /mob/proc/aspect_stash_get(check_id)
-	return mind?.aspect_stash[check_id]
+	var/datum/check_result/result = mind?.aspect_stash[check_id]
+	result.refresh() // Refresh the result so it shows its tooltip again
+	return result
 
 /datum/mind/proc/aspect_stash_push(check_id, datum/check_result/result, duration)
 	aspect_stash[check_id] = result
@@ -122,19 +124,20 @@
 	aspect_stash -= check_id
 
 // Examine checks "buffer" your check result for a certain amount of time, allowing you to skip repeated checks if you won the previous one
-/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, skill_modifier = 0, show_visual = TRUE)
-	var/check_key = "[check_id]_[aspect]_examine"
+/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, skill_modifier = 0, cooldown_mult = 1, show_visual = TRUE)
+	var/check_key = "[check_id]_[aspect]_[difficulty]_examine"
 
 	if (!aspect_ready(check_key))
-		return aspect_stash_get(check_key)
+		return aspect_stash_get(check_key) || new /datum/check_result(CHECK_FAILURE, get_aspect(aspect), difficulty, difficulty - 1, 0, 0, INFINITY)
 
 	var/datum/check_result/result = aspect_check(aspect, difficulty, 0, skill_modifier, show_visual = show_visual, exp_modifier = 0.1)
 	if (result.outcome < CHECK_SUCCESS)
-		aspect_cooldown(check_key, 30 SECONDS)
+		aspect_cooldown(check_key, 30 SECONDS * cooldown_mult)
+		aspect_stash(check_key, result, 30 SECONDS * cooldown_mult)
 		return result
 
-	aspect_cooldown(check_key, 180 SECONDS)
-	aspect_stash(check_key, result, 180 SECONDS)
+	aspect_cooldown(check_key, 180 SECONDS * cooldown_mult)
+	aspect_stash(check_key, result, 180 SECONDS * cooldown_mult)
 	return result
 
 /mob/dead/aspect_ready(cooldown_id)

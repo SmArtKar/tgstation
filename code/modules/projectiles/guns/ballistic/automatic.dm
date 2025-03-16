@@ -401,17 +401,17 @@
 /obj/item/gun/ballistic/automatic/battle_rifle/examine_more(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check("battle_rifle", SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	. += result.show_message("Looking down at \the [src], you recall something you read in a promotional pamphlet...")
 
-	. += span_info("The BR-38 possesses an acceleration rail that launches bullets at higher than typical velocity. \
+	. += result.show_message("The BR-38 possesses an acceleration rail that launches bullets at higher than typical velocity. \
 		This allows even less powerful cartridges to put out significant amounts of stopping power.")
 
-	. += span_notice("<b><i>However, you also remember some of the rumors...  </i></b>")
+	. += result.show_message("<b><i>However, you also remember some of the rumors...  </i></b>")
 
-	. += span_notice("In a sour twist of irony for Nanotrasen's historical issues with ballistics-based security weapons, the BR-38 has one significant flaw. \
+	. += result.show_message("In a sour twist of irony for Nanotrasen's historical issues with ballistics-based security weapons, the BR-38 has one significant flaw. \
 		It is possible for the weapon to suffer from unintended discombulations due to closed heat distribution systems should the weapon be tampered with. \
 		R&D are working on this issue before the weapon sees commercial sales. That, and trying to work out why the weapon's onboard computation systems suffer \
 		from so many calculation errors.")
@@ -419,7 +419,7 @@
 /obj/item/gun/ballistic/automatic/battle_rifle/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(shots_before_degradation)
 		. += span_notice("[src] can fire [shots_before_degradation] more times before risking system degradation.")

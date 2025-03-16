@@ -104,7 +104,7 @@
 /obj/item/reagent_containers/condiment/enzyme/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	var/datum/chemical_reaction/recipe = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cheesewheel]
 	var/milk_required = recipe.required_reagents[/datum/reagent/consumable/milk]
@@ -125,7 +125,7 @@
 /obj/item/reagent_containers/condiment/sugar/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	var/datum/chemical_reaction/recipe = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cakebatter]
 	var/flour_required = recipe.required_reagents[/datum/reagent/consumable/flour]
@@ -193,7 +193,7 @@
 /obj/item/reagent_containers/condiment/milk/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	var/datum/chemical_reaction/recipe = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cheesewheel]
 	var/milk_required = recipe.required_reagents[/datum/reagent/consumable/milk]
@@ -214,7 +214,7 @@
 /obj/item/reagent_containers/condiment/flour/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	var/datum/chemical_reaction/recipe_dough = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/dough]
 	var/datum/chemical_reaction/recipe_cakebatter = GLOB.chemical_reactions_list[/datum/chemical_reaction/food/cakebatter]

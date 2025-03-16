@@ -43,12 +43,12 @@
 /obj/item/food/egg/watcher/examine(mob/user)
 	// Okay this is weird but basically we buffer the check for examine_more to use, so we don't show the watch closely line if we fudged it
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
-	return ..() + result?.outcome >= CHECK_SUCCESS ? result.show_message("<i>Watch it more closely to see how it is doing...</i>") : null
+	return ..() + result.outcome >= CHECK_SUCCESS ? result.show_message("<i>Watch it more closely to see how it is doing...</i>") : null
 
 /obj/item/food/egg/watcher/examine_more(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if (steps_travelled < (steps_to_hatch * WATCHER_EGG_ACTIVE_MOD))
 		return . + result.show_message("Something stirs listlessly inside.")

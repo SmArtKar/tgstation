@@ -328,7 +328,7 @@
 /mob/living/simple_animal/bot/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/four_legged_wheelbarrel)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(health < maxHealth)
 		if(health > maxHealth/3)

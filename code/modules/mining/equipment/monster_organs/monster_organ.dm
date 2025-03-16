@@ -68,7 +68,7 @@
 		return
 	var/estimated_time_left = timeleft(decay_timer)
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/faveur_de_lame)
-	if (result?.outcome <= CHECK_CRIT_FAILURE)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
 		return
 	if (result.outcome == CHECK_FAILURE)
 		estimated_time_left += rand(-2 MINUTES, 2 MINUTES)

@@ -156,10 +156,10 @@
 		return
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("The status display reads:")
-	. += result.show_messagew(" - Productivity at <b>[productivity * 100]%</b>.")
+	. += result.show_message(" - Productivity at <b>[productivity * 100]%</b>.")
 	. += result.show_message(" - Converting <b>[processed_items_per_cycle]</b> pieces of food per cycle.")
 	. += result.show_message(" - Matter consumption at <b>[1 / efficiency * 100]</b>%.")
 	. += result.show_message(" - Internal biomass converter capacity at <b>[max_items]</b> pieces of food, and currently holding <b>[current_item_count]</b>.")

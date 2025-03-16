@@ -26,7 +26,7 @@
 /obj/item/storm_staff/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("It has [thunder_charges] charges remaining.")
 	. += result.show_message("Use it in hand to dispel storms.")

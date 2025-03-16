@@ -107,7 +107,7 @@
 	if(!HAS_MIND_TRAIT(user, TRAIT_EXAMINE_FISHING_SPOT))
 		return
 	var/datum/check_result/result = user.examine_check("lure", SKILLCHECK_EASY, /datum/aspect/encyclopedia)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 
 	var/list/known_fishes = list()

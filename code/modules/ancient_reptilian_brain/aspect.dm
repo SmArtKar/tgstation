@@ -203,6 +203,9 @@
 	var/tooltip = span_tooltip("[success_prob]% | Result: [roll] [modifier ? "([modifier > 0 ? "+" : ""][modifier])" : ""] | Check: [difficulty]", span_italics("\[[diff_string]: [outcome_string]\]"))
 	return "<span style='color:[aspect.attribute?.color || COLOR_PALE_PURPLE_GRAY]'><i><b>[aspect.name || "Spiritual Knowledge"]</b></i> [tooltip]<i>:</i> [text]</span>"
 
+/datum/check_result/proc/refresh()
+	tooltip_shown = FALSE
+
 /proc/dice_roll_probabilbity(dice, sides, difficulty)
 	var/static/list/probability_cache
 	var/static/list/dice_roll_cache

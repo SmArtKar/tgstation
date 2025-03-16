@@ -67,7 +67,7 @@
 /obj/machinery/quantum_server/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/mental_clockwork)
-	if (result?.outcome <= CHECK_CRIT_FAILURE)
+	if (result.outcome <= CHECK_CRIT_FAILURE)
 		return
 	. += result.show_message("Can be resource intensive to run. Ensure adequate power supply.")
 
@@ -78,7 +78,7 @@
 
 	if(servo_bonus > 0.2)
 		. += result.show_message("- Its manipulation potential is increasing rewards by [servo_bonus]x.")
-		. += result.shoow_message("- Injury from unsafe ejection reduced [servo_bonus * 100]%.")
+		. += result.show_message("- Injury from unsafe ejection reduced [servo_bonus * 100]%.")
 		upgraded = TRUE
 
 	if(!upgraded)
@@ -87,7 +87,7 @@
 	if(!is_ready)
 		. += result.show_message("It is currently cooling down. Give it a few moments.")
 
-	if(isobserver(user) || (obj_flags & EMAGGED) && result?.outcome >= CHECK_SUCCESS)
+	if(isobserver(user) || (obj_flags & EMAGGED) && result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("Ominous warning lights are blinking red. This server has been tampered with.")
 
 /obj/machinery/quantum_server/emag_act(mob/user, obj/item/card/emag/emag_card)

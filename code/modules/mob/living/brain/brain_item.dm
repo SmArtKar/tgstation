@@ -227,7 +227,7 @@
 /obj/item/organ/brain/examine(mob/user)
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_MEDIUM, /datum/aspect/faveur_de_lame)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(length(skillchips))
 		. += result.show_message("It has a skillchip embedded in it.")

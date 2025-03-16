@@ -167,7 +167,7 @@
 			. += "It doesn't have a <b>firing pin</b> installed, and won't fire."
 
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL)
-	if (result?.outcome == CHECK_CRIT_FAILURE)
+	if (result.outcome == CHECK_CRIT_FAILURE)
 		return
 	var/healthpercent = (atom_integrity/max_integrity) * 100
 	if (result.outcome == CHECK_FAILURE)
@@ -446,7 +446,7 @@
 			firing_burst = FALSE
 			return FALSE
 	if(chambered?.loaded_projectile)
-		if(HAS_TRAIT(user, TRAIT_PACIFISM) && !check_result?.outcome == CHECK_CRIT_FAILURE) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
+		if(HAS_TRAIT(user, TRAIT_PACIFISM) && !check_result.outcome == CHECK_CRIT_FAILURE) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
 			if(chambered.harmful) // Is the bullet chambered harmful?
 				to_chat(user, span_warning("[src] is lethally chambered! You don't want to risk harming anyone..."))
 				firing_burst = FALSE
@@ -485,7 +485,7 @@
 		SEND_SIGNAL(user, COMSIG_MOB_FIRED_GUN, src, target, params, zone_override, bonus_spread_values)
 		base_bonus_spread = bonus_spread_values[MIN_BONUS_SPREAD_INDEX]
 		bonus_spread = bonus_spread_values[MAX_BONUS_SPREAD_INDEX]
-		check_result = user.aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_TRIVIAL, crit_fail_modifier = -4, show_visual = TRUE, die_delay = 0.3 SECONDS)
+		check_result = user.aspect_check(/datum/aspect/hand_eye_coordination, SKILLCHECK_TRIVIAL, crit_fail_modifier = -7, show_visual = TRUE, die_delay = 0.3 SECONDS)
 		var/forced_crit = FALSE
 		if (check_result.outcome == CHECK_SUCCESS && user.get_aspect_level(/datum/aspect/hand_eye_coordination) >= HAND_EYE_ALWAYS_CRIT_LEVEL)
 			check_result.outcome = CHECK_CRIT_SUCCESS
@@ -535,7 +535,7 @@
 			addtimer(CALLBACK(src, PROC_REF(reset_fire_cd)), modified_fire_delay) // for the case of fire delay longer than burst
 
 		if(chambered)
-			if(user && HAS_TRAIT(user, TRAIT_PACIFISM) && check_result?.outcome != CHECK_CRIT_FAILURE) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
+			if(user && HAS_TRAIT(user, TRAIT_PACIFISM) && check_result.outcome != CHECK_CRIT_FAILURE) // If the user has the pacifist trait, then they won't be able to fire [src] if the round chambered inside of [src] is lethal.
 				if(chambered.harmful) // Is the bullet chambered harmful?
 					to_chat(user, span_warning("[src] is lethally chambered! You don't want to risk harming anyone..."))
 					return

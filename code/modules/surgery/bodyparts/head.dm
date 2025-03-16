@@ -117,7 +117,7 @@
 
 	var/check_aspect = IS_ROBOTIC_LIMB(src) ? /datum/aspect/four_legged_wheelbarrel : /datum/aspect/faveur_de_lame
 	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, check_aspect)
-	if (result?.outcome < CHECK_SUCCESS)
+	if (result.outcome < CHECK_SUCCESS)
 		return
 	var/obj/item/organ/brain/brain = locate(/obj/item/organ/brain) in src
 	if(!brain)
