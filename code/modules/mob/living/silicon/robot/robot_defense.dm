@@ -7,7 +7,8 @@ GLOBAL_LIST_INIT(blacklisted_borg_hats, typecacheof(list( //Hats that don't real
 /mob/living/silicon/robot/item_interaction(mob/living/user, obj/item/tool, list/modifiers)
 	if(is_wire_tool(tool, check_secured = TRUE))
 		if(wiresexposed)
-			wires.interact(user)
+			var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+			wire_rat.perform_hack(src, user, modifiers)
 			return ITEM_INTERACT_SUCCESS
 		if(user.combat_mode)
 			return ITEM_INTERACT_SKIP_TO_ATTACK

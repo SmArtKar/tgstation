@@ -547,7 +547,8 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 
 /obj/machinery/conveyor_switch/attackby(obj/item/attacking_item, mob/user, params)
 	if(is_wire_tool(attacking_item))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return TRUE
 
 /obj/machinery/conveyor_switch/multitool_act(mob/living/user, obj/item/I)

@@ -159,7 +159,8 @@
 		if(!locked && default_deconstruction_screwdriver(user, "[initial(icon_state)]_open", initial(icon_state), attacking_item))
 			return
 		if(panel_open && is_wire_tool(attacking_item))
-			wires.interact(user)
+			var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+			wire_rat.perform_hack(src, user, params2list(params))
 	return ..()
 
 /obj/machinery/scanner_gate/emag_act(mob/user, obj/item/card/emag/emag_card)

@@ -26,7 +26,8 @@
 		return WIRE_INTERACTION_FAIL
 	if(!user.CanReach(src))
 		return WIRE_INTERACTION_FAIL
-	INVOKE_ASYNC(wires, TYPE_PROC_REF(/datum/wires, interact), user)
+	var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+	INVOKE_ASYNC(wire_rat, TYPE_PROC_REF(/datum/aspect/wire_rat, perform_hack), src, user)
 	return WIRE_INTERACTION_BLOCK
 
 /datum/wires

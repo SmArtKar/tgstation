@@ -246,7 +246,8 @@
 		return
 
 	if(is_wire_tool(weapon) && (mecha_flags & PANEL_OPEN))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return
 
 	if(istype(weapon, /obj/item/stock_parts))

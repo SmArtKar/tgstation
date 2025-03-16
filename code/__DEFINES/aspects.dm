@@ -66,3 +66,8 @@
 
 /// How much night vision do we gain per level of perception past ASPECT_LEVEL_NEUTRAL
 #define PERCEPTION_NIGHTVIS_MULT 2.5
+
+/// Receive +1 difficulty per X wires
+#define WIRE_RAT_WIRES_PER_DIFFICULTY 3
+/// Boost you receive for having wire knowledge
+#define WIRE_RAT_KNOWLEDGE_BOOST 7

@@ -474,7 +474,8 @@
 
 	add_fingerprint(user)
 	if(is_wire_tool(W) && panel_open)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return
 
 

@@ -55,9 +55,9 @@
 	flick("mass_driver1", src)
 
 /obj/machinery/mass_driver/attackby(obj/item/I, mob/living/user, params)
-
 	if(is_wire_tool(I) && panel_open)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return
 	if(default_deconstruction_screwdriver(user, "mass_driver_o", "mass_driver", I))
 		return

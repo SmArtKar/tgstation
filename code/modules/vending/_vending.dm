@@ -717,7 +717,8 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 
 /obj/machinery/vending/attackby(obj/item/attack_item, mob/living/user, params)
 	if(panel_open && is_wire_tool(attack_item))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return
 
 	if(refill_canister && istype(attack_item, refill_canister))

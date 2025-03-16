@@ -428,7 +428,8 @@
 		return TRUE
 
 	if(panel_open && is_wire_tool(attacking_item))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return TRUE
 
 	if(machine_stat)

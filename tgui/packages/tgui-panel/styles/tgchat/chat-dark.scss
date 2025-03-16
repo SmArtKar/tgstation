@@ -1055,6 +1055,26 @@ em {
     border-color: hsla(260, 100%, 75%, 0.5);
   }
 
+  &.intellect {
+    background: hsl(215, 20%, 10%);
+    border-color: hsl(215, 39%, 55%, 0.5);
+  }
+
+  &.psyche {
+    background: hsl(250, 20%, 10%);
+    border-color: hsl(250, 20%, 56%, 0.5);
+  }
+
+  &.physique {
+    background: hsl(220, 20%, 10%);
+    border-color: hsl(0, 62%, 53%, 0.5);
+  }
+
+  &.motorics {
+    background: hsl(45, 20%, 10%);
+    border-color: hsl(45, 63%, 59%, 0.5);
+  }
+
   hr {
     margin: 0.5em -0.75em;
     border-color: inherit;

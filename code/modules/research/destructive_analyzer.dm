@@ -135,7 +135,8 @@
 //We need to let wire cutter in (not block) so we can analyze alien wirecutters.
 /obj/machinery/rnd/destructive_analyzer/wirecutter_act(mob/living/user, obj/item/tool)
 	if(panel_open)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user)
 		return ITEM_INTERACT_SUCCESS
 
 ///Drops the loaded item where it can and nulls it.

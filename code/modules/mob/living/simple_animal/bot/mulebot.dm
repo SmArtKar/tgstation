@@ -129,7 +129,8 @@
 
 /mob/living/simple_animal/bot/mulebot/attack_hand(mob/living/carbon/human/user, list/modifiers)
 	if(bot_cover_flags & BOT_COVER_MAINTS_OPEN && !HAS_AI_ACCESS(user))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, modifiers)
 		return
 	if(wires.is_cut(WIRE_RX) && HAS_AI_ACCESS(user))
 		return

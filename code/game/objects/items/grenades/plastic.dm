@@ -60,9 +60,10 @@
 
 /obj/item/grenade/c4/attackby(obj/item/item, mob/user, params)
 	if(is_wire_tool(item))
-		wires.interact(user)
-	else
-		return ..()
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
+		return
+	return ..()
 
 /obj/item/grenade/c4/detonate(mob/living/lanced_by)
 	if(QDELETED(src))

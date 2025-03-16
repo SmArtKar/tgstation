@@ -204,7 +204,8 @@
 		return NONE
 	if(!panel_open || !is_wire_tool(tool))
 		return NONE
-	wires.interact(user)
+	var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+	wire_rat.perform_hack(src, user, modifiers)
 	return ITEM_INTERACT_SUCCESS
 
 /obj/machinery/big_manipulator/RefreshParts()

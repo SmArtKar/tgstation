@@ -118,7 +118,8 @@
 ///Handles setting ownership and the betting itself.
 /obj/machinery/roulette/attackby(obj/item/W, mob/user, params)
 	if(machine_stat & MAINT && is_wire_tool(W))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 		return
 	if(playing)
 		return ..()

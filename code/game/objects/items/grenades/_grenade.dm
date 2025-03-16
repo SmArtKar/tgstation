@@ -132,7 +132,7 @@
 	if (dud_flags & GRENADE_USED)
 		. += span_warning("It looks like [p_theyve()] already been used.")
 
-/obj/item/grenade/attack_self(mob/user)
+/obj/item/grenade/attack_self(mob/user, modifiers)
 	if(HAS_TRAIT(src, TRAIT_NODROP))
 		to_chat(user, span_notice("You try prying [src] off your hand..."))
 		if(do_after(user, 7 SECONDS, target = src))

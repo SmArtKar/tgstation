@@ -108,7 +108,8 @@
 				togglelock(user)
 				return
 			else if(panel_open && is_wire_tool(W))
-				wires.interact(user)
+				var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+				wire_rat.perform_hack(src, user, params2list(params))
 				return
 		if(AIR_ALARM_BUILD_NO_WIRES)
 			if(istype(W, /obj/item/stack/cable_coil))

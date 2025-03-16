@@ -25,7 +25,8 @@
 		return .
 
 	if(panel_open && !opened && is_wire_tool(tool))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, modifiers)
 		return ITEM_INTERACT_SUCCESS
 
 	return .

@@ -86,7 +86,7 @@
 	var/list/dept_enzymes = list()
 	for(var/datum/mind/crewmember as anything in get_crewmember_minds())
 		var/mob/living/carbon/human/human_to_check = crewmember.current
-		if(!istype(human_to_check)|| !human_to_check.dna || !length(crewmember.assigned_role?.departments_list, attribute.owner.assigned_role?.departments_list) || human_to_check == target || human_to_check == source)
+		if(!istype(human_to_check)|| !human_to_check.dna || !length(crewmember.assigned_role?.departments_list & attribute.owner.assigned_role?.departments_list) || human_to_check == target || human_to_check == source)
 			continue
 		dept_enzymes[human_to_check.dna.unique_enzymes] = TRUE
 
@@ -95,8 +95,10 @@
 
 	for (var/i in 1 to get_level())
 		var/obj/item/stuff = pick_n_take(equipment)
+		if (!stuff)
+			break
+
 		if (!contraband_line && HAS_TRAIT(stuff, TRAIT_CONTRABAND))
-			examine_strings += result.show_message("Wearing something they shouldn't possess.")
 			contraband_line = TRUE
 
 		if (blood_line)
@@ -108,9 +110,14 @@
 				break
 
 	if (blood_line)
-		result = source.aspect_check(/datum/aspect/esprit_de_opus, SKILLCHECK_CHALLENGING)
+		result = source.aspect_check(/datum/aspect/esprit_de_labos, SKILLCHECK_CHALLENGING)
 		if (result.outcome >= CHECK_SUCCESS)
 			examine_strings += result.show_message("Covered in <b><i>their</i></b> blood. Blood of your colleagues, your family.")
+
+	if (contraband_line)
+		result = source.aspect_check(/datum/aspect/authority, SKILLCHECK_MEDIUM)
+		if (result.outcome >= CHECK_SUCCESS)
+			examine_strings += result.show_message("Wearing something they shouldn't possess.")
 
 // Allows you to handle emergencies better
 /datum/aspect/in_and_out
@@ -123,3 +130,75 @@
 	name = "Wire Rat"
 	desc = "Cut the right wires. Chew through the wrong ones."
 	attribute = /datum/attribute/motorics
+
+/datum/aspect/wire_rat/proc/perform_hack(atom/target, mob/user, list/modifiers)
+	if (LAZYACCESS(modifiers, RIGHT_CLICK) || !isliving(user))
+		target.wires.interact(user)
+		return
+
+	var/list/wires = list()
+	var/datum/check_result/result = user.examine_check("[REF(target)]_wires", SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
+	if (result?.outcome >= CHECK_SUCCESS)
+		wires += result.show_message("You recall the following wires being present on [target]...")
+		for (var/wire in target.wires.wires)
+			// Skip duds
+			if (wire[1] == "_")
+				continue
+
+			if (prob((result.roll + result.modifier) * 7.5)) // 13 roll guarantees all wires
+				wires += "<a href='byond://?src=[REF(src)];target=[REF(target)];wire=[wire];examine_time=[world.time]' style='border-bottom: 1px dotted;color: inherit;text-decoration: none;'>[wire]</a>"
+
+	var/list/wire_states = list()
+	for (var/color in target.wires.colors)
+		var/color_line = "<a href='byond://?src=[REF(src)];target=[REF(target)];wire_color=[color];examine_time=[world.time]' style='border-bottom: 1px dotted;color: inherit;text-decoration: none;'>[color]</a>"
+		if (target.wires.is_attached(color))
+			wire_states += "The [color_line] wire has \a [target.wires.get_attached(color)] attached to it."
+		else
+			wire_states += "The [color_line] wire is [target.wires.is_color_cut(color) ? "cut" : "intact"]"
+
+	to_chat(user, custom_boxed_message("motorics", "[jointext(wires, "<br>")][length(wires) >= 2 ? "<br><br>" : ""][jointext(wire_states, "<br>")]"))
+
+/datum/aspect/wire_rat/Topic(href, list/href_list)
+	var/mob/living/user = get_body()
+	if (usr != user || !istype(user))
+		return
+
+	if (!href_list["wire"] && !href_list["wire_color"])
+		return
+
+	var/atom/target = locate(href_list["target"])
+	if (!target || !user.CanReach(target))
+		return
+
+	if (text2num(href_list["examine_time"]) + 3 MINUTES < world.time)
+		return
+
+	var/obj/item/held_tool = user.get_active_held_item()
+	if (!isassembly(held_tool))
+		if (!is_wire_tool(held_tool.tool_behaviour))
+			held_tool = user.is_holding_tool_quality(TOOL_MULTITOOL) || user.is_holding_tool_quality(TOOL_WIRECUTTER)
+		else
+			held_tool = user.is_holding_tool_quality(held_tool.tool_behaviour)
+
+	if (!held_tool)
+		return
+
+	var/datum/check_result/result = user.aspect_check(type, href_list["wire"] ? SKILLCHECK_MEDIUM : SKILLCHECK_TRIVIAL, floor(length(target.wires.wires) / WIRE_RAT_WIRES_PER_DIFFICULTY), target.wires.can_reveal_wires(user) ? WIRE_RAT_KNOWLEDGE_BOOST : 0, show_visual = TRUE)
+	var/used_wire = result.outcome >= CHECK_SUCCESS ? (href_list["wire_color"] || target.wires.get_color_of_wire(href_list["wire"])) : pick(target.wires.colors)
+	var/action = "stare at"
+	if (isassembly(held_tool))
+		action = "attach"
+		if (target.wires.is_attached(used_wire))
+			used_wire = pick(target.wires.colors - flatten_list(target.wires.assemblies))
+		target.wires.attach_assembly(used_wire, held_tool)
+	else if (held_tool.tool_behaviour == TOOL_MULTITOOL)
+		action = "pulse"
+		target.wires.pulse_color(used_wire, user)
+	else if (held_tool.tool_behaviour == TOOL_WIRECUTTER)
+		if (target.wires.is_color_cut(used_wire))
+			action = "mend"
+		else
+			action = "cut"
+		target.wires.cut_color(used_wire, user)
+
+	to_chat(user, result.show_message("You [action] the [used_wire] wire[result.outcome == CHECK_FAILURE ? ", but something doesn't feel right.." : ""]."))

@@ -123,7 +123,7 @@
 		if(active)
 			balloon_alert(user, "[seconds_remaining()]")
 	else
-		. += results.show_message({"The digital display on it is inactive."})
+		. += result.show_message({"The digital display on it is inactive."})
 
 /obj/machinery/syndicatebomb/update_icon_state()
 	icon_state = "[initial(icon_state)][active ? "-active" : "-inactive"][open_panel ? "-wires" : ""]"
@@ -196,23 +196,25 @@
 
 
 /obj/machinery/syndicatebomb/attackby(obj/item/I, mob/user, params)
-
 	if(is_wire_tool(I) && open_panel)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
+		return
 
-	else if(istype(I, /obj/item/bombcore))
-		if(!payload)
-			if(!user.transferItemToLoc(I, src))
-				return
-			payload = I
-			to_chat(user, span_notice("You place [payload] into [src]."))
-		else
+	if(istype(I, /obj/item/bombcore))
+		if(payload)
 			to_chat(user, span_warning("[payload] is already loaded into [src]! You'll have to remove it first."))
-	else
-		var/old_integ = atom_integrity
-		. = ..()
-		if((old_integ > atom_integrity) && active && (payload in src))
-			to_chat(user, span_warning("That seems like a really bad idea..."))
+			return
+		if(!user.transferItemToLoc(I, src))
+			return
+		payload = I
+		to_chat(user, span_notice("You place [payload] into [src]."))
+		return
+
+	var/old_integ = atom_integrity
+	. = ..()
+	if((old_integ > atom_integrity) && active && (payload in src))
+		to_chat(user, span_warning("That seems like a really bad idea..."))
 
 /obj/machinery/syndicatebomb/interact(mob/user)
 	wires.interact(user)

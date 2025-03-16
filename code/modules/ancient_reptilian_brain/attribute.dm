@@ -124,7 +124,7 @@
 	aspect_stash -= check_id
 
 // Examine checks "buffer" your check result for a certain amount of time, allowing you to skip repeated checks if you won the previous one
-/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, skill_modifier = 0, cooldown_mult = 1, show_visual = TRUE)
+/mob/proc/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, skill_modifier = 0, cooldown_mult = 1, show_visual = FALSE)
 	var/check_key = "[check_id]_[aspect]_[difficulty]_examine"
 
 	if (!aspect_ready(check_key))

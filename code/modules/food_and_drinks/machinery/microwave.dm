@@ -375,7 +375,8 @@
 	if(dirty >= MAX_MICROWAVE_DIRTINESS)
 		return ITEM_INTERACT_SKIP_TO_ATTACK // Don't insert items if we're dirty
 	if(panel_open && is_wire_tool(tool))
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, modifiers)
 		return ITEM_INTERACT_SUCCESS
 	return ..()
 

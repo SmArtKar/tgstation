@@ -107,7 +107,8 @@
 
 /obj/machinery/rnd/multitool_act(mob/living/user, obj/item/multitool/tool)
 	if(panel_open)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user)
 		return ITEM_INTERACT_SUCCESS
 	if(!QDELETED(tool.buffer) && istype(tool.buffer, /datum/techweb))
 		connect_techweb(tool.buffer)
@@ -119,7 +120,8 @@
 /obj/machinery/rnd/wirecutter_act(mob/living/user, obj/item/tool)
 	. = ITEM_INTERACT_BLOCKING
 	if(panel_open)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user)
 		return ITEM_INTERACT_SUCCESS
 
 /obj/machinery/rnd/wirecutter_act_secondary(mob/living/user, obj/item/tool)

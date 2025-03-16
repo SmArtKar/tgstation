@@ -34,8 +34,7 @@
 /datum/aspect/four_legged_wheelbarrel/New(datum/attribute/new_attribute)
 	. = ..()
 	if (prob(15))
-		var/list/owner_name = splittext(attribute.owner.name, regex("\[ -\]"))
-		desc += " And get in the goddamn mech, [owner_name[1]]."
+		desc += " Get in the mech, [first_name(attribute.owner.name)]."
 
 // Social camouflage, neat tricks, be a better clown
 /datum/aspect/drama

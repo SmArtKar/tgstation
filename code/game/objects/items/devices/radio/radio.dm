@@ -179,12 +179,18 @@
 	special_channels |= RADIO_SPECIAL_SYNDIE
 	recalculateChannels()
 
+/obj/item/radio/attack_self_secondary(mob/user, modifiers)
+	if (!unscrewed)
+		return FALSE
+	wires.interact(user)
+	add_fingerprint(user)
+
 /obj/item/radio/interact(mob/user)
-	if(unscrewed && !isAI(user))
-		wires.interact(user)
-		add_fingerprint(user)
-	else
-		..()
+	if(!unscrewed || isAI(user))
+		return ..()
+	var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+	wire_rat.perform_hack(src, user)
+	add_fingerprint(user)
 
 //simple getters only because i NEED to enforce complex setter use for these vars for caching purposes but VAR_PROTECTED requires getter usage as well.
 //if another decorator is made that doesn't require getters feel free to nuke these and change these vars over to that

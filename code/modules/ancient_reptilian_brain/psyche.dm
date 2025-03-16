@@ -26,8 +26,8 @@
 	attribute = /datum/attribute/psyche
 
 // Gives you constant information about the state of your department and your colleagues
-/datum/aspect/esprit_de_opus
-	name = "Esprit de Opus"
+/datum/aspect/esprit_de_labos
+	name = "Esprit de Labōs"
 	desc = "Connect to your department. Understand the spacer culture."
 	attribute = /datum/attribute/psyche
 

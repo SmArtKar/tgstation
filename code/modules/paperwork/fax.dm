@@ -189,7 +189,8 @@ GLOBAL_VAR_INIT(fax_autoprinting, FALSE)
 		return
 	if (panel_open)
 		if (is_wire_tool(item))
-			wires.interact(user)
+			var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+			wire_rat.perform_hack(src, user, params2list(params))
 		return
 	if (can_load_item(item))
 		if (!loaded_item_ref?.resolve())

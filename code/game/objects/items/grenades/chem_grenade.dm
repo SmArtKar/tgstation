@@ -101,11 +101,12 @@
 	return ..()
 
 
-/obj/item/grenade/chem_grenade/attack_self(mob/user)
+/obj/item/grenade/chem_grenade/attack_self(mob/user, modifiers)
 	if(stage == GRENADE_READY && !active)
-		..()
-	if(stage == GRENADE_WIRED)
-		wires.interact(user)
+		return ..()
+	if (stage == GRENADE_WIRED)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, modifiers)
 
 /obj/item/grenade/chem_grenade/screwdriver_act(mob/living/user, obj/item/tool)
 	. = TRUE
@@ -169,7 +170,8 @@
 
 /obj/item/grenade/chem_grenade/attackby(obj/item/item, mob/user, params)
 	if(isassembly(item) && stage == GRENADE_WIRED)
-		wires.interact(user)
+		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+		wire_rat.perform_hack(src, user, params2list(params))
 	else if(stage == GRENADE_WIRED && is_type_in_list(item, allowed_containers))
 		. = TRUE //no afterattack
 		if(is_type_in_list(item, banned_containers))
