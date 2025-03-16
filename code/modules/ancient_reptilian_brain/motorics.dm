@@ -139,7 +139,7 @@
 	var/list/wires = list()
 	var/datum/check_result/result = user.examine_check("[REF(target)]_wires", SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
 	if (result?.outcome >= CHECK_SUCCESS)
-		wires += result.show_message("You recall the following wires being present on [target]...")
+		var/skipped = FALSE
 		for (var/wire in target.wires.wires)
 			// Skip duds
 			if (wire[1] == "_")
@@ -147,6 +147,11 @@
 
 			if (prob((result.roll + result.modifier) * 7.5)) // 13 roll guarantees all wires
 				wires += "<a href='byond://?src=[REF(src)];target=[REF(target)];wire=[wire];examine_time=[world.time]' style='border-bottom: 1px dotted;color: inherit;text-decoration: none;'>[wire]</a>"
+			else
+				skipped = TRUE
+
+		if (length(wires))
+			wires.Insert(1, result.show_message("You recall [skipped ? "some of " : ""]the following wires being present on [target]..."))
 
 	var/list/wire_states = list()
 	for (var/color in target.wires.colors)
@@ -156,7 +161,7 @@
 		else
 			wire_states += "The [color_line] wire is [target.wires.is_color_cut(color) ? "cut" : "intact"]"
 
-	to_chat(user, custom_boxed_message("motorics", "[jointext(wires, "<br>")][length(wires) >= 2 ? "<br><br>" : ""][jointext(wire_states, "<br>")]"))
+	to_chat(user, custom_boxed_message("motorics", "[jointext(wires, "<br>")][length(wires) ? "<br><br>" : ""][jointext(wire_states, "<br>")]"))
 
 /datum/aspect/wire_rat/Topic(href, list/href_list)
 	var/mob/living/user = get_body()
