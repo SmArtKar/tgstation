@@ -188,7 +188,7 @@
 	if (!held_tool)
 		return
 
-	var/datum/check_result/result = user.aspect_check(type, href_list["wire"] ? SKILLCHECK_MEDIUM : SKILLCHECK_TRIVIAL, floor(length(target.wires.wires) / WIRE_RAT_WIRES_PER_DIFFICULTY), target.wires.can_reveal_wires(user) ? WIRE_RAT_KNOWLEDGE_BOOST : 0, show_visual = TRUE)
+	var/datum/check_result/result = user.aspect_check(type, href_list["wire"] ? SKILLCHECK_MEDIUM : SKILLCHECK_PRIMITIVE, floor(length(target.wires.wires) / WIRE_RAT_WIRES_PER_DIFFICULTY), target.wires.can_reveal_wires(user) ? WIRE_RAT_KNOWLEDGE_BOOST : 0, show_visual = TRUE)
 	var/used_wire = result.outcome >= CHECK_SUCCESS ? (href_list["wire_color"] || target.wires.get_color_of_wire(href_list["wire"])) : pick(target.wires.colors)
 	var/action = "stare at"
 	if (isassembly(held_tool))
