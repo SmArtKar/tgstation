@@ -66,7 +66,7 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 	. = ..()
 	var/datum/check_result/result = user.examine_check(REF(powernet), SKILLCHECK_FORMIDDABLE, /datum/aspect/wire_rat)
 	if(result.outcome >= CHECK_SUCCESS || isobserver(user))
-		. += get_power_info()
+		. += result.show_message(get_power_info())
 
 /obj/structure/cable/proc/on_rat_eat(datum/source, mob/living/basic/regal_rat/king)
 	SIGNAL_HANDLER
@@ -191,7 +191,7 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 		return
 
 	else if(W.tool_behaviour == TOOL_MULTITOOL)
-		to_chat(user, get_power_info())
+		to_chat(user, span_notice(get_power_info()))
 		shock(user, 5, 0.2)
 
 	add_fingerprint(user)
@@ -199,9 +199,9 @@ GLOBAL_LIST_INIT(wire_node_generating_types, typecacheof(list(
 
 /obj/structure/cable/proc/get_power_info()
 	if(powernet?.avail > 0)
-		return span_danger("Total power: [display_power(powernet.avail)]\nLoad: [display_power(powernet.load)]\nExcess power: [display_power(surplus())]")
+		return "Total power: [display_power(powernet.avail)]\nLoad: [display_power(powernet.load)]\nExcess power: [display_power(surplus())]"
 	else
-		return span_danger("The cable is not powered.")
+		return "The cable is not powered."
 
 
 // Items usable on a cable :
