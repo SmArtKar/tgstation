@@ -146,5 +146,5 @@
 /mob/dead/aspect_cooldown(cooldown_id, duration)
 	return
 
-/mob/dead/examine_check(id, difficulty, aspect)
+/mob/dead/examine_check(check_id = "nothing", difficulty = SKILLCHECK_MEDIUM, aspect = /datum/aspect/perception, skill_modifier = 0, cooldown_mult = 1, show_visual = TRUE)
 	return new /datum/check_result(CHECK_CRIT_SUCCESS, get_aspect(aspect), difficulty, 18, difficulty, 0, 99)
