@@ -68,10 +68,12 @@
 	if(!in_range(user, src) && !isobserver(user))
 		return
 
-	. += span_notice("The status display reads:")
-	. += span_notice("Capable of packing up to <b>Tier [max_part_tier]</b>.")
-	. += span_notice("Storing up to <b>[materials.max_amount]</b> material units.")
-	. += span_notice("Material consumption at <b>[creation_efficiency * 100]%</b>")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result.outcome >= CHECK_SUCCESS)
+		. += result.show_message("The status display reads:")
+		. += result.show_message("Capable of packing up to <b>Tier [max_part_tier]</b>.")
+		. += result.show_message("Storing up to <b>[materials.max_amount]</b> material units.")
+		. += result.show_message("Material consumption at <b>[creation_efficiency * 100]%</b>")
 
 	. += span_notice("Its maintainence panel can be [EXAMINE_HINT("screwed")] [panel_open ? "close" : "open"]")
 	if(panel_open)

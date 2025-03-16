@@ -109,15 +109,21 @@
 
 /obj/machinery/syndicatebomb/examine(mob/user)
 	. = ..()
-	. += "The patented external shell design is resistant to \"probably all\" forms of external explosive compression, protecting the electronically-trigged bomb core from accidental early detonation."
+	var/datum/check_result/result = user.examine_check("syndiebomb", SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
+	if (result.outcome >= CHECK_SUCCESS)
+		. += result.show_message("The patented external shell design is resistant to \"probably all\" forms of external explosive compression, protecting the electronically-trigged bomb core from accidental early detonation.")
+
+	result = user.examine_check(REF(src), SKILLCHECK_HARD, show_visual = FALSE)
+	if (result.outcome < CHECK_SUCCESS)
+		return
 	if(istype(payload))
-		. += "A small window reveals some information about the payload: [payload.desc]."
+		. += result.show_message("A small window reveals some information about the payload: [payload.desc].")
 	if(examinable_countdown)
-		. += span_notice("A digital display on it reads \"[seconds_remaining()]\".")
+		. += result.show_message("A digital display on it reads \"[seconds_remaining()]\".")
 		if(active)
 			balloon_alert(user, "[seconds_remaining()]")
 	else
-		. += span_notice({"The digital display on it is inactive."})
+		. += results.show_message({"The digital display on it is inactive."})
 
 /obj/machinery/syndicatebomb/update_icon_state()
 	icon_state = "[initial(icon_state)][active ? "-active" : "-inactive"][open_panel ? "-wires" : ""]"

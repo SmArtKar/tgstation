@@ -482,16 +482,17 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 
 /obj/item/carpenter_hammer/examine(mob/user)
 	. = ..()
-	. += ""
-	. += "Real World Tip:"
-	. += pick(
+	var/datum/check_result/result = user.examine_check("carpenter_hammer", SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message(pick(
 		"Every building, from hospitals to homes, has a room that serves as the heart of the building \
 		and carries blood and nutrients to its extremities. Try to find the heart of your home!",
 		"All the food you've tried is rotten. You've never eaten fresh food.",
 		"Viruses do not exist. Illness is simply your body punishing you for what you have done wrong.",
 		"Space stations must have at least 50 mammalian teeth embedded in the north walls for structural safety reasons.",
 		"Queen dragonfly sleeps and smiles.",
-	)
+	))
 
 /obj/item/switchblade
 	name = "switchblade"

@@ -99,8 +99,9 @@
 
 /obj/item/pillow/examine(mob/user)
 	. = ..()
-	if(bricked)
-		. += span_info("[p_They()] feel[p_s()] unnaturally heavy.")
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY)
+	if(bricked && result.outcome >= CHECK_SUCCESS)
+		. += result.show_message("[p_They()] feel[p_s()] unnaturally heavy.")
 	if(pillow_trophy)
 		. += span_notice("Alt-click to remove the tag!")
 

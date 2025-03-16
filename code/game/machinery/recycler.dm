@@ -60,10 +60,13 @@
 
 /obj/machinery/recycler/examine(mob/user)
 	. = ..()
-	. += span_notice("Reclaiming <b>[amount_produced]%</b> of materials salvaged.")
-	. += {"The power light is [(machine_stat & NOPOWER) ? "off" : "on"].
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/mental_clockwork)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	. += result.show_message("Reclaiming <b>[amount_produced]%</b> of materials salvaged.")
+	. += result.show_message("The power light is [(machine_stat & NOPOWER) ? "off" : "on"].
 	The safety-mode light is [safety_mode ? "on" : "off"].
-	The safety-sensors status light is [obj_flags & EMAGGED ? "off" : "on"]."}
+	The safety-sensors status light is [obj_flags & EMAGGED ? "off" : "on"].")
 
 /obj/machinery/recycler/wrench_act(mob/living/user, obj/item/tool)
 	. = ..()
