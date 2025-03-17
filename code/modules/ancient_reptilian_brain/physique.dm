@@ -27,6 +27,8 @@
 	owner.maxHealth += (get_level() - ASPECT_LEVEL_NEUTRAL) * ENDURANCE_HEALTH_BOOST
 	if (get_level() >= ENDURANCE_ANALGESIA_LEVEL)
 		ADD_TRAIT(owner, TRAIT_ANALGESIA, ASPECT_TRAIT)
+	else
+		REMOVE_TRAIT(owner, TRAIT_ANALGESIA, ASPECT_TRAIT)
 
 /datum/aspect/endurance/unregister_body(mob/living/old_body)
 	. = ..()
@@ -38,6 +40,17 @@
 	name = "Shivers"
 	desc = "Raise the hair on your neck. Tune in to the forces beyond this world."
 	attribute = /datum/attribute/physique
+
+/datum/aspect/shivers/update_effects(prev_level)
+	var/mob/living/owner = get_body()
+	if (get_level() >= ENDURANCE_ANALGESIA_LEVEL)
+		ADD_TRAIT(owner, TRAIT_MAGICALLY_GIFTED, ASPECT_TRAIT)
+	else
+		REMOVE_TRAIT(owner, TRAIT_MAGICALLY_GIFTED, ASPECT_TRAIT)
+
+/datum/aspect/shivers/unregister_body(mob/living/old_body)
+	. = ..()
+	REMOVE_TRAIT(old_body, TRAIT_MAGICALLY_GIFTED, ASPECT_TRAIT)
 
 // Affects your metabolization and resistance to chemicals, positive and negative
 /datum/aspect/electrochemistry // TODO: THIS
