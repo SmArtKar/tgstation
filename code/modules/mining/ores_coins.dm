@@ -330,7 +330,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	icon_state = "gibtonite"
 	quality = GIBTONITE_QUALITY_LOW
 
-/obj/item/gibtonite/attack_self(user)
+/obj/item/gibtonite/attack_self(mob/user)
 	if(wires)
 		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
 		wire_rat.perform_hack(src, user)

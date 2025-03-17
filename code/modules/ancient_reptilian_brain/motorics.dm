@@ -189,7 +189,6 @@
 	if (!breath)
 		return FALSE
 
-	var/seeing_danger = FALSE
 	for (var/datum/gas/gas_type as anything in breath.gases)
 		if (!initial(gas_type.dangerous))
 			continue
