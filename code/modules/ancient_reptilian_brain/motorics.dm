@@ -30,11 +30,11 @@
 
 /datum/aspect/savoir_faire/proc/adjust_melee_cd(mob/living/source)
 	SIGNAL_HANDLER
-	source.changeNext_move(CLICK_CD_MELEE - (level - ASPECT_LEVEL_NEUTRAL) * SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION)
+	source.changeNext_move(CLICK_CD_MELEE - (get_level() - ASPECT_LEVEL_NEUTRAL) * SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION)
 
 /datum/aspect/savoir_faire/update_effects(prev_level)
 	var/mob/living/owner = get_body()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/savoir_faire, TRUE, (level - ASPECT_LEVEL_NEUTRAL) * SAVOIR_FAIRE_MOVESPEED_MULTIPLIER)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/savoir_faire, TRUE, (get_level() - ASPECT_LEVEL_NEUTRAL) * SAVOIR_FAIRE_MOVESPEED_MULTIPLIER)
 
 // Improves your firing skills, high levels can give you autoaim
 // Also allows you to automatically catch stuff
@@ -180,7 +180,7 @@
 		return
 
 	source.balloon_alert("you hold your breath!")
-	source.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/in_and_out, TRUE, (level - IN_AND_OUT_HOLD_BREATH_LEVEL) * IN_AND_OUT_MOVESPEED_MULTIPLIER)
+	source.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/in_and_out, TRUE, (get_level() - IN_AND_OUT_HOLD_BREATH_LEVEL) * IN_AND_OUT_MOVESPEED_MULTIPLIER)
 	to_chat(source, span_motorics_bold("A tingling sensation in your lungs, a thin layer of plaque on your fingers, slight fog in the air. Every single one of your instincts says you should get out of here, stat."))
 	holding_breath = TRUE
 	return COMSIG_CARBON_BLOCK_BREATH
