@@ -217,7 +217,8 @@
 		to_chat(user, span_warning("That seems like a really bad idea..."))
 
 /obj/machinery/syndicatebomb/interact(mob/user)
-	wires.interact(user)
+	var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
+	wire_rat.perform_hack(src, user)
 	if(!open_panel)
 		if(!active)
 			settings(user)

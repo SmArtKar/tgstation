@@ -8,8 +8,7 @@
 	if(!iscarbon(owner))
 		return FALSE
 
-	var/actual_interval = initial(tick_interval)
-	if(!owner.Knockdown(actual_interval * 2, ignore_canstun = TRUE) || owner.body_position != LYING_DOWN)
+	if(!owner.Knockdown(tick_interval * 2, ignore_canstun = TRUE) || owner.body_position != LYING_DOWN)
 		to_chat(owner, span_warning("You try to stop, drop, and roll - but you can't get on the ground!"))
 		return FALSE
 
@@ -22,8 +21,9 @@
 		span_notice("You stop, drop, and roll!"),
 	)
 	// Start with one weaker roll
-	owner.spin(spintime = actual_interval, speed = actual_interval / 4)
+	owner.spin(spintime = tick_interval, speed = tick_interval / 4)
 	owner.adjust_fire_stacks(-0.25)
+	update_interval()
 
 	for (var/obj/item/dropped in owner.loc)
 		dropped.extinguish() // Effectively extinguish your items by rolling on them
@@ -38,15 +38,15 @@
 		qdel(src)
 		return
 
-	var/actual_interval = initial(tick_interval)
-	if(!owner.Knockdown(actual_interval * 1.2, ignore_canstun = TRUE))
+	if(!owner.Knockdown(tick_interval * 1.2, ignore_canstun = TRUE))
 		stop_rolling()
 		return
 
-	owner.spin(spintime = actual_interval, speed = actual_interval / 4)
+	owner.spin(spintime = tick_interval, speed = tick_interval / 4)
 	owner.adjust_fire_stacks(-1)
 
 	if(owner.fire_stacks > 0)
+		update_interval()
 		return
 
 	owner.visible_message(
@@ -67,3 +67,7 @@
 
 	if(new_value != LYING_DOWN)
 		stop_rolling()
+
+/datum/status_effect/stop_drop_roll/proc/update_interval()
+	var/aspect_level = max(owner.get_aspect_level(/datum/aspect/in_and_out) - ASPECT_LEVEL_NEUTRAL, 0)
+	tick_interval = initial(tick_interval) - sqrt(aspect_level) * IN_AND_OUT_EXTINGUISH_DELAY_REDUCTION

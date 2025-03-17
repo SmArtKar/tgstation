@@ -51,7 +51,7 @@
 	if(isturf(loc) && body_position == STANDING_UP && !INCAPACITATED_IGNORING(src, INCAPABLE_GRAB) && (mobility_flags & MOBILITY_USE))
 		var/datum/check_result/result = aspect_check(/datum/aspect/reaction_speed, SKILLCHECK_GODLY, floor(bullet.speed)) // Chance of dodging this at 2 reaction speed is 2%
 		if (result.outcome >= CHECK_SUCCESS)
-			visible_message(span_motorics("[src] dodges \the [bullet]!"), result.show_message("You swiftly dodge \the [bullet]."))
+			visible_message(span_motorics_italic("[src] dodges \the [bullet]!"), result.show_message("You swiftly dodge \the [bullet]."))
 			return BULLET_ACT_FORCE_PIERCE
 
 	if(bullet.reflectable)

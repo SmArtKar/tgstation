@@ -179,12 +179,6 @@
 	special_channels |= RADIO_SPECIAL_SYNDIE
 	recalculateChannels()
 
-/obj/item/radio/attack_self_secondary(mob/user, modifiers)
-	if (!unscrewed)
-		return FALSE
-	wires.interact(user)
-	add_fingerprint(user)
-
 /obj/item/radio/interact(mob/user)
 	if(!unscrewed || isAI(user))
 		return ..()

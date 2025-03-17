@@ -66,14 +66,14 @@
 	var/obj/item/organ/lungs = get_organ_slot(ORGAN_SLOT_LUNGS)
 	var/is_on_internals = FALSE
 
-	if(SEND_SIGNAL(src, COMSIG_CARBON_ATTEMPT_BREATHE, seconds_per_tick, times_fired) & COMSIG_CARBON_BLOCK_BREATH)
-		return
-
-	SEND_SIGNAL(src, COMSIG_CARBON_PRE_BREATHE, seconds_per_tick, times_fired)
-
 	var/datum/gas_mixture/environment
 	if(loc)
 		environment = loc.return_air()
+
+	if(SEND_SIGNAL(src, COMSIG_CARBON_ATTEMPT_BREATHE, environment, seconds_per_tick, times_fired) & COMSIG_CARBON_BLOCK_BREATH)
+		return
+
+	SEND_SIGNAL(src, COMSIG_CARBON_PRE_BREATHE, seconds_per_tick, times_fired)
 
 	var/datum/gas_mixture/breath
 

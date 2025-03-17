@@ -41,9 +41,10 @@
 
 // Aspect constants
 /// Level of aspects which non-disco spessmen have (aka normal stats).
-/// We have slightly roughly 75% (on per-job basis) allocated roundstart, slightly worse if you exclude player-allocated points
-/// Multiply this by amount of attributes, divide by 2 - that's the amount of points people should be allowed to allocate
+/// We have slightly roughly 75% (on per-job basis) allocated roundstart, slightly worse than a normal spaceman if you exclude player-allocated points
 #define ASPECT_LEVEL_NEUTRAL 2
+/// Maximum level that any aspect can have, after all modifiers applied
+#define ASPECT_LEVEL_MAXIMUM 16
 
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 7.5
@@ -55,7 +56,7 @@
 /// Movespeed increase per level of Savoir Faire
 #define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.04
 /// Attack speed reduction per level of Savoir Faire
-#define SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION 0.5
+#define SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION 0.4
 
 /// Hand/eye level at which you don't need to wield heavy guns
 #define HAND_EYE_FREE_WIELD_LEVEL 6
@@ -71,3 +72,10 @@
 #define WIRE_RAT_WIRES_PER_DIFFICULTY 3
 /// Boost you receive for having wire knowledge
 #define WIRE_RAT_KNOWLEDGE_BOOST 7
+
+/// Level at which you hold your breath when you see dangerous gases
+#define IN_AND_OUT_HOLD_BREATH_LEVEL 4
+/// Speed boost per additional level of in and out while holding your breath
+#define IN_AND_OUT_MOVESPEED_MULTIPLIER -0.075
+/// Stop, drop and roll speed boost by square of current level of In and Out
+#define IN_AND_OUT_EXTINGUISH_DELAY_REDUCTION 0.15 SECONDS

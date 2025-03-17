@@ -441,8 +441,10 @@
 	if(!empty_pipe)
 		to_chat(user, span_notice("You begin to unfasten \the [src]..."))
 
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_EASY, /datum/aspect/in_and_out)
 	if (internal_pressure > 2 * ONE_ATMOSPHERE)
-		to_chat(user, span_warning("As you begin unwrenching \the [src] a gush of air blows in your face... maybe you should reconsider?"))
+		if (result.outcome >= CHECK_SUCCESS)
+			to_chat(user, result.show_message("As you begin unwrenching \the [src] a gush of air blows in your face... maybe you should reconsider?"))
 		unsafe_wrenching = TRUE //Oh dear oh dear
 
 	if(I.use_tool(src, user, empty_pipe ? 0 : 2 SECONDS, volume = 50))
@@ -454,7 +456,11 @@
 
 		//You unwrenched a pipe full of pressure? Let's splat you into the wall, silly.
 		if(unsafe_wrenching)
-			unsafe_pressure_release(user, internal_pressure)
+			result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/in_and_out)
+			if (result.outcome < CHECK_SUCCESS)
+				unsafe_pressure_release(user, internal_pressure)
+			else
+				to_chat(user, result.show_message("You quickly jump out of the way as you masterfully unwrench [src] with one hand, preventing the released pressure from sending you flying."))
 		deconstruct(TRUE)
 		return ITEM_INTERACT_SUCCESS
 

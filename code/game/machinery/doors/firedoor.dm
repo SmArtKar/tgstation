@@ -565,6 +565,61 @@
 	else
 		close()
 
+/obj/machinery/door/firedoor/try_safety_unlock(mob/living/user)
+	if (welded || operating)
+		return FALSE
+
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/in_and_out, SKILLCHECK_CHALLENGING, show_visual = TRUE)
+	if (result.outcome < CHECK_SUCCESS)
+		to_chat(user, result.show_message("You try but fail to find a spot to grip [src] in your panic."))
+		return FALSE
+
+	user.visible_message(span_motorics("[user] grips the gap between [src]'s panels."), result.show_message("You begin prying open [src] with all of your might."))
+	balloon_alert(user, "prying open!")
+	if (!do_after(user, 0.5 SECONDS, src))
+		balloon_alert(user, "interrupted!")
+		return
+
+	result = user.aspect_check(/datum/aspect/physical_instrument, SKILLCHECK_CHALLENGING)
+	var/delay = 4 SECONDS
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			crush_da_fingies(user, result)
+			return
+		if (CHECK_FAILURE)
+			delay *= 1.5
+		if (CHECK_CRIT_SUCCESS)
+			delay *= 0.5
+
+	if (!do_after(user, delay, src))
+		result = user.aspect_check(/datum/aspect/savoir_faire, SKILLCHECK_HARD, crit_fail_modifier = -5, show_visual = TRUE)
+		if (result.outcome < CHECK_SUCCESS)
+			crush_da_fingies(user, result)
+		else
+			balloon_alert(user, "interrupted!")
+		return
+
+	user.visible_message(("[user] forces [src] open with their bare hands!"), result.show_message("You force [src] open using nothing but your bare hands. A formiddable feat."), span_hear("You hear tensioned steel creaking."))
+	being_held_open = TRUE
+	user.balloon_alert_to_viewers("holding firelock open", "holding firelock open")
+	COOLDOWN_START(src, activation_cooldown, REACTIVATION_DELAY)
+	open()
+	if(QDELETED(user))
+		being_held_open = FALSE
+		return
+	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(handle_held_open_adjacency))
+	RegisterSignal(user, COMSIG_LIVING_SET_BODY_POSITION, PROC_REF(handle_held_open_adjacency))
+	RegisterSignal(user, COMSIG_QDELETING, PROC_REF(handle_held_open_adjacency))
+	handle_held_open_adjacency(user)
+
+/obj/machinery/door/firedoor/proc/crush_da_fingies(mob/living/user, datum/check_result/result)
+	user.visible_message(span_physique_bold("[user]'s grip on [src] slips, the heavy firelock crushing their fingers!"), result.show_message("Your grip on [src] slips, the heavy firelock crushing your fingers!"))
+	balloon_alert("your grip slips!")
+	user.apply_damage(10, BRUTE, BODY_ZONE_L_ARM, wound_bonus = 10, bare_wound_bonus = 10)
+	user.apply_damage(10, BRUTE, BODY_ZONE_R_ARM, wound_bonus = 10, bare_wound_bonus = 10)
+	if (!HAS_TRAIT(user, TRAIT_ANALGESIA))
+		user.emote("scream")
+
 /// A simple toggle for firedoors between on and off
 /obj/machinery/door/firedoor/try_to_crowbar_secondary(obj/item/acting_object, mob/user)
 	if(welded || operating)

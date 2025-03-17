@@ -112,7 +112,7 @@
 	if (blood_line)
 		result = source.aspect_check(/datum/aspect/esprit_de_labos, SKILLCHECK_CHALLENGING)
 		if (result.outcome >= CHECK_SUCCESS)
-			examine_strings += result.show_message("Covered in <b><i>their</i></b> blood. Blood of your colleagues, your family.")
+			examine_strings += result.show_message("Soaked in <b><i>their</i></b> blood. Blood of your colleagues, your family.")
 
 	if (contraband_line)
 		result = source.aspect_check(/datum/aspect/authority, SKILLCHECK_MEDIUM)
@@ -124,6 +124,80 @@
 	name = "In and Out"
 	desc = "Dash through fires and breaches. Save the day."
 	attribute = /datum/attribute/motorics
+	/// Are we currently holding our breath?
+	var/holding_breath = FALSE
+
+/datum/aspect/in_and_out/register_body(datum/mind/source, mob/living/old_current)
+	. = ..()
+	var/mob/living/owner = get_body()
+	if (get_level() >= IN_AND_OUT_HOLD_BREATH_LEVEL)
+		RegisterSignal(owner, COMSIG_CARBON_ATTEMPT_BREATHE, PROC_REF(attempt_breath))
+
+/datum/aspect/in_and_out/update_effects(prev_level)
+	. = ..()
+	var/mob/living/owner = get_body()
+	if (get_level() >= IN_AND_OUT_HOLD_BREATH_LEVEL)
+		if (prev_level < IN_AND_OUT_HOLD_BREATH_LEVEL)
+			RegisterSignal(owner, COMSIG_CARBON_ATTEMPT_BREATHE, PROC_REF(attempt_breath))
+	else if (prev_level >= IN_AND_OUT_HOLD_BREATH_LEVEL)
+		UnregisterSignal(owner, COMSIG_CARBON_ATTEMPT_BREATHE)
+
+/datum/aspect/in_and_out/unregister_body(mob/living/old_body)
+	. = ..()
+	UnregisterSignal(old_body, COMSIG_CARBON_ATTEMPT_BREATHE)
+
+/datum/aspect/in_and_out/proc/attempt_breath(mob/living/carbon/source, datum/gas_mixture/breath)
+	SIGNAL_HANDLER
+
+	if (holding_breath)
+		if (should_hold_breath(source, breath))
+			// Take oxyloss when you fail to breathe, less if you "know" how to hold your breath "properly", whatever that means
+			source.adjustOxyLoss(1 / log(IN_AND_OUT_HOLD_BREATH_LEVEL, get_level()))
+			return COMSIG_CARBON_BLOCK_BREATH
+
+		source.balloon_alert("you stop holding your breath")
+		to_chat(source, span_motorics("You stop holding your breath."))
+		source.remove_movespeed_modifier(/datum/movespeed_modifier/in_and_out)
+		return
+
+	// Don't start holding your breath if you're struggling to breathe - also prevents message spam
+	if (source.getOxyLoss() >= 10 + get_level() * 2.5)
+		return
+
+	if (!should_hold_breath(source, breath))
+		return
+
+	source.balloon_alert("you hold your breath!")
+	source.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/in_and_out, TRUE, (level - IN_AND_OUT_HOLD_BREATH_LEVEL) * IN_AND_OUT_MOVESPEED_MULTIPLIER)
+	to_chat(source, span_motorics_bold("A tingling sensation in your lungs, a thin layer of plaque on your fingers, slight fog in the air. Every single one of your instincts says you should get out of here, stat."))
+	holding_breath = TRUE
+	return COMSIG_CARBON_BLOCK_BREATH
+
+/datum/aspect/in_and_out/proc/should_hold_breath(mob/living/carbon/user, datum/gas_mixture/breath)
+	// Breathing from internals
+	if (user.internal || user.external)
+		return FALSE
+
+	// Knocked out
+	if (user.stat >= UNCONSCIOUS)
+		return FALSE
+
+	// Far too exhausted - checking oxyloss separately from the rest of HP, can continue holding our breath until 79 damage total
+	if (user.maxHealth - user.health + user.getOxyLoss() >= 40 || user.getOxyLoss() >= 40)
+		return FALSE
+
+	if (!breath)
+		return FALSE
+
+	var/seeing_danger = FALSE
+	for (var/datum/gas/gas_type as anything in breath.gases)
+		if (!initial(gas_type.dangerous))
+			continue
+
+		if (breath[gas_type][MOLES] >= MOLES_GAS_VISIBLE)
+			return TRUE
+
+	return FALSE
 
 // The actual hacking/power handling skill
 /datum/aspect/wire_rat
@@ -132,7 +206,7 @@
 	attribute = /datum/attribute/motorics
 
 /datum/aspect/wire_rat/proc/perform_hack(atom/target, mob/user, list/modifiers)
-	if (LAZYACCESS(modifiers, RIGHT_CLICK) || !isliving(user))
+	if (!isliving(user))
 		target.wires.interact(user)
 		return
 
@@ -192,7 +266,7 @@
 	var/used_wire = result.outcome >= CHECK_SUCCESS ? (href_list["wire_color"] || target.wires.get_color_of_wire(href_list["wire"])) : pick(target.wires.colors)
 	var/action = "stare at"
 	if (isassembly(held_tool))
-		action = "attach"
+		action = "attach [held_tool] to"
 		if (target.wires.is_attached(used_wire))
 			used_wire = pick(target.wires.colors - flatten_list(target.wires.assemblies))
 		target.wires.attach_assembly(used_wire, held_tool)
@@ -200,10 +274,15 @@
 		action = "pulse"
 		target.wires.pulse_color(used_wire, user)
 	else if (held_tool.tool_behaviour == TOOL_WIRECUTTER)
-		if (target.wires.is_color_cut(used_wire))
-			action = "mend"
+		if (target.wires.is_attached(used_wire))
+			var/obj/item/assembly = target.wires.detach_assembly(used_wire)
+			action = "detach [assembly] from"
+			user.put_in_hands(assembly)
 		else
-			action = "cut"
-		target.wires.cut_color(used_wire, user)
+			if (target.wires.is_color_cut(used_wire))
+				action = "mend"
+			else
+				action = "cut"
+			target.wires.cut_color(used_wire, user)
 
 	to_chat(user, result.show_message("You [action] the [used_wire] wire[result.outcome == CHECK_FAILURE ? ", but something doesn't feel right.." : ""]."))

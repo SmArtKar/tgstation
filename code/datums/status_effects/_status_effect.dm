@@ -9,9 +9,10 @@
 	var/duration = STATUS_EFFECT_PERMANENT
 	/// When set initially / in on_creation, this is how long between [proc/tick] calls in deciseconds.
 	/// Note that this cannot be faster than the processing subsystem you choose to fire the effect on. (See: [var/processing_speed])
-	/// While processing, this becomes the world.time when the next tick will occur.
 	/// -1 = will prevent ticks, and if duration is also unlimited (-1), stop processing wholesale.
 	var/tick_interval = 1 SECONDS
+	/// Next world.time when we tick
+	var/next_tick = -1
 	///If our tick intervals are set to be a dynamic value within a range, the lowerbound of said range
 	var/tick_interval_lowerbound
 	///If our tick intervals are set to be a dynamic value within a range, the upperbound of said range
@@ -61,7 +62,7 @@
 	if(duration != STATUS_EFFECT_PERMANENT)
 		duration = world.time + duration
 	if(tick_interval != STATUS_EFFECT_NO_TICK)
-		tick_interval = world.time + tick_interval
+		next_tick = world.time + tick_interval
 
 	if(alert_type)
 		var/atom/movable/screen/alert/status_effect/new_alert = owner.throw_alert(id, alert_type)
@@ -69,7 +70,7 @@
 		linked_alert = new_alert //so we can reference the alert, if we need to
 		update_shown_duration()
 
-	if(duration > world.time || tick_interval > world.time) //don't process if we don't care
+	if(duration > world.time || next_tick > world.time) //don't process if we don't care
 		switch(processing_speed)
 			if(STATUS_EFFECT_FAST_PROCESS)
 				START_PROCESSING(SSfastprocess, src)
@@ -119,10 +120,10 @@
 		qdel(src)
 		return
 
-	if(tick_interval != STATUS_EFFECT_NO_TICK && tick_interval < world.time)
-		var/tick_length = (tick_interval_upperbound && tick_interval_lowerbound) ? rand(tick_interval_lowerbound, tick_interval_upperbound) : initial(tick_interval)
+	if(tick_interval != STATUS_EFFECT_NO_TICK && next_tick < world.time)
+		var/tick_length = (tick_interval_upperbound && tick_interval_lowerbound) ? rand(tick_interval_lowerbound, tick_interval_upperbound) : tick_interval
 		tick(tick_length / (1 SECONDS))
-		tick_interval = world.time + tick_length
+		next_tick = world.time + tick_length
 		if(QDELING(src))
 			// tick deleted us, no need to continue
 			return

@@ -4,7 +4,7 @@
 	var/desc = "People you yell at when you see this"
 	var/color = "#FFFFFF"
 
-	var/level = 0
+	var/level = ASPECT_LEVEL_NEUTRAL
 	/// Temporary modifier you get from drugs or booze or whatever
 	/// Only allows you to level your aspects above this attribute's level
 	var/level_modifier = 0
@@ -35,8 +35,6 @@
 
 /datum/attribute/proc/adjust_level(change)
 	level += change
-	for (var/datum/aspect/aspect as anything in aspects)
-		aspect.adjust_level(change)
 
 /datum/attribute/proc/set_level(new_level)
 	adjust_level(new_level - level)

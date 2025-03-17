@@ -36,6 +36,9 @@
 	blacklisted_movetypes = FLOATING
 	variable = TRUE
 
+/datum/movespeed_modifier/in_and_out
+	variable = TRUE
+
 /// Movespeed modifier applied by worn equipment.
 /datum/movespeed_modifier/equipment_speedmod
 	variable = TRUE

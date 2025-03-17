@@ -9,7 +9,7 @@
 	var/name = "Shitcoding"
 	var/desc = "The aspect of Shitcoding, existing solely so you can yell at coders."
 	var/icon_state = ""
-	var/level = ASPECT_LEVEL_NEUTRAL
+	var/level = 0
 	var/stored_exp = 0
 	/// Attribute we are bound to, or its type (initially)
 	var/datum/attribute/attribute = /datum/attribute
@@ -40,14 +40,18 @@
 	level += change
 	update_effects(prev_level)
 
-/datum/aspect/proc/get_level()
-	. = level
+/datum/aspect/proc/level_calculation()
+	. = level + attribute.level
 	for (var/modifier in flatten_list(modifiers))
 		. += modifier
 
+/datum/aspect/proc/get_level()
+	SHOULD_NOT_OVERRIDE(TRUE)
+	return clamp(level_calculation(), 0, ASPECT_LEVEL_MAXIMUM)
+
 /datum/aspect/proc/gain_exp(exp_gained, can_level = TRUE, show_level_message = TRUE)
-	stored_exp += exp_gained
 	var/required_exp = get_exp_to_level()
+	stored_exp = clamp(exp_gained, 0, required_exp)
 	if (stored_exp < required_exp || !can_level)
 		return
 	if (attribute.level + attribute.level_modifier <= level)

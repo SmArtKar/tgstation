@@ -75,7 +75,7 @@
 	var/datum/check_result/result = aspect_check(/datum/aspect/savoir_faire, SKILLCHECK_LEGENDARY, levels - 1)
 	switch (result.outcome)
 		if (CHECK_CRIT_FAILURE)
-			visible_message(span_danger("[src] crashes into [impacted_turf] head-first!"), result.show_message("Landing face-first is usually considered an inferior strategy compared to using your feet to dampen your fall, but you seem to disagree."))
+			visible_message(span_motorics_bold("[src] crashes into [impacted_turf] head-first!"), result.show_message("Landing face-first is usually considered an inferior strategy compared to using your feet to dampen your fall, but you seem to disagree."))
 			levels += 1
 			graceful_landing = FALSE
 
@@ -101,7 +101,7 @@
 				emote("spin")
 
 			visible_message(
-				span_notice("[src] makes a hard landing on [impacted_turf] but remains unharmed from the fall[graceful_landing ? " and stays on [p_their()] feet" : " by tucking in rolling into the landing"]."),
+				span_motorics("[src] makes a hard landing on [impacted_turf] but remains unharmed from the fall[graceful_landing ? " and stays on [p_their()] feet" : " by tucking in rolling into the landing"]."),
 				result.show_message("You brace for the fall. You make a hard landing on [impacted_turf], but remain unharmed[graceful_landing ? " while landing on your feet" : " by tucking in and rolling into the landing"]."),
 			)
 			return
@@ -116,7 +116,7 @@
 		skip_knockdown = TRUE
 		if(small_surface_area)
 			visible_message(
-				span_notice("[src] makes a hard landing on [impacted_turf], but lands safely on [p_their()] feet!"),
+				span_motorics("[src] makes a hard landing on [impacted_turf], but lands safely on [p_their()] feet!"),
 				result.show_message("You make a hard landing on [impacted_turf], but land safely on your feet."),
 			)
 			new /obj/effect/temp_visual/mook_dust/small(impacted_turf)
@@ -126,7 +126,7 @@
 		add_movespeed_modifier(/datum/movespeed_modifier/landed_on_feet)
 		addtimer(CALLBACK(src, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/landed_on_feet), levels * 2 SECONDS)
 		visible_message(
-			span_danger("[src] makes a hard landing on [impacted_turf], landing on [p_their()] feet painfully!"),
+			span_motorics_bold("[src] makes a hard landing on [impacted_turf], landing on [p_their()] feet painfully!"),
 			result.show_message("Your instincts betray you as you make a hard landing on [impacted_turf], pain shooting through your stretched out legs."),
 		)
 		skipped_message = TRUE
@@ -144,7 +144,7 @@
 
 	if(!skipped_message)
 		visible_message(
-			span_danger("[src] crashes into [impacted_turf]!"),
+			span_motorics_bold("[src] crashes into [impacted_turf]!"),
 			span_big(result.show_message("You painfully crash into [impacted_turf].")),
 		)
 

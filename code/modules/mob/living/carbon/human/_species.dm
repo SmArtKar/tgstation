@@ -945,7 +945,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 							break
 
 				playsound(target.loc, attacking_bodypart.unarmed_miss_sound, 25, TRUE, -1)
-				target.visible_message(span_danger("[user]'s [atk_verb] misses [target]!"), \
+				target.visible_message(span_physique_bold("[user]'s [atk_verb] misses [target]!"), \
 								dodge_result.show_message(dodge_string), span_hear("You hear a swoosh!"), COMBAT_MESSAGE_RANGE, user)
 				to_chat(user, attack_result.show_message("Your [atk_verb] misses [target]."))
 				log_combat(user, target, "attempted to punch")
@@ -1000,7 +1000,7 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	if(grappled && attacking_bodypart.grappled_attack_verb)
 		atk_verb = attacking_bodypart.grappled_attack_verb
 
-	target.visible_message(span_danger("[user] [atk_verb]ed [target]!"), hit_message, span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, user)
+	target.visible_message(span_physique_bold("[user] [atk_verb]ed [target]!"), hit_message, span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, user)
 	if (!always_crit && roll_aspect)
 		to_chat(user, attack_result.show_message("You [atk_verb] [target]."))
 
