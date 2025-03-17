@@ -170,7 +170,7 @@
 		return  "<span style='color:[aspect.attribute?.color || COLOR_PALE_PURPLE_GRAY]'>[text]</span>"
 
 	tooltip_shown = TRUE
-	var/success_prob = round(dice_roll_probabilbity(3, 6, difficulty - modifier), 0.1)
+	var/success_prob = get_prob()
 
 	var/diff_string = "Error"
 	switch(success_prob)
@@ -209,6 +209,9 @@
 
 /datum/check_result/proc/refresh()
 	tooltip_shown = FALSE
+
+/datum/check_result/proc/get_prob()
+	return round(dice_roll_probabilbity(3, 6, difficulty - modifier), 0.1)
 
 /proc/dice_roll_probabilbity(dice, sides, difficulty)
 	var/static/list/probability_cache

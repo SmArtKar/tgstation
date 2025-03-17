@@ -51,7 +51,7 @@
 		if(!ishuman(user))
 			return ITEM_INTERACT_BLOCKING
 
-		var/datum/check_result/result = target.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
+		var/datum/check_result/result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
 		if(result.outcome >= CHECK_SUCCESS)
 			to_chat(user, result.show_message("You know better than to peer into the depths of the Mansus."))
 			return ITEM_INTERACT_BLOCKING

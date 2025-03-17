@@ -82,7 +82,7 @@
 	if(IS_HERETIC(wearer))
 		return
 
-	var/datum/check_result/result = target.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
+	var/datum/check_result/result = wearer.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
 	if (result.outcome >= CHECK_SUCCESS)
 		to_chat(wearer, result.show_message("Anchor yourself, don't let your grip on reality slip. Ignore their laughter."))
 		return

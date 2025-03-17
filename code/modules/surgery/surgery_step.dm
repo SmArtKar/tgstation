@@ -141,7 +141,7 @@
 				play_success_sound(user, target, target_zone, tool, surgery)
 				advance = TRUE
 		else
-			if(failure(user, target, target_zone, tool, surgery, fail_prob))
+			if(failure(user, target, target_zone, tool, surgery, 100 - result.get_prob()))
 				play_failure_sound(user, target, target_zone, tool, surgery)
 				update_surgery_mood(target, SURGERY_STATE_FAILURE)
 				advance = TRUE
