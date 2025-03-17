@@ -40,19 +40,19 @@
 	attribute = /datum/attribute/physique
 
 // Affects your metabolization and resistance to chemicals, positive and negative
-/datum/aspect/electrochemistry
+/datum/aspect/electrochemistry // TODO: THIS
 	name = "Electrochemistry"
 	desc = "Go to party planet. Love and be loved by drugs."
 	attribute = /datum/attribute/physique
 
 // Unarmed damage, lifting/dragging heavy things, prying doors open with your bare hands. Also being a racist, for some reason.
-/datum/aspect/physical_instrument
+/datum/aspect/physical_instrument // TODO: THIS
 	name = "Physical Instrument"
 	desc = "Flex powerful muscles. Enjoy healthy organs."
 	attribute = /datum/attribute/physique
 
-// How good are you with working heavy tools, also provides buffs to hand-eye for more precise ones
+// How good are you at working with tools, may depend on hand-eye for precision stuff
 /datum/aspect/handicraft
 	name = "Handicraft"
-	desc = "Work with your hands. Lift heavy equipment."
+	desc = "Work with your hands. Perform delicate procedures."
 	attribute = /datum/attribute/physique

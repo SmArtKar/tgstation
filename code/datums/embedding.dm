@@ -313,8 +313,12 @@
 	if (!jack_the_ripper.can_perform_action(owner, FORBID_TELEKINESIS_REACH | NEED_HANDS | ALLOW_RESTING))
 		return
 
+	if (!jack_the_ripper.aspect_ready("embed_rip_check"))
+		return
+
 	var/time_taken = rip_time * parent.w_class
 	var/damage_mult = 1
+	var/harmful = !is_harmless()
 	if (jack_the_ripper != owner)
 		time_taken *= RIPPING_OUT_HELP_TIME_MULTIPLIER
 		damage_mult *= RIPPING_OUT_HELP_DAMAGE_MULTIPLIER
@@ -325,21 +329,40 @@
 		owner.visible_message(span_warning("[owner] attempts to remove [parent] from [owner.p_their()] [owner_limb.plaintext_zone]."),
 			span_notice("You attempt to remove [parent] from your [owner_limb.plaintext_zone]..."))
 
+	var/datum/check_result/result = jack_the_ripper.aspect_check(/datum/aspect/handicraft, SKILLCHECK_FORMIDDABLE, 0, jack_the_ripper.get_aspect_level(/datum/aspect/hand_eye_coordination) - ASPECT_LEVEL_NEUTRAL, show_visual = TRUE)
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			to_chat(jack_the_ripper, result.show_message("At a crucial moment, you second guess yourself, pressing \the [parent] deeper into [jack_the_ripper == owner ? "your" : "[owner]'s"] flesh."))
+			damaging_removal_effect(damage_mult)
+			return
+
+		if (CHECK_SUCCESS)
+			to_chat(jack_the_ripper, result.show_message("Your hands are more than accustomed to careful tasks."))
+			time_taken *= 0.25
+
+		if (CHECK_CRIT_SUCCESS)
+			to_chat(jack_the_ripper, result.show_message("Many hours spent on delicate projects has prepared you for this moment."))
+			time_taken = 0
+			harmful = FALSE
+
+	jack_the_ripper.aspect_cooldown("embed_rip_check", time_taken)
 	if (!do_after(jack_the_ripper, time_taken, owner, extra_checks = CALLBACK(src, PROC_REF(still_in))))
+		jack_the_ripper.aspect_reset("embed_rip_check")
 		return
 
+	jack_the_ripper.aspect_reset("embed_rip_check")
 	if (parent.loc != owner || !(parent in owner_limb?.embedded_objects))
 		return
 
 	if (jack_the_ripper == owner)
 		owner.visible_message(span_notice("[owner] successfully rips [parent] [is_harmless() ? "off" : "out"] of [owner.p_their()] [owner_limb.plaintext_zone]!"),
-			span_notice("You successfully remove [parent] from your [owner_limb.plaintext_zone]."))
+			result.show_message("You successfully remove [parent] from your [owner_limb.plaintext_zone]."))
 	else
 		owner.visible_message(span_notice("[jack_the_ripper] successfully rips [parent] [is_harmless() ? "off" : "out"] of [owner]'s [owner_limb.plaintext_zone]!"),
 			span_userdanger("[jack_the_ripper] removes [parent] from your [owner_limb.plaintext_zone]!"), ignored_mobs = jack_the_ripper)
-		to_chat(jack_the_ripper, span_notice("You successfully remove [parent] from [owner]'s [owner_limb.plaintext_zone]."))
+		to_chat(jack_the_ripper, result.show_message("You successfully remove [parent] from [owner]'s [owner_limb.plaintext_zone]."))
 
-	if (!is_harmless())
+	if (harmful)
 		damaging_removal_effect(damage_mult)
 	remove_embedding(jack_the_ripper)
 

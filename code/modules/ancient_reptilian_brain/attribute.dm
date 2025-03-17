@@ -105,6 +105,10 @@
 		return
 	COOLDOWN_START(src, mind.aspect_cooldowns[cooldown_id], duration)
 
+/mob/proc/aspect_reset(cooldown_id)
+	if (mind)
+		mind.aspect_cooldowns -= cooldown_id
+
 /mob/proc/aspect_stash(check_id, datum/check_result/result, duration)
 	mind?.aspect_stash_push(check_id, result, duration)
 

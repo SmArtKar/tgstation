@@ -1224,6 +1224,14 @@
 
 	delay *= toolspeed * skill_modifier
 
+	if (delay && user.aspect_ready("tool_usage"))
+		var/datum/check_result/result = user.aspect_check(/datum/aspect/handicraft, SKILLCHECK_TRIVIAL, show_visual = TRUE)
+		switch (result.outcome)
+			if (CHECK_CRIT_FAILURE, CHECK_FAILURE)
+				delay *= 1.2
+			if (CHECK_CRIT_SUCCESS)
+				to_chat(user, result.show_message("A swift execution. A job well done."))
+				delay *= 0.2
 
 	// Play tool sound at the beginning of tool usage.
 	play_tool_sound(target, volume)

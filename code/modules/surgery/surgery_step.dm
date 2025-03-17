@@ -93,7 +93,6 @@
 
 	surgery.step_in_progress = TRUE
 	var/speed_mod = 1
-	var/fail_prob = 0//100 - fail_prob = success_prob
 	var/advance = FALSE
 
 	if(!chem_check(target))
@@ -127,11 +126,7 @@
 		implement_speed_mod = implements[implement_type] / 100.0
 
 	speed_mod /= (get_location_modifier(target) * (1 + surgery.speed_modifier) * implement_speed_mod) * target.mob_surgery_speed_mod
-	var/modded_time = time * speed_mod
-
-
-	fail_prob = min(max(0, modded_time - (time * SURGERY_SLOWDOWN_CAP_MULTIPLIER)),99)//if modded_time > time * modifier, then fail_prob = modded_time - time*modifier. starts at 0, caps at 99
-	modded_time = min(modded_time, time * SURGERY_SLOWDOWN_CAP_MULTIPLIER)//also if that, then cap modded_time at time*modifier
+	var/modded_time = time * min(speed_mod, SURGERY_SLOWDOWN_CAP_MULTIPLIER) // also if that, then cap modded_time at time*modifier
 
 	if(iscyborg(user))//any immunities to surgery slowdown should go in this check.
 		modded_time = time * tool.toolspeed
@@ -139,8 +134,8 @@
 	var/was_sleeping = (target.stat != DEAD && target.IsSleeping())
 
 	if(do_after(user, modded_time, target = target, interaction_key = user.has_status_effect(/datum/status_effect/hippocratic_oath) ? target : DOAFTER_SOURCE_SURGERY)) //If we have the hippocratic oath, we can perform one surgery on each target, otherwise we can only do one surgery in total.
-
-		if((prob(100-fail_prob) || (iscyborg(user) && !silicons_obey_prob)) && !try_to_fail)
+		var/datum/check_result/result = user.aspect_check(/datum/aspect/handicraft, SKILLCHECK_TRIVIAL, 0, (user.get_aspect_level(/datum/aspect/faveur_de_lame) + user.get_aspect_level(/datum/aspect/hand_eye_coordination)) - ASPECT_LEVEL_NEUTRAL)
+		if(result.outcome >= CHECK_SUCCESS && !try_to_fail)
 			if(success(user, target, target_zone, tool, surgery))
 				update_surgery_mood(target, SURGERY_STATE_SUCCESS)
 				play_success_sound(user, target, target_zone, tool, surgery)

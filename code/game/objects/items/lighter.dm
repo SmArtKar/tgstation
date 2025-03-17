@@ -177,10 +177,11 @@
 		if(gloves.max_heat_protection_temperature)
 			hand_protected = (gloves.max_heat_protection_temperature > 360)
 
-	if(hand_protected || prob(75))
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/handicraft, SKILLCHECK_EASY, show_visual = TRUE)
+	if(hand_protected || result.outcome >= CHECK_SUCCESS)
 		user.visible_message(
 			span_notice("After a few attempts, [user] manages to light [src]."),
-			span_notice("After a few attempts, you manage to light [src].")
+			result.show_message("After a few attempts, you manage to light [src].")
 		)
 		return
 
@@ -188,7 +189,7 @@
 	user.apply_damage(5, BURN, hitzone)
 	user.visible_message(
 		span_warning("After a few attempts, [user] manages to light [src] - however, [user.p_they()] burn[user.p_s()] [user.p_their()] finger in the process."),
-		span_warning("You burn yourself while lighting the lighter!")
+		result.show_message("Your eagerness to ignite [src] in a stylish fashion has shrouded your care. Your finger is bathed in the flame for a brief moment.")
 	)
 	user.add_mood_event("burnt_thumb", /datum/mood_event/burnt_thumb)
 
