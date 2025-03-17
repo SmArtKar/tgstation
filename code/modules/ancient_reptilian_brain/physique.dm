@@ -43,7 +43,7 @@
 
 /datum/aspect/shivers/update_effects(prev_level)
 	var/mob/living/owner = get_body()
-	if (get_level() >= ENDURANCE_ANALGESIA_LEVEL)
+	if (get_level() >= SHIVERS_MAGIC_GIFT_LEVEL)
 		ADD_TRAIT(owner, TRAIT_MAGICALLY_GIFTED, ASPECT_TRAIT)
 	else
 		REMOVE_TRAIT(owner, TRAIT_MAGICALLY_GIFTED, ASPECT_TRAIT)

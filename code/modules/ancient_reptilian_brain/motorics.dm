@@ -43,6 +43,24 @@
 	desc = "Ready? Aim and fire."
 	attribute = /datum/attribute/motorics
 
+/datum/aspect/hand_eye_coordination/update_effects(prev_level)
+	var/mob/living/owner = get_body()
+
+	if (get_level() >= HAND_EYE_FREE_WIELD_LEVEL)
+		ADD_TRAIT(owner, TRAIT_HEAVY_GUNNER, ASPECT_TRAIT)
+	else
+		REMOVE_TRAIT(owner, TRAIT_HEAVY_GUNNER, ASPECT_TRAIT)
+
+	if (get_level() >= HAND_EYE_AKIMBO_ANY_LEVEL)
+		ADD_TRAIT(owner, TRAIT_ANY_DUAL_WIELD, ASPECT_TRAIT)
+	else
+		REMOVE_TRAIT(owner, TRAIT_ANY_DUAL_WIELD, ASPECT_TRAIT)
+
+/datum/aspect/hand_eye_coordination/unregister_body(mob/living/old_body)
+	. = ..()
+	REMOVE_TRAIT(old_body, TRAIT_HEAVY_GUNNER, ASPECT_TRAIT)
+	REMOVE_TRAIT(old_body, TRAIT_ANY_DUAL_WIELD, ASPECT_TRAIT)
+
 // Gives you dark vision, can sometimes drop info about people and their posessions when you examine, or go by them.
 /datum/aspect/perception
 	name = "Perception"
@@ -126,12 +144,6 @@
 	attribute = /datum/attribute/motorics
 	/// Are we currently holding our breath?
 	var/holding_breath = FALSE
-
-/datum/aspect/in_and_out/register_body(datum/mind/source, mob/living/old_current)
-	. = ..()
-	var/mob/living/owner = get_body()
-	if (get_level() >= IN_AND_OUT_HOLD_BREATH_LEVEL)
-		RegisterSignal(owner, COMSIG_CARBON_ATTEMPT_BREATHE, PROC_REF(attempt_breath))
 
 /datum/aspect/in_and_out/update_effects(prev_level)
 	. = ..()

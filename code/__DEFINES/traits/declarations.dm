@@ -542,6 +542,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 /// When someone with this trait fires a ranged weapon, their fire delays and click cooldowns are halved
 #define TRAIT_DOUBLE_TAP "double_tap"
+/// Mobs with this trait don't need to wield heavy guns in both hands
+#define TRAIT_HEAVY_GUNNER "heavy_gunner"
+/// Mobs with this trait can dual wield guns of any size
+#define TRAIT_ANY_DUAL_WIELD "any_dual_wield"
 
 /// Trait applied to [/datum/mind] to stop someone from using the cursed hot springs to polymorph more than once.
 #define TRAIT_HOT_SPRING_CURSED "hot_spring_cursed"

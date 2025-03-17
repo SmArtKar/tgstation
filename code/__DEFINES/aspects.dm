@@ -48,24 +48,27 @@
 
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 7.5
-/// Increase to divider of damage slowdown per level of endurance
+/// Increase to divider of damage slowdown per level of Endurance
 #define ENDURANCE_DAMAGE_SLOWDOWN_REDUCTION 5
-/// Level of endurance at which you get analgesia
+/// Level of Endurance at which you get analgesia
 #define ENDURANCE_ANALGESIA_LEVEL 8
+
+/// Level of Shivers at which user can freely wield magical items
+#define SHIVERS_MAGIC_GIFT_LEVEL 8
 
 /// Movespeed increase per level of Savoir Faire
 #define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.04
 /// Attack speed reduction per level of Savoir Faire
 #define SAVOIR_FAIRE_ATTACK_SPEED_REDUCTION 0.4
 
-/// Hand/eye level at which you don't need to wield heavy guns
+/// Hand/Eye level at which you don't need to wield heavy guns
 #define HAND_EYE_FREE_WIELD_LEVEL 6
-/// Hand/eye level at which you can akimbo fire *any* guns
+/// Hand/Eye level at which you can akimbo fire *any* guns
 #define HAND_EYE_AKIMBO_ANY_LEVEL 8
-/// Hand/eye level at which gun successes turn into critical successes
+/// Hand/Eye level at which gun successes turn into critical successes
 #define HAND_EYE_ALWAYS_CRIT_LEVEL 10
 
-/// How much night vision do we gain per level of perception past ASPECT_LEVEL_NEUTRAL
+/// How much night vision do we gain per level of Perception past ASPECT_LEVEL_NEUTRAL
 #define PERCEPTION_NIGHTVIS_MULT 2.5
 
 /// Receive +1 difficulty per X wires
@@ -75,7 +78,7 @@
 
 /// Level at which you hold your breath when you see dangerous gases
 #define IN_AND_OUT_HOLD_BREATH_LEVEL 4
-/// Speed boost per additional level of in and out while holding your breath
+/// Speed boost per additional level of In and Out while holding your breath
 #define IN_AND_OUT_MOVESPEED_MULTIPLIER -0.075
 /// Stop, drop and roll speed boost by square of current level of In and Out
 #define IN_AND_OUT_EXTINGUISH_DELAY_REDUCTION 0.15 SECONDS

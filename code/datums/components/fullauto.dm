@@ -281,7 +281,7 @@
 		shoot_with_empty_chamber(shooter)
 		return FALSE
 	var/obj/item/bodypart/other_hand = shooter.has_hand_for_held_index(shooter.get_inactive_hand_index())
-	if(weapon_weight == WEAPON_HEAVY && (shooter.get_inactive_held_item() || !other_hand) && shooter.get_aspect_level(/datum/aspect/hand_eye_coordination) < HAND_EYE_FREE_WIELD_LEVEL)
+	if(weapon_weight == WEAPON_HEAVY && (shooter.get_inactive_held_item() || !other_hand) && !HAS_TRAIT(shooter, TRAIT_HEAVY_GUNNER))
 		balloon_alert(shooter, "use both hands!")
 		return FALSE
 	return TRUE
@@ -307,9 +307,8 @@
 /obj/item/gun/proc/do_autofire_shot(datum/source, atom/target, mob/living/shooter, allow_akimbo, params)
 	var/obj/item/gun/akimbo_gun = shooter.get_inactive_held_item()
 	var/bonus_spread = 0
-	var/freefire = shooter.get_aspect_level(/datum/aspect/hand_eye_coordination) >= HAND_EYE_AKIMBO_ANY_LEVEL
-	if(istype(akimbo_gun) && ((weapon_weight < WEAPON_MEDIUM && allow_akimbo) || freefire))
-		if((akimbo_gun.weapon_weight < WEAPON_MEDIUM || freefire) && akimbo_gun.can_trigger_gun(shooter))
+	if(istype(akimbo_gun) && ((weapon_weight < WEAPON_MEDIUM && allow_akimbo) || HAS_TRAIT(shooter, TRAIT_ANY_DUAL_WIELD)))
+		if((akimbo_gun.weapon_weight < WEAPON_MEDIUM || HAS_TRAIT(shooter, TRAIT_ANY_DUAL_WIELD)) && akimbo_gun.can_trigger_gun(shooter))
 			if(!akimbo_gun.can_shoot())
 				addtimer(CALLBACK(akimbo_gun, TYPE_PROC_REF(/obj/item/gun, shoot_with_empty_chamber), shooter), 0.1 SECONDS)
 			else

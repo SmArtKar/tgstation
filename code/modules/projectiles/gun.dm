@@ -384,7 +384,7 @@
 		return
 
 	var/obj/item/bodypart/other_hand = user.has_hand_for_held_index(user.get_inactive_hand_index()) //returns non-disabled inactive hands
-	if(weapon_weight == WEAPON_HEAVY && (user.get_inactive_held_item() || !other_hand) && (!istype(user) || user.get_aspect_level(/datum/aspect/hand_eye_coordination) < HAND_EYE_FREE_WIELD_LEVEL))
+	if(weapon_weight == WEAPON_HEAVY && (user.get_inactive_held_item() || !other_hand) && (!istype(user) || HAS_TRAIT(user, TRAIT_HEAVY_GUNNER)))
 		balloon_alert(user, "use both hands!")
 		return
 	//DUAL (or more!) WIELDING
@@ -392,7 +392,7 @@
 	var/loop_counter = 0
 	if(user.combat_mode && !HAS_TRAIT(user, TRAIT_NO_GUN_AKIMBO))
 		for(var/obj/item/gun/gun in user.held_items)
-			if(gun == src || (gun.weapon_weight >= WEAPON_MEDIUM && user.get_aspect_level(/datum/aspect/hand_eye_coordination) < HAND_EYE_AKIMBO_ANY_LEVEL))
+			if(gun == src || (gun.weapon_weight >= WEAPON_MEDIUM && HAS_TRAIT(user, TRAIT_ANY_DUAL_WIELD)))
 				continue
 			else if(gun.can_trigger_gun(user, akimbo_usage = TRUE))
 				bonus_spread += dual_wield_spread
