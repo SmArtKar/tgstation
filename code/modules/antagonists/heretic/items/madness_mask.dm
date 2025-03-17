@@ -45,6 +45,29 @@
 	REMOVE_TRAIT(src, TRAIT_NODROP, CLOTHING_TRAIT)
 	return ..()
 
+/obj/item/clothing/mask/madness_mask/attack_hand(mob/living/user, list/modifiers)
+	if (!user.aspect_ready("try_take_off_[REF(src)]"))
+		return ..()
+
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
+	user.aspect_cooldown("try_take_off_[REF(src)]", 90 SECONDS)
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			to_chat(user, result.show_message("Laughters echo in your mind as you fail to pull [src] away from your face!"))
+			user.adjustOrganLoss(ORGAN_SLOT_BRAIN, 20, 190)
+			SEND_SOUND(user, sound('sound/effects/magic/voidblink.ogg', 60))
+
+		if (CHECK_SUCCESS)
+			to_chat(user, result.show_message("Focus. Pull. Don't look into it's eyes. Put it on the ground, and leave."))
+			REMOVE_TRAIT(src, TRAIT_NODROP, CLOTHING_TRAIT)
+
+		if (CHECK_CRIT_SUCCESS)
+			to_chat(user, result.show_message("Focus. Pull. Don't look into it's eyes. Put it on the ground, and spit on it. <b><i>Let it rot.</i></b>"))
+			forceMove(src, drop_location())
+			dust()
+			return TRUE
+	return ..()
+
 /obj/item/clothing/mask/madness_mask/process(seconds_per_tick)
 	if(!local_user)
 		return PROCESS_KILL

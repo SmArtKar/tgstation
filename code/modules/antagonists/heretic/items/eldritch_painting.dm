@@ -46,6 +46,11 @@
 		return
 	if(viewer.can_block_magic(MAGIC_RESISTANCE|MAGIC_RESISTANCE_MIND))
 		return
+	// 3 minutes of immunity if you succeed
+	var/datum/check_result/result = viewer.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/shivers)
+	if (result.outcome >= CHECK_SUCCESS)
+		to_chat(viewer, result.show_message("This painting is not meant to your eyes. You should avert your gaze before its too late."))
+		return
 	to_chat(viewer, span_notice(text_to_display))
 	viewer.gain_trauma(applied_trauma, TRAUMA_RESILIENCE_SURGERY)
 	INVOKE_ASYNC(viewer, TYPE_PROC_REF(/mob, emote), "scream")
@@ -70,7 +75,7 @@
 	if (!IS_HERETIC(user))
 		var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_FORMIDDABLE, /datum/aspect/shivers)
 		if (result.outcome >= CHECK_SUCCESS)
-			. += result.show_message("This painting is not meant to your eyes.")
+			. += result.show_message("This painting is not meant to your eyes. You should avert your gaze before its too late.")
 			return
 
 	ADD_TRAIT(user, TRAIT_ELDRITCH_PAINTING_EXAMINE, REF(src))

@@ -479,6 +479,11 @@
 		return ..()
 
 	to_chat(user, span_cult_italic("In a brilliant flash of red, [target] falls to the ground!"))
+	var/datum/check_result/result = target.aspect_check(/datum/aspect/shivers, SKILLCHECK_GODLY)
+	if (result.outcome >= CHECK_SUCCESS)
+		to_chat(target, result.show_message("Concentrate, don't let them break your mind. Breathe in, and get back up."))
+		effect_coef *= 0.5
+
 	target.Paralyze(16 SECONDS * effect_coef)
 	target.flash_act(1, TRUE)
 	if(issilicon(target))

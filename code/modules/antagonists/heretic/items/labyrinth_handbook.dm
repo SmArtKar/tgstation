@@ -48,12 +48,19 @@
 
 /obj/item/heretic_labyrinth_handbook/ranged_interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(!IS_HERETIC(user))
-		if(ishuman(user))
-			var/mob/living/carbon/human/human_user = user
-			to_chat(human_user, span_userdanger("Your mind burns as you stare deep into the book, a headache setting in like your brain is on fire!"))
-			human_user.adjustOrganLoss(ORGAN_SLOT_BRAIN, 30, 190)
-			human_user.add_mood_event("gates_of_mansus", /datum/mood_event/gates_of_mansus)
-			human_user.dropItemToGround(src)
+		if(!ishuman(user))
+			return ITEM_INTERACT_BLOCKING
+
+		var/datum/check_result/result = target.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
+		if(result.outcome >= CHECK_SUCCESS)
+			to_chat(user, result.show_message("You know better than to peer into the depths of the Mansus."))
+			return ITEM_INTERACT_BLOCKING
+
+		var/mob/living/carbon/human/human_user = user
+		to_chat(human_user, span_userdanger("Your mind burns as you stare deep into the book, a headache setting in like your brain is on fire!"))
+		human_user.adjustOrganLoss(ORGAN_SLOT_BRAIN, 30, 190)
+		human_user.add_mood_event("gates_of_mansus", /datum/mood_event/gates_of_mansus)
+		human_user.dropItemToGround(src)
 		return ITEM_INTERACT_BLOCKING
 
 	var/turf/turf_target = get_turf(interacting_with)

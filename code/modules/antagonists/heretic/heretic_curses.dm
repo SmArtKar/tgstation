@@ -77,6 +77,11 @@
 		to_chat(to_curse, span_warning("A ghastly chill envelops you for a moment, but then it passes."))
 		return TRUE
 
+	var/datum/check_result/result = to_curse.aspect_check(/datum/aspect/shivers, SKILLCHECK_IMPOSSIBLE)
+	if(result.outcome >= CHECK_SUCCESS)
+		to_chat(to_curse, result.show_message("A ghastly chill envelops you for a moment, but then it passes."))
+		return TRUE
+
 	log_combat(user, to_curse, "cursed via heretic ritual", addition = "([name])")
 	var/obj/item/codex_cicatrix/morbus/cursed_book = locate() in selected_atoms
 	curse(to_curse, cursed_book)

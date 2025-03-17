@@ -168,7 +168,8 @@
 		return
 	if(!hit.mob_mood)
 		return
-	if(hit.mob_mood.sanity_level > SANITY_LEVEL_UNSTABLE)
+	var/datum/check_result/result = target.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY)
+	if(hit.mob_mood.sanity_level > SANITY_LEVEL_UNSTABLE || result.outcome >= CHECK_SUCCESS)
 		user.balloon_alert(user, "their mind is too strong!")
 		hit.add_mood_event("Moon Amulet Insanity", /datum/mood_event/amulet_insanity)
 		hit.mob_mood.set_sanity(hit.mob_mood.sanity - sanity_damage)
