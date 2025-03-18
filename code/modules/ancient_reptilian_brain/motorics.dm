@@ -8,7 +8,7 @@
 // Aspects
 
 // Allows you to dodge punches, and sometimes even bullets
-/datum/aspect/reaction_speed
+/datum/aspect/reaction_speed // todo: could use additonal effects?
 	name = "Reaction Speed"
 	desc = "The quickest to react. An untouchable man."
 	attribute = /datum/attribute/motorics
@@ -138,7 +138,7 @@
 			examine_strings += result.show_message("Wearing something they shouldn't possess.")
 
 // Allows you to handle emergencies better
-/datum/aspect/in_and_out
+/datum/aspect/in_and_out // TODO: could use additional effects
 	name = "In and Out"
 	desc = "Dash through fires and breaches. Save the day."
 	attribute = /datum/attribute/motorics
@@ -211,7 +211,7 @@
 	return FALSE
 
 // The actual hacking/power handling skill
-/datum/aspect/wire_rat
+/datum/aspect/wire_rat // TODO: combine with grey tide for baton/zap resistance
 	name = "Wire Rat"
 	desc = "Cut the right wires. Chew through the wrong ones."
 	attribute = /datum/attribute/motorics

@@ -8,14 +8,14 @@
 // Aspects
 
 // Melee brawling skill
-/datum/aspect/half_light
+/datum/aspect/half_light // todo: additonal effects?
 	name = "Half Light"
 	desc = "Let the body take control. Threaten people."
 	attribute = /datum/attribute/physique
 
 // How well you handle damage, each level gives max HP and negates some damage slowdown
 // Had to mix endurance and pain threshold together for this one
-/datum/aspect/endurance
+/datum/aspect/endurance // todo: additonal effects?
 	name = "Endurance"
 	desc = "Shrug off the pain. They'll have to hurt you more."
 	attribute = /datum/attribute/physique
@@ -36,7 +36,7 @@
 	REMOVE_TRAIT(old_body, TRAIT_ANALGESIA, ASPECT_TRAIT)
 
 // Handling paranormal items, holy stuff
-/datum/aspect/shivers
+/datum/aspect/shivers // todo: chaplain effects
 	name = "Shivers"
 	desc = "Raise the hair on your neck. Tune in to the forces beyond this world."
 	attribute = /datum/attribute/physique
