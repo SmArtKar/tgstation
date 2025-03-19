@@ -146,12 +146,22 @@
 	// the final list of strings to render
 	var/list/render_list = list()
 
+	var/datum/check_result/result = user.examine_check("[REF(target)]_health_scan", advanced ? SKILLCHECK_EASY : SKILLCHECK_TRIVIAL, /datum/aspect/faveur_de_lame, show_visual = TRUE)
+	var/chaos_value = 1
+	var/oopsie = FALSE
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			chaos_value = 2
+			oopsie = TRUE
+		if (CHECK_FAILURE)
+			chaos_value = 1.25
+
 	// Damage specifics
-	var/oxy_loss = target.getOxyLoss()
-	var/tox_loss = target.getToxLoss()
-	var/fire_loss = target.getFireLoss()
-	var/brute_loss = target.getBruteLoss()
-	var/mob_status = (!target.appears_alive() ? span_alert("<b>Deceased</b>") : "<b>[round(target.health / target.maxHealth, 0.01) * 100]% healthy</b>")
+	var/oxy_loss = target.getOxyLoss() * rand(100 / chaos_value, 100 * chaos_value) * 0.01
+	var/tox_loss = target.getToxLoss() * rand(100 / chaos_value, 100 * chaos_value) * 0.01
+	var/fire_loss = target.getFireLoss() * rand(100 / chaos_value, 100 * chaos_value) * 0.01
+	var/brute_loss = target.getBruteLoss() * rand(100 / chaos_value, 100 * chaos_value) * 0.01
+	var/mob_status = (!target.appears_alive() ? span_alert("<b>Deceased</b>") : "<b>[clamp(round(target.health * rand(100 / chaos_value, 100 * chaos_value) * 0.01 / target.maxHealth, 0.01), 0, 1) * 100]% healthy</b>")
 
 	if(HAS_TRAIT(target, TRAIT_FAKEDEATH) && target.stat != DEAD)
 		// if we don't appear to actually be in a "dead state", add fake oxyloss
@@ -159,7 +169,7 @@
 			oxy_loss += 200 - (oxy_loss + tox_loss + fire_loss + brute_loss)
 			oxy_loss = clamp(oxy_loss, 0, 200)
 
-	render_list += "[span_info("Analyzing results for <b>[target]</b> ([station_time_timestamp()]):")]<br><span class='info ml-1'>Overall status: [mob_status]</span><br>"
+	render_list += "[result.show_message("Analyzing results for:")]<br>[span_info("<b>[target]</b> ([station_time_timestamp()]):")]<br><span class='info ml-1'>Overall status: [mob_status]</span><br>"
 
 	if(!advanced && target.has_reagent(/datum/reagent/inverse/technetium))
 		advanced = TRUE
@@ -181,10 +191,11 @@
 
 	if(target.getStaminaLoss())
 		if(advanced)
-			render_list += "<span class='alert ml-1'>Fatigue level: [target.getStaminaLoss()]%.</span><br>"
+			render_list += "<span class='alert ml-1'>Fatigue level: [clamp(ceil(target.getStaminaLoss() * rand(100 / chaos_value, 100 * chaos_value) * 0.01), 0, 100)]%.</span><br>"
 		else
 			render_list += "<span class='alert ml-1'>Subject appears to be suffering from fatigue.</span><br>"
-	if (!target.get_organ_slot(ORGAN_SLOT_BRAIN)) // kept exclusively for soul purposes
+
+	if (!target.get_organ_slot(ORGAN_SLOT_BRAIN) || oopsie && prob(25)) // kept exclusively for soul purposes
 		render_list += "<span class='alert ml-1'>Subject lacks a brain.</span><br>"
 
 	if(iscarbon(target))
@@ -240,15 +251,17 @@
 						continue
 					dmgreport += "<tr>"
 					dmgreport += "<td><font color='#cc3333'>[capitalize((limb.bodytype & BODYTYPE_ROBOTIC) ? limb.name : limb.plaintext_zone)]:</font></td>"
-					dmgreport += "<td><font color='#cc3333'>[limb.brute_dam > 0 ? ceil(limb.brute_dam) : "0"]</font></td>"
-					dmgreport += "<td><font color='#ff9933'>[limb.burn_dam > 0 ? ceil(limb.burn_dam) : "0"]</font></td>"
+					dmgreport += "<td><font color='#cc3333'>[limb.brute_dam > 0 ? ceil(limb.brute_dam * rand(100 / chaos_value, 100 * chaos_value) * 0.01) : "0"]</font></td>"
+					dmgreport += "<td><font color='#ff9933'>[limb.burn_dam > 0 ? ceil(limb.burn_dam * rand(100 / chaos_value, 100 * chaos_value) * 0.01) : "0"]</font></td>"
 					if(zone == BODY_ZONE_CHEST) // tox/oxy is stored in the chest
-						dmgreport += "<td><font color='#00cc66'>[tox_loss > 0 ? ceil(tox_loss) : "0"]</font></td>"
-						dmgreport += "<td><font color='#33ccff'>[oxy_loss > 0 ? ceil(oxy_loss) : "0"]</font></td>"
+						dmgreport += "<td><font color='#00cc66'>[tox_loss > 0 ? ceil(tox_loss * rand(100 / chaos_value, 100 * chaos_value) * 0.01) : "0"]</font></td>"
+						dmgreport += "<td><font color='#33ccff'>[oxy_loss > 0 ? ceil(oxy_loss * rand(100 / chaos_value, 100 * chaos_value) * 0.01) : "0"]</font></td>"
 					dmgreport += "</tr>"
 					if(has_any_embeds)
 						var/list/embedded_names = list()
 						for(var/obj/item/embed as anything in limb.embedded_objects)
+							if (oopsie && !prob(embed.w_class * 20))
+								continue
 							embedded_names[capitalize(embed.name)] += 1
 						for(var/embedded_name in embedded_names)
 							var/displayed = embedded_name
@@ -258,6 +271,8 @@
 							dmgreport += "<tr><td colspan=6><span class='alert ml-2'>&rdsh; Foreign object(s): [conditional_tooltip(displayed, "Use a hemostat to remove.", tochat)]</span></td></tr>"
 					if(has_any_wounds)
 						for(var/datum/wound/wound as anything in limb.wounds)
+							if (oopsie && !prob(wound.severity * 20))
+								continue
 							dmgreport += "<tr><td colspan=6><span class='alert ml-2'>&rdsh; Physical trauma: [conditional_tooltip("[wound.name] ([wound.severity_text()])", wound.treat_text_short, tochat)]</span></td></tr>"
 
 			dmgreport += "</table></font>"
@@ -314,7 +329,7 @@
 				render = TRUE
 				toReport += "<tr>\
 					<td><font color='#cc3333'>[capitalize(organ.name)]:</font></td>\
-					[advanced ? "<td><font color='#ff3333'>[organ.damage > 0 ? ceil(organ.damage) : "0"]</font></td>" : ""]\
+					[advanced ? "<td><font color='#ff3333'>[organ.damage > 0 ? ceil(organ.damage * rand(100 / chaos_value, 100 * chaos_value) * 0.01) : "0"]</font></td>" : ""]\
 					<td>[status]</td>\
 					</tr>"
 				if(appendix)
@@ -366,19 +381,19 @@
 	var/mob/living/carbon/carbontarget = target
 	var/blood_id = carbontarget.get_blood_id()
 	if(blood_id)
-		var/blood_percent = round((carbontarget.blood_volume / BLOOD_VOLUME_NORMAL) * 100)
+		var/blood_percent = round((carbontarget.blood_volume * rand(100 / chaos_value, 100 * chaos_value) * 0.01 / BLOOD_VOLUME_NORMAL) * 100)
 		var/blood_type = carbontarget.dna.blood_type
 		if(blood_id != /datum/reagent/blood) // special blood substance
 			var/datum/reagent/real_reagent = GLOB.chemical_reagents_list[blood_id]
 			blood_type = real_reagent?.name || blood_id
 		if(carbontarget.blood_volume <= BLOOD_VOLUME_SAFE && carbontarget.blood_volume > BLOOD_VOLUME_OKAY)
-			render_list += "<span class='alert ml-1'>Blood level: LOW [blood_percent]%, [carbontarget.blood_volume] cl,</span> [span_info("type: [blood_type]")]<br>"
+			render_list += "<span class='alert ml-1'>Blood level: LOW [blood_percent]%, [round(carbontarget.blood_volume * rand(100 / chaos_value, 100 * chaos_value) * 0.01)] cl,</span> [span_info("type: [blood_type]")]<br>"
 		else if(carbontarget.blood_volume <= BLOOD_VOLUME_OKAY)
-			render_list += "<span class='alert ml-1'>Blood level: <b>CRITICAL [blood_percent]%</b>, [carbontarget.blood_volume] cl,</span> [span_info("type: [blood_type]")]<br>"
+			render_list += "<span class='alert ml-1'>Blood level: <b>CRITICAL [blood_percent]%</b>, [round(carbontarget.blood_volume * rand(100 / chaos_value, 100 * chaos_value) * 0.01)] cl,</span> [span_info("type: [blood_type]")]<br>"
 		else
-			render_list += "<span class='info ml-1'>Blood level: [blood_percent]%, [carbontarget.blood_volume] cl, type: [blood_type]</span><br>"
+			render_list += "<span class='info ml-1'>Blood level: [blood_percent]%, [round(carbontarget.blood_volume * rand(100 / chaos_value, 100 * chaos_value) * 0.01)] cl, type: [blood_type]</span><br>"
 
-	var/blood_alcohol_content = target.get_blood_alcohol_content()
+	var/blood_alcohol_content = target.get_blood_alcohol_content() * rand(100 / chaos_value, 100 * chaos_value) * 0.01
 	if(blood_alcohol_content > 0)
 		if(blood_alcohol_content >= 0.24)
 			render_list += "<span class='alert ml-1'>Blood alcohol content: <b>CRITICAL [blood_alcohol_content]%</b></span><br>"
@@ -389,6 +404,8 @@
 	var/disease_hr = FALSE
 	for(var/datum/disease/disease as anything in target.diseases)
 		if(disease.visibility_flags & HIDDEN_SCANNER)
+			continue
+		if(result.outcome < CHECK_SUCCESS && prob(45))
 			continue
 		if(!disease_hr)
 			render_list += "<hr>"

@@ -14,19 +14,19 @@
 	attribute = /datum/attribute/psyche
 
 // Looting maintenance, tiding departments, sort-of-hacking-related but in a weirder way
-/datum/aspect/grey_tide
+/datum/aspect/grey_tide // TODO: THIS
 	name = "Grey Tide"
 	desc = "Toolbelt, to store your tools. Toolbox, to apply to skulls."
 	attribute = /datum/attribute/psyche
 
 // Intimidating others, being more efficient in stun combat
-/datum/aspect/command
+/datum/aspect/command // TODO: THIS
 	name = "Command"
 	desc = "Intimidate the public. Assert yourself."
 	attribute = /datum/attribute/psyche
 
 // Gives you constant information about the state of your department and your colleagues
-/datum/aspect/esprit_de_labos
+/datum/aspect/esprit_de_labos // TODO: THIS
 	name = "Esprit de Labōs"
 	desc = "Connect to your department. Understand the spacer culture."
 	attribute = /datum/attribute/psyche
@@ -38,7 +38,7 @@
 	attribute = /datum/attribute/psyche
 
 // See stuff that happened previously, useful for detectives or when you want to hunt someone down
-/datum/aspect/rewind
+/datum/aspect/rewind // TODO: THIS
 	name = "Rewind"
 	desc = "Move back in time, just a bit. Here, a drop of blood was spilled."
 	attribute = /datum/attribute/psyche

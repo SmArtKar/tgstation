@@ -14,13 +14,13 @@
 	attribute = /datum/attribute/intellect
 
 // RND knowledge, xenobio, circuits
-/datum/aspect/cognition
+/datum/aspect/cognition // TODO: THIS but more effects
 	name = "Cognition"
 	desc = "Solve the mysteries of the Universe. Deduce the world."
 	attribute = /datum/attribute/intellect
 
 // Engineering knowledge related to machinery, atmos and construction (not hacking)
-/datum/aspect/mental_clockwork
+/datum/aspect/mental_clockwork // TODO: THIS crafting and machinery
 	name = "Mental Clockwork"
 	desc = "Repair malfunctions. Construct your magnum opus out of scrap."
 	attribute = /datum/attribute/intellect
@@ -37,13 +37,13 @@
 		desc += " Get in the mech, [first_name(attribute.owner.name)]."
 
 // Social camouflage, neat tricks, be a better clown
-/datum/aspect/drama
+/datum/aspect/drama // TODO: THIS
 	name = "Drama"
 	desc = "Play the actor. Lie and detect lies."
 	attribute = /datum/attribute/intellect
 
 // Handles everything under art and cuisine
-/datum/aspect/conceptualization
+/datum/aspect/conceptualization // TODO: THIS
 	name = "Conceptualization"
 	desc = "Understand creativity. See Art in the world."
 	attribute = /datum/attribute/intellect
