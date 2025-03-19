@@ -16,12 +16,12 @@
 // Looting maintenance, tiding departments, sort-of-hacking-related but in a weirder way
 /datum/aspect/grey_tide
 	name = "Grey Tide"
-	desc = "Toolbelt, to wear. Toolbox, to apply to skulls."
+	desc = "Toolbelt, to store your tools. Toolbox, to apply to skulls."
 	attribute = /datum/attribute/psyche
 
 // Intimidating others, being more efficient in stun combat
-/datum/aspect/authority
-	name = "Authority"
+/datum/aspect/command
+	name = "Command"
 	desc = "Intimidate the public. Assert yourself."
 	attribute = /datum/attribute/psyche
 
@@ -32,9 +32,9 @@
 	attribute = /datum/attribute/psyche
 
 // Decreases effects of low sanity or negative moodlets, helps with addictions
-/datum/aspect/volition
-	name = "Volition"
-	desc = "Hold yourself together. Keep your Morale up."
+/datum/aspect/morale
+	name = "Morale"
+	desc = "Hold yourself together. Keep your Sanity up."
 	attribute = /datum/attribute/psyche
 
 // See stuff that happened previously, useful for detectives or when you want to hunt someone down

@@ -204,28 +204,38 @@
 	else if(!appears_dead)
 		var/mob/living/living_user = user
 		if(src != user)
-			if(HAS_TRAIT(user, TRAIT_EMPATH))
+			var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/faveur_de_lame, HAS_TRAIT(user, TRAIT_EMPATH) ? 99 : 0)
+			if(result.outcome >= CHECK_SUCCESS)
 				if (combat_mode)
-					. += "[t_He] seem[p_s()] to be on guard."
-				if (getOxyLoss() >= 10)
-					. += "[t_He] seem[p_s()] winded."
-				if (getToxLoss() >= 10)
-					. += "[t_He] seem[p_s()] sickly."
+					. += result.show_message("[t_He] seem[p_s()] to be on guard.")
+				switch (getOxyLoss())
+					if (10 to 25)
+						. += result.show_message("[t_He] seem[p_s()] winded.")
+					if (26 to INFINITY)
+						. += result.show_message("[t_He] are[p_s()] out of breath.")
+				switch (getToxLoss())
+					if (10 to 25)
+						. += result.show_message("[t_He] seem[p_s()] sickly.")
+					if (26 to INFINITY)
+						. += result.show_message("[t_He] seem[p_s()] seriously unwell.")
+				if(losebreath)
+					. += result.show_message("[t_He] [p_are()] suffocating!")
 				if(mob_mood.sanity <= SANITY_DISTURBED)
-					. += "[t_He] seem[p_s()] distressed."
+					. += result.show_message("[t_He] seem[p_s()] distressed.")
 					living_user.add_mood_event("empath", /datum/mood_event/sad_empath, src)
 				if(is_blind())
-					. += "[t_He] appear[p_s()] to be staring off into space."
+					. += result.show_message("[t_He] appear[p_s()] to be staring off into space.")
 				if (HAS_TRAIT(src, TRAIT_DEAF))
-					. += "[t_He] appear[p_s()] to not be responding to noises."
+					. += result.show_message("[t_He] appear[p_s()] to not be responding to noises.")
 				if (bodytemperature > dna.species.bodytemp_heat_damage_limit)
-					. += "[t_He] [t_is] flushed and wheezing."
+					. += result.show_message("[t_He] [t_is] flushed and wheezing.")
 				if (bodytemperature < dna.species.bodytemp_cold_damage_limit)
-					. += "[t_He] [t_is] shivering."
+					. += result.show_message("[t_He] [t_is] shivering.")
 				if(HAS_TRAIT(src, TRAIT_EVIL))
-					. += "[t_His] eyes radiate with a unfeeling, cold detachment. There is nothing but darkness within [t_his] soul."
-					if(living_user.mind?.holy_role >= HOLY_ROLE_PRIEST)
-						. += span_warning("PERFECT FOR SMITING!!")
+					. += result.show_message("[t_His] eyes radiate with a unfeeling, cold detachment. There is nothing but darkness within [t_his] soul.")
+					result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_FORMIDDABLE, 0, living_user.mind?.holy_role >= HOLY_ROLE_PRIEST ? 5 : 0, show_visual = TRUE)
+					if(result.outcome >= CHECK_SUCCESS)
+						. += result.show_message(span_bold("PERFECT FOR SMITING!!"))
 					else
 						living_user.add_mood_event("encountered_evil", /datum/mood_event/encountered_evil)
 						living_user.set_jitter_if_lower(15 SECONDS)
@@ -283,6 +293,19 @@
 			. += span_notice("A skilled hand has mapped this one's internal intricacies. It will be far easier to perform future experimentations upon [user.p_them()]. <b><i>Exquisite.</i></b>")
 	if(isliving(user) && HAS_MIND_TRAIT(user, TRAIT_EXAMINE_FITNESS))
 		. += compare_fitness(user)
+
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_LEGENDARY, /datum/aspect/faveur_de_lame)
+	if (result.outcome >= CHECK_SUCCESS)
+		var/list/damaged_organs = list()
+		for (var/obj/item/organ/organ as anything in organs)
+			if (organ.organ_flags & ORGAN_HIDDEN)
+				continue
+			if (organ.damage > 10 || (organ.organ_flags & ORGAN_FAILING)) // 10 to prevent low damage organs from triggering the line when there's more important ones
+				damaged_organs += organ
+
+		if (length(damaged_organs))
+			var/obj/item/organ/organ = pick(damaged_organs)
+			. += result.show_message("There's a slight itch in your [parse_zone(organ.zone)]... Their [organ] [organ.organ_flags & ORGAN_FAILING ? "is damaged beyond recovery" : "must be damaged"].")
 
 	var/hud_info = get_hud_examine_info(user)
 	if(length(hud_info))

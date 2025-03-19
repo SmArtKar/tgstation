@@ -133,7 +133,7 @@
 			examine_strings += result.show_message("Soaked in <b><i>their</i></b> blood. Blood of your colleagues, your family.")
 
 	if (contraband_line)
-		result = source.aspect_check(/datum/aspect/authority, SKILLCHECK_MEDIUM)
+		result = source.aspect_check(/datum/aspect/command, SKILLCHECK_MEDIUM)
 		if (result.outcome >= CHECK_SUCCESS)
 			examine_strings += result.show_message("Wearing something they shouldn't possess.")
 
