@@ -85,23 +85,29 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 		/datum/component/bullet_intercepting,\
 		active_slots = ITEM_SLOT_SUITSTORE,\
 		on_intercepted = CALLBACK(src, PROC_REF(on_intercepted_bullet)),\
-		block_charges = 1,\
 	)
 
 /// Destroy the bible when it's shot by a bullet
 /obj/item/book/bible/proc/on_intercepted_bullet(mob/living/victim, obj/projectile/bullet)
 	victim.add_mood_event("blessing", /datum/mood_event/blessing)
 	playsound(victim, 'sound/effects/magic/magic_block_holy.ogg', 50, TRUE)
-	victim.visible_message(span_warning("[src] takes [bullet] in [victim]'s place!"))
+	var/datum/check_result/result = victim.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY, show_visual = TRUE)
 	var/obj/structure/fluff/paper/stack/pages = new(get_turf(src))
 	pages.setDir(pick(GLOB.alldirs))
-	name = "punctured bible"
 	desc = "A memento of good luck, or perhaps divine intervention?"
+	if (result.outcome >= CHECK_SUCCESS)
+		name = "shot bible"
+		victim.visible_message(span_physique_italic("[src] takes [bullet] in [victim]'s place!"), result.show_message("Blessing of the divine has saved you, once more."))
+		return
+
+	name = "punctured bible"
 	icon_state = "shot"
 	if (!GLOB.bible_icon_state)
 		GLOB.bible_icon_state = "shot" // New symbol of your religion if you hadn't picked one
+	victim.visible_message(span_physique_italic("[src] takes [bullet] in [victim]'s place!"), result.show_message("[src] whispers, \"See you Space Cowboy\""))
 	atom_storage?.remove_all(get_turf(src))
 	QDEL_NULL(atom_storage)
+	qdel(GetComponent(/datum/component/bullet_intercepting))
 
 /obj/item/book/bible/examine(mob/user)
 	. = ..()
@@ -166,9 +172,7 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 			user.dna.add_mutation(/datum/mutation/human/clumsy)
 			user.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/clown_hat(user), ITEM_SLOT_MASK)
 		if("insuls")
-			var/obj/item/clothing/gloves/color/fyellow/insuls = new
-			insuls.name = "insuls"
-			insuls.desc = "A mere copy of the true insuls."
+			var/obj/item/clothing/gloves/color/fyellow/holy/insuls = new
 			insuls.siemens_coefficient = 0.99999
 			user.equip_to_slot(insuls, ITEM_SLOT_GLOVES)
 	GLOB.bible_icon_state = icon_state
@@ -201,7 +205,7 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 	new /obj/structure/altar_of_gods(new_altar_area)
 	qdel(src)
 
-/obj/item/book/bible/proc/bless(mob/living/blessed, mob/living/user)
+/obj/item/book/bible/proc/bless(mob/living/blessed, mob/living/user, datum/check_result/result)
 	if(GLOB.religious_sect)
 		return GLOB.religious_sect.sect_bless(blessed,user)
 	if(!ishuman(blessed))
@@ -218,8 +222,8 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 		for(var/obj/item/bodypart/affecting as anything in hurt_limbs)
 			if(affecting.heal_damage(heal_amt, heal_amt, required_bodytype = BODYTYPE_ORGANIC))
 				built_in_his_image.update_damage_overlays()
-		built_in_his_image.visible_message(span_notice("[user] heals [built_in_his_image] with the power of [deity_name]!"))
-		to_chat(built_in_his_image, span_boldnotice("May the power of [deity_name] compel you to be healed!"))
+		user.visible_message(span_physique("[user] heals [built_in_his_image] with the power of [deity_name]!"), result?.show_message("You bless [built_in_his_image]."))
+		to_chat(built_in_his_image, span_physique_bold("May the power of [deity_name] compel you to be healed!"))
 		playsound(built_in_his_image, SFX_PUNCH, 25, TRUE, -1)
 		built_in_his_image.add_mood_event("blessing", /datum/mood_event/blessing)
 	return TRUE
@@ -253,19 +257,20 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 		balloon_alert(user, "can't heal yourself!")
 		return
 
-	var/smack_chance = DEFAULT_SMACK_CHANCE
+	var/smack_difficulty = DEFAULT_SMACK_DIFFICULTY
 	if(GLOB.religious_sect)
-		smack_chance = GLOB.religious_sect.smack_chance
-	var/success = !prob(smack_chance) && bless(target_mob, user)
-	if(success)
+		smack_difficulty = GLOB.religious_sect.smack_difficulty
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/shivers, smack_difficulty, show_visual = TRUE)
+	if(bless(target_mob, user, result))
 		return
 	if(iscarbon(target_mob))
 		var/mob/living/carbon/carbon_target = target_mob
 		if(!istype(carbon_target.head, /obj/item/clothing/head/helmet))
 			carbon_target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 5, 60)
 			carbon_target.balloon_alert(carbon_target, "you feel dumber!")
-	target_mob.visible_message(span_danger("[user] beats [target_mob] over the head with [src]!"), \
-			span_userdanger("[user] beats [target_mob] over the head with [src]!"))
+	target_mob.visible_message(span_physique_bold("[user] beats [target_mob] over the head with [src]!"), \
+			span_big(span_physique_bold("[user] beats [target_mob] over the head with [src]!")), ignored_mobs = user)
+	to_chat(user, result.show_message("The divine is not in the mood for healing today, it seems."))
 	playsound(target_mob, SFX_PUNCH, 25, TRUE, -1)
 	log_combat(user, target_mob, "attacked", src)
 

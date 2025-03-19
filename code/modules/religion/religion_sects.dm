@@ -39,7 +39,7 @@
 	/// Currently Active (non-deleted) rites
 	var/list/active_rites
 	/// Chance that we fail a bible blessing.
-	var/smack_chance = DEFAULT_SMACK_CHANCE
+	var/smack_difficulty = DEFAULT_SMACK_DIFFICULTY
 	/// Whether the structure has CANDLE OVERLAYS!
 	var/candle_overlay = TRUE
 
@@ -297,7 +297,7 @@
 	altar_icon_state = "convertaltar-burden"
 	alignment = ALIGNMENT_NEUT
 	candle_overlay = FALSE
-	smack_chance = 0
+	smack_difficulty = SKILLCHECK_PRIMITIVE
 	rites_list = list(/datum/religion_rites/nullrod_transformation)
 
 /datum/religion_sect/burden/on_conversion(mob/living/carbon/human/new_convert)

@@ -14,6 +14,18 @@
 	// All medicine metabolizes out slower / stay longer if you have a better metabolism
 	chemical_flags |= REAGENT_REVERSE_METABOLISM
 
+/datum/reagent/medicine/on_mob_add(mob/living/affected_mob, amount)
+	. = ..()
+	var/datum/check_result/result = affected_mob.aspect_check(/datum/aspect/electrochemistry, SKILLCHECK_FORMIDDABLE)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	to_chat(affected_mob, result.show_message("Not the hard stuff, but good enough."))
+	switch (result.outcome)
+		if (CHECK_SUCCESS)
+			metabolization_rate *= 0.75
+		if (CHECK_CRIT_SUCCESS)
+			metabolization_rate *= 0.5
+
 /datum/reagent/medicine/leporazine
 	name = "Leporazine"
 	description = "Leporazine will effectively regulate a patient's body temperature, ensuring it never leaves safe levels."

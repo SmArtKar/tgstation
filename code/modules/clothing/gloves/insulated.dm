@@ -112,6 +112,27 @@
 		. -= "partially insulated"
 	.["insulated"] = "It is made from a robust electrical insulator and will block any electricity passing through it!"
 
+/obj/item/clothing/gloves/color/fyellow/holy
+	name = "insuls"
+	desc = "A mere copy of the true insuls."
+
+/obj/item/clothing/gloves/color/fyellow/holy/equipped(mob/living/user, slot)
+	. = ..()
+	if (slot & ITEM_SLOT_GLOVES)
+		RegisterSignal(user, COMSIG_CARBON_SHOULD_ELECTROCUTE, PROC_REF(on_electrocution))
+
+/obj/item/clothing/gloves/color/fyellow/holy/dropped(mob/living/user)
+	. = ..()
+	UnregisterSignal(user, COMSIG_CARBON_SHOULD_ELECTROCUTE)
+
+/obj/item/clothing/gloves/color/fyellow/holy/proc/on_electrocution(mob/living/carbon/source, power_source)
+	SIGNAL_HANDLER
+
+	var/datum/check_result/result = source.aspect_check(/datum/aspect/shivers, SKILLCHECK_FORMIDDABLE, 0, source.get_aspect_level(/datum/aspect/grey_tide) - ASPECT_LEVEL_NEUTRAL)
+	if (result.outcome >= CHECK_SUCCESS)
+		to_chat(source, result.show_message("The divine Tide graces you with its blessing once more."))
+		return COMPONENT_PREVENT_ELECTROCUTION
+
 /obj/item/clothing/gloves/color/fyellow/old
 	desc = "Old and worn out insulated gloves, hopefully they still work."
 	name = "worn out insulated gloves"

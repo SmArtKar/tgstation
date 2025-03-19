@@ -180,3 +180,7 @@
 /// Called at the very end of human character setup
 /// At this point all quirks are assigned and the mob has a mind / client
 #define COMSIG_HUMAN_CHARACTER_SETUP_FINISHED "human_character_setup_finished"
+
+/// Called from /mob/living/carbon/proc/should_electrocute(power_source) : (power_source)
+#define COMSIG_CARBON_SHOULD_ELECTROCUTE "carbon_should_electrocute"
+	#define COMPONENT_PREVENT_ELECTROCUTION (1<<0)

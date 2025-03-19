@@ -1470,11 +1470,15 @@
 /mob/proc/update_equipment_speed_mods()
 	var/speedies = 0
 	var/immutable_speedies = 0
+	var/aspect_modifier = max(1 - (get_aspect_level(/datum/aspect/physical_instrument) - ASPECT_LEVEL_NEUTRAL) * PHYSICAL_INSTRUMENT_SLOWDOWN_NEGATION, 0)
 	for(var/obj/item/thing in get_equipped_speed_mod_items())
+		var/added_slowdown = thing.slowdown
+		if (added_slowdown > 0)
+			added_slowdown *= aspect_modifier
 		if(thing.item_flags & IMMUTABLE_SLOW)
-			immutable_speedies += thing.slowdown
+			immutable_speedies += added_slowdown
 		else
-			speedies += thing.slowdown
+			speedies += added_slowdown
 
 	//if  we have TRAIT_STURDY_FRAME, we reduce our overall speed penalty UNLESS that penalty would be a negative value, and therefore a speed boost.
 	if(speedies > 0 && HAS_TRAIT(src, TRAIT_STURDY_FRAME))

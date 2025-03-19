@@ -867,6 +867,8 @@ GLOBAL_LIST_EMPTY(features_by_species)
 	var/damage = rand(attacking_bodypart.unarmed_damage_low, attacking_bodypart.unarmed_damage_high)
 	var/limb_accuracy = attacking_bodypart.unarmed_effectiveness
 
+	damage = max(damage + (user.get_aspect_level(/datum/aspect/physical_instrument) - ASPECT_LEVEL_NEUTRAL) * PHYSICAL_INSTRUMENT_DAMAGE_BOOST, 0)
+
 	if(grappled)
 		var/pummel_bonus = attacking_bodypart.unarmed_pummeling_bonus
 		damage = floor(damage * pummel_bonus)

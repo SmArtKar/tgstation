@@ -29,6 +29,21 @@
 		if(affected_mob.adjustToxLoss(toxpwr * REM * normalise_creation_purity() * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
 			return UPDATE_MOB_HEALTH
 
+/datum/reagent/toxin/on_mob_add(mob/living/affected_mob, amount)
+	. = ..()
+	if (HAS_TRAIT(affected_mob, TRAIT_TOXIMMUNE) || HAS_TRAIT(affected_mob, TRAIT_TOXINLOVER))
+		return
+	var/datum/check_result/result = affected_mob.aspect_check(/datum/aspect/electrochemistry, SKILLCHECK_CHALLENGING)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	to_chat(affected_mob, result.show_message("Nah, this ain't the right stuff."))
+	switch (result.outcome)
+		if (CHECK_SUCCESS)
+			toxpwr *= 0.75
+		if (CHECK_CRIT_SUCCESS)
+			toxpwr *= 0.5
+			metabolization_rate *= 1.5
+
 /datum/reagent/toxin/amatoxin
 	name = "Amatoxin"
 	description = "A powerful poison derived from certain species of mushroom."

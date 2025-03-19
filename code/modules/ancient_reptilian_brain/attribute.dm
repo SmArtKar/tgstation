@@ -112,9 +112,10 @@
 /mob/proc/aspect_stash(check_id, datum/check_result/result, duration)
 	mind?.aspect_stash_push(check_id, result, duration)
 
-/mob/proc/aspect_stash_get(check_id)
+/mob/proc/aspect_stash_get(check_id, refresh = TRUE)
 	var/datum/check_result/result = mind?.aspect_stash[check_id]
-	result.refresh() // Refresh the result so it shows its tooltip again
+	if (refresh)
+		result.refresh() // Refresh the result so it shows its tooltip again
 	return result
 
 /datum/mind/proc/aspect_stash_push(check_id, datum/check_result/result, duration)

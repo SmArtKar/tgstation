@@ -13,7 +13,7 @@
 #define FESTIVAL_SONG_LONG_ENOUGH 170
 
 /// the probability, when not overridden by sects, for a bible's bless effect to trigger on a smack
-#define DEFAULT_SMACK_CHANCE 60
+#define DEFAULT_SMACK_DIFFICULTY SKILLCHECK_CHALLENGING
 
 //## which weapons should we use?
 

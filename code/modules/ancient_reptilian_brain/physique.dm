@@ -36,7 +36,7 @@
 	REMOVE_TRAIT(old_body, TRAIT_ANALGESIA, ASPECT_TRAIT)
 
 // Handling paranormal items, holy stuff
-/datum/aspect/shivers // todo: chaplain effects
+/datum/aspect/shivers
 	name = "Shivers"
 	desc = "Raise the hair on your neck. Tune in to the forces beyond this world."
 	attribute = /datum/attribute/physique
@@ -53,16 +53,27 @@
 	REMOVE_TRAIT(old_body, TRAIT_MAGICALLY_GIFTED, ASPECT_TRAIT)
 
 // Affects your metabolization and resistance to chemicals, positive and negative
-/datum/aspect/electrochemistry // TODO: THIS
+/datum/aspect/electrochemistry
 	name = "Electrochemistry"
 	desc = "Go to party planet. Love and be loved by drugs."
 	attribute = /datum/attribute/physique
 
 // Unarmed damage, lifting/dragging heavy things, prying doors open with your bare hands. Also being a racist, for some reason.
-/datum/aspect/physical_instrument // TODO: THIS
+/datum/aspect/physical_instrument // todo: additional effects?
 	name = "Physical Instrument"
 	desc = "Flex powerful muscles. Enjoy healthy organs."
 	attribute = /datum/attribute/physique
+
+/datum/aspect/physical_instrument/update_effects(prev_level)
+	var/mob/living/owner = get_body()
+	if (get_level() >= PHYSICAL_INSTRUMENT_DOORPRYER_LEVEL)
+		owner.AddElement(/datum/element/door_pryer, pry_time = 5 SECONDS, interaction_key = PHYSICAL_INSTRUMENT_INTERACTION)
+	else
+		owner.RemoveElement(/datum/element/door_pryer, pry_time = 5 SECONDS, interaction_key = PHYSICAL_INSTRUMENT_INTERACTION)
+
+/datum/aspect/physical_instrument/unregister_body(mob/living/old_body)
+	. = ..()
+	old_body.RemoveElement(/datum/element/door_pryer, pry_time = 5 SECONDS, interaction_key = PHYSICAL_INSTRUMENT_INTERACTION)
 
 // How good are you at working with tools, may depend on hand-eye for precision stuff
 /datum/aspect/handicraft

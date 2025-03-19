@@ -56,6 +56,17 @@
 /// Level of Shivers at which user can freely wield magical items
 #define SHIVERS_MAGIC_GIFT_LEVEL 8
 
+/// Percentile increase of OD threshold per level of Electrochemistry
+#define ELECTROCHEMISTRY_OD_BOOST 0.05
+
+/// Damage increase per level of Physical Instrument
+#define PHYSICAL_INSTRUMENT_DAMAGE_BOOST 2
+/// Percentile decrease of equipment slowdowns per level of Physical Instrument
+#define PHYSICAL_INSTRUMENT_SLOWDOWN_NEGATION 0.075
+/// Level of Physical Instrument at which you can pry doors open with your bare hands
+#define PHYSICAL_INSTRUMENT_DOORPRYER_LEVEL 10
+#define PHYSICAL_INSTRUMENT_INTERACTION "physical_instrument"
+
 /// Movespeed increase per level of Savoir Faire
 #define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.04
 /// Attack speed reduction per level of Savoir Faire

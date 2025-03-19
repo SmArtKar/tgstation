@@ -9,6 +9,19 @@
 	if(trippy)
 		affected_mob.clear_mood_event("[type]_high")
 
+/datum/reagent/drug/on_mob_add(mob/living/affected_mob, amount)
+	. = ..()
+	var/datum/check_result/result = affected_mob.aspect_stash_get("[type]_drug_check", FALSE) || affected_mob.aspect_check(/datum/aspect/electrochemistry, SKILLCHECK_LEGENDARY)
+	affected_mob.aspect_stash("[type]_drug_check", result, 60 SECONDS)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+	to_chat(affected_mob, result.show_message("Oh yeah, that's the shit."))
+	switch (result.outcome)
+		if (CHECK_SUCCESS)
+			metabolization_rate *= 0.75
+		if (CHECK_CRIT_SUCCESS)
+			metabolization_rate *= 0.5
+
 /datum/reagent/drug/space_drugs
 	name = "Space Drugs"
 	description = "An illegal chemical compound used as drug."

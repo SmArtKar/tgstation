@@ -171,7 +171,6 @@
 
 	tooltip_shown = TRUE
 	var/success_prob = get_prob()
-
 	var/diff_string = "Error"
 	switch(success_prob)
 		if(0)
@@ -233,7 +232,7 @@
 		probability_cache = new(18)
 		for (var/i in 3 to 18)
 			probability_cache[i] = chance_value
-			chance_value -= dice_cache[i] * 100 / (dice ** sides)
+			chance_value -= dice_cache[i] * 100 / (sides ** dice)
 
 	var/result = round(probability_cache[difficulty], 0.1)
 	dice_roll_cache["[dice]d[sides]d[difficulty]"] = result

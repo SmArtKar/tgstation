@@ -87,20 +87,21 @@
 /mob/living/proc/update_pull_movespeed()
 	SEND_SIGNAL(src, COMSIG_LIVING_UPDATING_PULL_MOVESPEED)
 
+	var/aspect_modifier = max(1 - (get_aspect_level(/datum/aspect/physical_instrument) - ASPECT_LEVEL_NEUTRAL) * PHYSICAL_INSTRUMENT_SLOWDOWN_NEGATION, 0)
 	if(pulling)
 		if(isliving(pulling))
 			var/mob/living/L = pulling
 			if(!slowed_by_drag || L.body_position == STANDING_UP || L.buckled || grab_state >= GRAB_AGGRESSIVE)
 				remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
 				return
-			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN)
+			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = PULL_PRONE_SLOWDOWN * aspect_modifier)
 			return
 		if(isobj(pulling))
 			var/obj/structure/S = pulling
 			if(!slowed_by_drag || !S.drag_slowdown)
 				remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
 				return
-			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = S.drag_slowdown)
+			add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/bulky_drag, multiplicative_slowdown = min(S.drag_slowdown, S.drag_slowdown * aspect_modifier))
 			return
 	remove_movespeed_modifier(/datum/movespeed_modifier/bulky_drag)
 

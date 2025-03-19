@@ -1341,6 +1341,9 @@
 	if(!get_powernet_info_from_source(power_source))
 		return FALSE
 
+	if (SEND_SIGNAL(src, COMSIG_CARBON_SHOULD_ELECTROCUTE, power_source) & COMPONENT_PREVENT_ELECTROCUTION)
+		return FALSE
+
 	if (HAS_TRAIT(src, TRAIT_SHOCKIMMUNE))
 		return FALSE
 

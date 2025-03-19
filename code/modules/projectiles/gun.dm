@@ -296,14 +296,19 @@
 		)
 		process_fire(user, user, FALSE, user.get_random_valid_zone(even_weights = TRUE))
 		user.dropItemToGround(src, TRUE)
-	else
-		user.visible_message(
-			span_notice("[user] spins [src] around [user.p_their()] finger by the trigger. That's pretty badass."),
-			span_notice("You spin [src] around your finger by the trigger. That's pretty badass."),
-		)
-		playsound(src, 'sound/items/handling/ammobox_pickup.ogg', 20, FALSE)
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
+	user.visible_message(
+		span_notice("[user] spins [src] around [user.p_their()] finger by the trigger. That's pretty badass."),
+		span_notice("You spin [src] around your finger by the trigger. That's pretty badass."),
+	)
+	playsound(src, 'sound/items/handling/ammobox_pickup.ogg', 20, FALSE)
+	spin_effect(user)
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+
+/// Special effect for spinning the gun
+/obj/item/gun/proc/spin_effect(mob/user)
+	return
 
 /obj/item/gun/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(user.combat_mode && isliving(interacting_with))

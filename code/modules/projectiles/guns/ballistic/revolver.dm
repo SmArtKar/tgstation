@@ -143,6 +143,52 @@
 		"Black Panther" = "c38_panther"
 	)
 
+/obj/item/gun/ballistic/revolver/c38/detective/spin_effect(mob/user)
+	if (!HAS_TRAIT(user, TRAIT_MAGICALLY_GIFTED) || !user.aspect_ready("detectives_blessing"))
+		return
+
+	user.aspect_cooldown("detectives_blessing", 1 MINUTES)
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_GODLY, show_visual = TRUE)
+	if (result.outcome < CHECK_SUCCESS)
+		return
+
+	user.emote("smile")
+	var/obj/item/gun/ballistic/revolver/chaplain/detective/new_gun = user.drop_location()
+	user.temporarilyRemoveItemFromInventory(src, force = TRUE)
+	user.put_in_hands(new_gun)
+	qdel(src)
+
+/obj/item/gun/ballistic/revolver/chaplain/detective
+	name = "\improper Colt Detective Exquisite"
+	desc = "Mister Nanotrasen is helping me find my gun."
+	projectile_damage_multiplier = 1
+
+/obj/item/gun/ballistic/revolver/chaplain/detective/spin_effect(mob/user)
+	pray_refill(user)
+
+/obj/item/gun/ballistic/revolver/chaplain/detective/pray_refill(mob/living/carbon/human/user)
+	if(DOING_INTERACTION_WITH_TARGET(user, src) || !istype(user))
+		return
+	user.manual_emote("presses [user.p_their()] palms together...")
+
+	var/delay = 2 SECONDS
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_LEGENDARY, show_visual = TRUE)
+	if (result.outcome == CHECK_CRIT_SUCCESS)
+		delay *= 0.25
+
+	if(!do_after(user, delay, src))
+		balloon_alert(user, "interrupted!")
+		return
+
+	if (result.outcome < CHECK_SUCCESS)
+		to_chat(user, result.show_message("The divine rejects your impure blood."))
+		return
+
+	user.say("#Oh great [GLOB.deity], give me the ammunition I need!", spans = list("physique"), forced = "ammo prayer")
+	magazine.top_off()
+	user.playsound_local(get_turf(src), 'sound/effects/magic/magic_block_holy.ogg', 50, TRUE)
+	chamber_round()
+
 /obj/item/gun/ballistic/revolver/badass
 	name = "\improper Badass Revolver"
 	desc = "A 7-chamber revolver manufactured by Waffle Corp to make their operatives feel Badass. Offers no tactical advantage whatsoever. Uses .357 ammo."
