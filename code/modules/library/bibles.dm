@@ -217,6 +217,8 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 			return FALSE
 
 	var/heal_amt = 10
+	if (result.outcome == CHECK_CRIT_SUCCESS)
+		heal_amt *= 2
 	var/list/hurt_limbs = built_in_his_image.get_damaged_bodyparts(1, 1, BODYTYPE_ORGANIC)
 	if(length(hurt_limbs))
 		for(var/obj/item/bodypart/affecting as anything in hurt_limbs)
@@ -261,7 +263,7 @@ GLOBAL_LIST_INIT(bibleitemstates, list(
 	if(GLOB.religious_sect)
 		smack_difficulty = GLOB.religious_sect.smack_difficulty
 	var/datum/check_result/result = user.aspect_check(/datum/aspect/shivers, smack_difficulty, show_visual = TRUE)
-	if(bless(target_mob, user, result))
+	if(result.outcome >= CHECK_SUCCESS && bless(target_mob, user, result))
 		return
 	if(iscarbon(target_mob))
 		var/mob/living/carbon/carbon_target = target_mob
