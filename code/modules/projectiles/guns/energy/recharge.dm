@@ -150,7 +150,7 @@
 
 /obj/item/gun/energy/recharge/fisher/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("fisher", SKILLCHECK_FORMIDDABLE, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("fisher", SKILLCHECK_FORMIDDABLE, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("The SC/FISHER is an illegally-modified kinetic accelerator cut down and refit into a disassembled miniature energy gun chassis, \

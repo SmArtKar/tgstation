@@ -104,8 +104,10 @@
 	// 0.416% is 15 successes / 3600 seconds. Calculated with 2 minute
 	// mood runtime, so 50% average uptime across the hour.
 	if(HAS_TRAIT(mob_parent, TRAIT_DEPRESSION) && SPT_PROB(0.416, seconds_per_tick) && !(mood_events["depression"]))
-		var/datum/check_result/result = mob_parent.aspect_stash_get("depression_check", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_FORMIDDABLE)
-		mob_parent.aspect_stash("depression_check", result, 180 SECONDS)
+		var/datum/check_result/result = mob_parent.aspect_stash_get("depression_check", FALSE)
+		if (!result)
+			result = mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_FORMIDDABLE)
+			mob_parent.aspect_stash("depression_check", result, 180 SECONDS)
 		if (result.outcome >= CHECK_SUCCESS)
 			if (!result.tooltip_shown)
 				to_chat(mob_parent, result.show_message("Don't let sadness take hold of you."))
@@ -562,8 +564,10 @@
 		mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
 		return
 
-	var/datum/check_result/result = mob_parent.aspect_stash_get("sanity_check", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_LEGENDARY, exp_modifier = 0.3)
-	mob_parent.aspect_stash("sanity_check", result, 60 SECONDS)
+	var/datum/check_result/result = mob_parent.aspect_stash_get("sanity_check", FALSE)
+	if (!result)
+		result = mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_LEGENDARY, exp_modifier = 0.3)
+		mob_parent.aspect_stash("sanity_check", result, 60 SECONDS)
 	if (result.outcome < CHECK_SUCCESS)
 		mob_parent.apply_status_effect(/datum/status_effect/hallucination/sanity)
 		return
@@ -575,11 +579,13 @@
 /// Adjusts sanity with modifiers, unless override is passed
 /datum/mood/proc/adjust_sanity(amount, minimum = SANITY_INSANE, maximum = SANITY_GREAT, override = FALSE)
 	if (!override && amount < 0)
-		var/datum/check_result/result = mob_parent.aspect_stash_get("sanity_adjustment", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_GODLY, exp_modifier = 0.1)
-		mob_parent.aspect_stash("sanity_adjustment", result, 60 SECONDS)
+		var/datum/check_result/result = mob_parent.aspect_stash_get("sanity_adjustment", FALSE)
+		if (!result)
+			result = mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_GODLY, exp_modifier = 0.1)
+			mob_parent.aspect_stash("sanity_adjustment", result, 60 SECONDS)
 		if (result.outcome >= CHECK_SUCCESS)
 			amount = 0 // Adjust towards neutral
-	set_sanity(amount, minimum, maximum, override)
+	set_sanity(sanity + amount, minimum, maximum, override)
 
 /// Sets the insanity effect on the mob
 /datum/mood/proc/set_insanity_effect(newval)

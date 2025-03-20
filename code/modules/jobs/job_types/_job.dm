@@ -167,7 +167,9 @@
 			spawned.get_attribute(attribute).set_level(attributes[attribute])
 
 	if (signature)
-		spawned.get_aspect(signature).signature = TRUE
+		var/datum/aspect/signature_aspect = spawned.get_aspect(signature)
+		signature_aspect.signature = TRUE
+		signature_aspect.adjust_level(1)
 
 	if(!ishuman(spawned))
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_SPAWN, src, spawned, player_client)

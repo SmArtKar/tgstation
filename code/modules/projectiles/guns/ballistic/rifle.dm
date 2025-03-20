@@ -312,7 +312,7 @@
 
 /obj/item/gun/ballistic/rifle/boltaction/pipegun/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("pipegun", SKILLCHECK_HARD, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("pipegun", SKILLCHECK_HARD, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("Looking down at \the [src], you recall a tale told to you in some distant memory...")

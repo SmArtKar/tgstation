@@ -117,7 +117,7 @@
 
 /obj/structure/mounted_gun/pipe/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("pipe_organ_gun", SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("pipe_organ_gun", SKILLCHECK_CHALLENGING, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("Looking down at \the [src], you recall a tale told to you in some distant memory...")

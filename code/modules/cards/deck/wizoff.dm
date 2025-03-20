@@ -23,7 +23,7 @@
 
 /obj/item/toy/singlecard/wizoff_ruleset/examine(mob/living/carbon/human/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_PRIMITIVE, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("Remember the rules of Wiz-Off!")

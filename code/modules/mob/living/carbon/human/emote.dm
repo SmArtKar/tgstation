@@ -76,6 +76,31 @@
 		return
 	return user.dna.species.get_scream_sound(user)
 
+/datum/emote/living/carbon/human/scream/run_emote(mob/user, params, type_override, intentional)
+	if (!user.aspect_ready("scream_stun"))
+		return ..()
+
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/command, SKILLCHECK_LEGENDARY, show_visual = TRUE)
+	user.aspect_cooldown("scream_stun", 60 SECONDS)
+	if (result.outcome < CHECK_SUCCESS)
+		return ..()
+
+	message = "yells a commanding shout!"
+	message_mime = "acts out a commanding shout!"
+	. = ..()
+	message = initial(message)
+	message_mime = initial(message_mime)
+
+	for (var/mob/living/carbon/hearer in hearers(world.view, user))
+		if (hearer == user || HAS_TRAIT(hearer, TRAIT_DEAF))
+			continue
+
+		var/datum/check_result/contest = hearer.aspect_check(/datum/aspect/morale, result.roll + result.modifier)
+		if (contest.outcome >= CHECK_SUCCESS)
+			to_chat(hearer, contest.show_message("Don't listen to [user.p_them()]."))
+		else
+			hearer.Paralyze(0.5 SECONDS)
+
 /datum/emote/living/carbon/human/scream/screech //If a human tries to screech it'll just scream.
 	key = "screech"
 	key_third_person = "screeches"

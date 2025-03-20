@@ -92,7 +92,7 @@
 /obj/machinery/ltsrbt/examine(mob/user)
 	. = ..()
 	// What is stock market but a stage? said literally noone
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/drama)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_TRIVIAL, /datum/aspect/acting)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 

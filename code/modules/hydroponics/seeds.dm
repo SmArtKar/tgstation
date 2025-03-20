@@ -113,7 +113,7 @@
 /obj/item/seeds/examine(mob/user)
 	. = ..()
 	. += span_notice("Use a pen on it to rename it or change its description.")
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia, user.can_see_reagents() ? SKILLCHECK_CHALLENGING : 0)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/erudition, user.can_see_reagents() ? SKILLCHECK_CHALLENGING : 0)
 	if(reagents_add && (user.can_see_reagents() || result.outcome == CHECK_CRIT_SUCCESS))
 		. += result.show_message("You recall this breed of [plantname] having the following reagents:")
 		for(var/datum/plant_gene/reagent/reagent_gene in genes)

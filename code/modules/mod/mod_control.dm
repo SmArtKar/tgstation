@@ -168,7 +168,7 @@
 
 /obj/item/mod/control/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("[theme.type]", SKILLCHECK_TRIVIAL, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("[theme.type]", SKILLCHECK_TRIVIAL, /datum/aspect/erudition)
 	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("<i>[extended_desc]</i>")
 

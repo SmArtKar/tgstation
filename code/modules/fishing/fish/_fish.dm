@@ -493,7 +493,7 @@
 		. += span_boldnicegreen("Caught by [catcher_name] on [catch_date].")
 
 	var/good_fisher = HAS_MIND_TRAIT(user, TRAIT_EXAMINE_FISH) || HAS_TRAIT(loc, TRAIT_EXAMINE_FISH)
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_LEGENDARY, /datum/aspect/encyclopedia, good_fisher ? SKILLCHECK_LEGENDARY : 0)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_LEGENDARY, /datum/aspect/erudition, good_fisher ? SKILLCHECK_LEGENDARY : 0)
 	if(good_fisher || result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("It's [size] cm long.")
 		. += result.show_message("It weighs [weight] g.")

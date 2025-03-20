@@ -29,7 +29,7 @@
 		/datum/attribute/motorics = 0,
 	)
 
-	signature = /datum/aspect/encyclopedia
+	signature = /datum/aspect/erudition
 
 /datum/job/ai/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

@@ -8,8 +8,8 @@
 // Aspects
 
 // Random bullshit trivia, go
-/datum/aspect/encyclopedia
-	name = "Encyclopedia"
+/datum/aspect/erudition
+	name = "Erudition"
 	desc = "Call upon all your knowledge. Produce fascinating trivia."
 	attribute = /datum/attribute/intellect
 
@@ -37,13 +37,13 @@
 		desc += " Get in the mech, [first_name(attribute.owner.name)]."
 
 // Social camouflage, neat tricks, be a better clown
-/datum/aspect/drama // TODO: THIS
-	name = "Drama"
-	desc = "Play the actor. Lie and detect lies."
+/datum/aspect/acting // TODO: THIS
+	name = "Acting"
+	desc = "Lights, curtains, stage. Fool the world."
 	attribute = /datum/attribute/intellect
 
 // Handles everything under art and cuisine
-/datum/aspect/conceptualization // TODO: THIS
-	name = "Conceptualization"
+/datum/aspect/impression // TODO: THIS
+	name = "Impression"
 	desc = "Understand creativity. See Art in the world."
 	attribute = /datum/attribute/intellect

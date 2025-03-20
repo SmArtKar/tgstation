@@ -538,7 +538,7 @@
 
 /obj/item/fish/babbelfish/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("babbel", SKILLCHECK_CHALLENGING, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("babbel", SKILLCHECK_CHALLENGING, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message(span_small(

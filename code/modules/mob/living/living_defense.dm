@@ -315,6 +315,11 @@
 		to_chat(user, span_warning("You don't want to risk hurting [src]!"))
 		return FALSE
 
+	var/datum/check_result/result = user.aspect_stash_get("depression_check", FALSE) || user.aspect_check(/datum/aspect/command, SKILLCHECK_PRIMITIVE, 0, get_aspect_level(/datum/aspect/command) - ASPECT_LEVEL_NEUTRAL, show_visual = TRUE)
+	if (result.outcome < CHECK_SUCCESS)
+		to_chat(user, result.show_message("You don't want to risk [src]'s wrath."))
+		return FALSE
+
 	grippedby(user)
 	update_incapacitated()
 
@@ -755,12 +760,16 @@
 			log_combat(src, target, "shoved", "knocking them down[weapon ? " with [weapon]" : ""]")
 			return
 
-	if(shove_flags & SHOVE_CAN_KICK_SIDE) //KICK HIM IN THE NUTS
+	// Assert your dominance
+	var/datum/check_result/result = aspect_check(/datum/aspect/command, SKILLCHECK_TRIVIAL, show_visual = TRUE)
+	if(result.outcome >= CHECK_SUCCESS && (shove_flags & SHOVE_CAN_KICK_SIDE)) //KICK HIM IN THE NUTS
 		target.Paralyze(SHOVE_CHAIN_PARALYZE)
+		if (result.outcome == CHECK_CRIT_SUCCESS) // C-c-combo!
+			target.Knockdown(SHOVE_CHAIN_PARALYZE, daze_amount = SHOVE_CHAIN_PARALYZE)
 		target.apply_status_effect(/datum/status_effect/no_side_kick)
-		target.visible_message(span_danger("[name] kicks [target.name] onto [target.p_their()] side!"),
+		target.visible_message(span_psyche_bold("[name] kicks [target.name] onto [target.p_their()] side!"),
 						span_userdanger("You're kicked onto your side by [name]!"), span_hear("You hear aggressive shuffling followed by a loud thud!"), COMBAT_MESSAGE_RANGE, src)
-		to_chat(src, span_danger("You kick [target.name] onto [target.p_their()] side!"))
+		to_chat(src, result.show_message("You kick [target.name] onto [target.p_their()] side!"))
 		addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living, SetKnockdown), 0), SHOVE_CHAIN_PARALYZE)
 		log_combat(src, target, "kicks", "onto their side (paralyzing)")
 		return

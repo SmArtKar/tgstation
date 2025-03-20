@@ -231,17 +231,29 @@
 		target.flash_act(affect_silicon = TRUE)
 		target.Paralyze((isnull(stun_override) ? stun_time_cyborg : stun_override) * (trait_check ? 0.1 : 1))
 		additional_effects_cyborg(target, user)
-	else
-		if(ishuman(target))
-			var/mob/living/carbon/human/human_target = target
-			if(prob(force_say_chance))
-				human_target.force_say()
-		var/effective_armour_penetration = get_stun_penetration_value()
-		var/armour_block = target.run_armor_check(null, armour_type_against_stun, null, null, effective_armour_penetration)
-		target.apply_damage(stamina_damage, STAMINA, blocked = armour_block)
-		if(!trait_check)
-			target.Knockdown((isnull(stun_override) ? knockdown_time : stun_override))
-		additional_effects_non_cyborg(target, user)
+		SEND_SIGNAL(target, COMSIG_MOB_BATONED, user, src)
+		return TRUE
+
+	if(ishuman(target))
+		var/mob/living/carbon/human/human_target = target
+		if(prob(force_say_chance))
+			human_target.force_say()
+	var/effective_armour_penetration = get_stun_penetration_value(user, target)
+	var/armour_block = target.run_armor_check(null, armour_type_against_stun, null, null, effective_armour_penetration)
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/command, SKILLCHECK_EASY, crit_fail_modifier = -7, show_visual = TRUE)
+	user.aspect_stash("[REF(target)]_baton", result, 3 SECONDS)
+	var/effect_multiplier = 1
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			effect_multiplier = 0.1
+		if (CHECK_FAILURE)
+			effect_multiplier = 0.5
+		if (CHECK_CRIT_SUCCESS)
+			effect_multiplier = 1.5
+	target.apply_damage(stamina_damage * effect_multiplier, STAMINA, blocked = armour_block)
+	if(!trait_check)
+		target.Knockdown((isnull(stun_override) ? knockdown_time : stun_override) * effect_multiplier)
+	additional_effects_non_cyborg(target, user)
 	SEND_SIGNAL(target, COMSIG_MOB_BATONED, user, src)
 	return TRUE
 
@@ -324,7 +336,7 @@
 	return
 
 /// Handles the penetration value of our baton, called during baton_effect()
-/obj/item/melee/baton/proc/get_stun_penetration_value()
+/obj/item/melee/baton/proc/get_stun_penetration_value(mob/living/user, mob/living/target)
 	return stun_armour_penetration
 
 /obj/item/conversion_kit
@@ -751,12 +763,17 @@
 	stun_override = 0 //Avoids knocking people down prematurely.
 	return ..()
 
-/obj/item/melee/baton/security/get_stun_penetration_value()
-	if(cell)
-		var/chargepower = cell.maxcharge
-		var/zap_pen = clamp(chargepower/STANDARD_CELL_CHARGE, 0, 100)
-		return zap_pen + additional_stun_armour_penetration
-	return stun_armour_penetration + additional_stun_armour_penetration
+/obj/item/melee/baton/security/get_stun_penetration_value(mob/living/user, mob/living/target)
+	var/aspect_mod = 0
+	if (user)
+		aspect_mod += (user.get_aspect_level(/datum/aspect/command) - ASPECT_LEVEL_NEUTRAL) * COMMAND_BATON_PENETRATION
+
+	if(!cell)
+		return stun_armour_penetration + additional_stun_armour_penetration + aspect_mod
+
+	var/chargepower = cell.maxcharge
+	var/zap_pen = clamp(chargepower/STANDARD_CELL_CHARGE, 0, 100)
+	return zap_pen + additional_stun_armour_penetration + aspect_mod
 
 /*
  * After a target is hit, we apply some status effects.
@@ -768,16 +785,28 @@
 	target.set_stutter_if_lower(16 SECONDS)
 
 	SEND_SIGNAL(target, COMSIG_LIVING_MINOR_SHOCK)
-	addtimer(CALLBACK(src, PROC_REF(apply_stun_effect_end), target), 2 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(apply_stun_effect_end), user, target), 2 SECONDS)
 
 /// After the initial stun period, we check to see if the target needs to have the stun applied.
-/obj/item/melee/baton/security/proc/apply_stun_effect_end(mob/living/target)
-	var/trait_check = HAS_TRAIT(target, TRAIT_BATON_RESISTANCE) //var since we check it in out to_chat as well as determine stun duration
-	if(!target.IsKnockdown())
-		to_chat(target, span_warning("Your muscles seize, making you collapse[trait_check ? ", but your body quickly recovers..." : "!"]"))
+/obj/item/melee/baton/security/proc/apply_stun_effect_end(mob/living/user, mob/living/target)
+	var/freebie = HAS_TRAIT(target, TRAIT_BATON_RESISTANCE) //var since we check it in out to_chat as well as determine stun duration
+	var/datum/check_result/result = target.aspect_check(/datum/aspect/wire_rat, SKILLCHECK_GODLY, 0, freebie ? 99 : (target.get_aspect_level(/datum/aspect/grey_tide) - ASPECT_LEVEL_NEUTRAL), show_visual = TRUE)
+	if (result.outcome >= CHECK_SUCCESS)
+		freebie = TRUE
 
-	if(!trait_check)
-		target.Knockdown(knockdown_time)
+	if(!target.IsKnockdown())
+		to_chat(target, result.show_message("Your muscles seize, making you collapse[freebie ? ", but your body quickly recovers..." : "!"]"))
+
+	result = user.aspect_stash_get("[REF(target)]_baton")
+	var/effect_multiplier = 1
+	switch (result.outcome)
+		if (CHECK_CRIT_FAILURE)
+			effect_multiplier = 0.1
+		if (CHECK_FAILURE)
+			effect_multiplier = 0.5
+		if (CHECK_CRIT_SUCCESS)
+			effect_multiplier = 1.5
+	target.Knockdown(freebie ? 0.1 SECONDS : knockdown_time * effect_multiplier)
 
 /obj/item/melee/baton/security/get_wait_description()
 	return span_danger("The baton is still charging!")

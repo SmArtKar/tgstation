@@ -72,7 +72,7 @@
 
 /obj/item/gun/ballistic/automatic/pistol/clandestine/fisher/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("ansem_fisher", SKILLCHECK_FORMIDDABLE, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("ansem_fisher", SKILLCHECK_FORMIDDABLE, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message("The Ansem/SC is a Scarborough Arms-manufactured overhaul suite for the also Scarborough Arms-manufactured Ansem handgun, designed for special \

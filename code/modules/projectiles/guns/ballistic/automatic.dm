@@ -400,7 +400,7 @@
 
 /obj/item/gun/ballistic/automatic/battle_rifle/examine_more(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("battle_rifle", SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("battle_rifle", SKILLCHECK_MEDIUM, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 

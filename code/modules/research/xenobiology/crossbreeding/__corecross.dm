@@ -40,7 +40,7 @@ To add a crossbreed:
 
 /obj/item/slimecross/examine(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/encyclopedia, user.get_aspect_level(/datum/aspect/cognition) - ASPECT_LEVEL_NEUTRAL)
+	var/datum/check_result/result = user.examine_check(type, SKILLCHECK_EASY, /datum/aspect/erudition, user.get_aspect_level(/datum/aspect/cognition) - ASPECT_LEVEL_NEUTRAL)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	if(effect_desc)

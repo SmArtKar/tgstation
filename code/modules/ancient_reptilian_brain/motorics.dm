@@ -137,6 +137,11 @@
 		if (result.outcome >= CHECK_SUCCESS)
 			examine_strings += result.show_message("Wearing something they shouldn't possess.")
 
+	if (ACCESS_COMMAND in inspected.wear_id?.GetAccess())
+		result = source.aspect_check(/datum/aspect/grey_tide, SKILLCHECK_GODLY)
+		if (result.outcome >= CHECK_SUCCESS)
+			examine_strings += result.show_message("With that sweet, savory <b><i>bridge</b></i> access.")
+
 // Allows you to handle emergencies better
 /datum/aspect/in_and_out // TODO: could use additional effects
 	name = "In and Out"
@@ -211,7 +216,7 @@
 	return FALSE
 
 // The actual hacking/power handling skill
-/datum/aspect/wire_rat // TODO: combine with grey tide for baton/zap resistance
+/datum/aspect/wire_rat
 	name = "Wire Rat"
 	desc = "Cut the right wires. Chew through the wrong ones."
 	attribute = /datum/attribute/motorics
@@ -222,7 +227,7 @@
 		return
 
 	var/list/wires = list()
-	var/datum/check_result/result = user.examine_check("[REF(target)]_wires", SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("[REF(target)]_wires", SKILLCHECK_PRIMITIVE, /datum/aspect/erudition)
 	if (result?.outcome >= CHECK_SUCCESS)
 		var/skipped = FALSE
 		for (var/wire in target.wires.wires)

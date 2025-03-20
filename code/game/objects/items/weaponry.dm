@@ -482,7 +482,7 @@ for further reading, please see: https://github.com/tgstation/tgstation/pull/301
 
 /obj/item/carpenter_hammer/examine(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("carpenter_hammer", SKILLCHECK_PRIMITIVE, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("carpenter_hammer", SKILLCHECK_PRIMITIVE, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		return
 	. += result.show_message(pick(

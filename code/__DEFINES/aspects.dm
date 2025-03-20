@@ -46,6 +46,12 @@
 /// Maximum level that any aspect can have, after all modifiers applied
 #define ASPECT_LEVEL_MAXIMUM 16
 
+/// How much armor penetration do batons get per level of Command?
+#define COMMAND_BATON_PENETRATION 5
+
+/// Increase/reduction of high/low sanity effects per level of Morale
+#define MORALE_SANITY_EFFECT_MODIFIER 0.1
+
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 7.5
 /// Increase to divider of damage slowdown per level of Endurance
@@ -68,9 +74,6 @@
 #define PHYSICAL_INSTRUMENT_INTERACTION "physical_instrument"
 /// How much experience you get by prying open a door
 #define DOOR_PRIED_EXP 150
-
-/// Increase/reduction of high/low sanity effects per level of Morale
-#define MORALE_SANITY_EFFECT_MODIFIER 0.1
 
 /// Movespeed increase per level of Savoir Faire
 #define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.04

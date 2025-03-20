@@ -267,6 +267,7 @@
 	icon_state = "d20"
 	alpha = 200
 	appearance_flags = KEEP_APART|RESET_COLOR|RESET_ALPHA|RESET_TRANSFORM|PIXEL_SCALE
+	plane = ABOVE_GAME_PLANE
 
 /obj/effect/abstract/die_back/update_overlays()
 	. = ..()
@@ -275,6 +276,7 @@
 /obj/effect/abstract/die_number
 	icon = 'icons/obj/toys/dice.dmi'
 	icon_state = "d20-1"
+	plane = ABOVE_GAME_PLANE
 
 #undef ASPECT_LEVEL_EXP_FLOOR
 #undef ASPECT_LEVEL_EXP_ADDITIONAL

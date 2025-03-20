@@ -109,7 +109,7 @@
 
 /obj/machinery/syndicatebomb/examine(mob/user)
 	. = ..()
-	var/datum/check_result/result = user.examine_check("syndiebomb", SKILLCHECK_MEDIUM, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check("syndiebomb", SKILLCHECK_MEDIUM, /datum/aspect/erudition)
 	if (result.outcome >= CHECK_SUCCESS)
 		. += result.show_message("The patented external shell design is resistant to \"probably all\" forms of external explosive compression, protecting the electronically-trigged bomb core from accidental early detonation.")
 

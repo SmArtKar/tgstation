@@ -73,7 +73,7 @@
 	. += span_notice("Add fuel via wood/coal stacks or any open container having a good fuel source")
 	. += span_notice("Place any food item on top via hand to start grilling")
 
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_HARD, /datum/aspect/encyclopedia)
+	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_HARD, /datum/aspect/erudition)
 	if (result.outcome < CHECK_SUCCESS)
 		. += result.show_message("You recall that simian-branded soda resulting in best char, although you could probably fuel it with oil, or even welding fuel or pure ethanol if you're truely desperate.")
 

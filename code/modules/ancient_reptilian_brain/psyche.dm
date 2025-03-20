@@ -20,7 +20,7 @@
 	attribute = /datum/attribute/psyche
 
 // Intimidating others, being more efficient in stun combat
-/datum/aspect/command // TODO: THIS
+/datum/aspect/command // TODO: More interactions
 	name = "Command"
 	desc = "Intimidate the public. Assert yourself."
 	attribute = /datum/attribute/psyche
