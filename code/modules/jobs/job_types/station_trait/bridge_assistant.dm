@@ -42,6 +42,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/savoir_faire
+
 /datum/job/bridge_assistant/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
 	var/mob/living/carbon/bridgie = spawned

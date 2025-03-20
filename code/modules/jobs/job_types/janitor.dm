@@ -39,6 +39,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/physical_instrument
+
 /datum/outfit/job/janitor
 	name = "Janitor"
 	jobtype = /datum/job/janitor

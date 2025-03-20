@@ -36,6 +36,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/command
+
 /datum/outfit/job/lawyer
 	name = "Lawyer"
 	jobtype = /datum/job/lawyer

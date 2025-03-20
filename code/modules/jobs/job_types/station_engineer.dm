@@ -46,6 +46,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/wire_rat
+
 /datum/outfit/job/engineer
 	name = "Station Engineer"
 	jobtype = /datum/job/station_engineer

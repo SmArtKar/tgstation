@@ -43,6 +43,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/cognition
+
 /datum/outfit/job/scientist
 	name = "Scientist"
 	jobtype = /datum/job/scientist

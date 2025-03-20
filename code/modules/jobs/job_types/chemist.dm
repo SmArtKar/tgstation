@@ -44,6 +44,8 @@
 		/datum/attribute/motorics = 0,
 	)
 
+	signature = /datum/aspect/electrochemistry
+
 /datum/outfit/job/chemist
 	name = "Chemist"
 	jobtype = /datum/job/chemist

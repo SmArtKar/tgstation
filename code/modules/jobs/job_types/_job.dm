@@ -139,6 +139,10 @@
 	/// Account for additional player-allocated points, so this should be ~6 on average
 	var/list/attributes
 
+	/// Signature aspect, if any.
+	/// Signature aspects can be leveled infinitely, regardless of attribute cap
+	var/signature
+
 /datum/job/New()
 	. = ..()
 	var/new_spawn_positions = CHECK_MAP_JOB_CHANGE(title, "spawn_positions")
@@ -161,6 +165,9 @@
 	if(length(attributes))
 		for (var/attribute in attributes)
 			spawned.get_attribute(attribute).set_level(attributes[attribute])
+
+	if (signature)
+		spawned.get_aspect(signature).signature = TRUE
 
 	if(!ishuman(spawned))
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_SPAWN, src, spawned, player_client)

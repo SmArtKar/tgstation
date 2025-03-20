@@ -34,6 +34,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/half_light
+
 /datum/job/pun_pun/get_spawn_mob(client/player_client, atom/spawn_point)
 	if (!player_client)
 		return

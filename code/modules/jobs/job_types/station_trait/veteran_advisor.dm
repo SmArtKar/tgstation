@@ -44,6 +44,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/esprit_de_labos
+
 /datum/job/veteran_advisor/get_default_roundstart_spawn_point()
 	for(var/obj/effect/landmark/start/spawn_point as anything in GLOB.start_landmarks_list)
 		if(spawn_point.name != "Security Officer")

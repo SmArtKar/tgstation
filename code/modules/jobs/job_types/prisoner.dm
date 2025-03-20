@@ -32,6 +32,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/half_light
+
 /datum/job/prisoner/New()
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_GLOB_CREWMEMBER_JOINED, PROC_REF(handle_prisoner_joining))

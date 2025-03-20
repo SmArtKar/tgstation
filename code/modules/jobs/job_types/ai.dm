@@ -29,6 +29,8 @@
 		/datum/attribute/motorics = 0,
 	)
 
+	signature = /datum/aspect/encyclopedia
+
 /datum/job/ai/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
 	//we may have been created after our borg

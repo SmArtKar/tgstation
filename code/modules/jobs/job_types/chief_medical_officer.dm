@@ -54,6 +54,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/faveur_de_lame
+
 /datum/job/chief_medical_officer/get_captaincy_announcement(mob/living/captain)
 	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
 

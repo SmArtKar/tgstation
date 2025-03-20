@@ -43,6 +43,8 @@ Assistant
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/grey_tide
+
 /datum/job/assistant/get_outfit(consistent)
 	if(consistent)
 		return /datum/outfit/job/assistant/preview

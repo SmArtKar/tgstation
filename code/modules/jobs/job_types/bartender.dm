@@ -39,6 +39,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/handicraft
+
 /datum/job/bartender/award_service(client/winner, award)
 	winner.give_award(award, winner.mob)
 

@@ -41,6 +41,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/four_legged_wheelbarrel
+
 /datum/job/roboticist/New()
 	. = ..()
 	family_heirlooms += subtypesof(/obj/item/toy/mecha)

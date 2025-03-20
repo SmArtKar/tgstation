@@ -25,6 +25,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/physical_instrument
+
 /datum/job/cargo_gorilla/get_roundstart_spawn_point()
 	if (length(GLOB.gorilla_start))
 		return pick(GLOB.gorilla_start)

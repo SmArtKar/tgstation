@@ -40,6 +40,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/morale
+
 /datum/outfit/job/psychologist
 	name = "Psychologist"
 	jobtype = /datum/job/psychologist

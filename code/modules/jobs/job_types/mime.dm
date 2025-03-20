@@ -43,6 +43,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/conceptualization
+
 /datum/job/mime/after_spawn(mob/living/spawned, client/player_client)
 	if (ishuman(spawned))
 		spawned.apply_pref_name(/datum/preference/name/mime, player_client)

@@ -48,6 +48,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/reaction_speed
+
 /datum/job/head_of_security/get_captaincy_announcement(mob/living/captain)
 	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
 

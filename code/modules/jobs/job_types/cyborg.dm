@@ -28,6 +28,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/four_legged_wheelbarrel
+
 /datum/job/cyborg/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
 	if(!iscyborg(spawned))

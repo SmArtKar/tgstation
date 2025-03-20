@@ -52,6 +52,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/rewind
+
 /datum/outfit/job/detective
 	name = "Detective"
 	jobtype = /datum/job/detective

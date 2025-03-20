@@ -43,6 +43,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/encyclopedia
+
 /datum/outfit/job/curator
 	name = "Curator"
 	jobtype = /datum/job/curator

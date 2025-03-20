@@ -38,6 +38,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/cognition
+
 /datum/outfit/job/geneticist
 	name = "Geneticist"
 	jobtype = /datum/job/geneticist

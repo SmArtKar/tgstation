@@ -42,6 +42,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/esprit_de_labos // Oh cargonia...
+
 /datum/outfit/job/cargo_tech
 	name = "Cargo Technician"
 	jobtype = /datum/job/cargo_technician

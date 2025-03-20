@@ -35,6 +35,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/endurance
+
 /datum/outfit/job/miner
 	name = "Shaft Miner"
 	jobtype = /datum/job/shaft_miner

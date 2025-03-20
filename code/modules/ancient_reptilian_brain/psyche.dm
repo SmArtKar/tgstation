@@ -8,7 +8,7 @@
 // Aspects
 
 // Medical knowledge, ability to determine state that someone is in at a glance, patching people up with your bare hands
-/datum/aspect/faveur_de_lame
+/datum/aspect/faveur_de_lame // TODO: Add barehanded healing
 	name = "Faveur de l'Âme"
 	desc = "Feel the heartbeat, the rhytm of the soul. Revive the dead, and cure the living."
 	attribute = /datum/attribute/psyche
@@ -32,7 +32,7 @@
 	attribute = /datum/attribute/psyche
 
 // Decreases effects of low sanity or negative moodlets, helps with addictions
-/datum/aspect/morale // Add more interactions
+/datum/aspect/morale // TODO: Add more interactions
 	name = "Morale"
 	desc = "Hold yourself together. Keep your Sanity up."
 	attribute = /datum/attribute/psyche

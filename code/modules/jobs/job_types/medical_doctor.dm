@@ -45,6 +45,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/faveur_de_lame
+
 /datum/outfit/job/doctor
 	name = "Medical Doctor"
 	jobtype = /datum/job/doctor

@@ -45,6 +45,8 @@
 		/datum/attribute/motorics = 3,
 	)
 
+	signature = /datum/aspect/savoir_faire
+
 /datum/outfit/job/paramedic
 	name = "Paramedic"
 	jobtype = /datum/job/paramedic

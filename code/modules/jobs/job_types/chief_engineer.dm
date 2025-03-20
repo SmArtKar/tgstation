@@ -57,6 +57,8 @@
 		/datum/attribute/motorics = 3,
 	)
 
+	signature = /datum/aspect/mental_clockwork
+
 /datum/job/chief_engineer/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
 	spawned.add_mob_memory(/datum/memory/key/message_server_key, decrypt_key = GLOB.preset_station_message_server_key)

@@ -49,6 +49,8 @@
 		/datum/attribute/motorics = 0,
 	)
 
+	signature = /datum/aspect/encyclopedia
+
 /datum/job/human_ai/get_roundstart_spawn_point()
 	return get_latejoin_spawn_point()
 

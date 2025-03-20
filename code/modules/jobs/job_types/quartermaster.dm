@@ -45,6 +45,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/esprit_de_labos
+
 /datum/outfit/job/quartermaster
 	name = "Quartermaster"
 	jobtype = /datum/job/quartermaster

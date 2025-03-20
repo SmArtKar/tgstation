@@ -51,6 +51,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/morale
+
 /datum/outfit/job/coroner
 	name = "Coroner"
 	jobtype = /datum/job/coroner

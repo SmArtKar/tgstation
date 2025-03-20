@@ -45,6 +45,8 @@
 		/datum/attribute/motorics = 3,
 	)
 
+	signature = /datum/aspect/in_and_out
+
 /datum/outfit/job/atmos
 	name = "Atmospheric Technician"
 	jobtype = /datum/job/atmospheric_technician

@@ -43,6 +43,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/shivers
+
 /datum/job/chaplain/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
 	if(!ishuman(spawned))

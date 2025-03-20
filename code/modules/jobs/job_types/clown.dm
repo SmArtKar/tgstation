@@ -45,6 +45,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/drama // 0 int moment
+
 /datum/job/clown/after_spawn(mob/living/spawned, client/player_client)
 	if (ishuman(spawned))
 		spawned.apply_pref_name(/datum/preference/name/clown, player_client)

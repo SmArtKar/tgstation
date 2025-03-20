@@ -58,6 +58,8 @@
 		/datum/attribute/motorics = 1,
 	)
 
+	signature = /datum/aspect/conceptualization
+
 /datum/job/cook/award_service(client/winner, award)
 	winner.give_award(award, winner.mob)
 

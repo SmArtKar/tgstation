@@ -49,6 +49,8 @@
 		/datum/attribute/motorics = 2,
 	)
 
+	signature = /datum/aspect/perception
+
 /datum/outfit/job/warden
 	name = "Warden"
 	jobtype = /datum/job/warden
