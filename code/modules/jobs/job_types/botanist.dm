@@ -46,7 +46,7 @@
 		/datum/attribute/motorics = 1,
 	)
 
-	signature = /datum/aspect/erudition
+	signature = /datum/aspect/handicraft
 
 /datum/outfit/job/botanist
 	name = "Botanist"
