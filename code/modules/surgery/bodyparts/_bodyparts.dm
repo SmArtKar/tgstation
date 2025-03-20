@@ -366,16 +366,17 @@
 		if(wound_desc)
 			check_list += "\t[wound_desc]"
 
+	var/datum/check_result/result = examiner.examine_check("[REF(owner)]_injuries", SKILLCHECK_LEGENDARY, /datum/aspect/faveur_de_lame, examiner.get_aspect_level(/datum/aspect/perception) - ASPECT_LEVEL_NEUTRAL, show_visual = TRUE)
 	for(var/obj/item/embedded_thing as anything in embedded_objects)
-		if(embedded_thing.get_embed().stealthy_embed)
+		if(embedded_thing.get_embed().stealthy_embed && result.outcome < CHECK_SUCCESS)
 			continue
 		var/harmless = embedded_thing.get_embed().is_harmless()
 		var/stuck_wordage = harmless ? "stuck to" : "embedded in"
-		var/embed_text = "\t<a href='byond://?src=[REF(examiner)];embedded_object=[REF(embedded_thing)];embedded_limb=[REF(src)]'> There is [icon2html(embedded_thing, examiner)] \a [embedded_thing] [stuck_wordage] your [plaintext_zone]!</a>"
+		var/embed_text = result.show_message("\t<a href='byond://?src=[REF(examiner)];embedded_object=[REF(embedded_thing)];embedded_limb=[REF(src)]'> There is [icon2html(embedded_thing, examiner)] \a [embedded_thing] [stuck_wordage] your [plaintext_zone]!</a>")
 		if (harmless)
-			check_list += span_italics(span_notice(embed_text))
+			check_list += span_italics(embed_text)
 		else
-			check_list += span_boldwarning(embed_text)
+			check_list += span_bold(embed_text)
 
 	if(current_gauze)
 		check_list += span_notice("\tThere is some [current_gauze.name] wrapped around it.")

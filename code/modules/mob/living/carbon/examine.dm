@@ -51,23 +51,24 @@
 
 	var/list/missing = list(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
 	var/list/disabled = list()
+	var/datum/check_result/result = user.examine_check("[REF(src)]_injuries", SKILLCHECK_LEGENDARY, /datum/aspect/faveur_de_lame, user.get_aspect_level(/datum/aspect/perception) - ASPECT_LEVEL_NEUTRAL, show_visual = TRUE)
 	for(var/obj/item/bodypart/body_part as anything in bodyparts)
 		if(body_part.bodypart_disabled)
 			disabled += body_part
 		missing -= body_part.body_zone
 		for(var/obj/item/embedded as anything in body_part.embedded_objects)
-			if(embedded.get_embed().stealthy_embed)
+			if(embedded.get_embed().stealthy_embed && result.outcome < CHECK_SUCCESS)
 				continue
 			var/harmless = embedded.get_embed().is_harmless()
 			var/stuck_wordage = harmless ? "stuck to" : "embedded in"
 			var/embed_line = "\a [embedded]"
 			if (get_dist(src, user) <= CARBON_EXAMINE_EMBEDDING_MAX_DIST)
 				embed_line = "<a href='byond://?src=[REF(src)];embedded_object=[REF(embedded)];embedded_limb=[REF(body_part)]'>\a [embedded]</a>"
-			var/embed_text = "[t_He] [t_has] [icon2html(embedded, user)] [embed_line] [stuck_wordage] [t_his] [body_part.plaintext_zone]!"
+			var/embed_text = result.show_message("[t_He] [t_has] [icon2html(embedded, user)] [embed_line] [stuck_wordage] [t_his] [body_part.plaintext_zone]!")
 			if (harmless)
-				. += span_italics(span_notice(embed_text))
+				. += span_italics(embed_text)
 			else
-				. += span_boldwarning(embed_text)
+				. += span_bold(embed_text)
 
 		for(var/datum/wound/iter_wound as anything in body_part.wounds)
 			. += span_danger(iter_wound.get_examine_description(user))
@@ -206,38 +207,38 @@
 	else if(!appears_dead)
 		var/mob/living/living_user = user
 		if(src != user)
-			var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/faveur_de_lame, HAS_TRAIT(user, TRAIT_EMPATH) ? 99 : 0)
-			if(result.outcome >= CHECK_SUCCESS)
+			var/datum/check_result/empath_result = user.examine_check(REF(src), SKILLCHECK_CHALLENGING, /datum/aspect/faveur_de_lame, HAS_TRAIT(user, TRAIT_EMPATH) ? 99 : 0)
+			if(empath_result.outcome >= CHECK_SUCCESS)
 				if (combat_mode)
-					. += result.show_message("[t_He] seem[p_s()] to be on guard.")
+					. += empath_result.show_message("[t_He] seem[p_s()] to be on guard.")
 				switch (getOxyLoss())
 					if (10 to 25)
-						. += result.show_message("[t_He] seem[p_s()] winded.")
+						. += empath_result.show_message("[t_He] seem[p_s()] winded.")
 					if (26 to INFINITY)
-						. += result.show_message("[t_He] are[p_s()] out of breath.")
+						. += empath_result.show_message("[t_He] are[p_s()] out of breath.")
 				switch (getToxLoss())
 					if (10 to 25)
-						. += result.show_message("[t_He] seem[p_s()] sickly.")
+						. += empath_result.show_message("[t_He] seem[p_s()] sickly.")
 					if (26 to INFINITY)
-						. += result.show_message("[t_He] seem[p_s()] seriously unwell.")
+						. += empath_result.show_message("[t_He] seem[p_s()] seriously unwell.")
 				if(losebreath)
-					. += result.show_message("[t_He] [p_are()] suffocating!")
+					. += empath_result.show_message("[t_He] [p_are()] suffocating!")
 				if(mob_mood.sanity <= SANITY_DISTURBED)
-					. += result.show_message("[t_He] seem[p_s()] distressed.")
+					. += empath_result.show_message("[t_He] seem[p_s()] distressed.")
 					living_user.add_mood_event("empath", /datum/mood_event/sad_empath, src)
 				if(is_blind())
-					. += result.show_message("[t_He] appear[p_s()] to be staring off into space.")
+					. += empath_result.show_message("[t_He] appear[p_s()] to be staring off into space.")
 				if (HAS_TRAIT(src, TRAIT_DEAF))
-					. += result.show_message("[t_He] appear[p_s()] to not be responding to noises.")
+					. += empath_result.show_message("[t_He] appear[p_s()] to not be responding to noises.")
 				if (bodytemperature > dna.species.bodytemp_heat_damage_limit)
-					. += result.show_message("[t_He] [t_is] flushed and wheezing.")
+					. += empath_result.show_message("[t_He] [t_is] flushed and wheezing.")
 				if (bodytemperature < dna.species.bodytemp_cold_damage_limit)
-					. += result.show_message("[t_He] [t_is] shivering.")
+					. += empath_result.show_message("[t_He] [t_is] shivering.")
 				if(HAS_TRAIT(src, TRAIT_EVIL))
-					. += result.show_message("[t_His] eyes radiate with a unfeeling, cold detachment. There is nothing but darkness within [t_his] soul.")
-					result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_FORMIDDABLE, 0, living_user.mind?.holy_role >= HOLY_ROLE_PRIEST ? 5 : 0, show_visual = TRUE)
-					if(result.outcome >= CHECK_SUCCESS)
-						. += result.show_message(span_bold("PERFECT FOR SMITING!!"))
+					. += empath_result.show_message("[t_His] eyes radiate with a unfeeling, cold detachment. There is nothing but darkness within [t_his] soul.")
+					empath_result = user.aspect_check(/datum/aspect/shivers, SKILLCHECK_FORMIDDABLE, 0, living_user.mind?.holy_role >= HOLY_ROLE_PRIEST ? 5 : 0, show_visual = TRUE)
+					if(empath_result.outcome >= CHECK_SUCCESS)
+						. += empath_result.show_message(span_bold("PERFECT FOR SMITING!!"))
 					else
 						living_user.add_mood_event("encountered_evil", /datum/mood_event/encountered_evil)
 						living_user.set_jitter_if_lower(15 SECONDS)
@@ -296,7 +297,6 @@
 	if(isliving(user) && HAS_MIND_TRAIT(user, TRAIT_EXAMINE_FITNESS))
 		. += compare_fitness(user)
 
-	var/datum/check_result/result = user.examine_check(REF(src), SKILLCHECK_LEGENDARY, /datum/aspect/faveur_de_lame)
 	if (result.outcome >= CHECK_SUCCESS)
 		var/list/damaged_organs = list()
 		for (var/obj/item/organ/organ as anything in organs)
@@ -621,7 +621,7 @@
 
 	var/agetext = get_age_text()
 	if(agetext)
-		. += agetext
+		. += result.show_message(agetext)
 
 /// Reports all body parts which are mismatched with the user's species
 /mob/living/carbon/human/proc/get_mismatched_limb_text()
@@ -663,7 +663,7 @@
 		if(101 to INFINITY)
 			age_text = "withering away"
 
-	return result.show_message("[p_They()] appear[p_s()] to be [age_text].")
+	return "[p_They()] appear[p_s()] to be [age_text]."
 
 #undef ADD_NEWLINE_IF_NECESSARY
 #undef CARBON_EXAMINE_EMBEDDING_MAX_DIST

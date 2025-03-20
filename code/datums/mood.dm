@@ -107,7 +107,8 @@
 		var/datum/check_result/result = mob_parent.aspect_stash_get("depression_check", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_FORMIDDABLE)
 		mob_parent.aspect_stash("depression_check", result, 180 SECONDS)
 		if (result.outcome >= CHECK_SUCCESS)
-			to_chat(mob_parent, result.show_message("Don't let sadness take hold of you."))
+			if (!result.tooltip_shown)
+				to_chat(mob_parent, result.show_message("Don't let sadness take hold of you."))
 		else
 			add_mood_event("depression", /datum/mood_event/depression)
 
@@ -567,8 +568,8 @@
 		mob_parent.apply_status_effect(/datum/status_effect/hallucination/sanity)
 		return
 
-	to_chat(mob_parent, result.show_message("Take a rest, you deserve it. Don't be too hard on yourself."))
-	set_sanity(SANITY_CRAZY, override = TRUE)
+	if (!result.tooltip_shown)
+		to_chat(mob_parent, result.show_message("Take a rest, you deserve it. Don't be too hard on yourself."))
 	mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
 
 /// Adjusts sanity with modifiers, unless override is passed

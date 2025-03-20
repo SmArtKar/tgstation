@@ -185,7 +185,7 @@
 /obj/item/grenade/chem_grenade/item_interaction(mob/living/user, obj/item/item, list/modifiers)
 	if (isassembly(item) && stage == GRENADE_WIRED)
 		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
-		wire_rat.perform_hack(src, user, params2list(params))
+		wire_rat.perform_hack(src, user, modifiers)
 		return ITEM_INTERACT_SUCCESS
 
 	if (stage == GRENADE_EMPTY && istype(item, /obj/item/stack/cable_coil))

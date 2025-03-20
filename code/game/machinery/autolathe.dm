@@ -427,9 +427,9 @@
 		balloon_alert(user, "it's busy!")
 		return ITEM_INTERACT_BLOCKING
 
-	if(panel_open && is_wire_tool(attacking_item))
+	if(panel_open && is_wire_tool(tool))
 		var/datum/aspect/wire_rat/wire_rat = user.get_aspect(/datum/aspect/wire_rat)
-		wire_rat.perform_hack(src, user, params2list(params))
+		wire_rat.perform_hack(src, user, modifiers)
 		return ITEM_INTERACT_SUCCESS
 
 	if(machine_stat)
