@@ -69,4 +69,5 @@
 		return
 	attacker.visible_message(span_warning("[attacker] forces the [airlock_target] to open."))
 	airlock_target.open(BYPASS_DOOR_CHECKS)
+	airlock_target.take_damage(AIRLOCK_PRY_DAMAGE, BRUTE, sound_effect = FALSE)
 	attacker.get_aspect(/datum/aspect/physical_instrument).gain_exp(DOOR_PRIED_EXP)
