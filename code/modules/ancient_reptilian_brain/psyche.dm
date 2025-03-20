@@ -32,7 +32,7 @@
 	attribute = /datum/attribute/psyche
 
 // Decreases effects of low sanity or negative moodlets, helps with addictions
-/datum/aspect/morale // TODO: THIS
+/datum/aspect/morale // Add more interactions
 	name = "Morale"
 	desc = "Hold yourself together. Keep your Sanity up."
 	attribute = /datum/attribute/psyche

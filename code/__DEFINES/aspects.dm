@@ -67,6 +67,9 @@
 #define PHYSICAL_INSTRUMENT_DOORPRYER_LEVEL 10
 #define PHYSICAL_INSTRUMENT_INTERACTION "physical_instrument"
 
+/// Increase/reduction of high/low sanity effects per level of Morale
+#define MORALE_SANITY_EFFECT_MODIFIER 0.1
+
 /// Movespeed increase per level of Savoir Faire
 #define SAVOIR_FAIRE_MOVESPEED_MULTIPLIER -0.04
 /// Attack speed reduction per level of Savoir Faire

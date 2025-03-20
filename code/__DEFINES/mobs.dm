@@ -284,6 +284,12 @@
 /// Equal to the highest sanity level
 #define SANITY_LEVEL_MAX SANITY_LEVEL_INSANE
 
+//Slowdowns at sanity levels
+#define SANITY_DISTURBED_SLOWDOWN 0.25
+#define SANITY_UNSTABLE_SLOWDOWN 0.5
+#define SANITY_CRAZY_SLOWDOWN 1
+#define LOW_SANITY_ACTIONSPEED 0.25
+
 //Nutrition levels for humans
 #define NUTRITION_LEVEL_FAT 600
 #define NUTRITION_LEVEL_FULL 550

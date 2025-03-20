@@ -1,6 +1,6 @@
 /datum/actionspeed_modifier/low_sanity
-	multiplicative_slowdown = 0.25
 	id = ACTIONSPEED_ID_SANITY
+	variable = TRUE
 
 /datum/actionspeed_modifier/high_sanity
 	multiplicative_slowdown = -0.1

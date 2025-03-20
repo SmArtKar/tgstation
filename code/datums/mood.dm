@@ -83,28 +83,33 @@
 /datum/mood/process(seconds_per_tick)
 	switch(mood_level)
 		if(MOOD_LEVEL_SAD4)
-			set_sanity(sanity - 0.3 * seconds_per_tick, SANITY_INSANE)
+			adjust_sanity(-0.3 * seconds_per_tick, SANITY_INSANE)
 		if(MOOD_LEVEL_SAD3)
-			set_sanity(sanity - 0.15 * seconds_per_tick, SANITY_INSANE)
+			adjust_sanity(-0.15 * seconds_per_tick, SANITY_INSANE)
 		if(MOOD_LEVEL_SAD2)
-			set_sanity(sanity - 0.1 * seconds_per_tick, SANITY_CRAZY)
+			adjust_sanity(-0.1 * seconds_per_tick, SANITY_CRAZY)
 		if(MOOD_LEVEL_SAD1)
-			set_sanity(sanity - 0.05 * seconds_per_tick, SANITY_UNSTABLE)
+			adjust_sanity(-0.05 * seconds_per_tick, SANITY_UNSTABLE)
 		if(MOOD_LEVEL_NEUTRAL)
-			set_sanity(sanity, SANITY_UNSTABLE) //This makes sure that mood gets increased should you be below the minimum.
+			adjust_sanity(0, SANITY_UNSTABLE) //This makes sure that mood gets increased should you be below the minimum.
 		if(MOOD_LEVEL_HAPPY1)
-			set_sanity(sanity + 0.2 * seconds_per_tick, SANITY_UNSTABLE)
+			adjust_sanity(0.2 * seconds_per_tick, SANITY_UNSTABLE)
 		if(MOOD_LEVEL_HAPPY2)
-			set_sanity(sanity + 0.3 * seconds_per_tick, SANITY_UNSTABLE)
+			adjust_sanity(0.3 * seconds_per_tick, SANITY_UNSTABLE)
 		if(MOOD_LEVEL_HAPPY3)
-			set_sanity(sanity + 0.4 * seconds_per_tick, SANITY_NEUTRAL, SANITY_MAXIMUM)
+			adjust_sanity(0.4 * seconds_per_tick, SANITY_NEUTRAL, SANITY_MAXIMUM)
 		if(MOOD_LEVEL_HAPPY4)
-			set_sanity(sanity + 0.6 * seconds_per_tick, SANITY_NEUTRAL, SANITY_MAXIMUM)
+			adjust_sanity(0.6 * seconds_per_tick, SANITY_NEUTRAL, SANITY_MAXIMUM)
 
 	// 0.416% is 15 successes / 3600 seconds. Calculated with 2 minute
 	// mood runtime, so 50% average uptime across the hour.
-	if(HAS_TRAIT(mob_parent, TRAIT_DEPRESSION) && SPT_PROB(0.416, seconds_per_tick))
-		add_mood_event("depression", /datum/mood_event/depression)
+	if(HAS_TRAIT(mob_parent, TRAIT_DEPRESSION) && SPT_PROB(0.416, seconds_per_tick) && !(mood_events["depression"]))
+		var/datum/check_result/result = mob_parent.aspect_stash_get("depression_check", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_FORMIDDABLE)
+		mob_parent.aspect_stash("depression_check", result, 180 SECONDS)
+		if (result.outcome >= CHECK_SUCCESS)
+			to_chat(mob_parent, result.show_message("Don't let sadness take hold of you."))
+		else
+			add_mood_event("depression", /datum/mood_event/depression)
 
 	if(HAS_TRAIT(mob_parent, TRAIT_JOLLY) && SPT_PROB(0.416, seconds_per_tick))
 		add_mood_event("jolly", /datum/mood_event/jolly)
@@ -474,21 +479,22 @@
 		return
 	sanity = amount
 	SEND_SIGNAL(mob_parent, COMSIG_CARBON_SANITY_UPDATE, amount)
+	var/sanity_mod = clamp((mob_parent.get_aspect_level(/datum/aspect/morale) - ASPECT_LEVEL_NEUTRAL) * MORALE_SANITY_EFFECT_MODIFIER, 0, 1)
 	switch(sanity)
 		if(SANITY_INSANE to SANITY_CRAZY)
-			set_insanity_effect(MAJOR_INSANITY_PEN)
-			mob_parent.add_movespeed_modifier(/datum/movespeed_modifier/sanity/insane)
-			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/low_sanity)
+			set_insanity_effect(MAJOR_INSANITY_PEN * (1 - sanity_mod))
+			mob_parent.add_movespeed_modifier(/datum/movespeed_modifier/sanity, TRUE, SANITY_CRAZY_SLOWDOWN * (1 - sanity_mod))
+			mob_parent.add_or_update_variable_actionspeed_modifier(/datum/actionspeed_modifier/low_sanity, TRUE, LOW_SANITY_ACTIONSPEED * (1 - sanity_mod))
 			sanity_level = SANITY_LEVEL_INSANE
 		if(SANITY_CRAZY to SANITY_UNSTABLE)
-			set_insanity_effect(MINOR_INSANITY_PEN)
-			mob_parent.add_movespeed_modifier(/datum/movespeed_modifier/sanity/crazy)
-			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/low_sanity)
+			set_insanity_effect(MINOR_INSANITY_PEN * (1 - sanity_mod))
+			mob_parent.add_movespeed_modifier(/datum/movespeed_modifier/sanity, TRUE, SANITY_UNSTABLE_SLOWDOWN * (1 - sanity_mod))
+			mob_parent.add_or_update_variable_actionspeed_modifier(/datum/actionspeed_modifier/low_sanity, TRUE, LOW_SANITY_ACTIONSPEED * (1 - sanity_mod))
 			sanity_level = SANITY_LEVEL_CRAZY
 		if(SANITY_UNSTABLE to SANITY_DISTURBED)
 			set_insanity_effect(0)
-			mob_parent.add_movespeed_modifier(/datum/movespeed_modifier/sanity/disturbed)
-			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/low_sanity)
+			mob_parent.add_movespeed_modifier(/datum/movespeed_modifier/sanity, TRUE, SANITY_DISTURBED_SLOWDOWN * (1 - sanity_mod))
+			mob_parent.add_or_update_variable_actionspeed_modifier(/datum/actionspeed_modifier/low_sanity, TRUE, LOW_SANITY_ACTIONSPEED * (1 - sanity_mod))
 			sanity_level = SANITY_LEVEL_UNSTABLE
 		if(SANITY_DISTURBED to SANITY_NEUTRAL)
 			set_insanity_effect(0)
@@ -498,21 +504,39 @@
 		if(SANITY_NEUTRAL+1 to SANITY_GREAT+1) //shitty hack but +1 to prevent it from responding to super small differences
 			set_insanity_effect(0)
 			mob_parent.remove_movespeed_modifier(MOVESPEED_ID_SANITY)
-			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/high_sanity)
+			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/high_sanity * (1 + sanity_mod))
 			sanity_level = SANITY_LEVEL_NEUTRAL
 		if(SANITY_GREAT+1 to INFINITY)
 			set_insanity_effect(0)
 			mob_parent.remove_movespeed_modifier(MOVESPEED_ID_SANITY)
-			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/high_sanity)
+			mob_parent.add_actionspeed_modifier(/datum/actionspeed_modifier/high_sanity * (1 + sanity_mod))
 			sanity_level = SANITY_LEVEL_GREAT
 
-	// Crazy or insane = add some uncommon hallucinations
-	if(sanity_level >= SANITY_CRAZY)
-		mob_parent.apply_status_effect(/datum/status_effect/hallucination/sanity)
-	else
-		mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
-
 	update_mood_icon()
+
+	// Crazy or insane = add some uncommon hallucinations if we fail the regular Morale check
+	if(sanity_level >= SANITY_CRAZY)
+		mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
+		return
+
+	var/datum/check_result/result = mob_parent.aspect_stash_get("sanity_check", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_LEGENDARY, exp_modifier = 0.3)
+	mob_parent.aspect_stash("sanity_check", result, 60 SECONDS)
+	if (result.outcome < CHECK_SUCCESS)
+		mob_parent.apply_status_effect(/datum/status_effect/hallucination/sanity)
+		return
+
+	to_chat(mob_parent, result.show_message("Take a rest, you deserve it. Don't be too hard on yourself."))
+	set_sanity(SANITY_CRAZY, override = TRUE)
+	mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
+
+/// Adjusts sanity with modifiers, unless override is passed
+/datum/mood/proc/adjust_sanity(amount, minimum = SANITY_INSANE, maximum = SANITY_GREAT, override = FALSE)
+	if (!override && amount < 0)
+		var/datum/check_result/result = mob_parent.aspect_stash_get("sanity_adjustment", FALSE) || mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_GODLY, exp_modifier = 0.1)
+		mob_parent.aspect_stash("sanity_adjustment", result, 60 SECONDS)
+		if (result.outcome >= CHECK_SUCCESS)
+			amount = 0 // Adjust towards neutral
+	set_sanity(amount, minimum, maximum, override)
 
 /// Sets the insanity effect on the mob
 /datum/mood/proc/set_insanity_effect(newval)
