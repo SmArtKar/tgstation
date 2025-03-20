@@ -26,7 +26,7 @@
 	attribute = /datum/attribute/intellect
 
 // Knowledge related to robotics, implants, mechs, etc.
-/datum/aspect/four_legged_wheelbarrel // Kapu i know you're reading this, its not a typo
+/datum/aspect/four_legged_wheelbarrel // Kapu i know you're reading this, its not a typo // TODO: More effects for constructing mechs and cyborgs (max HP/speed scaling?)
 	name = "Four Legged Wheelbarrel"
 	desc = "Create cyborgs. Turn yourself into one."
 	attribute = /datum/attribute/intellect
