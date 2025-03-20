@@ -25,6 +25,13 @@
 	rpg_title = "Defeated Miniboss"
 	job_flags = STATION_JOB_FLAGS | JOB_CANNOT_OPEN_SLOTS & ~JOB_REOPEN_ON_ROUNDSTART_LOSS
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 3,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/job/prisoner/New()
 	. = ..()
 	RegisterSignal(SSdcs, COMSIG_GLOB_CREWMEMBER_JOINED, PROC_REF(handle_prisoner_joining))

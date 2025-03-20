@@ -36,6 +36,13 @@
 
 	job_tone = "silence"
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 3,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/job/mime/after_spawn(mob/living/spawned, client/player_client)
 	if (ishuman(spawned))
 		spawned.apply_pref_name(/datum/preference/name/mime, player_client)

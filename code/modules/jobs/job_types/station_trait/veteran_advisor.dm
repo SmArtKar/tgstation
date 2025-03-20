@@ -37,6 +37,13 @@
 	allow_bureaucratic_error = FALSE
 	job_flags = STATION_JOB_FLAGS | STATION_TRAIT_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 4,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 1,
+	)
+
 /datum/job/veteran_advisor/get_default_roundstart_spawn_point()
 	for(var/obj/effect/landmark/start/spawn_point as anything in GLOB.start_landmarks_list)
 		if(spawn_point.name != "Security Officer")

@@ -50,6 +50,12 @@
 
 	voice_of_god_power = 1.4 //Command staff has authority
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 3,
+	)
 
 /datum/job/chief_engineer/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

@@ -1,5 +1,5 @@
-#define SKILLCHECK_SUCCESS_EXP 20
-#define SKILLCHECK_DIFFICULTY_BONUS 3
+#define SKILLCHECK_SUCCESS_EXP 50
+#define SKILLCHECK_DIFFICULTY_BONUS 4
 
 // Because we're working with 3d6 the distribution is *not linear*
 // Probabilities for winning/losing a certain roll, creds to Kapu

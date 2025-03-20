@@ -49,7 +49,13 @@
 	human_authority = JOB_AUTHORITY_HUMANS_ONLY
 
 	voice_of_god_power = 1.4 //Command staff has authority
-
+	// Cap is a special spessman who gets +8
+	attributes = list(
+		/datum/attribute/intellect = 1,
+		/datum/attribute/psyche = 3,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 2,
+	)
 
 /datum/job/captain/get_captaincy_announcement(mob/living/captain)
 	return "Captain [captain.real_name] on deck!"

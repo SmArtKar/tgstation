@@ -38,6 +38,13 @@
 	job_flags = STATION_JOB_FLAGS
 	rpg_title = "Aeromancer"
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 0,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 3,
+	)
+
 /datum/outfit/job/atmos
 	name = "Atmospheric Technician"
 	jobtype = /datum/job/atmospheric_technician

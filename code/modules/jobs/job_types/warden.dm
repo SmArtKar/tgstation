@@ -42,6 +42,13 @@
 	rpg_title = "Jailor"
 	job_flags = STATION_JOB_FLAGS | JOB_BOLD_SELECT_TEXT
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/outfit/job/warden
 	name = "Warden"
 	jobtype = /datum/job/warden

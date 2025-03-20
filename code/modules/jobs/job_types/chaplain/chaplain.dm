@@ -36,6 +36,12 @@
 
 	job_tone = "holy"
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 3,
+		/datum/attribute/motorics = 1,
+	)
 
 /datum/job/chaplain/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

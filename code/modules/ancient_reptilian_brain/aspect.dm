@@ -1,6 +1,5 @@
 #define ASPECT_LEVEL_EXP_FLOOR 1000
 #define ASPECT_LEVEL_EXP_ADDITIONAL 250
-#define ASPECT_LEVEL_EXP_POWER 1.5
 
 /// Aspect datum, represents a skill which can be used for passive/active/dialogue checks
 /// Aspects can be leveled by performing actions in-round, (normally) up to their Attribute's cap.
@@ -15,6 +14,8 @@
 	var/datum/attribute/attribute = /datum/attribute
 	/// List of currently active modifiers, source -> value
 	var/list/modifiers = list()
+	/// Is this a signature skill? If so, it can be leveled infinitely
+	var/signature = FALSE
 
 /datum/aspect/New(datum/attribute/new_attribute)
 	. = ..()
@@ -54,7 +55,7 @@
 	stored_exp = clamp(exp_gained, 0, required_exp)
 	if (stored_exp < required_exp || !can_level)
 		return
-	if (attribute.level + attribute.level_modifier <= level)
+	if (attribute.level + attribute.level_modifier <= level && !signature) // Signature skills ignore level cap
 		return
 	stored_exp -= required_exp
 	adjust_level(1)
@@ -65,7 +66,7 @@
 	return "You feel yourself becoming more attuned to [name]!"
 
 /datum/aspect/proc/get_exp_to_level()
-	return ASPECT_LEVEL_EXP_FLOOR + ASPECT_LEVEL_EXP_ADDITIONAL * (level ** ASPECT_LEVEL_EXP_POWER)
+	return ASPECT_LEVEL_EXP_FLOOR + ASPECT_LEVEL_EXP_ADDITIONAL * level
 
 /datum/aspect/proc/add_modifier(value, source)
 	var/prev_level = get_level()
@@ -277,4 +278,3 @@
 
 #undef ASPECT_LEVEL_EXP_FLOOR
 #undef ASPECT_LEVEL_EXP_ADDITIONAL
-#undef ASPECT_LEVEL_EXP_POWER

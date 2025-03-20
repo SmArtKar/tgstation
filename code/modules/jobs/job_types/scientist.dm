@@ -36,6 +36,12 @@
 
 	job_tone = "boom"
 
+	attributes = list(
+		/datum/attribute/intellect = 3,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 1,
+	)
 
 /datum/outfit/job/scientist
 	name = "Scientist"

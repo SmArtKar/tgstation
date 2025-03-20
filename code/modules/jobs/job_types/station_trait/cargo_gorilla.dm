@@ -18,6 +18,13 @@
 	allow_bureaucratic_error = FALSE
 	job_flags = STATION_TRAIT_JOB_FLAGS | JOB_ANNOUNCE_ARRIVAL | JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 3,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/job/cargo_gorilla/get_roundstart_spawn_point()
 	if (length(GLOB.gorilla_start))
 		return pick(GLOB.gorilla_start)

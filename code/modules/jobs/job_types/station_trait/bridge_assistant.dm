@@ -35,6 +35,13 @@
 	job_flags = STATION_JOB_FLAGS | STATION_TRAIT_JOB_FLAGS
 	human_authority = JOB_AUTHORITY_NON_HUMANS_ALLOWED
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/job/bridge_assistant/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()
 	var/mob/living/carbon/bridgie = spawned

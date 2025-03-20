@@ -38,6 +38,13 @@
 
 	job_tone = "honk"
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 4,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 1,
+	)
+
 /datum/job/clown/after_spawn(mob/living/spawned, client/player_client)
 	if (ishuman(spawned))
 		spawned.apply_pref_name(/datum/preference/name/clown, player_client)

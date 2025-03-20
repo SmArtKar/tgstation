@@ -38,6 +38,13 @@
 	voice_of_god_power = 1.4 //Command staff has authority
 	human_authority = JOB_AUTHORITY_NON_HUMANS_ALLOWED
 
+	attributes = list(
+		/datum/attribute/intellect = 1,
+		/datum/attribute/psyche = 3,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 1,
+	)
+
 /datum/outfit/job/quartermaster
 	name = "Quartermaster"
 	jobtype = /datum/job/quartermaster

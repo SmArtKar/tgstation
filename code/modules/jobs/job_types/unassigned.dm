@@ -8,3 +8,10 @@
 	title = "Unassigned Crewmember"
 	rpg_title = "Peasant"
 	paycheck = PAYCHECK_ZERO
+
+	attributes = list(
+		/datum/attribute/intellect = 1,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 1,
+	)

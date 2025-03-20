@@ -42,6 +42,13 @@
 	job_flags = STATION_JOB_FLAGS | STATION_TRAIT_JOB_FLAGS
 	human_authority = JOB_AUTHORITY_NON_HUMANS_ALLOWED //we can safely assume NT doesn't care what species AIs are made of, much less if they can't even afford an AI.
 
+	attributes = list(
+		/datum/attribute/intellect = 4,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 0,
+	)
+
 /datum/job/human_ai/get_roundstart_spawn_point()
 	return get_latejoin_spawn_point()
 

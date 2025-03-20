@@ -135,6 +135,10 @@
 	/// If set, look for a policy with this instead of the job title
 	var/policy_override
 
+	/// List of attribute levels this job gets
+	/// Account for additional player-allocated points, so this should be ~6 on average
+	var/list/attributes
+
 /datum/job/New()
 	. = ..()
 	var/new_spawn_positions = CHECK_MAP_JOB_CHANGE(title, "spawn_positions")
@@ -153,6 +157,10 @@
 	var/obj/item/organ/liver/liver = spawned.get_organ_slot(ORGAN_SLOT_LIVER)
 	if(liver && length(liver_traits))
 		liver.add_traits(liver_traits, JOB_TRAIT)
+
+	if(length(attributes))
+		for (var/attribute in attributes)
+			spawned.get_attribute(attribute).set_level(attributes[attribute])
 
 	if(!ishuman(spawned))
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_JOB_AFTER_SPAWN, src, spawned, player_client)

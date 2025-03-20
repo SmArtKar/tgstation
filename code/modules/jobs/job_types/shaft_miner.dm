@@ -28,6 +28,12 @@
 	rpg_title = "Adventurer"
 	job_flags = STATION_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 3,
+		/datum/attribute/motorics = 2,
+	)
 
 /datum/outfit/job/miner
 	name = "Shaft Miner"

@@ -32,6 +32,13 @@
 
 	job_tone = "slip"
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/outfit/job/janitor
 	name = "Janitor"
 	jobtype = /datum/job/janitor

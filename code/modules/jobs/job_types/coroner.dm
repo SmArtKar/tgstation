@@ -44,6 +44,13 @@
 
 	rpg_title = "Undertaker"
 
+	attributes = list(
+		/datum/attribute/intellect = 1,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/outfit/job/coroner
 	name = "Coroner"
 	jobtype = /datum/job/coroner

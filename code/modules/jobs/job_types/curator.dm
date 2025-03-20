@@ -36,6 +36,13 @@
 	voice_of_god_silence_power = 3
 	rpg_title = "Veteran Adventurer"
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 0,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/outfit/job/curator
 	name = "Curator"
 	jobtype = /datum/job/curator

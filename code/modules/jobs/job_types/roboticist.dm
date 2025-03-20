@@ -34,6 +34,12 @@
 	rpg_title = "Necromancer"
 	job_flags = STATION_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 2,
+	)
 
 /datum/job/roboticist/New()
 	. = ..()

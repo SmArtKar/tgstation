@@ -35,6 +35,8 @@
 
 /datum/attribute/proc/adjust_level(change)
 	level += change
+	for (var/datum/aspect/aspect as anything in aspects)
+		aspect.update_effects(aspect.get_level() - change)
 
 /datum/attribute/proc/set_level(new_level)
 	adjust_level(new_level - level)

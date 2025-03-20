@@ -48,6 +48,12 @@
 
 	voice_of_god_power = 1.4 //Command staff has authority
 
+	attributes = list(
+		/datum/attribute/intellect = 4,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 1,
+	)
 
 /datum/job/research_director/get_captaincy_announcement(mob/living/captain)
 	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"

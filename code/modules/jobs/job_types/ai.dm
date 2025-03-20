@@ -22,6 +22,12 @@
 	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK | JOB_BOLD_SELECT_TEXT | JOB_CANNOT_OPEN_SLOTS
 	config_tag = "AI"
 
+	attributes = list(
+		/datum/attribute/intellect = 4,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 0,
+	)
 
 /datum/job/ai/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

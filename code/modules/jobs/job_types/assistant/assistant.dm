@@ -36,6 +36,12 @@ Assistant
 	job_flags = STATION_JOB_FLAGS
 	rpg_title = "Lout"
 	config_tag = "ASSISTANT"
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 3,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 2,
+	)
 
 /datum/job/assistant/get_outfit(consistent)
 	if(consistent)

@@ -51,6 +51,13 @@
 	)
 	job_flags = STATION_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 1,
+	)
+
 /datum/job/cook/award_service(client/winner, award)
 	winner.give_award(award, winner.mob)
 

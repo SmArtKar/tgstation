@@ -54,6 +54,14 @@
 
 	owner.set_assigned_role(SSjob.get_job_type(/datum/job/paradox_clone))
 
+	for (var/datum/attribute/attribute as anything in original_mind?.attributes)
+		var/datum/attribute/owner_attribute = locate(attribute.type) in owner.attributes
+		owner_attribute.set_level(attribute.level)
+		for (var/datum/aspect/aspect as anything in attribute.aspects)
+			var/datum/aspect/owner_aspect = owner_attribute.get_aspect(aspect.type)
+			owner_aspect.adjust_level(aspect - owner_aspect.level)
+			owner_aspect.signature = aspect.signature
+
 	//clone doesnt show up on message lists
 	var/obj/item/modular_computer/pda/messenger = locate() in owner.current
 	if(messenger)

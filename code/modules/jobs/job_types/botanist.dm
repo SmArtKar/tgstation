@@ -39,6 +39,13 @@
 	job_flags = STATION_JOB_FLAGS
 	rpg_title = "Gardener"
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 1,
+	)
+
 /datum/outfit/job/botanist
 	name = "Botanist"
 	jobtype = /datum/job/botanist

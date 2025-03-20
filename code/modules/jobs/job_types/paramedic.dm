@@ -38,6 +38,12 @@
 	rpg_title = "Corpse Runner"
 	job_flags = STATION_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 3,
+	)
 
 /datum/outfit/job/paramedic
 	name = "Paramedic"

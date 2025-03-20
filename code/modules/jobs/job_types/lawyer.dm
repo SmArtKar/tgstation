@@ -29,6 +29,12 @@
 
 	job_tone = "objection"
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 3,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 1,
+	)
 
 /datum/outfit/job/lawyer
 	name = "Lawyer"

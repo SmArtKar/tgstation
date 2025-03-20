@@ -32,6 +32,13 @@
 	job_flags = STATION_JOB_FLAGS
 	rpg_title = "Tavernkeeper"
 
+	attributes = list(
+		/datum/attribute/intellect = 0,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 2,
+		/datum/attribute/motorics = 2,
+	)
+
 /datum/job/bartender/award_service(client/winner, award)
 	winner.give_award(award, winner.mob)
 

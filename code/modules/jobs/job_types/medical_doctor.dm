@@ -38,6 +38,12 @@
 	rpg_title = "Cleric"
 	job_flags = STATION_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 2,
+		/datum/attribute/psyche = 2,
+		/datum/attribute/physique = 1,
+		/datum/attribute/motorics = 1,
+	)
 
 /datum/outfit/job/doctor
 	name = "Medical Doctor"

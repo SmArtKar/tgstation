@@ -21,6 +21,12 @@
 	random_spawns_possible = FALSE
 	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK | JOB_CANNOT_OPEN_SLOTS
 
+	attributes = list(
+		/datum/attribute/intellect = 4,
+		/datum/attribute/psyche = 0,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 2,
+	)
 
 /datum/job/cyborg/after_spawn(mob/living/spawned, client/player_client)
 	. = ..()

@@ -31,6 +31,12 @@
 	rpg_title = "Genemancer"
 	job_flags = STATION_JOB_FLAGS
 
+	attributes = list(
+		/datum/attribute/intellect = 3,
+		/datum/attribute/psyche = 1,
+		/datum/attribute/physique = 0,
+		/datum/attribute/motorics = 1,
+	)
 
 /datum/outfit/job/geneticist
 	name = "Geneticist"
