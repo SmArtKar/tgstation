@@ -23,7 +23,7 @@
 	UnregisterSignal(source, COMSIG_LIVING_UNARMED_ATTACK)
 
 /// If we're targeting an airlock, open it
-/datum/element/door_pryer/proc/on_attack(mob/living/basic/attacker, atom/target, proximity_flag)
+/datum/element/door_pryer/proc/on_attack(mob/living/attacker, atom/target, proximity_flag)
 	SIGNAL_HANDLER
 	if(!proximity_flag || !istype(target, /obj/machinery/door/airlock))
 		return NONE
@@ -46,7 +46,7 @@
 	return COMPONENT_CANCEL_ATTACK_CHAIN
 
 /// Try opening the door, and if we can't then try forcing it
-/datum/element/door_pryer/proc/open_door(mob/living/basic/attacker, obj/machinery/door/airlock/airlock_target)
+/datum/element/door_pryer/proc/open_door(mob/living/attacker, obj/machinery/door/airlock/airlock_target)
 	if (!airlock_target.hasPower())
 		attacker.visible_message(span_warning("[attacker] forces the [airlock_target] to open."))
 		airlock_target.open(FORCING_DOOR_CHECKS)
@@ -69,3 +69,4 @@
 		return
 	attacker.visible_message(span_warning("[attacker] forces the [airlock_target] to open."))
 	airlock_target.open(BYPASS_DOOR_CHECKS)
+	attacker.get_aspect(/datum/aspect/physical_instrument).gain_exp(DOOR_PRIED_EXP)

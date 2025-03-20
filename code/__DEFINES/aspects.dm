@@ -1,5 +1,5 @@
-#define SKILLCHECK_SUCCESS_EXP 50
-#define SKILLCHECK_DIFFICULTY_BONUS 4
+#define SKILLCHECK_SUCCESS_EXP 45
+#define SKILLCHECK_DIFFICULTY_BONUS 3
 
 // Because we're working with 3d6 the distribution is *not linear*
 // Probabilities for winning/losing a certain roll, creds to Kapu
@@ -66,6 +66,8 @@
 /// Level of Physical Instrument at which you can pry doors open with your bare hands
 #define PHYSICAL_INSTRUMENT_DOORPRYER_LEVEL 10
 #define PHYSICAL_INSTRUMENT_INTERACTION "physical_instrument"
+/// How much experience you get by prying open a door
+#define DOOR_PRIED_EXP 150
 
 /// Increase/reduction of high/low sanity effects per level of Morale
 #define MORALE_SANITY_EFFECT_MODIFIER 0.1
