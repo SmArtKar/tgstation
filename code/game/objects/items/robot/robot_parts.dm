@@ -283,6 +283,10 @@
 			var/mob/living/silicon/robot/O = new /mob/living/silicon/robot/nocell(get_turf(loc), user)
 			if(!O)
 				return
+
+			O.maxHealth *= 1 + (O.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
+			O.fully_heal()
+
 			if(M.laws && M.laws.id != DEFAULT_AI_LAWID)
 				aisync = FALSE
 				lawsync = FALSE

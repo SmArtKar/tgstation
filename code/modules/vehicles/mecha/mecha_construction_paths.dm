@@ -25,13 +25,16 @@
 	var/obj/outer_plating
 	var/outer_plating_amount
 
-/datum/component/construction/mecha/spawn_result()
+/datum/component/construction/mecha/spawn_result(mob/living/user)
 	if(!result)
 		return
 	// Remove default mech power cell, as we replace it with a new one.
 	var/obj/vehicle/sealed/mecha/mech = new result(drop_location(), /* built_manually = */ TRUE)
 	var/obj/item/mecha_parts/chassis/parent_chassis = parent
 	mech.CheckParts(parent_chassis.contents)
+	mech.max_integrity *= 1 + (user.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
+	mech.atom_integrity = mech.max_integrity
+	mech.movedelay *= 1 - (user.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_SPEED_BOOST
 	SSblackbox.record_feedback("tally", "mechas_created", 1, mech.name)
 	ADD_TRAIT(mech, TRAIT_MECHA_CREATED_NORMALLY, mech)
 	QDEL_NULL(parent)
@@ -60,7 +63,7 @@
 		parent_atom.add_overlay(I.icon_state+"+o")
 		qdel(I)
 
-/datum/component/construction/unordered/mecha_chassis/spawn_result()
+/datum/component/construction/unordered/mecha_chassis/spawn_result(mob/living/user)
 	var/atom/parent_atom = parent
 	parent_atom.icon = 'icons/mob/rideables/mech_construction.dmi'
 	parent_atom.set_density(TRUE)

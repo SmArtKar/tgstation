@@ -257,8 +257,24 @@
 			return ", must be made on a tram!"
 
 	//If we're a mob we'll try a do_after; non mobs will instead instantly construct the item
-	if(ismob(crafter) && !do_after(crafter, recipe.time, target = crafter))
-		return "."
+	if(isliving(crafter))
+		var/mob/living/user = crafter
+		var/datum/check_result/result = user.aspect_check(recipe.used_aspect, SKILLCHECK_TRIVIAL, show_visual = TRUE)
+
+		var/delay = recipe.time
+		if (result.outcome == CHECK_CRIT_SUCCESS)
+			delay *= 0.2
+
+		if (!do_after(user, delay * 0.5, target = user))
+			return "."
+
+		if (result.outcome < CHECK_SUCCESS)
+			to_chat(user, result.show_message("Your hands slip, breaking your creation before it was born."))
+			return "."
+
+		if (!do_after(user, delay * 0.5, target = user))
+			return "."
+
 	contents = get_surroundings(crafter, recipe.blacklist)
 	if(!check_contents(crafter, recipe, contents))
 		return ", missing component."
@@ -534,7 +550,7 @@
 /datum/component/personal_crafting/proc/make_action(datum/crafting_recipe/recipe, mob/user)
 	var/atom/movable/result = construct_item(user, recipe)
 	if(istext(result)) //We failed to make an item and got a fail message
-		to_chat(user, span_warning("Construction failed[result]"))
+		to_chat(user, span_warning("Crafting failed[result]"))
 		return FALSE
 	if(ismob(user) && isitem(result)) //In case the user is actually possessing a non mob like a machine
 		user.put_in_hands(result)

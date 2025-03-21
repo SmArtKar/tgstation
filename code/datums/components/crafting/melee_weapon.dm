@@ -157,6 +157,7 @@
 	time = 10 SECONDS
 	category = CAT_WEAPON_MELEE
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_MUST_BE_LEARNED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/giant_wrench
 	name = "Big Slappy"
@@ -171,6 +172,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_MELEE
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/singulo_hammer
 	name = "Singularity Hammer"
@@ -191,6 +193,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_MELEE
+	used_aspect = /datum/aspect/cognition
 
 /datum/crafting_recipe/bambostaff
 	name = "Bamboo Bo Staff"
@@ -213,3 +216,4 @@
 	)
 	time = 120 SECONDS
 	category = CAT_WEAPON_MELEE
+	used_aspect = /datum/aspect/cognition

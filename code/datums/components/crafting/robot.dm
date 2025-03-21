@@ -1,4 +1,17 @@
-/datum/crafting_recipe/ed209
+/datum/crafting_recipe/robot
+	used_aspect = /datum/aspect/four_legged_wheelbarrel
+	category = CAT_ROBOT
+
+/datum/crafting_recipe/robot/on_craft_completion(mob/user, atom/result)
+	if (!isliving(user) || !isliving(result))
+		return
+
+	var/mob/living/crafter = user
+	var/mob/living/bot = result
+	bot.maxHealth *= 1 + (crafter.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
+	bot.fully_heal()
+
+/datum/crafting_recipe/robot/ed209
 	name = "ED209"
 	result = /mob/living/simple_animal/bot/secbot/ed209
 	reqs = list(
@@ -14,9 +27,8 @@
 	)
 	tool_behaviors = list(TOOL_WELDER, TOOL_SCREWDRIVER)
 	time = 6 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/secbot
+/datum/crafting_recipe/robot/secbot
 	name = "Secbot"
 	result = /mob/living/simple_animal/bot/secbot
 	reqs = list(
@@ -28,9 +40,8 @@
 	)
 	tool_behaviors = list(TOOL_WELDER)
 	time = 6 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/cleanbot
+/datum/crafting_recipe/robot/cleanbot
 	name = "Cleanbot"
 	result = /mob/living/basic/bot/cleanbot
 	reqs = list(
@@ -40,9 +51,8 @@
 	)
 	parts = list(/obj/item/reagent_containers/cup/bucket = 1)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/repairbot
+/datum/crafting_recipe/robot/repairbot
 	name = "Repairbot"
 	result = /mob/living/basic/bot/repairbot
 	reqs = list(
@@ -52,9 +62,8 @@
 		/obj/item/bodypart/arm/right/robot = 1,
 	)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/medbot
+/datum/crafting_recipe/robot/medbot
 	name = "Medbot"
 	result = /mob/living/basic/bot/medbot
 	reqs = list(
@@ -68,9 +77,9 @@
 		/obj/item/healthanalyzer = 1,
 	)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/medbot/on_craft_completion(mob/user, atom/result)
+/datum/crafting_recipe/robot/medbot/on_craft_completion(mob/user, atom/result)
+	. = ..()
 	var/mob/living/basic/bot/medbot/bot = result
 	var/obj/item/storage/medkit/medkit = bot.contents[3]
 	bot.medkit_type = medkit
@@ -79,7 +88,7 @@
 	bot.damage_type_healer = initial(medkit.damagetype_healed) ? initial(medkit.damagetype_healed) : BRUTE
 	bot.update_appearance()
 
-/datum/crafting_recipe/honkbot
+/datum/crafting_recipe/robot/honkbot
 	name = "Honkbot"
 	result = /mob/living/basic/bot/honkbot
 	reqs = list(
@@ -89,9 +98,8 @@
 		/obj/item/bikehorn = 1,
 	)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/firebot
+/datum/crafting_recipe/robot/firebot
 	name = "Firebot"
 	result = /mob/living/basic/bot/firebot
 	reqs = list(
@@ -101,9 +109,8 @@
 		/obj/item/clothing/head/utility/hardhat/red = 1,
 	)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/vibebot
+/datum/crafting_recipe/robot/vibebot
 	name = "Vibebot"
 	result = /mob/living/basic/bot/vibebot
 	reqs = list(
@@ -113,9 +120,8 @@
 		/obj/item/toy/crayon = 1,
 	)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
-/datum/crafting_recipe/hygienebot
+/datum/crafting_recipe/robot/hygienebot
 	name = "Hygienebot"
 	result = /mob/living/basic/bot/hygienebot
 	reqs = list(
@@ -125,7 +131,6 @@
 	)
 	tool_behaviors = list(TOOL_WELDER)
 	time = 4 SECONDS
-	category = CAT_ROBOT
 
 /datum/crafting_recipe/vim
 	name = "Vim"
@@ -139,7 +144,6 @@
 	)
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 6 SECONDS //Has a four second do_after when building manually
-	category = CAT_ROBOT
 
 /datum/crafting_recipe/aitater
 	name = "intelliTater"
@@ -154,7 +158,7 @@
 	parts = list(/obj/item/aicard = 1)
 	category = CAT_ROBOT
 
-/datum/crafting_recipe/aitater/aispook
+/datum/crafting_recipe/robot/aitater/aispook
 	name = "intelliLantern"
 	result = /obj/item/aicard/aispook
 	reqs = list(
@@ -163,7 +167,7 @@
 		/obj/item/stack/cable_coil = 5,
 	)
 
-/datum/crafting_recipe/aitater/on_craft_completion(mob/user, atom/result)
+/datum/crafting_recipe/robot/aitater/on_craft_completion(mob/user, atom/result)
 	var/obj/item/aicard/new_card = result
 	var/obj/item/aicard/base_card = result.contents[1]
 	var/mob/living/silicon/ai = base_card.AI

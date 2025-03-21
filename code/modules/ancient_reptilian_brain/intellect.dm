@@ -20,13 +20,13 @@
 	attribute = /datum/attribute/intellect
 
 // Engineering knowledge related to machinery, atmos and construction (not hacking)
-/datum/aspect/mental_clockwork // TODO: THIS crafting and machinery
+/datum/aspect/mental_clockwork
 	name = "Mental Clockwork"
 	desc = "Repair malfunctions. Construct your magnum opus out of scrap."
 	attribute = /datum/attribute/intellect
 
 // Knowledge related to robotics, implants, mechs, etc.
-/datum/aspect/four_legged_wheelbarrel // Kapu i know you're reading this, its not a typo // TODO: More effects for constructing mechs and cyborgs (max HP/speed scaling?)
+/datum/aspect/four_legged_wheelbarrel // Kapu i know you're reading this, its not a typo
 	name = "Four Legged Wheelbarrel"
 	desc = "Create cyborgs. Turn yourself into one."
 	attribute = /datum/attribute/intellect

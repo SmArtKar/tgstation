@@ -980,6 +980,12 @@
 	if((casted_magic_flags & MAGIC_RESISTANCE_HOLY) && HAS_TRAIT(src, TRAIT_HOLY))
 		is_magic_blocked = TRUE
 
+	var/datum/check_result/result = aspect_check(/datum/aspect/shivers, SKILLCHECK_GODLY, SHIVERS_ANTIMAGIC_LEVEL - ASPECT_LEVEL_NEUTRAL, is_magic_blocked ? 7 : 0, show_visual = charge_cost > 0)
+	if (result.outcome >= CHECK_SUCCESS)
+		if (result.outcome == CHECK_CRIT_SUCCESS)
+			charge_cost = 0
+		is_magic_blocked = TRUE
+
 	if(is_magic_blocked && charge_cost > 0 && !HAS_TRAIT(src, TRAIT_RECENTLY_BLOCKED_MAGIC))
 		on_block_magic_effects(casted_magic_flags, antimagic_sources)
 

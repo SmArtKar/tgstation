@@ -41,6 +41,8 @@
 	var/delete_contents = TRUE
 	/// Allows you to craft so that you don't have to click the craft button many times.
 	var/mass_craftable = FALSE
+	/// Aspect used in the skillcheck for this recipe
+	var/used_aspect = /datum/aspect/handicraft
 
 	///crafting_flags var to hold bool values
 	var/crafting_flags = CRAFT_CHECK_DENSITY

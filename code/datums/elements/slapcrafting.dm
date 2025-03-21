@@ -109,7 +109,7 @@
 	var/error_string = craft_sheet.construct_item(user, actual_recipe)
 
 	if(!isatom(error_string))
-		to_chat(user, span_warning("crafting failed" + error_string))
+		to_chat(user, span_warning("Crafting failed" + error_string))
 
 /// Alerts any examiners to the recipe, if they wish to know more.
 /datum/element/slapcrafting/proc/get_examine_info(atom/source, mob/user, list/examine_list)

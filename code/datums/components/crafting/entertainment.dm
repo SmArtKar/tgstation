@@ -75,7 +75,7 @@
 	)
 	parts = list(/obj/item/camera = 1)
 	category = CAT_ENTERTAINMENT
-
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/skateboard
 	name = "Skateboard"
@@ -86,6 +86,7 @@
 		/obj/item/stack/rods = 10,
 	)
 	category = CAT_ENTERTAINMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/scooter
 	name = "Scooter"
@@ -96,6 +97,7 @@
 		/obj/item/stack/rods = 12,
 	)
 	category = CAT_ENTERTAINMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/headpike
 	name = "Spike Head (Glass Spear)"
@@ -170,6 +172,7 @@
 	)
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WRENCH, TOOL_WELDER)
 	category = CAT_ENTERTAINMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/toiletbong
 	name = "Toiletbong"
@@ -215,6 +218,7 @@
 	)
 	category = CAT_ENTERTAINMENT
 	time = 10 SECONDS
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/stacklifter
 	name = "Chest Press"
@@ -227,6 +231,7 @@
 	)
 	category = CAT_ENTERTAINMENT
 	time = 10 SECONDS
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/weightlifter
 	name = "Bench Press"
@@ -239,6 +244,7 @@
 	)
 	category = CAT_ENTERTAINMENT
 	time = 10 SECONDS
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/latexballoon
 	name = "Latex Balloon"

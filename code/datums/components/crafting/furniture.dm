@@ -27,6 +27,7 @@
 		/obj/item/aquarium_kit = 1,
 	)
 	category = CAT_FURNITURE
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/fish_tank
 	name = "Portable Fish Tank"
@@ -37,6 +38,7 @@
 		/obj/item/aquarium_kit = 1,
 	)
 	category = CAT_FURNITURE
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/mirror
 	name = "Mirror"
@@ -69,6 +71,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	category = CAT_FURNITURE
 	time = 7 SECONDS
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/flatpack_cart
 	name = "Flatpack Cart"
@@ -81,3 +84,4 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	category = CAT_FURNITURE
 	time = 10 SECONDS
+	used_aspect = /datum/aspect/mental_clockwork

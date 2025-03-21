@@ -46,6 +46,11 @@
 /// Maximum level that any aspect can have, after all modifiers applied
 #define ASPECT_LEVEL_MAXIMUM 16
 
+/// Percentile health boost for mechs, cyborgs and bots per level of Four Legged Wheelbarrel that crafter has
+#define FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST 0.1
+/// Percentile speed boost for mechs per level of Four Legged Wheelbarrel that crafter has
+#define FOUR_LEGGED_WHEELBARREL_SPEED_BOOST 0.05
+
 /// How much armor penetration do batons get per level of Command?
 #define COMMAND_BATON_PENETRATION 5
 
@@ -59,6 +64,8 @@
 /// Level of Endurance at which you get analgesia
 #define ENDURANCE_ANALGESIA_LEVEL 8
 
+/// Level of Shivers at which user gets antimagic rolls
+#define SHIVERS_ANTIMAGIC_LEVEL 4
 /// Level of Shivers at which user can freely wield magical items
 #define SHIVERS_MAGIC_GIFT_LEVEL 8
 

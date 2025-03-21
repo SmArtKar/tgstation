@@ -33,7 +33,6 @@
 	time = 4 SECONDS
 	category = CAT_EQUIPMENT
 
-
 /datum/crafting_recipe/radiogloves
 	name = "Radio Gloves"
 	result = /obj/item/clothing/gloves/radio
@@ -45,6 +44,7 @@
 	)
 	tool_behaviors = list(TOOL_WIRECUTTER)
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/radiogloves/New()
 	..()
@@ -60,6 +60,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/motorized_wheelchair
 	name = "Motorized Wheelchair"
@@ -79,6 +80,7 @@
 	tool_behaviors = list(TOOL_WELDER, TOOL_SCREWDRIVER, TOOL_WRENCH)
 	time = 20 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/secured_freezer_cabinet
 	name = "Secure Freezer Cabinet"
@@ -93,6 +95,7 @@
 	)
 	time = 5 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/barbeque_grill
 	name = "Barbeque grill"
@@ -104,6 +107,7 @@
 	)
 	time = 7 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/secure_closet
 	name = "Secure Closet"
@@ -131,6 +135,7 @@
 	tool_behaviors = list(TOOL_WELDER, TOOL_SCREWDRIVER)
 	time = 10 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/trapdoor_remote
 	name = "Trapdoor Remote"
@@ -143,6 +148,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	time = 5 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/mousetrap
 	name = "Mouse Trap"
@@ -163,6 +169,7 @@
 		/obj/item/restraints/handcuffs/cable = 1
 	)
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/extendohand_r
 	name = "Extendo-Hand (Right Arm)"
@@ -203,6 +210,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/pinpointer/material_sniffer
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/pressureplate
 	name = "Pressure Plate"
@@ -236,6 +244,7 @@
 	)
 	category = CAT_EQUIPMENT
 	tool_behaviors = list(TOOL_WRENCH, TOOL_WELDER, TOOL_WIRECUTTER)
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/gripperoffbrand
 	name = "Improvised Gripper Gloves"
@@ -260,6 +269,7 @@
 	tool_paths = list(/obj/item/bikehorn)
 	time = 40 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/rebar_quiver
 	name = "Rebar Storage Quiver"
@@ -294,3 +304,4 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WRENCH)
 	time = 5 SECONDS
 	category = CAT_EQUIPMENT
+	used_aspect = /datum/aspect/mental_clockwork

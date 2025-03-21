@@ -80,7 +80,7 @@
 	)
 	time = 120 SECONDS
 	category = CAT_STRUCTURE
-
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/sm_small
 	name = "Small Supermatter Crystal"
@@ -94,3 +94,4 @@
 	)
 	time = 120 SECONDS
 	category = CAT_STRUCTURE
+	used_aspect = /datum/aspect/in_and_out

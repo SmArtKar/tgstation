@@ -92,6 +92,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_TOOLS
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/shuttle_blueprints/check_requirements(mob/user, list/collected_requirements)
 	var/list/crayons = collected_requirements[/obj/item/toy/crayon]
@@ -119,3 +120,4 @@
 		/obj/item/stack/cable_coil = 5,
 	)
 	category = CAT_TOOLS
+	used_aspect = /datum/aspect/mental_clockwork

@@ -65,6 +65,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/advancedegun/New()
 	..()
@@ -79,6 +80,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/tempgun/New()
 	..()
@@ -96,6 +98,7 @@
 	)
 	time = 30 SECONDS //Maybe the delay will make you reconsider your choices
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/cognition
 
 /datum/crafting_recipe/ebow
 	name = "Energy Crossbow"
@@ -107,6 +110,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/xraylaser
 	name = "X-ray Laser Gun"
@@ -117,6 +121,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/xraylaser/New()
 	..()
@@ -131,6 +136,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/hellgun/New()
 	..()
@@ -145,6 +151,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/ioncarbine/New()
 	..()
@@ -159,6 +166,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/improvised_pneumatic_cannon //Pretty easy to obtain but
 	name = "Pneumatic Cannon"
@@ -171,6 +179,7 @@
 	)
 	time = 5 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/flamethrower
 	name = "Flamethrower"
@@ -187,6 +196,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 1 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/pipegun
 	name = "Pipegun"
@@ -201,6 +211,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 5 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/pipepistol
 	name = "Pipe Pistol"
@@ -217,6 +228,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 5 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/rebarxbow
 	name = "Heated Rebar Crossbow"
@@ -232,6 +244,7 @@
 	tool_behaviors = list(TOOL_WELDER)
 	time = 5 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/rebarxbowforced
 	name = "Forced Rebar Crossbow"
@@ -247,6 +260,7 @@
 	tool_behaviors = list(TOOL_CROWBAR)
 	time = 1 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/pipegun_prime
 	name = "Regal Pipegun"
@@ -342,6 +356,7 @@
 	)
 	category = CAT_WEAPON_RANGED
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_MUST_BE_LEARNED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/laser_musket
 	name = "Laser Musket"
@@ -357,6 +372,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/laser_musket_prime
 	name = "Heroic Laser Musket"
@@ -373,6 +389,7 @@
 	time = 30 SECONDS //contemplate for a bit
 	category = CAT_WEAPON_RANGED
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_MUST_BE_LEARNED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/smoothbore_disabler
 	name = "Smoothbore Disabler"
@@ -388,6 +405,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WRENCH)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/smoothbore_disabler_prime
 	name = "Elite Smoothbore Disabler"
@@ -402,6 +420,7 @@
 	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_MUST_BE_LEARNED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/shortbow
 	name = "Shortbow"
@@ -427,6 +446,7 @@
 	)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/sks
 	name = "Sakhno SKS semi-automatic rifle"
@@ -439,6 +459,7 @@
 	tool_behaviors = list(TOOL_SCREWDRIVER)
 	time = 10 SECONDS
 	category = CAT_WEAPON_RANGED
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/dimensional_bombcore
 	name = "Multi-Dimensional Payload"
@@ -455,3 +476,4 @@
 	steps = list(
 		"use high quality gibtonite and advanced release or large grenades for better yield",
 	)
+	used_aspect = /datum/aspect/cognition

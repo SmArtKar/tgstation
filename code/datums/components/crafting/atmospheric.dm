@@ -8,6 +8,7 @@
 		/obj/item/stack/cable_coil = 10,
 	)
 	category = CAT_ATMOSPHERIC
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/pipe
 	name = "Smart pipe fitting"
@@ -16,6 +17,7 @@
 	reqs = list(/obj/item/stack/sheet/iron = 1)
 	time = 0.5 SECONDS
 	category = CAT_ATMOSPHERIC
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/igniter
 	name = "Igniter"
@@ -28,6 +30,7 @@
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF
 	time = 2 SECONDS
 	category = CAT_ATMOSPHERIC
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/air_sensor
 	name = "Monitored Air Sensor"
@@ -37,9 +40,11 @@
 		/obj/item/stack/sheet/iron = 1,
 		)
 	blacklist = list(/obj/item/analyzer/ranged)
+	used_aspect = /datum/aspect/mental_clockwork
 
 ///abstract path for pipe crafting recipes that set the pipe_type of their results and have other checks as well
 /datum/crafting_recipe/spec_pipe
+	used_aspect = /datum/aspect/mental_clockwork
 	var/pipe_type
 
 /datum/crafting_recipe/spec_pipe/check_requirements(mob/user, list/collected_requirements)
@@ -236,6 +241,7 @@
 		/obj/item/stock_parts/water_recycler = 1,
 	)
 	category = CAT_ATMOSPHERIC
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/elder_atmosian_statue
 	name = "Elder Atmosian Statue"
@@ -247,6 +253,7 @@
 		/obj/item/stack/sheet/iron = 30,
 	)
 	category = CAT_STRUCTURE
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/spec_pipe/airlock_pump
 	name = "External Airlock Pump"
@@ -261,3 +268,4 @@
 	time = 2 SECONDS
 	category = CAT_ATMOSPHERIC
 	pipe_type = /obj/machinery/atmospherics/components/unary/airlock_pump
+	used_aspect = /datum/aspect/mental_clockwork

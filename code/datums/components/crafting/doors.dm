@@ -10,6 +10,7 @@
 	time = 10 SECONDS
 	category = CAT_DOORS
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF
+	used_aspect = /datum/aspect/mental_clockwork
 
 /datum/crafting_recipe/blast_doors
 	name = "Blast Door"
@@ -23,3 +24,4 @@
 	time = 30 SECONDS
 	category = CAT_DOORS
 	crafting_flags = CRAFT_CHECK_DENSITY | CRAFT_ONE_PER_TURF
+	used_aspect = /datum/aspect/mental_clockwork
