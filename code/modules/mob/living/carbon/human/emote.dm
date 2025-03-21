@@ -99,7 +99,7 @@
 		if (contest.outcome >= CHECK_SUCCESS)
 			to_chat(hearer, contest.show_message("Don't listen to [user.p_them()]."))
 		else
-			hearer.Paralyze(0.5 SECONDS)
+			hearer.Stun(0.5 SECONDS)
 
 /datum/emote/living/carbon/human/scream/screech //If a human tries to screech it'll just scream.
 	key = "screech"
