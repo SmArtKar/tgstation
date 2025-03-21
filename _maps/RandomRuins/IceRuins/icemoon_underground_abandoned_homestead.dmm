@@ -19,7 +19,7 @@
 /turf/open/misc/asteroid/snow/icemoon,
 /area/icemoon/surface/outdoors/nospawn)
 "fd" = (
-/obj/structure/table/bronze{
+/obj/structure/table/reinforced/bronze{
 	color = "#666666"
 	},
 /obj/structure/sink/kitchen/directional/south,
@@ -84,7 +84,7 @@
 /turf/open/misc/asteroid/snow/icemoon,
 /area/icemoon/surface/outdoors/nospawn)
 "uc" = (
-/obj/structure/table/bronze{
+/obj/structure/table/reinforced/bronze{
 	color = "#666666"
 	},
 /obj/item/knife/hunting,

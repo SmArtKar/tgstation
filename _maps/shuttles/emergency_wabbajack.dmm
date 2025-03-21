@@ -24,12 +24,12 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "ag" = (
-/obj/structure/table/abductor/wabbajack/left,
+/obj/structure/table/reinforced/abductor/wabbajack/left,
 /obj/effect/turf_decal/tile/green/fourcorners,
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)
 "ah" = (
-/obj/structure/table/abductor/wabbajack/right,
+/obj/structure/table/reinforced/abductor/wabbajack/right,
 /obj/effect/turf_decal/tile/green/fourcorners,
 /turf/open/floor/iron/dark,
 /area/shuttle/escape)

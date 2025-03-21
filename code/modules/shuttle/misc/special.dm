@@ -71,7 +71,7 @@
 /obj/machinery/power/emitter/energycannon/magical/emag_act(mob/user, obj/item/card/emag/emag_card)
 	return FALSE
 
-/obj/structure/table/abductor/wabbajack
+/obj/structure/table/reinforced/abductor/wabbajack
 	name = "wabbajack altar"
 	desc = "Whether you're sleeping or waking, it's going to be quite chaotic."
 	max_integrity = 1000
@@ -80,21 +80,21 @@
 	var/list/mob/living/sleepers = list()
 	var/never_spoken = TRUE
 
-/obj/structure/table/abductor/wabbajack/Initialize(mapload, obj/structure/table_frame/frame_used, obj/item/stack/stack_used)
+/obj/structure/table/reinforced/abductor/wabbajack/Initialize(mapload, obj/structure/table_frame/frame_used, obj/item/stack/stack_used)
 	. = ..()
 	START_PROCESSING(SSobj, src)
 
-/obj/structure/table/abductor/wabbajack/Destroy()
+/obj/structure/table/reinforced/abductor/wabbajack/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	. = ..()
 
-/obj/structure/table/abductor/wabbajack/screwdriver_act(mob/living/user, obj/item/tool)
+/obj/structure/table/reinforced/abductor/wabbajack/screwdriver_act(mob/living/user, obj/item/tool)
 	return NONE
 
-/obj/structure/table/abductor/wabbajack/wrench_act(mob/living/user, obj/item/tool)
+/obj/structure/table/reinforced/abductor/wabbajack/wrench_act(mob/living/user, obj/item/tool)
 	return NONE
 
-/obj/structure/table/abductor/wabbajack/process()
+/obj/structure/table/reinforced/abductor/wabbajack/process()
 	if(isnull(our_statue))
 		our_statue = locate() in orange(4, src)
 
@@ -142,15 +142,15 @@
 	else
 		our_statue.active_tables -= src
 
-/obj/structure/table/abductor/wabbajack/proc/sleeper_dreams(mob/living/sleeper)
+/obj/structure/table/reinforced/abductor/wabbajack/proc/sleeper_dreams(mob/living/sleeper)
 	if(sleeper in sleepers)
 		to_chat(sleeper, span_revennotice("While you slumber, you have the strangest dream, like you can see yourself from the outside."))
 		sleeper.ghostize(TRUE)
 
-/obj/structure/table/abductor/wabbajack/left
+/obj/structure/table/reinforced/abductor/wabbajack/left
 	desc = "You sleep so it may wake."
 
-/obj/structure/table/abductor/wabbajack/right
+/obj/structure/table/reinforced/abductor/wabbajack/right
 	desc = "It wakes so you may sleep."
 
 /**

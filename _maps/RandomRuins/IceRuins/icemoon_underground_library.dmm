@@ -115,14 +115,14 @@
 	},
 /area/ruin/unpowered/buried_library)
 "aG" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/stack/ore/slag,
 /turf/open/floor/carpet/black{
 	initial_gas_mix = "ICEMOON_ATMOS"
 	},
 /area/ruin/unpowered/buried_library)
 "aH" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/statuebust/hippocratic,
 /turf/open/floor/carpet/black{
 	initial_gas_mix = "ICEMOON_ATMOS"
@@ -176,7 +176,7 @@
 /turf/open/floor/cult,
 /area/ruin/unpowered/buried_library)
 "aX" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/statuebust,
 /turf/open/floor/plating/icemoon,
 /area/ruin/unpowered/buried_library)

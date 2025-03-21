@@ -48,7 +48,7 @@
 /turf/open/floor/bronze,
 /area/icemoon/surface)
 "I" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/toy/clockwork_watch{
 	desc = "You can still feel the embers of a once great empire in your hand...";
 	name = "drained clockwork slab"
@@ -60,7 +60,7 @@
 /turf/open/floor/bronze,
 /area/icemoon/surface)
 "K" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /turf/open/floor/bronze,
 /area/icemoon/surface)
 "L" = (

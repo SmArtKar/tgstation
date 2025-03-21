@@ -224,7 +224,7 @@
 /turf/open/floor/bamboo,
 /area/deathmatch)
 "oR" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/nullrod/claymore/bostaff,
 /obj/structure/window/spawner/directional/south,
 /obj/structure/window/spawner/directional/west,
@@ -288,7 +288,7 @@
 /turf/open/floor/carpet,
 /area/deathmatch)
 "rP" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/flashlight/lantern{
 	light_on = 1
 	},
@@ -416,7 +416,7 @@
 /turf/open/floor/engine/cult,
 /area/deathmatch)
 "yL" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/throwing_star{
 	pixel_x = 2
 	},
@@ -548,7 +548,7 @@
 /turf/open/misc/grass/jungle,
 /area/deathmatch)
 "JP" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/restraints/legcuffs/bola/tactical,
 /obj/structure/window/spawner/directional/north,
 /obj/structure/window/spawner/directional/west,
@@ -568,7 +568,7 @@
 /obj/item/flashlight/lantern{
 	light_on = 1
 	},
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/machinery/light,
 /turf/open/floor/stone,
 /area/deathmatch)
@@ -601,7 +601,7 @@
 /turf/open/water,
 /area/deathmatch)
 "NJ" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clothing/suit/armor/riot/knight,
 /obj/item/clothing/head/helmet/knight,
 /obj/structure/window/spawner/directional/east,
@@ -710,7 +710,7 @@
 /turf/open/floor/wood/large,
 /area/deathmatch)
 "TW" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/flashlight/lantern{
 	light_on = 1
 	},

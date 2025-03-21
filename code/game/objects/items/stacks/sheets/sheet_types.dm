@@ -763,7 +763,7 @@ GLOBAL_LIST_INIT(bronze_recipes, list ( \
 	novariants = FALSE
 	grind_results = list(/datum/reagent/iron = 20, /datum/reagent/copper = 12) //we have no "tin" reagent so this is the closest thing
 	merge_type = /obj/item/stack/sheet/bronze
-	table_type = /obj/structure/table/bronze
+	table_type = /obj/structure/table/reinforced/bronze
 	material_type = /datum/material/bronze
 	walltype = /turf/closed/wall/mineral/bronze
 	has_unique_girder = TRUE

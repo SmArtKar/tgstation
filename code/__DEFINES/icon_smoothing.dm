@@ -178,8 +178,8 @@ DEFINE_BITFIELD(smoothing_junction, list(
 #define SMOOTH_GROUP_TABLES S_OBJ(51) ///obj/structure/table
 #define SMOOTH_GROUP_WOOD_TABLES S_OBJ(52) ///obj/structure/table/wood
 #define SMOOTH_GROUP_FANCY_WOOD_TABLES S_OBJ(53) ///obj/structure/table/wood/fancy
-#define SMOOTH_GROUP_BRONZE_TABLES S_OBJ(54) ///obj/structure/table/bronze
-#define SMOOTH_GROUP_ABDUCTOR_TABLES S_OBJ(55) ///obj/structure/table/abductor
+#define SMOOTH_GROUP_BRONZE_TABLES S_OBJ(54) ///obj/structure/table/reinforced/bronze
+#define SMOOTH_GROUP_ABDUCTOR_TABLES S_OBJ(55) ///obj/structure/table/reinforced/abductor
 #define SMOOTH_GROUP_GLASS_TABLES S_OBJ(56) ///obj/structure/table/glass
 
 #define SMOOTH_GROUP_ALIEN_NEST S_OBJ(60) ///obj/structure/bed/nest

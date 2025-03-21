@@ -56,7 +56,7 @@
 /turf/open/floor/plating,
 /area/awaymission/beach)
 "aC" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/reagent_containers/condiment/bbqsauce{
 	pixel_y = 13;
 	pixel_x = 3
@@ -122,7 +122,7 @@
 /turf/open/floor/iron/white,
 /area/awaymission/beach)
 "by" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clothing/suit/costume/hawaiian{
 	pixel_y = 2;
 	pixel_x = 5
@@ -134,7 +134,7 @@
 /turf/open/floor/wood/parquet,
 /area/awaymission/beach)
 "bz" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clothing/suit/costume/hawaiian{
 	pixel_y = 7;
 	pixel_x = -3
@@ -321,7 +321,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "ea" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/desk_bell{
 	pixel_x = 7;
 	pixel_y = 8
@@ -367,7 +367,7 @@
 /turf/open/floor/iron/white/textured_large,
 /area/awaymission/beach)
 "fd" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/desk_bell{
 	pixel_x = -11;
 	pixel_y = 9
@@ -449,7 +449,7 @@
 /turf/open/floor/wood,
 /area/awaymission/beach)
 "fI" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clothing/suit/costume/hawaiian{
 	pixel_y = 6;
 	pixel_x = 4
@@ -564,7 +564,7 @@
 /turf/open/water/beach,
 /area/awaymission/beach)
 "hp" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/sign/poster/random/directional/east,
 /obj/machinery/button/door/directional/south{
 	id = "beach_room_10";
@@ -611,7 +611,7 @@
 /turf/open/water/beach,
 /area/awaymission/beach)
 "im" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/sign/poster/random/directional/east,
 /obj/item/table_clock{
 	pixel_y = 4
@@ -1156,7 +1156,7 @@
 	pixel_y = 15;
 	pixel_x = -1
 	},
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/desk_bell{
 	pixel_x = 12;
 	pixel_y = 3
@@ -1197,7 +1197,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "pt" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/book/manual/wiki/barman_recipes{
 	pixel_x = 9;
 	pixel_y = 7;
@@ -1275,7 +1275,7 @@
 /turf/open/floor/wood/large,
 /area/awaymission/beach)
 "qf" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/pai_card{
 	desc = "A real Nanotrasen success, these personal AIs provide all of the companionship of an AI without any law related red-tape.";
 	name = "\improper Nanotrasen-brand personal AI device exhibit";
@@ -1368,7 +1368,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "rQ" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/paper_bin/carbon{
 	pixel_y = 8
 	},
@@ -1533,7 +1533,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "tU" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /turf/open/floor/carpet,
 /area/awaymission/beach)
 "uc" = (
@@ -1548,7 +1548,7 @@
 /turf/open/floor/iron/freezer,
 /area/awaymission/beach)
 "um" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/machinery/button/door/directional/south{
 	id = "beach_room_11";
 	normaldoorcontrol = 1;
@@ -1580,7 +1580,7 @@
 /turf/open/floor/wood,
 /area/awaymission/beach)
 "uu" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/reagent_containers/condiment/ketchup{
 	pixel_y = 14;
 	pixel_x = 1
@@ -1701,7 +1701,7 @@
 /turf/open/water/beach,
 /area/awaymission/beach)
 "vF" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/sign/poster/random/directional/east,
 /obj/machinery/button/door/directional/south{
 	id = "beach_room_8";
@@ -1773,7 +1773,7 @@
 /turf/open/floor/wood,
 /area/awaymission/beach)
 "wL" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/food/grown/banana/bunch{
 	pixel_y = 10;
 	offset_at_init = 0
@@ -1878,7 +1878,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "yt" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/camera{
 	pixel_y = 12;
 	pixel_x = 6
@@ -2045,7 +2045,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "AB" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/pai_card{
 	desc = "A real Nanotrasen success, these personal AIs provide all of the companionship of an AI without any law related red-tape.";
 	name = "\improper Nanotrasen-brand personal AI device exhibit";
@@ -2263,7 +2263,7 @@
 /turf/open/floor/wood,
 /area/awaymission/beach)
 "CR" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/camera{
 	pixel_y = 5
 	},
@@ -2328,7 +2328,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "DR" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/camera{
 	pixel_y = 8;
 	pixel_x = -3
@@ -2336,11 +2336,11 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "DU" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "DV" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/machinery/button/door/directional/south{
 	id = "beach_room_4";
 	normaldoorcontrol = 1;
@@ -2386,7 +2386,7 @@
 	pixel_y = 3;
 	pixel_x = 3
 	},
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /turf/open/floor/wood/large,
 /area/awaymission/beach)
 "Em" = (
@@ -2403,7 +2403,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "Es" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/table_clock{
 	pixel_y = 13
 	},
@@ -2713,7 +2713,7 @@
 /turf/open/floor/iron/dark/herringbone,
 /area/awaymission/beach)
 "HU" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/camera{
 	pixel_y = 12;
 	pixel_x = -10
@@ -2782,7 +2782,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "IE" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clothing/suit/costume/hawaiian{
 	pixel_y = 1;
 	pixel_x = 7
@@ -2812,7 +2812,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "Ja" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/reagent_containers/condiment/peppermill{
 	pixel_y = 12
 	},
@@ -3061,7 +3061,7 @@
 /turf/open/floor/wood,
 /area/awaymission/beach)
 "Mm" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /turf/open/floor/wood/large,
 /area/awaymission/beach)
 "Mn" = (
@@ -3146,7 +3146,7 @@
 /turf/open/floor/eighties,
 /area/awaymission/beach)
 "MP" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/structure/sign/poster/random/directional/east,
 /obj/item/camera{
 	pixel_y = 5
@@ -3256,7 +3256,7 @@
 /turf/open/floor/carpet,
 /area/awaymission/beach)
 "NS" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/storage/bag/tray,
 /turf/open/floor/wood/large,
 /area/awaymission/beach)
@@ -3558,7 +3558,7 @@
 /turf/open/floor/eighties,
 /area/awaymission/beach)
 "Sg" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/reagent_containers/cup/rag{
 	pixel_y = 5
 	},
@@ -3868,7 +3868,7 @@
 	pixel_y = 3;
 	pixel_x = -8
 	},
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/reagent_containers/cup/glass/drinkingglass/shotglass{
 	pixel_y = 10;
 	pixel_x = 6
@@ -3876,7 +3876,7 @@
 /turf/open/floor/wood/large,
 /area/awaymission/beach)
 "WC" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/camera{
 	pixel_y = 8;
 	pixel_x = 6
@@ -4027,7 +4027,7 @@
 /turf/open/floor/wood/large,
 /area/awaymission/beach)
 "Zt" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/storage/toolbox/fishing{
 	pixel_y = 2
 	},
@@ -4047,7 +4047,7 @@
 /turf/open/misc/beach/sand,
 /area/awaymission/beach)
 "ZH" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/paper/paperslip{
 	pixel_y = 6;
 	pixel_x = 10

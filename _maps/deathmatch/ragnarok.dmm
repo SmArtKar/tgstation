@@ -445,7 +445,7 @@
 /turf/open/misc/asteroid/moon,
 /area/deathmatch)
 "sd" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/toy/clockwork_watch,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/bronze,
@@ -491,7 +491,7 @@
 /turf/open/floor/bronze/filled,
 /area/deathmatch)
 "uT" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clockwork_alloy,
 /obj/item/stack/sheet/bronze/thirty,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1114,7 +1114,7 @@
 /turf/open/indestructible/plating,
 /area/deathmatch)
 "VY" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/clothing/shoes/bronze,
 /obj/item/clothing/suit/costume/bronze,
 /obj/item/clothing/head/costume/bronze,

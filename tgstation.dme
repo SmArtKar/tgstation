@@ -1483,6 +1483,7 @@
 #include "code\datums\elements\content_barfer.dm"
 #include "code\datums\elements\corrupted_organ.dm"
 #include "code\datums\elements\crackable.dm"
+#include "code\datums\elements\crawlable_under.dm"
 #include "code\datums\elements\crusher_loot.dm"
 #include "code\datums\elements\cuffsnapping.dm"
 #include "code\datums\elements\cult_eyes.dm"

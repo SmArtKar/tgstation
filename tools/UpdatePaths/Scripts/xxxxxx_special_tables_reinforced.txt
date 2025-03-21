@@ -1,0 +1,4 @@
+#comment Repaths bronze and abductor tables to be reinforced
+
+/obj/structure/table/bronze : /obj/structure/table/reinforced/bronze{@OLD}
+/obj/structure/table/abductor : /obj/structure/table/reinforced/abductor{@OLD}

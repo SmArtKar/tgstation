@@ -159,7 +159,7 @@ GLOBAL_LIST_INIT(phobia_objs, list(
 		/obj/structure/closet/abductor,
 		/obj/structure/statue/plasma/xeno,
 		/obj/structure/table_frame/abductor,
-		/obj/structure/table/abductor,
+		/obj/structure/table/reinforced/abductor,
 		/obj/structure/table/optable/abductor,
 	)),
 	"anime" = typecacheof(list(

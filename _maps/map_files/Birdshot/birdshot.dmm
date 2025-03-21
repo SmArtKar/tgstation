@@ -16061,7 +16061,7 @@
 /turf/open/floor/iron/grimy,
 /area/station/science/cubicle)
 "fIi" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/food/grown/cannabis{
 	pixel_x = -11
 	},
@@ -21644,7 +21644,7 @@
 /area/station/commons/toilet/auxiliary)
 "hwo" = (
 /obj/structure/cable,
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/effect/turf_decal/siding/thinplating_new/terracotta{
 	dir = 4
 	},
@@ -23990,7 +23990,7 @@
 /turf/open/floor/engine,
 /area/station/engineering/supermatter/room)
 "ikH" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/machinery/computer/security/wooden_tv{
 	pixel_x = 3;
 	pixel_y = 14
@@ -31796,7 +31796,7 @@
 /area/station/cargo/boutique)
 "kCC" = (
 /obj/structure/sink/directional/west,
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/item/paper/fluff/gateway,
 /turf/open/floor/iron/dark/small,
 /area/station/command/heads_quarters/captain/private)
@@ -39923,7 +39923,7 @@
 /area/station/service/abandoned_gambling_den/gaming)
 "noF" = (
 /obj/structure/cable,
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/effect/turf_decal/siding/thinplating_new/terracotta{
 	dir = 4
 	},
@@ -59882,7 +59882,7 @@
 /area/station/hallway/primary/central/fore)
 "tXl" = (
 /obj/effect/turf_decal/sand/plating,
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /turf/open/floor/wood/tile,
 /area/station/maintenance/port/lesser)
 "tXy" = (
@@ -61701,7 +61701,7 @@
 /turf/open/floor/engine,
 /area/station/engineering/atmospherics_engine)
 "uBQ" = (
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/machinery/microwave{
 	pixel_y = 5
 	},
@@ -71010,7 +71010,7 @@
 /area/station/medical/medbay/central)
 "xoS" = (
 /obj/structure/cable,
-/obj/structure/table/bronze,
+/obj/structure/table/reinforced/bronze,
 /obj/effect/turf_decal/siding/thinplating_new/terracotta{
 	dir = 4
 	},

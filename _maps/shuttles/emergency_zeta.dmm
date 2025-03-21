@@ -15,7 +15,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "eU" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/stock_parts/subspace/crystal{
 	pixel_x = -8
 	},
@@ -33,7 +33,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape/brig)
 "hh" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/gun/energy/alien,
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
@@ -79,7 +79,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "qD" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/machinery/recharger,
 /obj/item/melee/baton/abductor{
 	desc = "Even aliens can see the use of a good old-fashioned beating stick."
@@ -125,7 +125,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "xg" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/machinery/recharger,
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
@@ -134,14 +134,14 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "zx" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/abductor/mind_device{
 	desc = "Just holding this makes your head ache."
 	},
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "zC" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/screwdriver/abductor{
 	pixel_y = -5
 	},
@@ -155,7 +155,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "Bj" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/crowbar/abductor{
 	pixel_x = -13
 	},
@@ -186,7 +186,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "HK" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/storage/box/alienhandcuffs,
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape/brig)
@@ -197,7 +197,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape/brig)
 "IM" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/organ/heart/gland/access{
 	pixel_x = 10
 	},
@@ -206,7 +206,7 @@
 /area/shuttle/escape)
 "JK" = (
 /obj/item/lazarus_injector,
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "Lo" = (
@@ -217,7 +217,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "Nz" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/anomaly_neutralizer{
 	pixel_x = -15
 	},
@@ -268,7 +268,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "VR" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/scalpel/alien,
 /obj/item/cautery/alien,
 /obj/item/retractor/alien,
@@ -298,7 +298,7 @@
 /turf/open/floor/plating/abductor,
 /area/shuttle/escape)
 "Ya" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/abductor/gizmo,
 /obj/item/wirecutters/abductor{
 	pixel_y = 13

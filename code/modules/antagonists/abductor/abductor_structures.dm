@@ -17,11 +17,11 @@
 
 /obj/structure/table_frame/abductor/get_table_type(obj/item/stack/our_stack)
 	if(istype(our_stack, /obj/item/stack/sheet/mineral/abductor))
-		return /obj/structure/table/abductor
+		return /obj/structure/table/reinforced/abductor
 	if(istype(our_stack, /obj/item/stack/sheet/mineral/silver))
 		return /obj/structure/table/optable/abductor
 
-/obj/structure/table/abductor
+/obj/structure/table/reinforced/abductor
 	name = "alien table"
 	desc = "Advanced flat surface technology at work!"
 	icon = 'icons/obj/smooth_structures/alien_table.dmi'

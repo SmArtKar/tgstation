@@ -93,7 +93,7 @@
 /obj/item/scalpel/alien{
 	pixel_y = 7
 	},
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/cautery/alien{
 	pixel_y = 15
 	},
@@ -108,7 +108,7 @@
 	},
 /area/centcom/abductor_ship)
 "sS" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/machinery/recharger{
 	pixel_x = 7
 	},
@@ -118,7 +118,7 @@
 /turf/open/floor/plating/abductor,
 /area/centcom/abductor_ship)
 "tu" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/hemostat/alien{
 	pixel_y = 16
 	},
@@ -275,7 +275,7 @@
 	},
 /area/centcom/abductor_ship)
 "SK" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/toy/plush/abductor{
 	pixel_x = -7;
 	pixel_y = 14

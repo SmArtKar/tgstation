@@ -319,3 +319,6 @@
 
 /// Permanent trait from an overdose effect
 #define OVERDOSE_TRAIT "overdose"
+
+/// Trait from crawling under something
+#define CRAWLING_TRAIT "crawling"

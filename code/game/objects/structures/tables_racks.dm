@@ -33,10 +33,11 @@
 	var/framestack = /obj/item/stack/rods
 	var/glass_shard_type = /obj/item/shard
 	var/buildstack = /obj/item/stack/sheet/iron
-	var/busy = FALSE
 	var/buildstackamount = 1
 	var/framestackamount = 2
 	var/deconstruction_ready = TRUE
+	/// Can this table be crawled under?
+	var/crawlable = TRUE
 
 /obj/structure/table/Initialize(mapload, obj/structure/table_frame/frame_used, obj/item/stack/stack_used)
 	. = ..()
@@ -70,10 +71,12 @@
 /obj/structure/table/proc/apply_stack_properties(obj/item/stack/stack_used)
 	return
 
-///Adds the element used to make the object climbable, and also the one that shift the mob buckled to it up.
+///Adds the element used to make the object climbable, the one that shift the mob buckled to it up and allows to crawl under the table (if we're not reinforced)
 /obj/structure/table/proc/make_climbable()
 	AddElement(/datum/element/climbable)
 	AddElement(/datum/element/elevation, pixel_shift = 12)
+	if (crawlable)
+		AddElement(/datum/element/crawlable_under, crawl_delay = 5 SECONDS, crawl_layer = BELOW_TABLE_LAYER)
 
 /obj/structure/table/add_context(atom/source, list/context, obj/item/held_item, mob/living/user)
 	. = ..()
@@ -670,6 +673,7 @@
 	max_integrity = 200
 	integrity_failure = 0.25
 	armor_type = /datum/armor/table_reinforced
+	crawlable = FALSE
 
 /datum/armor/table_reinforced
 	melee = 10
@@ -757,7 +761,7 @@
 
 	return TRUE
 
-/obj/structure/table/bronze
+/obj/structure/table/reinforced/bronze
 	name = "bronze table"
 	desc = "A solid table made out of bronze."
 	icon = 'icons/obj/smooth_structures/brass_table.dmi'
@@ -768,7 +772,7 @@
 	smoothing_groups = SMOOTH_GROUP_BRONZE_TABLES //Don't smooth with SMOOTH_GROUP_TABLES
 	canSmoothWith = SMOOTH_GROUP_BRONZE_TABLES
 
-/obj/structure/table/bronze/tablepush(mob/living/user, mob/living/pushed_mob)
+/obj/structure/table/reinforced/bronze/tablepush(mob/living/user, mob/living/pushed_mob)
 	..()
 	playsound(src, 'sound/effects/magic/clockwork/fellowship_armory.ogg', 50, TRUE)
 
@@ -827,6 +831,7 @@
 	can_buckle = TRUE
 	buckle_lying = 90
 	custom_materials = list(/datum/material/silver =SHEET_MATERIAL_AMOUNT)
+	crawlable = FALSE
 	var/mob/living/carbon/patient = null
 	var/obj/machinery/computer/operating/computer = null
 

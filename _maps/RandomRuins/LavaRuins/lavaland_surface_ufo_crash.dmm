@@ -58,7 +58,7 @@
 	},
 /area/ruin/unpowered)
 "t" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/storage/box/alienhandcuffs,
 /turf/open/floor/plating/abductor{
 	initial_gas_mix = "LAVALAND_ATMOS"
@@ -85,7 +85,7 @@
 	},
 /area/ruin/unpowered)
 "z" = (
-/obj/structure/table/abductor,
+/obj/structure/table/reinforced/abductor,
 /obj/item/surgicaldrill/alien,
 /obj/item/circular_saw/alien,
 /turf/open/floor/plating/abductor{
