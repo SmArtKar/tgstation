@@ -24,11 +24,16 @@
 ///Called when you gain addiction points somehow. Takes a mind as argument and sees if you gained the addiction
 /datum/addiction/proc/on_gain_addiction_points(datum/mind/victim_mind)
 	var/current_addiction_point_amount = victim_mind.addiction_points[type]
-	if(current_addiction_point_amount < addiction_gain_threshold) //Not enough to become addicted
+	if(current_addiction_point_amount < addiction_gain_threshold * (victim_mind.get_aspect(/datum/aspect/morale).get_level() - ASPECT_LEVEL_NEUTRAL) * MORALE_ADDICTION_RESISTANCE) //Not enough to become addicted
 		return
 	if(LAZYACCESS(victim_mind.active_addictions, type)) //Already addicted
 		return
-	become_addicted(victim_mind)
+	var/datum/check_result/result = victim_mind.current?.aspect_check(/datum/aspect/morale, SKILLCHECK_LEGENDARY, exp_modifier = 2)
+	if (result?.outcome >= CHECK_SUCCESS)
+		victim_mind.addiction_points[type] -= addiction_gain_threshold * 0.25
+		to_chat(victim_mind.current, result.show_message("This really isn't good for you, you know."))
+	else
+		become_addicted(victim_mind)
 
 
 ///Called when you become addicted

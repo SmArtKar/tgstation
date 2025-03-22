@@ -33,8 +33,9 @@
 	var/obj/item/mecha_parts/chassis/parent_chassis = parent
 	mech.CheckParts(parent_chassis.contents)
 	mech.max_integrity *= 1 + (user.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
-	mech.atom_integrity = mech.max_integrity
+	mech.repair_damage(mech.max_integrity)
 	mech.movedelay *= 1 - (user.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_SPEED_BOOST
+	user.gain_aspect_exp(/datum/aspect/four_legged_wheelbarrel, 250)
 	SSblackbox.record_feedback("tally", "mechas_created", 1, mech.name)
 	ADD_TRAIT(mech, TRAIT_MECHA_CREATED_NORMALLY, mech)
 	QDEL_NULL(parent)

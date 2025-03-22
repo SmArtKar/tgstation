@@ -10,6 +10,7 @@
 	var/mob/living/bot = result
 	bot.maxHealth *= 1 + (crafter.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
 	bot.fully_heal()
+	crafter.gain_aspect_exp(/datum/aspect/four_legged_wheelbarrel, 200)
 
 /datum/crafting_recipe/robot/ed209
 	name = "ED209"

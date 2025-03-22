@@ -14,7 +14,7 @@
 	attribute = /datum/attribute/intellect
 
 // RND knowledge, xenobio, circuits
-/datum/aspect/cognition // TODO: THIS but more effects
+/datum/aspect/cognition // TODO: more effects
 	name = "Cognition"
 	desc = "Solve the mysteries of the Universe. Deduce the world."
 	attribute = /datum/attribute/intellect

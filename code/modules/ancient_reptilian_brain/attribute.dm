@@ -51,17 +51,28 @@
 	for (var/attribute_type in subtypesof(/datum/attribute))
 		attributes += new attribute_type(src)
 
-/mob/proc/get_attribute(attribute_type)
+/datum/mind/proc/get_attribute(attribute_type)
 	RETURN_TYPE(/datum/attribute)
-	return locate(attribute_type) in mind?.attributes
+	return locate(attribute_type) in attributes
 
-/mob/proc/get_aspect(datum/aspect/aspect_type)
+/datum/mind/proc/get_aspect(datum/aspect/aspect_type)
 	RETURN_TYPE(/datum/aspect)
 	var/datum/attribute/linked_attribute = get_attribute(initial(aspect_type.attribute))
 	return linked_attribute?.get_aspect(aspect_type)
 
+/mob/proc/get_attribute(attribute_type)
+	RETURN_TYPE(/datum/attribute)
+	return mind?.get_attribute(attribute_type)
+
+/mob/proc/get_aspect(datum/aspect/aspect_type)
+	RETURN_TYPE(/datum/aspect)
+	return mind?.get_aspect(aspect_type)
+
 /mob/proc/get_aspect_level(datum/aspect/aspect_type)
 	return get_aspect(aspect_type)?.get_level()
+
+/mob/proc/gain_aspect_exp(datum/aspect/aspect_type, gained)
+	return get_aspect(aspect_type)?.gain_exp(gained)
 
 /mob/proc/aspect_check(aspect_type, difficulty, modifier, skill_modifier, crit_fail_modifier = -10, show_visual = FALSE, die_delay = 0.6 SECONDS, exp_modifier = 1)
 	RETURN_TYPE(/datum/check_result)

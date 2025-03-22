@@ -557,13 +557,26 @@
 /mob/living/proc/electrocute_act(shock_damage, source, siemens_coeff = 1, flags = NONE)
 	if(SEND_SIGNAL(src, COMSIG_LIVING_ELECTROCUTE_ACT, shock_damage, source, siemens_coeff, flags) & COMPONENT_LIVING_BLOCK_SHOCK)
 		return FALSE
-	shock_damage *= siemens_coeff
 	if((flags & SHOCK_TESLA) && HAS_TRAIT(src, TRAIT_TESLA_SHOCKIMMUNE))
 		return FALSE
 	if(HAS_TRAIT(src, TRAIT_SHOCKIMMUNE))
 		return FALSE
+
+	var/datum/check_result/result = aspect_check(/datum/aspect/grey_tide, SKILLCHECK_LEGENDARY, 0, get_aspect_level(/datum/aspect/wire_rat) - ASPECT_LEVEL_NEUTRAL, -9, TRUE, 0.3 SECONDS)
+	if (result.outcome >= CHECK_SUCCESS && siemens_coeff > 0)
+		if (result.outcome == CHECK_CRIT_SUCCESS)
+			siemens_coeff = 0
+		to_chat(src, result.show_message("You prepare for the incoming shock, your nervous system bracing for impact[siemens_coeff <= 0.5 ? ", blocking the worst of the upcoming pain" : ""]."))
+		siemens_coeff -= 0.5
+
+	if (result.outcome == CHECK_CRIT_FAILURE)
+		siemens_coeff += 1 // oopsie
+
+	shock_damage *= siemens_coeff
+
 	if(shock_damage < 1)
 		return FALSE
+
 	if(!(flags & SHOCK_ILLUSION))
 		adjustFireLoss(shock_damage)
 	else

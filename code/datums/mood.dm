@@ -560,7 +560,7 @@
 	update_mood_icon()
 
 	// Crazy or insane = add some uncommon hallucinations if we fail the regular Morale check
-	if(sanity_level >= SANITY_CRAZY)
+	if(sanity_level < SANITY_LEVEL_CRAZY)
 		mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
 		return
 
@@ -568,6 +568,7 @@
 	if (!result)
 		result = mob_parent.aspect_check(/datum/aspect/morale, SKILLCHECK_LEGENDARY, exp_modifier = 0.3)
 		mob_parent.aspect_stash("sanity_check", result, 60 SECONDS)
+
 	if (result.outcome < CHECK_SUCCESS)
 		mob_parent.apply_status_effect(/datum/status_effect/hallucination/sanity)
 		return

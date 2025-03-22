@@ -284,7 +284,8 @@
 			if(!O)
 				return
 
-			O.maxHealth *= 1 + (O.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
+			O.maxHealth *= 1 + (user.get_aspect_level(/datum/aspect/four_legged_wheelbarrel) - ASPECT_LEVEL_NEUTRAL) * FOUR_LEGGED_WHEELBARREL_HEALTH_BOOST
+			user.gain_aspect_exp(/datum/aspect/four_legged_wheelbarrel, 250)
 			O.fully_heal()
 
 			if(M.laws && M.laws.id != DEFAULT_AI_LAWID)

@@ -51,11 +51,18 @@
 /// Percentile speed boost for mechs per level of Four Legged Wheelbarrel that crafter has
 #define FOUR_LEGGED_WHEELBARREL_SPEED_BOOST 0.05
 
+/// Flat nightvision increase in maintenance per level of Grey Tide past ASPECT_LEVEL_NEUTRAL
+#define GREY_TIDE_MAINT_NIGHTVIS 2
+/// Level at which we get full value out of Grey Tide nightvision
+#define GREY_TIDE_NIGHTVIS_LEVEL 6
+
 /// How much armor penetration do batons get per level of Command?
 #define COMMAND_BATON_PENETRATION 5
 
 /// Increase/reduction of high/low sanity effects per level of Morale
 #define MORALE_SANITY_EFFECT_MODIFIER 0.1
+/// Percentile increase of addiction points required to develop one per level of Morale
+#define MORALE_ADDICTION_RESISTANCE 0.05
 
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 7.5
