@@ -30,13 +30,12 @@
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
 	RegisterSignal(owner, COMSIG_CARBON_GAIN_ORGAN, PROC_REF(eye_implanted))
 	RegisterSignal(owner, COMSIG_CARBON_LOSE_ORGAN, PROC_REF(eye_removed))
-	//RegisterSignals(owner, COMSIG_LIVING_ADJUST_STANDARD_DAMAGE_TYPES, PROC_REF(on_adjust_damage))
 	update_eye_status()
 	START_PROCESSING(SSprocessing, src)
 
 /datum/aspect/grey_tide/unregister_body(mob/living/old_body)
 	. = ..()
-	UnregisterSignal(old_body, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_GAIN_ORGAN, COMSIG_CARBON_LOSE_ORGAN) + COMSIG_LIVING_ADJUST_STANDARD_DAMAGE_TYPES)
+	UnregisterSignal(old_body, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_GAIN_ORGAN, COMSIG_CARBON_LOSE_ORGAN))
 	STOP_PROCESSING(SSprocessing, src)
 
 /datum/aspect/grey_tide/proc/get_eye_strength()
