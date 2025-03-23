@@ -23,6 +23,8 @@
 	VAR_FINAL/last_eye_strength = 0
 	/// When we're moving around, skip any constant tick updates
 	COOLDOWN_DECLARE(skip_tick_update)
+	/// Cooldown for our loot seeker ability
+	COOLDOWN_DECLARE(loot_seeker_cd)
 
 /datum/aspect/grey_tide/register_body(datum/mind/source, mob/living/old_current)
 	. = ..()
@@ -41,7 +43,7 @@
 /datum/aspect/grey_tide/proc/get_eye_strength()
 	var/turf/owner_turf = get_turf(get_body())
 	var/darkness = istype(owner_turf) ? owner_turf.get_lumcount() : 1
-	var/vision = clamp(LIGHTING_CUTOFF_MEDIUM * min(1, get_level() / GREY_TIDE_NIGHTVIS_LEVEL) - ((darkness - LIGHTING_TILE_IS_DARK) * LIGHTING_CUTOFF_MEDIUM + 5), 0, LIGHTING_CUTOFF_MEDIUM + 5)
+	var/vision = clamp(LIGHTING_CUTOFF_MEDIUM * clamp((get_level() - ASPECT_LEVEL_NEUTRAL) / (GREY_TIDE_NIGHTVIS_LEVEL - ASPECT_LEVEL_NEUTRAL), 0, 1) - ((darkness - LIGHTING_TILE_IS_DARK) * LIGHTING_CUTOFF_MEDIUM + 5), 0, LIGHTING_CUTOFF_MEDIUM + 5)
 	if (istype(get_area(owner_turf), /area/station/maintenance))
 		vision += max(get_level() - ASPECT_LEVEL_NEUTRAL, 0) * GREY_TIDE_MAINT_NIGHTVIS
 	return vision
@@ -51,6 +53,8 @@
 
 	update_eye_status()
 	COOLDOWN_START(src, skip_tick_update, 0.5 SECONDS)
+	if (COOLDOWN_FINISHED(src, loot_seeker_cd))
+		seek_loot()
 
 /datum/aspect/grey_tide/proc/eye_implanted(mob/living/source, obj/item/organ/gained, special)
 	SIGNAL_HANDLER
@@ -68,6 +72,47 @@
 /datum/aspect/grey_tide/process(seconds_between_ticks)
 	if(COOLDOWN_FINISHED(src, skip_tick_update))
 		update_eye_status()
+
+	if (COOLDOWN_FINISHED(src, loot_seeker_cd))
+		seek_loot()
+
+/datum/aspect/grey_tide/proc/seek_loot()
+	var/static/list/loot_typecache
+	if (isnull(loot_typecache))
+		var/list/loot_copy = list()
+		var/list/to_process = GLOB.maintenance_loot.Copy() // No need to deep copy as we're not going to be modifying lists inside of it
+		while (length(to_process))
+			var/elem = to_process[1]
+			to_process -= elem
+			if (islist(elem))
+				to_process += elem
+			else
+				loot_copy += elem
+
+		loot_typecache = typecacheof(loot_copy)
+
+	COOLDOWN_START(src, loot_seeker_cd, max(GREY_TIDE_SEEKER_CD - GREY_TIDE_SEEKER_CD_REDUCTION * (get_level() - ASPECT_LEVEL_NEUTRAL), 15 SECONDS))
+	var/check_prob = GREY_TIDE_SEEKER_BASE + GREY_TIDE_SEEKER_SCALING * (get_level() - ASPECT_LEVEL_NEUTRAL)
+	var/mob/living/owner = get_body()
+	if (!istype(get_area(owner), /area/station/maintenance))
+		check_prob -= GREY_TIDE_SEEKER_PENALTY
+
+	if (check_prob <= 0)
+		return
+
+	for (var/obj/thing in view(5, owner))
+		var/list/loots = thing + thing.contents // One deep, to find stuff inside of crates and closets
+		for (var/atom/something as anything in loots)
+			if (!is_type_in_typecache(something, loot_typecache))
+				continue
+
+			var/image/particles = image(icon = 'icons/effects/effects.dmi', icon_state = "blessed", loc = get_turf(thing), layer = ABOVE_OBJ_LAYER)
+			particles.alpha = 150
+			particles.appearance_flags |= KEEP_APART|RESET_ALPHA
+			SET_PLANE_EXPLICIT(particles, ABOVE_GAME_PLANE, thing)
+			owner.client.images += particles
+			QDEL_IN(particles, 3 SECONDS)
+			break
 
 /datum/aspect/grey_tide/proc/update_eye_status(obj/item/organ/eyes/eyes = get_body()?.get_organ_by_type(/obj/item/organ/eyes))
 	if(!istype(eyes))

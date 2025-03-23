@@ -12,7 +12,7 @@
  * There are 2 separate """skill rolls""" involved here, which are handled and explained in [rollTackle()][/datum/component/tackler/proc/rollTackle] (for roll 1, carbons), and [splat()][/datum/component/tackler/proc/splat] (for roll 2, walls and solid objects)
 */
 /datum/component/tackler
-	dupe_mode = COMPONENT_DUPE_UNIQUE
+	dupe_mode = COMPONENT_DUPE_SOURCES
 
 	///If we're currently tackling or are on cooldown. Actually, shit, if I use this to handle cooldowns, then getting thrown by something while on cooldown will count as a tackle..... whatever, i'll fix that next commit
 	var/tackling = TRUE

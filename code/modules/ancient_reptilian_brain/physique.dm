@@ -13,6 +13,17 @@
 	desc = "Let the body take control. Threaten people."
 	attribute = /datum/attribute/physique
 
+/datum/aspect/half_light/update_effects(prev_level)
+	var/mob/living/owner = get_body()
+	if (get_level() >= HALF_LIGHT_TACKLER_LEVEL)
+		owner.AddComponentFrom(REF(src), /datum/component/tackler, stamina_cost = 25, base_knockdown = 1 SECONDS, range = 4, speed = 1, skill_mod = 1, min_distance = 0)
+	else
+		owner.RemoveComponentSource(REF(src), /datum/component/tackler)
+
+/datum/aspect/half_light/unregister_body(mob/living/old_body)
+	. = ..()
+	old_body.RemoveComponentSource(REF(src), /datum/component/tackler)
+
 // How well you handle damage, each level gives max HP and negates some damage slowdown
 // Had to mix endurance and pain threshold together for this one
 /datum/aspect/endurance // todo: additonal effects?

@@ -758,33 +758,41 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 				to_chat(user, span_warning("[src] refuses some items!"))
 			if(loaded)
 				to_chat(user, span_notice("You insert [loaded] dishes into [src]'s compartment."))
-	else
-		. = ..()
-		if(tiltable && !tilted && attack_item.force)
-			if(isclosedturf(get_turf(user))) //If the attacker is inside of a wall, immediately fall in the other direction, with no chance for goodies.
-				var/opposite_direction = REVERSE_DIR(get_dir(src, user))
-				var/target = get_step(src, opposite_direction)
-				tilt(get_turf(target))
-				return
-			switch(rand(1, 100))
-				if(1 to 5)
-					freebie(3)
-				if(6 to 15)
-					freebie(2)
-				if(16 to 25)
-					freebie(1)
-				if(26 to 75)
-					return
-				if(76 to 100)
-					tilt(user)
+		return
+
+	. = ..()
+	if (tilted || !attack_item.force)
+		return
+
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/grey_tide, SKILLCHECK_EASY, tiltable ? 5 : 0, show_visual = TRUE) // EASY is same 25% loss at neutral Grey Tide
+	if (result.outcome < CHECK_SUCCESS)
+		if (isopenturf(get_turf(user)))
+			tilt(user, result = result)
+			return
+		var/opposite_direction = REVERSE_DIR(get_dir(src, user))
+		var/target = get_step(src, opposite_direction)
+		tilt(get_turf(target), result = result)
+		return
+
+	if (result.outcome == CHECK_CRIT_SUCCESS)
+		freebie(3, user, result)
+		return
+
+	switch (result.roll + result.modifier)
+		if (11 to 13)
+			freebie(1, user, result)
+		if (14 to INFINITY)
+			freebie(2, user, result)
 
 /**
  * Dispenses free items from the standard stock.
  * Arguments:
  * freebies - number of free items to vend
  */
-/obj/machinery/vending/proc/freebie(freebies)
-	visible_message(span_notice("[src] yields [freebies > 1 ? "several free goodies" : "a free goody"][credits_contained > 0 ? " and some credits" : ""]!"))
+/obj/machinery/vending/proc/freebie(freebies, mob/living/user, datum/check_result/result)
+	var/message = "[src] yields [freebies > 1 ? "several free goodies" : "a free goody"][credits_contained > 0 ? " and some credits" : ""]!"
+	visible_message(span_notice(message), ignored_mobs = user)
+	to_chat(user, result.show_message(message))
 
 	for(var/i in 1 to freebies)
 		playsound(src, 'sound/machines/machine_vend.ogg', 50, TRUE, extrarange = -3)
@@ -810,7 +818,7 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
  * forced_crit - specific critical hit case to use, if any
  * range - the range of the machine when thrown if not adjacent
 */
-/obj/machinery/vending/proc/tilt(atom/fatty, local_crit_chance = crit_chance, forced_crit = forcecrit, range = 1)
+/obj/machinery/vending/proc/tilt(atom/fatty, local_crit_chance = crit_chance, forced_crit = forcecrit, range = 1, datum/check_result/result)
 	if(QDELETED(src) || !has_gravity(src))
 		return
 
@@ -818,10 +826,10 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 
 	var/picked_rotation = pick(90, 270)
 	if(Adjacent(fatty))
-		. = fall_and_crush(get_turf(fatty), squish_damage, local_crit_chance, forced_crit, 6 SECONDS, rotation = picked_rotation)
+		. = fall_and_crush(get_turf(fatty), squish_damage, local_crit_chance, forced_crit, 6 SECONDS, rotation = picked_rotation, target = fatty, result = result)
 
 		if (. & SUCCESSFULLY_FELL_OVER)
-			visible_message(span_danger("[src] tips over!"))
+			visible_message(span_danger("[src] tips over!"), ignored_mobs = fatty)
 			tilted = TRUE
 			tilted_rotation = picked_rotation
 			layer = ABOVE_MOB_LAYER
@@ -846,7 +854,7 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
  *
  * Returns: A collection of bitflags defined in crushing.dm. Read that file's documentation for info.
  */
-/atom/movable/proc/fall_and_crush(turf/target, damage, chance_to_crit = 0, forced_crit_case = null, paralyze_time, crush_dir = get_dir(get_turf(src), target), damage_type = BRUTE, damage_flag = MELEE, rotation = 90)
+/atom/movable/proc/fall_and_crush(turf/target, damage, chance_to_crit = 0, forced_crit_case = null, paralyze_time, crush_dir = get_dir(get_turf(src), target), damage_type = BRUTE, damage_flag = MELEE, rotation = 90, atom/victim, datum/check_result/result)
 
 	ASSERT(!isnull(target))
 
@@ -903,7 +911,10 @@ GLOBAL_LIST_EMPTY(vending_machines_to_restock)
 				flags_to_return |= SUCCESSFULLY_CRUSHED_ATOM
 
 			if (crushed)
-				atom_target.visible_message(span_danger("[atom_target] is crushed by [src]!"), span_userdanger("You are crushed by [src]!"))
+				if (atom_target == victim)
+					atom_target.visible_message(span_danger("[atom_target] is crushed by [src]!"), result.show_message("You are crushed by [src]!"))
+				else
+					atom_target.visible_message(span_danger("[atom_target] is crushed by [src]!"), span_userdanger("You are crushed by [src]!"))
 				SEND_SIGNAL(atom_target, COMSIG_POST_TILT_AND_CRUSH, src)
 
 		var/matrix/to_turn = turn(transform, rotation)

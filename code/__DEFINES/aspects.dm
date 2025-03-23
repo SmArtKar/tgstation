@@ -55,6 +55,16 @@
 #define GREY_TIDE_MAINT_NIGHTVIS 2
 /// Level at which we get full value out of Grey Tide nightvision
 #define GREY_TIDE_NIGHTVIS_LEVEL 6
+/// Base cooldown for Grey Tide's loot seeker ability
+#define GREY_TIDE_SEEKER_CD 60 SECONDS
+/// Decrease to loot seeker's cooldown per additional level of Grey Tide
+#define GREY_TIDE_SEEKER_CD_REDUCTION 5 SECONDS
+/// Base chance that loot seeker highlights an item
+#define GREY_TIDE_SEEKER_BASE 15
+/// Additional chance of highlighting per level of Grey Tide
+#define GREY_TIDE_SEEKER_SCALING 10
+/// Decrease in chance of loot seeker working outside of maintenance
+#define GREY_TIDE_SEEKER_PENALTY -25
 
 /// How much armor penetration do batons get per level of Command?
 #define COMMAND_BATON_PENETRATION 5
@@ -63,6 +73,9 @@
 #define MORALE_SANITY_EFFECT_MODIFIER 0.1
 /// Percentile increase of addiction points required to develop one per level of Morale
 #define MORALE_ADDICTION_RESISTANCE 0.05
+
+/// Level of Half Light at which you can naturally tackle
+#define HALF_LIGHT_TACKLER_LEVEL 4
 
 /// Health added per level of Endurance
 #define ENDURANCE_HEALTH_BOOST 7.5
