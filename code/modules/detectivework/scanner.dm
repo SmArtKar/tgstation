@@ -139,13 +139,11 @@
 	playsound(src, SFX_INDUSTRIAL_SCAN, 20, TRUE, -2, TRUE, FALSE)
 	scanner_busy = TRUE
 
-
+	var/datum/check_result/result = user.aspect_check(/datum/aspect/rewind, SKILLCHECK_EASY, show_visual = TRUE)
 	user.visible_message(
 		span_notice("\The [user] points \the [src] at \the [scanned_atom] and performs a forensic scan."),
-		ignored_mobs = user
+		result.show_message("You scan \the [scanned_atom]. The scanner is now analysing the results...")
 	)
-	to_chat(user, span_notice("You scan \the [scanned_atom]. The scanner is now analysing the results..."))
-
 
 	// GATHER INFORMATION
 
@@ -164,12 +162,13 @@
 
 	if(ishuman(scanned_atom))
 		var/mob/living/carbon/human/scanned_human = scanned_atom
-		if(!scanned_human.gloves)
+		if(!scanned_human.gloves && result.outcome >= CHECK_SUCCESS)
 			LAZYADD(log_entry_data[DETSCAN_CATEGORY_FINGERS], md5(scanned_human.dna?.unique_identity))
 
 	else if(!ismob(scanned_atom))
 
-		log_entry_data[DETSCAN_CATEGORY_FINGERS] = GET_ATOM_FINGERPRINTS(scanned_atom)
+		if (result.outcome >= CHECK_SUCCESS)
+			log_entry_data[DETSCAN_CATEGORY_FINGERS] = GET_ATOM_FINGERPRINTS(scanned_atom)
 
 		// Only get reagents from non-mobs.
 		for(var/datum/reagent/present_reagent as anything in scanned_atom.reagents?.reagent_list)

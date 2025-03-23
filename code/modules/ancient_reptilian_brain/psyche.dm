@@ -157,7 +157,7 @@
 	attribute = /datum/attribute/psyche
 
 // See stuff that happened previously, useful for detectives or when you want to hunt someone down
-/datum/aspect/rewind // TODO: THIS
+/datum/aspect/rewind // Make attacks leave copies of object appearances for 5-15 mins
 	name = "Rewind"
 	desc = "Move back in time, just a bit. Here, a drop of blood was spilled."
 	attribute = /datum/attribute/psyche
