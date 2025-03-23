@@ -45,7 +45,7 @@
 		return
 
 	update_interval()
-	owner.spin(spintime = actual_interval, speed = actual_interval / 4)
+	owner.spin(spintime = tick_interval, speed = tick_interval / 4)
 	if(!reduce_firestacks(1))
 		return
 
