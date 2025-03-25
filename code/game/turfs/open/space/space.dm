@@ -95,6 +95,16 @@ GLOBAL_LIST_EMPTY(starlight)
 /turf/open/space/RemoveLattice()
 	return
 
+// Ensures that any turf placed ontop of us gets a non-space area so it has lighting
+/turf/open/space/ChangeTurf(path, list/new_baseturfs, flags)
+	. = ..()
+	if (!. || isspaceturf(.))
+		return
+
+	var/area/new_turf_area = get_area(.)
+	if (new_turf_area.type == /area/space)
+		set_turfs_to_area(list(.), GLOB.areas_by_type[/area/space/nearstation])
+
 /turf/open/space/AfterChange()
 	..()
 	atmos_overlay_types = null
