@@ -177,7 +177,7 @@
 
 /// Spawn an evacuation rift for people to go through.
 /datum/sm_delam/proc/effect_evac_rift_start()
-	var/obj/cascade_portal/rift = new /obj/cascade_portal(get_turf(pick(GLOB.generic_event_spawns)))
+	var/obj/effect/abstract/cascade_portal/rift = new(get_turf(pick(GLOB.generic_event_spawns)))
 	priority_announce("We have been hit by a sector-wide electromagnetic pulse. All of our systems are heavily damaged, including those \
 		required for shuttle navigation. We can only reasonably conclude that a supermatter cascade is occurring on or near your station.\n\n\
 		Evacuation is no longer possible by conventional means; however, we managed to open a rift near the [get_area_name(rift)]. \

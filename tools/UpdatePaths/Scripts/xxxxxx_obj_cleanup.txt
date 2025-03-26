@@ -1,0 +1,2 @@
+/// Repaths some base /obj into /obj/effect or /obj/structure
+/obj/cascade_portal : /obj/effect/abstract/cascade_portal{@OLD}

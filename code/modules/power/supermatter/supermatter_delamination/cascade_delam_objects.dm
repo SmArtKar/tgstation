@@ -62,7 +62,7 @@
 			sm_comp.dust_mob(src, checked_atom, span_danger("\The [src] lunges out on [checked_atom], touching [checked_atom.p_them()]... \
 					[checked_atom.p_their()] body begins to shine with a brilliant light before crystallizing from the inside out and joining \the [src]!"),
 				span_userdanger("The crystal mass lunges on you and hits you in the chest. As your vision is filled with a blinding light, you think to yourself \"Damn it.\""))
-		else if(istype(checked_atom, /obj/cascade_portal))
+		else if(istype(checked_atom, /obj/effect/abstract/cascade_portal))
 			checked_atom.visible_message(span_userdanger("\The [checked_atom] screeches and closes away as it is hit by \a [src]! Too late!"))
 			playsound(get_turf(checked_atom), 'sound/effects/magic/charge.ogg', 50, TRUE)
 			playsound(get_turf(checked_atom), 'sound/effects/supermatter.ogg', 50, TRUE)
@@ -106,7 +106,7 @@
 	sm_comp = null
 	return ..()
 
-/obj/cascade_portal
+/obj/effect/abstract/cascade_portal
 	name = "Bluespace Rift"
 	desc = "Your mind begins to spin as it tries to comprehend what it sees."
 	icon = 'icons/effects/224x224.dmi'
@@ -121,9 +121,8 @@
 	move_resist = INFINITY
 	pixel_x = -96
 	pixel_y = -96
-	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
 
-/obj/cascade_portal/Initialize(mapload)
+/obj/effect/abstract/cascade_portal/Initialize(mapload)
 	. = ..()
 	var/turf/location = get_turf(src)
 	var/area_name = get_area_name(src)
@@ -131,7 +130,7 @@
 	log_game("Bluespace Exit Rift was created at [area_name].")
 	investigate_log("created at [area_name].", INVESTIGATE_ENGINE)
 
-/obj/cascade_portal/Destroy(force)
+/obj/effect/abstract/cascade_portal/Destroy(force)
 	var/turf/location = get_turf(src)
 	var/area_name = get_area_name(src)
 	message_admins("Exit rift at [area_name] deleted. [ADMIN_VERBOSEJMP(location)]")
@@ -139,7 +138,7 @@
 	investigate_log("was deleted.", INVESTIGATE_ENGINE)
 	return ..()
 
-/obj/cascade_portal/Bumped(atom/movable/hit_object)
+/obj/effect/abstract/cascade_portal/Bumped(atom/movable/hit_object)
 	consume(hit_object)
 	new /obj/effect/particle_effect/sparks(loc)
 	playsound(loc, SFX_SPARKS, 50, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
@@ -149,7 +148,7 @@
  *
  * Arguments: atom/movable/consumed_object is the object hitting the portal
  */
-/obj/cascade_portal/proc/consume(atom/movable/consumed_object)
+/obj/effect/abstract/cascade_portal/proc/consume(atom/movable/consumed_object)
 	if(isliving(consumed_object))
 		consumed_object.visible_message(span_danger("\The [consumed_object] walks into \the [src]... \
 			A blinding light covers [consumed_object.p_their()] body before disappearing completely!"),

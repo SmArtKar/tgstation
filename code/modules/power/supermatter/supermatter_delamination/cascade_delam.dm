@@ -62,7 +62,7 @@
 	sleep(2 SECONDS)
 	effect_strand_shuttle()
 	sleep(5 SECONDS)
-	var/obj/cascade_portal/rift = effect_evac_rift_start()
+	var/obj/effect/abstract/cascade_portal/rift = effect_evac_rift_start()
 	RegisterSignal(rift, COMSIG_QDELETING, PROC_REF(end_round_holder))
 	SSsupermatter_cascade.can_fire = TRUE
 	SSsupermatter_cascade.cascade_initiated = TRUE
