@@ -3280,6 +3280,19 @@
 		eyes.eye_color_right = color
 		affected_human.update_body()
 
+/datum/reagent/luminescent_fluid/expose_obj(obj/exposed_obj, reac_volume, methods, show_message)
+	. = ..()
+	// Smoke machines will make everything look like ass
+	if (reac_volume < 5)
+		return
+	// Acetone makes only the colored parts lit
+	var/has_acetone = holder.has_reagent(/datum/reagent/acetone)
+	// Lye makes only the bright parts lit
+	var/has_lye = holder.has_reagent(/datum/reagent/lye)
+	// Sulphuric acid etches the lit parts with our color
+	var/has_acid = holder.has_reagent(/datum/reagent/acid)
+	expose_obj.AddElement(/datum/element/selective_emissive, has_acetone, has_lye, has_acid ? color : null)
+
 /datum/reagent/luminescent_fluid/red
 	name = "Red Luminiscent Fluid"
 	color = COLOR_SOFT_RED
