@@ -3289,9 +3289,9 @@
 	var/has_acetone = holder.has_reagent(/datum/reagent/acetone)
 	// Lye makes only the bright parts lit
 	var/has_lye = holder.has_reagent(/datum/reagent/lye)
-	// Sulphuric acid etches the lit parts with our color
-	var/has_acid = holder.has_reagent(/datum/reagent/acid)
-	expose_obj.AddElement(/datum/element/selective_emissive, has_acetone, has_lye, has_acid ? color : null)
+	// Sulfuric acid etches the lit parts with our color
+	var/has_acid = holder.has_reagent(/datum/reagent/toxin/acid)
+	exposed_obj.AddComponent(/datum/component/selective_emissive, has_acetone, has_lye, has_acid ? color : null)
 
 /datum/reagent/luminescent_fluid/red
 	name = "Red Luminiscent Fluid"
