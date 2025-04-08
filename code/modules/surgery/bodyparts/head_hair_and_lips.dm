@@ -125,9 +125,7 @@
 				hair_overlay.pixel_z = hair_sprite_accessory.y_offset
 				//Emissive blocker
 				if(blocks_emissive != EMISSIVE_BLOCK_NONE)
-					var/mutable_appearance/blocker = emissive_blocker(hair_overlay.icon, hair_overlay.icon_state, location, alpha = hair_alpha)
-					worn_face_offset?.apply_offset(blocker)
-					. += blocker
+					. += emissive_blocker(hair_overlay.icon, hair_overlay.icon_state, location, alpha = hair_alpha)
 				//Offsets
 				worn_face_offset?.apply_offset(hair_overlay)
 				. += hair_overlay
