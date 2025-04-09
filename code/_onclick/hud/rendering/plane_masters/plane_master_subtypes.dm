@@ -337,6 +337,10 @@
 	render_relay_planes = list(EMISSIVE_RENDER_PLATE)
 	critical = PLANE_CRITICAL_DISPLAY
 
+/atom/movable/screen/plane_master/emissive/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
+	. = ..()
+	add_filter("emissive_bloom", 1, bloom_filter(rgb(EMISSIVE_BLOOM_THRESHOLD, EMISSIVE_BLOOM_THRESHOLD, EMISSIVE_BLOOM_THRESHOLD), size = 3, offset = 2))
+
 /atom/movable/screen/plane_master/pipecrawl
 	name = "Pipecrawl"
 	documentation = "Holds pipecrawl images generated during well, pipecrawling.\
