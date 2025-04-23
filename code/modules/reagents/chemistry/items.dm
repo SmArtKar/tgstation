@@ -165,7 +165,7 @@
 		if(lit)
 			var/obj/item/reagent_containers/container = I
 			container.reagents.expose_temperature(get_temperature())
-			to_chat(user, span_notice("You heat up the [I] with the [src]."))
+			to_chat(user, span_notice("You heat up \the [I] with \the [src]."))
 			playsound(user.loc, 'sound/effects/chemistry/heatdam.ogg', 50, TRUE)
 			return
 		else if(I.is_drainable()) //Transfer FROM it TO us. Special code so it only happens when flame is off.
@@ -183,7 +183,7 @@
 	if(I.heat < 1000)
 		return
 	set_lit(TRUE)
-	user.visible_message(span_notice("[user] lights up the [src]."))
+	user.visible_message(span_notice("[user] lights up \the [src]."))
 
 /obj/item/burner/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(!lit)
@@ -299,7 +299,7 @@
 	if(!user.transferItemToLoc(src, interacting_with))
 		return ITEM_INTERACT_BLOCKING
 	attached_to_reagents = interacting_with.reagents
-	to_chat(user, span_notice("You add the [src] to [interacting_with]."))
+	to_chat(user, span_notice("You add \the [src] to [interacting_with]."))
 	ui_interact(user)
 	return ITEM_INTERACT_SUCCESS
 
@@ -335,7 +335,7 @@
 	attached_to_reagents = null
 
 /obj/item/thermometer/proc/try_put_in_hand(obj/object, mob/living/user)
-	to_chat(user, span_notice("You remove the [src] from [attached_to_reagents.my_atom]."))
+	to_chat(user, span_notice("You remove \the [src] from [attached_to_reagents.my_atom]."))
 	if(!issilicon(user) && in_range(loc, user))
 		user.put_in_hands(object)
 	else

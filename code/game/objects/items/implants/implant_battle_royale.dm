@@ -123,7 +123,7 @@
 	if (is_type_in_list(get_area(source), limited_areas))
 		return
 	playsound(imp_in, 'sound/items/timer.ogg', 50, vary = FALSE)
-	to_chat(imp_in, span_boldwarning("You are out of bounds! Get to the [target_area_name] quickly!"))
+	to_chat(imp_in, span_boldwarning("You are out of bounds! Get to \the [target_area_name] quickly!"))
 	addtimer(CALLBACK(src, PROC_REF(check_area_deadly)), 5 SECONDS, TIMER_DELETE_ME)
 
 /// After a grace period they're still out of bounds, killing time

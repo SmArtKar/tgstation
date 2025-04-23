@@ -75,7 +75,7 @@
 		user.balloon_alert(user, "couldn't find apc!")
 
 /obj/item/multitool/suicide_act(mob/living/carbon/user)
-	user.visible_message(span_suicide("[user] puts the [src] to [user.p_their()] chest. It looks like [user.p_theyre()] trying to pulse [user.p_their()] heart off!"))
+	user.visible_message(span_suicide("[user] puts \the [src] to [user.p_their()] chest. It looks like [user.p_theyre()] trying to pulse [user.p_their()] heart off!"))
 	return OXYLOSS//there's a reason it wasn't recommended by doctors
 
 /**

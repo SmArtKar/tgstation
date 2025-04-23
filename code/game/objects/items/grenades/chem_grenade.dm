@@ -127,12 +127,12 @@
 	if (stage == GRENADE_WIRED)
 		if (length(beakers))
 			stage_change(GRENADE_READY)
-			to_chat(user, span_notice("You lock the [initial(name)] assembly."))
+			to_chat(user, span_notice("You lock \the [initial(name)] assembly."))
 			tool.play_tool_sound(src, 25)
 			return ITEM_INTERACT_SUCCESS
 
 		if (!landminemode || !(landminemode.scanning || landminemode.timing))
-			to_chat(user, span_warning("You need to add at least one beaker before locking the [initial(name)] assembly!"))
+			to_chat(user, span_warning("You need to add at least one beaker before locking \the [initial(name)] assembly!"))
 			return ITEM_INTERACT_BLOCKING
 
 		landminemode.timing = FALSE
@@ -159,7 +159,7 @@
 
 	tool.play_tool_sound(src)
 	stage_change(GRENADE_WIRED)
-	to_chat(user, span_notice("You unlock the [initial(name)] assembly."))
+	to_chat(user, span_notice("You unlock \the [initial(name)] assembly."))
 	return TRUE
 
 /obj/item/grenade/chem_grenade/wrench_act(mob/living/user, obj/item/tool)
@@ -171,10 +171,10 @@
 		wires.detach_assembly(wires.get_wire(1))
 		new /obj/item/stack/cable_coil(get_turf(src), 1)
 		stage_change(GRENADE_EMPTY)
-		to_chat(user, span_notice("You remove the activation mechanism from the [initial(name)] assembly."))
+		to_chat(user, span_notice("You remove the activation mechanism from \the [initial(name)] assembly."))
 		return ITEM_INTERACT_SUCCESS
 
-	to_chat(user, span_notice("You open the [initial(name)] assembly and remove the payload."))
+	to_chat(user, span_notice("You open \the [initial(name)] assembly and remove the payload."))
 	for(var/obj/item/beaker as anything in beakers)
 		beaker.forceMove(drop_location())
 		if(!beaker.reagents)
@@ -196,7 +196,7 @@
 
 		det_time = 5 SECONDS // In case the cable_coil was removed and readded.
 		stage_change(GRENADE_WIRED)
-		to_chat(user, span_notice("You rig the [initial(name)] assembly."))
+		to_chat(user, span_notice("You rig \the [initial(name)] assembly."))
 		return ITEM_INTERACT_SUCCESS
 
 	if (stage != GRENADE_WIRED)
@@ -216,7 +216,7 @@
 	if(!user.transferItemToLoc(item, src))
 		return ITEM_INTERACT_BLOCKING
 
-	to_chat(user, span_notice("You add [item] to the [initial(name)] assembly."))
+	to_chat(user, span_notice("You add [item] to \the [initial(name)] assembly."))
 	beakers += item
 	var/reagent_list = pretty_string_from_reagent_list(item.reagents.reagent_list)
 	user.log_message("inserted [item] ([reagent_list]) into [src]", LOG_GAME)

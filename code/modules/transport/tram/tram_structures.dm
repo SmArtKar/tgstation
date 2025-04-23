@@ -558,7 +558,7 @@
 /obj/structure/tram/spoiler/emag_act(mob/user)
 	if(obj_flags & EMAGGED)
 		return
-	to_chat(user, span_warning("You short-circuit the [src]'s servo to overheat!"), type = MESSAGE_TYPE_INFO)
+	to_chat(user, span_warning("You short-circuit \the [src]'s servo to overheat!"), type = MESSAGE_TYPE_INFO)
 	playsound(src, SFX_SPARKS, 100, vary = TRUE, extrarange = SHORT_RANGE_SOUND_EXTRARANGE)
 	do_sparks(5, cardinal_only = FALSE, source = src)
 	obj_flags |= EMAGGED

@@ -36,7 +36,7 @@
 	if(!isliving(user))
 		return CLICK_ACTION_BLOCKING
 	if(user.get_active_held_item() != src)
-		to_chat(user, span_warning("You must hold the [src] in your hand to do this!"))
+		to_chat(user, span_warning("You must hold \the [src] in your hand to do this!"))
 		return CLICK_ACTION_BLOCKING
 	if (!enabled_waddle)
 		to_chat(user, span_notice("You switch off the waddle dampeners!"))

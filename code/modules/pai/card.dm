@@ -34,7 +34,7 @@
 			to_chat(user, span_alert("Encryption Key ports not configured."))
 			return
 		pai.radio.attackby(used, user, params)
-		to_chat(user, span_notice("You insert [used] into the [src]."))
+		to_chat(user, span_notice("You insert [used] into \the [src]."))
 		return
 	return ..()
 

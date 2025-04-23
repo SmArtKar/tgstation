@@ -31,7 +31,7 @@
 		if(card_template.cardtype == "Creature")
 			if(!user.transferItemToLoc(current_card, src))
 				return
-			to_chat(user, span_notice("You put the [current_card] card in [src]."))
+			to_chat(user, span_notice("You put \the [current_card] card in [src]."))
 			icon_state = "card_holder_active"
 			update_appearance()
 			current_summon = new(locate(x + summon_offset_x, y + summon_offset_y, z))
@@ -67,7 +67,7 @@ GLOBAL_LIST_EMPTY(tcgcard_machine_radial_choices)
 			if("Pickup")
 				if(current_card)
 					user.put_in_hands(current_card)
-					to_chat(user, span_notice("You take the [current_card] card out of [src]."))
+					to_chat(user, span_notice("You take \the [current_card] card out of [src]."))
 					current_card = null
 				else
 					to_chat(user, span_notice("The blank card dematerializes."))

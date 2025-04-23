@@ -380,7 +380,7 @@
 	hacking_module.charge_message(src, cell.charge)
 	cell.charge = 0
 	update_appearance()
-	visible_message(span_warning("[ninja] drains the energy from the [src]!"))
+	visible_message(span_warning("[ninja] drains the energy from \the [src]!"))
 	do_sparks(number = 3, cardinal_only = FALSE, source = src)
 	return COMPONENT_CANCEL_ATTACK_CHAIN
 

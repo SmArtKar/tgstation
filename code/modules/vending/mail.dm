@@ -214,7 +214,7 @@
 				to_chat(user, span_warning("Some items are refused."))
 			return TRUE
 		else
-			to_chat(user, span_warning("There is nothing in \the [thingy] to put in the [src]!"))
+			to_chat(user, span_warning("There is nothing in \the [thingy] to put in \the [src]!"))
 			return FALSE
 	else if (istype(thingy, /obj/item/mail))
 		if (length(mail_list) + 1 > MAIL_CAPACITY )
@@ -222,7 +222,7 @@
 		else
 			thingy.forceMove(src)
 			mail_list += thingy
-			to_chat(user, span_notice("\The [src] whizzles as it accepts the [thingy]."))
+			to_chat(user, span_notice("\The [src] whizzles as it accepts \the [thingy]."))
 
 /// Prompts the user to select an anvelope from the list of all the envelopes inside.
 /obj/machinery/mailsorter/proc/pick_mail(mob/user)

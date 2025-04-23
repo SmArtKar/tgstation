@@ -231,7 +231,7 @@
 		var/datum/component/sizzle/sizzle = grilled_item.GetComponent(/datum/component/sizzle)
 		if(!isnull(sizzle))
 			grill_time = sizzle.time_elapsed()
-		to_chat(user, span_notice("You put the [grilled_item] on [src]."))
+		to_chat(user, span_notice("You put \the [grilled_item] on [src]."))
 		update_appearance(UPDATE_ICON_STATE)
 		grill_loop.start()
 		return ITEM_INTERACT_SUCCESS

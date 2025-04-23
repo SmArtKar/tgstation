@@ -1110,7 +1110,7 @@
 		return
 
 	if(machine_stat & NOPOWER)
-		visible_message(span_warning("The button doesn't appear to do anything, the [src]'s power failure status is flashing!"), vision_distance = COMBAT_MESSAGE_RANGE)
+		visible_message(span_warning("The button doesn't appear to do anything, \the [src]'s power failure status is flashing!"), vision_distance = COMBAT_MESSAGE_RANGE)
 		return
 
 	switch(action)

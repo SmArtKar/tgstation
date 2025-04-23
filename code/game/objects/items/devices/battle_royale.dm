@@ -315,7 +315,7 @@ GLOBAL_DATUM_INIT(battle_royale_master, /datum/battle_royale_master, new)
 /// Called halfway through the battle, if you've not made it to the designated battle zone we kill you
 /datum/battle_royale_controller/proc/limit_area()
 	priority_announce(
-		text = "We're halfway done folks! And bad news to anyone who hasn't made it to the [chosen_area]... you're out!",
+		text = "We're halfway done folks! And bad news to anyone who hasn't made it to \the [chosen_area]... you're out!",
 		title = "Rumble Royale Update",
 		sound = 'sound/announcer/notice/notice1.ogg',
 		has_important_message = TRUE,

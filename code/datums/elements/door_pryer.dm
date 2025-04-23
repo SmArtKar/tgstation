@@ -48,7 +48,7 @@
 /// Try opening the door, and if we can't then try forcing it
 /datum/element/door_pryer/proc/open_door(mob/living/basic/attacker, obj/machinery/door/airlock/airlock_target)
 	if (!airlock_target.hasPower())
-		attacker.visible_message(span_warning("[attacker] forces the [airlock_target] to open."))
+		attacker.visible_message(span_warning("[attacker] forces \the [airlock_target] to open."))
 		airlock_target.open(FORCING_DOOR_CHECKS)
 		return
 
@@ -57,7 +57,7 @@
 		return
 
 	attacker.visible_message(\
-		message = span_warning("[attacker] starts forcing the [airlock_target] open!"),
+		message = span_warning("[attacker] starts forcing \the [airlock_target] open!"),
 		blind_message = span_hear("You hear a metal screeching sound."),
 	)
 	playsound(airlock_target, 'sound/machines/airlock/airlock_alien_prying.ogg', 100, TRUE)
@@ -67,6 +67,6 @@
 		return
 	if(airlock_target.locked)
 		return
-	attacker.visible_message(span_warning("[attacker] forces the [airlock_target] to open."))
+	attacker.visible_message(span_warning("[attacker] forces \the [airlock_target] to open."))
 	airlock_target.open(BYPASS_DOOR_CHECKS)
 	airlock_target.take_damage(AIRLOCK_PRY_DAMAGE, BRUTE, sound_effect = FALSE)

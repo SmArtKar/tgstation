@@ -47,7 +47,7 @@
 				/obj/item/spellbook,
 			)
 			var/obj/item/stashed_item = pick(stash_item_paths)
-			message_pool[span_notice("[suspicious_personnel] puts the [initial(stashed_item.name)] into [equipped_backpack].")] = 5
+			message_pool[span_notice("[suspicious_personnel] puts \the [initial(stashed_item.name)] into [equipped_backpack].")] = 5
 
 		message_pool["[span_bold("[suspicious_personnel]")] [pick("sneezes", "coughs")]."] = 1
 

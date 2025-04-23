@@ -114,12 +114,12 @@
 	if(!.)
 		return
 	var/hulk_verb = pick("smash","pummel")
-	if(check_block(user, 15, "the [hulk_verb]ing", attack_type = UNARMED_ATTACK))
+	if(check_block(user, 15, "the [hulk_verb]", attack_type = UNARMED_ATTACK))
 		return
 	var/obj/item/bodypart/arm/active_arm = user.get_active_hand()
 	playsound(loc, active_arm.unarmed_attack_sound, 25, TRUE, -1)
 	visible_message(span_danger("[user] [hulk_verb]ed [src]!"), \
-					span_userdanger("[user] [hulk_verb]ed [src]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), null, user)
+					span_userdanger("You're [hulk_verb]es by [user]!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), null, user)
 	to_chat(user, span_danger("You [hulk_verb] [src]!"))
 	apply_damage(15, BRUTE, wound_bonus=10)
 

@@ -333,7 +333,7 @@
 	fancy = FALSE
 
 /obj/item/lighter/mime/ignition_effect(atom/A, mob/user)
-	. = span_infoplain("[user] lifts \the [src] to the [A], which miraculously lights!")
+	. = span_infoplain("[user] lifts \the [src] to \the [A], which miraculously lights!")
 
 /obj/item/lighter/bright
 	name = "illuminative zippo"
@@ -355,7 +355,7 @@
 
 /obj/item/lighter/bright/ignition_effect(atom/A, mob/user)
 	if(get_temperature())
-		. = span_infoplain(span_rose("[user] lifts the [src] to the [A], igniting it with a brilliant flash of light!"))
+		. = span_infoplain(span_rose("[user] lifts \the [src] to \the [A], igniting it with a brilliant flash of light!"))
 		var/mob/living/current_viewer = user
 		current_viewer.flash_act(4)
 

@@ -123,7 +123,7 @@
 		if(!user.transferItemToLoc(item, src))
 			return
 		attached_device = A
-		to_chat(user, span_notice("You attach the [item] to the valve controls and secure it."))
+		to_chat(user, span_notice("You attach \the [item] to the valve controls and secure it."))
 		A.holder = src
 		A.on_attach()
 		A.toggle_secure() //this calls update_icon(), which calls update_icon() on the holder (i.e. the bomb).

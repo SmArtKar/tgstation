@@ -34,7 +34,7 @@
 	if (!LAZYLEN(contents))
 		user.balloon_alert(user, "it's empty!")
 		return
-	user.visible_message(span_boldnotice("[user] takes a huge drag on the [src]."))
+	user.visible_message(span_boldnotice("[user] takes a huge drag on \the [src]."))
 	if (!do_after(user, 2 SECONDS, target = src))
 		return
 	var/turf/toiletbong_location = loc
@@ -79,7 +79,7 @@
 	if(anchored)
 		return FALSE
 	tool.play_tool_sound(src)
-	to_chat(user, span_notice("You begin taking apart the [src]."))
+	to_chat(user, span_notice("You begin taking apart \the [src]."))
 	if (!do_after(user, 10 SECONDS, target = src))
 		return FALSE
 	new /obj/item/flamethrower(get_turf(src))

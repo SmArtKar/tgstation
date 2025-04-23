@@ -229,16 +229,15 @@
 	if(user.client)
 		user.client.move_delay = world.time + 1.5 SECONDS
 
-	var/attack_name = ""
 	var/attack_verb = ""
 	var/impact = 0
 	var/obj/item/pokie = user.get_active_held_item()
-	if(pokie)
-		var/dmg = pokie.force || 0
-		var/list/attack_verbs = pokie.attack_verb_continuous
-		impact = rand(round(dmg / 4), dmg)
-		attack_name = pokie.name
-		attack_verb = length(attack_verbs) ? "[pick(attack_verbs)]" : "attacks"
+	if (!pokie)
+		return
+
+	var/list/attack_verbs = pokie.attack_verb_continuous
+	impact = rand(floor(pokie.force / 4), pokie.force)
+	attack_verb = length(attack_verbs) ? "[pick(attack_verbs)]" : "attacks"
 
 	if(!impact)
 		return
@@ -255,8 +254,8 @@
 		if(damage_ratio < part_dam_ratio)
 			damage_ratio = part_dam_ratio
 
-	play_from.visible_message(span_danger("[user] [attack_verb] [stomach_text] wall with the [attack_name]!"), \
-			span_userdanger("[user] [attack_verb] your stomach wall with the [attack_name]!"))
+	play_from.visible_message(span_danger("[user] [attack_verb] [stomach_text] wall with \the [pokie]!"), \
+			span_userdanger("[user] [attack_verb] your stomach wall with \the [pokie]!"))
 
 	// At 100% damage, the stomach burts
 	// Otherwise, we give them a -50% -> 50% chance scaling with damage dealt

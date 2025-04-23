@@ -425,7 +425,7 @@ GLOBAL_DATUM(cargo_ripley, /obj/vehicle/sealed/mecha/ripley/cargo)
 	to_chat(user, span_notice("You begin attempting a breakout. (This will take around [DisplayTimeText(breakout_time)] and [chassis] needs to remain stationary.)"))
 	if(!do_after(user, breakout_time, target = chassis))
 		return
-	to_chat(user, span_notice("You break out of the [src]."))
+	to_chat(user, span_notice("You break out of \the [src]."))
 	playsound(chassis, 'sound/items/tools/crowbar.ogg', 100, TRUE)
 	cheese_it(user)
 	for(var/mob/freebird in contents)

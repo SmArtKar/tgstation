@@ -159,7 +159,7 @@
 		balloon_alert(user, "scanner wand falls!")
 		scanner_wand = null
 		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
-	user.visible_message(span_notice("[user] unhooks the [scanner_wand] from [src]."))
+	user.visible_message(span_notice("[user] unhooks \the [scanner_wand] from [src]."))
 	balloon_alert(user, "scanner pulled")
 	playsound(src, 'sound/machines/click.ogg', 60, TRUE)
 	scanner_wand = null
@@ -175,7 +175,7 @@
 		return
 	if(user)
 		if (emag_card)
-			user.visible_message(span_warning("[user] waves a suspicious card by the [src]'s biometric scanner!"))
+			user.visible_message(span_warning("[user] waves a suspicious card by \the [src]'s biometric scanner!"))
 		balloon_alert(user, "sensors overloaded")
 	obj_flags |= EMAGGED
 	var/obj/item/circuitboard/board = circuit

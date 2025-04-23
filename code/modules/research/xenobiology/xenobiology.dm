@@ -919,7 +919,7 @@
 			return ITEM_INTERACT_BLOCKING
 		apply_to.slowdown = 0
 
-	to_chat(user, span_notice("You slather the red gunk over the [interacting_with], making it faster."))
+	to_chat(user, span_notice("You slather the red gunk over \the [interacting_with], making it faster."))
 	interacting_with.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 	interacting_with.add_atom_colour(color_transition_filter(COLOR_RED, SATURATION_OVERRIDE), FIXED_COLOUR_PRIORITY)
 	interacting_with.drag_slowdown = 0
@@ -949,7 +949,7 @@
 	if(clothing.max_heat_protection_temperature >= FIRE_IMMUNITY_MAX_TEMP_PROTECT)
 		to_chat(user, span_warning("\The [clothing] is already fireproof!"))
 		return ITEM_INTERACT_BLOCKING
-	to_chat(user, span_notice("You slather the blue gunk over the [clothing], fireproofing it."))
+	to_chat(user, span_notice("You slather the blue gunk over \the [clothing], fireproofing it."))
 	clothing.name = "fireproofed [clothing.name]"
 	clothing.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 	clothing.add_atom_colour(color_transition_filter(COLOR_NAVY, SATURATION_OVERRIDE), FIXED_COLOUR_PRIORITY)

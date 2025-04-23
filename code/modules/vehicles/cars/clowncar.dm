@@ -109,7 +109,7 @@
 		return
 	var/obj/item/food/grown/banana/banana = I
 	atom_integrity += min(banana.seed.potency, max_integrity-atom_integrity)
-	to_chat(user, span_danger("You use the [banana] to repair [src]!"))
+	to_chat(user, span_danger("You use \the [banana] to repair [src]!"))
 	qdel(banana)
 
 /obj/vehicle/sealed/car/clowncar/Bump(atom/bumped)

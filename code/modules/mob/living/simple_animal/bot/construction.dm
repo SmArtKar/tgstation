@@ -313,7 +313,7 @@
 			if(isprox(attacking_item))
 				if(!user.temporarilyRemoveItemFromInventory(attacking_item))
 					return
-				to_chat(user, span_notice("You add the [attacking_item] to [src]!"))
+				to_chat(user, span_notice("You add \the [attacking_item] to [src]!"))
 				icon_state = "honkbot_proxy"
 				name = "incomplete Honkbot assembly"
 				qdel(attacking_item)
@@ -323,7 +323,7 @@
 			if(istype(attacking_item, /obj/item/bikehorn))
 				if(!can_finish_build(attacking_item, user))
 					return
-				to_chat(user, span_notice("You add the [attacking_item] to [src]! Honk!"))
+				to_chat(user, span_notice("You add \the [attacking_item] to [src]! Honk!"))
 				var/mob/living/basic/bot/honkbot/new_honkbot = new(drop_location())
 				new_honkbot.name = created_name
 				playsound(new_honkbot, 'sound/machines/ping.ogg', 50, TRUE, -1)
@@ -484,7 +484,7 @@
 			if(istype(I, /obj/item/clothing/head/utility/hardhat/red))
 				if(!user.temporarilyRemoveItemFromInventory(I))
 					return
-				to_chat(user,span_notice("You add the [I] to [src]!"))
+				to_chat(user,span_notice("You add \the [I] to [src]!"))
 				icon_state = "firebot_helmet"
 				desc = "An incomplete firebot assembly with a fire helmet."
 				qdel(I)
@@ -494,7 +494,7 @@
 			if(isprox(I))
 				if(!can_finish_build(I, user))
 					return
-				to_chat(user, span_notice("You add the [I] to [src]! Beep Boop!"))
+				to_chat(user, span_notice("You add \the [I] to [src]! Beep Boop!"))
 				var/mob/living/basic/bot/firebot/firebot = new(drop_location())
 				firebot.name = created_name
 				qdel(I)

@@ -89,7 +89,7 @@
 		selected_hairstyle_color = "[target.hair_color]"
 
 	if(selected_hairstyle)
-		to_chat(user, span_notice("You adjust the [src] to look just like [target.name]'s [selected_hairstyle]."))
+		to_chat(user, span_notice("You adjust \the [src] to look just like [target.name]'s [selected_hairstyle]."))
 		add_atom_colour(selected_hairstyle_color, FIXED_COLOUR_PRIORITY)
 		hairstyle = selected_hairstyle
 		update_appearance()

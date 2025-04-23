@@ -66,7 +66,7 @@
 	if(LAZYLEN(launchpads) < maximum_pads)
 		launchpads |= tool.buffer
 		tool.set_buffer(null)
-		to_chat(user, span_notice("You upload the data from the [tool] buffer."))
+		to_chat(user, span_notice("You upload the data from \the [tool] buffer."))
 		return ITEM_INTERACT_SUCCESS
 
 /obj/machinery/computer/launchpad/proc/pad_exists(number)

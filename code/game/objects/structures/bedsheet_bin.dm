@@ -652,7 +652,7 @@ LINEN BINS
 		to_chat(user, span_warning("\The [src] must be empty first!"))
 		return ITEM_INTERACT_SUCCESS
 	if(tool.use_tool(src, user, 0.5 SECONDS, volume=50))
-		to_chat(user, span_notice("You disassemble the [src]."))
+		to_chat(user, span_notice("You disassemble \the [src]."))
 		new /obj/item/stack/rods(loc, 2)
 		qdel(src)
 		return ITEM_INTERACT_SUCCESS

@@ -54,7 +54,7 @@
 		user.temporarilyRemoveItemFromInventory(hand_item, TRUE) //DROPDEL will delete the item
 		if(!silent)
 			playsound(user, 'sound/effects/blob/blobattack.ogg', 30, TRUE)
-			user.visible_message(span_warning("With a sickening crunch, [user] reforms [user.p_their()] [weapon_name_simple] into an arm!"), span_notice("We assimilate the [weapon_name_simple] back into our body."), span_italics("You hear organic matter ripping and tearing!"))
+			user.visible_message(span_warning("With a sickening crunch, [user] reforms [user.p_their()] [weapon_name_simple] into an arm!"), span_notice("We assimilate \the [weapon_name_simple] back into our body."), span_italics("You hear organic matter ripping and tearing!"))
 		user.update_held_items()
 		return TRUE
 
@@ -242,13 +242,13 @@
 			return
 
 		if(opening.hasPower())
-			user.visible_message(span_warning("[user] jams [src] into the airlock and starts prying it open!"), span_warning("We start forcing the [opening] open."), \
+			user.visible_message(span_warning("[user] jams [src] into the airlock and starts prying it open!"), span_warning("We start forcing \the [opening] open."), \
 			span_hear("You hear a metal screeching sound."))
 			playsound(opening, 'sound/machines/airlock/airlock_alien_prying.ogg', 100, TRUE)
 			if(!do_after(user, 10 SECONDS, target = opening))
 				return
 		//user.say("Heeeeeeeeeerrre's Johnny!")
-		user.visible_message(span_warning("[user] forces the airlock to open with [user.p_their()] [src]!"), span_warning("We force the [opening] to open."), \
+		user.visible_message(span_warning("[user] forces the airlock to open with [user.p_their()] [src]!"), span_warning("We force \the [opening] to open."), \
 		span_hear("You hear a metal screeching sound."))
 		opening.open(BYPASS_DOOR_CHECKS)
 

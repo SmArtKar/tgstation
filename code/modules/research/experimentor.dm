@@ -263,7 +263,7 @@
 			visible_message(span_warning("[src] malfunctions!"))
 			exp = SCANTYPE_OBLITERATE
 		else if(prob(EFFECT_PROB_MEDIUM * (100 - malfunction_probability_coeff) * 0.01))
-			visible_message(span_danger("[src] malfunctions, throwing the [exp_on]!"))
+			visible_message(span_danger("[src] malfunctions, throwing \the [exp_on]!"))
 			var/mob/living/target = locate(/mob/living) in oview(7,src)
 			if(target)
 				var/obj/item/throwing = loaded_item
@@ -430,7 +430,7 @@
 	if(exp == SCANTYPE_OBLITERATE)
 		visible_message(span_warning("[exp_on] activates the crushing mechanism, [exp_on] is destroyed!"))
 		if(prob(EFFECT_PROB_LOW) && criticalReaction)
-			visible_message(span_warning("[src]'s crushing mechanism slowly and smoothly descends, flattening the [exp_on]!"))
+			visible_message(span_warning("[src]'s crushing mechanism slowly and smoothly descends, flattening \the [exp_on]!"))
 			new /obj/item/stack/sheet/plasteel(get_turf(pick(oview(1,src))))
 		else if(prob(EFFECT_PROB_VERYLOW * (100 - malfunction_probability_coeff) * 0.01))
 			visible_message(span_danger("[src]'s crusher goes way too many levels too high, crushing right through space-time!"))
@@ -458,7 +458,7 @@
 		visible_message(span_warning("[exp_on] [a], and [b], the experiment was a failure."))
 
 	if(exp == SCANTYPE_DISCOVER)
-		visible_message(span_notice("[src] scans the [exp_on], revealing its true nature!"))
+		visible_message(span_notice("[src] scans \the [exp_on], revealing its true nature!"))
 		playsound(src, 'sound/effects/supermatter.ogg', 50, 3, -1)
 		var/obj/item/relic/loaded_artifact = loaded_item
 		loaded_artifact.reveal()

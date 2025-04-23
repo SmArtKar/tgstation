@@ -129,7 +129,7 @@
 	playsound(get_turf(user), 'sound/items/tools/change_drill.ogg', 50, TRUE)
 	if(tool_behaviour != TOOL_ROLLINGPIN)
 		tool_behaviour = TOOL_ROLLINGPIN
-		to_chat(user, span_notice("You attach the rolling pin bit to the [src]."))
+		to_chat(user, span_notice("You attach the rolling pin bit to \the [src]."))
 		icon_state = "sili_rolling_pin"
 		force = 8
 		sharpness = NONE
@@ -139,7 +139,7 @@
 
 	else
 		tool_behaviour = TOOL_KNIFE
-		to_chat(user, span_notice("You attach the knife bit to the [src]."))
+		to_chat(user, span_notice("You attach the knife bit to \the [src]."))
 		icon_state = "sili_knife"
 		force = 0
 		sharpness = SHARP_EDGED

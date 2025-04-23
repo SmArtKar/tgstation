@@ -291,7 +291,7 @@ Can accept both a type path, and an instance of a datum. Type path has priority.
 		return FALSE
 
 	trader.say(trader_data.return_trader_phrase(INTERESTED_PHRASE))
-	trader.say("You will receive [cost] [trader_data.currency_name] for the [selling].")
+	trader.say("You will receive [cost] [trader_data.currency_name] for \the [selling].")
 	var/list/npc_options = list(
 		TRADER_OPTION_YES = radial_icons_cache[TRADER_RADIAL_YES],
 		TRADER_OPTION_NO = radial_icons_cache[TRADER_RADIAL_NO],

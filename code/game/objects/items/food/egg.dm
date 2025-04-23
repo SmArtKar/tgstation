@@ -114,9 +114,9 @@ GLOBAL_VAR_INIT(chicks_from_eggs, 0)
 
 		to_chat(user, span_notice("You check if [src] is rotten."))
 		if(istype(src, /obj/item/food/egg/rotten))
-			to_chat(user, span_warning("[src] floats in the [dunk_test_container]!"))
+			to_chat(user, span_warning("[src] floats in \the [dunk_test_container]!"))
 		else
-			to_chat(user, span_notice("[src] sinks into the [dunk_test_container]!"))
+			to_chat(user, span_notice("[src] sinks into \the [dunk_test_container]!"))
 	else
 		..()
 

@@ -140,9 +140,9 @@
 	if (istype(I))
 		inverted = !inverted
 		if(inverted)
-			to_chat(user, span_notice("You set the [src]'s sensors to release gases when the temperature is higher than the setted one."))
+			to_chat(user, span_notice("You set \the [src]'s sensors to release gases when the temperature is higher than the setted one."))
 		else
-			to_chat(user, span_notice("You set the [src]'s sensors to the default settings."))
+			to_chat(user, span_notice("You set \the [src]'s sensors to the default settings."))
 	return TRUE
 
 //mapping

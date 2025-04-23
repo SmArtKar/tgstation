@@ -759,7 +759,7 @@
 		return
 
 	user.apply_damage(25, BRUTE, user.get_bodypart(ears.zone), attacking_item = src)
-	to_chat(user, span_notice("As you're shoving them in, the [src] take on a life of their own and brutishly crawl right into [target_mob == user ? "your" : target_mob + "'s"] ears, taking their place entirely while maiming [target_mob == user ? "your" : target_mob.p_their()]  [ears.zone]!"))
+	to_chat(user, span_notice("As you're shoving them in, \the [src] take on a life of their own and brutishly crawl right into [target_mob == user ? "your" : target_mob + "'s"] ears, taking their place entirely while maiming [target_mob == user ? "your" : target_mob.p_their()]  [ears.zone]!"))
 	playsound(user, 'sound/effects/magic/demon_consume.ogg', vol = 100, falloff_exponent = 2, vary = TRUE)
 	// bad moodlet
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
@@ -777,7 +777,7 @@
 	)
 
 	if(HAS_MIND_TRAIT(organ_owner, TRAIT_TOWER_OF_BABEL))
-		to_chat(organ_owner, span_noticealien("You don't feel that much different this time. Looks like your brain has attuned to the [src]'s effect."))
+		to_chat(organ_owner, span_noticealien("You don't feel that much different this time. Looks like your brain has attuned to \the [src]'s effect."))
 		return
 
 	if(!removal_holder)

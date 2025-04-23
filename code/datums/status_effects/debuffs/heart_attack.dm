@@ -150,7 +150,7 @@
 /datum/status_effect/heart_attack/proc/defib_shock(obj/item/shockpaddles/source)
 	SIGNAL_HANDLER
 	time_until_stoppage += 50 //Three shocks should save pretty much anyone.
-	owner.visible_message(span_nicegreen("[owner] seems to be relieved of their pain as they're shocked by the [source]!"), span_nicegreen("\The [source] shocks your heart awake, and you feel the pain in your chest ease up!"))
+	owner.visible_message(span_nicegreen("[owner] seems to be relieved of their pain as they're shocked by \the [source]!"), span_nicegreen("\The [source] shocks your heart awake, and you feel the pain in your chest ease up!"))
 
 ///Slightly reduces your timer, just like the minor shock signal. Slightly more relief because these use cases are generally more dangerous.
 /datum/status_effect/heart_attack/proc/electrocuted(datum/source, shock_damage)

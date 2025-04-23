@@ -17,7 +17,7 @@
 			to_chat(user, span_warning("[atmos_device] already has a hypernoblium crystal inserted in it!"))
 			return ITEM_INTERACT_BLOCKING
 		atmos_device.insert_nob_crystal()
-		to_chat(user, span_notice("You insert the [src] into [atmos_device]."))
+		to_chat(user, span_notice("You insert \the [src] into [atmos_device]."))
 
 	if(istype(worn_item))
 		if(istype(worn_item, /obj/item/clothing/suit/space))
@@ -26,7 +26,7 @@
 		if(worn_item.min_cold_protection_temperature == SPACE_SUIT_MIN_TEMP_PROTECT && worn_item.clothing_flags & STOPSPRESSUREDAMAGE)
 			to_chat(user, span_warning("[worn_item] is already pressure-resistant!"))
 			return ITEM_INTERACT_BLOCKING
-		to_chat(user, span_notice("You see how the [worn_item] changes color, it's now pressure proof."))
+		to_chat(user, span_notice("You see how \the [worn_item] changes color, it's now pressure proof."))
 		worn_item.name = "pressure-resistant [worn_item.name]"
 		worn_item.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 		worn_item.add_atom_colour(color_transition_filter("#00fff7", SATURATION_OVERRIDE), FIXED_COLOUR_PRIORITY)

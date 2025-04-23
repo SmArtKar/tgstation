@@ -37,7 +37,7 @@
 	bay.detach()
 	bay.forceMove(src) //for later detaching
 	attach(mech, attach_right)
-	user.visible_message(span_notice("[user] inserts something into [src]."), span_notice("You attach the [initial(name)] into the concealed weapon bay."))
+	user.visible_message(span_notice("[user] inserts something into \the [mech]."), span_notice("You attach \the [src] into the concealed weapon bay."))
 	return TRUE
 
 /obj/item/mecha_parts/mecha_equipment/weapon/detach(atom/moveto)

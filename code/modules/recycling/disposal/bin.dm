@@ -405,7 +405,7 @@
 		balloon_alert(user, "destination tagger falls!")
 		mounted_tagger = null
 		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
-	user.visible_message(span_notice("[user] unhooks the [mounted_tagger] from [src]."))
+	user.visible_message(span_notice("[user] unhooks \the [mounted_tagger] from [src]."))
 	balloon_alert(user, "tagger pulled")
 	playsound(src, 'sound/machines/click.ogg', 60, TRUE)
 	mounted_tagger = null

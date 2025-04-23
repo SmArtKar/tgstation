@@ -66,7 +66,7 @@
 /mob/living/basic/guardian/gravitokinetic/proc/slam_turf(turf/open/slammed)
 	if (!isopenturf(slammed) || isgroundlessturf(slammed))
 		return
-	visible_message(span_danger("[src] slams their fist into the [slammed]!"), span_notice("You amplify gravity around the [slammed]."))
+	visible_message(span_danger("[src] slams their fist into \the [slammed]!"), span_notice("You amplify gravity around \the [slammed]."))
 	do_attack_animation(slammed)
 	add_gravity(slammed, turf_gravity)
 

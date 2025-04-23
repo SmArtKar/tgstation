@@ -192,7 +192,7 @@ GLOBAL_DATUM(necropolis_gate, /obj/structure/necropolis_gate/legion_gate)
 				flash_color(M, flash_color = "#FF0000", flash_time = 50)
 		var/mutable_appearance/release_overlay = mutable_appearance('icons/effects/effects.dmi', "legiondoor")
 		notify_ghosts(
-			"Legion has been released in the [get_area(src)]!",
+			"Legion has been released in \the [get_area(src)]!",
 			source = src,
 			alert_overlay = release_overlay,
 			notify_flags = NOTIFY_CATEGORY_NOFLASH,

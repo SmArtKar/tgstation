@@ -636,7 +636,7 @@ GLOBAL_LIST_INIT(command_strings, list(
 				to_chat(the_user, span_bolddanger("You fail to repair [src]'s [hackables]."))
 				return
 			bot_access_flags &= ~(BOT_COVER_EMAGGED|BOT_COVER_HACKED)
-			to_chat(the_user, span_notice("You reset the [src]'s [hackables]."))
+			to_chat(the_user, span_notice("You reset \the [src]'s [hackables]."))
 			the_user.log_message("re-enabled safety lock of [src]", LOG_GAME)
 			bot_reset()
 			to_chat(src, span_userdanger("Software restored to standard."))

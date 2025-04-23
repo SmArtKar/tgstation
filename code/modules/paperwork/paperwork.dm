@@ -236,7 +236,7 @@
 
 /obj/item/paperwork/photocopy/attackby(obj/item/attacking_item, mob/user, params)
 	if(istype(attacking_item, /obj/item/stamp/void) && !stamped && !voided)
-		to_chat(user, span_notice("You plant the [attacking_item] firmly onto the front of the documents."))
+		to_chat(user, span_notice("You plant \the [attacking_item] firmly onto the front of the documents."))
 		stamp_overlay = mutable_appearance('icons/obj/service/bureaucracy.dmi', "paper_stamp-void")
 		add_overlay(stamp_overlay)
 		voided = TRUE

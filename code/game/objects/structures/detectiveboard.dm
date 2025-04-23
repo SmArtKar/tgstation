@@ -63,7 +63,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/detectiveboard, 32)
 		cases[current_case].notices++
 		var/datum/evidence/evidence = new (name, desc, item)
 		cases[current_case].evidences += evidence
-		to_chat(user, span_notice("You pin the [item] to the detective board."))
+		to_chat(user, span_notice("You pin \the [item] to the detective board."))
 		attaching_evidence = FALSE
 		update_appearance(UPDATE_ICON)
 		return

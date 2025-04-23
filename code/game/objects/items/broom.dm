@@ -42,7 +42,7 @@
  * * user - The user which is wielding the broom
  */
 /obj/item/pushbroom/proc/on_wield(obj/item/source, mob/user)
-	to_chat(user, span_notice("You brace the [src] against the ground in a firm sweeping stance."))
+	to_chat(user, span_notice("You brace \the [src] against the ground in a firm sweeping stance."))
 	RegisterSignal(user, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(sweep))
 
 /**

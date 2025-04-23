@@ -726,8 +726,8 @@ GLOBAL_LIST_EMPTY(roundstart_station_closets)
 		update_appearance()
 
 	else if(istype(weapon, /obj/item/electronics/airlock) && can_install_airlock_electronics(user))
-		user.visible_message(span_notice("[user] installs the electronics into the [src]."),\
-			span_notice("You start to install electronics into the [src]..."))
+		user.visible_message(span_notice("[user] installs the electronics into \the [src]."),\
+			span_notice("You start to install electronics into \the [src]..."))
 
 		if(!do_after(user, 4 SECONDS, target = src, extra_checks = CALLBACK(src, PROC_REF(can_install_airlock_electronics), user)))
 			return
@@ -741,8 +741,8 @@ GLOBAL_LIST_EMPTY(roundstart_station_closets)
 		update_appearance()
 
 	else if(weapon.tool_behaviour == TOOL_SCREWDRIVER && can_unscrew_airlock_electronics(user))
-		user.visible_message(span_notice("[user] begins to remove the electronics from the [src]."),\
-			span_notice("You begin to remove the electronics from the [src]..."))
+		user.visible_message(span_notice("[user] begins to remove the electronics from \the [src]."),\
+			span_notice("You begin to remove the electronics from \the [src]..."))
 
 		if (!weapon.use_tool(src, user, 40, volume = 50, extra_checks = CALLBACK(src, PROC_REF(can_unscrew_airlock_electronics), user)))
 			return

@@ -125,7 +125,7 @@
 		else
 			if(!user.transferItemToLoc(pancake, src))
 				return
-			to_chat(user, span_notice("You add the [pancake] to the [src]."))
+			to_chat(user, span_notice("You add \the [pancake] to \the [src]."))
 			pancake.name = initial(pancake.name)
 			contents += pancake
 			update_snack_overlays(pancake)

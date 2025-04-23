@@ -374,11 +374,11 @@ GLOBAL_LIST_INIT(plastitaniumglass_recipes, list(
 		lightreplacer.attackby(src, user)
 	else if(istype(item, /obj/item/stack/sheet/cloth))
 		var/obj/item/stack/sheet/cloth/cloth = item
-		to_chat(user, span_notice("You begin to wrap the [cloth] around the [src]..."))
+		to_chat(user, span_notice("You begin to wrap \the [cloth] around \the [src]..."))
 		if(do_after(user, craft_time, target = src))
 			var/obj/item/knife/shiv/shiv = new shiv_type
 			cloth.use(1)
-			to_chat(user, span_notice("You wrap the [cloth] around the [src], forming a makeshift weapon."))
+			to_chat(user, span_notice("You wrap \the [cloth] around \the [src], forming a makeshift weapon."))
 			remove_item_from_storage(src, user)
 			qdel(src)
 			user.put_in_hands(shiv)

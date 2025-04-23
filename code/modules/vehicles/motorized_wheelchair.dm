@@ -107,7 +107,7 @@
 		else
 			attacking_item.forceMove(src)
 			power_cell = attacking_item
-			to_chat(user, span_notice("You install the [attacking_item]."))
+			to_chat(user, span_notice("You install \the [attacking_item]."))
 		refresh_parts()
 		return
 	if(!istype(attacking_item, /obj/item/stock_parts))

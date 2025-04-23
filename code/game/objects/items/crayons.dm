@@ -761,7 +761,7 @@
 		return
 
 	var/obj/item/stack/sheet/cardboard/cardboard = new /obj/item/stack/sheet/cardboard(user.drop_location())
-	to_chat(user, span_notice("You fold the [src] into cardboard."))
+	to_chat(user, span_notice("You fold \the [src] into cardboard."))
 	user.put_in_active_hand(cardboard)
 	qdel(src)
 

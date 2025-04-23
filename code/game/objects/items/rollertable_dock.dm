@@ -30,7 +30,8 @@
 /obj/item/rolling_table_dock/deploy_rolling_table(mob/user, atom/location)
 	if(loaded)
 		loaded.forceMove(location)
-		user.visible_message(span_notice("[user] deploys [loaded]."), balloon_alert(user, "you deploy the [loaded]."))
+		user.visible_message(span_notice("[user] deploys [loaded]."), null)
+		balloon_alert(user, "You deploy \the [loaded].")
 		loaded = null
 	else
-		balloon_alert(user, "the dock is Empty!")
+		balloon_alert(user, "the dock is empty!")

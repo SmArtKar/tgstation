@@ -396,7 +396,7 @@
 		. += span_info("Alt-click [src] to eject the identification card.")
 
 	if(internal_cell)
-		. += span_info("Right-click it with a screwdriver to eject the [internal_cell]")
+		. += span_info("Right-click it with a screwdriver to eject \the [internal_cell]")
 
 /obj/item/modular_computer/examine_more(mob/user)
 	. = ..()

@@ -315,7 +315,7 @@
 
 /obj/vehicle/ridden/scooter/skateboard/wheelys/post_unbuckle_mob(mob/living/M)
 	if(!has_buckled_mobs())
-		to_chat(M, span_notice("You pop the [wheel_name] back into place."))
+		to_chat(M, span_notice("You pop \the [wheel_name] back into place."))
 		moveToNullspace()
 		shoes.toggle_wheels(FALSE)
 	return ..()
@@ -324,7 +324,7 @@
 	return
 
 /obj/vehicle/ridden/scooter/skateboard/wheelys/post_buckle_mob(mob/living/M)
-	to_chat(M, span_notice("You pop out the [wheel_name]."))
+	to_chat(M, span_notice("You pop out \the [wheel_name]."))
 	shoes.toggle_wheels(TRUE)
 	return ..()
 

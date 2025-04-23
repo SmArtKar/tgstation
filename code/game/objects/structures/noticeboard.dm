@@ -39,7 +39,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/noticeboard, 32)
 				return
 			notices++
 			update_appearance(UPDATE_ICON)
-			to_chat(user, span_notice("You pin the [O] to the noticeboard."))
+			to_chat(user, span_notice("You pin \the [O] to the noticeboard."))
 		else
 			to_chat(user, span_warning("The notice board is full!"))
 	else
