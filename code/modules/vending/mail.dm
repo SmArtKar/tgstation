@@ -193,7 +193,7 @@
 /obj/machinery/mailsorter/item_interaction(mob/user, obj/item/thingy, params)
 	if (istype(thingy, /obj/item/storage/bag/mail))
 		if (length(thingy.contents) < 1)
-			to_chat(user, span_warning("The [thingy] is empty!"))
+			to_chat(user, span_warning("\The [thingy] is empty!"))
 			return
 		var/loaded = 0
 		for (var/obj/item/mail in thingy.contents)
@@ -222,7 +222,7 @@
 		else
 			thingy.forceMove(src)
 			mail_list += thingy
-			to_chat(user, span_notice("The [src] whizzles as it accepts the [thingy]."))
+			to_chat(user, span_notice("\The [src] whizzles as it accepts the [thingy]."))
 
 /// Prompts the user to select an anvelope from the list of all the envelopes inside.
 /obj/machinery/mailsorter/proc/pick_mail(mob/user)

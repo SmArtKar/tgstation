@@ -161,7 +161,7 @@
 	for(var/datum/stock_part/capacitor/capacitor in component_parts)
 		if(capacitor.tier >= 2)
 			vampire_charging_capable = TRUE
-			visible_message(span_notice("The [EXAMINE_HINT("Charge Ready")] light on \the [src] flickers to life."))
+			visible_message(span_notice("The [EXAMINE_HINT("\"Charge Ready\"")] light on \the [src] flickers to life."))
 			break
 
 /obj/machinery/microwave/examine(mob/user)

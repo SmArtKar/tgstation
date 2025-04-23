@@ -282,7 +282,7 @@
 		return
 
 	if(get_turf(node) != get_turf(src))
-		initiate_wave_loss(loss_message = "The [node] detaches from the [src], and the vent closes back up!")
+		initiate_wave_loss(loss_message = "\The [node] detaches from the [src], and the vent closes back up!")
 		return //Start over!
 
 	initiate_wave_win()

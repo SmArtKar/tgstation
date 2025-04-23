@@ -296,7 +296,7 @@
 			user.visible_message(span_warning("[user]'s skin flashes red for a moment..."), span_warning("Your skin flashes red as you emit rage-inducing pheromones..."))
 			for(var/mob/living/basic/slime/slime in viewers(get_turf(user), null))
 				slime.ai_controller?.set_blackboard_key(BB_SLIME_RABID, TRUE)
-				slime.visible_message(span_danger("The [slime] is driven into a frenzy!"))
+				slime.visible_message(span_danger("\The [slime] is driven into a frenzy!"))
 			return 600
 
 /obj/item/slime_extract/blue
@@ -947,7 +947,7 @@
 		to_chat(user, span_warning("The potion can only be used on clothing!"))
 		return ITEM_INTERACT_BLOCKING
 	if(clothing.max_heat_protection_temperature >= FIRE_IMMUNITY_MAX_TEMP_PROTECT)
-		to_chat(user, span_warning("The [clothing] is already fireproof!"))
+		to_chat(user, span_warning("\The [clothing] is already fireproof!"))
 		return ITEM_INTERACT_BLOCKING
 	to_chat(user, span_notice("You slather the blue gunk over the [clothing], fireproofing it."))
 	clothing.name = "fireproofed [clothing.name]"

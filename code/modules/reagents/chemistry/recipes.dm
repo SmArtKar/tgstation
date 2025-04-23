@@ -334,7 +334,7 @@
 	var/turf/location = get_turf(holder.my_atom)
 	for(var/mob/living/living_mob in viewers(range, location))
 		living_mob.flash_act(length = length)
-	holder.my_atom.visible_message("The [holder.my_atom] suddenly lets out a bright flash!")
+	holder.my_atom.visible_message("\The [holder.my_atom] suddenly lets out a bright flash!")
 
 /*
  *Deafens those in range causing ear damage and muting sound
@@ -371,7 +371,7 @@
 	if(invert_reagents.reagent_list)
 		smoke.set_up(force_range, holder = holder.my_atom, location = holder.my_atom, carry = invert_reagents)
 		smoke.start(log = TRUE)
-	holder.my_atom.audible_message("The [holder.my_atom] suddenly explodes, launching the aerosolized reagents into the air!")
+	holder.my_atom.audible_message("\The [holder.my_atom] suddenly explodes, launching the aerosolized reagents into the air!")
 	if(clear_reactants)
 		clear_reactants(holder)
 	if(clear_products)
@@ -392,7 +392,7 @@
 	if(reagents.reagent_list)
 		smoke.set_up(force_range, holder = holder.my_atom, location = holder.my_atom, carry = reagents)
 		smoke.start(log = TRUE)
-	holder.my_atom.audible_message("The [holder.my_atom] suddenly explodes, launching the aerosolized reagents into the air!")
+	holder.my_atom.audible_message("\The [holder.my_atom] suddenly explodes, launching the aerosolized reagents into the air!")
 	if(clear_reactants)
 		clear_reactants(holder)
 	if(clear_products)
@@ -402,7 +402,7 @@
 /datum/chemical_reaction/proc/explode_shockwave(datum/reagents/holder, datum/equilibrium/equilibrium, range = 3, damage = 5, sound_and_text = TRUE, implosion = FALSE)
 	var/turf/this_turf = get_turf(holder.my_atom)
 	if(sound_and_text)
-		holder.my_atom.audible_message("The [holder.my_atom] suddenly explodes, sending a shockwave rippling through the air!")
+		holder.my_atom.audible_message("\The [holder.my_atom] suddenly explodes, sending a shockwave rippling through the air!")
 		playsound(this_turf, 'sound/effects/chemistry/shockwave_explosion.ogg', 80, TRUE)
 	//Modified goonvortex
 	for(var/atom/movable/movey as anything in orange(range, this_turf))
@@ -431,7 +431,7 @@
 //Calls the default explosion subsystem handiler to explode with fire (random firespots and noise)
 /datum/chemical_reaction/proc/explode_fire(datum/reagents/holder, datum/equilibrium/equilibrium, range = 3)
 	explosion(holder.my_atom, flame_range = range, explosion_cause = src)
-	holder.my_atom.audible_message("The [holder.my_atom] suddenly errupts in flames!")
+	holder.my_atom.audible_message("\The [holder.my_atom] suddenly errupts in flames!")
 
 //Creates a ring of fire in a set range around the beaker location
 /datum/chemical_reaction/proc/explode_fire_vortex(datum/reagents/holder, datum/equilibrium/equilibrium, x_offset = 1, y_offset = 1, reverse = FALSE, id = "f_vortex", )
@@ -545,7 +545,7 @@
 			continue
 		if(target.get_eye_protection() && !ignore_eyes)
 			continue
-		to_chat(target, "The [holder.my_atom.name] launches some of [holder.p_their()] contents at you!")
+		to_chat(target, "\The [holder.my_atom.name] launches some of [holder.p_their()] contents at you!")
 		target.reagents.add_reagent(reagent, vol)
 
 

@@ -418,7 +418,7 @@
 	radio.talk_into(src, speaking, common_channel)
 
 	notify_ghosts(
-		"The [src] has begun melting down!",
+		"\The [src] has begun melting down!",
 		source = src,
 		header = "Meltdown Incoming",
 		ghost_sound = 'sound/machines/warning-buzzer.ogg',

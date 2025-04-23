@@ -84,7 +84,7 @@
 	if(.)
 		return
 	if (moving && obj_flags & EMAGGED)
-		visible_message(span_warning("The [src]'s control panel fizzles slightly."))
+		visible_message(span_warning("\The [src]'s control panel fizzles slightly."))
 		return
 	switch(action)
 		if("toggle")

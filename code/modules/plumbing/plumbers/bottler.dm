@@ -67,7 +67,7 @@
 	if(!new_amount || QDELETED(user) || QDELETED(src) || !user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		return .
 	wanted_amount = new_amount
-	to_chat(user, span_notice(" The [src] will now fill for [wanted_amount]u."))
+	to_chat(user, span_notice("\The [src] will now fill for [wanted_amount]u."))
 
 /obj/machinery/plumbing/bottler/process(seconds_per_tick)
 	if(!is_operational)

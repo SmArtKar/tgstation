@@ -320,7 +320,7 @@
 			slime.update_name()
 			continue
 		slime.set_enraged_behaviour()
-		slime.visible_message(span_danger("The [slime] is driven into a frenzy!"))
+		slime.visible_message(span_danger("[slime] is driven into a frenzy!"))
 	..()
 
 /datum/chemical_reaction/slime/slimespeed

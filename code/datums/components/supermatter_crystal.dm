@@ -167,8 +167,8 @@
 		if(clumsy)
 			var/obj/item/bodypart/dust_arm = user.get_active_hand()
 			dust_arm.dismember()
-			user.visible_message(span_danger("The [item] flashes out of existence on contact with \the [atom_source], resonating with a horrible sound..."),\
-				span_danger("Oops! The [item] flashes out of existence on contact with \the [atom_source], taking your arm with it! That was clumsy of you!"))
+			user.visible_message(span_danger("\The [item] flashes out of existence on contact with \the [atom_source], resonating with a horrible sound..."),\
+				span_danger("Oops! \The [item] flashes out of existence on contact with \the [atom_source], taking your arm with it! That was clumsy of you!"))
 			playsound(atom_source, 'sound/effects/supermatter.ogg', 150, TRUE)
 			consume(atom_source, dust_arm)
 			qdel(item)

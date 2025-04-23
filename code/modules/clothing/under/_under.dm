@@ -171,7 +171,7 @@
 	if(has_sensor == BROKEN_SENSORS || has_sensor == NO_SENSORS)
 		return
 
-	visible_message(span_warning("[src]'s medical sensors short out!"), blind_message = span_warning("The [src] makes an electronic sizzling sound!"), vision_distance = COMBAT_MESSAGE_RANGE)
+	visible_message(span_warning("[src]'s medical sensors short out!"), blind_message = span_warning("You hear electronics sizzling!"), vision_distance = COMBAT_MESSAGE_RANGE)
 	has_sensor = BROKEN_SENSORS
 	sensor_malfunction()
 	update_wearer_status()
@@ -242,11 +242,10 @@
 
 	if(severity <= EMP_HEAVY)
 		break_sensors()
-
 	else
 		sensor_mode = pick(SENSOR_OFF, SENSOR_OFF, SENSOR_OFF, SENSOR_LIVING, SENSOR_LIVING, SENSOR_VITALS, SENSOR_VITALS, SENSOR_COORDS)
 		playsound(source = src, soundin = 'sound/effects/sparks/sparks3.ogg', vol = 75, vary = TRUE, extrarange = SHORT_RANGE_SOUND_EXTRARANGE, ignore_walls = FALSE)
-		visible_message(span_warning("The [src]'s medical sensors flash and change rapidly!"), blind_message = span_warning("The [src] makes an electronic sizzling sound!"), vision_distance = COMBAT_MESSAGE_RANGE)
+		visible_message(span_warning("\The [src]'s medical sensors flash and change rapidly!"), blind_message = span_warning("You hear electronics sizzling!"), vision_distance = COMBAT_MESSAGE_RANGE)
 
 	update_wearer_status()
 

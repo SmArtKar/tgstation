@@ -74,7 +74,7 @@
 
 	user.visible_message(
 		span_notice("[user] begins inserting [inserted_item] into [parent]."),
-		span_notice("You start to insert the [inserted_item] into [parent]."),
+		span_notice("You start to insert \the [inserted_item] into [parent]."),
 	)
 
 	INVOKE_ASYNC(src, PROC_REF(insert_item), inserted_item, user)

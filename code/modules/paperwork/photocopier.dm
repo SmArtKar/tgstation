@@ -519,7 +519,7 @@ GLOBAL_LIST_INIT(paper_blanks, init_paper_blanks())
 	object.forceMove(user.loc)
 	user.put_in_hands(object)
 
-	to_chat(user, span_notice("You take [object] out of [src]. [busy ? "The [src] comes to a halt." : ""]"))
+	to_chat(user, span_notice("You take [object] out of \the [src]. [busy ? "\The [src] comes to a halt." : ""]"))
 
 /obj/machinery/photocopier/wrench_act(mob/living/user, obj/item/tool)
 	. = ..()
@@ -548,7 +548,7 @@ GLOBAL_LIST_INIT(paper_blanks, init_paper_blanks())
 
 	else if(istype(object, /obj/item/paperwork))
 		if(istype(object, /obj/item/paperwork/photocopy)) //No infinite paper chain. You need the original paperwork to make more copies.
-			to_chat(user, span_warning("The [object] is far too messy to produce a good copy!"))
+			to_chat(user, span_warning("\The [object] is far too messy to produce a good copy!"))
 		else
 			insert_copy_object(object, user)
 

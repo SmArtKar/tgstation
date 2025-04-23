@@ -17,7 +17,7 @@ Self-sustaining extracts:
 //Just divides into the actual item.
 /obj/item/slimecross/selfsustaining/Initialize(mapload)
 	..()
-	visible_message(span_warning("The [src] shudders, and splits into four smaller extracts."))
+	visible_message(span_warning("\The [src] shudders, and splits into four smaller extracts."))
 	for(var/i in 1 to 4)
 		var/obj/item/autoslime/A = new /obj/item/autoslime(src.loc)
 		var/obj/item/slime_extract/X = new extract_type(A)

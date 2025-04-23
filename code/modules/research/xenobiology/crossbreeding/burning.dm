@@ -203,7 +203,7 @@ Burning extracts:
 		for(var/list/mob/living/ex_friend in friends)
 			slime_in_view.unfriend(ex_friend)
 		slime_in_view.set_enraged_behaviour()
-		slime_in_view.visible_message(span_danger("The [slime_in_view] is driven into a dangerous frenzy!"))
+		slime_in_view.visible_message(span_danger("[slime_in_view] is driven into a dangerous frenzy!"))
 	..()
 
 /obj/item/slimecross/burning/green

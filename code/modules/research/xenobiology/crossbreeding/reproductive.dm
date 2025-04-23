@@ -56,7 +56,7 @@ Reproductive extracts:
 			playsound(src, 'sound/items/eatfood.ogg', 20, TRUE)
 			return
 		else
-			to_chat(user, span_notice("The [src] rejects the Monkey Cube!")) //in case it fails to insert for whatever reason you get feedback
+			to_chat(user, span_notice("\The [src] rejects \the [O]!")) //in case it fails to insert for whatever reason you get feedback
 
 /obj/item/slimecross/reproductive/grey
 	extract_type = /obj/item/slime_extract/grey

@@ -649,7 +649,7 @@ LINEN BINS
 
 /obj/structure/bedsheetbin/screwdriver_act_secondary(mob/living/user, obj/item/tool)
 	if(amount)
-		to_chat(user, span_warning("The [src] must be empty first!"))
+		to_chat(user, span_warning("\The [src] must be empty first!"))
 		return ITEM_INTERACT_SUCCESS
 	if(tool.use_tool(src, user, 0.5 SECONDS, volume=50))
 		to_chat(user, span_notice("You disassemble the [src]."))

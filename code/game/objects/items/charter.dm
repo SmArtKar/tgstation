@@ -26,7 +26,7 @@
 
 /obj/item/station_charter/attack_self(mob/living/user)
 	if(used)
-		to_chat(user, span_warning("The [name_type] has already been named!"))
+		to_chat(user, span_warning("\The [name_type] has already been named!"))
 		return
 	if(!ignores_timeout && (world.time-SSticker.round_start_time > STATION_RENAME_TIME_LIMIT)) //5 minutes
 		to_chat(user, span_warning("The crew has already settled into the shift. It probably wouldn't be good to rename the [name_type] right now."))

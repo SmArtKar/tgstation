@@ -119,7 +119,7 @@
 		for(var/_i in 1 to amount)
 			if(!prob(final_effectiveness))
 				if(butcher)
-					to_chat(butcher, span_warning("You fail to harvest some of the [initial(remains.name)] from [target]."))
+					to_chat(butcher, span_warning("You fail to harvest some of \the [initial(remains.name)] from [target]."))
 				continue
 
 			if(prob(bonus_chance))

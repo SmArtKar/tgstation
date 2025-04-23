@@ -40,7 +40,7 @@
 			current_summon.team_color = team_color
 			current_summon.load_model()
 		else
-			to_chat(user, span_notice("The [src] smartly rejects the non-creature card."))
+			to_chat(user, span_notice("\The [src] smartly rejects the non-creature card."))
 			current_card = null
 			return ..()
 	else
@@ -99,7 +99,7 @@ GLOBAL_LIST_EMPTY(tcgcard_machine_radial_choices)
 		current_summon.team_color = team_color
 		current_summon.load_model()
 	else
-		to_chat(user, span_notice("The [src] already contains a card."))
+		to_chat(user, span_notice("\The [src] already contains a card."))
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/machinery/trading_card_holder/proc/check_menu(mob/living/user)

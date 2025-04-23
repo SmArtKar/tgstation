@@ -108,7 +108,7 @@
 	for(var/obj/item/borg/upgrade/modkit/modkit as anything in stored_gun.modkits)
 		. += span_notice("There is \a [modkit] installed, using <b>[modkit.cost]%</b> capacity.")
 	if(ai_controller && ai_controller.ai_status == AI_STATUS_IDLE)
-		. += "The [src] appears to be in <b>sleep mode</b>. You can restore normal functions by <b>tapping</b> it."
+		. += "\The [src] appears to be in <b>sleep mode</b>. You can restore normal functions by <b>tapping</b> it."
 
 
 /mob/living/basic/mining_drone/welder_act(mob/living/user, obj/item/welder)

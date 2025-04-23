@@ -244,7 +244,7 @@
 /obj/machinery/limbgrower/proc/build_item(list/modified_consumed_reagents_list)
 	for(var/reagent_id in modified_consumed_reagents_list)
 		if(!reagents.has_reagent(reagent_id, modified_consumed_reagents_list[reagent_id]))
-			audible_message(span_notice("The [src] buzzes."))
+			audible_message(span_notice("\The [src] buzzes."))
 			playsound(src, 'sound/machines/buzz/buzz-sigh.ogg', 50, FALSE)
 			break
 

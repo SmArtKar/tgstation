@@ -202,8 +202,8 @@
  */
 
 /proc/cleanup_ghosts(list/delete_list)
-	for(var/mob/living/mob_to_delete as anything in delete_list)
-		mob_to_delete.visible_message(span_alert("The [mob_to_delete] wails as it is torn back into the void!"), span_alert("You let out one last wail as you are sucked back into the realm of the dead. Then suddenly, you're back in the comforting embrace of the afterlife."), span_hear("You hear ethereal wailing."))
+	for(var/mob/mob_to_delete as anything in delete_list)
+		mob_to_delete.visible_message(span_alert("\The [mob_to_delete] wails as it is torn back into the void!"), span_alert("You let out one last wail as you are sucked back into the realm of the dead. Then suddenly, you're back in the comforting embrace of the afterlife."), span_hear("You hear ethereal wailing."))
 		playsound(mob_to_delete, pick(delete_list), 50)
 		new /obj/effect/temp_visual/revenant/cracks(get_turf(mob_to_delete))
 		new /obj/effect/decal/cleanable/greenglow/ecto(get_turf(mob_to_delete))

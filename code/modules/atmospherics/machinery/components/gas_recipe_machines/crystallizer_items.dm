@@ -21,7 +21,7 @@
 
 	if(istype(worn_item))
 		if(istype(worn_item, /obj/item/clothing/suit/space))
-			to_chat(user, span_warning("The [worn_item] is already pressure-resistant!"))
+			to_chat(user, span_warning("\The [worn_item] is already pressure-resistant!"))
 			return ITEM_INTERACT_BLOCKING
 		if(worn_item.min_cold_protection_temperature == SPACE_SUIT_MIN_TEMP_PROTECT && worn_item.clothing_flags & STOPSPRESSUREDAMAGE)
 			to_chat(user, span_warning("[worn_item] is already pressure-resistant!"))

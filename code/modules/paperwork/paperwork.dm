@@ -86,7 +86,7 @@
 	var/obj/item/bodypart/BP = user.get_bodypart(pick(BODY_ZONE_HEAD))
 	if(BP)
 		BP.dismember()
-		new_paper.visible_message(span_alert("The [src] launches a sheet of paper, instantly slicing off [user]'s head!"))
+		new_paper.visible_message(span_alert("\The [src] launches a sheet of paper, instantly slicing off [user]'s head!"))
 	else
 		user.visible_message(span_suicide("[user] panics and starts choking to death!"))
 		return OXYLOSS

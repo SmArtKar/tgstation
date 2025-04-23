@@ -43,7 +43,7 @@
 
 /obj/item/void_eater/examine(mob/user)
 	. = ..()
-	. += span_notice("The [name] weakens each hit, recharge it by kidnapping someone!")
+	. += span_notice("\The [src] weakens each hit, recharge it by kidnapping someone!")
 	. += span_notice("Sharpness: [round(force)]/[initial(force)]")
 
 /obj/item/void_eater/attack(mob/living/target_mob, mob/living/user, params)

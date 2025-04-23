@@ -245,7 +245,7 @@
 			say("No ID card detected.")
 			return
 		if(IS_DEPARTMENTAL_CARD(id_card))
-			say("The [src] rejects [id_card].")
+			visible_message(span_warning("\The [src] rejects \the [id_card]."))
 			return
 		account = id_card.registered_account
 		if(!istype(account))

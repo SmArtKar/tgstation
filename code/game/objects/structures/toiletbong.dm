@@ -97,7 +97,7 @@
 	playsound(src, 'sound/effects/fish_splash.ogg', 50)
 	balloon_alert(user, "toilet broke")
 	if (emag_card)
-		to_chat(user, span_boldwarning("The [emag_card] falls into the toilet. You fish it back out. Looks like you broke the toilet."))
+		to_chat(user, span_boldwarning("\The [emag_card] falls into the toilet. You fish it back out. Looks like you broke the toilet."))
 	return TRUE
 
 /obj/structure/toiletbong/attackby(obj/item/attacking_item, mob/user, params)

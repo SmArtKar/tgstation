@@ -127,7 +127,7 @@
 				var/turf/chasm = get_turf(victim)
 				var/fall_into_chasm = jaunter.chasm_react(victim)
 				if(!fall_into_chasm)
-					chasm.visible_message(span_boldwarning("[victim] falls into the [chasm]!")) //To freak out any bystanders
+					chasm.visible_message(span_boldwarning("[victim] falls into \the [chasm]!")) //To freak out any bystanders
 				return fall_into_chasm ? CHASM_DROPPING : CHASM_NOT_DROPPING
 	return CHASM_DROPPING
 

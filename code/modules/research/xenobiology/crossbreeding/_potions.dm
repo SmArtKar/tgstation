@@ -117,10 +117,10 @@ Slimecrossing Potions
 		to_chat(user, span_warning("The potion can only be used on clothing!"))
 		return ITEM_INTERACT_BLOCKING
 	if(istype(clothing, /obj/item/clothing/suit/space))
-		to_chat(user, span_warning("The [interacting_with] is already pressure-resistant!"))
+		to_chat(user, span_warning("\The [interacting_with] is already pressure-resistant!"))
 		return ITEM_INTERACT_BLOCKING
 	if(clothing.min_cold_protection_temperature == SPACE_SUIT_MIN_TEMP_PROTECT && (clothing.clothing_flags & STOPSPRESSUREDAMAGE))
-		to_chat(user, span_warning("The [interacting_with] is already pressure-resistant!"))
+		to_chat(user, span_warning("\The [interacting_with] is already pressure-resistant!"))
 		return ITEM_INTERACT_BLOCKING
 	to_chat(user, span_notice("You slather the blue gunk over the [clothing], making it airtight."))
 	clothing.name = "pressure-resistant [clothing.name]"

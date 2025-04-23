@@ -74,21 +74,22 @@
 	if(!B)
 		return
 
-	if(B.data["mind"] && B.data["cloneable"])
-		mind = B.data["mind"]
-		ckey = B.data["ckey"]
-		realName = B.data["real_name"]
-		blood_gender = B.data["gender"]
-		blood_type = B.data["blood_type"]
-		features = B.data["features"]
-		factions = B.data["factions"]
-		quirks = B.data["quirks"]
-		sampleDNA = B.data["blood_DNA"]
-		contains_sample = TRUE
-		visible_message(span_notice("The [src] is injected with a fresh blood sample."))
-		investigate_log("[key_name(mind)]'s cloning record was added to [src]", INVESTIGATE_BOTANY)
-	else
-		visible_message(span_warning("The [src] rejects the sample!"))
+	if(!B.data["mind"] || !B.data["cloneable"])
+		visible_message(span_warning("\The [src] rejects the sample!"))
+		return NONE
+
+	mind = B.data["mind"]
+	ckey = B.data["ckey"]
+	realName = B.data["real_name"]
+	blood_gender = B.data["gender"]
+	blood_type = B.data["blood_type"]
+	features = B.data["features"]
+	factions = B.data["factions"]
+	quirks = B.data["quirks"]
+	sampleDNA = B.data["blood_DNA"]
+	contains_sample = TRUE
+	visible_message(span_notice("\The [src] is injected with a fresh blood sample."))
+	investigate_log("[key_name(mind)]'s cloning record was added to [src]", INVESTIGATE_BOTANY)
 	return NONE
 
 /// Handles reagents being deleted from these seeds.

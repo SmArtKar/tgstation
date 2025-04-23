@@ -1052,7 +1052,7 @@
 
 /obj/machinery/transport/tram_controller/ui_status(mob/user, datum/ui_state/state)
 	if(HAS_SILICON_ACCESS(user) && (controller_datum.controller_status & SYSTEM_FAULT || controller_datum.controller_status & COMM_ERROR || !is_operational))
-		to_chat(user, span_warning("An error code flashes: Communications fault! The [src] is not responding to remote inputs!"))
+		to_chat(user, span_warning("An error code flashes: Communications fault! \The [src] is not responding to remote inputs!"))
 		return UI_CLOSE
 
 	return ..()

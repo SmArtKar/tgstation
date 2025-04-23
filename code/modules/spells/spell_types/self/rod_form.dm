@@ -101,7 +101,7 @@
 
 	penetrated.visible_message(
 		span_danger("[penetrated] is penetrated by an immovable rod!"),
-		span_userdanger("The [src] penetrates you!"),
+		span_userdanger("\The [src] penetrates you!"),
 		span_danger("You hear a CLANG!"),
 		)
 	penetrated.adjustBruteLoss(70 + damage_bonus)

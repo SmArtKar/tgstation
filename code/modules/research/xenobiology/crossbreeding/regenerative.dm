@@ -44,7 +44,7 @@ Regenerative extracts:
 	colour = SLIME_TYPE_ORANGE
 
 /obj/item/slimecross/regenerative/orange/core_effect_before(mob/living/target, mob/user)
-	target.visible_message(span_warning("The [src] boils over!"))
+	target.visible_message(span_warning("\The [src] boils over!"))
 	for(var/turf/targetturf in RANGE_TURFS(1,target))
 		if(!locate(/obj/effect/hotspot) in targetturf)
 			new /obj/effect/hotspot(targetturf)
@@ -204,7 +204,7 @@ Regenerative extracts:
 
 /obj/item/slimecross/regenerative/green/core_effect(mob/living/target, mob/user)
 	if(isslime(target))
-		target.visible_message(span_warning("The [target] suddenly changes color!"))
+		target.visible_message(span_warning("\The [target] suddenly changes color!"))
 		var/mob/living/basic/slime/target_slime = target
 		target_slime.random_colour()
 	if(isjellyperson(target))

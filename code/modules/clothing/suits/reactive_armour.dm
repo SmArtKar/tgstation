@@ -481,7 +481,7 @@
 
 /obj/item/clothing/suit/armor/reactive/ectoplasm/reactive_activation(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	playsound(get_turf(owner),'sound/effects/hallucinations/veryfar_noise.ogg', 100, TRUE)
-	owner.visible_message(span_danger("The [src] lets loose a burst of otherworldly energy!"))
+	owner.visible_message(span_danger("\The [src] lets loose a burst of otherworldly energy!"))
 
 	haunt_outburst(epicenter = get_turf(owner), range = 5, haunt_chance = 85, duration = 30 SECONDS)
 

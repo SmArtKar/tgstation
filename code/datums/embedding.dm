@@ -604,7 +604,7 @@
 
 	owner.throw_at(caster, get_dist(owner, caster) - 1, 1, caster)
 	owner.Paralyze(1 SECONDS)
-	owner.visible_message(span_alert("[owner] is sent flying towards [caster] as the [parent] tears out of them!"), span_alert("You are launched at [caster] as the [parent] tears from your body and towards their hand!"))
+	owner.visible_message(span_alert("[owner] is sent flying towards [caster] as \the [parent] tears out of them!"), span_alert("You are launched at [caster] as \the [parent] tears from your body and towards their hand!"))
 
 /datum/embedding/proc/still_in()
 	if (parent.loc != owner)
