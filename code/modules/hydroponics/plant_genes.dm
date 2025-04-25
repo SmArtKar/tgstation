@@ -748,7 +748,7 @@
 	if(target_tray.myseed) // Check if there's another seed in the next tray.
 		if(target_tray.myseed.type == origin_tray.myseed.type && target_tray.plant_status != HYDROTRAY_PLANT_DEAD)
 			return FALSE // It should not destroy its own kind.
-		target_tray.visible_message(span_warning("The [target_tray.myseed.plantname] is overtaken by [origin_tray.myseed.plantname]!"))
+		target_tray.visible_message(span_warning("\The [target_tray.myseed.plantname] is overtaken by [origin_tray.myseed.plantname]!"))
 		QDEL_NULL(target_tray.myseed)
 	target_tray.set_seed(origin_tray.myseed.Copy())
 	target_tray.age = 0
