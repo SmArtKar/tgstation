@@ -25,7 +25,6 @@
 	dummy.put_in_r_hand(testing_item)
 	check_dismember(dummy, BODY_ZONE_R_ARM, status_text)
 
-
 /datum/unit_test/dismemberment/proc/check_dismember(mob/living/carbon/human/dummy, which_arm, status_text)
 	var/obj/item/bodypart/dismembered_limb = dummy.get_bodypart(which_arm)
 	var/obj/item/held_item = dummy.get_item_for_held_index(dismembered_limb.held_index)

@@ -794,21 +794,17 @@
 	return TRUE
 
 /**
- *the mob M is attempting to equip this item into the slot passed through as 'slot'. Return 1 if it can do this and 0 if it can't.
- *if this is being done by a mob other than M, it will include the mob equipper, who is trying to equip the item to mob M. equipper will be null otherwise.
- *If you are making custom procs but would like to retain partial or complete functionality of this one, include a 'return ..()' to where you want this to happen.
+ * Checks if the mob [target] can equip this item to a certain slot, to be overriden by items
  * Arguments:
- * * disable_warning to TRUE if you wish it to not give you text outputs.
- * * slot is the slot we are trying to equip to
- * * bypass_equip_delay_self for whether we want to bypass the equip delay
- * * ignore_equipped ignores any already equipped items in that slot
- * * indirect_action allows inserting into "soft locked" bags, things that can be easily opened by the owner
+ * * target - mob we're being equipped to
+ * * slot - is the slot we are trying to equip to
+ * * ignore_equipped - ignores any already equipped items in that slot, if you want to only check if something fits a slot and not try and equip it
+ * * allow_locked - allows inserting into "soft locked" bags, things that can be easily opened by the owner
  */
-/obj/item/proc/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE, indirect_action = FALSE)
-	if(!M)
+/obj/item/proc/mob_can_equip(mob/living/target, slot, disable_warning = FALSE, ignore_equipped = FALSE, allow_locked = FALSE)
+	if(!target)
 		return FALSE
-
-	return M.can_equip(src, slot, disable_warning, bypass_equip_delay_self, ignore_equipped, indirect_action = indirect_action)
+	return target._can_equip(src, slot, ignore_equipped, allow_locked = allow_locked)
 
 /obj/item/verb/verb_pickup()
 	set src in oview(1)

@@ -104,16 +104,16 @@
 		visible_items += held
 	return visible_items
 
-/mob/living/carbon/proc/equip_in_one_of_slots(obj/item/equipping, list/slots, qdel_on_fail = TRUE, indirect_action = FALSE)
+/mob/living/carbon/proc/equip_in_one_of_slots(obj/item/equipping, list/slots, qdel_on_fail = TRUE, allow_locked = FALSE)
 	for(var/slot in slots)
-		if(equip_to_slot_if_possible(equipping, slots[slot], disable_warning = TRUE, indirect_action = indirect_action))
+		if(equip_to_slot_if_possible(equipping, slots[slot], disable_warning = TRUE, allow_locked = allow_locked))
 			return slot
 	if(qdel_on_fail)
 		qdel(equipping)
 	return null
 
 //This is an UNSAFE proc. Use mob_can_equip() before calling this one! Or rather use equip_to_slot_if_possible() or advanced_equip_to_slot_if_possible()
-/mob/living/carbon/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, indirect_action = FALSE)
+/mob/living/carbon/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, allow_locked = FALSE)
 	if(!slot)
 		return
 	if(!istype(equipping))
@@ -170,7 +170,7 @@
 			put_in_hands(equipping)
 			update_held_items()
 		if(ITEM_SLOT_BACKPACK)
-			if(!back || !back.atom_storage?.attempt_insert(equipping, src, override = TRUE, force = indirect_action ? STORAGE_SOFT_LOCKED : STORAGE_NOT_LOCKED))
+			if(!back || !back.atom_storage?.attempt_insert(equipping, src, override = TRUE, force = allow_locked ? STORAGE_SOFT_LOCKED : STORAGE_NOT_LOCKED))
 				not_handled = TRUE
 		else
 			not_handled = TRUE
@@ -516,7 +516,7 @@
 		"right pocket" = ITEM_SLOT_RPOCKET
 	)
 
-	var/placed_in = equip_in_one_of_slots(item, slots, indirect_action = TRUE)
+	var/placed_in = equip_in_one_of_slots(item, slots, allow_locked = TRUE)
 
 	if (isnull(placed_in) && delete_item_if_failed)
 		qdel(item)

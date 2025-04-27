@@ -15,11 +15,11 @@
 		items += worn_under.attached_accessories
 	return items
 
-/mob/living/carbon/human/can_equip(obj/item/equip_target, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE, indirect_action = FALSE)
+/mob/living/carbon/human/_can_equip(obj/item/equipped, slot, ignore_equipped = FALSE, allow_locked = FALSE)
 	if(SEND_SIGNAL(src, COMSIG_HUMAN_EQUIPPING_ITEM, equip_target, slot) == COMPONENT_BLOCK_EQUIP)
 		return FALSE
 
-	return dna.species.can_equip(equip_target, slot, disable_warning, src, bypass_equip_delay_self, ignore_equipped, indirect_action)
+	return dna.species.can_equip(equip_target, slot, src, ignore_equipped, allow_locked)
 
 /mob/living/carbon/human/get_item_by_slot(slot_id)
 	switch(slot_id)
@@ -51,9 +51,6 @@
 /mob/living/carbon/human/get_slot_by_item(obj/item/looking_for)
 	if(looking_for == belt)
 		return ITEM_SLOT_BELT
-
-	if(belt && (looking_for in belt))
-		return ITEM_SLOT_BELTPACK
 
 	if(looking_for == wear_id)
 		return ITEM_SLOT_ID
@@ -133,7 +130,7 @@
 
 //This is an UNSAFE proc. Use mob_can_equip() before calling this one! Or rather use equip_to_slot_if_possible() or advanced_equip_to_slot_if_possible()
 // Initial is used to indicate whether or not this is the initial equipment (job datums etc) or just a player doing it
-/mob/living/carbon/human/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, indirect_action = FALSE)
+/mob/living/carbon/human/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, allow_locked = FALSE)
 	if(!..()) //a check failed or the item has already found its slot
 		return
 
@@ -175,9 +172,7 @@
 		if(ITEM_SLOT_OCLOTHING)
 			if(wear_suit)
 				return
-
 			wear_suit = equipping
-
 			if(wear_suit.breakouttime) //when equipping a straightjacket
 				ADD_TRAIT(src, TRAIT_RESTRAINED, SUIT_TRAIT)
 				stop_pulling() //can't pull if restrained
@@ -200,9 +195,6 @@
 				return
 			s_store = equipping
 			update_suit_storage()
-		if(ITEM_SLOT_BELTPACK)
-			if(!belt || !belt.atom_storage?.attempt_insert(equipping, src, override = TRUE, force = indirect_action ? STORAGE_SOFT_LOCKED : STORAGE_NOT_LOCKED))
-				not_handled = TRUE
 		else
 			to_chat(src, span_danger("You are trying to equip this item to an unsupported inventory slot. Report this to a coder!"))
 

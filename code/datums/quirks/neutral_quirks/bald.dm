@@ -53,7 +53,7 @@
 	if(!quirk_holder.temporarilyRemoveItemFromInventory(existing))
 		return ..()
 	// try to place the wig. if fail -> try equipping like normal
-	if(!quirk_holder.equip_to_slot_if_possible(quirk_item, ITEM_SLOT_HEAD, qdel_on_fail = FALSE, indirect_action = TRUE))
+	if(!quirk_holder.equip_to_slot_if_possible(quirk_item, ITEM_SLOT_HEAD, qdel_on_fail = FALSE, allow_locked = TRUE))
 		return ..()
 
 	// now that the wig is properly equipped, try attaching the old job / loadout hat via the component

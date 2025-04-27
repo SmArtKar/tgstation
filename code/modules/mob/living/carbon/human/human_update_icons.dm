@@ -1,8 +1,3 @@
-#define RESOLVE_ICON_STATE(worn_item) (worn_item.worn_icon_state || worn_item.icon_state)
-
-	///////////////////////
-	//UPDATE_ICONS SYSTEM//
-	///////////////////////
 /* Keep these comments up-to-date if you -insist- on hurting my code-baby ;_;
 This system allows you to update individual mob-overlays, without regenerating them all each time.
 When we generate overlays we generate the standing version and then rotate the mob as necessary..
@@ -45,30 +40,30 @@ There are several things that need to be remembered:
 		update_body()				//Calls update_body_parts(), as well as updates mutant bodyparts, the old, not-actually-bodypart system.
 */
 
-/* --------------------------------------- */
-//For legacy support.
+// For legacy support.
 /mob/living/carbon/human/regenerate_icons()
-
-	if(!..())
-		update_worn_undersuit()
-		update_worn_id()
-		update_worn_glasses()
-		update_worn_gloves()
-		update_worn_ears()
-		update_worn_shoes()
-		update_suit_storage()
-		update_worn_mask()
-		update_worn_head()
-		update_worn_belt()
-		update_worn_back()
-		update_worn_oversuit()
-		update_pockets()
-		update_worn_neck()
-		update_transform()
-		//mutations
-		update_mutations_overlay()
-		//damage overlays
-		update_damage_overlays()
+	. = ..()
+	if(!.)
+		return
+	update_worn_undersuit()
+	update_worn_id()
+	update_worn_glasses()
+	update_worn_gloves()
+	update_worn_ears()
+	update_worn_shoes()
+	update_suit_storage()
+	update_worn_mask()
+	update_worn_head()
+	update_worn_belt()
+	update_worn_back()
+	update_worn_oversuit()
+	update_pockets()
+	update_worn_neck()
+	update_transform()
+	//mutations
+	update_mutations_overlay()
+	//damage overlays
+	update_damage_overlays()
 
 /mob/living/carbon/human/update_obscured_slots(obscured_flags)
 	..()
@@ -1125,5 +1120,3 @@ generate/load female uniform sprites matching all previously decided variables
 			apply_height_filters(overlay)
 
 	return appearance
-
-#undef RESOLVE_ICON_STATE

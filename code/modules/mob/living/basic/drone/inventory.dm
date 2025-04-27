@@ -13,20 +13,19 @@
 	return FALSE
 
 
-/mob/living/basic/drone/can_equip(obj/item/item, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE, indirect_action = FALSE)
+/mob/living/basic/drone/_can_equip(obj/item/equipped, slot, ignore_equipped = FALSE, allow_locked = FALSE)
 	switch(slot)
 		if(ITEM_SLOT_HEAD)
 			if(head)
 				return FALSE
-			if(!((item.slot_flags & ITEM_SLOT_HEAD) || (item.slot_flags & ITEM_SLOT_MASK)))
+			if(!((equip_target.slot_flags & ITEM_SLOT_HEAD) || (equip_target.slot_flags & ITEM_SLOT_MASK)))
 				return FALSE
 			return TRUE
 		if(ITEM_SLOT_DEX_STORAGE)
 			if(internal_storage)
 				return FALSE
 			return TRUE
-	..()
-
+	return FALSE
 
 /mob/living/basic/drone/get_item_by_slot(slot_id)
 	switch(slot_id)
@@ -44,7 +43,7 @@
 		return ITEM_SLOT_HEAD
 	return ..()
 
-/mob/living/basic/drone/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, indirect_action = FALSE)
+/mob/living/basic/drone/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, allow_locked = FALSE)
 	if(!slot)
 		return
 	if(!istype(equipping))

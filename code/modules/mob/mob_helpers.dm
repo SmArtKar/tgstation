@@ -420,7 +420,7 @@
 	return stat == DEAD || HAS_TRAIT(src, TRAIT_REAGENT_SCANNER) //Dead guys and silicons can always see reagents
 
 ///Can this mob hold items
-/mob/proc/can_hold_items(obj/item/I)
+/mob/proc/can_hold_items(obj/item/equipped)
 	return length(held_items)
 
 /// Returns this mob's default lighting alpha

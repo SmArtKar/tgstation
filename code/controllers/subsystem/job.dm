@@ -845,7 +845,7 @@ SUBSYSTEM_DEF(job)
 		LOCATION_BACKPACK = ITEM_SLOT_BACKPACK,
 		LOCATION_HANDS = ITEM_SLOT_HANDS
 	)
-	var/where = new_captain.equip_in_one_of_slots(paper, slots, FALSE, indirect_action = TRUE) || "at your feet"
+	var/where = new_captain.equip_in_one_of_slots(paper, slots, FALSE, allow_locked = TRUE) || "at your feet"
 
 	if(acting_captain)
 		to_chat(new_captain, span_notice("Due to your position in the chain of command, you have been promoted to Acting Captain. You can find in important note about this [where]."))

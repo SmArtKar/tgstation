@@ -63,7 +63,7 @@
 		return ..()
 	var/mob/living/carbon/human/humie = item
 	if(signaler) //57% chance that the mob is equipped with electropack and cuffs
-		humie.equip_to_slot_or_del(new /obj/item/restraints/handcuffs, ITEM_SLOT_HANDCUFFED, indirect_action = TRUE)
+		humie.equip_to_slot_or_del(new /obj/item/restraints/handcuffs, ITEM_SLOT_HANDCUFFED, allow_locked = TRUE)
 		if(humie.back) //try to remove the neck item if possible before we attempt to install the collar bomb
 			humie.transferItemToLoc(humie.back, loc)
 		var/obj/item/electropack/pack = new(loc)
@@ -73,14 +73,14 @@
 		UnregisterSignal(signaler, COMSIG_QDELETING)
 		signaler = null
 	else if(prob(66)) // 29% chance of just cuffs
-		humie.equip_to_slot_or_del(new /obj/item/restraints/handcuffs, ITEM_SLOT_HANDCUFFED, indirect_action = TRUE)
+		humie.equip_to_slot_or_del(new /obj/item/restraints/handcuffs, ITEM_SLOT_HANDCUFFED, allow_locked = TRUE)
 	else // 14% chance of just a tee souvenir and pin, no cuffs and shit.
 		var/obj/item/clothing/under/misc/syndicate_souvenir/souvenir = new(loc)
-		humie.equip_to_slot_if_possible(souvenir, ITEM_SLOT_ICLOTHING, indirect_action = TRUE)
+		humie.equip_to_slot_if_possible(souvenir, ITEM_SLOT_ICLOTHING, allow_locked = TRUE)
 		var/obj/item/clothing/accessory/anti_sec_pin/pin = new(loc)
 		pin.attach(souvenir)
 
 	if(isnull(humie.w_uniform))
 		//FUCKING SLAVES, GET YOUR CLOTHES BACK ON!
-		humie.equip_to_slot_or_del(new /obj/item/clothing/under/costume/jabroni(humie), ITEM_SLOT_ICLOTHING, indirect_action = TRUE)
+		humie.equip_to_slot_or_del(new /obj/item/clothing/under/costume/jabroni(humie), ITEM_SLOT_ICLOTHING, allow_locked = TRUE)
 	return ..()

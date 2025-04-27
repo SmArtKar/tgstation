@@ -75,7 +75,7 @@
 				slot_to_equip_to = clothing_item.slot_flags
 
 			target.dropItemToGround(target.get_item_by_slot(slot_to_equip_to), TRUE)
-			target.equip_to_slot_or_del(new_item, slot_to_equip_to, indirect_action = TRUE)
+			target.equip_to_slot_or_del(new_item, slot_to_equip_to, allow_locked = TRUE)
 			ADD_TRAIT(new_item, TRAIT_NODROP, CURSED_ITEM_TRAIT(new_item))
 			new_item.item_flags |= DROPDEL
 			new_item.name = "cursed " + new_item.name

@@ -236,13 +236,14 @@
 
 /mob/living/carbon/regenerate_icons()
 	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
-		return
+		return FALSE
 	icon_render_keys = list() //Clear this bad larry out
 	update_held_items()
 	update_worn_handcuffs()
 	update_worn_legcuffs()
 	update_body()
 	update_appearance(UPDATE_OVERLAYS)
+	return TRUE
 
 /mob/living/carbon/update_held_items()
 	. = ..()

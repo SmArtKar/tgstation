@@ -228,9 +228,8 @@
 		return
 	var/weapon_type = pick_weight(weapon_types)
 	var/obj/item/weapon = new weapon_type
-	if(!punpun.put_in_l_hand(weapon) && !punpun.put_in_r_hand(weapon))
+	if(!punpun.put_in_hands(weapon, del_on_fail = TRUE))
 		// Guess they did all this with whatever they have in their hands already
-		qdel(weapon)
 		weapon = punpun.get_active_held_item() || punpun.get_inactive_held_item()
 
 	weapon?.add_mob_blood(punpun)

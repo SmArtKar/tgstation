@@ -160,7 +160,7 @@
 	return
 
 #define EQUIP_OUTFIT_ITEM(item_path, slot_name) if(##item_path) { \
-	user.equip_to_slot_or_del(SSwardrobe.provide_type(##item_path, user), ##slot_name, TRUE, indirect_action = TRUE); \
+	user.equip_to_slot_or_del(SSwardrobe.provide_type(##item_path, user), ##slot_name, TRUE, allow_locked = TRUE); \
 	var/obj/item/outfit_item = user.get_item_by_slot(##slot_name); \
 	if (outfit_item && outfit_item.type == ##item_path) { \
 		outfit_item.on_outfit_equip(user, visuals_only, ##slot_name); \
@@ -257,7 +257,7 @@
 				if(!isnum(number))//Default to 1
 					number = 1
 				for(var/i in 1 to number)
-					EQUIP_OUTFIT_ITEM(path, ITEM_SLOT_BACKPACK)
+					user.equip_to_slot_or_del(SSwardrobe.provide_type(path, user), ITEM_SLOT_BACK, TRUE, allow_locked = TRUE);
 
 		if(belt_contents)
 			for(var/path in belt_contents)
@@ -265,7 +265,7 @@
 				if(!isnum(number))//Default to 1
 					number = 1
 				for(var/i in 1 to number)
-					EQUIP_OUTFIT_ITEM(path, ITEM_SLOT_BELTPACK)
+					user.equip_to_slot_or_del(SSwardrobe.provide_type(path, user), ITEM_SLOT_BELT, TRUE, allow_locked = TRUE);
 
 	post_equip(user, visuals_only)
 

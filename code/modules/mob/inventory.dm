@@ -1,55 +1,49 @@
-//These procs handle putting stuff in your hands
-//as they handle all relevant stuff like adding it to the player's screen and updating their overlays.
+// These procs handle putting stuff in your hands
+// as they handle all relevant stuff like adding it to the player's screen and updating their overlays.
 
-///Returns the thing we're currently holding
+/// Returns the item we're currently holding
 /mob/proc/get_active_held_item()
 	return get_item_for_held_index(active_hand_index)
 
 
-//Finds the opposite limb for the active one (eg: upper left arm will find the item in upper right arm)
-//So we're treating each "pair" of limbs as a team, so "both" refers to them
+/// Finds the opposite limb for the active one (eg: upper left arm will find the item in upper right arm)
+/// So we're treating each "pair" of limbs as a team, so "both" refers to them
 /mob/proc/get_inactive_held_item()
 	return get_item_for_held_index(get_inactive_hand_index())
 
-
-//Finds the opposite index for the active one (eg: upper left arm will find the item in upper right arm)
-//So we're treating each "pair" of limbs as a team, so "both" refers to them
+/// Finds the opposite index for the active one (eg: upper left arm will find the item in upper right arm)
+/// So we're treating each "pair" of limbs as a team, so "both" refers to them
 /mob/proc/get_inactive_hand_index()
 	var/other_hand = 0
 	if(IS_RIGHT_INDEX(active_hand_index))
-		other_hand = active_hand_index-1 //finding the matching "left" limb
+		other_hand = active_hand_index - 1 //finding the matching "left" limb
 	else
-		other_hand = active_hand_index+1 //finding the matching "right" limb
+		other_hand = active_hand_index + 1 //finding the matching "right" limb
 	if(other_hand < 0 || other_hand > held_items.len)
 		other_hand = 0
 	return other_hand
-
 
 /mob/proc/get_item_for_held_index(i)
 	if(i > 0 && i <= held_items.len)
 		return held_items[i]
 	return null
 
-
-//Odd = left. Even = right
+/// Odd indexes are left, even indexes are right
 /mob/proc/held_index_to_dir(i)
 	if(IS_RIGHT_INDEX(i))
 		return "r"
 	return "l"
 
-//Check we have an organ for this hand slot (Dismemberment), Only relevant for humans
+/// Check we have an organ for this hand slot (Dismemberment), only relevant for carbons
 /mob/proc/has_hand_for_held_index(i)
 	return TRUE
 
-
-//Check we have an organ for our active hand slot (Dismemberment),Only relevant for humans
+/// Check we have an organ for our active hand slot (Dismemberment), only relevant for carbons
 /mob/proc/has_active_hand()
 	return has_hand_for_held_index(active_hand_index)
 
 
-//Finds the first available (null) index OR all available (null) indexes in held_items based on a side.
-//Lefts: 1, 3, 5, 7...
-//Rights:2, 4, 6, 8...
+/// Finds the first available (null) index OR all available (null) indexes in held_items based on a side.
 /mob/proc/get_empty_held_index_for_side(side = LEFT_HANDS, all = FALSE)
 	var/list/empty_indexes = all ? list() : null
 	for(var/i in (side == LEFT_HANDS) ? 1 : 2 to held_items.len step 2)
@@ -59,73 +53,67 @@
 			empty_indexes += i
 	return empty_indexes
 
-
-//Same as the above, but returns the first or ALL held *ITEMS* for the side
+/// Returns a list of all items held by hands of one side
 /mob/proc/get_held_items_for_side(side = LEFT_HANDS, all = FALSE)
 	var/list/holding_items = all ? list() : null
 	for(var/i in (side == LEFT_HANDS) ? 1 : 2 to held_items.len step 2)
-		var/obj/item/I = held_items[i]
-		if(I)
+		var/obj/item/held_item = held_items[i]
+		if(held_item)
 			if(!all)
-				return I
-			holding_items += I
+				return held_item
+			holding_items += held_item
 	return holding_items
 
-
 /mob/proc/get_empty_held_indexes()
-	var/list/L
+	var/list/empty_indexes
 	for(var/i in 1 to held_items.len)
 		if(!held_items[i])
-			LAZYADD(L, i)
-	return L
+			LAZYADD(empty_indexes, i)
+	return empty_indexes
 
-/mob/proc/get_held_index_of_item(obj/item/I)
-	return held_items.Find(I)
+/mob/proc/get_held_index_of_item(obj/item/to_check)
+	return held_items.Find(to_check)
 
-
-///Find number of held items, multihand compatible
+/// How many items is the user currently holding
 /mob/proc/get_num_held_items()
 	. = 0
 	for(var/i in 1 to held_items.len)
 		if(held_items[i])
 			.++
 
-//Sad that this will cause some overhead, but the alias seems necessary
-//*I* may be happy with a million and one references to "indexes" but others won't be
-/mob/proc/is_holding(obj/item/I)
-	return get_held_index_of_item(I)
+/// Wrapper for get_held_index_of_item
+/mob/proc/is_holding(obj/item/to_check)
+	return get_held_index_of_item(to_check)
 
-
-//Checks if we're holding an item of type: typepath
+/// Checks if we're holding an item of type
 /mob/proc/is_holding_item_of_type(typepath)
-	for(var/obj/item/I in held_items)
-		if(istype(I, typepath))
-			return I
-	return FALSE
+	for(var/obj/item/held in held_items)
+		if(istype(held, typepath))
+			return held
+	return null
 
-// List version of above proc
-// Returns ret_item, which is either the successfully located item or null
+/// Checks if we're holding an item in list of passed typepaths
 /mob/proc/is_holding_item_of_types(list/typepaths)
-	for(var/typepath in typepaths)
-		var/ret_item = is_holding_item_of_type(typepath)
-		return ret_item
+	for(var/obj/item/held in held_items)
+		if(is_type_in_list(held, typepaths))
+			return held
+	return null
 
-//Checks if we're holding a tool that has given quality
-//Returns the tool that has the best version of this quality
+/// Checks if we're holding a tool that has given quality
+/// Returns the tool that has the best version of this quality
 /mob/proc/is_holding_tool_quality(quality)
 	var/obj/item/best_item
 	var/best_quality = INFINITY
 
-	for(var/obj/item/I in held_items)
-		if(I.tool_behaviour == quality && I.toolspeed < best_quality)
-			best_item = I
-			best_quality = I.toolspeed
+	for(var/obj/item/held in held_items)
+		if(held.tool_behaviour == quality && held.toolspeed < best_quality)
+			best_item = held
+			best_quality = held.toolspeed
 
 	return best_item
 
-
-//To appropriately fluff things like "they are holding [I] in their [get_held_index_name(get_held_index_of_item(I))]"
-//Can be overridden to pass off the fluff to something else (eg: science allowing people to add extra robotic limbs, and having this proc react to that
+// To appropriately fluff things like "they are holding [I] in their [get_held_index_name(get_held_index_of_item(I))]"
+// Can be overridden to pass off the fluff to something else (eg: science allowing people to add extra robotic limbs, and having this proc react to that
 // with say "they are holding [I] in their Nanotrasen Brand Utility Arm - Right Edition" or w/e
 /mob/proc/get_held_index_name(i)
 	var/list/hand = list()
@@ -143,30 +131,41 @@
 		hand += " #[num]"
 	return hand.Join()
 
-
-
-//Returns if a certain item can be equipped to a certain slot.
-// Currently invalid for two-handed items - call obj/item/mob_can_equip() instead.
-/mob/proc/can_equip(obj/item/I, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE, ignore_equipped = FALSE, indirect_action = FALSE)
-	return FALSE
-
-/mob/proc/can_put_in_hand(I, hand_index)
+/mob/proc/can_put_in_hand(obj/item/equipped, hand_index)
 	if(hand_index > held_items.len)
 		return FALSE
-	if(!put_in_hand_check(I))
+	if(!put_in_hand_check(equipped))
 		return FALSE
 	if(!has_hand_for_held_index(hand_index))
 		return FALSE
 	return !held_items[hand_index]
 
-/mob/proc/put_in_hand(obj/item/I, hand_index, forced = FALSE, ignore_anim = TRUE, visuals_only = FALSE)
-	if(hand_index == null || !held_items.len || (!forced && !can_put_in_hand(I, hand_index)))
+/mob/proc/put_in_hand_check(obj/item/equipped)
+	return FALSE // non-living mobs don't have hands
+
+/*
+ * Checks if an item can be equipped to a slot
+ * EVIL INTERNAL PROC, only the item wrapper proc should be called unless its from inside the inventory code
+ * Arguments:
+ * * equipped - Item we're checking
+ * * slot - Slot we're equipping the item into
+ * * ignore_equipped - If we don't care if the slot is already occupied and just want to check if it fits
+ * * allow_locked - If we care about "soft-locked" storages that can easily be opened
+ */
+
+/mob/proc/_can_equip(obj/item/equipped, slot, ignore_equipped = FALSE, allow_locked = FALSE)
+	return FALSE
+
+/mob/proc/put_in_hand(obj/item/item, hand_index, forced = FALSE, ignore_anim = TRUE, visuals_only = FALSE)
+	if(!hand_index || !length(held_items) || (!forced && !can_put_in_hand(item, hand_index)))
 		return FALSE
 
-	if(isturf(I.loc) && !ignore_anim)
-		I.do_pickup_animation(src)
+	if(isturf(item.loc) && !ignore_anim)
+		item.do_pickup_animation(src)
+
 	if(get_item_for_held_index(hand_index))
 		dropItemToGround(get_item_for_held_index(hand_index), force = TRUE)
+
 	I.forceMove(src)
 	held_items[hand_index] = I
 	SET_PLANE_EXPLICIT(I, ABOVE_HUD_PLANE, src)
@@ -189,15 +188,6 @@
 //Puts the item into the first available right hand if possible and calls all necessary triggers/updates. returns 1 on success.
 /mob/proc/put_in_r_hand(obj/item/I, visuals_only = FALSE)
 	return put_in_hand(I, get_empty_held_index_for_side(RIGHT_HANDS), visuals_only = visuals_only)
-
-/mob/proc/put_in_hand_check(obj/item/I)
-	return FALSE //nonliving mobs don't have hands
-
-/mob/living/put_in_hand_check(obj/item/I)
-	if(istype(I) && ((mobility_flags & MOBILITY_PICKUP) || (I.item_flags & ABSTRACT)) \
-		&& !(SEND_SIGNAL(src, COMSIG_LIVING_TRY_PUT_IN_HAND, I) & COMPONENT_LIVING_CANT_PUT_IN_HAND))
-		return TRUE
-	return FALSE
 
 //Puts the item into our active hand if possible. returns TRUE on success.
 /mob/proc/put_in_active_hand(obj/item/I, forced = FALSE, ignore_animation = TRUE, visuals_only = FALSE)
@@ -443,18 +433,18 @@
  *
  * Initial is used to indicate whether or not this is the initial equipment (job datums etc) or just a player doing it
  *
- * set indirect_action to allow insertions into "soft" locked objects, things that are easily opened by the owning mob
+ * set allow_locked to allow insertions into "soft" locked objects, things that are easily opened by the owning mob
  */
-/mob/proc/equip_to_slot_if_possible(obj/item/W, slot, qdel_on_fail = FALSE, disable_warning = FALSE, redraw_mob = TRUE, bypass_equip_delay_self = FALSE, initial = FALSE, indirect_action = FALSE)
+/mob/proc/equip_to_slot_if_possible(obj/item/W, slot, qdel_on_fail = FALSE, disable_warning = FALSE, redraw_mob = TRUE, bypass_equip_delay_self = FALSE, initial = FALSE, allow_locked = FALSE)
 	if(!istype(W) || QDELETED(W)) //This qdeleted is to prevent stupid behavior with things that qdel during init, like say stacks
 		return FALSE
-	if(!W.mob_can_equip(src, slot, disable_warning, bypass_equip_delay_self, indirect_action = indirect_action))
+	if(!W.mob_can_equip(src, slot, disable_warning, bypass_equip_delay_self, allow_locked = allow_locked))
 		if(qdel_on_fail)
 			qdel(W)
 		else if(!disable_warning)
 			to_chat(src, span_warning("You are unable to equip that!"))
 		return FALSE
-	equip_to_slot(W, slot, initial, redraw_mob, indirect_action = indirect_action) //This proc should not ever fail.
+	equip_to_slot(W, slot, initial, redraw_mob, allow_locked = allow_locked) //This proc should not ever fail.
 	return TRUE
 
 /**
@@ -465,7 +455,7 @@
  *
  *In most cases you will want to use equip_to_slot_if_possible()
  */
-/mob/proc/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, indirect_action = FALSE)
+/mob/proc/equip_to_slot(obj/item/equipping, slot, initial = FALSE, redraw_mob = FALSE, allow_locked = FALSE)
 	return
 
 /**
@@ -476,10 +466,10 @@
  *
  * Also bypasses equip delay checks, since the mob isn't actually putting it on.
  * Initial is used to indicate whether or not this is the initial equipment (job datums etc) or just a player doing it
- * set indirect_action to allow insertions into "soft" locked objects, things that are easily opened by the owning mob
+ * set allow_locked to allow insertions into "soft" locked objects, things that are easily opened by the owning mob
  */
-/mob/proc/equip_to_slot_or_del(obj/item/W, slot, initial = FALSE, indirect_action = FALSE)
-	return equip_to_slot_if_possible(W, slot, TRUE, TRUE, FALSE, TRUE, initial, indirect_action)
+/mob/proc/equip_to_slot_or_del(obj/item/W, slot, initial = FALSE, allow_locked = FALSE)
+	return equip_to_slot_if_possible(W, slot, TRUE, TRUE, FALSE, TRUE, initial, allow_locked)
 
 /**
  * Auto equip the passed in item the appropriate slot based on equipment priority
@@ -488,7 +478,7 @@
  *
  * returns 0 if it cannot, 1 if successful
  */
-/mob/proc/equip_to_appropriate_slot(obj/item/W, qdel_on_fail = FALSE, indirect_action = FALSE)
+/mob/proc/equip_to_appropriate_slot(obj/item/W, qdel_on_fail = FALSE, allow_locked = FALSE)
 	if(!istype(W))
 		return FALSE
 	var/slot_priority = W.slot_equipment_priority
@@ -506,7 +496,7 @@
 		)
 
 	for(var/slot in slot_priority)
-		if(equip_to_slot_if_possible(W, slot, disable_warning = TRUE, redraw_mob = TRUE, indirect_action = indirect_action))
+		if(equip_to_slot_if_possible(W, slot, disable_warning = TRUE, redraw_mob = TRUE, allow_locked = allow_locked))
 			return TRUE
 
 	if(qdel_on_fail)
@@ -609,3 +599,5 @@
 			. += item
 		else if(del_if_nodrop && !(item.item_flags & ABSTRACT))
 			qdel(item)
+
+*/

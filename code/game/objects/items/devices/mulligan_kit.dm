@@ -52,7 +52,7 @@
 			LOCATION_RPOCKET = ITEM_SLOT_RPOCKET,
 			LOCATION_BACKPACK = ITEM_SLOT_BACKPACK,
 			LOCATION_HANDS = ITEM_SLOT_HANDS,
-		), qdel_on_fail = FALSE, indirect_action = TRUE)
+		), qdel_on_fail = FALSE, allow_locked = TRUE)
 	if (isnull(placed_in))
 		fake_id.forceMove(user.drop_location())
 		to_chat(user, span_warning("You drop your new ID card on the ground."))
@@ -77,7 +77,7 @@
 			LOCATION_LPOCKET = ITEM_SLOT_LPOCKET,
 			LOCATION_RPOCKET = ITEM_SLOT_RPOCKET,
 			LOCATION_HANDS = ITEM_SLOT_HANDS,
-		), qdel_on_fail = FALSE, indirect_action = TRUE)
+		), qdel_on_fail = FALSE, allow_locked = TRUE)
 		if (isnull(returned_to))
 			fake_id.forceMove(user.drop_location())
 			to_chat(user, span_warning("You drop your old ID card on the ground."))

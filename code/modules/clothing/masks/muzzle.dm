@@ -76,16 +76,20 @@
 /obj/item/clothing/mask/muzzle/tape/attack(mob/living/carbon/victim, mob/living/carbon/attacker, list/modifiers)
 	if(attacker.combat_mode)
 		return ..()
+
 	if(victim.is_mouth_covered(ITEM_SLOT_HEAD))
 		to_chat(attacker, span_notice("[victim]'s mouth is covered."))
 		return
+
 	if(!mob_can_equip(victim, ITEM_SLOT_MASK))
 		to_chat(attacker, span_notice("[victim] is already wearing somthing on their face."))
 		return
+
 	balloon_alert(attacker, "taping mouth...")
 	to_chat(victim, span_userdanger("[attacker] is attempting to tape your mouth closed!"))
 	if(!do_after(attacker, equip_delay_other, target = victim))
 		return
+
 	victim.equip_to_slot_if_possible(src, ITEM_SLOT_MASK)
 	update_appearance()
 

@@ -149,4 +149,13 @@
 	var/grav_strength = gravity - GRAVITY_DAMAGE_THRESHOLD
 	adjustBruteLoss(min(GRAVITY_DAMAGE_SCALING * grav_strength, GRAVITY_DAMAGE_MAXIMUM) * seconds_per_tick)
 
+/mob/living/put_in_hand_check(obj/item/equipped)
+	if (!istype(equipped))
+		return FALSE
+	if (!(mobility_flags & MOBILITY_PICKUP) && !(equipped.item_flags & ABSTRACT))
+		return FALSE
+	if (SEND_SIGNAL(src, COMSIG_LIVING_TRY_PUT_IN_HAND, equipped) & COMPONENT_LIVING_CANT_PUT_IN_HAND)
+		return FALSE
+	return TRUE
+
 #undef BODYTEMP_DIVISOR

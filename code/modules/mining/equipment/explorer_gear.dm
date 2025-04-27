@@ -110,8 +110,8 @@
 
 /obj/item/clothing/suit/hooded/cloak/goliath
 	name = "goliath cloak"
-	icon_state = "goliath_cloak"
 	desc = "A staunch, practical cape made out of numerous monster materials, it is coveted amongst exiles & hermits."
+	icon_state = "goliath_cloak"
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION_NO_NEW_ICON
 	cold_protection = CHEST|GROIN|LEGS|ARMS
@@ -162,10 +162,10 @@
 
 /obj/item/clothing/head/hooded/cloakhood/goliath
 	name = "goliath cloak hood"
+	desc = "A protective & concealing hood."
 	icon = 'icons/obj/clothing/head/helmet.dmi'
 	worn_icon = 'icons/mob/clothing/head/helmet.dmi'
 	icon_state = "golhood"
-	desc = "A protective & concealing hood."
 	armor_type = /datum/armor/hooded_goliath
 	body_parts_covered = HEAD
 	cold_protection = HEAD
@@ -176,9 +176,6 @@
 	flags_inv = HIDEEARS|HIDEEYES|HIDEHAIR|HIDEFACIALHAIR
 	transparent_protection = HIDEMASK
 	resistance_flags = FIRE_PROOF
-
-/obj/item/clothing/head/hooded/cloakhood/goliath/Initialize(mapload)
-	. = ..()
 
 /obj/item/clothing/suit/armor/bone
 	name = "bone armor"
