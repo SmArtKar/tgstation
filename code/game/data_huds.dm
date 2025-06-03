@@ -286,7 +286,10 @@ Security HUDs! Basic mode shows only the job.
 					set_hud_image_state(IMPSEC_SECOND_HUD, current_implant.hud_icon_state, x_offset = (ICON_SIZE_X / 4 - 1)) //Adds an offset that mirrors the hud blip to the other side of the mob
 					set_hud_image_active(IMPSEC_SECOND_HUD)
 
-	if(HAS_TRAIT(src, TRAIT_MINDSHIELD))
+	if(HAS_TRAIT(src, TRAIT_CENTCOM_IFF))
+		set_hud_image_state(IMPLOYAL_HUD, "hud_imp_centcom")
+		set_hud_image_active(IMPLOYAL_HUD)
+	else if(HAS_TRAIT(src, TRAIT_MINDSHIELD))
 		set_hud_image_state(IMPLOYAL_HUD, "hud_imp_loyal")
 		set_hud_image_active(IMPLOYAL_HUD)
 

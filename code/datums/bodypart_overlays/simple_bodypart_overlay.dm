@@ -12,26 +12,24 @@
 	return mutable_appearance(icon, icon_state, layer = layer)
 
 /datum/bodypart_overlay/simple/color_image(image/overlay, layer, obj/item/bodypart/limb)
-
 	overlay.color = draw_color
 
 /datum/bodypart_overlay/simple/generate_icon_cache()
 	. = ..()
-
 	. += "[icon_state]"
 
-///A sixpack drawn on the chest
+/// A sixpack drawn on the chest
 /datum/bodypart_overlay/simple/sixpack
 	icon_state = "sixpack"
 	layers = EXTERNAL_ADJACENT
 
-///bags drawn beneath the eyes
+/// Bags drawn beneath the eyes
 /datum/bodypart_overlay/simple/bags
 	icon_state = "bags"
 	draw_color = COLOR_WEBSAFE_DARK_GRAY
 	layers = EXTERNAL_ADJACENT
 
-///PENDING eyes drawn on the face
+/// PENDING eyes drawn on the face
 /datum/bodypart_overlay/simple/soul_pending_eyes
 	icon_state = "soul_pending_eyes"
 	layers = EXTERNAL_FRONT

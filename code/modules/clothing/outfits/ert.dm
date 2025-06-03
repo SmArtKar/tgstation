@@ -4,7 +4,7 @@
 /datum/outfit/centcom/post_equip(mob/living/carbon/human/centcom_member, visuals_only = FALSE)
 	if(visuals_only)
 		return
-	var/obj/item/implant/mindshield/mindshield = new /obj/item/implant/mindshield(centcom_member)//hmm lets have centcom officials become revs
+	var/obj/item/implant/mindshield/centcom/mindshield = new /obj/item/implant/mindshield/centcom(centcom_member)//hmm lets have centcom officials become revs
 	mindshield.implant(centcom_member, null, silent = TRUE)
 
 /datum/outfit/centcom/ert
@@ -444,7 +444,7 @@
 	)
 	belt = /obj/item/gun/ballistic/revolver/mateba
 	ears = /obj/item/radio/headset/headset_cent/alt
-	glasses = /obj/item/clothing/glasses/hud/toggle/thermal
+	glasses = /obj/item/clothing/glasses/hud/security/night
 	gloves = /obj/item/clothing/gloves/tackler/combat/insulated
 	mask = /obj/item/clothing/mask/gas/sechailer/swat
 	shoes = /obj/item/clothing/shoes/combat/swat
@@ -457,6 +457,10 @@
 	)
 
 /datum/outfit/centcom/death_commando/post_equip(mob/living/carbon/human/squaddie, visuals_only = FALSE)
+	var/obj/item/organ/eyes/threat_visor/apocryphal/visor = new(squaddie.drop_location())
+	if(!visor.Insert(squaddie, movement_flags = DELETE_IF_REPLACED))
+		qdel(visor)
+
 	if(visuals_only)
 		return
 

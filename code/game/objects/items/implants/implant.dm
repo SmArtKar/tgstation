@@ -23,7 +23,8 @@
 	var/implant_flags = NONE
 	///what icon state will we represent ourselves with on the hud?
 	var/hud_icon_state = null
-
+	/// Alternative implant basetype to compare duplicates against when implanting
+	var/dupe_type = null
 
 /obj/item/implant/proc/activate()
 	SEND_SIGNAL(src, COMSIG_IMPLANT_ACTIVATED)
@@ -83,7 +84,7 @@
 			qdel(other_implant)
 			continue
 
-		if(!istype(other_implant, type) || allow_multiple)
+		if(!istype(other_implant, dupe_type || type) || allow_multiple)
 			continue
 
 		if(other_implant.uses < initial(other_implant.uses)*2)

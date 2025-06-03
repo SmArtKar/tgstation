@@ -58,6 +58,8 @@
 	var/native_fov = FOV_90_DEGREES
 	/// Scarring on this organ
 	var/scarring = NONE
+	/// Can these eyes get scarred?
+	var/can_scar = TRUE
 
 /obj/item/organ/eyes/Initialize(mapload)
 	. = ..()
@@ -180,7 +182,7 @@
 	SIGNAL_HANDLER
 
 	// Once-a-dozen-rounds level of rare
-	if (def_zone != BODY_ZONE_HEAD || !prob(proj.damage * 0.1) || !(proj.damage_type == BRUTE || proj.damage_type == BURN))
+	if (def_zone != BODY_ZONE_HEAD || !prob(proj.damage * 0.1) || !(proj.damage_type == BRUTE || proj.damage_type == BURN) || !can_scar)
 		return
 
 	if (blocked && source.is_eyes_covered())
@@ -326,7 +328,7 @@
 	apply_scarring_effects()
 
 /obj/item/organ/eyes/proc/apply_scarring_effects()
-	if(!owner)
+	if(!owner || !can_scar)
 		return
 	// Even if eyes have enough health, our owner still becomes nearsighted
 	if(scarring & RIGHT_EYE_SCAR)
@@ -622,6 +624,7 @@
 	icon_state = "eyes_cyber"
 	organ_flags = ORGAN_ROBOTIC
 	failing_desc = "seems to be broken."
+	can_scar = FALSE
 
 /obj/item/organ/eyes/robotic/emp_act(severity)
 	. = ..()
@@ -683,8 +686,8 @@
 /obj/item/organ/eyes/robotic/flashlight
 	name = "flashlight eyes"
 	desc = "It's two flashlights rigged together with some wire. Why would you put these in someone's head?"
-	eye_color_left ="#fee5a3"
-	eye_color_right ="#fee5a3"
+	eye_color_left = "#fee5a3"
+	eye_color_right = "#fee5a3"
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "flashlight_eyes"
 	flash_protect = FLASH_PROTECTION_WELDER
@@ -1113,3 +1116,43 @@
 	eye_color_right = "#375846"
 	iris_overlay = null
 	foodtype_flags = PODPERSON_ORGAN_FOODTYPES
+
+/obj/item/organ/eyes/robotic/threat_visor
+	name = "integrated threat visor"
+	desc = "A high-definition threat visor with an integrated customizeable IFF system, allowing user to quickly pinpoint targets.\
+		Due to high complexity and lack of space it cuts into the user's frontal lobe, distrupting their ability to recognize voices."
+	icon_state = "eyes_threat_visor"
+	iris_overlay = null
+	eye_icon_state = null // so it ignores HIDEEYES because its really wide, handled separately as an implant overlay
+	pepperspray_protect = TRUE
+	color_cutoffs = list(25, 21, 25) // Cyan
+	flash_protect = FLASH_PROTECTION_SENSITIVE // don't look at bright blue flashes
+	/// Visor overlay we're going to apply to whoever we're implanted into
+	var/datum/bodypart_overlay/aug_overlay = /datum/bodypart_overlay/simple/threat_visor
+	/// Asspc of all mobs -> image overrides we've made for them
+	var/list/static_images = list()
+
+/obj/item/organ/eyes/robotic/threat_visor/on_mob_insert(mob/living/carbon/receiver, special, movement_flags)
+	. = ..()
+
+/// Threat visor drawn on the face, overlay is used instead of an eye sprite to bypass HIDEEYES
+/datum/bodypart_overlay/simple/threat_visor
+	icon = 'icons/mob/human/species/misc/bodypart_overlay_augmentations.dmi'
+	icon_state = "threat_visor"
+	layers = EXTERNAL_ADJACENT
+
+/datum/bodypart_overlay/simple/threat_visor/get_image(layer, obj/item/bodypart/limb)
+	var/mutable_appearance/overlay = ..()
+	overlay.overlays += emissive_appearance(icon, "threat_visor_e", limb?.owner, -BODY_LAYER)
+	return overlay
+
+/obj/item/organ/eyes/robotic/threat_visor/apocryphal
+	name = "apocryphal threat visor"
+	desc = "A high-definition threat visor with an integrated CentCom IFF system and combat guidance systems, created based on old rejected TerraGov models. Remember, no Tirizan."
+	icon_state = "eyes_apocryphal_visor"
+	color_cutoffs = list(25, 15, 5) // Yellow
+	sight_flags = SEE_MOBS
+	aug_overlay = /datum/bodypart_overlay/simple/threat_visor/apocryphal
+
+/datum/bodypart_overlay/simple/threat_visor/apocryphal
+	icon_state = "apocryphal_visor"

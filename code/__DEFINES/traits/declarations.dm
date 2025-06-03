@@ -1506,4 +1506,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait given to colorblind mobs
 #define TRAIT_COLORBLIND "colorblind"
 
+/// Makes the mob be registered as friendly by centcom IFF and gives them a green sechud outline
+#define TRAIT_CENTCOM_IFF "centcom_iff"
+
 // END TRAIT DEFINES
