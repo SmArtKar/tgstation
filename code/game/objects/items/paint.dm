@@ -5,8 +5,8 @@
 	gender= PLURAL
 	name = "paint"
 	desc = "Used to recolor floors and walls. Can be removed by the janitor."
-	icon = 'icons/obj/art/paint.dmi'
-	icon_state = "paint_neutral"
+	icon = 'icons/obj/art/artstuff.dmi'
+	icon_state = "paint_bucket"
 	inhand_icon_state = "paintcan"
 	w_class = WEIGHT_CLASS_NORMAL
 	resistance_flags = FLAMMABLE
@@ -20,25 +20,29 @@
 	. = ..()
 	AddElement(/datum/element/falling_hazard, damage = 20, wound_bonus = 5, hardhat_safety = TRUE, crushes = FALSE) // You ever watched home alone?
 
+/obj/item/paint/update_overlays()
+	. = ..()
+	if (!paintleft)
+		return
+	var/mutable_appearance/paint = mutable_appearance(icon, "[icon_state]_fill", appearance_flags = RESET_COLOR|KEEP_APART)
+	paint.color = paint_color
+	. += paint
+
 /obj/item/paint/red
 	name = "red paint"
 	paint_color = COLOR_RED
-	icon_state = "paint_red"
 
 /obj/item/paint/green
 	name = "green paint"
 	paint_color = COLOR_VIBRANT_LIME
-	icon_state = "paint_green"
 
 /obj/item/paint/blue
 	name = "blue paint"
 	paint_color = COLOR_BLUE
-	icon_state = "paint_blue"
 
 /obj/item/paint/yellow
 	name = "yellow paint"
 	paint_color = COLOR_YELLOW
-	icon_state = "paint_yellow"
 
 /obj/item/paint/violet
 	name = "violet paint"
@@ -48,17 +52,14 @@
 /obj/item/paint/black
 	name = "black paint"
 	paint_color = COLOR_ALMOST_BLACK
-	icon_state = "paint_black"
 
 /obj/item/paint/white
 	name = "white paint"
 	paint_color = COLOR_WHITE
-	icon_state = "paint_white"
 
 /obj/item/paint/anycolor
 	gender = PLURAL
 	name = "adaptive paint"
-	icon_state = "paint_neutral"
 
 /obj/item/paint/anycolor/cyborg
 	paintleft = INFINITY
@@ -123,14 +124,13 @@
 		color_type = SATURATION_OVERRIDE
 	interacting_with.add_atom_colour(color_transition_filter(paint_color, color_type), WASHABLE_COLOUR_PRIORITY)
 	if(paintleft <= 0)
-		icon_state = "paint_empty"
+		update_appearance()
 	return ITEM_INTERACT_SUCCESS
 
 /obj/item/paint/paint_remover
 	gender = PLURAL
 	name = "paint remover"
 	desc = "Used to remove color from anything."
-	icon_state = "paint_neutral"
 
 /obj/item/paint/paint_remover/interact_with_atom(atom/interacting_with, mob/living/user, list/modifiers)
 	if(!isturf(interacting_with) || !isobj(interacting_with))
