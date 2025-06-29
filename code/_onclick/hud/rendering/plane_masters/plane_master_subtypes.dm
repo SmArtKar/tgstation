@@ -67,7 +67,39 @@
 	. = ..()
 	add_relay_to(GET_NEW_PLANE(EMISSIVE_RENDER_PLATE, offset), relay_layer = EMISSIVE_SPACE_LAYER)
 
-///Contains space parallax
+
+/atom/movable/screen/plane_master/parallax_white/show_to(mob/mymob)
+	. = ..()
+	if(!.)
+		return
+
+	update_color()
+	var/datum/hud/our_hud = home.our_hud
+	if(isnull(our_hud))
+		return
+	RegisterSignals(our_hud, list(SIGNAL_ADDTRAIT(TRAIT_PARALLAX_ENABLED), SIGNAL_REMOVETRAIT(TRAIT_PARALLAX_ENABLED)), PROC_REF(update_color), override = TRUE)
+
+/atom/movable/screen/plane_master/parallax_white/proc/update_color()
+	var/datum/hud/our_hud = home.our_hud
+	if(isnull(our_hud))
+		return
+
+	// We could do not do parallax for anything except the main plane group
+	// This could be changed, but it would require refactoring this whole thing
+	// And adding non client particular hooks for all the inputs, and I do not have the time I'm sorry :(
+	if(!HAS_TRAIT(our_hud, TRAIT_PARALLAX_ENABLED) || home.key != PLANE_GROUP_MAIN)
+		color = initial(color)
+		return
+
+	color = list(
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		1, 1, 1, 1,
+		0, 0, 0, 0
+	)
+
+/// Contains space parallax
 /atom/movable/screen/plane_master/parallax
 	name = "Parallax"
 	documentation = "Contains parallax, or to be more exact the screen objects that hold parallax.\
@@ -83,9 +115,8 @@
 /atom/movable/screen/plane_master/parallax/Initialize(mapload, datum/hud/hud_owner, datum/plane_master_group/home, offset)
 	. = ..()
 	if(offset != 0)
-		// You aren't the source? don't change yourself
-		critical = PLANE_CRITICAL_FUCKO_PARALLAX
 		return
+
 	RegisterSignal(SSmapping, COMSIG_PLANE_OFFSET_INCREASE, PROC_REF(on_offset_increase))
 	RegisterSignal(SSdcs, COMSIG_NARSIE_SUMMON_UPDATE, PROC_REF(narsie_modified))
 	if(GLOB.narsie_summon_count >= 1)
@@ -103,12 +134,18 @@
 			// Overlay so we don't multiply twice, and thus fuck up our rendering
 			add_relay_to(GET_NEW_PLANE(plane, offset), BLEND_OVERLAY)
 
-// Hacky shit to ensure parallax works in perf mode
+/atom/movable/screen/plane_master/parallax/check_outside_bounds()
+	// If we're outside bounds AND we're the 0th offset, aka the source parallax
+	// We need to render even out of bounds because we actually relay ourselves to the relevant child parallaxes
+	return offset != 0 && is_outside_bounds
+
 /atom/movable/screen/plane_master/parallax/outside_bounds(mob/relevant)
 	if(offset == 0)
+		// Don't render 0th offset to the game plane but keep the rendering to other planes
 		remove_relay_from(GET_NEW_PLANE(RENDER_PLANE_GAME, 0))
-		is_outside_bounds = TRUE // I'm sorry :(
+		is_outside_bounds = TRUE // Doesn't actually impact anything bar making sure that inside_bounds fires when we rejoin
 		return
+
 	// If we can't render, and we aren't the bottom layer, don't render us
 	// This way we only multiply against stuff that's not fullwhite space
 	var/atom/movable/screen/plane_master/parent_parallax = home.our_hud.get_plane_master(PLANE_SPACE_PARALLAX)
@@ -124,15 +161,11 @@
 		add_relay_to(GET_NEW_PLANE(RENDER_PLANE_GAME, 0))
 		is_outside_bounds = FALSE
 		return
+
 	// Always readd, just in case we lost it
 	var/atom/movable/screen/plane_master/parent_parallax = home.our_hud.get_plane_master(PLANE_SPACE_PARALLAX)
 	parent_parallax.add_relay_to(plane, BLEND_OVERLAY)
 	return ..()
-
-// Needs to handle rejoining on a lower z level, so we NEED to readd old planes
-/atom/movable/screen/plane_master/parallax/check_outside_bounds()
-	// If we're outside bounds AND we're the 0th plane, we need to show cause parallax is hacked to hell
-	return offset != 0 && is_outside_bounds
 
 /// Starts the narsie animation midway, so we can catch up to everyone else quickly
 /atom/movable/screen/plane_master/parallax/proc/narsie_start_midway(start_time)
@@ -460,7 +493,7 @@
 	if(istype(mymob) && mymob.canon_client?.prefs?.read_preference(/datum/preference/toggle/ambient_occlusion))
 		// We use outlines instead of drop shadow due to how extremely expensive it is, and there's no reason to use it for runechat
 		// which already has high drop shadow transparency at just 32 alpha, so outline does the job good enough
-		add_filter("AO", 1, outline_filter(size = 3, color = "#04080F20", flags = OUTLINE_SQUARE))
+		add_filter("AO", 1, outline_filter(size = 2, color = "#04080F18", flags = OUTLINE_SQUARE))
 
 /atom/movable/screen/plane_master/balloon_chat
 	name = "Balloon chat"
