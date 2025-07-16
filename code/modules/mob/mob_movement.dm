@@ -539,7 +539,7 @@
 	else
 		move_intent = MOVE_INTENT_RUN
 	if(hud_used?.static_inventory)
-		for(var/atom/movable/screen/mov_intent/selector in hud_used.static_inventory)
+		for(var/atom/movable/screen/move_intent/selector in hud_used.static_inventory)
 			selector.update_appearance()
 	update_move_intent_slowdown()
 

@@ -40,6 +40,9 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	var/atom/movable/screen/resist_icon
 	var/atom/movable/screen/floor_change
 
+	var/list/atom/movable/screen/ui_elements = list()
+
+	/// DEPRECATED
 	var/list/static_inventory = list() //the screen objects which are static
 	var/list/toggleable_inventory = list() //the screen objects which can be hidden
 	var/list/atom/movable/screen/hotkeybuttons = list() //the buttons that can be used via hotkeys

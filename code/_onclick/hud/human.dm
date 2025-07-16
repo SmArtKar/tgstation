@@ -1,13 +1,11 @@
-/atom/movable/screen/human
-	icon = 'icons/hud/screen_midnight.dmi'
-
-/atom/movable/screen/human/toggle
+/atom/movable/screen/inv_toggle
 	name = "toggle"
+	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "toggle"
 	base_icon_state = "toggle"
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
-/atom/movable/screen/human/toggle/Click()
+/atom/movable/screen/inv_toggle/Click()
 
 	var/mob/targetmob = usr
 
@@ -26,7 +24,7 @@
 	targetmob.hud_used.hidden_inventory_update(usr)
 	update_appearance()
 
-/atom/movable/screen/human/toggle/update_icon_state()
+/atom/movable/screen/inv_toggle/update_icon_state()
 	icon_state = "[base_icon_state][hud?.inventory_shown ? "_active" : ""]"
 	return ..()
 
@@ -56,37 +54,6 @@
 	var/atom/movable/screen/using
 	var/atom/movable/screen/inventory/inv_box
 
-	using = new /atom/movable/screen/language_menu(null, src)
-	using.icon = ui_style
-	using.screen_loc = ui_human_language
-	static_inventory += using
-
-	using = new /atom/movable/screen/navigate(null, src)
-	using.icon = ui_style
-	using.screen_loc = ui_human_navigate
-	static_inventory += using
-
-	using = new /atom/movable/screen/area_creator(null, src)
-	using.icon = ui_style
-	using.screen_loc = ui_human_area
-	static_inventory += using
-
-	action_intent = new /atom/movable/screen/combattoggle/flashy(null, src)
-	action_intent.icon = ui_style
-	action_intent.screen_loc = ui_combat_toggle
-	static_inventory += action_intent
-
-	floor_change = new /atom/movable/screen/floor_changer/vertical(null, src)
-	floor_change.icon = ui_style
-	floor_change.screen_loc = ui_human_floor_changer
-	static_inventory += floor_change
-
-	using = new /atom/movable/screen/mov_intent(null, src)
-	using.icon = ui_style
-	using.icon_state = (owner.move_intent == MOVE_INTENT_RUN ? "running" : "walking")
-	using.screen_loc = ui_movi
-	static_inventory += using
-
 	inv_box = new /atom/movable/screen/inventory(null, src)
 	inv_box.name = "uniform"
 	inv_box.icon = ui_style
@@ -106,17 +73,6 @@
 	toggleable_inventory += inv_box
 
 	build_hand_slots()
-
-	using = new /atom/movable/screen/drop(null, src)
-	using.icon = ui_style
-	using.screen_loc = ui_swaphand_position(owner, 1)
-	static_inventory += using
-
-	using = new /atom/movable/screen/swap_hand(null, src)
-	using.icon = ui_style
-	using.icon_state = "act_swap"
-	using.screen_loc = ui_swaphand_position(owner, 2)
-	static_inventory += using
 
 	inv_box = new /atom/movable/screen/inventory(null, src)
 	inv_box.name = "id"
@@ -181,16 +137,6 @@
 	inv_box.slot_id = ITEM_SLOT_SUITSTORE
 	static_inventory += inv_box
 
-	resist_icon = new /atom/movable/screen/resist(null, src)
-	resist_icon.icon = ui_style
-	resist_icon.screen_loc = ui_above_movement
-	hotkeybuttons += resist_icon
-
-	using = new /atom/movable/screen/human/toggle(null, src)
-	using.icon = ui_style
-	using.screen_loc = ui_inventory
-	static_inventory += using
-
 	inv_box = new /atom/movable/screen/inventory(null, src)
 	inv_box.name = "gloves"
 	inv_box.icon = ui_style
@@ -245,21 +191,6 @@
 	inv_box.slot_id = ITEM_SLOT_BELT
 	static_inventory += inv_box
 
-	throw_icon = new /atom/movable/screen/throw_catch(null, src)
-	throw_icon.icon = ui_style
-	throw_icon.screen_loc = ui_drop_throw
-	hotkeybuttons += throw_icon
-
-	rest_icon = new /atom/movable/screen/rest(null, src)
-	rest_icon.icon = ui_style
-	rest_icon.screen_loc = ui_rest
-	rest_icon.update_appearance()
-	static_inventory += rest_icon
-
-	sleep_icon = new /atom/movable/screen/sleep(null, src)
-	sleep_icon.icon = ui_style
-	sleep_icon.screen_loc = ui_above_throw
-
 	spacesuit = new /atom/movable/screen/spacesuit(null, src)
 	infodisplay += spacesuit
 
@@ -274,17 +205,6 @@
 
 	stamina = new /atom/movable/screen/stamina(null, src)
 	infodisplay += stamina
-
-	pull_icon = new /atom/movable/screen/pull(null, src)
-	pull_icon.icon = ui_style
-	pull_icon.screen_loc = ui_above_movement_top
-	pull_icon.update_appearance()
-	static_inventory += pull_icon
-
-	zone_select = new /atom/movable/screen/zone_sel(null, src)
-	zone_select.icon = ui_style
-	zone_select.update_appearance()
-	static_inventory += zone_select
 
 	for(var/atom/movable/screen/inventory/inv in (static_inventory + toggleable_inventory))
 		if(inv.slot_id)

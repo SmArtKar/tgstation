@@ -18,10 +18,8 @@
 	interaction_flags_atom = parent_type::interaction_flags_atom | INTERACT_ATOM_MOUSEDROP_IGNORE_CHECKS
 	/// A reference to the owner HUD, if any.
 	VAR_PRIVATE/datum/hud/hud = null
-	/**
-	 * Map name assigned to this object.
-	 * Automatically set by /client/proc/add_obj_to_map.
-	 */
+	/// Map name assigned to this object.
+	/// Automatically set by /client/proc/add_obj_to_map.
 	var/assigned_map
 	/**
 	 * Mark this object as garbage-collectible after you clean the map
@@ -40,6 +38,9 @@
 	/// Generally we don't want default Click stuff, which results in bugs like using Telekinesis on a screen element
 	/// or trying to point your gun at your screen.
 	var/default_click = FALSE
+	/// What part of HUD are we assigned to
+	/// Controls in which HUD modes we're visible and in which ones we aren't
+	var/hud_type = HUD_ELEM_BASIC
 
 /atom/movable/screen/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
@@ -97,8 +98,8 @@
 	maptext_width = 480
 
 /atom/movable/screen/swap_hand
-	plane = HUD_PLANE
 	name = "swap hand"
+	icon_state = "act_swap"
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/swap_hand/Click()
@@ -157,7 +158,10 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/language_menu/Click()
-	usr.get_language_holder().open_language_menu(usr)
+	if(!ismob(usr))
+		return
+	var/mob/user = usr
+	user.get_language_holder().open_language_menu(user)
 
 /atom/movable/screen/language_menu/ghost
 	icon = 'icons/hud/screen_ghost.dmi'
@@ -299,7 +303,6 @@
 	name = "drop"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "act_drop"
-	plane = HUD_PLANE
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/drop/Click()
@@ -393,19 +396,19 @@
 	icon_state = "spacesuit_0"
 	screen_loc = ui_spacesuit
 
-/atom/movable/screen/mov_intent
+/atom/movable/screen/move_intent
 	name = "run/walk toggle"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "running"
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
-/atom/movable/screen/mov_intent/Click()
+/atom/movable/screen/move_intent/Click()
 	if(!isliving(usr))
 		return
 	var/mob/living/user = usr
 	user.toggle_move_intent()
 
-/atom/movable/screen/mov_intent/update_icon_state()
+/atom/movable/screen/move_intent/update_icon_state()
 	if(!hud || !hud.mymob || !isliving(hud.mymob))
 		return
 	var/mob/living/living_hud_owner = hud.mymob
@@ -434,7 +437,6 @@
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "act_resist"
 	base_icon_state = "act_resist"
-	plane = HUD_PLANE
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/resist/Click()
@@ -449,7 +451,6 @@
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "act_rest"
 	base_icon_state = "act_rest"
-	plane = HUD_PLANE
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/rest/Click()
@@ -469,7 +470,6 @@
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "act_sleep"
 	base_icon_state = "act_sleep"
-	plane = HUD_PLANE
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/sleep/Click()
@@ -497,7 +497,6 @@
 	name = "storage"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "storage_cell"
-	plane = HUD_PLANE
 
 /atom/movable/screen/storage/Click(location, control, params)
 	if (!ismob(usr))

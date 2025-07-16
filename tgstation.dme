@@ -622,6 +622,8 @@
 #include "code\_onclick\hud\screentip.dm"
 #include "code\_onclick\hud\soulscythe.dm"
 #include "code\_onclick\hud\voidwalkerhud.dm"
+#include "code\_onclick\hud\hud_elements\_hud_element.dm"
+#include "code\_onclick\hud\hud_elements\human.dm"
 #include "code\_onclick\hud\parallax\parallax.dm"
 #include "code\_onclick\hud\parallax\random_layer.dm"
 #include "code\_onclick\hud\rendering\plane_master_controller.dm"
