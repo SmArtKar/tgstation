@@ -418,7 +418,7 @@
 			next_in_line = BODY_ZONE_HEAD
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(next_in_line, mob)
+	selector.set_selected_zone(next_in_line)
 
 ///Hidden verb to target the head, unbound by default.
 /client/verb/body_head()
@@ -429,7 +429,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_HEAD, mob)
+	selector.set_selected_zone(BODY_ZONE_HEAD)
 
 ///Hidden verb to target the eyes, bound to 7
 /client/verb/body_eyes()
@@ -440,7 +440,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_PRECISE_EYES, mob)
+	selector.set_selected_zone(BODY_ZONE_PRECISE_EYES)
 
 ///Hidden verb to target the mouth, bound to 9
 /client/verb/body_mouth()
@@ -451,7 +451,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_PRECISE_MOUTH, mob)
+	selector.set_selected_zone(BODY_ZONE_PRECISE_MOUTH)
 
 ///Hidden verb to target the right arm, bound to 4
 /client/verb/body_r_arm()
@@ -462,7 +462,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_R_ARM, mob)
+	selector.set_selected_zone(BODY_ZONE_R_ARM)
 
 ///Hidden verb to target the chest, bound to 5
 /client/verb/body_chest()
@@ -473,7 +473,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_CHEST, mob)
+	selector.set_selected_zone(BODY_ZONE_CHEST)
 
 ///Hidden verb to target the left arm, bound to 6
 /client/verb/body_l_arm()
@@ -484,7 +484,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_L_ARM, mob)
+	selector.set_selected_zone(BODY_ZONE_L_ARM)
 
 ///Hidden verb to target the right leg, bound to 1
 /client/verb/body_r_leg()
@@ -495,7 +495,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_R_LEG, mob)
+	selector.set_selected_zone(BODY_ZONE_R_LEG)
 
 ///Hidden verb to target the groin, bound to 2
 /client/verb/body_groin()
@@ -506,7 +506,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_PRECISE_GROIN, mob)
+	selector.set_selected_zone(BODY_ZONE_PRECISE_GROIN)
 
 ///Hidden verb to target the left leg, bound to 3
 /client/verb/body_l_leg()
@@ -517,7 +517,7 @@
 		return
 
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_select
-	selector.set_selected_zone(BODY_ZONE_L_LEG, mob)
+	selector.set_selected_zone(BODY_ZONE_L_LEG)
 
 ///Verb to toggle the walk or run status
 /client/verb/toggle_walk_run()

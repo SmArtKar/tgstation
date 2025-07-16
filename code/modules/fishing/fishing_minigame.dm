@@ -184,6 +184,7 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 		//Stops the line snapped message from appearing everytime the minigame is over.
 		UnregisterSignal(fishing_line, COMSIG_QDELETING)
 		QDEL_NULL(fishing_line)
+	QDEL_NULL(fishing_hud)
 	QDEL_NULL(float)
 	SStgui.close_uis(src)
 	user = null
@@ -804,12 +805,14 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	screen_loc = "CENTER+1:8,CENTER:2"
 	name = "fishing minigame"
 	appearance_flags = APPEARANCE_UI|KEEP_TOGETHER
-	///The fish as shown in the minigame
+	/// The fish as shown in the minigame
 	var/atom/movable/screen/hud_fish/hud_fish
-	///The bait as shown in the minigame
+	/// The bait as shown in the minigame
 	var/atom/movable/screen/hud_bait/hud_bait
-	///The completion bar as shown in the minigame
+	/// The completion bar as shown in the minigame
 	var/atom/movable/screen/hud_completion/hud_completion
+	/// Our fishing minigame datum
+	var/datum/fishing_challenge/fishing_challenge
 
 ///Initialize bait, fish and completion bar and add them to the visual appearance of this screen object.
 /atom/movable/screen/fishing_hud/proc/prepare_minigame(datum/fishing_challenge/challenge)
@@ -821,12 +824,12 @@ GLOBAL_LIST_EMPTY(fishing_challenges_by_user)
 	vis_contents += list(hud_bait, hud_fish, hud_completion)
 	challenge.user.client.screen += src
 	challenge.update_visuals(0) // Set all states to their initial positions so they don't jump around when the game starts
-	master_ref = WEAKREF(challenge)
+	fishing_challenge = challenge
 
 /atom/movable/screen/fishing_hud/Destroy()
-	var/datum/fishing_challenge/challenge = master_ref?.resolve()
-	if(!isnull(challenge))
-		challenge.user.client.screen -= src
+	if(!isnull(fishing_challenge))
+		fishing_challenge.user.client.screen -= src
+		fishing_challenge = null
 	QDEL_NULL(hud_fish)
 	QDEL_NULL(hud_bait)
 	QDEL_NULL(hud_completion)

@@ -32,4 +32,4 @@
 	if (isnull(zone_selector))
 		source.zone_selected = new_zone
 	else
-		zone_selector.set_selected_zone(new_zone, source, should_log = FALSE)
+		zone_selector.set_selected_zone(new_zone, should_log = FALSE)

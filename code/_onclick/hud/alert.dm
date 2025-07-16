@@ -114,6 +114,8 @@
 	var/alerttooltipstyle = ""
 	var/override_alerts = FALSE //If it is overriding other alerts of the same type
 	var/mob/owner //Alert owner
+	/// Weakref to our overlay object
+	var/datum/weakref/master_ref
 
 	/// Boolean. If TRUE, the Click() proc will attempt to Click() on the master first if there is a master.
 	var/click_master = TRUE

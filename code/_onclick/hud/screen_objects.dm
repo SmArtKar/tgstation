@@ -16,8 +16,6 @@
 	speech_span = SPAN_ROBOT
 	appearance_flags = APPEARANCE_UI
 	interaction_flags_atom = parent_type::interaction_flags_atom | INTERACT_ATOM_MOUSEDROP_IGNORE_CHECKS
-	/// A reference to the object in the slot. Grabs or items, generally, but any datum will do.
-	var/datum/weakref/master_ref = null
 	/// A reference to the owner HUD, if any.
 	VAR_PRIVATE/datum/hud/hud = null
 	/**
@@ -45,12 +43,10 @@
 
 /atom/movable/screen/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
-	if(isnull(hud_owner)) //some screens set their hud owners on /new, this prevents overriding them with null post atoms init
-		return
-	set_new_hud(hud_owner)
+	if(!isnull(hud_owner)) //some screens set their hud owners on /new, this prevents overriding them with null post atoms init
+		set_new_hud(hud_owner)
 
 /atom/movable/screen/Destroy()
-	master_ref = null
 	hud = null
 	return ..()
 
@@ -106,18 +102,13 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/swap_hand/Click()
+	if(!ismob(usr))
+		return
+	var/mob/user = usr
 	// At this point in client Click() code we have passed the 1/10 sec check and little else
 	// We don't even know if it's a middle click
-	if(world.time <= usr.next_move)
-		return 1
-
-	if(usr.incapacitated)
-		return 1
-
-	if(ismob(usr))
-		var/mob/M = usr
-		M.swap_hand()
-	return 1
+	if(world.time > user.next_move && !user.incapacitated)
+		user.swap_hand()
 
 /atom/movable/screen/navigate
 	name = "navigate"
@@ -128,7 +119,7 @@
 
 /atom/movable/screen/navigate/Click()
 	if(!isliving(usr))
-		return TRUE
+		return
 	var/mob/living/navigator = usr
 	navigator.navigate()
 
@@ -147,13 +138,16 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/area_creator/Click()
-	if(usr.incapacitated || (isobserver(usr) && !isAdminGhostAI(usr)))
-		return TRUE
-	var/area/A = get_area(usr)
-	if(!A.outdoors)
-		to_chat(usr, span_warning("There is already a defined structure here."))
-		return TRUE
-	create_area(usr)
+	if(!ismob(usr))
+		return
+	var/mob/user = usr
+	if(user.incapacitated || (isobserver(user) && !isAdminGhostAI(user)))
+		return
+	var/area/user_area = get_area(user)
+	if(!user_area.outdoors)
+		to_chat(user, span_warning("There is already a defined structure here."))
+	else
+		create_area(user)
 
 /atom/movable/screen/language_menu
 	name = "language menu"
@@ -177,26 +171,27 @@
 	var/icon_full
 	/// The overlay when hovering over with an item in your hand
 	var/image/object_overlay
-	plane = HUD_PLANE
 
 /atom/movable/screen/inventory/Click(location, control, params)
+	if(!ismob(usr))
+		return
+	var/mob/user = usr
+
 	// At this point in client Click() code we have passed the 1/10 sec check and little else
 	// We don't even know if it's a middle click
-	if(world.time <= usr.next_move)
-		return TRUE
+	if(world.time <= user.next_move || INCAPACITATED_IGNORING(user, INCAPABLE_STASIS))
+		return
 
-	if(INCAPACITATED_IGNORING(usr, INCAPABLE_STASIS))
-		return TRUE
-	if(ismecha(usr.loc)) // stops inventory actions in a mech
-		return TRUE
+	if(ismecha(user.loc)) // stops inventory actions in a mech
+		return
 
 	if(hud?.mymob && slot_id)
 		var/obj/item/inv_item = hud.mymob.get_item_by_slot(slot_id)
 		if(inv_item)
 			return inv_item.Click(location, control, params)
 
-	if(usr.attack_ui(slot_id, params))
-		usr.update_held_items()
+	if(user.attack_ui(slot_id, params))
+		user.update_held_items()
 	return TRUE
 
 /atom/movable/screen/inventory/MouseEntered(location, control, params)
@@ -233,21 +228,21 @@
 	if(!holding.mob_can_equip(user, slot_id, disable_warning = TRUE, bypass_equip_delay_self = TRUE))
 		item_overlay.color = COLOR_RED
 	else
-		item_overlay.color = "#00ff00"
+		item_overlay.color = COLOR_VIBRANT_LIME
 
 	cut_overlay(object_overlay)
 	object_overlay = item_overlay
 	add_overlay(object_overlay)
 
 /atom/movable/screen/inventory/hand
+	interaction_flags_atom = NONE //so dragging objects into hands icon don't skip adjacency & other checks
+
 	var/mutable_appearance/handcuff_overlay
 	var/static/mutable_appearance/blocked_overlay = mutable_appearance('icons/hud/screen_gen.dmi', "blocked")
 	var/held_index = 0
-	interaction_flags_atom = NONE //so dragging objects into hands icon don't skip adjacency & other checks
 
 /atom/movable/screen/inventory/hand/update_overlays()
 	. = ..()
-
 	if(!handcuff_overlay)
 		var/state = IS_RIGHT_INDEX(held_index) ? "markus" : "gabrielle"
 		handcuff_overlay = mutable_appearance('icons/hud/screen_gen.dmi', state)
@@ -256,12 +251,12 @@
 		return
 
 	if(iscarbon(hud.mymob))
-		var/mob/living/carbon/C = hud.mymob
-		if(C.handcuffed)
+		var/mob/living/carbon/as_carbon = hud.mymob
+		if(as_carbon.handcuffed)
 			. += handcuff_overlay
 
 		if(held_index)
-			if(!C.has_hand_for_held_index(held_index))
+			if(!as_carbon.has_hand_for_held_index(held_index))
 				. += blocked_overlay
 
 	if(held_index == hud.mymob.active_hand_index)
@@ -272,21 +267,20 @@
 	// We don't even know if it's a middle click
 	var/mob/user = hud?.mymob
 	if(usr != user)
-		return TRUE
-	if(world.time <= user.next_move)
-		return TRUE
-	if(user.incapacitated)
-		return TRUE
-	if (ismecha(user.loc)) // stops inventory actions in a mech
-		return TRUE
+		return
+
+	if(world.time <= user.next_move || user.incapacitated)
+		return
+
+	if(ismecha(user.loc)) // stops inventory actions in a mech
+		return
 
 	if(user.active_hand_index == held_index)
-		var/obj/item/I = user.get_active_held_item()
-		if(I)
-			I.Click(location, control, params)
+		var/obj/item/held_item = user.get_active_held_item()
+		if(held_item)
+			held_item.Click(location, control, params)
 	else
 		user.swap_hand(held_index)
-	return TRUE
 
 /atom/movable/screen/close
 	name = "close"
@@ -295,16 +289,11 @@
 	icon_state = "storage_close"
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
-/atom/movable/screen/close/Initialize(mapload, datum/hud/hud_owner, new_master)
-	. = ..()
-	master_ref = WEAKREF(new_master)
-
 /atom/movable/screen/close/Click()
-	var/datum/storage/storage = master_ref?.resolve()
-	if(!storage)
+	if(!ismob(usr))
 		return
-	storage.hide_contents(usr)
-	return TRUE
+	var/mob/user = usr
+	user.active_storage.hide_contents(user)
 
 /atom/movable/screen/drop
 	name = "drop"
@@ -314,8 +303,11 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/drop/Click()
-	if(usr.stat == CONSCIOUS)
-		usr.dropItemToGround(usr.get_active_held_item())
+	if(!ismob(usr))
+		return
+	var/mob/user = usr
+	if(user.stat == CONSCIOUS)
+		user.dropItemToGround(user.get_active_held_item())
 
 /atom/movable/screen/combattoggle
 	name = "toggle combat mode"
@@ -329,27 +321,27 @@
 	update_appearance()
 
 /atom/movable/screen/combattoggle/Click()
-	if(isliving(usr))
-		var/mob/living/owner = usr
-		owner.set_combat_mode(!owner.combat_mode, FALSE)
-		update_appearance()
+	if(!isliving(usr))
+		return
+	var/mob/living/owner = usr
+	owner.set_combat_mode(!owner.combat_mode, FALSE)
+	update_appearance()
 
 /atom/movable/screen/combattoggle/update_icon_state()
 	var/mob/living/user = hud?.mymob
-	if(!istype(user) || !user.client)
-		return ..()
-	icon_state = user.combat_mode ? "combat" : "combat_off" //Treats the combat_mode
+	if(istype(user))
+		icon_state = user.combat_mode ? "combat" : "combat_off" // Treats the combat_mode
 	return ..()
 
-//Version of the combat toggle with the flashy overlay
+// Version of the combat toggle with the flashy overlay
 /atom/movable/screen/combattoggle/flashy
-	///Mut appearance for flashy border
+	/// Mut appearance for flashy border
 	var/mutable_appearance/flashy
 
 /atom/movable/screen/combattoggle/flashy/update_overlays()
 	. = ..()
 	var/mob/living/user = hud?.mymob
-	if(!istype(user) || !user.client)
+	if(!istype(user) || !user.combat_mode)
 		return
 
 	if(!user.combat_mode)
@@ -372,22 +364,22 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 	var/vertical = FALSE
 
-/atom/movable/screen/floor_changer/Click(location,control,params)
+/atom/movable/screen/floor_changer/Click(location, control, params)
+	if (!ismob(usr))
+		return
+
+	var/mob/user = usr
 	var/list/modifiers = params2list(params)
-
 	var/mouse_position
-
 	if(vertical)
 		mouse_position = text2num(LAZYACCESS(modifiers, ICON_Y))
 	else
 		mouse_position = text2num(LAZYACCESS(modifiers, ICON_X))
 
 	if(mouse_position > 16)
-		usr.up()
-		return
-
-	usr.down()
-	return
+		user.up()
+	else
+		user.down()
 
 /atom/movable/screen/floor_changer/vertical
 	icon_state = "floor_change_v"
@@ -408,7 +400,10 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/mov_intent/Click()
-	toggle(usr)
+	if(!isliving(usr))
+		return
+	var/mob/living/user = usr
+	user.toggle_move_intent()
 
 /atom/movable/screen/mov_intent/update_icon_state()
 	if(!hud || !hud.mymob || !isliving(hud.mymob))
@@ -421,11 +416,6 @@
 			icon_state = "running"
 	return ..()
 
-/atom/movable/screen/mov_intent/proc/toggle(mob/living/user)
-	if(!istype(user))
-		return
-	user.toggle_move_intent()
-
 /atom/movable/screen/pull
 	name = "stop pulling"
 	icon = 'icons/hud/screen_midnight.dmi'
@@ -434,13 +424,10 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/pull/Click()
-	if(isobserver(usr))
+	if(!ismob(usr))
 		return
-	usr.stop_pulling()
-
-/atom/movable/screen/pull/update_icon_state()
-	icon_state = "[base_icon_state][hud?.mymob?.pulling ? null : 0]"
-	return ..()
+	var/mob/user = usr
+	user.stop_pulling()
 
 /atom/movable/screen/resist
 	name = "resist"
@@ -451,10 +438,11 @@
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/resist/Click()
+	if(!isliving(usr))
+		return
+	var/mob/living/user = usr
+	user.resist()
 	flick("[base_icon_state]_on", src)
-	if(isliving(usr))
-		var/mob/living/L = usr
-		L.resist()
 
 /atom/movable/screen/rest
 	name = "rest"
@@ -466,8 +454,8 @@
 
 /atom/movable/screen/rest/Click()
 	if(isliving(usr))
-		var/mob/living/L = usr
-		L.toggle_resting()
+		var/mob/living/user = usr
+		user.toggle_resting()
 
 /atom/movable/screen/rest/update_icon_state()
 	var/mob/living/user = hud?.mymob
@@ -487,20 +475,23 @@
 /atom/movable/screen/sleep/Click()
 	if(!isliving(usr) || HAS_TRAIT(usr, TRAIT_KNOCKEDOUT))
 		return
-	if(usr.client?.prefs.read_preference(/datum/preference/toggle/remove_double_click))
-		var/tgui_answer = tgui_alert(usr, "You sure you want to sleep for a while?", "Sleeping", list("Yes", "No"))
-		if(tgui_answer == "Yes" && !HAS_TRAIT(usr, TRAIT_KNOCKEDOUT))
-			var/mob/living/L = usr
-			L.SetSleeping(400)
-	else
+
+	var/mob/living/user = usr
+	if(!user.client?.prefs.read_preference(/datum/preference/toggle/remove_double_click))
 		flick("[base_icon_state]_flick", src)
+		return
+
+	var/tgui_answer = tgui_alert(usr, "You sure you want to sleep for a while?", "Sleeping", list("Yes", "No"))
+	if(tgui_answer == "Yes" && !HAS_TRAIT(usr, TRAIT_KNOCKEDOUT))
+		user.SetSleeping(400)
 
 /atom/movable/screen/sleep/DblClick(location, control, params)
-	if(!isliving(usr) || usr.client?.prefs.read_preference(/datum/preference/toggle/remove_double_click))
+	if(!isliving(usr))
 		return
-	if(isliving(usr))
-		var/mob/living/L = usr
-		L.SetSleeping(400)
+
+	var/mob/living/user = usr
+	if(!user.client?.prefs.read_preference(/datum/preference/toggle/remove_double_click))
+		user.SetSleeping(400)
 
 /atom/movable/screen/storage
 	name = "storage"
@@ -508,34 +499,33 @@
 	icon_state = "storage_cell"
 	plane = HUD_PLANE
 
-/atom/movable/screen/storage/Initialize(mapload, datum/hud/hud_owner, new_master)
-	. = ..()
-	master_ref = WEAKREF(new_master)
-
 /atom/movable/screen/storage/Click(location, control, params)
-	var/datum/storage/storage_master = master_ref?.resolve()
+	if (!ismob(usr))
+		return
+
+	var/mob/user = usr
+	var/datum/storage/storage_master = user.active_storage
 	if(!istype(storage_master))
-		return FALSE
+		return
 
-	if(world.time <= usr.next_move)
-		return TRUE
-	if(usr.incapacitated)
-		return TRUE
-	if(ismecha(usr.loc)) // stops inventory actions in a mech
-		return TRUE
+	if(world.time <= usr.next_move || user.incapacitated)
+		return
 
-	var/obj/item/inserted = usr.get_active_held_item()
+	if(ismecha(user.loc)) // stops inventory actions in a mech
+		return
+
+	var/obj/item/inserted = user.get_active_held_item()
 	if(inserted)
-		storage_master.attempt_insert(inserted, usr)
-
-	return TRUE
+		storage_master.attempt_insert(inserted, user)
 
 /atom/movable/screen/storage/cell
 
 /atom/movable/screen/storage/cell/mouse_drop_receive(atom/target, mob/living/user, params)
-	var/datum/storage/storage = master_ref?.resolve()
+	if (!istype(user))
+		return
 
-	if (isnull(storage) || !istype(user) || storage != user.active_storage)
+	var/datum/storage/storage = user.active_storage
+	if (!istype(storage))
 		return
 
 	if (!user.can_perform_action(storage.parent, FORBID_TELEKINESIS_REACH))
@@ -590,24 +580,22 @@
 	var/hovering
 
 /atom/movable/screen/zone_sel/Click(location, control,params)
-	if(isobserver(usr))
+	if(usr != hud?.mymob)
 		return
 
 	var/list/modifiers = params2list(params)
 	var/icon_x = text2num(LAZYACCESS(modifiers, ICON_X))
 	var/icon_y = text2num(LAZYACCESS(modifiers, ICON_Y))
 	var/choice = get_zone_at(icon_x, icon_y)
-	if (!choice)
-		return 1
-
-	return set_selected_zone(choice, usr)
+	if (choice)
+		set_selected_zone(choice)
 
 /atom/movable/screen/zone_sel/MouseEntered(location, control, params)
 	. = ..()
 	MouseMove(location, control, params)
 
 /atom/movable/screen/zone_sel/MouseMove(location, control, params)
-	if(isobserver(usr))
+	if(usr != hud?.mymob)
 		return
 
 	var/list/modifiers = params2list(params)
@@ -636,7 +624,7 @@
 	plane = ABOVE_HUD_PLANE
 
 /atom/movable/screen/zone_sel/MouseExited(location, control, params)
-	if(!isobserver(usr) && hovering)
+	if(isliving(usr) && hovering)
 		vis_contents -= hover_overlays_cache[hovering]
 		hovering = null
 
@@ -678,18 +666,15 @@
 							return BODY_ZONE_PRECISE_EYES
 				return BODY_ZONE_HEAD
 
-/atom/movable/screen/zone_sel/proc/set_selected_zone(choice, mob/user, should_log = TRUE)
-	if(user != hud?.mymob)
+/atom/movable/screen/zone_sel/proc/set_selected_zone(choice, should_log = TRUE)
+	if(choice == hud.mymob.zone_selected)
 		return
 
-	if(choice != hud.mymob.zone_selected)
-		if(should_log)
-			hud.mymob.log_manual_zone_selected_update("screen_hud", new_target = choice)
-		hud.mymob.zone_selected = choice
-		update_appearance()
-		SEND_SIGNAL(user, COMSIG_MOB_SELECTED_ZONE_SET, choice)
-
-	return TRUE
+	if(should_log)
+		hud.mymob.log_manual_zone_selected_update("screen_hud", new_target = choice)
+	hud.mymob.zone_selected = choice
+	update_appearance()
+	SEND_SIGNAL(hud.mymob, COMSIG_MOB_SELECTED_ZONE_SET, choice)
 
 /atom/movable/screen/zone_sel/update_overlays()
 	. = ..()
@@ -766,8 +751,8 @@
 
 /atom/movable/screen/healthdoll/Click()
 	if (iscarbon(usr))
-		var/mob/living/carbon/C = usr
-		C.check_self_for_injuries()
+		var/mob/living/carbon/user = usr
+		user.check_self_for_injuries()
 
 /atom/movable/screen/healthdoll/proc/update_body_zones()
 	return
