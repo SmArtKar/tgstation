@@ -17,14 +17,14 @@
 	screen_loc = "EAST-3:24,SOUTH+1:24"
 
 /datum/hud_element/human/combat_toggle
-	element_type = /atom/movable/screen/combattoggle/flashy
+	element_type = /atom/movable/screen/combat_toggle/flashy
 	screen_loc = "EAST-3:24,SOUTH:5"
 	hud_type = HUD_ELEM_INFO
 	/// Alternate position for reduced HUD
 	var/reduced_screen_loc = "EAST-1:28,SOUTH:5"
 
 /datum/hud_element/human/combat_toggle/create_element(datum/hud/hud, mob/owner)
-	var/atom/movable/screen/combattoggle/element = ..()
+	var/atom/movable/screen/combat_toggle/element = ..()
 	element.reduced_screen_loc = reduced_screen_loc
 	return element
 

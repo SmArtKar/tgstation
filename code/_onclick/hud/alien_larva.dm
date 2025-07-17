@@ -5,7 +5,7 @@
 	..()
 	var/atom/movable/screen/using
 
-	action_intent = new /atom/movable/screen/combattoggle/flashy(null, src)
+	action_intent = new /atom/movable/screen/combat_toggle/flashy(null, src)
 	action_intent.icon = ui_style
 	action_intent.screen_loc = ui_combat_toggle
 	static_inventory += action_intent

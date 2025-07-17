@@ -8,7 +8,7 @@
 	floor_change.screen_loc = ui_rest
 	static_inventory += floor_change
 
-	action_intent = new /atom/movable/screen/combattoggle/flashy/voidwalker(null, src)
+	action_intent = new /atom/movable/screen/combat_toggle/flashy/voidwalker(null, src)
 	action_intent.icon = ui_style
 	static_inventory += action_intent
 
@@ -21,7 +21,7 @@
 	static_inventory += vomit
 
 /// This exists because for some reason only the combat indicator screen_loc is constantly set to initial
-/atom/movable/screen/combattoggle/flashy/voidwalker
+/atom/movable/screen/combat_toggle/flashy/voidwalker
 	screen_loc = ui_movi
 
 /atom/movable/screen/space_camo

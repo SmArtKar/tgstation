@@ -312,7 +312,7 @@
 	if(user.stat == CONSCIOUS)
 		user.dropItemToGround(user.get_active_held_item())
 
-/atom/movable/screen/combattoggle
+/atom/movable/screen/combat_toggle
 	name = "toggle combat mode"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "combat_off"
@@ -321,29 +321,29 @@
 	/// Alternate position for reduced HUD
 	var/reduced_screen_loc = "EAST-1:28,SOUTH:5"
 
-/atom/movable/screen/combattoggle/Initialize(mapload, datum/hud/hud_owner)
+/atom/movable/screen/combat_toggle/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
 	update_appearance()
 
-/atom/movable/screen/combattoggle/Click()
+/atom/movable/screen/combat_toggle/Click()
 	if(!isliving(usr))
 		return
 	var/mob/living/owner = usr
 	owner.set_combat_mode(!owner.combat_mode, FALSE)
 	update_appearance()
 
-/atom/movable/screen/combattoggle/update_icon_state()
+/atom/movable/screen/combat_toggle/update_icon_state()
 	var/mob/living/user = hud?.mymob
 	if(istype(user))
 		icon_state = user.combat_mode ? "combat" : "combat_off" // Treats the combat_mode
 	return ..()
 
 // Version of the combat toggle with the flashy overlay
-/atom/movable/screen/combattoggle/flashy
+/atom/movable/screen/combat_toggle/flashy
 	/// Mut appearance for flashy border
 	var/mutable_appearance/flashy
 
-/atom/movable/screen/combattoggle/flashy/update_overlays()
+/atom/movable/screen/combat_toggle/flashy/update_overlays()
 	. = ..()
 	var/mob/living/user = hud?.mymob
 	if(!istype(user) || !user.combat_mode)
@@ -357,7 +357,7 @@
 		flashy.color = "#C62727"
 	. += flashy
 
-/atom/movable/screen/combattoggle/robot
+/atom/movable/screen/combat_toggle/robot
 	icon = 'icons/hud/screen_cyborg.dmi'
 	screen_loc = ui_borg_intents
 
