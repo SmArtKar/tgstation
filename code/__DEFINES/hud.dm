@@ -9,15 +9,6 @@
 /// Used in show_hud(); Please ensure this is the same as the maximum index.
 #define HUD_VERSIONS 3
 
-/// Hotkey-accessible button that doesn't always have to be shown
-#define HUD_ELEM_HOTKEY 0
-/// Static HUD UI elements, removed in reduced UI mode
-#define HUD_ELEM_BASIC 1
-/// High-priority elements displaying info like chemicals or plasma, visible in reduced mode
-#define HUD_ELEM_INFO 3
-/// UI elements that are displayed even in the NOHUD mode
-#define HUD_ELEMENT_STATIC 4
-
 // Consider these images/atoms as part of the UI/HUD (apart of the appearance_flags)
 /// Used for progress bars and chat messages
 #define APPEARANCE_UI_IGNORE_ALPHA (RESET_COLOR|RESET_TRANSFORM|NO_CLIENT_COLOR|RESET_ALPHA|PIXEL_SCALE)
@@ -118,7 +109,11 @@
 #define ui_living_healthdoll "EAST-1:28,CENTER-1:15"
 
 //Humans
+#define ui_human_floor_changer "EAST-4:22,SOUTH:5"
 #define ui_human_crafting "EAST-3:24,SOUTH+1:7"
+#define ui_human_navigate "EAST-3:7,SOUTH+1:7"
+#define ui_human_language "EAST-3:7,SOUTH+1:24"
+#define ui_human_area "EAST-3:24,SOUTH+1:24"
 
 //Drones
 #define ui_drone_drop "CENTER+1:18,SOUTH:5"

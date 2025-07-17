@@ -148,7 +148,7 @@
 	//Combat Mode
 	action_intent = new /atom/movable/screen/combat_toggle/robot(null, src)
 	action_intent.icon = ui_style
-	action_intent.screen_loc = ui_combat_toggle
+	action_intent.screen_loc = UI_LOC_COMBAT_TOGGLE
 	static_inventory += action_intent
 
 	floor_change = new /atom/movable/screen/floor_changer(null, src)

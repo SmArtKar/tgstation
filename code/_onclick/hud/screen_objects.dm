@@ -9,8 +9,7 @@
 /atom/movable/screen
 	name = ""
 	icon = 'icons/hud/screen_gen.dmi'
-	// NOTE: screen objects do NOT change their plane to match the z layer of their owner
-	// You shouldn't need this, but if you ever do and it's widespread, reconsider what you're doing.
+	// HUD objects have a fixed plane as they are rendered to a non-offsetting plane
 	plane = HUD_PLANE
 	animate_movement = SLIDE_STEPS
 	speech_span = SPAN_ROBOT
@@ -19,17 +18,9 @@
 	/// A reference to the owner HUD, if any.
 	VAR_PRIVATE/datum/hud/hud = null
 	/// Map name assigned to this object.
-	/// Automatically set by /client/proc/add_obj_to_map.
 	var/assigned_map
-	/**
-	 * Mark this object as garbage-collectible after you clean the map
-	 * it was registered on.
-	 *
-	 * This could probably be changed to be a proc, for conditional removal.
-	 * But for now, this works.
-	 */
+	/// Should this object be automatically marked as garbage-collectible after its map is deleted?
 	var/del_on_map_removal = TRUE
-
 	/// If FALSE, this will not be cleared when calling /client/clear_screen()
 	var/clear_with_screen = TRUE
 	/// If TRUE, clicking the screen element will fall through and perform a default "Click" call
@@ -38,9 +29,6 @@
 	/// Generally we don't want default Click stuff, which results in bugs like using Telekinesis on a screen element
 	/// or trying to point your gun at your screen.
 	var/default_click = FALSE
-	/// What part of HUD are we assigned to
-	/// Controls in which HUD modes we're visible and in which ones we aren't
-	var/hud_type = HUD_ELEM_BASIC
 
 /atom/movable/screen/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
@@ -115,7 +103,7 @@
 	name = "navigate"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "navigate"
-	screen_loc = ui_navigate_menu
+	screen_loc = UI_LOC_NAVIGATE
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/navigate/Click()
@@ -128,14 +116,14 @@
 	name = "crafting menu"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "craft"
-	screen_loc = ui_crafting
+	screen_loc = UI_LOC_CRAFTING
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/area_creator
 	name = "create new area"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "area_edit"
-	screen_loc = ui_building
+	screen_loc = UI_LOC_AREA_CREATOR
 	mouse_over_pointer = MOUSE_HAND_POINTER
 
 /atom/movable/screen/area_creator/Click()
@@ -179,8 +167,8 @@
 /atom/movable/screen/inventory/Click(location, control, params)
 	if(!ismob(usr))
 		return
-	var/mob/user = usr
 
+	var/mob/user = usr
 	// At this point in client Click() code we have passed the 1/10 sec check and little else
 	// We don't even know if it's a middle click
 	if(world.time <= user.next_move || INCAPACITATED_IGNORING(user, INCAPABLE_STASIS))
@@ -196,6 +184,7 @@
 
 	if(user.attack_ui(slot_id, params))
 		user.update_held_items()
+
 	return TRUE
 
 /atom/movable/screen/inventory/MouseEntered(location, control, params)
@@ -239,8 +228,7 @@
 	add_overlay(object_overlay)
 
 /atom/movable/screen/inventory/hand
-	interaction_flags_atom = NONE //so dragging objects into hands icon don't skip adjacency & other checks
-
+	interaction_flags_atom = NONE // So dragging objects into hands icon don't skip adjacency & other checks
 	var/mutable_appearance/handcuff_overlay
 	var/static/mutable_appearance/blocked_overlay = mutable_appearance('icons/hud/screen_gen.dmi', "blocked")
 	var/held_index = 0
@@ -316,10 +304,8 @@
 	name = "toggle combat mode"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "combat_off"
-	screen_loc = ui_combat_toggle
+	screen_loc = UI_LOC_COMBAT_TOGGLE
 	mouse_over_pointer = MOUSE_HAND_POINTER
-	/// Alternate position for reduced HUD
-	var/reduced_screen_loc = "EAST-1:28,SOUTH:5"
 
 /atom/movable/screen/combat_toggle/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()
@@ -330,7 +316,6 @@
 		return
 	var/mob/living/owner = usr
 	owner.set_combat_mode(!owner.combat_mode, FALSE)
-	update_appearance()
 
 /atom/movable/screen/combat_toggle/update_icon_state()
 	var/mob/living/user = hud?.mymob
@@ -357,15 +342,17 @@
 		flashy.color = "#C62727"
 	. += flashy
 
+/* TODO SMARTKAR
 /atom/movable/screen/combat_toggle/robot
 	icon = 'icons/hud/screen_cyborg.dmi'
-	screen_loc = ui_borg_intents
+	screen_loc = UI_LOC_COMBAT_TOGGLE_CYBORG
+*/
 
 /atom/movable/screen/floor_changer
 	name = "change floor"
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "floor_change"
-	screen_loc = ui_above_intent
+	screen_loc = UI_LOC_FLOOR_CHANGE
 	mouse_over_pointer = MOUSE_HAND_POINTER
 	var/vertical = FALSE
 
@@ -396,7 +383,7 @@
 /atom/movable/screen/spacesuit
 	name = "Space suit cell status"
 	icon_state = "spacesuit_0"
-	screen_loc = ui_spacesuit
+	screen_loc = UI_LOC_SPACESUIT_CELL
 
 /atom/movable/screen/move_intent
 	name = "run/walk toggle"
