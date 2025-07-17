@@ -469,13 +469,13 @@ There are several things that need to be remembered:
 
 		if(l_store)
 			l_store.screen_loc = ui_storage1
-			if(hud_used.hud_shown)
+			if(hud_used.hud_version == HUD_STYLE_STANDARD)
 				client.screen += l_store
 			update_observer_view(l_store)
 
 		if(r_store)
 			r_store.screen_loc = ui_storage2
-			if(hud_used.hud_shown)
+			if(hud_used.hud_version == HUD_STYLE_STANDARD)
 				client.screen += r_store
 			update_observer_view(r_store)
 
@@ -689,82 +689,82 @@ There are several things that need to be remembered:
 
 /mob/living/carbon/human/proc/update_hud_uniform(obj/item/worn_item)
 	worn_item.screen_loc = ui_iclothing
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_id(obj/item/worn_item)
 	worn_item.screen_loc = ui_id
-	if((client && hud_used?.hud_shown))
+	if((client && hud_used?.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item)
 
 /mob/living/carbon/human/proc/update_hud_gloves(obj/item/worn_item)
 	worn_item.screen_loc = ui_gloves
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_glasses(obj/item/worn_item)
 	worn_item.screen_loc = ui_glasses
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_ears(obj/item/worn_item)
 	worn_item.screen_loc = ui_ears
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_shoes(obj/item/worn_item)
 	worn_item.screen_loc = ui_shoes
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_s_store(obj/item/worn_item)
 	worn_item.screen_loc = ui_sstore1
-	if(client && hud_used?.hud_shown)
+	if(client && hud_used?.hud_version == HUD_STYLE_STANDARD)
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_wear_suit(obj/item/worn_item)
 	worn_item.screen_loc = ui_oclothing
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/proc/update_hud_belt(obj/item/worn_item)
 	belt.screen_loc = ui_belt
-	if(client && hud_used?.hud_shown)
+	if(client && hud_used?.hud_version == HUD_STYLE_STANDARD)
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 /mob/living/carbon/human/update_hud_head(obj/item/worn_item)
 	worn_item.screen_loc = ui_head
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 //update whether our mask item appears on our hud.
 /mob/living/carbon/human/update_hud_wear_mask(obj/item/worn_item)
 	worn_item.screen_loc = ui_mask
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 //update whether our neck item appears on our hud.
 /mob/living/carbon/human/update_hud_neck(obj/item/worn_item)
 	worn_item.screen_loc = ui_neck
-	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_shown))
+	if((client && hud_used) && (hud_used.inventory_shown && hud_used.hud_version == HUD_STYLE_STANDARD))
 		client.screen += worn_item
 	update_observer_view(worn_item,TRUE)
 
 //update whether our back item appears on our hud.
 /mob/living/carbon/human/update_hud_back(obj/item/worn_item)
 	worn_item.screen_loc = ui_back
-	if(client && hud_used?.hud_shown)
+	if(client && hud_used?.hud_version == HUD_STYLE_STANDARD)
 		client.screen += worn_item
 	update_observer_view(worn_item, inventory = TRUE)
 

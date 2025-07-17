@@ -88,7 +88,7 @@
 	return ITEM_SLOT_DEX_STORAGE
 
 /mob/living/basic/guardian/dextrous/proc/update_inv_internal_storage()
-	if(isnull(internal_storage) || isnull(client) || !hud_used?.hud_shown)
+	if(isnull(internal_storage) || isnull(client) || hud_used?.hud_version != HUD_STYLE_STANDARD)
 		return
 	internal_storage.screen_loc = ui_id
 	client.screen += internal_storage

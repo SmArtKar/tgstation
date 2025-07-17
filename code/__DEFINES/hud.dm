@@ -6,15 +6,17 @@
 /// No hud (for screenshots)
 #define HUD_STYLE_NOHUD 3
 
-/// Static HUD UI elements, only depends on reduced UI mode
-#define HUD_ELEM_BASIC 1
-/// High-priority elements displaying info like chemicals or plasma, visible in reduced mode
-#define HUD_ELEM_INFO 2
-/// UI elements that are displayed even in the NOHUD mode
-#define HUD_ELEMENT_STATIC 3
-
 /// Used in show_hud(); Please ensure this is the same as the maximum index.
 #define HUD_VERSIONS 3
+
+/// Hotkey-accessible button that doesn't always have to be shown
+#define HUD_ELEM_HOTKEY 0
+/// Static HUD UI elements, removed in reduced UI mode
+#define HUD_ELEM_BASIC 1
+/// High-priority elements displaying info like chemicals or plasma, visible in reduced mode
+#define HUD_ELEM_INFO 3
+/// UI elements that are displayed even in the NOHUD mode
+#define HUD_ELEMENT_STATIC 4
 
 // Consider these images/atoms as part of the UI/HUD (apart of the appearance_flags)
 /// Used for progress bars and chat messages

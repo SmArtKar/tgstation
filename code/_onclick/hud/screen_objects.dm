@@ -318,6 +318,8 @@
 	icon_state = "combat_off"
 	screen_loc = ui_combat_toggle
 	mouse_over_pointer = MOUSE_HAND_POINTER
+	/// Alternate position for reduced HUD
+	var/reduced_screen_loc = "EAST-1:28,SOUTH:5"
 
 /atom/movable/screen/combattoggle/Initialize(mapload, datum/hud/hud_owner)
 	. = ..()

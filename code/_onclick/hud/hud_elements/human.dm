@@ -20,6 +20,13 @@
 	element_type = /atom/movable/screen/combattoggle/flashy
 	screen_loc = "EAST-3:24,SOUTH:5"
 	hud_type = HUD_ELEM_INFO
+	/// Alternate position for reduced HUD
+	var/reduced_screen_loc = "EAST-1:28,SOUTH:5"
+
+/datum/hud_element/human/combat_toggle/create_element(datum/hud/hud, mob/owner)
+	var/atom/movable/screen/combattoggle/element = ..()
+	element.reduced_screen_loc = reduced_screen_loc
+	return element
 
 /datum/hud_element/human/floor_changer
 	element_type = /atom/movable/screen/floor_changer/vertical
@@ -50,25 +57,29 @@
 	element.screen_loc = ui_swaphand_position(owner, RIGHT_HANDS)
 	return element
 
-/datum/hud_element/human/resist
-	element_type = /atom/movable/screen/resist
-	screen_loc = "EAST-2:26,SOUTH+1:7"
-
-/datum/hud_element/human/throw_catch
-	element_type = /atom/movable/screen/throw_catch
-	screen_loc = "EAST-1:28,SOUTH+1:24"
-
-/datum/hud_element/human/rest
-	element_type = /atom/movable/screen/resist
-	screen_loc = "EAST-1:28,SOUTH+1:7"
-
 /datum/hud_element/human/sleep
 	element_type = /atom/movable/screen/sleep
 	screen_loc = "EAST-1:28,SOUTH+1:41"
 
+/datum/hud_element/human/resist
+	element_type = /atom/movable/screen/resist
+	screen_loc = "EAST-2:26,SOUTH+1:7"
+	hud_type = HUD_ELEM_HOTKEY
+
+/datum/hud_element/human/throw_catch
+	element_type = /atom/movable/screen/throw_catch
+	screen_loc = "EAST-1:28,SOUTH+1:24"
+	hud_type = HUD_ELEM_HOTKEY
+
+/datum/hud_element/human/rest
+	element_type = /atom/movable/screen/rest
+	screen_loc = "EAST-1:28,SOUTH+1:7"
+	hud_type = HUD_ELEM_HOTKEY
+
 /datum/hud_element/human/pull
 	element_type = /atom/movable/screen/pull
 	screen_loc = "EAST-2:26,SOUTH+1:24"
+	hud_type = HUD_ELEM_HOTKEY
 
 /datum/hud_element/human/zone_sel
 	element_type = /atom/movable/screen/zone_sel
@@ -110,31 +121,6 @@
 /datum/hud_element/human/inv_toggle
 	element_type = /atom/movable/screen/inv_toggle
 	screen_loc = "WEST:6,SOUTH:5"
-
-/datum/hud_element/inventory
-	element_type = /atom/movable/screen/inventory
-	abstract_type = /datum/hud_element/inventory
-	/// Name of the slot
-	var/name = "error"
-	/// Item slot attached to this element
-	var/slot_id
-	/// Icon state for the slot
-	var/icon_state
-	/// Icon state for the slot when its occupied by an item
-	var/icon_full
-	/// Does this element get hidden when the inventory is collapsed?
-	var/toggleable = FALSE
-
-/datum/hud_element/inventory/create_element(datum/hud/hud, mob/owner)
-	var/atom/movable/screen/inventory/element = ..()
-	element.name = name
-	element.slot_id = slot_id
-	element.icon_state = icon_state
-	element.icon_full = icon_full
-	if (slot_id)
-		hud.inv_slots[TOBITSHIFT(slot_id) + 1] = element
-	element.update_appearance()
-	return element
 
 /datum/hud_element/inventory/human
 	abstract_type = /datum/hud_element/inventory/human
@@ -246,7 +232,6 @@
 	icon_full = "template"
 	screen_loc = "CENTER-5:10,SOUTH:5"
 	slot_id = ITEM_SLOT_SUITSTORE
-	toggleable = TRUE
 
 /datum/hud_element/inventory/human/belt
 	name = "belt"

@@ -22,7 +22,7 @@
 		update_inv_internal_storage()
 
 /mob/living/basic/drone/proc/update_inv_internal_storage()
-	if(internal_storage && client && hud_used?.hud_shown)
+	if(internal_storage && client && hud_used?.hud_version == HUD_STYLE_STANDARD)
 		internal_storage.screen_loc = ui_drone_storage
 		client.screen += internal_storage
 
@@ -31,7 +31,7 @@
 	remove_overlay(DRONE_HEAD_LAYER)
 
 	if(head)
-		if(client && hud_used?.hud_shown)
+		if(client && hud_used?.hud_version == HUD_STYLE_STANDARD)
 			head.screen_loc = ui_drone_head
 			client.screen += head
 		var/used_head_icon = 'icons/mob/clothing/head/utility.dmi'

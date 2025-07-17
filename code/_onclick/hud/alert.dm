@@ -1114,7 +1114,7 @@ or shoot a gun to move around via Newton's 3rd Law of Motion."
 	if(!screenmob.client)
 		return FALSE
 	var/list/alerts = mymob.alerts
-	if(!hud_shown)
+	if(hud_version != HUD_STYLE_STANDARD)
 		for(var/i in 1 to alerts.len)
 			screenmob.client.screen -= alerts[alerts[i]]
 		return TRUE

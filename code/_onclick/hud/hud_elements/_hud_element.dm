@@ -34,5 +34,32 @@ GLOBAL_LIST_INIT(hud_elements, init_hud_elements())
 	element.hud_type = hud_type
 	if (screen_loc)
 		element.screen_loc = screen_loc
-	hud.ui_elements += element
+	hud.ui_elements[element] = src
+	return element
+
+/// Inventory datum, has additional logic/vars for inventory slots and toggling
+
+/datum/hud_element/inventory
+	element_type = /atom/movable/screen/inventory
+	abstract_type = /datum/hud_element/inventory
+	/// Name of the slot
+	var/name = "error"
+	/// Item slot attached to this element
+	var/slot_id
+	/// Icon state for the slot
+	var/icon_state
+	/// Icon state for the slot when its occupied by an item
+	var/icon_full
+	/// Does this element get hidden when the inventory is collapsed?
+	var/toggleable = FALSE
+
+/datum/hud_element/inventory/create_element(datum/hud/hud, mob/owner)
+	var/atom/movable/screen/inventory/element = ..()
+	element.name = name
+	element.slot_id = slot_id
+	element.icon_state = icon_state
+	element.icon_full = icon_full
+	if (slot_id)
+		hud.inv_slots[TOBITSHIFT(slot_id) + 1] = element
+	element.update_appearance()
 	return element

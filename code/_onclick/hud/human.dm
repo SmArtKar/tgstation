@@ -46,7 +46,7 @@
 
 	var/mob/screenmob = viewer || H
 
-	if(screenmob.hud_used.inventory_shown && screenmob.hud_used.hud_shown)
+	if(screenmob.hud_used.inventory_shown && screenmob.hud_used.hud_version == HUD_STYLE_STANDARD)
 		if(H.shoes)
 			H.shoes.screen_loc = ui_shoes
 			screenmob.client.screen += H.shoes
@@ -105,7 +105,7 @@
 	var/mob/screenmob = viewer || H
 
 	if(screenmob.hud_used)
-		if(screenmob.hud_used.hud_shown)
+		if(screenmob.hud_used.hud_version == HUD_STYLE_STANDARD)
 			if(H.s_store)
 				H.s_store.screen_loc = ui_sstore1
 				screenmob.client.screen += H.s_store

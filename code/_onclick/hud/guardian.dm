@@ -84,20 +84,20 @@
 	static_inventory += using
 
 /datum/hud/dextrous/guardian/persistent_inventory_update()
-	if(!mymob)
+	if(!istype(mymob, /mob/living/basic/guardian/dextrous))
 		return
-	if(istype(mymob, /mob/living/basic/guardian/dextrous))
-		var/mob/living/basic/guardian/dextrous/dex_guardian = mymob
 
-		if(hud_shown)
-			if(dex_guardian.internal_storage)
-				dex_guardian.internal_storage.screen_loc = ui_id
-				dex_guardian.client.screen += dex_guardian.internal_storage
-		else
-			if(dex_guardian.internal_storage)
-				dex_guardian.internal_storage.screen_loc = null
+	var/mob/living/basic/guardian/dextrous/dex_guardian = mymob
+	if(hud_version != HUD_STYLE_STANDARD)
+		if(dex_guardian.internal_storage)
+			dex_guardian.internal_storage.screen_loc = null
+		return ..()
 
-	..()
+	if(dex_guardian.internal_storage)
+		dex_guardian.internal_storage.screen_loc = ui_id
+		dex_guardian.client.screen += dex_guardian.internal_storage
+
+	return ..()
 
 /atom/movable/screen/guardian
 	icon = 'icons/hud/guardian.dmi'

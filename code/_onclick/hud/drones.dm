@@ -29,17 +29,19 @@
 /datum/hud/dextrous/drone/persistent_inventory_update()
 	if(!mymob)
 		return
-	var/mob/living/basic/drone/drone = mymob
 
-	if(hud_shown)
-		if(!isnull(drone.internal_storage))
-			drone.internal_storage.screen_loc = ui_drone_storage
-			drone.client.screen += drone.internal_storage
-		if(!isnull(drone.head))
-			drone.head.screen_loc = ui_drone_head
-			drone.client.screen += drone.head
-	else
+	var/mob/living/basic/drone/drone = mymob
+	if(hud_version != HUD_STYLE_STANDARD)
 		drone.internal_storage?.screen_loc = null
 		drone.head?.screen_loc = null
+		return ..()
 
-	..()
+	if(!isnull(drone.internal_storage))
+		drone.internal_storage.screen_loc = ui_drone_storage
+		drone.client.screen += drone.internal_storage
+
+	if(!isnull(drone.head))
+		drone.head.screen_loc = ui_drone_head
+		drone.client.screen += drone.head
+
+	return ..()

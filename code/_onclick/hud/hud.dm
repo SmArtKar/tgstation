@@ -21,12 +21,14 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	return GLOB.available_ui_styles[ui_style] || GLOB.available_ui_styles[GLOB.available_ui_styles[1]]
 
 /datum/hud
+	/// Owner of this HUD
 	var/mob/mymob
-
-	var/hud_shown = TRUE //Used for the HUD toggle (F12)
-	var/hud_version = HUD_STYLE_STANDARD //Current displayed version of the HUD
-	var/inventory_shown = FALSE //Equipped item inventory
-	var/hotkey_ui_hidden = FALSE //This is to hide the buttons that can be used via hotkeys. (hotkeybuttons list of buttons)
+	/// Display mode of the HUD, standard/reduced/none
+	var/hud_version = HUD_STYLE_STANDARD
+	/// Is the inventory menu expanded?
+	var/inventory_shown = FALSE
+	/// Are hotkey-accessible buttons hidden?
+	var/hotkey_ui_hidden = FALSE
 
 	var/atom/movable/screen/alien_plasma_display
 	var/atom/movable/screen/alien_queen_finder
@@ -40,17 +42,12 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	var/atom/movable/screen/resist_icon
 	var/atom/movable/screen/floor_change
 
+	/// Assoc list of all UI elements on this HUD -> their datum, or null if they're independent (bad, evil, malicious even)
 	var/list/atom/movable/screen/ui_elements = list()
-
-	/// DEPRECATED
-	var/list/static_inventory = list() //the screen objects which are static
-	var/list/toggleable_inventory = list() //the screen objects which can be hidden
-	var/list/atom/movable/screen/hotkeybuttons = list() //the buttons that can be used via hotkeys
-	var/list/infodisplay = list() //the screen objects that display mob info (health, alien plasma, etc...)
-	/// Screen objects that never exit view.
-	var/list/always_visible_inventory = list()
-	var/list/inv_slots[SLOTS_AMT] // /atom/movable/screen/inventory objects, ordered by their slot ID.
-	var/list/hand_slots // /atom/movable/screen/inventory/hand objects, assoc list of "[held_index]" = object
+	/// List of inventory objects ordered by their slot index
+	var/list/atom/movable/screen/inventory/inv_slots[SLOTS_AMT]
+	/// Assoc list of "[held_index]" -> inventory element for that hand
+	var/list/atom/movable/screen/inventory/hand/hand_slots
 
 	/// Assoc list of key => "plane master groups"
 	/// This is normally just the main window, but it'll occasionally contain things like spyglasses windows
@@ -129,8 +126,9 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	screentip_color = preferences?.read_preference(/datum/preference/color/screentip_color)
 	screentips_enabled = preferences?.read_preference(/datum/preference/choiced/enable_screentips)
 	screentip_images = preferences?.read_preference(/datum/preference/toggle/screentip_images)
+	// TODO SMARTKAR
 	screentip_text = new(null, src)
-	static_inventory += screentip_text
+	ui_elements[screentip_text] = null
 
 	for(var/mytype in subtypesof(/atom/movable/plane_master_controller))
 		var/atom/movable/plane_master_controller/controller_instance = new mytype(null,src)
@@ -224,8 +222,7 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	QDEL_NULL(palette_actions)
 	QDEL_NULL(listed_actions)
 	QDEL_LIST(floating_actions)
-
-	QDEL_LIST(static_inventory)
+	QDEL_LIST(ui_elements)
 
 	// all already deleted by static inventory clear
 	inv_slots.Cut()
@@ -236,11 +233,8 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	floor_change = null
 	hand_slots.Cut()
 
-	QDEL_LIST(toggleable_inventory)
-	QDEL_LIST(hotkeybuttons)
 	throw_icon = null
 	resist_icon = null
-	QDEL_LIST(infodisplay)
 
 	healths = null
 	stamina = null
@@ -252,7 +246,6 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 
 	QDEL_LIST_ASSOC_VAL(master_groups)
 	QDEL_LIST_ASSOC_VAL(plane_master_controllers)
-	QDEL_LIST(always_visible_inventory)
 	mymob = null
 
 	QDEL_NULL(screentip_text)
@@ -314,10 +307,10 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
  * * viewmob - what mob to show the hud to. Can be this hud's mob, can be another mob, can be null (will use this hud's mob if so)
  */
 /datum/hud/proc/show_hud(version = 0, mob/viewmob)
-	if(!ismob(mymob))
+	if (!ismob(mymob))
 		return FALSE
 	var/mob/screenmob = viewmob || mymob
-	if(!screenmob.client)
+	if (!screenmob.client)
 		return FALSE
 
 	// This code is the absolute fucking worst, I want it to go die in a fire
@@ -325,33 +318,43 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 	screenmob.client.clear_screen()
 	screenmob.client.apply_clickcatcher()
 
-	var/display_hud_version = version
-	if(!display_hud_version) //If 0 or blank, display the next hud version
-		display_hud_version = hud_version + 1
-	if(display_hud_version > HUD_VERSIONS) //If the requested version number is greater than the available versions, reset back to the first version
-		display_hud_version = 1
+	if (version)
+		hud_version = version
+	else // If 0 or blank, display the next hud version
+		hud_version += 1
 
-	switch(display_hud_version)
-		if(HUD_STYLE_STANDARD) //Default HUD
-			hud_shown = TRUE //Governs behavior of other procs
-			if(static_inventory.len)
-				screenmob.client.screen += static_inventory
-			if(toggleable_inventory.len && screenmob.hud_used && screenmob.hud_used.inventory_shown)
-				screenmob.client.screen += toggleable_inventory
-			if(hotkeybuttons.len && !hotkey_ui_hidden)
-				screenmob.client.screen += hotkeybuttons
-			if(infodisplay.len)
-				screenmob.client.screen += infodisplay
-			if(always_visible_inventory.len)
-				screenmob.client.screen += always_visible_inventory
+	if (hud_version > HUD_VERSIONS) //If the requested version number is greater than the available versions, reset back to the first version
+		hud_version = HUD_STYLE_STANDARD
 
+	for (var/atom/movable/screen/element as anything in ui_elements)
+		if (hud_version != HUD_STYLE_STANDARD && element.hud_type < hud_version)
+			screenmob.client.screen -= element
+			continue
+
+		if (!istype(ui_elements[element], /atom/movable/screen/inventory))
+			screenmob.client.screen += element
+			continue
+
+		var/datum/hud_element/inventory/inv_ui = ui_elements[element]
+		// Referring to screenmob's hud and not ourselves for ghosts' hud peeking
+		if (!inv_ui.toggleable || screenmob.hud_used.inventory_shown)
+			screenmob.client.screen += element
+
+	switch (display_hud_version)
+		if (HUD_STYLE_STANDARD)
 			screenmob.client.screen += toggle_palette
-
+			// Return combat mode toggle to its original position
 			if(action_intent)
-				action_intent.screen_loc = initial(action_intent.screen_loc) //Restore intent selection to the original position
+				var/datum/hud_element/combat_toggle = ui_elements[action_intent]
+				action_intent.screen_loc = combat_toggle?.screen_loc || initial(action_intent.screen_loc)
+
+		if (HUD_STYLE_REDUCED)
+
+
+
+	/*
 
 		if(HUD_STYLE_REDUCED) //Reduced HUD
-			hud_shown = FALSE //Governs behavior of other procs
 			if(static_inventory.len)
 				screenmob.client.screen -= static_inventory
 			if(toggleable_inventory.len)
@@ -373,7 +376,6 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 				action_intent.screen_loc = ui_acti_alt //move this to the alternative position, where zone_select usually is.
 
 		if(HUD_STYLE_NOHUD) //No HUD
-			hud_shown = FALSE //Governs behavior of other procs
 			if(static_inventory.len)
 				screenmob.client.screen -= static_inventory
 			if(toggleable_inventory.len)
@@ -384,8 +386,8 @@ GLOBAL_LIST_INIT(available_ui_styles, list(
 				screenmob.client.screen -= infodisplay
 			if(always_visible_inventory.len)
 				screenmob.client.screen += always_visible_inventory
+	*/
 
-	hud_version = display_hud_version
 	persistent_inventory_update(screenmob)
 	// Gives all of the actions the screenmob owes to their hud
 	screenmob.update_action_buttons(TRUE)
