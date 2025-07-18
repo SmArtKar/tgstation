@@ -39,7 +39,7 @@
 	drop_preview = animate_ui_element(
 		"act_drop",
 		initial_screen_loc,
-		ui_drop_throw,
+		UI_LOC_THROW,
 		TIME_TO_START_MOVING_DROP_ICON,
 	)
 

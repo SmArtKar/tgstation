@@ -24,18 +24,18 @@
 	pull_icon = new /atom/movable/screen/pull(null, src)
 	pull_icon.icon = 'icons/hud/screen_alien.dmi'
 	pull_icon.update_appearance()
-	pull_icon.screen_loc = ui_above_movement
+	pull_icon.screen_loc = UI_LOC_ABOVE_MOVEMENT
 	hotkeybuttons += pull_icon
 
 	rest_icon = new /atom/movable/screen/rest(null, src)
 	rest_icon.icon = ui_style
-	rest_icon.screen_loc = ui_rest
+	rest_icon.screen_loc = UI_LOC_REST
 	rest_icon.update_appearance()
 	static_inventory += rest_icon
 
 	sleep_icon = new /atom/movable/screen/sleep(null, src)
 	sleep_icon.icon = ui_style
-	sleep_icon.screen_loc = ui_drop_throw
+	sleep_icon.screen_loc = UI_LOC_THROW
 
 	using = new/atom/movable/screen/language_menu(null, src)
 	using.screen_loc = ui_alien_language_menu

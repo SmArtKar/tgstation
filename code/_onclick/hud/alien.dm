@@ -74,35 +74,35 @@
 
 	using = new /atom/movable/screen/drop(null, src)
 	using.icon = ui_style
-	using.screen_loc = ui_drop_throw
+	using.screen_loc = UI_LOC_THROW
 	static_inventory += using
 
 	resist_icon = new /atom/movable/screen/resist(null, src)
 	resist_icon.icon = ui_style
-	resist_icon.screen_loc = ui_above_movement
+	resist_icon.screen_loc = UI_LOC_ABOVE_MOVEMENT
 	resist_icon.update_appearance()
 	hotkeybuttons += resist_icon
 
 	throw_icon = new /atom/movable/screen/throw_catch(null, src)
 	throw_icon.icon = ui_style
-	throw_icon.screen_loc = ui_drop_throw
+	throw_icon.screen_loc = UI_LOC_THROW
 	hotkeybuttons += throw_icon
 
 	pull_icon = new /atom/movable/screen/pull(null, src)
 	pull_icon.icon = ui_style
 	pull_icon.update_appearance()
-	pull_icon.screen_loc = ui_above_movement
+	pull_icon.screen_loc = UI_LOC_ABOVE_MOVEMENT
 	static_inventory += pull_icon
 
 	rest_icon = new /atom/movable/screen/rest(null, src)
 	rest_icon.icon = ui_style
-	rest_icon.screen_loc = ui_rest
+	rest_icon.screen_loc = UI_LOC_REST
 	rest_icon.update_appearance()
 	static_inventory += rest_icon
 
 	sleep_icon = new /atom/movable/screen/sleep(null, src)
 	sleep_icon.icon = ui_style
-	sleep_icon.screen_loc = ui_above_throw
+	sleep_icon.screen_loc = UI_LOC_ABOVE_THROW
 
 //begin indicators
 

@@ -61,15 +61,14 @@
 #define ui_combo "CENTER+4:24,SOUTH+1:7" //combo meter for martial arts
 
 //Lower right, persistent menu
-#define ui_rest "EAST-1:28,SOUTH+1:7"
-#define ui_drop_throw "EAST-1:28,SOUTH+1:24"
-#define ui_above_throw "EAST-1:28,SOUTH+1:41"
-#define ui_above_movement "EAST-2:26,SOUTH+1:7"
-#define ui_above_movement_top "EAST-2:26, SOUTH+1:24"
-#define ui_above_intent "EAST-3:24, SOUTH+1:7"
+#define UI_LOC_REST "EAST-1:28,SOUTH+1:7"
+#define UI_LOC_THROW "EAST-1:28,SOUTH+1:24"
+#define UI_LOC_ABOVE_THROW "EAST-1:28,SOUTH+1:41"
+#define UI_LOC_ABOVE_MOVEMENT "EAST-2:26,SOUTH+1:7"
+#define UI_LOC_ABOVE_MOVEMENT_TOP "EAST-2:26, SOUTH+1:24"
 #define ui_movi "EAST-2:26,SOUTH:5"
 #define ui_acti "EAST-3:24,SOUTH:5"
-#define ui_combat_toggle "EAST-3:24,SOUTH:5"
+#define UI_LOC_COMBAT_TOGGLE "EAST-3:24,SOUTH:5"
 #define ui_zonesel "EAST-1:28,SOUTH:5"
 #define ui_acti_alt "EAST-1:28,SOUTH:5" //alternative intent switcher for when the interface is hidden (F12)
 #define ui_crafting "EAST-4:22,SOUTH:5"
