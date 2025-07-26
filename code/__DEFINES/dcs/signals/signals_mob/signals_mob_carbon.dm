@@ -36,6 +36,7 @@
 #define COMSIG_BODYPART_GAUZED "bodypart_gauzed"
 /// from /obj/item/stack/medical/gauze/Destroy(): (/obj/item/stack/medical/gauze/removed_gauze)
 #define COMSIG_BODYPART_UNGAUZED "bodypart_ungauzed"
+#define COMSIG_BODYPART_HAIR_GENERATED "bodypart_hair_generated"
 
 /// Called from bodypart changing owner, which could be on attach or detachment. Either argument can be null. (mob/living/carbon/new_owner, mob/living/carbon/old_owner)
 #define COMSIG_BODYPART_CHANGED_OWNER "bodypart_changed_owner"

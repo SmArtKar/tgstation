@@ -43,6 +43,8 @@
 
 	RegisterSignal(owner, COMSIG_CARBON_ATTACH_LIMB, PROC_REF(texture_limb)) //also catch new limbs being attached
 	RegisterSignal(owner, COMSIG_CARBON_REMOVE_LIMB, PROC_REF(untexture_limb)) //and remove it from limbs if they go away
+	RegisterSignal(owner, COMSIG_MOB_EQUIPPED_ITEM, PROC_REF(on_equipped))
+	RegisterSignal(owner, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(on_unequipped))
 
 	for(var/obj/item/bodypart as anything in owner.bodyparts)
 		texture_limb(owner, bodypart)
@@ -59,6 +61,8 @@
 		human.socks = "Nude"
 
 	owner.update_body()
+	for(var/obj/item/thing as anything in owner.get_equipped_items())
+		on_equipped(owner, thing, owner.get_slot_by_item(thing))
 
 /datum/brain_trauma/voided/on_lose()
 	. = ..()
@@ -94,6 +98,7 @@
 	if(istype(limb, /obj/item/bodypart/head))
 		var/obj/item/bodypart/head/head = limb
 		head.head_flags &= ~HEAD_EYESPRITES
+		RegisterSignal(head, COMSIG_BODYPART_HAIR_GENERATED, PROC_REF(on_hair_generated))
 
 /datum/brain_trauma/voided/proc/untexture_limb(atom/source, obj/item/bodypart/limb)
 	SIGNAL_HANDLER
@@ -106,12 +111,35 @@
 	if(istype(limb, /obj/item/bodypart/head))
 		var/obj/item/bodypart/head/head = limb
 		head.head_flags = initial(head.head_flags)
+		UnregisterSignal(head, COMSIG_BODYPART_HAIR_GENERATED)
 
 /datum/brain_trauma/voided/on_death()
 	. = ..()
 
 	if(is_on_a_planet(owner))
 		qdel(src)
+
+/datum/brain_trauma/voided/proc/on_equipped(mob/source, obj/item/picked_up, slot)
+	SIGNAL_HANDLER
+	RegisterSignal(picked_up, COMSIG_ITEM_GET_WORN_OVERLAYS, PROC_REF(on_worn_overlays))
+	source.update_clothing(slot)
+
+/datum/brain_trauma/voided/proc/on_worn_overlays(obj/item/source, list/overlays, mutable_appearance/standing, isinhands, icon_file)
+	SIGNAL_HANDLER
+	standing.add_filter("black", 1, color_matrix_filter(list(0,0,0,0,0,0,0,0,0)))
+	standing.add_filter("stars", 2, layering_filter(icon('icons/mob/human/textures.dmi', "spacey"), blend_mode = BLEND_INSET_OVERLAY))
+	standing.add_filter("white", 3, outline_filter(1, COLOR_WHITE, OUTLINE_SHARP))
+
+/datum/brain_trauma/voided/proc/on_hair_generated(obj/item/bodypart/head/head, list/overlays)
+	SIGNAL_HANDLER
+	for (var/mutable_appearance/overlay as anything in overlays)
+		overlay.add_filter("black", 1, color_matrix_filter(list(0,0,0,0,0,0,0,0,0)))
+		overlay.add_filter("stars", 2, layering_filter(icon('icons/mob/human/textures.dmi', "spacey"), blend_mode = BLEND_INSET_OVERLAY))
+		overlay.add_filter("white", 3, outline_filter(1, COLOR_WHITE, OUTLINE_SHARP))
+
+/datum/brain_trauma/voided/proc/on_unequipped(mob/source, obj/item/dropped_item, force, new_location)
+	SIGNAL_HANDLER
+	UnregisterSignal(dropped_item, COMSIG_ITEM_GET_WORN_OVERLAYS)
 
 /// Positive version of the previous. Get space immunity and the ability to slowly move through glass (but you still get muted)
 /datum/brain_trauma/voided/stable

@@ -136,6 +136,7 @@
 					var/image/hair_gradient_overlay = get_gradient_overlay(base_icon, hair_overlay.layer, SSaccessories.hair_gradients_list[hair_gradient_style], hair_gradient_color)
 					hair_gradient_overlay.pixel_z = hair_sprite_accessory.y_offset
 					. += hair_gradient_overlay
+			SEND_SIGNAL(src, COMSIG_BODYPART_HAIR_GENERATED, all_hair_overlays)
 
 	if(show_debrained && (head_flags & HEAD_DEBRAIN))
 		. += get_debrain_overlay()
