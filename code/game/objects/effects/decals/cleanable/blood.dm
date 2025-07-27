@@ -459,6 +459,20 @@
 	/// Beyond a threshold we change to a bloodier icon state
 	var/very_bloody = FALSE
 
+/obj/effect/decal/cleanable/blood/trail/Initialize(mapload, list/datum/disease/diseases, list/blood_or_dna)
+	. = ..()
+	if(!istype(loc, /obj/effect/decal/cleanable/blood/trail_holder))
+		if (mapload)
+#ifdef UNIT_TESTS
+			stack_trace("[src] spawned outside of a trail holder at [AREACOORD(src)]!")
+#else
+			log_mapping("[src] spawned outside of a trail holder at [AREACOORD(src)]!")
+#endif
+		return INITIALIZE_HINT_QDEL
+
+	// Despite having VIS_INHERIT_PLANE, our emissives still inherit our plane offset, so we need to inherit our parent's offset to have them render correctly
+	SET_PLANE_EXPLICIT(src, initial(plane), loc)
+
 /obj/effect/decal/cleanable/blood/trail/update_desc(updates)
 	. = ..()
 	desc = "A [dried ? "dried " : ""]trail of [get_blood_string()]."
