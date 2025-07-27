@@ -464,7 +464,8 @@
 	// Despite having VIS_INHERIT_PLANE, our emissives still inherit our plane offset, so we need to inherit our parent's offset to have them render correctly
 	if(istype(loc, /obj/effect/decal/cleanable/blood/trail_holder))
 		SET_PLANE_EXPLICIT(src, initial(plane), loc)
-		update_appearance() // correct our emissive
+		if (emissive_alpha && !dried)
+			update_appearance() // correct our emissive
 		return
 
 #ifndef UNIT_TESTS
