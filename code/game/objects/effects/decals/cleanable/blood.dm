@@ -461,17 +461,20 @@
 
 /obj/effect/decal/cleanable/blood/trail/Initialize(mapload, list/datum/disease/diseases, list/blood_or_dna)
 	. = ..()
-	if(!istype(loc, /obj/effect/decal/cleanable/blood/trail_holder))
-		if (mapload)
-#ifdef UNIT_TESTS
-			stack_trace("[src] spawned outside of a trail holder at [AREACOORD(src)]!")
-#else
-			log_mapping("[src] spawned outside of a trail holder at [AREACOORD(src)]!")
-#endif
-		return INITIALIZE_HINT_QDEL
-
 	// Despite having VIS_INHERIT_PLANE, our emissives still inherit our plane offset, so we need to inherit our parent's offset to have them render correctly
-	SET_PLANE_EXPLICIT(src, initial(plane), loc)
+	if(istype(loc, /obj/effect/decal/cleanable/blood/trail_holder))
+		SET_PLANE_EXPLICIT(src, initial(plane), loc)
+		update_appearance() // correct our emissive
+		return
+
+#ifndef UNIT_TESTS
+	if (mapload)
+		log_mapping("[src] spawned outside of a trail holder at [AREACOORD(src)]!")
+		return INITIALIZE_HINT_QDEL
+#endif
+
+	stack_trace("[src] spawned outside of a trail holder at [AREACOORD(src)]!")
+	return INITIALIZE_HINT_QDEL
 
 /obj/effect/decal/cleanable/blood/trail/update_desc(updates)
 	. = ..()
