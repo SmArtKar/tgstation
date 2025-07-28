@@ -119,7 +119,17 @@
 		. += blood_emissive(icon, icon_state)
 
 /obj/effect/decal/cleanable/blood/proc/blood_emissive(icon_to_use, icon_state_to_use)
-	return emissive_appearance(icon_to_use, icon_state_to_use, src, layer, 255 * emissive_alpha / alpha)
+	var/layer_to_use = layer
+	// Floor plane layers are offset by 10000, which causes their emissives to freak out, so we need to flatten it back down to a sane value
+	if(plane == FLOOR_PLANE)
+		layer_to_use = ABOVE_NORMAL_TURF_LAYER + (layer - TOPDOWN_LAYER) * 0.001
+	return emissive_appearance(icon_to_use, icon_state_to_use, src, layer_to_use, 255 * emissive_alpha / alpha)
+
+/obj/effect/decal/cleanable/blood/update_emissive_block()
+	var/mutable_appearance/blocker = ..()
+	if(plane == FLOOR_PLANE)
+		blocker.layer = ABOVE_NORMAL_TURF_LAYER + (layer - TOPDOWN_LAYER) * 0.001 - 0.001
+	return blocker
 
 /obj/effect/decal/cleanable/blood/lazy_init_reagents()
 	if (reagents)
