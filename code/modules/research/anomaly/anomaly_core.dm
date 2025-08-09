@@ -8,7 +8,10 @@
 	righthand_file = 'icons/mob/inhands/items/devices_righthand.dmi'
 	resistance_flags = FIRE_PROOF
 	custom_materials = null
+	/// Anomaly to spawn when this core is destabilized
 	var/anomaly_type = /obj/effect/anomaly
+	/// Overlay color to use when installed into an anomacore channeler
+	var/channeler_color = null
 
 /obj/item/assembly/signaler/anomaly/receive_signal(datum/signal/signal)
 	if(!signal)
@@ -41,48 +44,56 @@
 	desc = "The neutralized core of a pyroclastic anomaly. It feels warm to the touch. It'd probably be valuable for research."
 	icon_state = "pyro_core"
 	anomaly_type = /obj/effect/anomaly/pyro
+	channeler_color = "red"
 
 /obj/item/assembly/signaler/anomaly/grav
 	name = "\improper gravitational anomaly core"
 	desc = "The neutralized core of a gravitational anomaly. It feels much heavier than it looks. It'd probably be valuable for research."
 	icon_state = "grav_core"
 	anomaly_type = /obj/effect/anomaly/grav
+	channeler_color = "green"
 
 /obj/item/assembly/signaler/anomaly/flux
 	name = "\improper flux anomaly core"
 	desc = "The neutralized core of a flux anomaly. Touching it makes your skin tingle. It'd probably be valuable for research."
 	icon_state = "flux_core"
 	anomaly_type = /obj/effect/anomaly/flux
+	channeler_color = "orange"
 
 /obj/item/assembly/signaler/anomaly/bluespace
 	name = "\improper bluespace anomaly core"
 	desc = "The neutralized core of a bluespace anomaly. It keeps phasing in and out of view. It'd probably be valuable for research."
 	icon_state = "anomaly_core"
 	anomaly_type = /obj/effect/anomaly/bluespace
+	channeler_color = "teal"
 
 /obj/item/assembly/signaler/anomaly/vortex
 	name = "\improper vortex anomaly core"
 	desc = "The neutralized core of a vortex anomaly. It won't sit still, as if some invisible force is acting on it. It'd probably be valuable for research."
 	icon_state = "vortex_core"
 	anomaly_type = /obj/effect/anomaly/bhole
+	channeler_color = "purple"
 
 /obj/item/assembly/signaler/anomaly/bioscrambler
 	name = "\improper bioscrambler anomaly core"
 	desc = "The neutralized core of a bioscrambler anomaly. It's squirming, as if moving. It'd probably be valuable for research."
 	icon_state = "bioscrambler_core"
 	anomaly_type = /obj/effect/anomaly/bioscrambler
+	channeler_color = "darkblue"
 
 /obj/item/assembly/signaler/anomaly/hallucination
 	name = "\improper hallucination anomaly core"
 	desc = "The neutralized core of a hallucination anomaly. It seems to be moving, but it's probably your imagination. It'd probably be valuable for research."
 	icon_state = "hallucination_core"
 	anomaly_type = /obj/effect/anomaly/hallucination
+	channeler_color = "pink"
 
 /obj/item/assembly/signaler/anomaly/dimensional
 	name = "\improper dimensional anomaly core"
 	desc = "The neutralized core of a dimensional anomaly. Objects reflected on its surface don't look quite right. It'd probably be valuable for research."
 	icon_state = "dimensional_core"
 	anomaly_type = /obj/effect/anomaly/dimensional
+	channeler_color = "greyscale"
 
 /obj/item/assembly/signaler/anomaly/dimensional/Initialize(mapload)
 	. = ..()
