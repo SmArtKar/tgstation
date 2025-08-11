@@ -16,16 +16,78 @@
 	var/beam_chargeup_delay = 1.5 SECONDS
 	/// Maximum distance a beam can travel, in tiles
 	var/beam_distance = 64
+	/// Speed at which the beam can turn, in degrees per tick
+	var/turn_speed = 15
 
 	/// Are we currently charging an anomabeam?
 	var/charging_beam = BEAM_INACTIVE
 	/// Currently tracked target
 	var/atom/cur_target = null
-	// Pixel offsets for the beam
-	var/beam_x = 0
-	var/beam_y = 0
+	// Desired pixel offsets for the beam
+	var/target_x = 0
+	var/target_y = 0
+	// Current tile coordinates for the beam
+	var/beam_x = -1
+	var/beam_y = -1
+	// Current pixel offsets for the beam
+	var/beam_pixel_x = ICON_SIZE_X / 2
+	var/beam_pixel_y = ICON_SIZE_Y / 2
 	/// Active beam visual
 	var/datum/beam/active_beam = null
+
+/obj/item/gun/energy/anomacore_channeler/Initialize(mapload)
+	. = ..()
+	if (!isliving(loc))
+		return
+	var/mob/living/user = loc
+	if (user.get_active_held_item() == src)
+		click_track(user)
+
+/obj/item/gun/energy/anomacore_channeler/Destroy()
+	if (isliving(loc))
+		stop_tracking(loc)
+	QDEL_NULL(installed_core)
+	return ..()
+
+/obj/item/gun/energy/anomacore_channeler/equipped(mob/user, slot, initial)
+	. = ..()
+	if ((slot & ITEM_SLOT_HANDS) && user.get_active_held_item() == src)
+		click_track(user)
+
+/obj/item/gun/energy/anomacore_channeler/dropped(mob/user, silent)
+	. = ..()
+	stop_tracking(user)
+
+/obj/item/gun/energy/anomacore_channeler/proc/click_track(mob/living/user)
+	RegisterSignal(user, COMSIG_MOB_SWAP_HANDS, PROC_REF(on_swap_hands))
+	RegisterSignal(user, COMSIG_MOB_LOGIN, PROC_REF(on_login))
+	if (user.client)
+		RegisterSignal(user.client, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(on_mouse_down))
+
+/obj/item/gun/energy/anomacore_channeler/proc/stop_tracking(mob/living/user)
+	UnregisterSignal(user, list(COMSIG_MOB_SWAP_HANDS, COMSIG_MOB_LOGIN))
+	if (user.client)
+		UnregisterSignal(user.client, COMSIG_CLIENT_MOUSEDOWN)
+	stop_beaming()
+
+/obj/item/gun/energy/anomacore_channeler/proc/on_login(mob/living/source)
+	SIGNAL_HANDLER
+
+	if(!source.client) // BYOND client jank
+		return
+
+	if(source.get_active_held_item() == src)
+		RegisterSignal(source.client, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(on_mouse_down))
+
+/obj/item/gun/energy/anomacore_channeler/proc/on_swap_hands(mob/living/source)
+	SIGNAL_HANDLER
+
+	if(source.get_active_held_item() == src)
+		if (source.client)
+			RegisterSignal(source.client, COMSIG_CLIENT_MOUSEDOWN, PROC_REF(on_mouse_down))
+	else
+		UnregisterSignal(source.client, COMSIG_CLIENT_MOUSEDOWN)
+		stop_beaming()
 
 /obj/item/gun/energy/anomacore_channeler/update_overlays()
 	. = ..()
@@ -93,7 +155,7 @@
 		return
 
 	if(isnull(location) || istype(target, /atom/movable/screen)) //Clicking on a screen object.
-		if(_target.plane != CLICKCATCHER_PLANE) //The clickcatcher is a special case. We want the click to trigger then, under it.
+		if(target.plane != CLICKCATCHER_PLANE) //The clickcatcher is a special case. We want the click to trigger then, under it.
 			return //If we click and drag on our worn backpack, for example, we want it to open instead.
 		target = parse_caught_click_modifiers(modifiers, get_turf(source.eye), source)
 		if(!target)
@@ -110,6 +172,11 @@
 
 	RegisterSignal(source, COMSIG_CLIENT_MOUSEDRAG, PROC_REF(on_mouse_drag))
 	set_target(target, modifiers)
+	beam_x = cur_target.x
+	beam_y = cur_target.y
+	beam_pixel_x = target_x
+	beam_pixel_y = target_y
+	send_tracer()
 	charging_beam = BEAM_CHANNELING
 	START_PROCESSING(SSfastprocess, src)
 
@@ -120,14 +187,14 @@
 /obj/item/gun/energy/anomacore_channeler/proc/on_mouse_up(client/source, object, location, control, params)
 	SIGNAL_HANDLER
 	// Stops the beam automatically
-	set_target(null)
+	stop_beaming()
 	UnregisterSignal(source, list(COMSIG_CLIENT_MOUSEUP, COMSIG_CLIENT_MOUSEDRAG))
 	UnregisterSignal(source.mob, COMSIG_MOB_LOGOUT)
 
 /obj/item/gun/energy/anomacore_channeler/proc/on_logout(mob/living/source)
 	SIGNAL_HANDLER
 	// Stops the beam automatically
-	set_target(null)
+	stop_beaming()
 	// Don't need to clean up the client as it gets deleted on cleanup
 	UnregisterSignal(source, COMSIG_MOB_LOGOUT)
 
@@ -152,31 +219,74 @@
 
 	cur_target = new_target
 	if (!new_target || (!isturf(new_target) && !isturf(new_target.loc)))
-		stop_beaming()
+		cut_beam()
 		return
 
-	beam_x = text2num(LAZYACCESS(modifiers, ICON_X)) || ICON_SIZE_X / 2
-	beam_y = text2num(LAZYACCESS(modifiers, ICON_Y)) || ICON_SIZE_Y / 2
+	target_x = text2num(LAZYACCESS(modifiers, ICON_X)) || ICON_SIZE_X / 2
+	target_y = text2num(LAZYACCESS(modifiers, ICON_Y)) || ICON_SIZE_Y / 2
 	RegisterSignal(cur_target, COMSIG_QDELETING, PROC_REF(on_target_deleted))
-	send_tracer()
 
 /obj/item/gun/energy/anomacore_channeler/proc/on_target_deleted(datum/source)
 	SIGNAL_HANDLER
 	set_target(get_turf(cur_target))
 
 /obj/item/gun/energy/anomacore_channeler/proc/stop_beaming()
+	set_target(null)
+
+/obj/item/gun/energy/anomacore_channeler/proc/cut_beam()
 	charging_beam = BEAM_INACTIVE
 	STOP_PROCESSING(SSfastprocess, src)
 	QDEL_NULL(active_beam)
 
+/obj/item/gun/energy/anomacore_channeler/process(seconds_per_tick)
+	. = ..()
+	if (cur_target && charging_beam == BEAM_CHANNELING)
+		send_tracer()
+
 /obj/item/gun/energy/anomacore_channeler/proc/send_tracer()
+	var/turf/owner_turf = get_turf(loc)
+	var/atom/active_target = locate(beam_x, beam_y, owner_turf.z)
+	var/active_x = beam_pixel_x
+	var/active_y = beam_pixel_y
+
+	if (!active_target)
+		stop_beaming()
+		CRASH("Channeler was unable to locate its target at [beam_x], [beam_y], [owner_turf.z]!")
+
+	var/cur_angle = SIMPLIFY_DEGREES(ATAN2((beam_x - owner_turf.x) * ICON_SIZE_X + beam_pixel_x - (loc.pixel_x - loc.base_pixel_x), (beam_y - owner_turf.y) * ICON_SIZE_Y + beam_pixel_y - (loc.pixel_y - loc.base_pixel_y)))
+	var/target_angle = SIMPLIFY_DEGREES(ATAN2((cur_target.x - owner_turf.x) * ICON_SIZE_X + target_x - (loc.pixel_x - loc.base_pixel_x), (cur_target.y - owner_turf.y) * ICON_SIZE_Y + target_y - (loc.pixel_y - loc.base_pixel_y)))
+	// If the difference between current and targeted angles is equal or less than our turn speed, just target our real target
+	if (abs(target_angle - cur_angle) <= turn_speed || abs(target_angle - cur_angle) >= (360 - turn_speed))
+		active_target = cur_target
+		active_x = target_x
+		active_y = target_y
+	else
+		var/new_angle = SIMPLIFY_DEGREES(cur_angle + turn_speed * SIGN(closer_angle_difference(cur_angle, target_angle)))
+		// Okay so this is mildly cursed, but instead of trying to find a line intersection we can just consider the line between the two as straight vertical line
+		// in which case we just need to find the distance between intersection of arccos(turn_angle) and the line, and that would be our target distance
+		var/cur_dist = sqrt(((beam_x - owner_turf.x) * ICON_SIZE_X + beam_pixel_x - (loc.pixel_x - loc.base_pixel_x)) ** 2 + ((beam_y - owner_turf.y) * ICON_SIZE_Y + beam_pixel_y - (loc.pixel_y - loc.base_pixel_y)) ** 2)
+		// Distance to the intersection, i.e. distance to our target. Boom.
+		var/beam_dist = cur_dist / cos(turn_speed)
+		var/x_offset = owner_turf.x * ICON_SIZE_X + (loc.pixel_x - loc.base_pixel_x) + beam_dist * cos(new_angle)
+		var/y_offset = owner_turf.y * ICON_SIZE_Y + (loc.pixel_y - loc.base_pixel_y) + beam_dist * sin(new_angle)
+		active_x = floor(MODULUS(x_offset, ICON_SIZE_X))
+		active_y = floor(MODULUS(y_offset, ICON_SIZE_Y))
+		var/target_x_pos = floor(x_offset / ICON_SIZE_X)
+		var/target_y_pos = floor(y_offset / ICON_SIZE_Y)
+		beam_x = target_x_pos
+		beam_y = target_y_pos
+		beam_pixel_x = active_x
+		beam_pixel_y = active_y
+		active_target = locate(target_x_pos, target_y_pos, owner_turf.z)
+
 	// God forgive me for this, but sending projectiles out is actually the cleanest, albeit not the most performance-friendly
 	// way to handle continious beam attacks like this. Gives us both a way to apply effects to targets, and allows objects to handle pass logic themselves
-	var/obj/projectile/anomacore_tracer/tracer = new(get_turf(loc))
-	tracer.original = cur_target
+	var/obj/projectile/anomacore_tracer/tracer = new(owner_turf)
+	tracer.original = active_target
 	tracer.firer = loc
 	tracer.fired_from = src
-	tracer.aim_projectile(cur_target, loc, list(ICON_X = beam_x, ICON_Y = beam_y))
+	tracer.range = beam_distance
+	tracer.aim_projectile(active_target, loc, list(ICON_X = active_x, ICON_Y = active_y))
 	tracer.fire()
 
 /obj/item/gun/energy/anomacore_channeler/proc/update_beam(atom/hit_object, impact_x, impact_y)
@@ -188,6 +298,11 @@
 	icon_state = null
 	hitscan = TRUE
 	invisibility = INVISIBILITY_ABSTRACT
+
+/obj/projectile/anomacore_tracer/on_range()
+	var/obj/item/gun/energy/anomacore_channeler/channeler = fired_from
+	channeler.update_beam(get_turf(src), entry_x + movement_vector?.pixel_x * rand(0, ICON_SIZE_X / 2), entry_y + movement_vector?.pixel_y * rand(0, ICON_SIZE_Y / 2))
+	return ..()
 
 /obj/projectile/anomacore_tracer/pre_target_impact(atom/target, impact_mode)
 	if (impact_mode != PROJECTILE_PIERCE_NONE)
