@@ -556,8 +556,7 @@
 		if(mode == PROJECTILE_PIERCE_HIT)
 			pierces += 1
 
-		// Targets should handle their impact logic on our own and if they decide that we hit them, they call our on_hit
-		var/result = target.projectile_hit(src, def_zone, mode == PROJECTILE_PIERCE_HIT)
+		var/result = pre_target_impact(target, mode)
 		if (result != BULLET_ACT_FORCE_PIERCE && max_pierces && pierces >= max_pierces)
 			return PROJECTILE_IMPACT_SUCCESSFUL
 
@@ -573,6 +572,11 @@
 		target = select_target(target_turf, target)
 
 	return PROJECTILE_IMPACT_PASSED
+
+/// Wrapper for projectile_hit calls, should only be used to completely override projectile functionality and nothing else
+/obj/projectile/proc/pre_target_impact(atom/target, impact_mode)
+	// Targets should handle their impact logic on our own and if they decide that we hit them, they call our on_hit
+	return target.projectile_hit(src, def_zone, impact_mode == PROJECTILE_PIERCE_HIT)
 
 /**
  * Selects a target to hit from a turf
