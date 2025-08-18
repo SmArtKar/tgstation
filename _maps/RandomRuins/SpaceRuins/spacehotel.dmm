@@ -2848,6 +2848,10 @@
 	},
 /turf/open/floor/carpet/blue,
 /area/ruin/space/has_grav/hotel)
+"Fd" = (
+/obj/structure/lattice,
+/turf/template_noop,
+/area/ruin/space/has_grav/hotel)
 "Fe" = (
 /obj/machinery/door/airlock{
 	name = "Bathroom"
@@ -3107,7 +3111,7 @@
 /obj/structure/lattice/catwalk,
 /obj/structure/marker_beacon/burgundy,
 /turf/template_noop,
-/area/template_noop)
+/area/ruin/space/has_grav/hotel)
 "Ig" = (
 /obj/structure/sign/warning/no_smoking/circle/directional/north,
 /turf/open/floor/iron/grimy,
@@ -4756,8 +4760,8 @@ Cl
 Cl
 Cl
 Ie
-yV
-yV
+Fd
+Fd
 js
 WD
 QS
@@ -4768,8 +4772,8 @@ WD
 WD
 WD
 UD
-yV
-yV
+Fd
+Fd
 Ie
 Cl
 Cl
@@ -4851,14 +4855,14 @@ lB
 le
 Cl
 Ie
-yV
-yV
+Fd
+Fd
 Up
 WD
 WD
 Up
-yV
-yV
+Fd
+Fd
 Ie
 Cl
 Cl
@@ -4975,8 +4979,8 @@ FM
 Cl
 Cl
 Ie
-yV
-yV
+Fd
+Fd
 js
 WD
 WD
@@ -4987,8 +4991,8 @@ WD
 WD
 WD
 UD
-yV
-yV
+Fd
+Fd
 Ie
 Cl
 Cl

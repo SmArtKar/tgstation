@@ -30,7 +30,7 @@
 /area/ruin/space/has_grav/film_studio/stage)
 "aG" = (
 /obj/structure/lattice,
-/turf/open/space/basic,
+/turf/template_noop,
 /area/template_noop)
 "aI" = (
 /obj/effect/turf_decal/siding/wood,
@@ -181,7 +181,7 @@
 /turf/open/floor/wood,
 /area/ruin/space/has_grav/film_studio/director)
 "dd" = (
-/turf/open/space/basic,
+/turf/template_noop,
 /area/template_noop)
 "dg" = (
 /turf/closed/wall,
@@ -1063,7 +1063,7 @@
 "tD" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/marker_beacon/teal,
-/turf/open/space/basic,
+/turf/template_noop,
 /area/ruin/space)
 "tG" = (
 /obj/structure/railing{
@@ -2209,7 +2209,7 @@
 "Mt" = (
 /obj/structure/lattice,
 /obj/effect/spawner/random/structure/grille,
-/turf/open/space/basic,
+/turf/template_noop,
 /area/ruin/space)
 "MB" = (
 /obj/effect/turf_decal/bot,
@@ -2620,7 +2620,7 @@
 "SY" = (
 /obj/structure/lattice/catwalk,
 /obj/structure/marker_beacon/burgundy,
-/turf/open/space/basic,
+/turf/template_noop,
 /area/ruin/space)
 "Te" = (
 /obj/structure/filingcabinet/filingcabinet,
@@ -3047,7 +3047,7 @@
 /area/ruin/space/has_grav/film_studio/stage)
 "YG" = (
 /obj/structure/lattice,
-/turf/open/space/basic,
+/turf/template_noop,
 /area/ruin/space)
 "YK" = (
 /obj/structure/toilet{

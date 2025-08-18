@@ -258,15 +258,6 @@
 	},
 /turf/open/floor/iron/airless,
 /area/ruin/space/has_grav/derelictconstruction)
-"DU" = (
-/obj/structure/lattice,
-/turf/template_noop,
-/area/template_noop)
-"DY" = (
-/obj/structure/lattice/catwalk,
-/obj/structure/marker_beacon/burgundy,
-/turf/template_noop,
-/area/template_noop)
 "DZ" = (
 /obj/structure/frame,
 /turf/open/misc/asteroid,
@@ -745,8 +736,8 @@ bY
 bY
 "}
 (12,1,1) = {"
-DY
-DU
+Oz
+LL
 Ax
 Ax
 jX
@@ -861,8 +852,8 @@ qM
 qM
 "}
 (16,1,1) = {"
-DY
-DU
+Oz
+LL
 Hq
 uc
 FY
