@@ -32,8 +32,13 @@
 	// Current pixel offsets for the beam
 	var/beam_pixel_x = ICON_SIZE_X / 2
 	var/beam_pixel_y = ICON_SIZE_Y / 2
-	/// Active beam visual
-	var/datum/beam/active_beam = null
+
+	/// List of current tracer effects so we can recycle them instead of constantly recreating
+	var/list/obj/effect/projectile/tracer/tracers = list()
+	/// Active muzzle effect, so we dont recreate it every shot
+	var/obj/effect/projectile/muzzle/muzzle_effect = null
+	/// Active muzzle effect, so we dont recreate it every shot
+	var/obj/effect/projectile/impact/impact_effect = null
 
 /obj/item/gun/energy/anomacore_channeler/Initialize(mapload)
 	. = ..()
@@ -47,6 +52,9 @@
 	if (isliving(loc))
 		stop_tracking(loc)
 	QDEL_NULL(installed_core)
+	QDEL_LIST(tracers)
+	QDEL_NULL(muzzle_effect)
+	QDEL_NULL(impact_effect)
 	return ..()
 
 /obj/item/gun/energy/anomacore_channeler/equipped(mob/user, slot, initial)
@@ -236,7 +244,9 @@
 /obj/item/gun/energy/anomacore_channeler/proc/cut_beam()
 	charging_beam = BEAM_INACTIVE
 	STOP_PROCESSING(SSfastprocess, src)
-	QDEL_NULL(active_beam)
+	QDEL_LIST(tracers)
+	QDEL_NULL(muzzle_effect)
+	QDEL_NULL(impact_effect)
 
 /obj/item/gun/energy/anomacore_channeler/process(seconds_per_tick)
 	. = ..()
@@ -289,32 +299,104 @@
 	tracer.aim_projectile(active_target, loc, list(ICON_X = active_x, ICON_Y = active_y))
 	tracer.fire()
 
-/obj/item/gun/energy/anomacore_channeler/proc/update_beam(atom/hit_object, impact_x, impact_y)
-	QDEL_NULL(active_beam)
-	active_beam = loc.Beam(hit_object, "2-full", override_target_pixel_x = impact_x, override_target_pixel_y = impact_y)
-
 /obj/projectile/anomacore_tracer
 	name = "anomacore beam"
 	icon_state = null
+	armor_flag = LASER
+	pass_flags = PASSTABLE
+	hitsound = 'sound/items/weapons/sear.ogg'
+	hitsound_wall = 'sound/items/weapons/effects/searwall.ogg'
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/red_laser
+	light_system = OVERLAY_LIGHT
+	light_range = 1
+	light_power = 1.4
+	light_color = COLOR_SOFT_RED
+	ricochets_max = 50
+	ricochet_chance = 0
+	reflectable = TRUE
+	wound_bonus = -20
+	exposed_wound_bonus = 10
+	tracer_type = /obj/effect/projectile/tracer/laser
+	muzzle_type = /obj/effect/projectile/muzzle/laser
+	impact_type = /obj/effect/projectile/impact/laser
 	hitscan = TRUE
-	invisibility = INVISIBILITY_ABSTRACT
 
-/obj/projectile/anomacore_tracer/on_range()
+/obj/projectile/anomacore_tracer/generate_tracer(datum/point/start_point, point_index, list/passed_turfs)
 	var/obj/item/gun/energy/anomacore_channeler/channeler = fired_from
-	channeler.update_beam(get_turf(src), entry_x + movement_vector?.pixel_x * rand(0, ICON_SIZE_X / 2), entry_y + movement_vector?.pixel_y * rand(0, ICON_SIZE_Y / 2))
-	return ..()
+	if (!istype(channeler))
+		return ..()
 
-/obj/projectile/anomacore_tracer/pre_target_impact(atom/target, impact_mode)
-	if (impact_mode != PROJECTILE_PIERCE_NONE)
-		return BULLET_ACT_FORCE_PIERCE
+	if (isnull(beam_points[start_point]))
+		return
+
+	var/datum/point/end_point = beam_points[start_point]
+	var/datum/point/midpoint = point_midpoint_points(start_point, end_point)
+
+	var/obj/effect/projectile/tracer/tracer_effect = null
+	if (length(channeler.tracers) >= point_index)
+		tracer_effect = channeler.tracers[point_index]
+		tracer_effect.forceMove(midpoint.return_turf())
+	else
+		tracer_effect = new tracer_type(midpoint.return_turf())
+		tracer_effect.animate_movement = NO_STEPS // we dont want BYOND trying to glide our beams
+		channeler.tracers += tracer_effect
+
+	tracer_effect.apply_vars(
+		angle_override = angle_between_points(start_point, end_point),
+		p_x = midpoint.pixel_x,
+		p_y = midpoint.pixel_y,
+		color_override = color,
+		scaling = pixel_length_between_points(start_point, end_point) / ICON_SIZE_ALL,
+		override = TRUE,
+	)
+
+	SET_PLANE_EXPLICIT(tracer_effect, GAME_PLANE, src)
+
+/obj/projectile/anomacore_tracer/generate_hitscan_tracers(impact_point = TRUE, impact_visual = TRUE)
+	if (!length(beam_points))
+		return
+
 	var/obj/item/gun/energy/anomacore_channeler/channeler = fired_from
-	var/impact_x = target.pixel_x + p_x - ICON_SIZE_X / 2
-	var/impact_y = target.pixel_y + p_y - ICON_SIZE_Y / 2
-	if(target != original)
-		impact_x = entry_x + movement_vector?.pixel_x * rand(0, ICON_SIZE_X / 2)
-		impact_y = entry_y + movement_vector?.pixel_y * rand(0, ICON_SIZE_Y / 2)
-	channeler.update_beam(target, impact_x, impact_y)
-	return BULLET_ACT_HIT
+	if (!istype(channeler))
+		return ..()
+
+	if (impact_point)
+		create_hitscan_point(impact = TRUE)
+
+	if (tracer_type)
+		for (var/point_index in 1 to length(beam_points))
+			generate_tracer(beam_points[point_index], point_index)
+
+	if (length(channeler.tracers) > length(beam_points))
+		for (var/i in length(beam_points) + 1 to length(channeler.tracers))
+			qdel(channeler.tracers[i])
+		channeler.tracers.Cut(length(beam_points) + 1, length(channeler.tracers) + 1)
+
+	if (muzzle_type && !spawned_muzzle)
+		spawned_muzzle = TRUE
+		var/datum/point/start_point = beam_points[1]
+		if (!channeler.muzzle_effect)
+			channeler.muzzle_effect = new muzzle_type(loc)
+			channeler.muzzle_effect.animate_movement = NO_STEPS
+			channeler.muzzle_effect.color =  color
+			channeler.muzzle_effect.set_light(muzzle_flash_range, muzzle_flash_intensity, muzzle_flash_color_override || color)
+
+		start_point.move_atom_to_src(channeler.muzzle_effect)
+		var/matrix/matrix = new
+		matrix.Turn(original_angle)
+		channeler.muzzle_effect.transform = matrix
+
+	if (impact_type && impact_visual)
+		if (!channeler.impact_effect)
+			channeler.impact_effect = new impact_type(loc)
+			channeler.impact_effect.animate_movement = NO_STEPS
+			channeler.impact_effect.color =  color
+			channeler.impact_effect.set_light(impact_light_range, impact_light_intensity, impact_light_color_override || color)
+
+		last_point.move_atom_to_src(channeler.impact_effect)
+		var/matrix/matrix = new
+		matrix.Turn(angle)
+		channeler.impact_effect.transform = matrix
 
 #undef BEAM_INACTIVE
 #undef BEAM_CHARGING
