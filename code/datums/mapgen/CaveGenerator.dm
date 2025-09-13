@@ -251,15 +251,15 @@
 
 			if (feature_allowed && prob(feature_spawn_chance))
 				var/can_spawn = TRUE
-				for(var/list/coord_set as anything in spawn_data[CAVE_SPAWN_FEATURE])
-					if (abs(coord_set[1] - target_turf.x) + abs(coord_set[2] - target_turf.y) <= feature_exclusion_radius)
+				for(var/turf/spawn_turf as anything in spawn_data[CAVE_SPAWN_FEATURE])
+					if (get_dist(spawn_turf, target_turf) <= feature_exclusion_radius)
 						can_spawn = FALSE
 						break
 
 				if (can_spawn)
 					var/picked_feature = pick(feature_spawn_list)
 					new picked_feature(target_turf)
-					spawn_data[CAVE_SPAWN_FEATURE] += list(list(target_turf.x, target_turf.y))
+					spawn_data[CAVE_SPAWN_FEATURE] += target_turf
 					continue
 
 		if (!mobs_allowed || !prob(mob_spawn_chance))
@@ -274,25 +274,25 @@
 		var/can_spawn = TRUE
 		if(ispath(picked_mob, /obj/structure/spawner/lavaland))
 			// Prevents tendrils spawning in each other's collapse range
-			for(var/list/coord_set as anything in spawn_data[CAVE_SPAWN_TENDRIL])
-				if (abs(coord_set[1] - target_turf.x) + abs(coord_set[2] - target_turf.y) <= 2)
+			for(var/turf/spawn_turf as anything in spawn_data[CAVE_SPAWN_TENDRIL])
+				if (get_dist(spawn_turf, target_turf) <= 2)
 					can_spawn = FALSE
 					break
 
 			// Also avoid spawning them next to megafauna
-			for(var/list/coord_set as anything in spawn_data[CAVE_SPAWN_MEGAFAUNA])
-				if (abs(coord_set[1] - target_turf.x) + abs(coord_set[2] - target_turf.y) <= megafauna_exclusion_radius)
+			for(var/turf/spawn_turf as anything in spawn_data[CAVE_SPAWN_MEGAFAUNA])
+				if (get_dist(spawn_turf, target_turf) <= megafauna_exclusion_radius)
 					can_spawn = FALSE
 					break
 		else if (is_megafauna)
 			// Megafauna can spawn wherever it wants as long as its not next to another mega
-			for(var/list/coord_set as anything in spawn_data[CAVE_SPAWN_MEGAFAUNA])
-				if (abs(coord_set[1] - target_turf.x) + abs(coord_set[2] - target_turf.y) <= megafauna_exclusion_radius)
+			for(var/turf/spawn_turf as anything in spawn_data[CAVE_SPAWN_MEGAFAUNA])
+				if (get_dist(spawn_turf, target_turf) <= megafauna_exclusion_radius)
 					can_spawn = FALSE
 					break
 		else
-			for(var/list/coord_set as anything in spawn_data[CAVE_SPAWN_MOB])
-				if (abs(coord_set[1] - target_turf.x) + abs(coord_set[2] - target_turf.y) <= mob_exclusion_radius)
+			for(var/turf/spawn_turf as anything in spawn_data[CAVE_SPAWN_MOB])
+				if (get_dist(spawn_turf, target_turf) <= mob_exclusion_radius)
 					can_spawn = FALSE
 					break
 
@@ -300,11 +300,11 @@
 			continue
 
 		if (ispath(picked_mob, /obj/structure/spawner/lavaland))
-			spawn_data[CAVE_SPAWN_TENDRIL] += list(list(target_turf.x, target_turf.y))
+			spawn_data[CAVE_SPAWN_TENDRIL] += target_turf
 		else
 			if (is_megafauna)
-				spawn_data[CAVE_SPAWN_MEGAFAUNA] += list(list(target_turf.x, target_turf.y))
-			spawn_data[CAVE_SPAWN_MOB] += list(list(target_turf.x, target_turf.y))
+				spawn_data[CAVE_SPAWN_MEGAFAUNA] += target_turf
+			spawn_data[CAVE_SPAWN_MOB] += target_turf
 
 		new picked_mob(target_turf)
 
