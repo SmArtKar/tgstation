@@ -31,8 +31,8 @@
 		if(!rock.scan_state)
 			continue
 		var/mutable_appearance/scan = mutable_appearance('icons/effects/ore_visuals.dmi', rock.scan_state, FLASH_LAYER, rock, HIGH_GAME_PLANE)
-		scan.pixel_w = -224
-		scan.pixel_z = -224
+		scan.pixel_w = -220
+		scan.pixel_z = -220
 		rock.add_overlay(scan)
 	qdel(src)
 

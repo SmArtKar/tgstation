@@ -74,26 +74,96 @@
 	else if(held_item.tool_behaviour == TOOL_MINING)
 		attackby(held_item, bumping)
 
-/turf/closed/mineral/proc/spread_vein()
-	var/spread_chance = initial(mineral_type.spread_chance)
-	if(spread_chance)
-		for(var/dir in GLOB.cardinals)
-			if(prob(spread_chance))
-				var/turf/T = get_step(src, dir)
-				var/turf/closed/mineral/random/M = T
-				if(istype(M) && !M.mineral_type)
-					M.change_ore(mineral_type)
+/turf/closed/mineral/proc/spread_vein(ore_type)
+	if(!ispath(ore_type, /obj/item/stack/ore))
+		change_ore(ore_type)
+		return
 
-/turf/closed/mineral/proc/change_ore(ore_type, random = 0)
-	if(random)
-		mineral_amt = rand(1, 5)
-	if(ispath(ore_type, /obj/item/stack/ore)) // If it has a scan_state, switch to it
-		var/obj/item/stack/ore/the_ore = ore_type
-		scan_state = initial(the_ore.scan_state) // I SAID. SWITCH. TO. IT.
-		mineral_type = ore_type // Everything else assumes that this is typed correctly so don't set it to non-ores thanks.
-	if(ispath(ore_type, /obj/item/boulder))
+	var/obj/item/stack/ore/ore_path = ore_type
+	if (!ore_path::vein_type)
+		change_ore(ore_type)
+		return
+
+	var/vein_size = ore_path::vein_size
+	switch (ore_path::vein_type)
+		if (ORE_VEIN_CLUSTER)
+			var/vein_radius = rand(ceil((floor(vein_size * 0.5) - 1) / 2), ceil((ceil(vein_size * 1.33) - 1) / 2))
+			for (var/turf/closed/mineral/rock in range(vein_radius, src))
+				if (rock.mineral_type)
+					continue
+
+				if (rock == src || prob(100 * sqrt(max(0, 1 - sqrt((x - rock.x) ** 2 + (y - rock.y) ** 2) / vein_radius))))
+					rock.change_ore(ore_path)
+
+		if (ORE_VEIN_SCATTER)
+			var/vein_radius = rand(ceil((floor(vein_size * 0.5) - 1) / 2), ceil((ceil(vein_size * 1.33) - 1) / 2))
+			var/list/turf/closed/mineral/rocks = list()
+			for (var/turf/closed/mineral/rock in range(vein_radius, src))
+				if (!rock.mineral_type)
+					rocks += rock
+
+			for (var/i in 1 to rand(1, 5))
+				var/turf/closed/mineral/rock = pick_n_take(rocks)
+				rock.change_ore(ore_path, FALSE)
+				rock.mineral_amt = 1
+
+		if (ORE_VEIN_PLAIN)
+			var/vein_length = rand(floor(vein_size * 0.5), ceil(vein_size * 1.33))
+			var/list/turf/closed/mineral/rocks = list()
+			for (var/turf/closed/mineral/rock in range(vein_length, src))
+				if (!rock.mineral_type)
+					rocks += rock
+
+			var/turf/first_end = pick(rocks)
+			var/first_dist = get_dist(src, first_end)
+			var/second_dist = vein_length - first_dist
+			var/turf/second_end = locate(x - round((first_end.x - x) / first_dist * second_dist, 1), y - round((first_end.y - y) / first_dist * second_dist, 1), z)
+			if (!istype(second_end))
+				second_end = src
+
+			rocks.Cut()
+			for (var/turf/closed/mineral/rock in range(1, second_end))
+				if (!rock.mineral_type)
+					rocks += rock
+
+			second_end = pick(rocks)
+			for (var/turf/closed/mineral/rock in get_line(first_end, src) + get_line(second_end, src))
+				rock.change_ore(ore_path)
+				if (rock == src || prob(100 / get_dist(src, rock)))
+					var/turf/closed/mineral/other_rock = get_step(rock, pick(GLOB.cardinals))
+					if (istype(other_rock) && !other_rock.mineral_type)
+						other_rock.change_ore(ore_path)
+
+		if (ORE_VEIN_BRANCH)
+			for (var/branch in 1 to rand(3, 5))
+				var/vein_length = rand(floor(vein_size * 0.2), ceil(vein_size * 0.4))
+				var/list/turf/closed/mineral/rocks = list()
+				for (var/turf/closed/mineral/rock in range(vein_length, src))
+					if (!rock.mineral_type)
+						rocks += rock
+
+				if (!length(rocks))
+					continue
+
+				for (var/turf/closed/mineral/rock in get_line(src, pick(rocks)))
+					if (!rock.mineral_type)
+						rock.change_ore(ore_path)
+
+/turf/closed/mineral/proc/change_ore(ore_type, random = TRUE)
+	if (ispath(ore_type, /obj/item/boulder))
 		scan_state = "rock_boulder" // Yes even the lowly boulder has a scan state
 		spawned_boulder = /obj/item/boulder/gulag_expanded
+		return
+
+	if (random)
+		mineral_amt = rand(1, 5)
+
+	if (!ispath(ore_type, /obj/item/stack/ore))
+		return
+
+	var/obj/item/stack/ore/the_ore = ore_type
+	scan_state = initial(the_ore.scan_state) // If it has a scan_state, switch to it
+	mineral_type = ore_type // Everything else assumes that this is typed correctly so don't set it to non-ores thanks.
 
 /turf/closed/mineral/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
 	if(turf_type)
@@ -257,6 +327,10 @@
 	var/exposure_based = FALSE
 	/// Chance of spawning a specific mineral per type, cached for speed
 	var/static/list/mineral_chances_by_type = list()
+	/// Chance of spawning a specific mineral per type per depth
+	var/static/list/mineral_chances_by_depth = list()
+	/// Sum of ore spawn probabilities per type per depth
+	var/static/list/spawn_chances_by_depth = list()
 
 /// Returns a list of the chances for minerals to spawn.
 /// Will only run once, and will then be cached.
@@ -289,31 +363,68 @@
 		spawn_ore(pick(spawn_chance_list))
 
 /turf/closed/mineral/random/proc/randomize_ore()
+#ifdef TESTING
 	if (open_turf_distance == -1)
 		color = COLOR_BLUE
-		return
-
-	color = BlendRGB(COLOR_GREEN, COLOR_RED, clamp((open_turf_distance - 1) / 5, 0, 0.99))
+	else
+		color = BlendRGB(COLOR_GREEN, COLOR_RED, clamp((open_turf_distance - 1) / 5, 0, 0.99))
 	maptext_x = 4
 	maptext_y = 4
 	maptext = MAPTEXT_TINY_UNICODE("[open_turf_distance]")
+#endif
 
-	/*
-	if (!prob(max(0, 10 - open_turf_distance * 2) * 10))
-		return
+	var/list/spawn_type_list = mineral_chances_by_depth[type]
+	if (isnull(spawn_type_list))
+		spawn_type_list = list()
+		mineral_chances_by_depth[type] = spawn_type_list
 
-	var/list/spawn_chance_list = mineral_chances_by_type[type]
+	var/list/ore_depth_chances = spawn_chances_by_depth[type]
+	if (isnull(ore_depth_chances))
+		ore_depth_chances = list()
+		spawn_chances_by_depth[type] = ore_depth_chances
+
+	var/list/spawn_chance_list = spawn_type_list["[open_turf_distance]"]
+	var/ore_depth_chance = ore_depth_chances["[open_turf_distance]"]
 	if (isnull(spawn_chance_list))
-		mineral_chances_by_type[type] = expand_weights(mineral_chances())
-		spawn_chance_list = mineral_chances_by_type[type]
-	spawn_ore(pick(spawn_chance_list))
-	*/
+		spawn_chance_list = mineral_chances()
+		var/total_spawn_sum = 0
+		var/base_spawn_sum = 0
+		var/lowest_factor = 1
+		for (var/obj/item/stack/ore/ore_type as anything in spawn_chance_list)
+			base_spawn_sum += spawn_chance_list[ore_type]
+			if (!ispath(ore_type, /obj/item/stack/ore))
+				total_spawn_sum += spawn_chance_list[ore_type]
+				continue
+
+			var/depth_factor = 1 / (1 + abs(ore_type::vein_distance - open_turf_distance))
+			lowest_factor = clamp(ceil(1 / (spawn_chance_list[ore_type] * depth_factor)), lowest_factor, ORE_CHANCE_PRECISION)
+			spawn_chance_list[ore_type] *= depth_factor
+			total_spawn_sum += spawn_chance_list[ore_type]
+
+		for (var/obj/item/stack/ore/ore_type as anything in spawn_chance_list)
+			spawn_chance_list[ore_type] = floor(spawn_chance_list[ore_type] * lowest_factor)
+
+		spawn_chance_list = expand_weights(spawn_chance_list)
+		ore_depth_chance = mineral_chance * total_spawn_sum / base_spawn_sum
+
+		spawn_type_list["[open_turf_distance]"] = spawn_chance_list
+		ore_depth_chances["[open_turf_distance]"] = ore_depth_chance
+
+	if (prob(ore_depth_chance))
+		spawn_ore(pick(spawn_chance_list))
 
 /turf/closed/mineral/random/proc/spawn_ore(ore_path)
+	if (!SSore_generation.ores_generated[ore_path])
+		SSore_generation.ores_generated[ore_path] = 0
+	SSore_generation.ores_generated[ore_path] += 1
+
 	if(!ispath(ore_path, /turf))
-		change_ore(ore_path, FALSE)
-		spread_vein(ore_path)
-		mineral_amt = rand(1, 5)
+		change_ore(ore_path)
+		if (!ispath(ore_path, /obj/item/stack/ore))
+			return
+		var/obj/item/stack/ore/ore_type = ore_path
+		if (prob(ore_type::spread_chance))
+			spread_vein(ore_path)
 		return
 
 	var/stored_flags = 0
@@ -434,7 +545,7 @@
 	weak_turf = TRUE
 	exposure_based = TRUE
 
-/turf/closed/mineral/random/snow/change_ore(ore_type, random = 0)
+/turf/closed/mineral/random/snow/change_ore(ore_type, random = TRUE)
 	. = ..()
 	if(mineral_type)
 		icon = 'icons/turf/walls/icerock_wall.dmi'
@@ -535,7 +646,7 @@
 		/turf/closed/mineral/gibtonite/ice/icemoon = 2,
 	)
 
-/turf/closed/mineral/random/labormineral/ice/change_ore(ore_type, random = 0)
+/turf/closed/mineral/random/labormineral/ice/change_ore(ore_type, random = TRUE)
 	. = ..()
 	if(mineral_type)
 		icon = 'icons/turf/walls/icerock_wall.dmi'

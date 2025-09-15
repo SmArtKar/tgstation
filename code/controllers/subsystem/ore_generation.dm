@@ -22,6 +22,8 @@ SUBSYSTEM_DEF(ore_generation)
 	var/list/ore_vent_minerals = list()
 	/// List of ore turfs that want to be randomized
 	var/list/turf/closed/mineral/random/ore_turfs = list()
+	/// Amount of ores by type generated
+	var/list/ores_generated = list()
 
 /datum/controller/subsystem/ore_generation/Initialize()
 	//Basically, we're going to round robin through the list of ore vents and assign a mineral to them until complete.

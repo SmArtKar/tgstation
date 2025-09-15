@@ -51,5 +51,15 @@
 #define OREGEN_PRESET_LAVALAND "lavaland"
 #define OREGEN_PRESET_TRIPLE_Z "triple_z"
 
-/// Maximum distance for the ore spawning floodfill to look
-#define OREGEN_FLOODFILL_MAX_DISTANCE 48
+// Ore vein types
+/// Round ore cluster
+#define ORE_VEIN_CLUSTER "cluster"
+/// Randomly scattered ore
+#define ORE_VEIN_SCATTER "scatter"
+/// A straight or slightly bent uneven line
+#define ORE_VEIN_PLAIN "plain"
+/// A branching tree-like vein
+#define ORE_VEIN_BRANCH "branch"
+
+/// Maximum precision for ore spawn probabilities
+#define ORE_CHANCE_PRECISION 5

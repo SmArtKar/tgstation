@@ -13,6 +13,9 @@
 	grind_results = list(/datum/reagent/bluespace = 20)
 	scan_state = "rock_bscrystal"
 	merge_type = /obj/item/stack/ore/bluespace_crystal
+	vein_type = ORE_VEIN_SCATTER
+	vein_size = 2
+	vein_distance = 5
 	/// The teleport range when crushed/thrown at someone.
 	var/blink_range = 8
 
