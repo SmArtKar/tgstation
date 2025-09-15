@@ -16,7 +16,7 @@
 	novariants = TRUE // Ore stacks handle their icon updates themselves to keep the illusion that there's more going
 	var/list/stack_overlays
 	var/scan_state = "" //Used by mineral turfs for their scan overlay.
-	var/spreadChance = 0 //Also used by mineral turfs for spreading veins
+	var/spread_chance = 0 //Also used by mineral turfs for spreading veins
 	drop_sound = SFX_STONE_DROP
 	pickup_sound = SFX_STONE_PICKUP
 	sound_vary = TRUE
@@ -88,7 +88,7 @@
 	refined_type = /obj/item/stack/sheet/mineral/uranium
 	mine_experience = 6
 	scan_state = "rock_uranium"
-	spreadChance = 5
+	spread_chance = 5
 	merge_type = /obj/item/stack/ore/uranium
 
 /obj/item/stack/ore/iron
@@ -100,7 +100,7 @@
 	refined_type = /obj/item/stack/sheet/iron
 	mine_experience = 1
 	scan_state = "rock_iron"
-	spreadChance = 20
+	spread_chance = 20
 	merge_type = /obj/item/stack/ore/iron
 
 /obj/item/stack/ore/glass
@@ -172,7 +172,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	refined_type = /obj/item/stack/sheet/mineral/plasma
 	mine_experience = 5
 	scan_state = "rock_plasma"
-	spreadChance = 8
+	spread_chance = 8
 	merge_type = /obj/item/stack/ore/plasma
 
 /obj/item/stack/ore/plasma/welder_act(mob/living/user, obj/item/I)
@@ -188,7 +188,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	mats_per_unit = list(/datum/material/silver=SHEET_MATERIAL_AMOUNT)
 	refined_type = /obj/item/stack/sheet/mineral/silver
 	scan_state = "rock_silver"
-	spreadChance = 5
+	spread_chance = 5
 	merge_type = /obj/item/stack/ore/silver
 
 /obj/item/stack/ore/gold
@@ -200,7 +200,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	mats_per_unit = list(/datum/material/gold=SHEET_MATERIAL_AMOUNT)
 	refined_type = /obj/item/stack/sheet/mineral/gold
 	scan_state = "rock_gold"
-	spreadChance = 5
+	spread_chance = 5
 	merge_type = /obj/item/stack/ore/gold
 
 /obj/item/stack/ore/diamond
@@ -237,7 +237,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	refined_type = /obj/item/stack/sheet/mineral/titanium
 	mine_experience = 3
 	scan_state = "rock_titanium"
-	spreadChance = 5
+	spread_chance = 5
 	merge_type = /obj/item/stack/ore/titanium
 
 /obj/item/stack/ore/slag

@@ -27,9 +27,13 @@
 /obj/item/mining_scanner/admin
 
 /obj/item/mining_scanner/admin/attack_self(mob/user)
-	for(var/turf/closed/mineral/M in world)
-		if(M.scan_state)
-			M.icon_state = M.scan_state
+	for(var/turf/closed/mineral/rock in world)
+		if(!rock.scan_state)
+			continue
+		var/mutable_appearance/scan = mutable_appearance('icons/effects/ore_visuals.dmi', rock.scan_state, FLASH_LAYER, rock, HIGH_GAME_PLANE)
+		scan.pixel_w = -224
+		scan.pixel_z = -224
+		rock.add_overlay(scan)
 	qdel(src)
 
 /obj/item/t_scanner/adv_mining_scanner

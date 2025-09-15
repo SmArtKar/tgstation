@@ -20,8 +20,8 @@ SUBSYSTEM_DEF(ore_generation)
 	 * If we call cave_generation more than once, we copy a list from the lists in lists/ores_spawned.dm
 	 */
 	var/list/ore_vent_minerals = list()
-
-	/// A tracker of how many of each ore vent size we have in the game. Useful for tracking purposes.
+	/// List of ore turfs that want to be randomized
+	var/list/turf/closed/mineral/random/ore_turfs = list()
 
 /datum/controller/subsystem/ore_generation/Initialize()
 	//Basically, we're going to round robin through the list of ore vents and assign a mineral to them until complete.
@@ -42,29 +42,6 @@ SUBSYSTEM_DEF(ore_generation)
 		if(stallbreaker >= length(possible_vents))
 			break //We've done all we can here. break outer loop
 
-	/// Handles roundstart logging
-	logger.Log(
-		LOG_CATEGORY_CAVE_GENERATION,
-		"Ore Generation spawned the following ores based on vent proximity",
-		list(
-			"[ORE_WALL_FAR]" = GLOB.post_ore_random["[ORE_WALL_FAR]"],
-			"[ORE_WALL_LOW]" = GLOB.post_ore_random["[ORE_WALL_LOW]"],
-			"[ORE_WALL_MEDIUM]" = GLOB.post_ore_random["[ORE_WALL_MEDIUM]"],
-			"[ORE_WALL_HIGH]" = GLOB.post_ore_random["[ORE_WALL_HIGH]"],
-			"[ORE_WALL_VERY_HIGH]" = GLOB.post_ore_random["[ORE_WALL_VERY_HIGH]"],
-		),
-	)
-	logger.Log(
-		LOG_CATEGORY_CAVE_GENERATION,
-		"Ore Generation spawned the following ores randomly",
-		list(
-			"[ORE_WALL_FAR]" = GLOB.post_ore_manual["[ORE_WALL_FAR]"],
-			"[ORE_WALL_LOW]" = GLOB.post_ore_manual["[ORE_WALL_LOW]"],
-			"[ORE_WALL_MEDIUM]" = GLOB.post_ore_manual["[ORE_WALL_MEDIUM]"],
-			"[ORE_WALL_HIGH]" = GLOB.post_ore_manual["[ORE_WALL_HIGH]"],
-			"[ORE_WALL_VERY_HIGH]" = GLOB.post_ore_manual["[ORE_WALL_VERY_HIGH]"],
-		),
-	)
 	logger.Log(
 		LOG_CATEGORY_CAVE_GENERATION,
 		"Ore Generation spawned the following vent sizes",
@@ -74,6 +51,11 @@ SUBSYSTEM_DEF(ore_generation)
 			"small" = LAZYACCESS(GLOB.ore_vent_sizes, SMALL_VENT_TYPE),
 		),
 	)
+
+	randomize_mineral_ores()
+	for (var/turf/closed/mineral/random/rock in ore_turfs) // Typecheck in case they got destroyed
+		rock.randomize_ore()
+
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/ore_generation/fire(resumed)
