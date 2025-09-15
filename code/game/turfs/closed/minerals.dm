@@ -136,7 +136,7 @@
 
 		if (ORE_VEIN_BRANCH)
 			for (var/branch in 1 to rand(3, 5))
-				var/vein_length = rand(floor(vein_size * 0.2), ceil(vein_size * 0.4))
+				var/vein_length = rand(floor(vein_size * 0.25), ceil(vein_size * 0.5))
 				var/list/turf/closed/mineral/rocks = list()
 				for (var/turf/closed/mineral/rock in range(vein_length, src))
 					if (!rock.mineral_type)
