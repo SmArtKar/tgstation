@@ -69,12 +69,14 @@
 		//Overlay
 		var/image/lip_overlay = image('icons/mob/human/human_face.dmi', "lips_[lip_style]", -BODY_LAYER)
 		lip_overlay.color = lip_color
-		//Emissive blocker
-		if(blocks_emissive != EMISSIVE_BLOCK_NONE)
-			lip_overlay.overlays += emissive_blocker(lip_overlay.icon, lip_overlay.icon_state, location, alpha = facial_hair_alpha)
 		//Offsets
 		worn_face_offset?.apply_offset(lip_overlay)
 		. += lip_overlay
+		//Emissive blocker
+		if(blocks_emissive != EMISSIVE_BLOCK_NONE)
+			var/mutable_appearance/lip_blocker = emissive_blocker(lip_overlay.icon, lip_overlay.icon_state, location, -HAIR_LAYER, alpha = facial_hair_alpha)
+			worn_face_offset?.apply_offset(lip_blocker)
+			. += lip_blocker
 
 	var/image/facial_hair_overlay
 	if(!facial_hair_hidden && facial_hairstyle && (head_flags & HEAD_FACIAL_HAIR))
@@ -83,12 +85,14 @@
 			//Overlay
 			facial_hair_overlay = image(sprite_accessory.icon, sprite_accessory.icon_state, -HAIR_LAYER)
 			facial_hair_overlay.alpha = facial_hair_alpha
-			//Emissive blocker
-			if(blocks_emissive != EMISSIVE_BLOCK_NONE)
-				facial_hair_overlay.overlays += emissive_blocker(facial_hair_overlay.icon, facial_hair_overlay.icon_state, location, alpha = facial_hair_alpha)
 			//Offsets
 			worn_face_offset?.apply_offset(facial_hair_overlay)
 			. += facial_hair_overlay
+			//Emissive blocker
+			if(blocks_emissive != EMISSIVE_BLOCK_NONE)
+				var/mutable_appearance/facial_blocker = emissive_blocker(facial_hair_overlay.icon, facial_hair_overlay.icon_state, location, -HAIR_LAYER, alpha = facial_hair_alpha)
+				worn_face_offset?.apply_offset(facial_blocker)
+				. += facial_blocker
 			//Gradients
 			var/facial_hair_gradient_style = gradient_styles[GRADIENT_FACIAL_HAIR_KEY]
 			if(facial_hair_gradient_style != "None")
@@ -116,12 +120,15 @@
 			for(var/image/hair_overlay as anything in all_hair_overlays)
 				hair_overlay.alpha = hair_alpha
 				hair_overlay.pixel_z = hair_sprite_accessory.y_offset
-				//Emissive blocker
-				if(blocks_emissive != EMISSIVE_BLOCK_NONE)
-					hair_overlay.overlays += emissive_blocker(hair_overlay.icon, hair_overlay.icon_state, location, alpha = hair_alpha)
 				//Offsets
 				worn_face_offset?.apply_offset(hair_overlay)
 				. += hair_overlay
+				//Emissive blocker
+				if(blocks_emissive != EMISSIVE_BLOCK_NONE)
+					var/mutable_appearance/hair_blocker = emissive_blocker(hair_overlay.icon, hair_overlay.icon_state, location, -OUTER_HAIR_LAYER, alpha = hair_alpha)
+					hair_blocker.pixel_z = hair_sprite_accessory.y_offset
+					worn_face_offset?.apply_offset(hair_blocker)
+					. += hair_blocker
 				//Gradients
 				var/hair_gradient_style = gradient_styles[GRADIENT_HAIR_KEY]
 				if(hair_gradient_style != "None")

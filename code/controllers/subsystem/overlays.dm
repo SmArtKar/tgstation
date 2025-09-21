@@ -233,12 +233,12 @@ SUBSYSTEM_DEF(overlays)
 
 /// Extracts KEEP_APART overlays from the passed appearance, required due to a BYOND bug
 /// Kinda expensive, so limit usage to only frequently seen and transformed things (such as humans with their pesky clothing breaking emissives and emissive blockers)
-/proc/flatten_overlays(mutable_appearance/source)
+/proc/flatten_overlays(mutable_appearance/source, atom/offset_spokesman)
 	var/list/result = null
 	var/index = 1
 	var/list/index_overlays = source.overlays
 	var/static_flags = (source.appearance_flags & (LONG_GLIDE|NO_CLIENT_COLOR|TILE_BOUND|PIXEL_SCALE|PASS_MOUSE|TILE_MOVER))
-	while (index < length(index_overlays))
+	while (index <= length(index_overlays))
 		var/mutable_appearance/overlay = index_overlays[index]
 		index += 1
 		if (istext(overlay)) // I hate john featurecoder
@@ -255,7 +255,7 @@ SUBSYSTEM_DEF(overlays)
 			index_overlays += nested
 			continue
 
-		if (!(overlay.appearance_flags & RESET_COLOR))
+		if (!(overlay.appearance_flags & RESET_COLOR) && source.color)
 			if (overlay.color)
 				if (!islist(source.color))
 					if (!islist(overlay.color))
@@ -266,7 +266,7 @@ SUBSYSTEM_DEF(overlays)
 						overlay.color = apply_matrix_to_color(source.color, overlay.color, COLORSPACE_RGB)
 				else
 					if (!islist(overlay.color))
-						source.color = apply_matrix_to_color(overlay.color, source.color, COLORSPACE_RGB)
+						overlay.color = apply_matrix_to_color(overlay.color, source.color, COLORSPACE_RGB)
 					else
 						overlay.color = blend_color_matrices(overlay.color, source.color)
 			else
@@ -291,7 +291,6 @@ SUBSYSTEM_DEF(overlays)
 
 		// Inherit all other flags
 		overlay.appearance_flags |= static_flags
-		source.overlays -= overlay
 		LAZYADD(result, overlay)
 
 		// Possibly there's more hiding inside of it, so check if we can flatten that
@@ -304,4 +303,7 @@ SUBSYSTEM_DEF(overlays)
 			index_overlays = source.overlays.Copy()
 		index_overlays += nested
 
+	if (result)
+		// Microop in case we cut out multiple appearances
+		source.overlays -= result
 	return result
