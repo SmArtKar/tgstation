@@ -37,8 +37,25 @@
 	var/list/overlays_standing[TOTAL_LAYERS]
 
 /mob/living/carbon/proc/apply_overlay(cache_index)
-	if((. = overlays_standing[cache_index]))
-		add_overlay(.)
+	if (!overlays_standing[cache_index])
+		SEND_SIGNAL(src, COMSIG_CARBON_APPLY_OVERLAY, cache_index, null)
+		return
+
+	// Due to a BYOND bug (https://www.byond.com/forum/post/2969321) we need to extract and flatten nested KEEP_APART overlays
+	// As otherwise they will act as if all of them have RESET_TRANSFORM
+	if (islist(overlays_standing[cache_index]))
+		for (var/mutable_appearance/overlay as anything in overlays_standing[cache_index])
+			var/list/nested = flatten_overlays(overlay)
+			if (nested)
+				overlays_standing[cache_index] += nested
+	else
+		var/list/nested = flatten_overlays(overlays_standing[cache_index])
+		if (nested)
+			nested += overlays_standing[cache_index]
+			overlays_standing[cache_index] = nested
+
+	. = overlays_standing[cache_index]
+	add_overlay(.)
 	SEND_SIGNAL(src, COMSIG_CARBON_APPLY_OVERLAY, cache_index, .)
 
 /mob/living/carbon/proc/remove_overlay(cache_index)

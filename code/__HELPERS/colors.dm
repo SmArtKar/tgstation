@@ -264,3 +264,44 @@
 		modify.underlays[underlay_index] = filter_appearance_recursive(modify.underlays[underlay_index], filter_to_apply)
 
 	return modify
+
+/// Blend together two color matrices in the same colorspace
+/proc/blend_color_matrices(list/first, list/second)
+	first = pad_color_matrix(first)
+	second = pad_color_matrix(second)
+	// Color factors can be multiplied safely
+	for (var/i in 1 to 16)
+		first[i] *= second[i]
+	// But constants of the first get colored by the second matrix
+	for (var/i in 1 to 4)
+		var/constant = second[16 + i]
+		for (var/constant_index in 1 to 4)
+			for (var/constant_factor in 1 to 4)
+				constant += first[16 + constant_index] * second[(constant_index - 1) * 4 + constant_factor]
+		first[16 + i] = constant
+	return first
+
+/// Pad a color matrix to a full 4x5 one
+/proc/pad_color_matrix(list/target)
+	target = target.Copy()
+	if (length(target) == 20)
+		return target
+
+	if (length(target) == 16)
+		// Add constants
+		for (var/i in 1 to 4)
+			target += 0
+		return target
+
+	if (length(target) == 9)
+		// Add constants
+		for (var/i in 1 to 3)
+			target += 0
+
+	// Pad RGB + constants with 0 alpha
+	for (var/i in 1 to 4)
+		target.Insert(4 * (i + 1), 0)
+	// Add alpha identity
+	for (var/i in 1 to 4)
+		target.Insert(12 + i, i == 4)
+	return target

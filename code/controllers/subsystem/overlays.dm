@@ -230,3 +230,78 @@ SUBSYSTEM_DEF(overlays)
 	message_admins(text)
 	log_world(text)
 	return diff_found
+
+/// Extracts KEEP_APART overlays from the passed appearance, required due to a BYOND bug
+/// Kinda expensive, so limit usage to only frequently seen and transformed things (such as humans with their pesky clothing breaking emissives and emissive blockers)
+/proc/flatten_overlays(mutable_appearance/source)
+	var/list/result = null
+	var/index = 1
+	var/list/index_overlays = source.overlays
+	var/static_flags = (source.appearance_flags & (LONG_GLIDE|NO_CLIENT_COLOR|TILE_BOUND|PIXEL_SCALE|PASS_MOUSE|TILE_MOVER))
+	while (index < length(index_overlays))
+		var/mutable_appearance/overlay = index_overlays[index]
+		index += 1
+		if (istext(overlay)) // I hate john featurecoder
+			continue
+		// If the overlay is not KEEP_APART, check if we need to extract any of its overlays
+		// We cannot skip RESET_TRANSFORM KEEP_APARTs because that would skip other RESETS mid-chain
+		if (!(overlay.appearance_flags & KEEP_APART))
+			var/list/nested = flatten_overlays(overlay)
+			if (!nested)
+				continue
+			// If we extracted something in a nested chain, we need to continue processing it until its fully up the chain with the initial parent appearance
+			if (index_overlays == source.overlays)
+				index_overlays = source.overlays.Copy()
+			index_overlays += nested
+			continue
+
+		if (!(overlay.appearance_flags & RESET_COLOR))
+			if (overlay.color)
+				if (!islist(source.color))
+					if (!islist(overlay.color))
+						var/list/source_color = rgb2num(source.color)
+						var/list/overlay_color = rgb2num(overlay.color)
+						overlay.color = rgb(source_color[1] / 255 * overlay_color[1] / 255, source_color[2] / 255 * overlay_color[2] / 255, source_color[3] / 255 * overlay_color[3] / 255)
+					else
+						overlay.color = apply_matrix_to_color(source.color, overlay.color, COLORSPACE_RGB)
+				else
+					if (!islist(overlay.color))
+						source.color = apply_matrix_to_color(overlay.color, source.color, COLORSPACE_RGB)
+					else
+						overlay.color = blend_color_matrices(overlay.color, source.color)
+			else
+				overlay.color = source.color
+
+		if (!(overlay.appearance_flags & RESET_TRANSFORM))
+			overlay.transform *= source.transform
+
+		if (!(overlay.appearance_flags & RESET_ALPHA))
+			overlay.alpha *= source.alpha / 255
+
+		if (overlay.layer == FLOAT_LAYER && source.layer != FLOAT_LAYER)
+			overlay.layer = source.layer
+
+		if (overlay.plane == FLOAT_PLANE && source.plane != FLOAT_PLANE)
+			overlay.plane = source.plane
+
+		overlay.pixel_x += source.pixel_x
+		overlay.pixel_y += source.pixel_y
+		overlay.pixel_w += source.pixel_w
+		overlay.pixel_z += source.pixel_z
+
+		// Inherit all other flags
+		overlay.appearance_flags |= static_flags
+		source.overlays -= overlay
+		LAZYADD(result, overlay)
+
+		// Possibly there's more hiding inside of it, so check if we can flatten that
+		var/list/nested = flatten_overlays(overlay)
+		if (!nested)
+			continue
+
+		// If we extracted something in a nested chain, we need to continue processing it until its fully up the chain with the initial parent appearance
+		if (index_overlays == source.overlays)
+			index_overlays = source.overlays.Copy()
+		index_overlays += nested
+
+	return result
