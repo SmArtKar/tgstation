@@ -235,18 +235,19 @@ SUBSYSTEM_DEF(overlays)
 /// Kinda expensive, so limit usage to only frequently seen and transformed things (such as humans with their pesky clothing breaking emissives and emissive blockers)
 /proc/flatten_overlays(mutable_appearance/source, atom/offset_spokesman)
 	var/list/result = null
+	var/list/removal = null
 	var/index = 1
 	var/list/index_overlays = source.overlays
 	var/static_flags = (source.appearance_flags & (LONG_GLIDE|NO_CLIENT_COLOR|TILE_BOUND|PIXEL_SCALE|PASS_MOUSE|TILE_MOVER))
 	while (index <= length(index_overlays))
-		var/mutable_appearance/overlay = index_overlays[index]
+		var/mutable_appearance/child_holder = index_overlays[index]
 		index += 1
-		if (istext(overlay)) // I hate john featurecoder
+		if (istext(child_holder)) // I hate john featurecoder
 			continue
 		// If the overlay is not KEEP_APART, check if we need to extract any of its overlays
 		// We cannot skip RESET_TRANSFORM KEEP_APARTs because that would skip other RESETS mid-chain
-		if (!(overlay.appearance_flags & KEEP_APART))
-			var/list/nested = flatten_overlays(overlay)
+		if (!(child_holder.appearance_flags & KEEP_APART))
+			var/list/nested = flatten_overlays(child_holder)
 			if (!nested)
 				continue
 			// If we extracted something in a nested chain, we need to continue processing it until its fully up the chain with the initial parent appearance
@@ -254,6 +255,9 @@ SUBSYSTEM_DEF(overlays)
 				index_overlays = source.overlays.Copy()
 			index_overlays += nested
 			continue
+
+		var/mutable_appearance/overlay = new()
+		overlay.appearance = child_holder
 
 		if (!(overlay.appearance_flags & RESET_COLOR) && source.color)
 			if (overlay.color)
@@ -292,6 +296,7 @@ SUBSYSTEM_DEF(overlays)
 		// Inherit all other flags
 		overlay.appearance_flags |= static_flags
 		LAZYADD(result, overlay)
+		LAZYADD(removal, child_holder)
 
 		// Possibly there's more hiding inside of it, so check if we can flatten that
 		var/list/nested = flatten_overlays(overlay)
@@ -303,7 +308,7 @@ SUBSYSTEM_DEF(overlays)
 			index_overlays = source.overlays.Copy()
 		index_overlays += nested
 
-	if (result)
+	if (removal)
 		// Microop in case we cut out multiple appearances
-		source.overlays -= result
+		source.overlays -= removal
 	return result
