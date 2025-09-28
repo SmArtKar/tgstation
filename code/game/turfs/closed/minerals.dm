@@ -749,14 +749,22 @@
 
 /turf/closed/mineral/asteroid
 	name = "iron rock"
-	icon_state = "redrock"
-	icon = MAP_SWITCH('icons/turf/walls/red_wall.dmi', 'icons/turf/mining.dmi')
-	base_icon_state = "red_wall"
+	icon = MAP_SWITCH('icons/turf/walls/red_rock.dmi', 'icons/turf/mining.dmi')
+	icon_state = "red_rock"
+	base_icon_state = "red_rock"
+	layer = EDGED_TURF_LOWER_LAYER
+	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
+	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
+	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
 
 /turf/closed/mineral/random/stationside/asteroid
 	name = "iron rock"
-	icon = MAP_SWITCH('icons/turf/walls/red_wall.dmi', 'icons/turf/mining.dmi')
-	base_icon_state = "red_wall"
+	icon = MAP_SWITCH('icons/turf/walls/red_rock.dmi', 'icons/turf/mining.dmi')
+	icon_state = "red_rock"
+	base_icon_state = "red_rock"
+	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
+	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
+	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
 
 /turf/closed/mineral/random/stationside/asteroid/porus
 	name = "porous iron rock"
