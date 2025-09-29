@@ -27,10 +27,13 @@
 /obj/item/mining_scanner/admin
 
 /obj/item/mining_scanner/admin/attack_self(mob/user)
-	for(var/turf/closed/mineral/mineral_turf in world)
-		if(mineral_turf.scan_state)
-			mineral_turf.icon = mineral_turf.scan_icon
-			mineral_turf.icon_state = mineral_turf.scan_state
+	for(var/turf/closed/mineral/rock in world)
+		if(!rock.scan_state)
+			continue
+		var/mutable_appearance/scan = mutable_appearance(mineral_turf.scan_icon, rock.scan_state, FLASH_LAYER, rock, HIGH_GAME_PLANE)
+		scan.pixel_w = -220
+		scan.pixel_z = -220
+		rock.add_overlay(scan)
 	qdel(src)
 
 /obj/item/t_scanner/adv_mining_scanner
