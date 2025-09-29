@@ -128,6 +128,9 @@
 				if (!rock.mineral_type)
 					rocks += rock
 
+			if (!length(rocks))
+				return
+
 			second_end = pick(rocks)
 			for (var/turf/closed/mineral/rock in get_line(first_end, src) + get_line(second_end, src))
 				rock.change_ore(ore_path)

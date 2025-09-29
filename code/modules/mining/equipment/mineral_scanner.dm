@@ -30,7 +30,7 @@
 	for(var/turf/closed/mineral/rock in world)
 		if(!rock.scan_state)
 			continue
-		var/mutable_appearance/scan = mutable_appearance(mineral_turf.scan_icon, rock.scan_state, FLASH_LAYER, rock, HIGH_GAME_PLANE)
+		var/mutable_appearance/scan = mutable_appearance(rock.scan_icon, rock.scan_state, FLASH_LAYER, rock, HIGH_GAME_PLANE)
 		scan.pixel_w = -220
 		scan.pixel_z = -220
 		rock.add_overlay(scan)
