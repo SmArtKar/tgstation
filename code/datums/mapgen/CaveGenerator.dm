@@ -36,9 +36,6 @@
 	var/list/weighted_feature_spawn_list
 	///Expanded list of extra features that can spawn in the area. Reads from the weighted list
 	var/list/feature_spawn_list
-	/// The turf types to replace with a biome-related turf, as typecache.
-	/// Leave empty for all open turfs (but not closed turfs) to be hijacked.
-	var/list/biome_accepted_turfs = list()
 	/// An associative list of biome type to the list of turfs that were
 	/// generated of that biome specifically. Helps to improve the efficiency
 	/// of biome-related operations. Is populated through
@@ -53,6 +50,9 @@
 	/// Used to select "zoom" level into the perlin noise, higher numbers
 	/// result in slower transitions
 	var/perlin_zoom = 65
+
+	/// Should we populate turfs through biome datums if we have such
+	var/biome_population = TRUE
 
 	///Base chance of spawning a mob
 	var/mob_spawn_chance = 6
@@ -189,27 +189,12 @@
 			BIOME_HIGH_HEAT : text2num(heat_gen[BIOME_MEDIUM_HEAT][coordinate]) ? BIOME_MEDIUM_HEAT : BIOME_LOW_HEAT
 
 		selected_biome = possible_biomes[heat_level][humidity_level]
-
-		// Currently, we only affect open turfs, because biomes don't currently
-		// have a definition for biome-specific closed turfs.
-		if((!length(biome_accepted_turfs) && !closed) || biome_accepted_turfs[new_turf_type])
-			LAZYADD(generated_turfs_per_biome[selected_biome], gen_turf)
-
-		else
-			// The assumption is this will be faster then changeturf, and changeturf isn't required since by this point
-			// The old tile hasn't got the chance to init yet
-			var/turf/new_turf = new new_turf_type(gen_turf)
-
-			if(gen_turf.turf_flags & NO_RUINS)
-				new_turf.turf_flags |= NO_RUINS
-
+		LAZYSET(generated_turfs_per_biome[selected_biome], gen_turf, closed)
 		CHECK_TICK
 
 	for(var/biome in generated_turfs_per_biome)
 		var/datum/biome/generating_biome = SSmapping.biomes[biome]
-
 		var/list/turf/generated_turfs = generating_biome.generate_turfs_for_terrain(generated_turfs_per_biome[biome])
-
 		generated_turfs_per_biome[biome] = generated_turfs
 
 	var/message = "[name] terrain generation finished in [(REALTIMEOFDAY - start_time)/10]s!"
@@ -217,7 +202,7 @@
 	log_world(message)
 
 /datum/map_generator/cave_generator/populate_terrain(list/turfs, area/generate_in)
-	if (length(possible_biomes))
+	if (biome_population && length(possible_biomes))
 		return populate_terrain_with_biomes(turfs, generate_in)
 
 	// Area var pullouts to make accessing in the loop faster

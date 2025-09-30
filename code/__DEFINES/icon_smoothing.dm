@@ -135,7 +135,7 @@ DEFINE_BITFIELD(smoothing_junction, list(
 #define SMOOTH_GROUP_HOTEL_WALLS S_TURF(56) ///turf/closed/indestructible/hotelwall
 #define SMOOTH_GROUP_MINERAL_WALLS S_TURF(57) ///turf/closed/mineral, /turf/closed/indestructible
 #define SMOOTH_GROUP_RED_ROCK_WALLS S_TURF(58) ///turf/closed/mineral/asteroid, /turf/closed/mineral/random/stationside/asteroid
-#define SMOOTH_GROUP_SHALE_WALLS S_TURF(59) ///turf/closed/mineral/asteroid, /turf/closed/mineral/random/stationside/asteroid
+#define SMOOTH_GROUP_SHALE_WALLS S_TURF(59) ///turf/closed/mineral/random/volcanic/shale
 #define SMOOTH_GROUP_BOSS_WALLS S_TURF(60) ///turf/closed/indestructible/riveted/boss
 #define SMOOTH_GROUP_SURVIVAL_TITANIUM_WALLS S_TURF(61) ///turf/closed/wall/mineral/titanium/survival
 #define SMOOTH_GROUP_TURF_OPEN_CLIFF S_TURF(62) ///turf/open/cliff

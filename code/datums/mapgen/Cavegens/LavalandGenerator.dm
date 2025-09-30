@@ -2,6 +2,26 @@
 	weighted_open_turf_types = list(/turf/open/misc/asteroid/basalt/lava_land_surface = 1)
 	weighted_closed_turf_types = list(/turf/closed/mineral/random/volcanic = 1)
 
+	possible_biomes = list(
+		BIOME_LOW_HEAT = list(
+			BIOME_LOW_HUMIDITY = /datum/biome/lavaland/basalt,
+			BIOME_MEDIUM_HUMIDITY = /datum/biome/lavaland/basalt,
+			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/shale
+			),
+		BIOME_MEDIUM_HEAT = list(
+			BIOME_LOW_HUMIDITY = /datum/biome/lavaland/basalt,
+			BIOME_MEDIUM_HUMIDITY = /datum/biome/lavaland/basalt,
+			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/shale
+			),
+		BIOME_HIGH_HEAT = list(
+			BIOME_LOW_HUMIDITY = /datum/biome/lavaland/basalt,
+			BIOME_MEDIUM_HUMIDITY = /datum/biome/lavaland/red_rock,
+			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/red_rock
+			)
+		)
+
+	biome_population = FALSE
+
 	weighted_mob_spawn_list = list(
 		SPAWN_MEGAFAUNA = 2,
 		/obj/effect/spawner/random/lavaland_mob/goliath = 50,
