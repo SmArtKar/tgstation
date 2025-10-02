@@ -170,6 +170,30 @@
 	scan_state = initial(the_ore.scan_state) // If it has a scan_state, switch to it
 	mineral_type = ore_type // Everything else assumes that this is typed correctly so don't set it to non-ores thanks.
 
+/turf/closed/mineral/proc/flash_scan()
+	var/obj/effect/temp_visual/mining_overlay/scan_overlay = locate(/obj/effect/temp_visual/mining_overlay) in src
+	if(scan_overlay)
+		deltimer(scan_overlay.timerid)
+		scan_overlay.timerid = QDEL_IN_STOPPABLE(scan_overlay, scan_overlay.duration)
+		animate(scan_overlay, alpha = 0, time = scan_overlay.duration, easing = scan_overlay.easing_style)
+		return
+
+	// We need scan state icons to be 480x480 (or rather, world.view) in size so that they can be seen from anywhere
+	var/static/list/scan_state_icons = null
+	if (isnull(scan_state_icons))
+		scan_state_icons = list()
+
+	var/icon/scan_state_icon = scan_state_icons["[scan_icon]_[scan_state]"]
+	if (!scan_state_icon)
+		scan_state_icon = icon('icons/blanks/32x32.dmi', "nothing")
+		scan_state_icon.Scale((world.view * 2 + 1) * ICON_SIZE_X, (world.view * 2 + 1) * ICON_SIZE_Y)
+		scan_state_icon.Blend(icon(scan_icon, scan_state), ICON_OVERLAY, x = world.view * ICON_SIZE_X + 1, y = world.view * ICON_SIZE_Y + 1)
+		scan_state_icons["[scan_icon]_[scan_state]"] = scan_state_icon
+	scan_overlay = new(src)
+	scan_overlay.add_overlay(scan_state_icon)
+	scan_overlay.pixel_w = -world.view * ICON_SIZE_X
+	scan_overlay.pixel_z = -world.view * ICON_SIZE_Y
+
 /turf/closed/mineral/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
 	if(turf_type)
 		underlay_appearance.icon = initial(turf_type.icon)
