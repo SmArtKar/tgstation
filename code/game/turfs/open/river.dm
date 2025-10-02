@@ -59,7 +59,9 @@
 			var/turf/river_turf = new turf_type(cur_turf)
 			river_turf.Spread(25, 11, whitelist_area)
 
-	QDEL_LIST(GLOB.river_waypoint_list["[target_z]"])
+	for(var/obj/effect/landmark/river_waypoint/waypoint as anything in GLOB.river_waypoint_list["[target_z]"])
+		qdel(waypoint)
+
 	GLOB.river_waypoint_list -= "[target_z]"
 
 /obj/effect/landmark/river_waypoint
