@@ -6,21 +6,25 @@
 		BIOME_LOW_HEAT = list(
 			BIOME_LOW_HUMIDITY = /datum/biome/lavaland/basalt,
 			BIOME_MEDIUM_HUMIDITY = /datum/biome/lavaland/basalt,
-			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/shale
+			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/shale,
 			),
 		BIOME_MEDIUM_HEAT = list(
 			BIOME_LOW_HUMIDITY = /datum/biome/lavaland/basalt,
 			BIOME_MEDIUM_HUMIDITY = /datum/biome/lavaland/basalt,
-			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/shale
+			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/shale,
 			),
 		BIOME_HIGH_HEAT = list(
 			BIOME_LOW_HUMIDITY = /datum/biome/lavaland/basalt,
 			BIOME_MEDIUM_HUMIDITY = /datum/biome/lavaland/red_rock,
-			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/red_rock
-			)
+			BIOME_HIGH_HUMIDITY = /datum/biome/lavaland/red_rock,
+			),
 		)
 
 	biome_population = FALSE
+
+	high_heat_threshold = 0.1
+	high_humidity_threshold = 0.1
+	biome_stamp_size = 35
 
 	weighted_mob_spawn_list = list(
 		SPAWN_MEGAFAUNA = 2,

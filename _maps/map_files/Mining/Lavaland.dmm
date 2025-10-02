@@ -9097,6 +9097,10 @@
 /obj/item/radio/intercom/directional/east,
 /turf/open/floor/iron,
 /area/mine/cafeteria)
+"Zo" = (
+/obj/effect/landmark/river_waypoint,
+/turf/open/lava/smooth/lava_land_surface,
+/area/lavaland/surface/outdoors)
 "Zp" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -54164,7 +54168,7 @@ ZY
 ZY
 pU
 pU
-pU
+aj
 aj
 aj
 aj
@@ -54420,10 +54424,10 @@ ZY
 ZY
 ZY
 ZY
-ZY
-pU
-pU
-pU
+aj
+aj
+aj
+aj
 aj
 aj
 aj
@@ -54676,11 +54680,11 @@ ZY
 ZY
 ZY
 ZY
-ZY
-ZY
-ZY
-pU
-pU
+aj
+aj
+aj
+aj
+aj
 pU
 pU
 pU
@@ -54932,11 +54936,11 @@ ZY
 ZY
 ZY
 ZY
-ZY
-ZY
-ZY
-ZY
-ZY
+aj
+aj
+aj
+aj
+aj
 pU
 pU
 pU
@@ -55189,10 +55193,10 @@ fQ
 ZY
 ZY
 ZY
-ZY
-ZY
-ZY
-ZY
+aj
+Zo
+aj
+aj
 ZY
 ZY
 ZY
@@ -55447,8 +55451,8 @@ fQ
 fQ
 ZY
 ZY
-ZY
-ZY
+aj
+aj
 ZY
 ZY
 ZY

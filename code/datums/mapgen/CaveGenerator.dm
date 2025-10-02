@@ -53,6 +53,18 @@
 
 	/// Should we populate turfs through biome datums if we have such
 	var/biome_population = TRUE
+	/// Noise threshold above which a biome is considered high heat
+	var/high_heat_threshold = -0.1
+	/// Noise threshold above which a biome is considered medium heat
+	var/medium_heat_threshold = -0.3
+	/// Noise threshold above which a biome is considered high humidity
+	var/high_humidity_threshold = -0.1
+	/// Noise threshold above which a biome is considered medium humidity
+	var/medium_humidity_threshold = -0.3
+	/// Should all generators on the same z level use the same seeds?
+	var/shared_seed = TRUE
+	/// Stamp size for DBP noise, aka frequency
+	var/biome_stamp_size = 75
 
 	///Base chance of spawning a mob
 	var/mob_spawn_chance = 6
@@ -147,31 +159,45 @@
  * This should only be called by `generate_terrain()`, if you have to call this,
  * you're probably doing something wrong.
  */
-/datum/map_generator/cave_generator/proc/generate_terrain_with_biomes(list/turfs, area/generate_in)
+/datum/map_generator/cave_generator/proc/generate_terrain_with_biomes(list/turf/turfs, area/generate_in)
 	if(!(generate_in.area_flags & CAVES_ALLOWED))
 		return
 
-	var/humidity_seed = rand(0, 50000)
-	var/heat_seed = rand(0, 50000)
+	var/humidity_seed = null
+	var/heat_seed = null
+
+	// Make sure that all caves on the same z level generate smoothly regardless of the area
+	if (shared_seed)
+		var/static/list/static_heat = null
+		var/static/list/static_humi = null
+		if (!static_heat)
+			static_heat = list()
+			static_humi = list()
+
+		var/z_key = "[turfs[1].z]"
+		if (!static_heat[z_key])
+			static_heat[z_key] = rand(0, 50000)
+			static_humi[z_key] = rand(0, 50000)
+
+		heat_seed = static_heat[z_key]
+		humidity_seed = static_humi[z_key]
+	else
+		humidity_seed = rand(0, 50000)
+		heat_seed = rand(0, 50000)
 
 	var/start_time = REALTIMEOFDAY
 	string_gen = rustg_cnoise_generate("[initial_closed_chance]", "[smoothing_iterations]", "[birth_limit]", "[death_limit]", "[world.maxx]", "[world.maxy]") //Generate the raw CA data
 
 	var/humidity_gen = list()
-	humidity_gen[BIOME_HIGH_HUMIDITY] = rustg_dbp_generate("[humidity_seed]", "60", "75", "[world.maxx]", "-0.1", "1.1")
-	humidity_gen[BIOME_MEDIUM_HUMIDITY] = rustg_dbp_generate("[humidity_seed]", "60", "75", "[world.maxx]", "-0.3", "-0.1")
+	humidity_gen[BIOME_HIGH_HUMIDITY] = rustg_dbp_generate("[humidity_seed]", "60", "[biome_stamp_size]", "[world.maxx]", "[high_heat_threshold]", "1.1")
+	humidity_gen[BIOME_MEDIUM_HUMIDITY] = rustg_dbp_generate("[humidity_seed]", "60", "[biome_stamp_size]", "[world.maxx]", "[medium_heat_threshold]", "[high_heat_threshold]")
 
 	var/heat_gen = list()
-	heat_gen[BIOME_HIGH_HEAT] = rustg_dbp_generate("[heat_seed]", "60", "75", "[world.maxx]", "-0.1", "1.1")
-	heat_gen[BIOME_MEDIUM_HEAT] = rustg_dbp_generate("[heat_seed]", "60", "75", "[world.maxx]", "-0.3", "-0.1")
-
-	var/list/expanded_closed_turfs = src.closed_turf_types
-	var/list/expanded_open_turfs = src.open_turf_types
+	heat_gen[BIOME_HIGH_HEAT] = rustg_dbp_generate("[heat_seed]", "60", "[biome_stamp_size]", "[world.maxx]", "[high_heat_threshold]", "1.1")
+	heat_gen[BIOME_MEDIUM_HEAT] = rustg_dbp_generate("[heat_seed]", "60", "[biome_stamp_size]", "[world.maxx]", "[medium_heat_threshold]", "[high_heat_threshold]")
 
 	for(var/turf/gen_turf as anything in turfs) //Go through all the turfs and generate them
 		var/closed = string_gen[world.maxx * (gen_turf.y - 1) + gen_turf.x] != "0"
-		var/new_turf_type = pick(closed ? expanded_closed_turfs : expanded_open_turfs)
-
 		var/datum/biome/selected_biome
 
 		// Here comes the meat of the biome code.
