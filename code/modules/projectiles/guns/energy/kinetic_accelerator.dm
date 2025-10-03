@@ -468,20 +468,20 @@
 		return
 	new /obj/effect/temp_visual/explosion/fast(target_turf)
 	if(turf_aoe)
-		for(var/T in RANGE_TURFS(2, target_turf) - target_turf)
+		for(var/T in RANGE_TURFS(1, target_turf) - target_turf)
 			if(ismineralturf(T))
 				var/turf/closed/mineral/M = T
 				M.gets_drilled(kinetic_blast.firer, 0.1)
 
-	if(modifier)
-		for(var/mob/living/living_mob in range(2, target) - kinetic_blast.firer - target)
+	if(!modifier)
+		return
 
-			if(!ismining(living_mob))
-				continue
-
-			var/armor = living_mob.run_armor_check(kinetic_blast.def_zone, kinetic_blast.armor_flag, armour_penetration = kinetic_blast.armour_penetration)
-			living_mob.apply_damage(kinetic_blast.damage*modifier, kinetic_blast.damage_type, kinetic_blast.def_zone, armor)
-			to_chat(living_mob, span_userdanger("You're struck by a [kinetic_blast.name]!"))
+	for(var/mob/living/living_mob in range(1, target) - kinetic_blast.firer - target)
+		if(!ismining(living_mob))
+			continue
+		var/armor = living_mob.run_armor_check(kinetic_blast.def_zone, kinetic_blast.armor_flag, armour_penetration = kinetic_blast.armour_penetration)
+		living_mob.apply_damage(kinetic_blast.damage*modifier, kinetic_blast.damage_type, kinetic_blast.def_zone, armor)
+		to_chat(living_mob, span_userdanger("You're struck by a [kinetic_blast.name]!"))
 
 /obj/item/borg/upgrade/modkit/aoe/turfs
 	name = "mining explosion"

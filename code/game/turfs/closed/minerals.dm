@@ -42,7 +42,7 @@
 	/// If true you can mine the mineral turf without tools.
 	var/weak_turf = FALSE
 	/// How long it takes to mine this turf with tools, before the tool's speed and the user's skill modifier are factored in.
-	var/tool_mine_speed = 4 SECONDS
+	var/tool_mine_speed = 3 SECONDS
 	/// How long it takes to mine this turf without tools, if it's weak.
 	var/hand_mine_speed = 15 SECONDS
 	/// Distance to the nearest open turf
@@ -560,7 +560,7 @@
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
 	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
-	tool_mine_speed = 5 SECONDS // 25% harder than basalt
+	tool_mine_speed = 4 SECONDS // 33% harder than basalt
 
 /turf/closed/mineral/random/volcanic/shale
 	name = "shale"
@@ -570,7 +570,7 @@
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_SHALE_WALLS
 	canSmoothWith = SMOOTH_GROUP_SHALE_WALLS
-	tool_mine_speed = 7 SECONDS // 75% harder than basalt
+	tool_mine_speed = 6 SECONDS // Twice as hard as basalt
 
 /turf/closed/mineral/random/snow
 	name = "snowy mountainside"

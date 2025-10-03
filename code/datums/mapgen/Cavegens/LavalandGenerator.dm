@@ -22,9 +22,9 @@
 
 	biome_population = FALSE
 
-	high_heat_threshold = 0.1
-	high_humidity_threshold = 0.1
-	biome_stamp_size = 35
+	high_heat_threshold = 0.15
+	high_humidity_threshold = 0.15
+	biome_stamp_size = 30
 
 	weighted_mob_spawn_list = list(
 		SPAWN_MEGAFAUNA = 2,
