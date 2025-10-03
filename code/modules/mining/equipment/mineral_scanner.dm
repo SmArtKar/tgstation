@@ -29,7 +29,8 @@
 /obj/item/mining_scanner/admin/attack_self(mob/user)
 	for(var/turf/closed/mineral/rock in world)
 		if(rock.scan_state)
-			rock.add_overlay(mutable_appearance(rock.scan_icon, rock.scan_state, FLASH_LAYER, rock, ABOVE_LIGHTING_PLANE))
+			var/mutable_appearance/rock_overlay = mutable_appearance(rock.scan_icon, rock.scan_state, FLASH_LAYER, rock, ABOVE_LIGHTING_PLANE, appearance_flags = RESET_TRANSFORM)
+			rock.add_overlay(rock_overlay)
 	qdel(src)
 
 /obj/item/t_scanner/adv_mining_scanner

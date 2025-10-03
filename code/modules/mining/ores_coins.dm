@@ -29,8 +29,10 @@
 	var/vein_type = ORE_VEIN_CLUSTER
 	/// Optimal distance from open turfs for us to spawn, 1 is next to an open tile
 	var/vein_distance = 1
-	/// Distance that a vein can span +-25% (rounding up), diameter for cluster/scatter, maximum length for plain/branching
-	var/vein_size = 5
+	/// Minimum distance that a vein can span, radius for cluster/scatter, maximum length for plain/branching
+	var/min_vein_size = 1
+	/// Minimum distance that a vein can span, radius for cluster/scatter, maximum length for plain/branching
+	var/max_vein_size = 2
 
 /obj/item/stack/ore/update_overlays()
 	. = ..()
@@ -104,7 +106,8 @@
 	merge_type = /obj/item/stack/ore/uranium
 	vein_type = ORE_VEIN_PLAIN
 	vein_distance = 3
-	vein_size = 4
+	min_vein_size = 1
+	max_vein_size = 3
 
 /obj/item/stack/ore/iron
 	name = "iron ore"
@@ -117,6 +120,8 @@
 	scan_state = "rock_iron"
 	spread_chance = 20
 	merge_type = /obj/item/stack/ore/iron
+	min_vein_size = 1
+	max_vein_size = 3
 
 /obj/item/stack/ore/glass
 	name = "sand pile"
@@ -192,7 +197,8 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	spread_chance = 8
 	merge_type = /obj/item/stack/ore/plasma
 	vein_type = ORE_VEIN_PLAIN
-	vein_size = 4
+	min_vein_size = 2
+	max_vein_size = 4
 
 /obj/item/stack/ore/plasma/welder_act(mob/living/user, obj/item/I)
 	to_chat(user, span_warning("You can't hit a high enough temperature to smelt [src] properly!"))
@@ -210,7 +216,8 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	spread_chance = 5
 	merge_type = /obj/item/stack/ore/silver
 	vein_type = ORE_VEIN_BRANCH
-	vein_size = 4
+	min_vein_size = 0
+	max_vein_size = 2
 
 /obj/item/stack/ore/gold
 	name = "gold ore"
@@ -224,8 +231,9 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	spread_chance = 5
 	merge_type = /obj/item/stack/ore/gold
 	vein_type = ORE_VEIN_BRANCH
-	vein_size = 3
 	vein_distance = 2
+	min_vein_size = 0
+	max_vein_size = 2
 
 /obj/item/stack/ore/diamond
 	name = "diamond ore"
@@ -239,7 +247,8 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	merge_type = /obj/item/stack/ore/diamond
 	vein_type = ORE_VEIN_SCATTER
 	vein_distance = 4
-	vein_size = 2
+	min_vein_size = 1
+	max_vein_size = 2
 
 /obj/item/stack/ore/diamond/five
 	amount = 5
@@ -256,7 +265,8 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	merge_type = /obj/item/stack/ore/bananium
 	vein_type = ORE_VEIN_PLAIN
 	vein_distance = 4
-	vein_size = 2
+	min_vein_size = 1
+	max_vein_size = 2
 
 /obj/item/stack/ore/titanium
 	name = "titanium ore"
@@ -269,7 +279,8 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	scan_state = "rock_titanium"
 	spread_chance = 5
 	merge_type = /obj/item/stack/ore/titanium
-	vein_size = 4
+	min_vein_size = 1
+	max_vein_size = 2
 
 /obj/item/stack/ore/slag
 	name = "slag"

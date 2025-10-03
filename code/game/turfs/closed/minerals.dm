@@ -86,39 +86,63 @@
 		change_ore(ore_type)
 		return
 
-	var/vein_size = ore_path::vein_size
+	// No need to recalculate ore vein size lists every time we want to spawn one
+	var/static/list/vein_sizes = null
+	if (!vein_sizes)
+		vein_sizes = list()
+
+	if (!vein_sizes[ore_path])
+		var/min_vein_size = ore_path::min_vein_size
+		var/max_vein_size = ore_path::max_vein_size
+		var/list/ore_sizes = list()
+		// Larger veins are rarer by default
+		for (var/i in min_vein_size to max_vein_size)
+			ore_sizes["[i]"] = max_vein_size - i + 1
+		vein_sizes[ore_path] = ore_sizes
+
+	var/vein_size = text2num(pick_weight(vein_sizes[ore_path]))
+
 	switch (ore_path::vein_type)
 		if (ORE_VEIN_CLUSTER)
-			var/vein_radius = rand(ceil((floor(vein_size * 0.5) - 1) / 2), ceil((ceil(vein_size * 1.33) - 1) / 2))
-			for (var/turf/closed/mineral/rock in range(vein_radius, src))
+			for (var/turf/closed/mineral/rock in range(vein_size, src))
 				if (rock.mineral_type)
 					continue
 
-				if (rock == src || prob(100 * sqrt(max(0, 1 - sqrt((x - rock.x) ** 2 + (y - rock.y) ** 2) / vein_radius))))
+				var/spread_prob = 100
+				// Easiest way to check for different rock types
+				if (rock.base_icon_state != base_icon_state)
+					spread_prob = 50
+
+				if (rock == src || prob(spread_prob * sqrt(max(0, 1 - sqrt((x - rock.x) ** 2 + (y - rock.y) ** 2) / vein_size))))
 					rock.change_ore(ore_path)
 
 		if (ORE_VEIN_SCATTER)
-			var/vein_radius = rand(ceil((floor(vein_size * 0.5) - 1) / 2), ceil((ceil(vein_size * 1.33) - 1) / 2))
 			var/list/turf/closed/mineral/rocks = list()
-			for (var/turf/closed/mineral/rock in range(vein_radius, src))
+			for (var/turf/closed/mineral/rock in range(vein_size, src))
+				if (rock.base_icon_state != base_icon_state && prob(50))
+					continue
 				if (!rock.mineral_type)
 					rocks += rock
 
-			for (var/i in 1 to rand(1, 5))
+			for (var/i in 1 to rand(min_vein_size ** 2, max_vein_size ** 2))
 				var/turf/closed/mineral/rock = pick_n_take(rocks)
 				rock.change_ore(ore_path, FALSE)
 				rock.mineral_amt = 1
 
 		if (ORE_VEIN_PLAIN)
-			var/vein_length = rand(floor(vein_size * 0.5), ceil(vein_size * 1.33))
 			var/list/turf/closed/mineral/rocks = list()
-			for (var/turf/closed/mineral/rock in range(vein_length, src))
+			for (var/turf/closed/mineral/rock in range(vein_size, src))
+				if (rock.base_icon_state != base_icon_state && prob(50))
+					continue
 				if (!rock.mineral_type)
 					rocks += rock
 
+			if (!length(rocks))
+				return
+
 			var/turf/first_end = pick(rocks)
 			var/first_dist = get_dist(src, first_end)
-			var/second_dist = vein_length - first_dist
+			var/second_dist = vein_size - first_dist
 			var/turf/second_end = locate(x - round((first_end.x - x) / first_dist * second_dist, 1), y - round((first_end.y - y) / first_dist * second_dist, 1), z)
 			if (!istype(second_end))
 				second_end = src
@@ -141,9 +165,10 @@
 
 		if (ORE_VEIN_BRANCH)
 			for (var/branch in 1 to rand(3, 5))
-				var/vein_length = rand(floor(vein_size * 0.2), ceil(vein_size * 0.4))
 				var/list/turf/closed/mineral/rocks = list()
-				for (var/turf/closed/mineral/rock in range(vein_length, src))
+				for (var/turf/closed/mineral/rock in range(vein_size, src))
+					if (rock.base_icon_state != base_icon_state && prob(50))
+						continue
 					if (!rock.mineral_type)
 						rocks += rock
 
@@ -538,6 +563,23 @@
 	defer_change = TRUE
 	exposure_based = TRUE
 	mineral_chance = 5
+
+/* Default values
+
+/turf/closed/mineral/random/volcanic/mineral_chances()
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 1,
+		/obj/item/stack/ore/diamond = 1,
+		/obj/item/stack/ore/gold = 10,
+		/obj/item/stack/ore/iron = 40,
+		/obj/item/stack/ore/plasma = 20,
+		/obj/item/stack/ore/silver = 12,
+		/obj/item/stack/ore/titanium = 11,
+		/obj/item/stack/ore/uranium = 5,
+		/turf/closed/mineral/gibtonite/volcanic = 4,
+	)
+
+*/
 
 /turf/closed/mineral/random/volcanic/mineral_chances()
 	return list(
