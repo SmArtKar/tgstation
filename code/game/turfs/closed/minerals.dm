@@ -460,6 +460,9 @@
 	src = new_rock
 	new_rock.levelupdate()
 
+	if(mineral_type && !mineral_amt)
+		stack_trace("Mineral turf with mineral_amt being zero initialized at [src.x], [src.y], [src.z] ([get_area(src)])")
+
 /turf/closed/mineral/random/high_chance
 	icon_state = "rock_highchance"
 	mineral_chance = 25

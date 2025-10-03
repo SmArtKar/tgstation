@@ -2442,6 +2442,10 @@
 	dir = 1
 	},
 /area/mine/laborcamp/security)
+"mG" = (
+/obj/effect/landmark/river_waypoint,
+/turf/open/lava/smooth/lava_land_surface,
+/area/lavaland/surface/outdoors)
 "mJ" = (
 /obj/docking_port/stationary{
 	dwidth = 2;
@@ -9097,10 +9101,6 @@
 /obj/item/radio/intercom/directional/east,
 /turf/open/floor/iron,
 /area/mine/cafeteria)
-"Zo" = (
-/obj/effect/landmark/river_waypoint,
-/turf/open/lava/smooth/lava_land_surface,
-/area/lavaland/surface/outdoors)
 "Zp" = (
 /obj/structure/cable,
 /obj/machinery/atmospherics/pipe/smart/manifold4w/supply/hidden/layer4,
@@ -55194,7 +55194,7 @@ ZY
 ZY
 ZY
 aj
-Zo
+mG
 aj
 aj
 ZY
