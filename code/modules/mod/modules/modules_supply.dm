@@ -208,8 +208,8 @@
 	SIGNAL_HANDLER
 	if (!istype(module, /obj/item/mod/module/sphere_transform))
 		return
-	// In sphere mode we get instamine and halved power drain
-	toolspeed = 0
+	// In sphere mode we get faster mining and halved power drain
+	toolspeed = 0.1
 	use_energy_cost *= 0.5
 	exp_multiplier *= 0.2
 	if (!active)
