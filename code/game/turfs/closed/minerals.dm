@@ -91,9 +91,9 @@
 	if (!vein_sizes)
 		vein_sizes = list()
 
+	var/min_vein_size = ore_path::min_vein_size
+	var/max_vein_size = ore_path::max_vein_size
 	if (!vein_sizes[ore_path])
-		var/min_vein_size = ore_path::min_vein_size
-		var/max_vein_size = ore_path::max_vein_size
 		var/list/ore_sizes = list()
 		// Larger veins are rarer by default
 		for (var/i in min_vein_size to max_vein_size)
