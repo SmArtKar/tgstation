@@ -544,12 +544,12 @@
 		/obj/item/stack/ore/bluespace_crystal = 1,
 		/obj/item/stack/ore/diamond = 1,
 		/obj/item/stack/ore/gold = 10,
-		/obj/item/stack/ore/iron = 40,
-		/obj/item/stack/ore/plasma = 20,
+		/obj/item/stack/ore/iron = 60,
+		/obj/item/stack/ore/plasma = 10,
 		/obj/item/stack/ore/silver = 12,
-		/obj/item/stack/ore/titanium = 11,
+		/obj/item/stack/ore/titanium = 13,
 		/obj/item/stack/ore/uranium = 5,
-		/turf/closed/mineral/gibtonite/volcanic = 4,
+		/turf/closed/mineral/gibtonite/volcanic = 6,
 	)
 
 /turf/closed/mineral/random/volcanic/red_rock
@@ -561,6 +561,18 @@
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
 	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
 	tool_mine_speed = 4 SECONDS // 33% harder than basalt
+	mineral_chance = 13
+
+/turf/closed/mineral/random/volcanic/red_rock/mineral_chances()
+	return list(
+		/obj/item/stack/ore/gold = 3,
+		/obj/item/stack/ore/iron = 40,
+		/obj/item/stack/ore/plasma = 10,
+		/obj/item/stack/ore/silver = 6,
+		/obj/item/stack/ore/titanium = 16,
+		/obj/item/stack/ore/uranium = 2,
+		/turf/closed/mineral/gibtonite/volcanic/red_rock = 2,
+	)
 
 /turf/closed/mineral/random/volcanic/shale
 	name = "shale"
@@ -571,6 +583,20 @@
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_SHALE_WALLS
 	canSmoothWith = SMOOTH_GROUP_SHALE_WALLS
 	tool_mine_speed = 6 SECONDS // Twice as hard as basalt
+	mineral_chance = 13
+
+/turf/closed/mineral/random/volcanic/shale/mineral_chances()
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 1,
+		/obj/item/stack/ore/diamond = 1,
+		/obj/item/stack/ore/gold = 7,
+		/obj/item/stack/ore/iron = 20,
+		/obj/item/stack/ore/plasma = 30,
+		/obj/item/stack/ore/silver = 12,
+		/obj/item/stack/ore/titanium = 7,
+		/obj/item/stack/ore/uranium = 10,
+		/turf/closed/mineral/gibtonite/volcanic/shale = 4,
+	)
 
 /turf/closed/mineral/random/snow
 	name = "snowy mountainside"
@@ -1035,6 +1061,26 @@
 	baseturfs = /turf/open/misc/asteroid/basalt/lava_land_surface
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = TRUE
+
+/turf/closed/mineral/gibtonite/volcanic/red_rock
+	name = "siderite"
+	icon = MAP_SWITCH('icons/turf/walls/red_rock.dmi', 'icons/turf/mining.dmi')
+	icon_state = "red_rock"
+	base_icon_state = "red_rock"
+	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
+	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
+	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
+	tool_mine_speed = 4 SECONDS // 33% harder than basalt
+
+/turf/closed/mineral/gibtonite/volcanic/shale
+	name = "shale"
+	icon = MAP_SWITCH('icons/turf/walls/shale.dmi', 'icons/turf/mining.dmi')
+	icon_state = "shale"
+	base_icon_state = "shale"
+	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
+	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_SHALE_WALLS
+	canSmoothWith = SMOOTH_GROUP_SHALE_WALLS
+	tool_mine_speed = 6 SECONDS // Twice as hard as basalt
 
 /turf/closed/mineral/gibtonite/volcanic/airless
 	turf_type = /turf/open/misc/asteroid/basalt
