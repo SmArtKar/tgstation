@@ -439,6 +439,8 @@
 	var/turf_aoe = FALSE
 	/// Have we taken another kit's AOE?
 	var/stats_stolen = FALSE
+	/// Multiplier for mob damage
+	var/damage_modifier = 0
 
 /obj/item/borg/upgrade/modkit/cooldown/aoe/install(obj/item/gun/energy/recharge/kinetic_accelerator/KA, mob/user)
 	. = ..()
