@@ -137,6 +137,7 @@ GLOBAL_LIST_EMPTY(ruin_landmarks)
 GLOBAL_LIST_EMPTY(bar_areas)
 /// Assoc list of river waypoint markers by z-level
 GLOBAL_LIST_EMPTY(river_waypoint_list)
+GLOBAL_LIST_EMPTY(mining_center) // For determining vent size ranked lists, epicenters for comparison goes here.
 
 /// List of all the maps that have been cached for /proc/load_map
 GLOBAL_LIST_EMPTY(cached_maps)
