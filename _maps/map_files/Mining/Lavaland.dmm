@@ -6163,6 +6163,9 @@
 /area/mine/laborcamp/security/maintenance)
 "Jp" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4,
+/obj/effect/landmark/start,
+/obj/effect/landmark/start/research_director,
+/obj/effect/landmark/start/shaft_miner,
 /turf/open/floor/iron/dark/textured_large,
 /area/mine/eva)
 "Jt" = (
