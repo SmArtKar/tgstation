@@ -196,6 +196,7 @@
 	heat_gen[BIOME_HIGH_HEAT] = rustg_dbp_generate("[heat_seed]", "60", "[biome_stamp_size]", "[world.maxx]", "[high_heat_threshold]", "1.1")
 	heat_gen[BIOME_MEDIUM_HEAT] = rustg_dbp_generate("[heat_seed]", "60", "[biome_stamp_size]", "[world.maxx]", "[medium_heat_threshold]", "[high_heat_threshold]")
 
+	var/list/to_generate = list()
 	for(var/turf/gen_turf as anything in turfs) //Go through all the turfs and generate them
 		var/closed = string_gen[world.maxx * (gen_turf.y - 1) + gen_turf.x] != "0"
 		var/datum/biome/selected_biome
@@ -215,12 +216,12 @@
 			BIOME_HIGH_HEAT : text2num(heat_gen[BIOME_MEDIUM_HEAT][coordinate]) ? BIOME_MEDIUM_HEAT : BIOME_LOW_HEAT
 
 		selected_biome = possible_biomes[heat_level][humidity_level]
-		LAZYSET(generated_turfs_per_biome[selected_biome], gen_turf, closed)
+		LAZYSET(to_generate[selected_biome], gen_turf, closed)
 		CHECK_TICK
 
-	for(var/biome in generated_turfs_per_biome)
+	for(var/biome in to_generate)
 		var/datum/biome/generating_biome = SSmapping.biomes[biome]
-		var/list/turf/generated_turfs = generating_biome.generate_turfs_for_terrain(generated_turfs_per_biome[biome])
+		var/list/turf/generated_turfs = generating_biome.generate_turfs_for_terrain(to_generate[biome])
 		generated_turfs_per_biome[biome] = generated_turfs
 
 	var/message = "[name] terrain generation finished in [(REALTIMEOFDAY - start_time)/10]s!"

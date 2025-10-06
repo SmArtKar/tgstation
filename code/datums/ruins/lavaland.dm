@@ -5,6 +5,8 @@
 	prefix = "_maps/RandomRuins/LavaRuins/"
 	default_area = /area/lavaland/surface/outdoors/unexplored
 
+/* Fuck you three   ~ Sincerely, SmArtKar
+
 /datum/map_template/ruin/lavaland/biodome
 	cost = 5
 	allow_duplicates = FALSE
@@ -29,12 +31,16 @@
 	description = "WELCOME TO CLOWN PLANET! HONK HONK HONK etc.!"
 	suffix = "lavaland_biodome_clown_planet.dmm"
 
+*/
+
 /datum/map_template/ruin/lavaland/lizgas
 	name = "Lava-Ruin The Lizard's Gas"
 	id = "lizgas2"
 	description = "A recently opened gas station from the Lizard's Gas franchise."
 	suffix = "lavaland_surface_gas.dmm"
 	allow_duplicates = FALSE
+
+/* See you later in a remap
 
 /datum/map_template/ruin/lavaland/cube
 	name = "Lava-Ruin The Wishgranter Cube"
@@ -43,6 +49,8 @@
 	suffix = "lavaland_surface_cube.dmm"
 	cost = 10
 	allow_duplicates = FALSE
+
+*/
 
 /datum/map_template/ruin/lavaland/seed_vault
 	name = "Lava-Ruin Seed Vault"

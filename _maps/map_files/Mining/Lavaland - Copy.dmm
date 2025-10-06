@@ -510,7 +510,6 @@
 /obj/effect/turf_decal/trimline/brown/filled/line{
 	dir = 4
 	},
-/obj/machinery/mineral/ore_redemption/offstation,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 8
 	},
@@ -3306,10 +3305,6 @@
 	dir = 8
 	},
 /area/mine/lounge)
-"qX" = (
-/obj/machinery/ore_silo,
-/turf/closed/wall,
-/area/mine/mechbay)
 "ra" = (
 /obj/effect/turf_decal/sand/plating/volcanic,
 /obj/structure/marker_beacon/teal,
@@ -6797,8 +6792,6 @@
 	dir = 6
 	},
 /obj/item/radio/intercom/directional/east,
-/obj/machinery/ore_silo,
-/obj/item/multitool,
 /turf/open/floor/iron/dark,
 /area/mine/production)
 "Mr" = (
@@ -7113,10 +7106,10 @@
 /turf/open/floor/plating/lavaland_atmos,
 /area/lavaland/surface/outdoors)
 "Ob" = (
+/obj/machinery/suit_storage_unit/mining,
 /obj/effect/turf_decal/trimline/brown/filled/line{
 	dir = 5
 	},
-/obj/structure/closet/secure_closet/miner,
 /turf/open/floor/iron/dark,
 /area/mine/eva)
 "Og" = (
@@ -7995,10 +7988,8 @@
 /area/mine/eva)
 "Ti" = (
 /obj/effect/turf_decal/trimline/brown/filled/line,
-/obj/machinery/computer/rdconsole{
-	dir = 1
-	},
-/obj/item/disk/tech_disk/debug,
+/obj/structure/table,
+/obj/item/paper/fluff/stations/lavaland/orm_notice,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -8098,7 +8089,6 @@
 	pixel_y = 4
 	},
 /obj/effect/turf_decal/trimline/brown/filled/line,
-/obj/item/storage/medkit/regular,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -8531,10 +8521,8 @@
 /obj/machinery/power/apc/auto_name/directional/south,
 /obj/structure/cable,
 /obj/effect/turf_decal/trimline/brown/filled/line,
-/obj/machinery/rnd/production/protolathe/department/cargo{
-	allowed_buildtypes = 14;
-	allowed_department_flags = 120
-	},
+/obj/structure/table,
+/obj/item/storage/medkit/regular,
 /turf/open/floor/iron/dark/smooth_edge{
 	dir = 1
 	},
@@ -45959,7 +45947,7 @@ oA
 oA
 oA
 Vn
-qX
+QX
 QX
 vF
 QX

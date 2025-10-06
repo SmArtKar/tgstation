@@ -74,7 +74,7 @@
 	},
 /area/ruin/unpowered)
 "o" = (
-/turf/closed/mineral/volcanic/lava_land_surface,
+/turf/closed/mineral/volcanic/lava_land_surface/biome_replace,
 /area/lavaland/surface)
 "p" = (
 /obj/structure/rack,
@@ -318,7 +318,7 @@ G
 G
 G
 G
-o
+G
 o
 o
 o
@@ -344,9 +344,9 @@ G
 G
 G
 G
-o
-o
-o
+G
+G
+G
 o
 o
 E
@@ -370,10 +370,10 @@ G
 G
 G
 G
-o
-o
-o
-o
+G
+G
+G
+G
 a
 a
 E
@@ -397,9 +397,9 @@ G
 G
 G
 G
-o
-o
-a
+G
+G
+G
 a
 a
 t
@@ -424,9 +424,9 @@ G
 G
 G
 G
+G
+G
 o
-o
-a
 a
 a
 a
@@ -451,7 +451,7 @@ G
 G
 G
 G
-o
+G
 n
 q
 q
@@ -478,7 +478,7 @@ G
 G
 G
 G
-o
+G
 O
 y
 I
