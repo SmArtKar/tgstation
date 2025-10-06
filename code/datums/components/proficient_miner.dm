@@ -51,7 +51,7 @@
 	var/mining_delay = mineral_wall.tool_mine_speed * mining_speed
 	TIMER_COOLDOWN_START(mineral_wall, REF(user), mining_delay)
 	var/static/list/mine_sounds = list('sound/effects/pickaxe/picaxe1.ogg', 'sound/effects/pickaxe/picaxe2.ogg', 'sound/effects/pickaxe/picaxe3.ogg')
-	playsound(pick(mine_sounds), vol = 50)
+	playsound(user, pick(mine_sounds), 50)
 
 	var/mob/living/driver = null
 	if (pass_driver && length(user.buckled_mobs))
@@ -60,6 +60,9 @@
 	if(!do_after(user, mining_delay, mineral_wall, bar_override = driver))
 		TIMER_COOLDOWN_END(mineral_wall, REF(user)) //if we fail we can start again immediately
 		return
+
+	if (mining_delay > MIN_TOOL_SOUND_DELAY)
+		playsound(user, pick(mine_sounds), 50)
 
 	if(istype(mineral_wall))
 		mineral_wall.gets_drilled(driver || user)
