@@ -270,7 +270,7 @@
 	new /obj/effect/temp_visual/explosion/fast(get_turf(target))
 
 	for(var/turf/closed/mineral/mineral_turf in RANGE_TURFS(2, target) - target)
-		mineral_turf.gets_drilled(firer, 0.1)
+		mineral_turf.drill_aoe(firer, 0.1)
 
 	for(var/mob/living/living_mob in range(2, target) - firer - target)
 		if(!ismining(living_mob))
@@ -491,7 +491,7 @@
 	name = "mining explosion"
 	desc = "Causes the kinetic accelerator to destroy rock in an AoE."
 	turf_aoe = TRUE
-	modifier = -2
+	modifier = -4
 
 /obj/item/borg/upgrade/modkit/cooldown/aoe/mobs
 	name = "offensive explosion"
@@ -502,7 +502,7 @@
 	name = "offensive mining explosion"
 	desc = "Causes the kinetic accelerator to destroy rock and damage mobs in an AoE."
 	turf_aoe = TRUE
-	modifier = -1 // Slightly better than normal turf AOE as its a rare find
+	modifier = -2 // Slightly better than normal turf AOE as its a rare find
 
 // Minebot passthrough
 /obj/item/borg/upgrade/modkit/minebot_passthrough

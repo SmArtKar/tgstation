@@ -750,8 +750,11 @@
 /obj/structure/mining_bomb/proc/boom(atom/movable/firer)
 	visible_message(span_danger("[src] explodes!"))
 	playsound(src, 'sound/effects/magic/magic_missile.ogg', 200, vary = TRUE)
-	for(var/turf/closed/mineral/rock in circle_range_turfs(src, 1))
-		rock.gets_drilled()
+	for(var/turf/closed/mineral/rock in RANGE_TURFS(src, 1))
+		if (get_turf(src))
+			rock.gets_drilled(firer, 0)
+		else
+			rock.drill_aoe(firer, 0)
 	for(var/mob/living/victim in range(1, src))
 		if(HAS_TRAIT(victim, TRAIT_MINING_AOE_IMMUNE))
 			continue

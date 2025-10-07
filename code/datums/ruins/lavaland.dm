@@ -70,6 +70,8 @@
 	cost = 20
 	allow_duplicates = FALSE
 
+/* Temp removal for my sanity
+
 /datum/map_template/ruin/lavaland/syndicate_base
 	name = "Lava-Ruin Syndicate Lava Base"
 	id = "lava-base"
@@ -77,6 +79,7 @@
 	suffix = "lavaland_surface_syndicate_base1.dmm"
 	cost = 20
 	allow_duplicates = FALSE
+
 
 /datum/map_template/ruin/lavaland/free_golem
 	name = "Lava-Ruin Free Golem Ship"
@@ -87,6 +90,7 @@
 	prefix = "_maps/RandomRuins/AnywhereRuins/"
 	suffix = "golem_ship.dmm"
 	allow_duplicates = FALSE
+*/
 
 /datum/map_template/ruin/lavaland/gaia
 	name = "Lava-Ruin Patch of Eden"
@@ -95,6 +99,8 @@
 	cost = 5
 	suffix = "lavaland_surface_gaia.dmm"
 	allow_duplicates = FALSE
+
+/* See you later in a remap
 
 /datum/map_template/ruin/lavaland/sin
 	cost = 10
@@ -132,6 +138,8 @@
 	suffix = "lavaland_surface_sloth.dmm"
 	// Generates nothing but atmos runtimes and salt
 	cost = 0
+
+*/
 
 /datum/map_template/ruin/lavaland/ratvar
 	name = "Lava-Ruin Dead God"
@@ -317,6 +325,8 @@
 	cost = 5
 	allow_duplicates = FALSE
 
+/* See you later in a remap
+
 /datum/map_template/ruin/lavaland/mook_village
 	name = "Lava-Ruin Mook Village"
 	id = "mook_village"
@@ -324,6 +334,8 @@
 	suffix = "lavaland_surface_mookvillage.dmm"
 	allow_duplicates = FALSE
 	cost = 5
+
+*/
 
 /datum/map_template/ruin/lavaland/shuttle_wreckage
 	name = "Lava-Ruin Shuttle Wreckage"

@@ -42,7 +42,7 @@
 	/// If true you can mine the mineral turf without tools.
 	var/weak_turf = FALSE
 	/// How long it takes to mine this turf with tools, before the tool's speed and the user's skill modifier are factored in.
-	var/tool_mine_speed = 3 SECONDS
+	var/tool_mine_speed = 4 SECONDS
 	/// How long it takes to mine this turf without tools, if it's weak.
 	var/hand_mine_speed = 15 SECONDS
 	/// Distance to the nearest open turf
@@ -290,6 +290,14 @@
 	addtimer(CALLBACK(src, PROC_REF(AfterChange), flags, old_type), 1, TIMER_UNIQUE)
 	playsound(src, 'sound/effects/break_stone.ogg', 50, TRUE) //beautiful destruction
 	mined.update_visuals()
+
+/// When the turf gets drilled from an AOE explosion
+/// Has a chance of not being drilled based on own hardness
+/turf/closed/mineral/proc/drill_aoe(mob/user, exp_multiplier = 0)
+	var/speed_change = /turf/closed/mineral::tool_mine_speed / tool_mine_speed
+	// Probability scaling isn't linear to still mine somewhat reliably in dense rocks
+	if (speed_change >= 1 || prob(100 * sqrt(speed_change)))
+		return gets_drilled(user, exp_multiplier)
 
 /turf/closed/mineral/attack_alien(mob/living/carbon/alien/user, list/modifiers)
 	balloon_alert(user, "digging...")
@@ -1064,27 +1072,34 @@
 		user.visible_message(span_danger("[user] hit gibtonite with [attacking_item.name], launching [user.p_them()] back!"), span_danger("You've struck gibtonite! Your [attacking_item.name] launched you back!"))
 
 /turf/closed/mineral/gibtonite/proc/explosive_reaction(mob/user = null)
-	if(stage == GIBTONITE_UNSTRUCK)
-		activated_overlay = mutable_appearance('icons/turf/smoothrocks_overlays.dmi', "rock_Gibtonite_inactive", ON_EDGED_TURF_LAYER) //shows in gaps between pulses if there are any
-		add_overlay(activated_overlay)
-		name = "gibtonite deposit"
-		desc = "An active gibtonite reserve. Run!"
-		stage = GIBTONITE_ACTIVE
-		visible_message(span_danger("There's gibtonite inside! It's going to explode!"))
+	if(stage != GIBTONITE_UNSTRUCK)
+		return
 
-		var/notify_admins = !is_mining_level(z)
+	activated_overlay = mutable_appearance('icons/turf/smoothrocks_overlays.dmi', "rock_Gibtonite_inactive", ON_EDGED_TURF_LAYER) //shows in gaps between pulses if there are any
+	activated_overlay.pixel_x = 2
+	activated_overlay.pixel_y = 2
+	add_overlay(activated_overlay)
+	name = "gibtonite deposit"
+	desc = "An active gibtonite reserve. Run!"
+	stage = GIBTONITE_ACTIVE
+	visible_message(span_danger("There's gibtonite inside! It's going to explode!"))
 
-		if(user)
-			log_bomber(user, "has triggered a gibtonite deposit reaction via", src, null, notify_admins)
-		else
-			log_bomber(null, "An explosion has triggered a gibtonite deposit reaction via", src, null, notify_admins)
+	var/notify_admins = !is_mining_level(z)
 
-		countdown(notify_admins)
+	if(user)
+		log_bomber(user, "has triggered a gibtonite deposit reaction via", src, null, notify_admins)
+	else
+		log_bomber(null, "An explosion has triggered a gibtonite deposit reaction via", src, null, notify_admins)
+
+	countdown(notify_admins)
 
 /turf/closed/mineral/gibtonite/proc/countdown(notify_admins = FALSE)
 	set waitfor = FALSE
 	while(istype(src, /turf/closed/mineral/gibtonite) && stage == GIBTONITE_ACTIVE && det_time > 0 && mineral_amt >= 1)
-		flick_overlay_view(mutable_appearance('icons/turf/smoothrocks_overlays.dmi', "rock_Gibtonite_active", ON_EDGED_TURF_LAYER + 0.1), 0.5 SECONDS) //makes the animation pulse one time per tick
+		var/mutable_appearance/boom_overlay = mutable_appearance('icons/turf/smoothrocks_overlays.dmi', "rock_Gibtonite_active", ON_EDGED_TURF_LAYER + 0.1)
+		boom_overlay.pixel_x = 2
+		boom_overlay.pixel_y = 2
+		flick_overlay_view(boom_overlay, 0.5 SECONDS) //makes the animation pulse one time per tick
 		det_time--
 		sleep(0.5 SECONDS)
 	if(istype(src, /turf/closed/mineral/gibtonite))
@@ -1095,17 +1110,18 @@
 			explosion(bombturf, devastation_range = 1, heavy_impact_range = 3, light_impact_range = 5, flame_range = 0, flash_range = 0, adminlog = notify_admins, explosion_cause = src)
 
 /turf/closed/mineral/gibtonite/proc/defuse(mob/living/defuser)
-	if(stage == GIBTONITE_ACTIVE)
-		cut_overlay(activated_overlay)
-		activated_overlay.icon_state = "rock_Gibtonite_inactive"
-		add_overlay(activated_overlay)
-		desc = "An inactive gibtonite reserve. The ore can be extracted."
-		stage = GIBTONITE_STABLE
-		if(det_time < 0)
-			det_time = 0
-		visible_message(span_notice("The chain reaction stopped! The gibtonite had [det_time] reactions left till the explosion!"))
-		if(defuser)
-			SEND_SIGNAL(defuser, COMSIG_LIVING_DEFUSED_GIBTONITE, det_time)
+	if(stage != GIBTONITE_ACTIVE)
+		return
+	cut_overlay(activated_overlay)
+	activated_overlay.icon_state = "rock_Gibtonite_inactive"
+	add_overlay(activated_overlay)
+	desc = "An inactive gibtonite reserve. The ore can be extracted."
+	stage = GIBTONITE_STABLE
+	if(det_time < 0)
+		det_time = 0
+	visible_message(span_notice("The chain reaction stopped! The gibtonite had [det_time] reactions left till the explosion!"))
+	if(defuser)
+		SEND_SIGNAL(defuser, COMSIG_LIVING_DEFUSED_GIBTONITE, det_time)
 
 /turf/closed/mineral/gibtonite/gets_drilled(mob/user, exp_multiplier = 0, triggered_by_explosion = FALSE)
 	if(istype(user))
@@ -1152,7 +1168,7 @@
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
 	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
-	tool_mine_speed = 4 SECONDS // 33% harder than basalt
+	tool_mine_speed = 5 SECONDS // 25% harder than basalt
 
 /turf/closed/mineral/gibtonite/volcanic/shale
 	name = "shale"
@@ -1162,7 +1178,7 @@
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_SHALE_WALLS
 	canSmoothWith = SMOOTH_GROUP_SHALE_WALLS
-	tool_mine_speed = 6 SECONDS // Twice as hard as basalt
+	tool_mine_speed = 7 SECONDS // 75% harder than basalt
 
 /turf/closed/mineral/gibtonite/volcanic/airless
 	turf_type = /turf/open/misc/asteroid/basalt

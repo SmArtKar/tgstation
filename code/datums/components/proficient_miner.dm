@@ -45,7 +45,7 @@
 	mineral_wall.gets_drilled(source)
 
 /datum/component/proficient_miner/proc/slow_mine(mob/living/user, turf/closed/mineral/mineral_wall)
-	if(TIMER_COOLDOWN_RUNNING(src, REF(user))) //prevents mining turfs in progress
+	if(TIMER_COOLDOWN_RUNNING(mineral_wall, REF(user))) //prevents mining turfs in progress
 		return
 
 	var/mining_delay = mineral_wall.tool_mine_speed * mining_speed
