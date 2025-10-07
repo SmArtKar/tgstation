@@ -154,6 +154,7 @@
 		/obj/item/wrench,
 		/obj/item/wormhole_jaunter,
 		/obj/item/skeleton_key,
+		/obj/item/crusher_trophy,
 	))
 
 ///Primitive mining belt

@@ -338,7 +338,7 @@
 	if(prob(50))
 		gets_drilled()
 
-/proc/randomize_mineral_ores()
+/proc/calculate_rock_edges()
 	var/cardinals = GLOB.cardinals.Copy() // i'm sorry
 	for(var/mining_z in SSmapping.levels_by_trait(ZTRAIT_MINING))
 		var/list/adjacent_minerals = list()
@@ -454,12 +454,16 @@
 		for (var/obj/item/stack/ore/ore_type as anything in spawn_chance_list)
 			spawn_chance_list[ore_type] = floor(spawn_chance_list[ore_type] * lowest_factor)
 
-		spawn_chance_list = expand_weights(spawn_chance_list)
 		ore_depth_chance = mineral_chance * total_spawn_sum / base_spawn_sum
+
+		LAZYSET(SSore_generation.ore_spread_probabilities[type], "[open_turf_distance]", spawn_chance_list.Copy() + list("chance" = ore_depth_chance, "count" = 0))
+
+		spawn_chance_list = expand_weights(spawn_chance_list)
 
 		spawn_type_list["[open_turf_distance]"] = spawn_chance_list
 		ore_depth_chances["[open_turf_distance]"] = ore_depth_chance
 
+	SSore_generation.ore_spread_probabilities[type]["[open_turf_distance]"]["count"] += 1
 	if (prob(ore_depth_chance))
 		spawn_ore(pick(spawn_chance_list))
 
@@ -571,37 +575,39 @@
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = TRUE
 	exposure_based = TRUE
-	mineral_chance = 5
+	mineral_chance = 13 // 7.17% functionally, accounts for ~65% turfs
 
-/* Default values
+/turf/closed/mineral/random/volcanic/mineral_chances()
+	// Comments are value with distance accounting for turf distribution (not average!)
+	// Values of these across rock types should sum up to default values when corrected for vein spreading
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 1, // 0.37 raw
+		/obj/item/stack/ore/diamond = 1, // 0.38 raw
+		/obj/item/stack/ore/gold = 10, // 8.84 raw
+		/obj/item/stack/ore/iron = 40, // 44.52 raw
+		/obj/item/stack/ore/plasma = 20, // 22.26 raw
+		/obj/item/stack/ore/silver = 12, // 13.35 raw
+		/obj/item/stack/ore/titanium = 11, // 12.22 raw
+		/obj/item/stack/ore/uranium = 5, // 3.17 raw
+		/turf/closed/mineral/gibtonite/volcanic = 4, // 5.89 raw
+	) // Total sum of 104, raw sum of 111
+
+/* Default values - comments mean values with distance
 
 /turf/closed/mineral/random/volcanic/mineral_chances()
 	return list(
-		/obj/item/stack/ore/bluespace_crystal = 1,
-		/obj/item/stack/ore/diamond = 1,
-		/obj/item/stack/ore/gold = 10,
-		/obj/item/stack/ore/iron = 40,
-		/obj/item/stack/ore/plasma = 20,
-		/obj/item/stack/ore/silver = 12,
-		/obj/item/stack/ore/titanium = 11,
-		/obj/item/stack/ore/uranium = 5,
-		/turf/closed/mineral/gibtonite/volcanic = 4,
-	)
+		/obj/item/stack/ore/bluespace_crystal = 1, // 0.58
+		/obj/item/stack/ore/diamond = 1, // 0.60
+		/obj/item/stack/ore/gold = 10, // 14.14
+		/obj/item/stack/ore/iron = 40, // 73.90
+		/obj/item/stack/ore/plasma = 20, // 36.95
+		/obj/item/stack/ore/silver = 12, // 22.15
+		/obj/item/stack/ore/titanium = 11, // 20.29
+		/obj/item/stack/ore/uranium = 5, // 5.00
+		/turf/closed/mineral/gibtonite/volcanic = 4, // 9.53   ~ what no scaling does to a rock
+	) // Total sum of 104, raw sum of 183.14
 
 */
-
-/turf/closed/mineral/random/volcanic/mineral_chances()
-	return list(
-		/obj/item/stack/ore/bluespace_crystal = 1,
-		/obj/item/stack/ore/diamond = 1,
-		/obj/item/stack/ore/gold = 10,
-		/obj/item/stack/ore/iron = 60,
-		/obj/item/stack/ore/plasma = 10,
-		/obj/item/stack/ore/silver = 12,
-		/obj/item/stack/ore/titanium = 13,
-		/obj/item/stack/ore/uranium = 5,
-		/turf/closed/mineral/gibtonite/volcanic = 6,
-	)
 
 /turf/closed/mineral/random/volcanic/red_rock
 	name = "siderite"
@@ -611,19 +617,21 @@
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
 	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
-	tool_mine_speed = 4 SECONDS // 33% harder than basalt
-	mineral_chance = 13
+	tool_mine_speed = 5 SECONDS // 25% harder than basalt
+	mineral_chance = 13 // 6.67% functionally, accounts for ~22% turfs
 
 /turf/closed/mineral/random/volcanic/red_rock/mineral_chances()
 	return list(
-		/obj/item/stack/ore/gold = 3,
-		/obj/item/stack/ore/iron = 40,
-		/obj/item/stack/ore/plasma = 10,
-		/obj/item/stack/ore/silver = 6,
-		/obj/item/stack/ore/titanium = 16,
-		/obj/item/stack/ore/uranium = 2,
-		/turf/closed/mineral/gibtonite/volcanic/red_rock = 2,
-	)
+		/obj/item/stack/ore/bluespace_crystal = 1, // 0.12 raw
+		/obj/item/stack/ore/diamond = 1, // 0.12 raw
+		/obj/item/stack/ore/gold = 10, // 2.73 raw
+		/obj/item/stack/ore/iron = 40, // 13.74 raw
+		/obj/item/stack/ore/plasma = 20, // 6.87 raw
+		/obj/item/stack/ore/silver = 12, // 4.11 raw
+		/obj/item/stack/ore/titanium = 11, // 3.77 raw
+		/obj/item/stack/ore/uranium = 5, // 0.99 raw
+		/turf/closed/mineral/gibtonite/volcanic/shale = 4, // 1.87 raw
+	) // Total sum of 104, raw sum of 34.32
 
 /turf/closed/mineral/random/volcanic/shale
 	name = "shale"
@@ -633,21 +641,21 @@
 	transform = MAP_SWITCH(TRANSLATE_MATRIX(-8, -8), matrix())
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_SHALE_WALLS
 	canSmoothWith = SMOOTH_GROUP_SHALE_WALLS
-	tool_mine_speed = 6 SECONDS // Twice as hard as basalt
-	mineral_chance = 13
+	tool_mine_speed = 7 SECONDS // 75% harder than basalt
+	mineral_chance = 13 // 7.01% functionally, accounts for ~13% turfs
 
 /turf/closed/mineral/random/volcanic/shale/mineral_chances()
 	return list(
-		/obj/item/stack/ore/bluespace_crystal = 1,
-		/obj/item/stack/ore/diamond = 1,
-		/obj/item/stack/ore/gold = 7,
-		/obj/item/stack/ore/iron = 20,
-		/obj/item/stack/ore/plasma = 30,
-		/obj/item/stack/ore/silver = 12,
-		/obj/item/stack/ore/titanium = 7,
-		/obj/item/stack/ore/uranium = 10,
-		/turf/closed/mineral/gibtonite/volcanic/shale = 4,
-	)
+		/obj/item/stack/ore/bluespace_crystal = 1, // 0.07 raw
+		/obj/item/stack/ore/diamond = 1, // 0.08 raw
+		/obj/item/stack/ore/gold = 10, // 1.75 raw
+		/obj/item/stack/ore/iron = 40, // 8.80 raw
+		/obj/item/stack/ore/plasma = 20, // 4.40 raw
+		/obj/item/stack/ore/silver = 12, // 2.64 raw
+		/obj/item/stack/ore/titanium = 11, // 2.42 raw
+		/obj/item/stack/ore/uranium = 5, //  0.63 raw
+		/turf/closed/mineral/gibtonite/volcanic/red_rock = 4, // 1.17 raw
+	) // Total sum of 104, raw sum of 21.96
 
 /turf/closed/mineral/random/snow
 	name = "snowy mountainside"

@@ -24,6 +24,8 @@ SUBSYSTEM_DEF(ore_generation)
 	var/list/turf/closed/mineral/random/ore_turfs = list()
 	/// Amount of ores by type generated
 	var/list/ores_generated = list()
+	/// Probabilities by type and depth to generate ores
+	var/list/list/list/ore_spread_probabilities = list()
 
 /datum/controller/subsystem/ore_generation/Initialize()
 	/// First, lets sort each ore_vent here based on their distance to the landmark, then we'll assign sizes.
@@ -78,9 +80,37 @@ SUBSYSTEM_DEF(ore_generation)
 		),
 	)
 
-	randomize_mineral_ores()
+	calculate_rock_edges()
 	for (var/turf/closed/mineral/random/rock in ore_turfs) // Typecheck in case they got destroyed
 		rock.randomize_ore()
+
+	var/list/result = list()
+	var/summary_count = 0
+	for (var/turf/closed/mineral/random/rock_type as anything in ore_spread_probabilities)
+		var/list/rock_data = ore_spread_probabilities[rock_type]
+		var/list/result_rock = list()
+		var/total_count = 0
+		var/total_chance = 0
+		for (var/spread_range in rock_data)
+			var/list/dist_info = rock_data[spread_range]
+			for (var/ore_type in dist_info - list("chance", "count"))
+				if (!result_rock[ore_type])
+					result_rock[ore_type] = 0
+				result_rock[ore_type] += dist_info[ore_type] * dist_info["chance"] / initial(rock_type.mineral_chance) * dist_info["count"]
+			total_count += dist_info["count"]
+			total_chance += dist_info["chance"] * dist_info["count"]
+
+		result_rock["chance"] = total_chance / total_count
+		result_rock["count"] = total_count
+		summary_count += total_count
+		result[rock_type] = result_rock
+
+	ore_spread_probabilities = result
+	for (var/turf/closed/mineral/random/rock_type as anything in result)
+		var/list/rock_data = result[rock_type]
+		for (var/ore_type in rock_data)
+			if (ispath(ore_type))
+				rock_data[ore_type] /= summary_count
 
 	return SS_INIT_SUCCESS
 

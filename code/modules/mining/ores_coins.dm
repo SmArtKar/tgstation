@@ -102,7 +102,7 @@
 	refined_type = /obj/item/stack/sheet/mineral/uranium
 	mine_experience = 6
 	scan_state = "rock_uranium"
-	spread_chance = 5
+	spread_chance = 0
 	merge_type = /obj/item/stack/ore/uranium
 	vein_type = ORE_VEIN_PLAIN
 	vein_distance = 3
@@ -118,7 +118,7 @@
 	refined_type = /obj/item/stack/sheet/iron
 	mine_experience = 1
 	scan_state = "rock_iron"
-	spread_chance = 20
+	spread_chance = 0
 	merge_type = /obj/item/stack/ore/iron
 	min_vein_size = 1
 	max_vein_size = 3
@@ -194,7 +194,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	refined_type = /obj/item/stack/sheet/mineral/plasma
 	mine_experience = 5
 	scan_state = "rock_plasma"
-	spread_chance = 8
+	spread_chance = 0
 	merge_type = /obj/item/stack/ore/plasma
 	vein_type = ORE_VEIN_PLAIN
 	min_vein_size = 2
@@ -213,7 +213,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	mats_per_unit = list(/datum/material/silver = SHEET_MATERIAL_AMOUNT)
 	refined_type = /obj/item/stack/sheet/mineral/silver
 	scan_state = "rock_silver"
-	spread_chance = 5
+	spread_chance = 0
 	merge_type = /obj/item/stack/ore/silver
 	vein_type = ORE_VEIN_BRANCH
 	min_vein_size = 0
@@ -228,7 +228,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	mats_per_unit = list(/datum/material/gold = SHEET_MATERIAL_AMOUNT)
 	refined_type = /obj/item/stack/sheet/mineral/gold
 	scan_state = "rock_gold"
-	spread_chance = 5
+	spread_chance = 0
 	merge_type = /obj/item/stack/ore/gold
 	vein_type = ORE_VEIN_BRANCH
 	vein_distance = 2
@@ -277,7 +277,7 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 	refined_type = /obj/item/stack/sheet/mineral/titanium
 	mine_experience = 3
 	scan_state = "rock_titanium"
-	spread_chance = 5
+	spread_chance = 0
 	merge_type = /obj/item/stack/ore/titanium
 	min_vein_size = 1
 	max_vein_size = 2
