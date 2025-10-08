@@ -575,11 +575,45 @@
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	defer_change = TRUE
 	exposure_based = TRUE
-	mineral_chance = 13 // 7.17% functionally, accounts for ~65% turfs
+	mineral_chance = 13 // N% functionally, 7.17% default, accounts for ~65% turfs
 
 /turf/closed/mineral/random/volcanic/mineral_chances()
 	// Comments are value with distance accounting for turf distribution (not average!)
-	// Values of these across rock types should sum up to default values when corrected for vein spreading
+	// Values of these across rock types should roughly sum up to default values when corrected for vein spreading
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 1,
+		/obj/item/stack/ore/diamond = 1,
+		/obj/item/stack/ore/gold = 10,
+		/obj/item/stack/ore/iron = 30,
+		/obj/item/stack/ore/plasma = 16,
+		/obj/item/stack/ore/silver = 12,
+		/obj/item/stack/ore/titanium = 11,
+		/obj/item/stack/ore/uranium = 5,
+		/turf/closed/mineral/gibtonite/volcanic = 2,
+	) // Total sum of 78, raw sum of
+
+/* Default values - comments mean values with distance
+
+/turf/closed/mineral/random/volcanic/mineral_chances()
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 1, // 0.58 raw
+		/obj/item/stack/ore/diamond = 1, // 0.60 raw
+		/obj/item/stack/ore/gold = 10, // 14.14 raw
+		/obj/item/stack/ore/iron = 40, // 73.90 raw
+		/obj/item/stack/ore/plasma = 20, // 36.95 raw
+		/obj/item/stack/ore/silver = 12, // 22.15 raw
+		/obj/item/stack/ore/titanium = 11, // 20.29 raw
+		/obj/item/stack/ore/uranium = 5, // 5.00 raw
+		/turf/closed/mineral/gibtonite/volcanic = 4, // 9.53 raw  ~ what no scaling does to a rock
+	) // Total sum of 104, raw sum of 183.14
+
+*/
+
+/* Default RAWs
+
+/turf/closed/mineral/random/volcanic/mineral_chances()
+	// Comments are value with distance accounting for turf distribution (not average!)
+	// Values of these across rock types should roughly sum up to default values when corrected for vein spreading
 	return list(
 		/obj/item/stack/ore/bluespace_crystal = 1, // 0.37 raw
 		/obj/item/stack/ore/diamond = 1, // 0.38 raw
@@ -592,21 +626,6 @@
 		/turf/closed/mineral/gibtonite/volcanic = 4, // 5.89 raw
 	) // Total sum of 104, raw sum of 111
 
-/* Default values - comments mean values with distance
-
-/turf/closed/mineral/random/volcanic/mineral_chances()
-	return list(
-		/obj/item/stack/ore/bluespace_crystal = 1, // 0.58
-		/obj/item/stack/ore/diamond = 1, // 0.60
-		/obj/item/stack/ore/gold = 10, // 14.14
-		/obj/item/stack/ore/iron = 40, // 73.90
-		/obj/item/stack/ore/plasma = 20, // 36.95
-		/obj/item/stack/ore/silver = 12, // 22.15
-		/obj/item/stack/ore/titanium = 11, // 20.29
-		/obj/item/stack/ore/uranium = 5, // 5.00
-		/turf/closed/mineral/gibtonite/volcanic = 4, // 9.53   ~ what no scaling does to a rock
-	) // Total sum of 104, raw sum of 183.14
-
 */
 
 /turf/closed/mineral/random/volcanic/red_rock
@@ -618,7 +637,22 @@
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_RED_ROCK_WALLS
 	canSmoothWith = SMOOTH_GROUP_RED_ROCK_WALLS
 	tool_mine_speed = 5 SECONDS // 25% harder than basalt
-	mineral_chance = 13 // 6.67% functionally, accounts for ~22% turfs
+	mineral_chance = 13 // N% functionally, 6.67% default, accounts for ~22% turfs
+
+/turf/closed/mineral/random/volcanic/red_rock/mineral_chances()
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 0.7,
+		/obj/item/stack/ore/diamond = 0.8,
+		/obj/item/stack/ore/gold = 6,
+		/obj/item/stack/ore/iron = 58,
+		/obj/item/stack/ore/plasma = 12,
+		/obj/item/stack/ore/silver = 12,
+		/obj/item/stack/ore/titanium = 25,
+		/obj/item/stack/ore/uranium = 3,
+		/turf/closed/mineral/gibtonite/volcanic/red_rock = 1,
+	) // Total sum of 140, raw sum of
+
+/* Default RAWs
 
 /turf/closed/mineral/random/volcanic/red_rock/mineral_chances()
 	return list(
@@ -630,8 +664,9 @@
 		/obj/item/stack/ore/silver = 12, // 4.11 raw
 		/obj/item/stack/ore/titanium = 11, // 3.77 raw
 		/obj/item/stack/ore/uranium = 5, // 0.99 raw
-		/turf/closed/mineral/gibtonite/volcanic/shale = 4, // 1.87 raw
+		/turf/closed/mineral/gibtonite/volcanic/red_rock = 4, // 1.87 raw
 	) // Total sum of 104, raw sum of 34.32
+*/
 
 /turf/closed/mineral/random/volcanic/shale
 	name = "shale"
@@ -642,7 +677,22 @@
 	smoothing_groups = SMOOTH_GROUP_CLOSED_TURFS + SMOOTH_GROUP_SHALE_WALLS
 	canSmoothWith = SMOOTH_GROUP_SHALE_WALLS
 	tool_mine_speed = 7 SECONDS // 75% harder than basalt
-	mineral_chance = 13 // 7.01% functionally, accounts for ~13% turfs
+	mineral_chance = 13 // N% functionally, 7.01% default, accounts for ~13% turfs
+
+/turf/closed/mineral/random/volcanic/shale/mineral_chances()
+	return list(
+		/obj/item/stack/ore/bluespace_crystal = 1,
+		/obj/item/stack/ore/diamond = 1,
+		/obj/item/stack/ore/gold = 8,
+		/obj/item/stack/ore/iron = 20,
+		/obj/item/stack/ore/plasma = 35,
+		/obj/item/stack/ore/silver = 8,
+		/obj/item/stack/ore/titanium = 8,
+		/obj/item/stack/ore/uranium = 16,
+		/turf/closed/mineral/gibtonite/volcanic/shale = 3,
+	) // Total sum of 100, raw sum of
+
+/* Default RAWs
 
 /turf/closed/mineral/random/volcanic/shale/mineral_chances()
 	return list(
@@ -654,8 +704,9 @@
 		/obj/item/stack/ore/silver = 12, // 2.64 raw
 		/obj/item/stack/ore/titanium = 11, // 2.42 raw
 		/obj/item/stack/ore/uranium = 5, //  0.63 raw
-		/turf/closed/mineral/gibtonite/volcanic/red_rock = 4, // 1.17 raw
+		/turf/closed/mineral/gibtonite/volcanic/shale = 4, // 1.17 raw
 	) // Total sum of 104, raw sum of 21.96
+*/
 
 /turf/closed/mineral/random/snow
 	name = "snowy mountainside"

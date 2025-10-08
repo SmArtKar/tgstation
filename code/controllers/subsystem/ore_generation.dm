@@ -84,7 +84,14 @@ SUBSYSTEM_DEF(ore_generation)
 	for (var/turf/closed/mineral/random/rock in ore_turfs) // Typecheck in case they got destroyed
 		rock.randomize_ore()
 
+	calculate_ore_spread()
+
+	return SS_INIT_SUCCESS
+
+/// Generates debug data about ore spread among rock turfs
+/datum/controller/subsystem/ore_generation/proc/calculate_ore_spread()
 	var/list/result = list()
+	var/list/totals = list("chance" = 0, "raw_sum" = 0)
 	var/summary_count = 0
 	for (var/turf/closed/mineral/random/rock_type as anything in ore_spread_probabilities)
 		var/list/rock_data = ore_spread_probabilities[rock_type]
@@ -102,17 +109,36 @@ SUBSYSTEM_DEF(ore_generation)
 
 		result_rock["chance"] = total_chance / total_count
 		result_rock["count"] = total_count
+		totals["chance"] += total_chance
 		summary_count += total_count
 		result[rock_type] = result_rock
 
-	ore_spread_probabilities = result
 	for (var/turf/closed/mineral/random/rock_type as anything in result)
 		var/list/rock_data = result[rock_type]
+		var/raw_sum = 0
 		for (var/ore_type in rock_data)
-			if (ispath(ore_type))
-				rock_data[ore_type] /= summary_count
+			if (!ispath(ore_type))
+				continue
+			rock_data[ore_type] /= summary_count
+			raw_sum += rock_data[ore_type]
+			if (!totals[ore_type])
+				totals[ore_type] = 0
+			if (ispath(ore_type, /turf/closed/mineral/gibtonite/volcanic))
+				totals[/turf/closed/mineral/gibtonite/volcanic] += rock_data[ore_type]
+			else
+				totals[ore_type] += rock_data[ore_type]
+		rock_data["raw_sum"] = raw_sum
+		totals["raw_sum"] += raw_sum
 
-	return SS_INIT_SUCCESS
+	for (var/spawn_type in totals)
+		if (!ispath(spawn_type))
+			continue
+		totals[spawn_type] /= totals["raw_sum"] / 104
+
+	totals["count"] = summary_count
+	totals["chance"] /= summary_count
+	result["total"] = totals
+	ore_spread_probabilities = result
 
 /datum/controller/subsystem/ore_generation/fire(resumed)
 	available_boulders.Cut() // reset upon new fire.
