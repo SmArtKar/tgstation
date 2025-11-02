@@ -16,7 +16,7 @@
 	var/drinking
 	/// If true, we put food in our tummy instead of deleting it
 	var/add_to_contents
-	/// If true, when add_to_contents would put the item into contents but it is used for healing, the item is instead consumed
+	/// If true, when add_to_contents would put the item into contents but when used for healing, the item is consumed instead
 	var/consume_healing
 	/// Types the animal can eat. Can be an assoc list with amount to heal/damage the mob by
 	var/list/food_types
@@ -69,7 +69,8 @@
 /datum/element/basic_eating/proc/try_eating(mob/living/eater, atom/target, mob/living/feeder)
 	if(!is_type_in_list(target, food_types))
 		return FALSE
-	if(SEND_SIGNAL(eater, COMSIG_MOB_PRE_EAT, target, feeder) & COMSIG_MOB_CANCEL_EAT)
+	var/list/effect_mult = list()
+	if(SEND_SIGNAL(eater, COMSIG_MOB_PRE_EAT, target, feeder, effect_mult) & COMSIG_MOB_CANCEL_EAT)
 		return FALSE
 	if(add_to_contents && !ismovable(target))
 		return FALSE
@@ -100,12 +101,16 @@
 		else if (best_value < 0)
 			to_damage = -best_value
 
+		for (var/mult in effect_mult)
+			to_heal *= mult
+			to_damage *= mult
+
 	if (to_heal > 0)
 		var/healed = eater.heal_overall_damage(to_heal)
 		eater.visible_message(span_notice("[eater] [eat_verb]s [target]."), span_notice("You [eat_verb] [target][healed ? ", restoring some health" : ""]."))
 	else if (to_damage > 0 && damage_type)
 		var/damaged = eater.apply_damage(to_damage, damage_type)
-		eater.visible_message(span_notice("[eater] [eat_verb]s [target][damaged ? ", and seems to hurt itself" : ""]."), span_notice("You [eat_verb] [target][damaged ? ", hurting yourself in the process" : ""]."))
+		eater.visible_message(span_notice("[eater] [eat_verb]s [target][damaged ? ", and seems to hurt [eater.p_themselves()]!" : "."]"), span_notice("You [eat_verb] [target][damaged ? ", hurting yourself in the process" : ""]."))
 	else
 		eater.visible_message(span_notice("[eater] [eat_verb]s [target]."), span_notice("You [eat_verb] [target]."))
 
@@ -133,3 +138,4 @@
 		movable_target.forceMove(eater)
 	else
 		qdel(final_target)
+

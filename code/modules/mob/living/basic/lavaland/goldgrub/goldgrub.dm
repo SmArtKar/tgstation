@@ -104,6 +104,7 @@
 	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
 	for(var/obj/item/stack/ore/ore in src)
 		ore.forceMove(loc)
+
 	if(!gibbed)
 		visible_message(span_danger("[src] spits out its consumed ores!"))
 
