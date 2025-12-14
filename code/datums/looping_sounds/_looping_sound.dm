@@ -33,7 +33,7 @@
 	/// The extra range of the sound in tiles, defaults to 0.
 	var/extra_range = 0
 	/// How much the sound will be affected by falloff per tile.
-	var/falloff_exponent
+	var/falloff_exponent = SOUND_FALLOFF_EXPONENT
 	/// The falloff distance of the sound,
 	var/falloff_distance
 	/// Are the sounds affected by pressure? Defaults to TRUE.
