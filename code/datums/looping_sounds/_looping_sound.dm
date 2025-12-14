@@ -35,7 +35,7 @@
 	/// How much the sound will be affected by falloff per tile.
 	var/falloff_exponent = SOUND_FALLOFF_EXPONENT
 	/// The falloff distance of the sound,
-	var/falloff_distance
+	var/falloff_distance = SOUND_DEFAULT_FALLOFF_DISTANCE
 	/// Are the sounds affected by pressure? Defaults to TRUE.
 	var/pressure_affected = TRUE
 	/// Are the sounds subject to reverb? Defaults to TRUE.
