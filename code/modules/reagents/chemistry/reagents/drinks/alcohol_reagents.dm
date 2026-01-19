@@ -53,34 +53,39 @@
 
 /datum/reagent/consumable/ethanol/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, metabolization_ratio)
 	. = ..()
-	if(drinker.get_drunk_amount() < volume * boozepwr * ALCOHOL_THRESHOLD_MODIFIER || boozepwr < 0)
-		var/booze_power = boozepwr
-		if(HAS_TRAIT(drinker, TRAIT_ALCOHOL_TOLERANCE)) // we're an accomplished drinker
-			booze_power *= 0.7
-		if(HAS_TRAIT(drinker, TRAIT_LIGHT_DRINKER))
-			booze_power *= 2
 
-		// water will dilute alcohol effects
-		var/total_water_volume = 0
-		var/total_alcohol_volume = 0
-		for(var/datum/reagent/water/sobriety in drinker.reagents.reagent_list)
-			total_water_volume += sobriety.volume
+	if(drinker.get_drunk_amount() > volume * boozepwr * ALCOHOL_THRESHOLD_MODIFIER && boozepwr > 0)
+		return
 
-		for(var/datum/reagent/consumable/ethanol/alcohol in drinker.reagents.reagent_list)
-			total_alcohol_volume += alcohol.volume
+	var/booze_power = boozepwr
+	if(HAS_TRAIT(drinker, TRAIT_ALCOHOL_TOLERANCE)) // we're an accomplished drinker
+		booze_power *= 0.7
+	if(HAS_TRAIT(drinker, TRAIT_LIGHT_DRINKER))
+		booze_power *= 2
 
-		var/combined_dilute_volume = total_alcohol_volume + total_water_volume
-		if(combined_dilute_volume) // safety check to prevent division by zero
-			booze_power *= (total_alcohol_volume / combined_dilute_volume)
+	// water will dilute alcohol effects
+	var/total_water_volume = 0
+	var/total_alcohol_volume = 0
+	for(var/datum/reagent/water/sobriety in drinker.reagents.reagent_list)
+		total_water_volume += sobriety.volume
 
-		// Volume, power, and server alcohol rate effect how quickly one gets drunk
-		drinker.adjust_drunk_effect(1 * sqrt(volume) * booze_power * ALCOHOL_RATE * metabolization_ratio * seconds_per_tick)
-		if(boozepwr > 0)
-			var/obj/item/organ/liver/liver = drinker.get_organ_slot(ORGAN_SLOT_LIVER)
-			var/heavy_drinker_multiplier = (HAS_TRAIT(drinker, TRAIT_HEAVY_DRINKER) ? 0.5 : 1)
-			if (istype(liver))
-				if(liver.apply_organ_damage(((max(sqrt(volume) * (boozepwr ** ALCOHOL_EXPONENT) * liver.alcohol_tolerance * heavy_drinker_multiplier * seconds_per_tick, 0))/150)))
-					return UPDATE_MOB_HEALTH
+	for(var/datum/reagent/consumable/ethanol/alcohol in drinker.reagents.reagent_list)
+		total_alcohol_volume += alcohol.volume
+
+	var/combined_dilute_volume = total_alcohol_volume + total_water_volume
+	if(combined_dilute_volume) // safety check to prevent division by zero
+		booze_power *= (total_alcohol_volume / combined_dilute_volume)
+
+	// Volume, power, and server alcohol rate effect how quickly one gets drunk
+	drinker.adjust_drunk_effect(sqrt(volume) * booze_power * ALCOHOL_RATE * metabolization_ratio * seconds_per_tick)
+	if(boozepwr <= 0)
+		return
+
+	var/obj/item/organ/liver/liver = drinker.get_organ_slot(ORGAN_SLOT_LIVER)
+	var/heavy_drinker_multiplier = (HAS_TRAIT(drinker, TRAIT_HEAVY_DRINKER) ? 0.5 : 1)
+	if (istype(liver))
+		if(liver.apply_organ_damage(((max(sqrt(volume) * (boozepwr ** ALCOHOL_EXPONENT) * liver.alcohol_tolerance * heavy_drinker_multiplier * seconds_per_tick, 0))/150)))
+			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/expose_obj(obj/exposed_obj, reac_volume, methods=TOUCH, show_message=TRUE)
 	if(istype(exposed_obj, /obj/item/paper))
@@ -180,9 +185,9 @@
 
 /datum/reagent/consumable/ethanol/kahlua/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, metabolization_ratio)
 	. = ..()
-	drinker.set_dizzy_if_lower(10 SECONDS * metabolization_ratio * seconds_per_tick)
-	drinker.adjust_drowsiness(-6 SECONDS * metabolization_ratio * seconds_per_tick)
-	drinker.AdjustSleeping(-4 SECONDS * metabolization_ratio * seconds_per_tick)
+	drinker.set_dizzy_if_lower(5 SECONDS * metabolization_ratio * seconds_per_tick)
+	drinker.adjust_drowsiness(-3 SECONDS * metabolization_ratio * seconds_per_tick)
+	drinker.AdjustSleeping(-2 SECONDS * metabolization_ratio * seconds_per_tick)
 	if(!HAS_TRAIT(drinker, TRAIT_ALCOHOL_TOLERANCE))
 		drinker.set_jitter_if_lower(10 SECONDS)
 
@@ -229,9 +234,9 @@
 
 /datum/reagent/consumable/ethanol/thirteenloko/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, metabolization_ratio)
 	. = ..()
-	drinker.adjust_drowsiness(-14 SECONDS * metabolization_ratio * seconds_per_tick)
-	drinker.AdjustSleeping(-4 SECONDS * metabolization_ratio * seconds_per_tick)
-	drinker.adjust_bodytemperature(-5 * metabolization_ratio * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, drinker.get_body_temp_normal())
+	drinker.adjust_drowsiness(-7 SECONDS * metabolization_ratio * seconds_per_tick)
+	drinker.AdjustSleeping(-2 SECONDS * metabolization_ratio * seconds_per_tick)
+	drinker.adjust_bodytemperature(-2.5 * metabolization_ratio * TEMPERATURE_DAMAGE_COEFFICIENT * seconds_per_tick, drinker.get_body_temp_normal())
 	if(!HAS_TRAIT(drinker, TRAIT_ALCOHOL_TOLERANCE))
 		drinker.set_jitter_if_lower(10 SECONDS)
 
@@ -302,7 +307,7 @@
 /datum/reagent/consumable/ethanol/bilk/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, metabolization_ratio)
 	. = ..()
 	if(drinker.get_brute_loss() && SPT_PROB(5, seconds_per_tick))
-		if(drinker.heal_bodypart_damage(brute = 1 * metabolization_ratio, updating_health = FALSE))
+		if(drinker.heal_bodypart_damage(brute = metabolization_ratio, updating_health = FALSE))
 			return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/threemileisland
@@ -317,7 +322,7 @@
 
 /datum/reagent/consumable/ethanol/threemileisland/on_mob_life(mob/living/carbon/drinker, seconds_per_tick, metabolization_ratio)
 	. = ..()
-	drinker.set_drugginess(100 SECONDS * metabolization_ratio * seconds_per_tick)
+	drinker.set_drugginess(50 SECONDS * metabolization_ratio * seconds_per_tick)
 
 /datum/reagent/consumable/ethanol/gin
 	name = "Gin"
@@ -555,10 +560,10 @@
 	. = ..()
 	var/need_mob_update
 	if(cubano.mind && cubano.mind.has_antag_datum(/datum/antagonist/rev)) //Cuba Libre, the traditional drink of revolutions! Heals revolutionaries.
-		need_mob_update = cubano.adjust_brute_loss(-1 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype)
-		need_mob_update += cubano.adjust_fire_loss(-1 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype)
-		need_mob_update += cubano.adjust_tox_loss(-1 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
-		need_mob_update += cubano.adjust_oxy_loss(-5 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype, required_respiration_type = affected_respiration_type)
+		need_mob_update = cubano.adjust_brute_loss(-0.5 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype)
+		need_mob_update += cubano.adjust_fire_loss(-0.5 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_bodytype = affected_bodytype)
+		need_mob_update += cubano.adjust_tox_loss(-0.5 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
+		need_mob_update += cubano.adjust_oxy_loss(-2.5 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype, required_respiration_type = affected_respiration_type)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 
@@ -645,7 +650,7 @@
 	if(HAS_TRAIT(liver, TRAIT_ENGINEER_METABOLISM))
 		ADD_TRAIT(drinker, TRAIT_HALT_RADIATION_EFFECTS, "[type]")
 		if (HAS_TRAIT(drinker, TRAIT_IRRADIATED))
-			if(drinker.adjust_tox_loss(-2 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
+			if(drinker.adjust_tox_loss(-1 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype))
 				return UPDATE_MOB_HEALTH
 
 /datum/reagent/consumable/ethanol/screwdrivercocktail/on_mob_end_metabolize(mob/living/drinker)

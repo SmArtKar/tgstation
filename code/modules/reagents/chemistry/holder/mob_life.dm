@@ -104,7 +104,8 @@
 
 	var/need_mob_update = FALSE
 	var/metabolized_volume = reagent.compute_metabolization(owner, seconds_per_tick)
-	var/metabolization_ratio = REM * metabolized_volume
+	// 0 - 1 (under normal circumstances) multiplier for reagent effects, based on how much of it has been metabolized
+	var/metabolization_ratio = metabolized_volume / (reagent.metabolization_rate * seconds_per_tick)
 	if(can_overdose && !HAS_TRAIT(owner, TRAIT_OVERDOSEIMMUNE))
 		if(reagent.overdose_threshold && reagent.volume >= reagent.overdose_threshold && !reagent.overdosed)
 			reagent.overdosed = TRUE
