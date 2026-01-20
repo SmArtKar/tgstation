@@ -74,6 +74,10 @@
 		if(surgery_examine)
 			. += surgery_examine
 
+		for(var/datum/bodypart_ailment/ailment as anything in body_part.ailments)
+			var/descriptor = ailment.on_owner_examine(user)
+			if (descriptor)
+				. += descriptor
 
 	for(var/obj/item/bodypart/body_part as anything in disabled)
 		var/damage_text
@@ -253,8 +257,6 @@
 			if(12 to INFINITY)
 				. += span_notice("<b><i>[t_He] [t_is] just absolutely fucked up, you can look again to take a closer look...</i></b>")
 
-	if(HAS_TRAIT(src, TRAIT_HUSK))
-		. += span_warning("This body has been reduced to a grotesque husk.")
 	if(HAS_MIND_TRAIT(user, TRAIT_MORBID))
 		if(HAS_TRAIT(src, TRAIT_DISSECTED))
 			. += span_notice("[t_He] appear[p_s()] to have been dissected. Useless for examination... <b><i>for now.</i></b>")

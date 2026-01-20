@@ -168,7 +168,14 @@
 	if(!on_fire)
 		return TRUE
 
-	var/decay_multiplier = HAS_TRAIT(owner, TRAIT_HUSK) ? 2 : 1 // husks decay twice as fast
+	var/decay_multiplier = 1
+	if (iscarbon(owner))
+		var/mob/living/carbon/as_carbon = owner
+		for (var/obj/item/bodypart/limb as anything in as_carbon.bodyparts)
+			// Husks extinguish twice as fast
+			if (limb.get_ailment(/datum/bodypart_ailment/husked))
+				decay_multiplier += 1 / length(as_carbon.bodyparts)
+
 	adjust_stacks(owner.fire_stack_decay_rate * decay_multiplier * seconds_between_ticks)
 	SEND_SIGNAL(owner, COMSIG_FIRE_STACKS_UPDATED, stacks)
 

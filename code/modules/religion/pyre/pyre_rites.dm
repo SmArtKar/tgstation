@@ -57,24 +57,35 @@
 	if(!ismovable(religious_tool))
 		to_chat(user, span_warning("This rite requires a religious device that individuals can be buckled to."))
 		return FALSE
+
 	var/atom/movable/movable_reltool = religious_tool
 	if(!movable_reltool)
 		return FALSE
+
 	if(!LAZYLEN(movable_reltool.buckled_mobs))
 		to_chat(user, span_warning("Nothing is buckled to the altar!"))
 		return FALSE
-	for(var/corpse in movable_reltool.buckled_mobs)
-		if(!iscarbon(corpse))// only works with carbon corpse since most normal mobs can't be set on fire.
-			to_chat(user, span_warning("Only carbon lifeforms can be properly burned for the sacrifice!"))
-			return FALSE
+
+	for(var/mob/living/carbon/corpse in movable_reltool.buckled_mobs)
 		chosen_sacrifice = corpse
 		if(chosen_sacrifice.stat != DEAD)
 			to_chat(user, span_warning("You can only sacrifice dead bodies, this one is still alive!"))
 			return FALSE
-		if(!chosen_sacrifice.on_fire && !HAS_TRAIT_FROM(chosen_sacrifice, TRAIT_HUSK, BURN))
+
+		var/is_husked = TRUE
+		for(var/obj/item/bodypart/limb as anything in chosen_sacrifice.bodyparts)
+			// Burn-husked corpses extinguish faster so we let them count as valid sacs
+			if(!limb.get_ailment(/datum/bodypart_ailment/husked/burn))
+				is_husked = FALSE
+				break
+
+		if(!chosen_sacrifice.on_fire && !is_husked)
 			to_chat(user, span_warning("This corpse needs to be on fire or husked to be sacrificed!"))
 			return FALSE
 		return ..()
+
+	// If the lazylen passed but the for loop didn't, we don't have carbon victims
+	to_chat(user, span_warning("Only humanoid lifeforms can be properly burned for the sacrifice!"))
 
 /datum/religion_rites/burning_sacrifice/invoke_effect(mob/living/user, atom/movable/religious_tool)
 	..()
@@ -82,7 +93,12 @@
 		to_chat(user, span_warning("The right sacrifice is no longer on the altar!"))
 		chosen_sacrifice = null
 		return FALSE
-	if(!chosen_sacrifice.on_fire && !HAS_TRAIT_FROM(chosen_sacrifice, TRAIT_HUSK, BURN))
+	var/is_husked = TRUE
+	for (var/obj/item/bodypart/limb as anything in chosen_sacrifice.bodyparts)
+		if (!limb.get_ailment(/datum/bodypart_ailment/husked/burn))
+			is_husked = FALSE
+			break
+	if(!chosen_sacrifice.on_fire && !is_husked)
 		to_chat(user, span_warning("The sacrifice has to be on fire or husked to finish the end of the rite!"))
 		chosen_sacrifice = null
 		return FALSE

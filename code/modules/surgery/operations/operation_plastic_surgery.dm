@@ -25,7 +25,7 @@
 	return limb.body_zone == BODY_ZONE_HEAD
 
 /datum/surgery_operation/limb/plastic_surgery/pre_preop(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
-	if(HAS_TRAIT_FROM(limb.owner, TRAIT_DISFIGURED, TRAIT_GENERIC))
+	if(HAS_TRAIT_FROM(limb, TRAIT_DISFIGURED, TRAIT_GENERIC))
 		return TRUE //skip name selection if fixing disfigurement
 
 	var/list/names = list()
@@ -61,8 +61,8 @@
 	display_pain(limb.owner, "You feel a slicing pain across your face!")
 
 /datum/surgery_operation/limb/plastic_surgery/on_success(obj/item/bodypart/limb, mob/living/surgeon, obj/item/tool, list/operation_args)
-	if(HAS_TRAIT_FROM(limb.owner, TRAIT_DISFIGURED, TRAIT_GENERIC))
-		REMOVE_TRAIT(limb.owner, TRAIT_DISFIGURED, TRAIT_GENERIC)
+	if(HAS_TRAIT_FROM(limb, TRAIT_DISFIGURED, TRAIT_GENERIC))
+		REMOVE_TRAIT(limb, TRAIT_DISFIGURED, TRAIT_GENERIC)
 		display_results(
 			surgeon,
 			limb.owner,
@@ -100,7 +100,7 @@
 		span_notice("[surgeon] finishes the operation on [limb.owner]'s face."),
 	)
 	display_pain(limb.owner, "Your face feels horribly scarred and deformed!")
-	ADD_TRAIT(limb.owner, TRAIT_DISFIGURED, TRAIT_GENERIC)
+	ADD_TRAIT(limb, TRAIT_DISFIGURED, TRAIT_GENERIC)
 
 #undef OPERATION_NEW_NAME
 

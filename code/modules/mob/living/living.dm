@@ -1022,8 +1022,8 @@
 
 /// Checks if we are actually able to ressuscitate this mob.
 /// (We don't want to revive then to have them instantly die again)
-/mob/living/proc/can_be_revived()
-	if(health <= HEALTH_THRESHOLD_DEAD)
+/mob/living/proc/can_be_revived(ignore_health = FALSE)
+	if(health <= HEALTH_THRESHOLD_DEAD && !ignore_health)
 		return FALSE
 	return TRUE
 

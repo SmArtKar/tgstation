@@ -14,9 +14,12 @@
 				LAZYSET(hair_masks, worn_item.hair_mask, TRUE)
 		hair_hidden = !!(human_head_owner.obscured_slots & HIDEHAIR)
 		facial_hair_hidden = !!(human_head_owner.obscured_slots & HIDEFACIALHAIR)
-	if(is_husked)
+
+	#warn Unified system for ailments?
+	if(get_ailment(/datum/bodypart_ailment/husked))
 		hair_hidden = TRUE
 		facial_hair_hidden = TRUE
+
 	//HIDDEN CHECKS END
 
 	if(owner)

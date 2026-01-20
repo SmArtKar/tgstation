@@ -1,0 +1,1 @@
+/datum/bodypart_ailment/krokodil_zombie

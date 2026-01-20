@@ -355,21 +355,25 @@
 			var/obj/item/bodypart/chaplains_limb = chaplain.get_bodypart(affected_limb.body_zone)
 			if(!chaplains_limb || !IS_ORGANIC_LIMB(chaplains_limb))
 				chaplains_limb = pick(chaplains_limbs)
+
 			var/brute_damage = affected_limb.brute_dam
 			var/burn_damage = affected_limb.burn_dam
+
 			if((brute_damage || burn_damage))
 				transferred = TRUE
 				affected_limb.heal_damage(brute_damage, burn_damage, required_bodytype = BODYTYPE_ORGANIC)
 				chaplains_limb.receive_damage(brute_damage * burden_modifier, burn_damage * burden_modifier, forced = TRUE, wound_bonus = CANT_WOUND)
+
 			for(var/datum/wound/iter_wound as anything in affected_limb.wounds)
 				transferred = TRUE
 				iter_wound.remove_wound()
 				iter_wound.apply_wound(chaplains_limb)
 
-		if(HAS_TRAIT_FROM(target, TRAIT_HUSK, BURN))
-			transferred = TRUE
-			target.cure_husk(BURN)
-			chaplain.become_husk(BURN)
+			for(var/datum/bodypart_ailment/ailment as anything in affected_limb.ailments)
+				if (!ailment.negative)
+					continue
+				transferred = TRUE
+				ailment.transfer_to(chaplains_limb)
 
 	var/toxin_damage = target.get_tox_loss()
 	if(toxin_damage && !HAS_TRAIT(chaplain, TRAIT_TOXIMMUNE))

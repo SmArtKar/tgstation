@@ -91,12 +91,15 @@
 	VAR_PROTECTED
 		/// Draw this head as "debrained"
 		show_debrained = FALSE
-
 		/// Draw this head as missing eyes
 		show_eyeless = FALSE
-
 		/// Can this head be dismembered normally?
 		can_dismember = FALSE
+
+/obj/item/bodypart/head/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/toy_talk)
+	RegisterSignals(src, list(SIGNAL_ADDTRAIT(TRAIT_DISFIGURED), SIGNAL_REMOVETRAIT(TRAIT_DISFIGURED)), PROC_REF(update_owner_name))
 
 /obj/item/bodypart/head/Destroy()
 	QDEL_NULL(worn_ears_offset)
@@ -171,7 +174,7 @@
 /obj/item/bodypart/head/update_limb(dropping_limb, is_creating)
 	. = ..()
 	if(!isnull(owner))
-		if(HAS_TRAIT(owner, TRAIT_HUSK))
+		if(HAS_TRAIT(src, TRAIT_DISFIGURED))
 			real_name = "Unknown"
 		else
 			real_name = owner.real_name
@@ -222,10 +225,6 @@
 	. += eye_left
 	. += eye_right
 
-/obj/item/bodypart/head/Initialize(mapload)
-	. = ..()
-	AddElement(/datum/element/toy_talk)
-
 /obj/item/bodypart/head/get_voice(add_id_name)
 	return "The head of [real_name]"
 
@@ -237,9 +236,18 @@
 	. = ..()
 	var/new_states = brutestate + burnstate
 	if(new_states >= HUMAN_DISFIGURATION_HEAD_DAMAGE_STATES)
-		add_bodypart_trait(TRAIT_DISFIGURED)
+		ADD_TRAIT(src, TRAIT_DISFIGURED, BODYPART_TRAIT)
 	else if(old_states >= HUMAN_DISFIGURATION_HEAD_DAMAGE_STATES)
-		remove_bodypart_trait(TRAIT_DISFIGURED)
+		REMOVE_TRAIT(src, TRAIT_DISFIGURED, BODYPART_TRAIT)
+
+/obj/item/bodypart/head/proc/update_owner_name(datum/source)
+	SIGNAL_HANDLER
+	if (ishuman(owner))
+		var/mob/living/carbon/human/as_human = owner
+		as_human?.update_visible_name()
+	// If we have an owner we already handle this in update_limb
+	if (!owner && HAS_TRAIT(src, TRAIT_DISFIGURED))
+		real_name = "Unknown"
 
 /obj/item/bodypart/head/monkey
 	icon = 'icons/mob/human/species/monkey/bodyparts.dmi'

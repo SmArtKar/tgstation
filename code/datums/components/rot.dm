@@ -46,9 +46,9 @@
 	if(iscarbon(parent))
 		var/mob/living/carbon/carbon_parent = parent
 		RegisterSignal(carbon_parent.reagents, COMSIG_REAGENTS_HOLDER_UPDATED, PROC_REF(check_reagent))
-		RegisterSignals(parent, list(SIGNAL_ADDTRAIT(TRAIT_HUSK), SIGNAL_REMOVETRAIT(TRAIT_HUSK)), PROC_REF(check_husk_trait))
+		RegisterSignals(parent, list(COMSIG_CARBON_BODYPART_AILMENT_APPLIED, COMSIG_CARBON_BODYPART_AILMENT_REMOVED), PROC_REF(check_husk_state))
 		check_reagent(carbon_parent.reagents, null)
-		check_husk_trait(null)
+		check_husk_state()
 	if(ishuman(parent))
 		var/mob/living/carbon/human/human_parent = parent
 		RegisterSignal(parent, COMSIG_HUMAN_CORETEMP_CHANGE, PROC_REF(check_for_temperature))
@@ -97,12 +97,16 @@
 		return
 	start_up(TEMPERATURE_BLOCKER)
 
-/datum/component/rot/proc/check_husk_trait()
+/datum/component/rot/proc/check_husk_state()
 	SIGNAL_HANDLER
-	if(HAS_TRAIT(parent, TRAIT_HUSK))
-		rest(HUSK_BLOCKER)
-		return
-	start_up(HUSK_BLOCKER)
+	// If all of our parent's bodyparts are husked, there's nothing left to rot
+	var/mob/living/carbon/as_carbon = parent
+	for (var/obj/item/bodypart/limb as anything in as_carbon.bodyparts)
+		if (!limb.get_ailment(/datum/bodypart_ailment/husked))
+			start_up(HUSK_BLOCKER)
+			return
+
+	rest(HUSK_BLOCKER)
 
 /datum/component/rot/proc/rot_hit_react(datum/source, obj/item/hit_with, mob/living/attacker, params)
 	SIGNAL_HANDLER

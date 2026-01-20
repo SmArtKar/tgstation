@@ -108,6 +108,8 @@
 	inverse_chem_val = 0.3
 	inverse_chem = /datum/reagent/inverse/krokodil
 	addiction_types = list(/datum/addiction/opioids = 18) //7.2 per 2 seconds
+	/// Have we given the user the skin rot message?
+	var/skin_message = FALSE
 
 /datum/reagent/drug/krokodil/on_mob_life(mob/living/carbon/affected_mob, seconds_per_tick, metabolization_ratio)
 	. = ..()
@@ -115,21 +117,35 @@
 	if(SPT_PROB(2.5, seconds_per_tick))
 		to_chat(affected_mob, span_notice("[high_message]"))
 	affected_mob.add_mood_event("smacked out", /datum/mood_event/narcotic_heavy)
-	if(current_cycle == 36 && creation_purity <= 0.6)
-		if(!istype(affected_mob.dna.species, /datum/species/human/krokodil_addict))
-			to_chat(affected_mob, span_userdanger("Your skin falls off easily!"))
-			var/mob/living/carbon/human/affected_human = affected_mob
-			affected_human.set_facial_hairstyle("Shaved", update = FALSE)
-			affected_human.set_hairstyle("Bald", update = FALSE)
-			affected_mob.set_species(/datum/species/human/krokodil_addict)
-			if(affected_mob.adjust_brute_loss(50 * REM, updating_health = FALSE, required_bodytype = affected_bodytype)) // holy shit your skin just FELL THE FUCK OFF
-				return UPDATE_MOB_HEALTH
+
+	if (current_cycle < 36 || creation_purity >= 0.6 || !ishuman(affected_mob) || !SPT_PROB(15, seconds_per_tick))
+		return
+
+	var/list/valid_bodyparts = list()
+	for (var/obj/item/bodypart/limb as anything in affected_mob.bodyparts)
+		if (!(limb.bodytype & affected_bodytype) || !LIMB_HAS_SKIN(limb))
+			continue
+		// Make sure its not an already "zombified" limb
+		if (!limb.get_ailment(/datum/bodypart_ailment/zombie_rot/krokodil))
+			valid_bodyparts += limb
+
+	if (!length(valid_bodyparts))
+		return
+
+	var/obj/item/bodypart/affected_limb = pick(valid_bodyparts)
+	affected_limb.apply_ailment(/datum/bodypart_ailment/zombie_rot/krokodil)
+	if (!skin_message)
+		skin_message = TRUE
+		to_chat(affected_mob, span_userdanger("Your skin starts falling off!"))
+
+	// A chunk of your skin literally just fell off
+	if(affected_mob.adjust_brute_loss(10, updating_health = FALSE, required_bodytype = affected_bodytype))
+		return UPDATE_MOB_HEALTH
 
 /datum/reagent/drug/krokodil/overdose_process(mob/living/affected_mob, seconds_per_tick, metabolization_ratio)
 	. = ..()
-	var/need_mob_update
-	need_mob_update = affected_mob.adjust_organ_loss(ORGAN_SLOT_BRAIN, 0.25 * metabolization_ratio * seconds_per_tick, required_organ_flag = affected_organ_flags)
-	need_mob_update = affected_mob.adjust_tox_loss(0.25 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
+	var/need_mob_update = affected_mob.adjust_organ_loss(ORGAN_SLOT_BRAIN, 0.25 * metabolization_ratio * seconds_per_tick, required_organ_flag = affected_organ_flags)
+	need_mob_update |= affected_mob.adjust_tox_loss(0.25 * metabolization_ratio * seconds_per_tick, updating_health = FALSE, required_biotype = affected_biotype)
 	if(need_mob_update)
 		return UPDATE_MOB_HEALTH
 

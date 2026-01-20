@@ -66,8 +66,8 @@
 /mob/living/brain/flash_act(intensity = 1, override_blindness_check = 0, affect_silicon = 0, visual = 0, type = /atom/movable/screen/fullscreen/flash, length = 25)
 	return // no eyes, no flashing
 
-/mob/living/brain/can_be_revived()
-	if(!container || health <= HEALTH_THRESHOLD_DEAD)
+/mob/living/brain/can_be_revived(ignore_health = FALSE)
+	if(!container || health <= HEALTH_THRESHOLD_DEAD && !ignore_health)
 		return FALSE
 	return TRUE
 

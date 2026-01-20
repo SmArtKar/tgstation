@@ -866,11 +866,12 @@ generate/load female uniform sprites matching all previously decided variables
 
 /mob/living/carbon/human/proc/update_underwear()
 	remove_overlay(BODY_LAYER)
-	if(HAS_TRAIT(src, TRAIT_HUSK) || HAS_TRAIT(src, TRAIT_INVISIBLE_MAN) || HAS_TRAIT(src, TRAIT_NO_UNDERWEAR))
+	if(HAS_TRAIT(src, TRAIT_INVISIBLE_MAN) || HAS_TRAIT(src, TRAIT_NO_UNDERWEAR))
 		return
 	// Underwear, Undershirts & Socks
 	var/list/standing = list()
-	if(underwear)
+	var/obj/item/bodypart/chest = get_bodypart(BODY_ZONE_CHEST)
+	if(underwear && !HAS_TRAIT(chest, TRAIT_NO_UNDERWEAR))
 		var/datum/sprite_accessory/underwear/undie_accessory = SSaccessories.underwear_list[underwear]
 		var/mutable_appearance/underwear_overlay
 		if(undie_accessory)
@@ -882,7 +883,7 @@ generate/load female uniform sprites matching all previously decided variables
 				underwear_overlay.color = underwear_color
 			standing += underwear_overlay
 
-	if(undershirt)
+	if(undershirt && !HAS_TRAIT(chest, TRAIT_NO_UNDERWEAR))
 		var/datum/sprite_accessory/undershirt/undie_accessory = SSaccessories.undershirt_list[undershirt]
 		if(undie_accessory)
 			var/mutable_appearance/working_shirt
@@ -892,7 +893,12 @@ generate/load female uniform sprites matching all previously decided variables
 				working_shirt = mutable_appearance(undie_accessory.icon, undie_accessory.icon_state, layer = -BODY_LAYER)
 			standing += working_shirt
 
-	if(socks && num_legs >= 2 && !(bodyshape & BODYSHAPE_DIGITIGRADE))
+	var/leg_num = 0
+	for(var/obj/item/bodypart/leg/leg in bodyparts)
+		if(!HAS_TRAIT(leg, TRAIT_NO_UNDERWEAR))
+			leg_num += 1
+
+	if(socks && leg_num >= 2 && !(bodyshape & BODYSHAPE_DIGITIGRADE))
 		var/datum/sprite_accessory/socks/undie_accessory = SSaccessories.socks_list[socks]
 		if(undie_accessory)
 			standing += mutable_appearance(undie_accessory.icon, undie_accessory.icon_state, -BODY_LAYER)
@@ -904,9 +910,10 @@ generate/load female uniform sprites matching all previously decided variables
 
 /mob/living/carbon/human/proc/update_eyes()
 	remove_overlay(EYES_LAYER)
-	if(HAS_TRAIT(src, TRAIT_HUSK) || HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
+	if(HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
 		return
 	var/obj/item/bodypart/head/noggin = get_bodypart(BODY_ZONE_HEAD)
+	#warn Husked limbs need to apply ~HEAD_EYESPRITES through a generic? system
 	if(!(noggin?.head_flags & HEAD_EYESPRITES))
 		return
 	// eyes (missing eye sprites get handled by the head itself, but sadly we have to do this stupid shit here, for now)
@@ -919,12 +926,9 @@ generate/load female uniform sprites matching all previously decided variables
 /// Updates face (as of now, only eye) offsets
 /mob/living/carbon/human/update_face_offset()
 	var/list/eye_overlays = overlays_standing[EYES_LAYER]
-
-	if(HAS_TRAIT(src, TRAIT_INVISIBLE_MAN) || HAS_TRAIT(src, TRAIT_HUSK) || !length(eye_overlays))
+	if(!length(eye_overlays))
 		return
-
 	remove_overlay(EYES_LAYER)
-
 	var/obj/item/bodypart/head/noggin = get_bodypart(BODY_ZONE_HEAD)
 	for (var/mutable_appearance/overlay as anything in eye_overlays)
 		overlay.pixel_w = 0

@@ -8,6 +8,7 @@
 	icon = 'icons/mob/human/bodyparts.dmi'
 	icon_state = "" //Leave this blank! Bodyparts are built using overlays
 	flags_1 = PREVENT_CONTENTS_EXPLOSION_1 //actually mindblowing
+	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	/// The icon for Organic limbs using greyscale
 	VAR_PROTECTED/icon_greyscale = DEFAULT_BODYPART_ICON_ORGANIC
 	///The icon for non-greyscale limbs
@@ -20,7 +21,6 @@
 	var/husk_type = "humanoid"
 	///The color to multiply the greyscaled husk sprites by. Can be null. Old husk sprite chest color is #A6A6A6
 	var/husk_color = "#A6A6A6"
-	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	/// The mob that "owns" this limb
 	/// DO NOT MODIFY DIRECTLY. Use update_owner()
 	var/mob/living/carbon/owner
@@ -43,8 +43,6 @@
 	///Random flags that describe this bodypart
 	var/bodypart_flags = BODYPART_VIRGIN
 
-	///Whether the bodypart (and the owner) is husked.
-	var/is_husked = FALSE
 	///Whether the bodypart (and the owner) is invisible through invisibleman trait.
 	var/is_invisible = FALSE
 	///The ID of a species used to generate the icon. Needs to match the icon_state portion in the limbs file!
@@ -235,6 +233,8 @@
 	var/static/list/butcher_drop_cache = list()
 	/// What state is the bodypart in for determining surgery availability
 	VAR_FINAL/surgery_state = NONE
+	/// Lazylist of ailments affecting this limb at the time
+	var/list/datum/bodypart_ailment/ailments = null
 
 /obj/item/bodypart/apply_fantasy_bonuses(bonus)
 	. = ..()
@@ -300,6 +300,7 @@
 
 	QDEL_NULL(current_gauze)
 	QDEL_LAZYLIST(scars)
+	QDEL_LAZYLIST(ailments)
 
 	for(var/atom/movable/movable in contents)
 		qdel(movable)
@@ -1144,15 +1145,12 @@
 			// wash also adds the blood dna again
 			wash(CLEAN_TYPE_BLOOD)
 			bodypart_flags &= ~BODYPART_VIRGIN
-		if(!(bodypart_flags & BODYPART_UNHUSKABLE) && owner && HAS_TRAIT(owner, TRAIT_HUSK))
-			dmg_overlay_type = "" //no damage overlay shown when husked
-			is_husked = TRUE
-		else if(owner && HAS_TRAIT(owner, TRAIT_INVISIBLE_MAN))
+
+		if(owner && HAS_TRAIT(owner, TRAIT_INVISIBLE_MAN))
 			dmg_overlay_type = "" //no damage overlay shown when invisible since the wounds themselves are invisible.
 			is_invisible = TRUE
 		else
 			dmg_overlay_type = initial(dmg_overlay_type)
-			is_husked = FALSE
 			is_invisible = FALSE
 
 	update_draw_color()
@@ -1311,6 +1309,11 @@
 		if(burnstate)
 			. += image('icons/mob/effects/dam_mob.dmi', "[dmg_overlay_type]_[body_zone]_0[burnstate]", -DAMAGE_LAYER, dir = SOUTH)
 
+	var/is_husked = FALSE
+	#warn Unified system to allow ling husking to grey the blood out?
+	if (!(bodypart_flags & BODYPART_UNHUSKABLE) && get_ailment(/datum/bodypart_ailment/husked))
+		is_husked = TRUE
+
 	if(is_husked)
 		. += huskify_image(thing_to_husk = limb)
 		if(aux)
@@ -1401,6 +1404,11 @@
 	husk_blood.blend_mode = BLEND_INSET_OVERLAY
 	husk_blood.dir = thing_to_husk.dir
 	husk_blood.layer = thing_to_husk.layer
+	var/list/blood_dna = blood_dna_info || owner?.get_blood_dna_list()
+	if (LAZYLEN(blood_dna))
+		husk_blood.color = get_color_from_blood_list(blood_dna)
+	else
+		husk_blood.color = BLOOD_COLOR_RED
 	return husk_blood
 
 ///Add a bodypart overlay and call the appropriate update procs
@@ -1799,3 +1807,49 @@
 	var/old_state = surgery_state
 	. = ..()
 	update_surgical_state(old_state, surgery_state ^ old_state)
+
+/// Applies a bodypart ailment to the limb
+/obj/item/bodypart/proc/apply_ailment(datum/bodypart_ailment/ailment_type)
+	if (!ispath(ailment_type, /datum/bodypart_ailment))
+		CRASH("Non-ailment path [ailment_type] passed to [src]'s apply_ailment!")
+
+	var/datum/bodypart_ailment/ailment = new ailment_type(src)
+	LAZYADD(ailments, ailment)
+	SEND_SIGNAL(owner, COMSIG_CARBON_BODYPART_AILMENT_APPLIED, src, ailment)
+	return ailment
+
+/// Removes a bodypart ailment from the limb. Can be passed either an instance, or a typepath.
+/// In case of the latter, strict_type determines if the type is compared directly or if istype() is used
+/// remove_all controls if all matching ailments should be removed (only makes sense to be used if strict_type is FALSE)
+/obj/item/bodypart/proc/remove_ailment(datum/bodypart_ailment/ailment, strict_type = FALSE, remove_all = TRUE)
+	if (istype(ailment))
+		if (ailment.owner != src)
+			return
+		LAZYREMOVE(ailments, ailment)
+		SEND_SIGNAL(owner, COMSIG_CARBON_BODYPART_AILMENT_REMOVED, src, ailment)
+		qdel(ailment)
+		return
+
+	if (!ispath(ailment, /datum/bodypart_ailment))
+		CRASH("Non-ailment path or type [ailment] passed to [src]'s remove_ailment!")
+
+	for (var/datum/bodypart_ailment/our_ailment as anything in ailments)
+		if (strict_type && our_ailment.type != ailment)
+			continue
+
+		if (!strict_type && !istype(our_ailment, ailment))
+			continue
+
+		LAZYREMOVE(ailments, our_ailment)
+		SEND_SIGNAL(owner, COMSIG_CARBON_BODYPART_AILMENT_REMOVED, src, ailment)
+		qdel(our_ailment)
+		if (!remove_all)
+			break
+
+/obj/item/bodypart/proc/get_ailment(datum/bodypart_ailment/ailment_type, strict_type = FALSE)
+	if (!ispath(ailment_type, /datum/bodypart_ailment))
+		CRASH("Non-ailment path [ailment_type] passed to [src]'s get_ailment!")
+
+	for (var/datum/bodypart_ailment/our_ailment as anything in ailments)
+		if ((strict_type && our_ailment.type == ailment_type) || (!strict_type && istype(our_ailment, ailment_type)))
+			return our_ailment

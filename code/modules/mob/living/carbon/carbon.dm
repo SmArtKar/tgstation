@@ -776,9 +776,11 @@
 	set_heartattack(FALSE)
 	return ..()
 
-/mob/living/carbon/can_be_revived()
+/mob/living/carbon/can_be_revived(ignore_health = FALSE)
+	#warn Unified husk check for these 2
 	if(HAS_TRAIT(src, TRAIT_HUSK))
 		return FALSE
+
 	if(!HAS_TRAIT(src, TRAIT_BRAINLESS_CARBON) && !get_organ_by_type(/obj/item/organ/brain))
 		return FALSE
 	return ..()

@@ -20,6 +20,7 @@
 	return image(/obj/item/blood_filter)
 
 /datum/surgery_operation/limb/filter_blood/state_check(obj/item/bodypart/limb)
+	#warn Needs to check for noblood? or some more complex system with husked limbs
 	return limb.body_zone == BODY_ZONE_CHEST && !HAS_TRAIT(limb.owner, TRAIT_HUSK)
 
 /datum/surgery_operation/limb/filter_blood/can_loop(mob/living/patient, obj/item/bodypart/limb, mob/living/surgeon, tool, list/operation_args)

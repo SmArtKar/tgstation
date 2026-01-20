@@ -242,7 +242,8 @@
 		obscured_slots |= other_equipped_item.flags_inv
 		covered_slots |= other_equipped_item.flags_inv | other_equipped_item.transparent_protection
 
-	if(HAS_TRAIT(src, TRAIT_HUSK) || HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
+	var/obj/item/bodypart/head = get_bodypart(BODY_ZONE_HEAD)
+	if(!head || head.get_ailment(/datum/bodypart_ailment/husked) || HAS_TRAIT(src, TRAIT_INVISIBLE_MAN))
 		obscured_slots |= HIDEHAIR|HIDEFACIALHAIR
 
 	if(pre_coverage != obscured_slots)

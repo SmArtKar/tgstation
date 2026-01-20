@@ -18,6 +18,7 @@
 	return ..() + list("the patient must not be husked")
 
 /datum/surgery_operation/organ/stomach_pump/state_check(obj/item/organ/stomach/organ)
+	#warn Figure this out?
 	return !HAS_TRAIT(organ.owner, TRAIT_HUSK)
 
 /datum/surgery_operation/organ/stomach_pump/on_preop(obj/item/organ/stomach/organ, mob/living/surgeon, obj/item/tool, list/operation_args)

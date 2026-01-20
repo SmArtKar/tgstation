@@ -116,7 +116,6 @@
 	// Logic being that if their DNA is incompatible with us, it's also bad for transforming
 	if(!iscarbon(target) \
 		|| !target.has_dna() \
-		|| HAS_TRAIT(target, TRAIT_HUSK) \
 		|| HAS_TRAIT(target, TRAIT_BADDNA) \
 		|| (HAS_TRAIT(target, TRAIT_NO_DNA_COPY) && !ismonkey(target))) // sure, go ahead, make a monk-clone
 		user.balloon_alert(user, "incompatible DNA!")
@@ -158,7 +157,7 @@
 		return
 	if(isliving(target))
 		var/mob/living/L = target
-		if((HAS_TRAIT(L, TRAIT_HUSK)) || !L.has_dna())
+		if((HAS_TRAIT(L, TRAIT_BADDNA)) || !L.has_dna())
 			user.balloon_alert(user, "incompatible DNA!")
 			return FALSE
 	return TRUE

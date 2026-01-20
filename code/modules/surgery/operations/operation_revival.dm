@@ -28,6 +28,7 @@
 /datum/surgery_operation/basic/revival/state_check(mob/living/patient)
 	if(patient.stat != DEAD)
 		return FALSE
+	#warn Should use unified proc
 	if(HAS_TRAIT(patient, TRAIT_SUICIDED) || HAS_TRAIT(patient, TRAIT_HUSK) || HAS_TRAIT(patient, TRAIT_DEFIB_BLACKLISTED))
 		return FALSE
 	if(patient.has_limbs)

@@ -200,12 +200,15 @@
 	. = ..()
 	if(!.)
 		return
-
 	if(sacrifice.on_fire)
 		return TRUE
-	if(HAS_TRAIT_FROM(sacrifice, TRAIT_HUSK, BURN))
-		return TRUE
-	return FALSE
+
+	// Burnt husks also count
+	for (var/obj/item/bodypart/limb as anything in sacrifice.bodyparts)
+		if (!limb.get_ailment(/datum/bodypart_ailment/husked/burn))
+			return FALSE
+
+	return TRUE
 
 /datum/heretic_knowledge/ultimate/ash_final/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
 	. = ..()

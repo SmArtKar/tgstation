@@ -82,10 +82,12 @@
 		if (feedback)
 			host.balloon_alert(owner, "not dead!")
 		return FALSE
+	#warn Unified revive check
 	if (HAS_TRAIT(host, TRAIT_HUSK))
 		if (feedback)
 			host.balloon_alert(owner, "husked!")
 		return FALSE
+	#warn brainless mob check for these two
 	if (!host.get_organ_slot(ORGAN_SLOT_BRAIN))
 		if (feedback)
 			host.balloon_alert(owner, "no brain!")

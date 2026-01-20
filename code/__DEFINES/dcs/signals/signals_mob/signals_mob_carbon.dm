@@ -205,3 +205,8 @@
 #define COMSIG_HUMAN_NON_STORAGE_HOTKEY "human_storage_hotkey"
 	/// Return to prevent the storage fail message
 	#define COMPONENT_STORAGE_HOTKEY_HANDLED (1<<0)
+
+/// From /obj/item/bodypart/proc/apply_ailment(): (obj/item/bodypart/new_owner, datum/bodypart_ailment/ailment)
+#define COMSIG_CARBON_BODYPART_AILMENT_APPLIED "carbon_bodypart_ailment_applied"
+/// From /obj/item/bodypart/proc/remove_ailment(): (obj/item/bodypart/old_owner, datum/bodypart_ailment/ailment)
+#define COMSIG_CARBON_BODYPART_AILMENT_REMOVED "carbon_bodypart_ailment_removed"

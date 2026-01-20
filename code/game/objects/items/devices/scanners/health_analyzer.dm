@@ -175,21 +175,6 @@
 
 	SEND_SIGNAL(target, COMSIG_LIVING_HEALTHSCAN, render_list, advanced, user, mode, tochat)
 
-	// Husk detection
-	if(HAS_TRAIT(target, TRAIT_HUSK))
-		if(advanced)
-			if(HAS_TRAIT_FROM(target, TRAIT_HUSK, CHANGELING_DRAIN))
-				render_list += "<span class='alert ml-1'>Subject has been husked by [conditional_tooltip("desiccation", "Irreparable. Under normal circumstances, revival can only proceed via brain transplant.", tochat)].</span><br>"
-			else if(HAS_TRAIT_FROM(target, TRAIT_HUSK, SKELETON_TRAIT))
-				render_list += "<span class='alert ml-1'>Subject has been husked due to severe flesh loss.</span><br>"
-			else if(!HAS_TRAIT_FROM(target, TRAIT_HUSK, BURN)) // prioritize showing unknown causes over burns
-				render_list += "<span class='alert ml-1'>Subject has been husked by mysterious causes.</span><br>"
-			else
-				render_list += "<span class='alert ml-1'>Subject has been husked by [conditional_tooltip("severe burns", "Tend burns and apply a de-husking agent, such as [/datum/reagent/medicine/c2/synthflesh::name].", tochat)].</span><br>"
-
-		else
-			render_list += "<span class='alert ml-1'>Subject has been husked.</span><br>"
-
 	if(target.get_stamina_loss())
 		if(advanced)
 			render_list += "<span class='alert ml-1'>Fatigue level: [target.get_stamina_loss()]%.</span><br>"
@@ -215,9 +200,7 @@
 			if(advanced)
 				render_list += "<span class='info ml-1'>Subject Minor Disabilities: [carbontarget.get_quirk_string(FALSE, CAT_QUIRK_MINOR_DISABILITY, TRUE)].</span><br>"
 
-	// Body part damage report
-	if(iscarbon(target))
-		var/mob/living/carbon/carbontarget = target
+		// Body part damage report
 		var/any_damage = brute_loss > 0 || fire_loss > 0 || oxy_loss > 0 || tox_loss > 0 || fire_loss > 0
 		var/any_missing = length(carbontarget.bodyparts) < (carbontarget.dna?.species?.max_bodypart_count || 6)
 		var/any_wounded = length(carbontarget.all_wounds)
@@ -254,11 +237,19 @@
 						dmgreport += "</tr>"
 						dmgreport += "<tr><td colspan=6><span class='alert ml-2'>&rdsh; Physical trauma: [conditional_tooltip("Dismembered", "Reattach or replace surgically.", tochat)]</span></td></tr>"
 						continue
+
 					var/has_any_embeds = LAZYLEN(limb.embedded_objects) >= 1
 					var/has_any_wounds = length(limb.wounds) >= 1
 					var/is_damaged = limb.burn_dam > 0 || limb.brute_dam > 0
-					if(!is_damaged && (zone != BODY_ZONE_CHEST || (tox_loss <= 0 && oxy_loss <= 0)) && !has_any_embeds && !has_any_wounds)
+					var/list/ailment_states = list()
+					for(var/datum/bodypart_ailment/ailment as anything in limb.ailments)
+						var/ailment_desc = ailment.get_health_analyzer_desc(user, advanced, tochat)
+						if(ailment_desc)
+							ailment_states += ailment_desc
+
+					if(!is_damaged && (zone != BODY_ZONE_CHEST || (tox_loss <= 0 && oxy_loss <= 0)) && !has_any_embeds && !has_any_wounds && !length(ailment_states))
 						continue
+
 					dmgreport += "<tr>"
 					dmgreport += "<td><font color='#cc3333'>[capitalize((limb.bodytype & BODYTYPE_ROBOTIC) ? limb.name : limb.plaintext_zone)]:</font></td>"
 					dmgreport += "<td><font color='#cc3333'>[limb.brute_dam > 0 ? ceil(limb.brute_dam) : "0"]</font></td>"
@@ -267,6 +258,7 @@
 						dmgreport += "<td><font color='#00cc66'>[tox_loss > 0 ? ceil(tox_loss) : "0"]</font></td>"
 						dmgreport += "<td><font color='#33ccff'>[oxy_loss > 0 ? ceil(oxy_loss) : "0"]</font></td>"
 					dmgreport += "</tr>"
+
 					if(has_any_embeds)
 						var/list/embedded_names = list()
 						for(var/obj/item/embed as anything in limb.embedded_objects)
@@ -277,9 +269,16 @@
 							if(embedded_amt > 1)
 								displayed = "[embedded_amt]x [embedded_name]"
 							dmgreport += "<tr><td colspan=6><span class='alert ml-2'>&rdsh; Foreign object(s): [conditional_tooltip(displayed, "Use a hemostat to remove.", tochat)]</span></td></tr>"
+
 					if(has_any_wounds)
 						for(var/datum/wound/wound as anything in limb.wounds)
 							dmgreport += "<tr><td colspan=6><span class='alert ml-2'>&rdsh; Physical trauma: [conditional_tooltip("[wound.name] ([wound.severity_text()])", wound.treat_text_short, tochat)]</span></td></tr>"
+
+					if (length(ailment_states))
+						dmgreport += "<tr>"
+						for (var/ailment_desc in ailment_states)
+							dmgreport += ailment_desc
+						dmgreport += "</tr>"
 
 			dmgreport += "</table></font>"
 			render_list += dmgreport // tables do not need extra linebreak
