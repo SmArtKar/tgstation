@@ -85,24 +85,38 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(debug_variables, R_NONE, "View Variables", datum/th
 	if(!islist && thing.gc_destroyed)
 		deleted_line = VV_MSG_DELETED
 
-	var/list/dropdownoptions
+	var/list/dropdown_popovers = list()
 	if (islist)
-		dropdownoptions = list(
-			"---",
+		var/list/dropdown_options = list(
 			"Add Item" = VV_HREF_TARGETREF_INTERNAL(refid, VV_HK_LIST_ADD),
 			"Remove Nulls" = VV_HREF_TARGETREF_INTERNAL(refid, VV_HK_LIST_ERASE_NULLS),
 			"Remove Dupes" = VV_HREF_TARGETREF_INTERNAL(refid, VV_HK_LIST_ERASE_DUPES),
 			"Set len" = VV_HREF_TARGETREF_INTERNAL(refid, VV_HK_LIST_SET_LENGTH),
 			"Shuffle" = VV_HREF_TARGETREF_INTERNAL(refid, VV_HK_LIST_SHUFFLE),
 			"Show VV To Player" = VV_HREF_TARGETREF_INTERNAL(refid, VV_HK_EXPOSE),
-			"---"
 			)
-		for(var/i in 1 to length(dropdownoptions))
-			var/name = dropdownoptions[i]
-			var/link = dropdownoptions[name]
-			dropdownoptions[i] = "<option value[link? "='[link]'":""]>[name]</option>"
+
+		for(var/i in 1 to length(dropdown_options))
+			var/name = dropdown_options[i]
+			var/link = dropdown_options[name]
+			dropdown_options[i] = "<button onclick=\"window.location.href='[link? "='[link]'":""]';\">[name]</button>"
+		dropdown_popovers += "<menu id='vv_dropdown_base' popover align='left'>[dropdown_options.Join()]</menu>"
 	else
-		dropdownoptions = thing.vv_get_dropdown()
+		var/list/dropdown_options = thing.vv_get_dropdown()
+		var/list/popover_groups = list("vv_dropdown_base" = list())
+		for (var/button in dropdown_options)
+			// Not a nested option
+			if (isnull(dropdown_options[button]))
+				popover_groups["vv_dropdown_base"] += button
+				continue
+
+			popover_groups["vv_dropdown_[button]"] = dropdown_options[button]
+			var/list/split_path = splittext("[button]", "/")
+			popover_groups["vv_dropdown_base"] += "<button popovertarget='vv_dropdown_[button]'>/[split_path[length(split_path)]]</button>"
+
+		for (var/popover_id in popover_groups)
+			var/list/popover_buttons = popover_groups[popover_id]
+			dropdown_popovers += "<menu id='[popover_id]' popover align='left'>[popover_buttons.Join()]</menu>"
 
 	var/list/names = list()
 	if(!islist)
@@ -216,16 +230,6 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(debug_variables, R_NONE, "View Variables", datum/th
 				updateSearch();
 			}
 
-			// onchange
-			function handle_dropdown(list) {
-				var value = list.options\[list.selectedIndex].value;
-				if (value !== "") {
-					location.href = value;
-				}
-				list.selectedIndex = 0;
-				document.getElementById('filter').focus();
-			}
-
 			// byjax
 			function replace_span(what) {
 				var idx = what.indexOf(':');
@@ -259,14 +263,9 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(debug_variables, R_NONE, "View Variables", datum/th
 						<div align='center'>
 							<a id='refresh_link' href='byond://?_src_=vars;
 datumrefresh=[refid];[HrefToken()]'>Refresh</a>
-							<form>
-								<select name="file" size="1"
-									onchange="handle_dropdown(this)"
-									onmouseclick="this.focus()">
-									<option value selected>Select option</option>
-									[dropdownoptions.Join()]
-								</select>
-							</form>
+							<br>
+							<button popovertarget='vv_dropdown_base'>Select Option</button>
+							[dropdown_popovers.Join()]
 						</div>
 					</td>
 				</tr>

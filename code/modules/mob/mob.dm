@@ -1356,26 +1356,27 @@
  */
 /mob/vv_get_dropdown()
 	. = ..()
-	VV_DROPDOWN_OPTION("", "---------")
-	VV_DROPDOWN_OPTION(VV_HK_GIB, "Gib")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_AI, "Give AI Controller")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_AI_SPEECH, "Give Random AI Speech")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_SPELL, "Give Spell")
-	VV_DROPDOWN_OPTION(VV_HK_REMOVE_SPELL, "Remove Spell")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_MOB_ACTION, "Give Mob Ability")
-	VV_DROPDOWN_OPTION(VV_HK_REMOVE_MOB_ACTION, "Remove Mob Ability")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_DISEASE, "Give Disease")
-	VV_DROPDOWN_OPTION(VV_HK_GODMODE, "Toggle Godmode")
-	VV_DROPDOWN_OPTION(VV_HK_DROP_ALL, "Drop Everything")
-	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS, "Regenerate Icons")
-	VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS_FULL, "Regenerate Icons & Clear Stuck Overlays")
-	VV_DROPDOWN_OPTION(VV_HK_PLAYER_PANEL, "Show player panel")
-	VV_DROPDOWN_OPTION(VV_HK_BUILDMODE, "Toggle Buildmode")
-	VV_DROPDOWN_OPTION(VV_HK_DIRECT_CONTROL, "Assume Direct Control")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_DIRECT_CONTROL, "Give Direct Control")
-	VV_DROPDOWN_OPTION(VV_HK_OFFER_GHOSTS, "Offer Control to Ghosts")
-	VV_DROPDOWN_OPTION(VV_HK_VIEW_PLANES, "View/Edit Planes")
-	VV_DROPDOWN_OPTION(VV_HK_GIVE_ACCESS, "Give Access")
+	.[/mob] = list(
+		VV_DROPDOWN_OPTION(VV_HK_GIB, "Gib"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_AI, "Give AI Controller"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_AI_SPEECH, "Give Random AI Speech"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_SPELL, "Give Spell"),
+		VV_DROPDOWN_OPTION(VV_HK_REMOVE_SPELL, "Remove Spell"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_MOB_ACTION, "Give Mob Ability"),
+		VV_DROPDOWN_OPTION(VV_HK_REMOVE_MOB_ACTION, "Remove Mob Ability"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_DISEASE, "Give Disease"),
+		VV_DROPDOWN_OPTION(VV_HK_GODMODE, "Toggle Godmode"),
+		VV_DROPDOWN_OPTION(VV_HK_DROP_ALL, "Drop Everything"),
+		VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS, "Regenerate Icons"),
+		VV_DROPDOWN_OPTION(VV_HK_REGEN_ICONS_FULL, "Regenerate Icons & Clear Stuck Overlays"),
+		VV_DROPDOWN_OPTION(VV_HK_PLAYER_PANEL, "Show player panel"),
+		VV_DROPDOWN_OPTION(VV_HK_BUILDMODE, "Toggle Buildmode"),
+		VV_DROPDOWN_OPTION(VV_HK_DIRECT_CONTROL, "Assume Direct Control"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_DIRECT_CONTROL, "Give Direct Control"),
+		VV_DROPDOWN_OPTION(VV_HK_OFFER_GHOSTS, "Offer Control to Ghosts"),
+		VV_DROPDOWN_OPTION(VV_HK_VIEW_PLANES, "View/Edit Planes"),
+		VV_DROPDOWN_OPTION(VV_HK_GIVE_ACCESS, "Give Access"),
+	)
 
 /mob/vv_do_topic(list/href_list)
 	. = ..()
@@ -1384,13 +1385,9 @@
 		return
 
 	if(href_list[VV_HK_REGEN_ICONS])
-		if(!check_rights(NONE))
-			return
 		regenerate_icons()
 
 	if(href_list[VV_HK_REGEN_ICONS_FULL])
-		if(!check_rights(NONE))
-			return
 		cut_overlays()
 		regenerate_icons()
 
@@ -1441,8 +1438,6 @@
 		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/cmd_give_direct_control, src)
 
 	if(href_list[VV_HK_OFFER_GHOSTS])
-		if(!check_rights(NONE))
-			return
 		offer_control(src)
 
 	if(href_list[VV_HK_VIEW_PLANES])
@@ -1451,8 +1446,6 @@
 		usr.client.edit_plane_masters(src)
 
 	if(href_list[VV_HK_GIVE_ACCESS])
-		if(!check_rights(NONE))
-			return
 		AddComponent(/datum/component/simple_access, SSid_access.get_region_access_list(list(REGION_ALL_GLOBAL)))
 		to_chat(usr, span_notice("Access granted."))
 /**

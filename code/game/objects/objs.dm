@@ -168,9 +168,10 @@ GLOBAL_LIST_EMPTY(objects_by_id_tag)
 
 /obj/vv_get_dropdown()
 	. = ..()
-	VV_DROPDOWN_OPTION("", "---")
-	VV_DROPDOWN_OPTION(VV_HK_MASS_DEL_TYPE, "Delete all of type")
-	VV_DROPDOWN_OPTION(VV_HK_OSAY, "Object Say")
+	.[/obj] = list(
+		VV_DROPDOWN_OPTION(VV_HK_MASS_DEL_TYPE, "Delete all of type"),
+		VV_DROPDOWN_OPTION(VV_HK_OSAY, "Object Say"),
+	)
 
 /obj/vv_do_topic(list/href_list)
 	. = ..()

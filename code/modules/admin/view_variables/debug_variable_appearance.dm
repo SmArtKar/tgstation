@@ -68,12 +68,11 @@
 	SHOULD_CALL_PARENT(FALSE)
 
 	. = list()
-	VV_DROPDOWN_OPTION("", "---")
-	VV_DROPDOWN_OPTION(VV_HK_CALLPROC, "Call Proc")
-	VV_DROPDOWN_OPTION(VV_HK_MARK, "Mark Object")
-	VV_DROPDOWN_OPTION(VV_HK_TAG, "Tag Datum")
-	VV_DROPDOWN_OPTION(VV_HK_DELETE, "Delete")
-	VV_DROPDOWN_OPTION(VV_HK_EXPOSE, "Show VV To Player")
+	. += VV_DROPDOWN_OPTION(VV_HK_CALLPROC, "Call Proc")
+	. += VV_DROPDOWN_OPTION(VV_HK_MARK, "Mark Object")
+	. += VV_DROPDOWN_OPTION(VV_HK_TAG, "Tag Datum")
+	. += VV_DROPDOWN_OPTION(VV_HK_DELETE, "Delete")
+	. += VV_DROPDOWN_OPTION(VV_HK_EXPOSE, "Show VV To Player")
 
 /proc/get_vv_appearance(mutable_appearance/appearance) // actually appearance yadeeyada
 	return new /mutable_appearance/appearance_mirror(appearance)

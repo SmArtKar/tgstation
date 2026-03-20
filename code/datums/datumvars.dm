@@ -31,23 +31,21 @@ GLOBAL_LIST_INIT(vv_var_blacklist, list(
 
 /**
  * Gets all the dropdown options in the vv menu.
- * When overriding, make sure to call . = ..() first and append to the result, that way parent items are always at the top and child items are further down.
- * Add separators by doing VV_DROPDOWN_OPTION("", "---")
+ * When overriding, make sure to call . = ..() first, and either add your elements directly, or nest them in a list to add them in a separate popover (use your typepath as the key!)
  */
 /datum/proc/vv_get_dropdown()
 	SHOULD_CALL_PARENT(TRUE)
 
 	. = list()
-	VV_DROPDOWN_OPTION("", "---")
-	VV_DROPDOWN_OPTION(VV_HK_CALLPROC, "Call Proc")
-	VV_DROPDOWN_OPTION(VV_HK_MARK, "Mark Object")
-	VV_DROPDOWN_OPTION(VV_HK_TAG, "Tag Datum")
-	VV_DROPDOWN_OPTION(VV_HK_DELETE, "Delete")
-	VV_DROPDOWN_OPTION(VV_HK_EXPOSE, "Show VV To Player")
-	VV_DROPDOWN_OPTION(VV_HK_ADDCOMPONENT, "Add Component/Element")
-	VV_DROPDOWN_OPTION(VV_HK_REMOVECOMPONENT, "Remove Component/Element")
-	VV_DROPDOWN_OPTION(VV_HK_MASS_REMOVECOMPONENT, "Mass Remove Component/Element")
-	VV_DROPDOWN_OPTION(VV_HK_MODIFY_TRAITS, "Modify Traits")
+	. += VV_DROPDOWN_OPTION(VV_HK_CALLPROC, "Call Proc")
+	. += VV_DROPDOWN_OPTION(VV_HK_MARK, "Mark Object")
+	. += VV_DROPDOWN_OPTION(VV_HK_TAG, "Tag Datum")
+	. += VV_DROPDOWN_OPTION(VV_HK_DELETE, "Delete")
+	. += VV_DROPDOWN_OPTION(VV_HK_EXPOSE, "Show VV To Player")
+	. += VV_DROPDOWN_OPTION(VV_HK_ADDCOMPONENT, "Add Component/Element")
+	. += VV_DROPDOWN_OPTION(VV_HK_REMOVECOMPONENT, "Remove Component/Element")
+	. += VV_DROPDOWN_OPTION(VV_HK_MASS_REMOVECOMPONENT, "Mass Remove Component/Element")
+	. += VV_DROPDOWN_OPTION(VV_HK_MODIFY_TRAITS, "Modify Traits")
 
 /**
  * This proc is only called if everything topic-wise is verified. The only verifications that should happen here is things like permission checks!
