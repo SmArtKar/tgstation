@@ -400,23 +400,3 @@
 	genes = list(/datum/plant_gene/trait/fire_resistance, /datum/plant_gene/trait/glow/yellow)
 	growing_icon = 'icons/obj/service/hydroponics/growing_flowers.dmi'
 	reagents_add = list(/datum/reagent/consumable/tinlux = 0.04, /datum/reagent/consumable/nutriment = 0.03, /datum/reagent/carbon = 0.05)
-
-//CRAFTING
-
-/datum/crafting_recipe/mushroom_bowl
-	name = "Mushroom Bowl"
-	result = /obj/item/reagent_containers/cup/bowl/mushroom_bowl
-	reqs = list(/obj/item/food/grown/ash_flora/shavings = 5)
-	time = 3 SECONDS
-	category = CAT_CONTAINERS
-
-/obj/item/reagent_containers/cup/bowl/mushroom_bowl
-	name = "mushroom bowl"
-	desc = "A bowl made out of mushrooms. Not food, though it might have contained some at some point."
-	icon = 'icons/obj/mining_zones/ash_flora.dmi'
-	base_icon_state = "mushroom_bowl"
-	icon_state = "mushroom_bowl"
-	fill_icon_state = "fullbowl"
-	fill_icon = 'icons/obj/mining_zones/ash_flora.dmi'
-	custom_materials = null
-
