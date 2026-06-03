@@ -32,6 +32,7 @@ GLOBAL_LIST_INIT(tendrils, list())
 	attack_verb_simple = "pierce through"
 	throw_blocked_message = "does nothing to the thick shell of"
 	move_resist = INFINITY
+	anchored = TRUE
 
 	light_range = 3
 	light_power = 2
